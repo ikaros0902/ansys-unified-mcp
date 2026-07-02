@@ -1,0 +1,25 @@
+# 虛擬環境
+.venv/
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Python 快取與編譯檔案
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# 環境變數與設定
+.env
+.env.local
+.env.*.local
+.vscode/
+.idea/
+
+# 執行日誌與暫存
+*.log
+workbench_queue/*
+!workbench_queue/.gitkeep

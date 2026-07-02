@@ -1,0 +1,9 @@
+fastmcp
+ansys-mechanical-core
+ansys-fluent-core
+ansys-geometry-core
+lasso-python
+python-dotenv
+pydantic
+rich
+psutil
