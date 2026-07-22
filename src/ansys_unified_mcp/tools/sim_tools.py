@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from src.shared import mcp
-from src import sim_impl
+from ansys_unified_mcp.shared import mcp
+from ansys_unified_mcp import sim_impl
 from typing import Any, List, Dict
 
 @mcp.tool(name='fluent_launch')
@@ -364,12 +364,26 @@ async def mechanical_exit() -> str:
     return "\n".join([c.text for c in res])
 
 @mcp.tool(name='geometry_launch')
-async def geometry_launch() -> str:
-    """啟動 Geometry 建模器（Discovery/SpaceClaim 後端）
+async def geometry_launch(port: int = None, host: str = "localhost", transport_mode: str = "wnua", connect_timeout: int = 60) -> str:
+    """啟動 Geometry 建模器或連線現有 SpaceClaim 實例
+
+    :param port: 連線已啟動 SpaceClaim 的 gRPC 埠號，不填則啟動新實例（啟動前會自動掃描 50051-50055 尋找已運行實例）
+    :param host: SpaceClaim 主機地址
+    :param transport_mode: gRPC 傳輸模式（Windows 預設 wnua）
+    :param connect_timeout: 連線/啟動超時秒數，預設60秒
     """
     args = {}
+    if port is not None:
+        args['port'] = port
+    if host is not None:
+        args['host'] = host
+    if transport_mode is not None:
+        args['transport_mode'] = transport_mode
+    if connect_timeout is not None:
+        args['connect_timeout'] = connect_timeout
     res = await sim_impl.call_tool('geometry_launch', args)
     return "\n".join([c.text for c in res])
+
 
 @mcp.tool(name='geometry_create_design')
 async def geometry_create_design(name: str) -> str:

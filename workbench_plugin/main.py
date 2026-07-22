@@ -190,7 +190,31 @@ def _auto_start_queue_timer():
     except Exception as exc:
         _log("Auto queue timer start skipped or failed: " + str(exc))
 
+def _auto_start_grpc_server():
+    """自動開啟 Mechanical 的 gRPC Server 供外部 PyMechanical (MCP) 連接。"""
+    sentinel = "_WORKBENCH_MCP_GRPC_STARTED"
+    if getattr(_builtins, sentinel, False):
+        return
+    setattr(_builtins, sentinel, True)
+    
+    port = 10000
+    try:
+        # 嘗試使用標準 ExtAPI
+        if hasattr(ExtAPI, "Application") and hasattr(ExtAPI.Application, "StartGrpcServer"):
+            ExtAPI.Application.StartGrpcServer(port)
+            _log(f"Auto-started Mechanical gRPC Server on port {port} via ExtAPI.Application")
+            return
+            
+        # Fallback 嘗試使用 Ansys.ACT.Mechanical API (依使用者提示)
+        import clr
+        clr.AddReference("Ansys.ACT.Mechanical")
+        import Ansys
+        Ansys.ACT.Mechanical.MechanicalAPI.Instance.ApplicationAPI.StartGrpcServer(port)
+        _log(f"Auto-started Mechanical gRPC Server on port {port} via MechanicalAPI")
+    except Exception as exc:
+        _log("Failed to auto-start gRPC Server: " + str(exc))
 
 _debug_log("main.py imported from " + __file__)
 _auto_start_mcp_socket_timer()
 _auto_start_queue_timer()
+_auto_start_grpc_server()

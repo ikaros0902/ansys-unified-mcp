@@ -136,8 +136,12 @@ MECHANICAL_TOOLS = [
 ]
 
 GEOMETRY_TOOLS = [
-    Tool(name="geometry_launch", description="啟動 Geometry 建模器（Discovery/SpaceClaim 後端）",
-         inputSchema={"type": "object", "properties": {}}),
+    Tool(name="geometry_launch", description="啟動 Geometry 建模器或連線現有 SpaceClaim 實例",
+         inputSchema={"type": "object", "properties": {
+             "port": {"type": "integer", "description": "連線已啟動 SpaceClaim 的 gRPC 埠號，不填則啟動新實例（啟動前會自動掃描 50051-50055 尋找已運行實例）"},
+             "host": {"type": "string", "default": "localhost", "description": "SpaceClaim 主機地址"},
+             "transport_mode": {"type": "string", "enum": ["wnua", "insecure", "uds"], "default": "wnua", "description": "gRPC 傳輸模式（Windows 預設 wnua）"},
+             "connect_timeout": {"type": "integer", "default": 60, "description": "連線/啟動超時秒數，預設60秒"}}}),
     Tool(name="geometry_create_design", description="建立新的幾何設計",
          inputSchema={"type": "object", "properties": {"name": {"type": "string", "default": "Design"}},
              "required": ["name"]}),
@@ -260,9 +264,9 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
         if name == "fluent_launch":
             import ansys.fluent.core as pyfluent
             port = arguments.get("port")
+            loop = asyncio.get_event_loop()
             if port:
                 connect_timeout = arguments.get("connect_timeout", 30)
-                loop = asyncio.get_event_loop()
 
                 def _connect():
                     return pyfluent.connect_to_fluent(
@@ -289,9 +293,13 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
                 ver = _fluent_session.get_fluent_version()
                 result = f"已連線 Fluent (埠 {port}, 版本: {ver})"
             else:
-                _fluent_session = pyfluent.launch_fluent(
-                    precision="double", processor_count=arguments.get("processors", 4),
-                    dimension=3, cwd=arguments.get("cwd"))
+                _fluent_session = await loop.run_in_executor(
+                    None,
+                    lambda: pyfluent.launch_fluent(
+                        precision="double", processor_count=arguments.get("processors", 4),
+                        dimension=3, cwd=arguments.get("cwd")
+                    )
+                )
                 result = f"Fluent 已啟動 (版本: {_fluent_session.get_fluent_version()})"
 
         elif name.startswith("fluent_"):
@@ -454,15 +462,22 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
         elif name == "mechanical_launch":
             import ansys.mechanical.core as pymechanical
             port = arguments.get("port")
+            loop = asyncio.get_event_loop()
             if port:
-                _mechanical_session = pymechanical.connect_to_mechanical(
-                    port=int(port), transport_mode="insecure", loglevel="ERROR",
-                    connect_timeout=30, cleanup_on_exit=False,
+                _mechanical_session = await loop.run_in_executor(
+                    None,
+                    lambda: pymechanical.connect_to_mechanical(
+                        port=int(port), transport_mode="insecure", loglevel="ERROR",
+                        connect_timeout=30, cleanup_on_exit=False,
+                    )
                 )
                 result = f"已連線 Mechanical (埠 {port}, 版本: {_mechanical_session.version})"
             else:
-                _mechanical_session = pymechanical.launch_mechanical(
-                    batch=True, transport_mode="insecure", start_timeout=120, loglevel="ERROR"
+                _mechanical_session = await loop.run_in_executor(
+                    None,
+                    lambda: pymechanical.launch_mechanical(
+                        batch=True, transport_mode="insecure", start_timeout=120, loglevel="ERROR"
+                    )
                 )
                 result = f"Mechanical 已啟動 (版本: {_mechanical_session.version})"
 
@@ -599,9 +614,63 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
 
         # ==================== GEOMETRY ====================
         elif name == "geometry_launch":
-            from ansys.geometry.core import launch_modeler
-            _modeler = launch_modeler(mode="spaceclaim", version=251, timeout=180)
-            result = "Geometry 建模器已啟動 (SpaceClaim v251)"
+            from ansys.geometry.core import Modeler, launch_modeler
+            loop = asyncio.get_event_loop()
+            port = arguments.get("port")
+            host = arguments.get("host", "localhost")
+            transport_mode = arguments.get("transport_mode", "wnua")
+            connect_timeout = arguments.get("connect_timeout", 60)
+
+            if port:
+                # 模式 1：連接已存在的 SpaceClaim 實例（指定 port）
+                try:
+                    _modeler = await asyncio.wait_for(
+                        loop.run_in_executor(None, lambda: Modeler(
+                            host=host, port=int(port), transport_mode=transport_mode
+                        )),
+                        timeout=connect_timeout,
+                    )
+                    result = f"已連線 Geometry 建模器 ({host}:{port})"
+                except asyncio.TimeoutError:
+                    raise TimeoutError(
+                        f"連線 SpaceClaim ({host}:{port}) 超時 ({connect_timeout}s)，"
+                        f"請檢查 SpaceClaim 是否已啟動並監聽 gRPC"
+                    )
+            else:
+                # 嘗試自動掃描常用 port 連接已運行的 SpaceClaim
+                scan_ports = [50051, 50052, 50053, 50054, 50055]
+                connected = False
+                for scan_port in scan_ports:
+                    try:
+                        _modeler = await asyncio.wait_for(
+                            loop.run_in_executor(None, lambda p=scan_port: Modeler(
+                                host=host, port=p, transport_mode=transport_mode
+                            )),
+                            timeout=5,  # 每個 port 快速嘗試 5 秒
+                        )
+                        connected = True
+                        result = f"自動偵測到已運行的 SpaceClaim 並連線成功 ({host}:{scan_port})"
+                        logger.info(f"Auto-connected to SpaceClaim on port {scan_port}")
+                        break
+                    except Exception:
+                        continue
+
+                if not connected:
+                    # 模式 2：啟動新的 SpaceClaim 實例
+                    try:
+                        _modeler = await asyncio.wait_for(
+                            loop.run_in_executor(None, lambda: launch_modeler(
+                                mode="spaceclaim", version=251, timeout=180
+                            )),
+                            timeout=connect_timeout,
+                        )
+                        result = "Geometry 建模器已啟動 (SpaceClaim v251)"
+                    except asyncio.TimeoutError:
+                        result = (
+                            f"啟動 SpaceClaim 超時 ({connect_timeout}s)。"
+                            f"SpaceClaim 可能仍在背景啟動中。"
+                            f"請稍等片刻後用 geometry_launch(port=50051) 嘗試連線。"
+                        )
 
         elif name.startswith("geometry_"):
             if _modeler is None:

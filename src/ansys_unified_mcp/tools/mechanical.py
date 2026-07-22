@@ -13,7 +13,7 @@ _mechanical = None
 _port = 0
 __version__ = "1.0.0"
 
-from src.shared import mcp
+from ansys_unified_mcp.shared import mcp
 
 # Use forward slashes so embedded paths in IronPython strings are safe on Windows
 _OUTFILE = (Path(__file__).parent / "mech_out.txt").as_posix()

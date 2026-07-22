@@ -23,3 +23,10 @@ __pycache__/
 *.log
 workbench_queue/*
 !workbench_queue/.gitkeep
+
+# Generated files
+results/
+scripts/
+mcp_config.json
+status.json
+*.wbjn

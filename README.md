@@ -1,70 +1,68 @@
-# ANSYS Unified MCP Server
+# ANSYS Unified MCP Server v2.0
 
-這個專案將多個 ANSYS 相關的 MCP (Model Context Protocol) 伺服器整合為單一的集中化伺服器，大幅降低系統資源消耗並統一管理。
-此伺服器提供了 127 個自動化工具，涵蓋了 ANSYS Workbench、Mechanical、Fluent 以及 SpaceClaim / Geometry。
+這是一個專為 AI Agent (Claude, Cursor 等) 設計的模型上下文協議 (Model Context Protocol, MCP) 伺服器，能夠讓 AI 直接連線並操控您本機的 ANSYS 軟體系列。
 
-## 🚀 核心功能
+## 支援的 ANSYS 模組
 
-* **單一處理程序 (Single Process)**：將原本分散的四個 Python 行程整合為單一進程，節省 CPU/記憶體開銷。
-* **Workbench 整合**：支援 Workbench 專案管理、日誌讀取與任務控制。
-* **Mechanical 整合**：透過 ACT 擴充套件，實現與 Mechanical 雙向通訊、材料賦予、邊界條件設定與求解控制。
-* **Fluent 與 Geometry 整合**：透過 PyAnsys (PyFluent, PyGeometry)，自動化執行流體計算與 SpaceClaim 3D CAD 幾何繪製。
-* **100% 相容**：無縫支援 Claude / AI 代理人操作的所有原有工具。
+- **Workbench** (透過 File IPC 驅動)
+- **Mechanical** (透過 gRPC 驅動，ACT 外掛自動啟動)
+- **SpaceClaim** (透過 gRPC 驅動)
+- **Fluent** (透過 gRPC 驅動)
+- **OptiSLang** (透過原生 Python API 驅動)
+- **LS-DYNA** (即將支援)
+- **MAPDL** (即將支援)
 
-## 📦 系統需求
+---
 
-* **作業系統**：Windows
-* **Python**：Python 3.10 或以上版本 (建議使用虛擬環境)
-* **ANSYS 版本**：預設為 **ANSYS 2025 R1 (v251)**。如果您使用的是其他版本，請於 `.env` 中調整相應路徑。
+## 🚀 快速安裝 (針對一般使用者 / 同事)
 
-## ⚙️ 安裝與設定
+您不再需要手動設定 Python 環境或尋找 ANSYS 安裝路徑！我們提供了一鍵安裝腳本。
 
-### 1. 安裝 Python 依賴套件
+1. **下載本專案** (或 `git clone`) 到您的電腦上。
+2. 在專案資料夾上點擊右鍵，選擇 **「使用 PowerShell 執行 (Run with PowerShell)」**，或是打開 PowerShell 並輸入：
+   ```powershell
+   .\setup.ps1
+   ```
+3. 腳本會自動完成以下工作：
+   - 建立 Python 虛擬環境 (`.venv`)
+   - 安裝所有必要的相依套件 (PyAnsys 等)
+   - 自動偵測您安裝的 ANSYS 版本
+   - 自動安裝 WorkbenchMCP (ACT 外掛) 到您的 `%APPDATA%`
+   - 生成專屬的 `mcp_config.json` 供 AI 客戶端使用
 
-請在專案目錄下建立並啟動虛擬環境，接著安裝相依套件：
+### 將 MCP Server 加入 Claude / Cursor
 
-```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
-```
+安裝完成後，開啟專案目錄下的 `mcp_config.json`，將裡面的內容複製到您的 Claude Desktop 設定檔 (通常在 `%APPDATA%\Claude\claude_desktop_config.json`) 中，然後重啟 Claude 即可。
 
-### 2. 設定環境變數
+---
 
-請複製一份 `.env.example` 並命名為 `.env`，根據您的本機 ANSYS 安裝路徑修改：
+## ⚡ 自動連線機制 (Auto-Connect)
 
-```powershell
-cp .env.example .env
-```
-確保 `.env` 中的路徑正確指向您的 ANSYS 安裝位置。
+v2.0 導入了全新的「自動連線管理器」。
 
-### 3. 部署 Mechanical ACT 外掛程式
+您**不需要**在指令列打指令來啟動伺服器或設定 Port。您只要像平常一樣開啟您的 ANSYS 軟體：
+1. **Workbench**：直接開啟，背景會自動輪詢。
+2. **Mechanical**：從 Workbench 開啟，或是單獨開啟。內建的 ACT 外掛會在背景自動啟動 gRPC Server (Port 10000+)。
+3. **SpaceClaim / Fluent**：同理，只要開啟，MCP Agent 就能掃描並連上。
 
-為了讓伺服器能與 ANSYS Mechanical 進行雙向溝通，必須部署 ACT 擴充套件：
+MCP Agent 在啟動時會自動偵測正在執行的這些視窗並接管控制。
 
-1. 將專案中的 `workbench_plugin/WorkbenchMCP` 資料夾，複製到您的 `%APPDATA%\Ansys\v251\ACT\extensions\` 目錄下。
-2. 啟動 ANSYS Mechanical，在擴充套件管理器中啟用 `WorkbenchMCP`。
-3. 若要啟動自動排程通訊，請點選 UI 介面上的 **"Socket Timer Start"** 按鈕。
+---
 
-## 🎮 啟動伺服器 (供 MCP 客戶端使用)
+## 開發者資訊 (Project Structure)
 
-這個伺服器是為 Claude / Cursor / Antigravity 等 MCP 客戶端設計的。請在您的 MCP 設定檔（例如 `mcp_config.json` 或 `claude_desktop_config.json`）中加入以下設定：
+本專案已重構為標準 Python 套件：
+- `pyproject.toml`: 專案設定與相依性。
+- `src/ansys_unified_mcp/`: 核心原始碼目錄。
+  - `config.py`: 自動偵測與推導 ANSYS 系統路徑。
+  - `connection_manager.py`: 自動探測背景運作中的 ANSYS 進程與 Port。
+  - `server.py` / `__main__.py`: MCP 伺服器主程式。
+  - `tools/`: 各模組的 MCP 註冊工具 (Mechanical, Fluent, OptiSLang 等)。
+  - `drivers/`: 底層呼叫模組。
+  - `bridges/`: File IPC 等橋接工具。
+- `workbench_plugin/`: 將安裝至 ANSYS 的 ACT 外掛原始碼。
 
-```json
-{
-  "mcpServers": {
-    "ansys-unified-mcp": {
-      "command": "您的路徑\\ansys-unified-mcp\\.venv\\Scripts\\python.exe",
-      "args": [
-        "您的路徑\\ansys-unified-mcp\\mcp_server.py"
-      ],
-      "cwd": "您的路徑\\ansys-unified-mcp"
-    }
-  }
-}
-```
+## 疑難排解
 
-## ⚠️ 注意事項
-
-1. **SpaceClaim 啟動時間**：當呼叫 `geometry_launch` 工具時，SpaceClaim 的啟動通常需要 **30 ~ 50 秒**。在此期間請耐心等待工具執行完成，**請勿中止**，以免造成連線遺失或殭屍行程。
-2. **快取與重啟**：如果您修改了 `workbench_plugin` 中的 Python 腳本，必須重新啟動 ANSYS Mechanical 才能載入最新版本的腳本。
+- 若安裝腳本執行時出現「執行原則 (Execution Policy)」錯誤，請先在 PowerShell 輸入 `Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass`。
+- 連線失敗時，請確認防火牆沒有阻擋 10000~10010 (Mechanical) 與 50051 (SpaceClaim) 的本機 (localhost) 網路通訊。

@@ -31,7 +31,7 @@ from tools.workbench_socket_timer import (
 
 load_dotenv()
 
-from src.shared import mcp
+from ansys_unified_mcp.shared import mcp
 
 
 @mcp.tool()

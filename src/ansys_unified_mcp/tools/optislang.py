@@ -11,7 +11,7 @@ from __future__ import annotations
 import json
 import os
 
-from src.shared import mcp
+from ansys_unified_mcp.shared import mcp
 
 # ponytail: 全域單一 Optislang session。上限=單一連線；要多專案並行時再改為 dict 管理。
 _osl = None

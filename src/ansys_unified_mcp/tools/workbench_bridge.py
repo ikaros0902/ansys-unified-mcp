@@ -38,14 +38,16 @@ RUNS_DIR = MCP_HOME / "runs"
 STATUS_FILE = MCP_HOME / "status.json"
 STOP_FILE = MCP_HOME / "stop.flag"
 LOG_FILE = MCP_HOME / "mcp.log"
-BRIDGE_JOURNAL = SERVER_ROOT / "ansys_workbench_bridge.wbjn"
+BRIDGE_JOURNAL = SERVER_ROOT.parent / "scripts" / "ansys_workbench_bridge.wbjn"
 
-DEFAULT_RUNWB2 = r"D:\Program Files\ANSYS Inc\v251\Framework\bin\Win64\RunWB2.exe"
-DEFAULT_MECHANICAL = r"D:\Program Files\ANSYS Inc\v251\aisol\bin\winx64\AnsysWBU.exe"
-DEFAULT_MAPDL = r"D:\Program Files\ANSYS Inc\v251\ansys\bin\winx64\ANSYS251.exe"
-DEFAULT_FLUENT = r"D:\Program Files\ANSYS Inc\v251\fluent\ntbin\win64\fluent.exe"
-DEFAULT_CFX_SOLVE = r"D:\Program Files\ANSYS Inc\v251\CFX\bin\cfx5solve.exe"
-DEFAULT_CFX_PRE = r"D:\Program Files\ANSYS Inc\v251\CFX\bin\cfx5pre.exe"
+from ansys_unified_mcp.config import config
+
+DEFAULT_RUNWB2 = str(config.workbench_exe)
+DEFAULT_MECHANICAL = str(config.mechanical_exe)
+DEFAULT_MAPDL = str(config.mapdl_exe)
+DEFAULT_FLUENT = str(config.fluent_exe)
+DEFAULT_CFX_SOLVE = str(config.cfx_solve_exe)
+DEFAULT_CFX_PRE = str(config.cfx_pre_exe)
 
 RUNWB2 = Path(os.environ.get("ANSYS_RUNWB2", DEFAULT_RUNWB2))
 MECHANICAL = Path(os.environ.get("ANSYS_MECHANICAL", DEFAULT_MECHANICAL))
@@ -82,7 +84,7 @@ WORKBENCH_DEFAULT_PROJECT_NAMES: dict[str, str] = {
     "fluent": "fluent_flow",
 }
 
-from src.shared import mcp
+from ansys_unified_mcp.shared import mcp
 
 
 def _ensure_dirs() -> None:
@@ -351,6 +353,149 @@ def execute_workbench_script(script: str, timeout_seconds: int = 60) -> str:
     """Execute Python/Workbench journal code inside the running Workbench bridge."""
     result = _send_command("execute_script", timeout=float(timeout_seconds), script=script)
     return _format_bridge_result(result)
+
+
+@mcp.tool()
+def execute_spaceclaim_script_live(script: str, system_name: str = "", timeout_seconds: int = 120) -> str:
+    """透過已啟動的 Workbench 橋接器，向活躍的 SpaceClaim 視窗發送並執行 SpaceClaim Python 腳本。
+
+    :param script: 要執行的 SpaceClaim Python 腳本內容
+    :param system_name: 指定的系統名稱（例如 'SYS'），留空則自動尋找第一個含幾何設計的系統
+    """
+    wb_script = f"""# encoding: utf-8
+import traceback
+
+def run():
+    target_system = None
+    system_name = {system_name!r}
+    
+    if system_name:
+        for s in GetAllSystems():
+            if s.Name == system_name:
+                target_system = s
+                break
+    else:
+        for s in GetAllSystems():
+            if s.GetContainer(ComponentName="Geometry"):
+                target_system = s
+                break
+                
+    if not target_system:
+        raise RuntimeError("在專案中找不到具有幾何組件的系統")
+        
+    geometry = target_system.GetContainer(ComponentName="Geometry")
+    geometry.Edit(IsSpaceClaimGeometry=True, Interactive=True)
+    geometry.SendCommand(Language="Python", Command={script!r})
+
+try:
+    run()
+    print("SUCCESS")
+except Exception as e:
+    print("ERROR: " + str(e))
+    print(traceback.format_exc())
+"""
+    result = _send_command("execute_script", timeout=float(timeout_seconds), script=wb_script)
+    return _format_bridge_result(result)
+
+
+@mcp.tool()
+def execute_mechanical_script_live(script: str, system_name: str = "", timeout_seconds: int = 120) -> str:
+    """透過已啟動的 Workbench 橋接器，向活躍的 Mechanical 視窗發送並執行 ACT Python 腳本。
+
+    利用暫存檔擷取輸出結果並回傳，提供如同 gRPC 般的完整雙向溝通能力，但完全避開授權連線阻擋。
+    :param script: 要執行的 Mechanical ACT Python 腳本內容
+    :param system_name: 指定的系統名稱（例如 'SYS'），留空則自動尋找第一個含模型 (Model) 組件的系統
+    """
+    wb_script = f"""# encoding: utf-8
+import traceback
+import os
+import time
+
+def run():
+    target_system = None
+    system_name = {system_name!r}
+    
+    if system_name:
+        for s in GetAllSystems():
+            if s.Name == system_name:
+                target_system = s
+                break
+    else:
+        for s in GetAllSystems():
+            if s.GetContainer(ComponentName="Model"):
+                target_system = s
+                break
+                
+    if not target_system:
+        raise RuntimeError("在專案中找不到具有 Model 組件的系統")
+        
+    model = target_system.GetContainer(ComponentName="Model")
+    model.Edit(Interactive=True)
+    
+    # 建立輸出結果的暫存路徑
+    temp_file = os.path.abspath("mech_out_" + str(time.time()).replace(".", "") + ".txt").replace("\\\\", "/")
+    
+    # 封裝使用者的程式碼，將輸出寫入暫存檔
+    user_script = {script!r}
+    wrapped_script = \"\"\"
+import sys
+import traceback
+import io
+
+class OutputCapture:
+    def __init__(self):
+        self.output = []
+    def write(self, s):
+        self.output.append(s)
+    def flush(self):
+        pass
+
+capture = OutputCapture()
+original_stdout = sys.stdout
+sys.stdout = capture
+
+try:
+    exec(user_script)
+except Exception as e:
+    capture.write("ERROR: " + str(e) + "\\n")
+    capture.write(traceback.format_exc())
+finally:
+    sys.stdout = original_stdout
+    with open(r'\"\"\" + temp_file + \"\"\"', 'w') as f:
+        f.write("".join(capture.output))
+\"\"\"
+    
+    # 替換 user_script 以正確載入 (IronPython字串處理)
+    wrapped_script = wrapped_script.replace("user_script", "'''\\n" + user_script.replace("'''", "\\'\\'\\'") + "\\n'''")
+    
+    model.SendCommand(Language="Python", Command=wrapped_script)
+    
+    # 輪詢等待輸出結果
+    for _ in range({timeout_seconds} * 2):
+        if os.path.exists(temp_file):
+            with open(temp_file, 'r') as f:
+                print("---MECHANICAL OUTPUT---")
+                print(f.read().strip())
+                print("-----------------------")
+            try:
+                os.remove(temp_file)
+            except:
+                pass
+            return
+        time.sleep(0.5)
+        
+    raise RuntimeError("Timed out waiting for Mechanical output in " + str({timeout_seconds}) + " seconds.")
+
+try:
+    run()
+    print("SUCCESS")
+except Exception as e:
+    print("ERROR: " + str(e))
+    print(traceback.format_exc())
+"""
+    result = _send_command("execute_script", timeout=float(timeout_seconds), script=wb_script)
+    return _format_bridge_result(result)
+
 
 
 @mcp.tool()
