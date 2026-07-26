@@ -3,7 +3,7 @@ from __future__ import annotations
 from dotenv import load_dotenv
 from fastmcp import FastMCP
 
-from tools.workbench_bridge import (
+from ansys_unified_mcp.bridges.workbench_bridge import (
     detect_workbench_environment,
     get_workbench_job_status,
     launch_mechanical_script,
@@ -11,7 +11,7 @@ from tools.workbench_bridge import (
     list_workbench_jobs,
     read_workbench_job_log,
 )
-from tools.workbench_file_queue import (
+from ansys_unified_mcp.bridges.file_queue import (
     list_queue as queue_list,
     queue_execute_python,
     queue_get_state,
@@ -21,7 +21,7 @@ from tools.workbench_file_queue import (
     submit_request as queue_submit_request,
     trigger_socket_process_queue,
 )
-from tools.workbench_socket_timer import (
+from ansys_unified_mcp.bridges.socket_timer import (
     socket_timer_execute_python,
     socket_timer_ping,
     socket_timer_state,

@@ -10,11 +10,35 @@ DEFAULT_HOST = os.environ.get("WORKBENCH_MCP_HOST", "127.0.0.1")
 DEFAULT_PORT = int(os.environ.get("WORKBENCH_MCP_PORT", "9885"))
 
 
-def _request(payload: dict[str, Any], timeout: float = 10.0) -> dict[str, Any]:
+def _get_active_socket_port(app_name: str = "AnsysFWW") -> int:
+    try:
+        reg_dir = os.path.abspath(
+            os.path.join(os.path.dirname(__file__), "..", "..", "..", "workbench_queue", "registry")
+        )
+        if os.path.exists(reg_dir):
+            for name in os.listdir(reg_dir):
+                if name.endswith(".json"):
+                    with open(os.path.join(reg_dir, name), "r", encoding="utf-8") as fp:
+                        data = json.load(fp)
+                        if data.get("app_name") == app_name and "socket_timer_port" in data:
+                            return int(data["socket_timer_port"])
+    except Exception:
+        pass
+    return DEFAULT_PORT
+
+
+def _request(payload: dict[str, Any], timeout: float = 10.0, port: int | None = None) -> dict[str, Any]:
     data = (json.dumps(payload, ensure_ascii=False) + "\0").encode("utf-8")
     received = b""
+    
+    target_port = port
+    if target_port is None:
+        target_port = _get_active_socket_port("AnsysFWW")
+        if target_port == DEFAULT_PORT:
+            target_port = _get_active_socket_port("AnsysWBU")
+            
     try:
-        with socket.create_connection((DEFAULT_HOST, DEFAULT_PORT), timeout=timeout) as sock:
+        with socket.create_connection((DEFAULT_HOST, target_port), timeout=timeout) as sock:
             sock.settimeout(timeout)
             sock.sendall(data)
             while b"\0" not in received:
@@ -28,7 +52,7 @@ def _request(payload: dict[str, Any], timeout: float = 10.0) -> dict[str, Any]:
             "ok": True,
             "connected": True,
             "host": DEFAULT_HOST,
-            "port": DEFAULT_PORT,
+            "port": target_port,
             "response": json.loads(received.split(b"\0", 1)[0].decode("utf-8", errors="replace")),
         }
     except Exception as exc:
@@ -36,7 +60,7 @@ def _request(payload: dict[str, Any], timeout: float = 10.0) -> dict[str, Any]:
             "ok": False,
             "connected": False,
             "host": DEFAULT_HOST,
-            "port": DEFAULT_PORT,
+            "port": target_port,
             "error": str(exc),
             "hint": "Open Mechanical and start Workbench MCP > Socket Timer Start, or enable plugin auto-start.",
         }

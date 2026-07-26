@@ -109,7 +109,7 @@ def check_workbench(live: bool):
     exe = _exe("ANSYS_RUNWB2")
     if not exe:
         try:
-            from tools.workbench_bridge import find_workbench_exe
+            from ansys_unified_mcp.bridges.workbench_bridge import find_workbench_exe
             found = find_workbench_exe()
             exe = str(found) if found else None
         except Exception:
@@ -119,7 +119,7 @@ def check_workbench(live: bool):
     if not live:
         return OK, f"RunWB2 就緒：{exe}"
     try:
-        from tools.workbench_bridge import detect_workbench_environment
+        from ansys_unified_mcp.bridges.workbench_bridge import detect_workbench_environment
         return OK, f"環境偵測：{detect_workbench_environment()}"
     except Exception as e:
         return OK, f"RunWB2 存在但偵測函式未跑：{e}"

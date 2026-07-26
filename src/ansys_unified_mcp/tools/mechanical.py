@@ -91,11 +91,43 @@ def _run(script):
 
 
 @mcp.tool()
-def connect_to_mechanical(port: int = 10000) -> str:
-    """Connect to ANSYS Mechanical via gRPC. Args: port: gRPC port"""
+def list_instances() -> str:
+    """List all running and registered ANSYS instances (Mechanical, Workbench, etc.) and their ports."""
+    from ansys_unified_mcp.connection_manager import connection_manager
+    instances = connection_manager.get_registered_instances()
+    return _json({"ok": True, "instances": instances})
+
+
+@mcp.tool()
+def connect_to_mechanical(port: int = None, pid: int = None) -> str:
+    """Connect to ANSYS Mechanical via gRPC. 
+    Args:
+        port: gRPC connection port. If omitted, connects to the first running instance.
+        pid: gRPC connection PID. Connects to the Mechanical instance with this PID.
+    """
     global _mechanical, _port
     try:
         import ansys.mechanical.core as mech
+        from ansys_unified_mcp.connection_manager import connection_manager
+
+        target_port = port
+        if target_port is None:
+            instances = connection_manager.get_registered_instances()
+            mech_instances = [inst for inst in instances if inst.get("app_name") == "AnsysWBU" and "grpc_port" in inst]
+            
+            if pid is not None:
+                match = [inst for inst in mech_instances if inst["pid"] == pid]
+                if not match:
+                    return _json({"ok": False, "error": f"No registered Mechanical instance found with PID {pid}."})
+                target_port = int(match[0]["grpc_port"])
+            else:
+                if not mech_instances:
+                    scanned_port = connection_manager.scan_for_mechanical_grpc()
+                    if scanned_port is None:
+                        return _json({"ok": False, "error": "No running Mechanical instance registered or detected."})
+                    target_port = scanned_port
+                else:
+                    target_port = int(mech_instances[0]["grpc_port"])
 
         if _mechanical is not None:
             try:
@@ -103,15 +135,16 @@ def connect_to_mechanical(port: int = 10000) -> str:
             except Exception:
                 pass
             _mechanical = None
-        _mechanical = mech.connect_to_mechanical(port=port)
-        _port = port
+            
+        _mechanical = mech.connect_to_mechanical(port=target_port)
+        _port = target_port
         info = _run(
             "model = ExtAPI.DataModel.Project.Model\n"
             'print("Connected! Analyses: " + str(len(model.Analyses)))\n'
             "for i, a in enumerate(model.Analyses):\n"
             '    print("  [" + str(i) + "] " + str(a.Name) + " (" + str(a.AnalysisType) + ")")\n'
         )
-        return _json({"ok": True, "port": port, "info": info})
+        return _json({"ok": True, "port": target_port, "info": info})
     except ImportError:
         return _json({"ok": False, "error": "ansys-mechanical-core not installed."})
     except Exception as e:

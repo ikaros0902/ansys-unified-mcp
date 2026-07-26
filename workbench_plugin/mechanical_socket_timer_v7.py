@@ -32,8 +32,22 @@ PROJECT_ROOT = os.environ.get("WORKBENCH_MCP_ROOT") or os.path.abspath(os.path.j
 QUEUE_ROOT = os.environ.get("WORKBENCH_MCP_QUEUE_ROOT") or r"F:\Ming_python\ansys-unified-mcp\workbench_queue"
 
 HOST = os.environ.get("WORKBENCH_MCP_HOST", "127.0.0.1")
-PORT = int(os.environ.get("WORKBENCH_MCP_PORT", "9885"))
-VERSION = "SOCKET_TIMER_V7_DOTNET_THREAD_PORT_9885_QUEUE_ACTION_2026_05_18"
+
+def find_free_port(start_port, max_attempts=100):
+    import socket
+    for port in range(start_port, start_port + max_attempts):
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        try:
+            s.bind(('127.0.0.1', port))
+            s.close()
+            return port
+        except socket.error:
+            continue
+    raise RuntimeError("No free port found in range %d-%d" % (start_port, start_port + max_attempts))
+
+PORT = find_free_port(9885)
+VERSION = "SOCKET_TIMER_V7_DYNAMIC_PORT_2026_07_26"
 LOG_FILE = os.path.join(QUEUE_ROOT, "mechanical_socket_timer_v7.log")
 QUEUE_PROCESSOR_PATH = os.path.join(PLUGIN_DIR, "mechanical_queue_processor.py")
 

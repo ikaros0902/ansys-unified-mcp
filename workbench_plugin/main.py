@@ -144,12 +144,99 @@ def _load_socket_timer_namespace():
     return namespace
 
 
+def find_free_port(start_port, max_attempts=100):
+    import socket
+    for port in range(start_port, start_port + max_attempts):
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        try:
+            s.bind(('127.0.0.1', port))
+            s.close()
+            return port
+        except socket.error:
+            continue
+    raise RuntimeError("No free port found in range %d-%d" % (start_port, start_port + max_attempts))
+
+
+def _register_instance(socket_port=None, grpc_port=None):
+    try:
+        import os
+        import System
+        
+        pid = os.getpid()
+        proc = System.Diagnostics.Process.GetCurrentProcess()
+        proc_name = proc.ProcessName
+        title = proc.MainWindowTitle or proc_name
+        
+        registry_dir = os.path.join(_QUEUE_ROOT, "registry")
+        if not os.path.isdir(registry_dir):
+            try:
+                os.makedirs(registry_dir)
+            except:
+                pass
+                
+        reg_file = os.path.join(registry_dir, "%d.json" % pid)
+        
+        data = {}
+        try:
+            import json
+            if os.path.isfile(reg_file):
+                with open(reg_file, "r") as fp:
+                    data = json.load(fp)
+        except:
+            pass
+            
+        data["pid"] = pid
+        data["app_name"] = proc_name
+        data["app_title"] = title
+        if socket_port is not None:
+            data["socket_timer_port"] = socket_port
+        if grpc_port is not None:
+            data["grpc_port"] = grpc_port
+        data["last_seen"] = time.time()
+        
+        try:
+            if "AnsysFWW" in proc_name:
+                data["project_path"] = GetActiveProject().FilePath
+        except:
+            pass
+            
+        try:
+            import json
+            with open(reg_file, "w") as fp:
+                json.dump(data, fp)
+        except:
+            serialized = "{"
+            serialized += '"pid": %d, ' % data["pid"]
+            serialized += '"app_name": "%s", ' % data["app_name"].replace('\\', '\\\\').replace('"', '\\"')
+            serialized += '"app_title": "%s", ' % data["app_title"].replace('\\', '\\\\').replace('"', '\\"')
+            if "socket_timer_port" in data:
+                serialized += '"socket_timer_port": %d, ' % data["socket_timer_port"]
+            if "grpc_port" in data:
+                serialized += '"grpc_port": %d, ' % data["grpc_port"]
+            if "project_path" in data:
+                serialized += '"project_path": "%s", ' % data["project_path"].replace('\\', '\\\\').replace('"', '\\"')
+            serialized += '"last_seen": %f' % data["last_seen"]
+            serialized += "}"
+            with open(reg_file, "w") as fp:
+                fp.write(serialized)
+                
+        _log("Registered: PID=%d (%s) with socket_port=%s, grpc_port=%s" % (pid, proc_name, str(socket_port), str(grpc_port)))
+    except Exception as exc:
+        _log("Failed to register app: " + str(exc))
+
+
 def start_mcp_socket_timer(analysis=None):
     _debug_log("start_mcp_socket_timer callback entered")
     _log("Starting non-blocking socket timer with: " + _SOCKET_TIMER_PATH)
     namespace = _load_socket_timer_namespace()
     state = namespace["start_socket_timer_bridge"]()
     _log("Socket Timer Start state: " + str(state))
+    
+    socket_port = state.get("port")
+    if socket_port:
+        _register_instance(socket_port=socket_port)
+        
     try:
         start_auto_queue_timer()
     except Exception as exc:
@@ -197,20 +284,24 @@ def _auto_start_grpc_server():
         return
     setattr(_builtins, sentinel, True)
     
-    port = 10000
+    import System
+    proc_name = System.Diagnostics.Process.GetCurrentProcess().ProcessName
+    if "AnsysWBU" not in proc_name:
+        return
+        
     try:
-        # 嘗試使用標準 ExtAPI
+        grpc_port = find_free_port(10000)
+        
         if hasattr(ExtAPI, "Application") and hasattr(ExtAPI.Application, "StartGrpcServer"):
-            ExtAPI.Application.StartGrpcServer(port)
-            _log(f"Auto-started Mechanical gRPC Server on port {port} via ExtAPI.Application")
+            ExtAPI.Application.StartGrpcServer(grpc_port)
+            _log("Auto-started Mechanical gRPC Server on port %d via ExtAPI.Application" % grpc_port)
+            _register_instance(grpc_port=grpc_port)
             return
             
-        # Fallback 嘗試使用 Ansys.ACT.Mechanical API (依使用者提示)
-        import clr
-        clr.AddReference("Ansys.ACT.Mechanical")
-        import Ansys
-        Ansys.ACT.Mechanical.MechanicalAPI.Instance.ApplicationAPI.StartGrpcServer(port)
-        _log(f"Auto-started Mechanical gRPC Server on port {port} via MechanicalAPI")
+        import Ansys.ACT.Mechanical
+        Ansys.ACT.Mechanical.MechanicalAPI.Instance.ApplicationAPI.StartGrpcServer(grpc_port)
+        _log("Auto-started Mechanical gRPC Server on port %d via MechanicalAPI" % grpc_port)
+        _register_instance(grpc_port=grpc_port)
     except Exception as exc:
         _log("Failed to auto-start gRPC Server: " + str(exc))
 

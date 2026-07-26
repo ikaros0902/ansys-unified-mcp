@@ -65,4 +65,13 @@ MCP Agent 在啟動時會自動偵測正在執行的這些視窗並接管控制�
 ## 疑難排解
 
 - 若安裝腳本執行時出現「執行原則 (Execution Policy)」錯誤，請先在 PowerShell 輸入 `Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass`。
-- 連線失敗時，請確認防火牆沒有阻擋 10000~10010 (Mechanical) 與 50051 (SpaceClaim) 的本機 (localhost) 網路通訊。
+- 若連線失敗時，請確認防火牆沒有阻擋 10000~10010 (Mechanical) 與 50051 (SpaceClaim) 的本機 (localhost) 網路通訊。
+
+---
+
+## 👥 多實例動態埠與引導規則
+
+為了支援在同一台電腦上同時開啟多個不同的 ANSYS 視窗（例如：同時開啟 Workbench、Mechanical、SpaceClaim 等多專案情境），v2.0 導入了動態埠與實例註冊表：
+1. **動態分配通訊埠**：各視窗啟動時會自動尋找可用的埠號綁定通訊（Socket 埠自 9885 起；gRPC 埠自 10000 起），避免互相佔用衝突。
+2. **自動註冊**：啟動後會自動在 `workbench_queue/registry/` 目錄中以 PID 命名寫入資訊檔（包含 PID、進程名稱、視窗標題與分配到的埠號）。當視窗關閉時，MCP 伺服器會自動清理過期實例。
+3. **主動詢問引導**：當 AI 客戶端收到「連線 ANSYS」指令且環境中有多個實例或模組時，**AI 必須先主動以多選單或問答方式詢問使用者要連接哪一個模組**，不可擅自盲目猜測連線。

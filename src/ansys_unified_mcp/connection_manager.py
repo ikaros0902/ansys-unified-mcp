@@ -105,5 +105,33 @@ class ConnectionManager:
             return fluent_port
         return None
 
+    def get_registered_instances(self) -> List[Dict]:
+        """讀取 registry 目錄，獲取所有運行中的 ANSYS 實例，過濾已關閉的 PID 並自動清理。"""
+        import json
+        from pathlib import Path
+        
+        reg_dir = Path(__file__).parent.parent.parent / "workbench_queue" / "registry"
+        instances = []
+        if not reg_dir.exists():
+            return instances
+            
+        for f in reg_dir.glob("*.json"):
+            try:
+                pid = int(f.stem)
+                # 檢查進程是否仍然存在，不存在則清理
+                if not psutil.pid_exists(pid):
+                    try: f.unlink()
+                    except: pass
+                    continue
+                    
+                with open(f, "r", encoding="utf-8") as fp:
+                    data = json.load(fp)
+                    instances.append(data)
+            except Exception as e:
+                logger.warning(f"無法讀取註冊檔案 {f}: {e}")
+                
+        return instances
+
 # 全域連線管理器實例
 connection_manager = ConnectionManager()
+
