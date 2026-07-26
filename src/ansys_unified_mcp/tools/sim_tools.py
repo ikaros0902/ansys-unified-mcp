@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from ansys_unified_mcp.shared import mcp
-from ansys_unified_mcp import sim_impl
+from ansys_unified_mcp.drivers import sim_impl
 from typing import Any, List, Dict
 
 @mcp.tool(name='fluent_launch')

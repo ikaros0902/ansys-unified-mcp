@@ -130,10 +130,6 @@ def connect_to_mechanical(port: int = None, pid: int = None) -> str:
                     target_port = int(mech_instances[0]["grpc_port"])
 
         if _mechanical is not None:
-            try:
-                _mechanical.exit()
-            except Exception:
-                pass
             _mechanical = None
             
         _mechanical = mech.connect_to_mechanical(port=target_port)
@@ -158,10 +154,6 @@ def disconnect_from_mechanical() -> str:
     err = _check_connection()
     if err:
         return err
-    try:
-        _mechanical.exit()
-    except Exception:
-        pass
     _mechanical = None
     _port = 0
     return _json({"ok": True, "message": "Disconnected."})
