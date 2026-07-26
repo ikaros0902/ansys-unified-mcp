@@ -93,72 +93,30 @@ $configObject = @{
 $configJson = $configObject | ConvertTo-Json -Depth 5
 Set-Content -Path $mcpConfigPath -Value $configJson -Encoding UTF8
 Write-Host "Generated config file: $mcpConfigPath" -ForegroundColor Green
+# 6. Deploy SpaceClaimMCP ACT Extension (auto-starts gRPC on SpaceClaim launch)
+Write-Host ""
+Write-Host "[6/6] Deploying SpaceClaimMCP ACT Extension..." -ForegroundColor Cyan
+
+$scPluginSource = Join-Path $ScriptDir "spaceclaim_plugin"
+
+foreach ($ver in $ansysVersions) {
+    $actExtDir = "$env:APPDATA\Ansys\v$ver\ACT\extensions"
+    if (-Not (Test-Path $actExtDir)) {
+        New-Item -ItemType Directory -Force -Path $actExtDir | Out-Null
+    }
+
+    # 部署擴充套件資料夾
+    $scPluginTarget = Join-Path $actExtDir "SpaceClaimMCP"
+    if (Test-Path $scPluginTarget) { Remove-Item -Recurse -Force $scPluginTarget }
+    Copy-Item -Path $scPluginSource -Destination $scPluginTarget -Recurse
+    Copy-Item -Path (Join-Path $scPluginSource "SpaceClaimMCP.xml") -Destination $actExtDir -Force
+    Write-Host "Installed SpaceClaimMCP ACT Extension to: $actExtDir" -ForegroundColor Green
+}
+
 Write-Host ""
 Write-Host "===========================================" -ForegroundColor Cyan
 Write-Host "Setup Completed Successfully!" -ForegroundColor Green
-Write-Host "You can now load mcp_config.json into your MCP client (Claude/Cursor)." -ForegroundColor Green
+Write-Host "SpaceClaim gRPC server will auto-start whenever SpaceClaim opens." -ForegroundColor Green
+Write-Host "AI can connect to SpaceClaim at any time without interrupting your work!" -ForegroundColor Green
 Write-Host "===========================================" -ForegroundColor Cyan
 
-# 6. Setup SpaceClaim gRPC API Server (auto-start on SpaceClaim launch)
-Write-Host ""
-Write-Host "[6/6] Configuring SpaceClaim gRPC API Server..." -ForegroundColor Cyan
-
-$scPublishedScripts = "$env:APPDATA\SpaceClaim\Published Scripts"
-$scStartupScript = Join-Path $ScriptDir "workbench_plugin\start_api_server.py"
-
-# 複製啟動腳本到 SpaceClaim Published Scripts
-if (-Not (Test-Path $scPublishedScripts)) {
-    New-Item -ItemType Directory -Force -Path $scPublishedScripts | Out-Null
-}
-Copy-Item -Path $scStartupScript -Destination $scPublishedScripts -Force
-Write-Host "Copied SpaceClaim startup script to: $scPublishedScripts" -ForegroundColor Green
-
-# 確保 ApiServer 增益集已加入 user.config (支援 v251 及其他版本)
-$scConfigDirs = Get-ChildItem "$env:APPDATA\SpaceClaim" -Directory -ErrorAction SilentlyContinue |
-    Where-Object { $_.Name -like "DiscoverySpaceClaim*" }
-
-$apiServerKey = "C:\Program Files\ANSYS Inc\v251\Addins\ApiServer\Presentation.ApiServerAddIn.dll, Presentation.ApiServerAddIn.ApiServerAddIn"
-
-foreach ($dir in $scConfigDirs) {
-    $configFile = Join-Path $dir.FullName "user.config"
-    if (Test-Path $configFile) {
-        $xml = [xml](Get-Content $configFile -Encoding UTF8)
-        # 檢查 ApiServer 是否已在設定中
-        $found = $false
-        $xml.SelectNodes("//item") | ForEach-Object {
-            if ($_.key -eq $apiServerKey) { $found = $true }
-        }
-        if (-Not $found) {
-            Write-Host "Adding ApiServer to SpaceClaim user.config: $configFile" -ForegroundColor Yellow
-            # 找到 AddIns 設定區段並插入新 item
-            $settingNode = $xml.SelectSingleNode("//setting[@name='AddIns']")
-            if ($settingNode) {
-                $dict = $settingNode.SelectSingleNode("value/SettingsDictionary")
-                if ($dict) {
-                    $newItem = $xml.CreateElement("item")
-                    $keyNode = $xml.CreateElement("key")
-                    $keyNode.InnerText = $apiServerKey
-                    $valNode = $xml.CreateElement("value")
-                    $valNode.InnerText = "True"
-                    $newItem.AppendChild($keyNode) | Out-Null
-                    $newItem.AppendChild($valNode) | Out-Null
-                    $dict.AppendChild($newItem) | Out-Null
-                    $xml.Save($configFile)
-                    Write-Host "ApiServer added to $($dir.Name) config." -ForegroundColor Green
-                }
-            }
-        } else {
-            Write-Host "ApiServer already configured in $($dir.Name)." -ForegroundColor Green
-        }
-    }
-}
-
-Write-Host ""
-Write-Host "===========================================" -ForegroundColor Cyan
-Write-Host "  [Action Required] One-time SpaceClaim Setup:" -ForegroundColor Yellow
-Write-Host "  1. Open SpaceClaim" -ForegroundColor Yellow
-Write-Host "  2. File > SpaceClaim Options > File Options" -ForegroundColor Yellow
-Write-Host "  3. Find 'Startup macro' and set it to:" -ForegroundColor Yellow
-Write-Host "     $scPublishedScripts\start_api_server.py" -ForegroundColor White
-Write-Host "  After this one-time step, AI can ALWAYS connect to SpaceClaim!" -ForegroundColor Green
-Write-Host "===========================================" -ForegroundColor Cyan

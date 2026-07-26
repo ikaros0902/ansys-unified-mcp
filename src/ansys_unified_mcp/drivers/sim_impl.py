@@ -614,63 +614,77 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
 
         # ==================== GEOMETRY ====================
         elif name == "geometry_launch":
+            import grpc
             from ansys.geometry.core import Modeler, launch_modeler
             loop = asyncio.get_event_loop()
             port = arguments.get("port")
             host = arguments.get("host", "localhost")
-            transport_mode = arguments.get("transport_mode", "wnua")
-            connect_timeout = arguments.get("connect_timeout", 60)
+            transport_mode = arguments.get("transport_mode", "insecure")
+            connect_timeout = arguments.get("connect_timeout", 15)
+
+            def _grpc_ping(h, p, ping_timeout=3):
+                """用 grpc channel 快速確認 port 是否存活"""
+                ch = grpc.insecure_channel(f"{h}:{p}")
+                try:
+                    grpc.channel_ready_future(ch).result(timeout=ping_timeout)
+                    return True
+                except grpc.FutureTimeoutError:
+                    return False
+                finally:
+                    ch.close()
+
+            def _make_modeler(h, p, tm, to):
+                return Modeler(host=h, port=int(p), transport_mode=tm, timeout=to)
 
             if port:
-                # 模式 1：連接已存在的 SpaceClaim 實例（指定 port）
+                # 模式 1：連接指定 port
+                if not _grpc_ping(host, port):
+                    raise ConnectionError(
+                        f"SpaceClaim gRPC 埠號 {port} 無回應。\n"
+                        f"請在 SpaceClaim Script Editor 中執行啟動腳本：\n"
+                        f"  start_api_server.py（位於 %APPDATA%\\SpaceClaim\\Published Scripts\\）"
+                    )
                 try:
                     _modeler = await asyncio.wait_for(
-                        loop.run_in_executor(None, lambda: Modeler(
-                            host=host, port=int(port), transport_mode=transport_mode
-                        )),
-                        timeout=connect_timeout,
+                        loop.run_in_executor(None, lambda: _make_modeler(host, port, transport_mode, connect_timeout)),
+                        timeout=connect_timeout + 5,
                     )
-                    result = f"已連線 Geometry 建模器 ({host}:{port})"
+                    result = f"已連線 SpaceClaim Geometry 建模器 ({host}:{port})"
                 except asyncio.TimeoutError:
-                    raise TimeoutError(
-                        f"連線 SpaceClaim ({host}:{port}) 超時 ({connect_timeout}s)，"
-                        f"請檢查 SpaceClaim 是否已啟動並監聽 gRPC"
-                    )
+                    raise TimeoutError(f"連線 SpaceClaim ({host}:{port}) 超時 ({connect_timeout}s)")
             else:
-                # 嘗試自動掃描常用 port 連接已運行的 SpaceClaim
+                # 自動掃描常用 port（先 ping 確認再連線）
                 scan_ports = [50051, 50052, 50053, 50054, 50055]
                 connected = False
                 for scan_port in scan_ports:
+                    if not _grpc_ping(host, scan_port):
+                        continue
                     try:
                         _modeler = await asyncio.wait_for(
-                            loop.run_in_executor(None, lambda p=scan_port: Modeler(
-                                host=host, port=p, transport_mode=transport_mode
-                            )),
-                            timeout=5,  # 每個 port 快速嘗試 5 秒
+                            loop.run_in_executor(None, lambda p=scan_port: _make_modeler(host, p, transport_mode, connect_timeout)),
+                            timeout=connect_timeout + 5,
                         )
                         connected = True
-                        result = f"自動偵測到已運行的 SpaceClaim 並連線成功 ({host}:{scan_port})"
+                        result = f"✅ 自動偵測到 SpaceClaim，已連線 ({host}:{scan_port})"
                         logger.info(f"Auto-connected to SpaceClaim on port {scan_port}")
                         break
-                    except Exception:
+                    except Exception as e:
+                        logger.warning(f"Port {scan_port} ping OK but Modeler failed: {e}")
                         continue
 
                 if not connected:
-                    # 模式 2：啟動新的 SpaceClaim 實例
-                    try:
-                        _modeler = await asyncio.wait_for(
-                            loop.run_in_executor(None, lambda: launch_modeler(
-                                mode="spaceclaim", version=251, timeout=180
-                            )),
-                            timeout=connect_timeout,
-                        )
-                        result = "Geometry 建模器已啟動 (SpaceClaim v251)"
-                    except asyncio.TimeoutError:
-                        result = (
-                            f"啟動 SpaceClaim 超時 ({connect_timeout}s)。"
-                            f"SpaceClaim 可能仍在背景啟動中。"
-                            f"請稍等片刻後用 geometry_launch(port=50051) 嘗試連線。"
-                        )
+                    # 所有 port 都無回應，提示使用者在 SpaceClaim 中執行啟動腳本
+                    result = (
+                        "❌ 找不到活躍的 SpaceClaim gRPC 服務（已掃描 50051-50055）。\n\n"
+                        "請在 SpaceClaim Script Editor 中執行以下腳本以啟動連線服務：\n"
+                        "  import System.Reflection, System\n"
+                        "  asm = System.Reflection.Assembly.LoadFrom(\n"
+                        "    r'C:\\Program Files\\ANSYS Inc\\v251\\Addins\\ApiServer\\Presentation.ApiServerAddIn.dll')\n"
+                        "  addon = System.Activator.CreateInstance(asm.GetType('Presentation.ApiServerAddIn.ApiServerAddIn'))\n"
+                        "  addon.Initialize(); addon.Connect()\n\n"
+                        "或執行 setup.ps1 並設定 Startup macro，讓 SpaceClaim 每次開啟時自動啟動。"
+                    )
+
 
         elif name.startswith("geometry_"):
             if _modeler is None:

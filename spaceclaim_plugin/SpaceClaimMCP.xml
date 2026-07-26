@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="2026" minorversion="1" name="SpaceClaimMCP">
+  <guid shortid="SpaceClaimMCP">3a7f2b91-84cd-4f11-93e2-d1b6e04a8c52</guid>
+  <author>Text-to-CAE</author>
+  <description>Auto-starts gRPC API Server in SpaceClaim for MCP AI connection.</description>
+  <script src="main.py" />
+  <interface context="SpaceClaim">
+    <toolbar name="SpaceClaim MCP" caption="SpaceClaim MCP">
+      <entry name="Start API Server">
+        <callbacks>
+          <onclick>start_grpc_server</onclick>
+        </callbacks>
+      </entry>
+    </toolbar>
+  </interface>
+</extension>
