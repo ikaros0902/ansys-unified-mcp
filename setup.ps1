@@ -93,30 +93,35 @@ $configObject = @{
 $configJson = $configObject | ConvertTo-Json -Depth 5
 Set-Content -Path $mcpConfigPath -Value $configJson -Encoding UTF8
 Write-Host "Generated config file: $mcpConfigPath" -ForegroundColor Green
-# 6. Deploy SpaceClaimMCP ACT Extension (auto-starts gRPC on SpaceClaim launch)
+# 6. Configure SpaceClaim Auto gRPC Startup
 Write-Host ""
-Write-Host "[6/6] Deploying SpaceClaimMCP ACT Extension..." -ForegroundColor Cyan
+Write-Host "[6/6] Configuring SpaceClaim Auto gRPC Startup..." -ForegroundColor Cyan
 
-$scPluginSource = Join-Path $ScriptDir "spaceclaim_plugin"
-
-foreach ($ver in $ansysVersions) {
-    $actExtDir = "$env:APPDATA\Ansys\v$ver\ACT\extensions"
-    if (-Not (Test-Path $actExtDir)) {
-        New-Item -ItemType Directory -Force -Path $actExtDir | Out-Null
-    }
-
-    # 部署擴充套件資料夾
-    $scPluginTarget = Join-Path $actExtDir "SpaceClaimMCP"
-    if (Test-Path $scPluginTarget) { Remove-Item -Recurse -Force $scPluginTarget }
-    Copy-Item -Path $scPluginSource -Destination $scPluginTarget -Recurse
-    Copy-Item -Path (Join-Path $scPluginSource "SpaceClaimMCP.xml") -Destination $actExtDir -Force
-    Write-Host "Installed SpaceClaimMCP ACT Extension to: $actExtDir" -ForegroundColor Green
+$programDataSCAddins = "$env:ProgramData\SpaceClaim\AddIns"
+if (-Not (Test-Path $programDataSCAddins)) {
+    New-Item -ItemType Directory -Force -Path $programDataSCAddins | Out-Null
 }
+
+$manifestPath = Join-Path $programDataSCAddins "ApiServerAddIn.Manifest.xml"
+$manifestContent = @"
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Auto-configured by ANSYS Unified MCP Server Setup -->
+<AddIns>
+  <AddIn name="Discovery Api Server"
+         description="Discovery remote API server."
+         assembly="C:\Program Files\ANSYS Inc\v251\Addins\ApiServer\Presentation.ApiServerAddIn.dll"
+         typename="Presentation.ApiServerAddIn.ApiServerAddIn"
+         host="SameAppDomain"/>
+</AddIns>
+"@
+
+Set-Content -Path $manifestPath -Value $manifestContent -Encoding UTF8
+Write-Host "Configured SpaceClaim auto gRPC at: $manifestPath" -ForegroundColor Green
 
 Write-Host ""
 Write-Host "===========================================" -ForegroundColor Cyan
 Write-Host "Setup Completed Successfully!" -ForegroundColor Green
-Write-Host "SpaceClaim gRPC server will auto-start whenever SpaceClaim opens." -ForegroundColor Green
+Write-Host "SpaceClaim gRPC server will auto-start whenever SpaceClaim opens (on port 50051)." -ForegroundColor Green
 Write-Host "AI can connect to SpaceClaim at any time without interrupting your work!" -ForegroundColor Green
 Write-Host "===========================================" -ForegroundColor Cyan
 
