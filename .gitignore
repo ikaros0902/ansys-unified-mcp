@@ -21,8 +21,11 @@ __pycache__/
 
 # 執行日誌與暫存
 *.log
+*.txt
 workbench_queue/*
 !workbench_queue/.gitkeep
+**/workbench_queue/*
+!**/workbench_queue/.gitkeep
 
 # Generated files
 results/
