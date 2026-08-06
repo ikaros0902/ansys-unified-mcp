@@ -106,5 +106,6 @@ config.py               偵測 ANSYS 安裝（registry / 環境變數），找�
 ## 8. 相關文件
 
 - `ARCHITECTURE.md`：分層職責、工具命名規則、`_json` 回傳信封慣例（C2）。
+- `pyansys-mapping-and-roadmap.md`：Workbench/授權模組 ↔ 官方 pyansys 套件 ↔ 官方 MCP ↔ 安裝現況對照，及專案後續規劃 roadmap。
 - `README.md`：安裝與啟動（如存在）。
 - `specs/*.md`：個別功能規格（如存在）。
