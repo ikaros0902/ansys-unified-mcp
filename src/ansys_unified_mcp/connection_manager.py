@@ -15,13 +15,17 @@ class ConnectionManager:
         self.config = config
         
     def _is_port_open(self, port: int, host: str = "127.0.0.1") -> bool:
-        """測試特定的 TCP port 是否在監聽中。"""
+        """測試特定的 TCP port 是否在監聽中。
+
+        Windows 上被拒絕的連線可能丟 ConnectionRefusedError、ConnectionResetError
+        或一般 OSError；一律視為未開啟，避免例外外溢。
+        """
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-            s.settimeout(0.1)
+            s.settimeout(0.2)
             try:
                 s.connect((host, port))
                 return True
-            except (socket.timeout, ConnectionRefusedError):
+            except OSError:
                 return False
 
     def scan_for_mechanical_grpc(self, start_port: int = 10000, end_port: int = 10010) -> Optional[int]:
@@ -88,22 +92,21 @@ class ConnectionManager:
             return True
         return False
         
+    def scan_for_fluent_grpc(self, start_port: int = 50052, end_port: int = 50070) -> Optional[int]:
+        """掃描 Fluent gRPC server 埠（Fluent 以 -sgui/server 模式開啟時綁定的埠）。"""
+        for port in range(start_port, end_port + 1):
+            if self._is_port_open(port):
+                logger.info(f"偵測到可能的 Fluent gRPC 服務於 Port {port}")
+                return port
+        return None
+
     def attach_to_fluent(self) -> Optional[int]:
-        """
-        偵測 Fluent process。
-        若 Fluent 透過啟動掛鉤自動開啟 gRPC，我們這裡可以掃描其預設 Port。
-        預設 Fluent gRPC 通常由 Scheme 腳本指定，假設我們指定 50052。
-        """
+        """偵測執行中的 Fluent，並掃描其 gRPC 埠範圍（不再寫死單一埠）。"""
         procs = self.find_running_ansys_processes()["fluent"]
         if not procs:
             return None
-            
         logger.info(f"發現執行中的 Fluent (PID: {procs[0].info['pid']})")
-        # 假設 Fluent 掛鉤將 Port 寫入暫存檔或預設為 50052
-        fluent_port = 50052
-        if self._is_port_open(fluent_port):
-            return fluent_port
-        return None
+        return self.scan_for_fluent_grpc()
 
     def get_registered_instances(self) -> List[Dict]:
         """讀取 registry 目錄，獲取所有運行中的 ANSYS 實例，過濾已關閉的 PID 並自動清理。"""

@@ -1,13 +1,18 @@
 # encoding: utf-8
-"""ACT entry points for Workbench MCP.
+"""ACT entry point for Workbench MCP (slim).
 
-The plugin supports two Mechanical-side transports:
-- file queue processing on the Mechanical UI/script context
-- a localhost socket timer bridge for repeated lightweight requests
+On load inside Mechanical (AnsysWBU), this plugin:
+- auto-starts the Mechanical gRPC server on a free port (10000+), and
+- registers the instance (pid, app name, gRPC port) into the MCP registry dir,
 
-Set WORKBENCH_MCP_ROOT to the cloned Workbench MCP folder when the plugin is
-installed outside this repository, for example in the user's ACT extensions
-directory.
+so the MCP server can discover and connect to a running Mechanical via
+PyMechanical. The previous file-queue and socket-timer transports were removed
+during the architecture refactor (superseded by gRPC + the Workbench-journal
+bridge).
+
+Set WORKBENCH_MCP_QUEUE_ROOT (or WORKBENCH_MCP_ROOT) so the registry lands in
+the same folder the MCP server reads. If neither is set, the registry defaults
+to a folder next to this plugin.
 """
 
 from __future__ import print_function
@@ -23,16 +28,11 @@ except Exception:
 
 _PLUGIN_DIR = os.path.abspath(os.path.dirname(__file__))
 _PROJECT_ROOT = os.environ.get("WORKBENCH_MCP_ROOT") or os.path.abspath(os.path.join(_PLUGIN_DIR, ".."))
-_PLUGIN_ROOT = _PLUGIN_DIR
-_QUEUE_ROOT = os.environ.get("WORKBENCH_MCP_QUEUE_ROOT") or r"F:\Ming_python\ansys-unified-mcp\workbench_queue"
 
-_QUEUE_PROCESSOR_PATH = os.path.join(_PLUGIN_ROOT, "mechanical_queue_processor.py")
-_SOCKET_TIMER_PATH = os.path.join(_PLUGIN_ROOT, "mechanical_socket_timer_v7.py")
-_AUTO_START_SOCKET_TIMER = os.environ.get("WORKBENCH_MCP_AUTO_START_SOCKET", "1") != "0"
-_AUTO_START_QUEUE_TIMER = os.environ.get("WORKBENCH_MCP_AUTO_START_QUEUE", "1") != "0"
-_QUEUE_TIMER_INTERVAL_MS = int(os.environ.get("WORKBENCH_MCP_QUEUE_INTERVAL_MS", "1500"))
+# Registry root: prefer explicit env, else <project_root>/workbench_queue.
+# (No hardcoded machine-specific fallback.)
+_QUEUE_ROOT = os.environ.get("WORKBENCH_MCP_QUEUE_ROOT") or os.path.join(_PROJECT_ROOT, "workbench_queue")
 _DEBUG_LOG_FILE = os.path.join(_QUEUE_ROOT, "act_main_debug.log")
-_REQUEST_DIR = os.path.join(_QUEUE_ROOT, "requests")
 
 
 def _mkdirs(path):
@@ -62,88 +62,6 @@ def _log(message):
         print("[WorkbenchMCP] " + str(message))
 
 
-def process_mcp_queue(analysis=None):
-    _debug_log("process_mcp_queue callback entered")
-    _log("Processing MCP queue with: " + _QUEUE_PROCESSOR_PATH)
-    namespace = {}
-    namespace.update(globals())
-    with open(_QUEUE_PROCESSOR_PATH, "r") as stream:
-        code = stream.read()
-    exec(compile(code, _QUEUE_PROCESSOR_PATH, "exec"), namespace, namespace)
-    _log("MCP queue processing finished")
-
-
-def _pending_request_count():
-    try:
-        if not os.path.isdir(_REQUEST_DIR):
-            return 0
-        return len([name for name in os.listdir(_REQUEST_DIR) if name.lower().endswith(".json")])
-    except Exception as exc:
-        _debug_log("pending request count failed: " + str(exc))
-        return 0
-
-
-def _auto_queue_tick(sender=None, args=None):
-    sentinel = "_WORKBENCH_MCP_AUTO_QUEUE_PROCESSING"
-    if getattr(_builtins, sentinel, False):
-        return
-    count = _pending_request_count()
-    if count <= 0:
-        return
-    setattr(_builtins, sentinel, True)
-    try:
-        _log("Auto queue timer found %d request(s); processing now" % count)
-        process_mcp_queue()
-    except Exception as exc:
-        _log("Auto queue processing failed: " + str(exc))
-    finally:
-        setattr(_builtins, sentinel, False)
-
-
-def start_auto_queue_timer(analysis=None):
-    if getattr(_builtins, "_WORKBENCH_MCP_AUTO_QUEUE_TIMER_RUNNING", False):
-        _debug_log("auto queue timer already running")
-        return
-    import clr
-    clr.AddReference("System.Windows.Forms")
-    from System.Windows.Forms import Timer
-    timer = Timer()
-    timer.Interval = _QUEUE_TIMER_INTERVAL_MS
-    timer.Tick += _auto_queue_tick
-    timer.Start()
-    setattr(_builtins, "_WORKBENCH_MCP_AUTO_QUEUE_TIMER", timer)
-    setattr(_builtins, "_WORKBENCH_MCP_AUTO_QUEUE_TIMER_RUNNING", True)
-    _log("Auto MCP queue timer started; interval=%d ms" % _QUEUE_TIMER_INTERVAL_MS)
-
-
-def stop_auto_queue_timer(analysis=None):
-    timer = getattr(_builtins, "_WORKBENCH_MCP_AUTO_QUEUE_TIMER", None)
-    if timer is not None:
-        try:
-            timer.Stop()
-        except Exception:
-            pass
-    setattr(_builtins, "_WORKBENCH_MCP_AUTO_QUEUE_TIMER", None)
-    setattr(_builtins, "_WORKBENCH_MCP_AUTO_QUEUE_TIMER_RUNNING", False)
-    _log("Auto MCP queue timer stopped")
-
-
-def show_mcp_queue_info(analysis=None):
-    _debug_log("show_mcp_queue_info callback entered")
-    _log("MCP project root: " + _PROJECT_ROOT)
-    _log("MCP queue root: " + _QUEUE_ROOT)
-    _log("Submit requests through the MCP queue tools, then use Process MCP Queue or the auto queue timer.")
-
-
-def _load_socket_timer_namespace():
-    namespace = globals()
-    namespace["WORKBENCH_MCP_LOAD_ONLY"] = True
-    with open(_SOCKET_TIMER_PATH, "r") as stream:
-        code = stream.read()
-    exec(compile(code, _SOCKET_TIMER_PATH, "exec"), namespace, namespace)
-    return namespace
-
-
 def find_free_port(start_port, max_attempts=100):
     import socket
     for port in range(start_port, start_port + max_attempts):
@@ -158,60 +76,55 @@ def find_free_port(start_port, max_attempts=100):
     raise RuntimeError("No free port found in range %d-%d" % (start_port, start_port + max_attempts))
 
 
-def _register_instance(socket_port=None, grpc_port=None):
+def _register_instance(grpc_port=None):
     try:
-        import os
         import System
-        
+
         pid = os.getpid()
         proc = System.Diagnostics.Process.GetCurrentProcess()
         proc_name = proc.ProcessName
         title = proc.MainWindowTitle or proc_name
-        
+
         registry_dir = os.path.join(_QUEUE_ROOT, "registry")
         if not os.path.isdir(registry_dir):
             try:
                 os.makedirs(registry_dir)
-            except:
+            except Exception:
                 pass
-                
+
         reg_file = os.path.join(registry_dir, "%d.json" % pid)
-        
+
         data = {}
         try:
             import json
             if os.path.isfile(reg_file):
                 with open(reg_file, "r") as fp:
                     data = json.load(fp)
-        except:
+        except Exception:
             pass
-            
+
         data["pid"] = pid
         data["app_name"] = proc_name
         data["app_title"] = title
-        if socket_port is not None:
-            data["socket_timer_port"] = socket_port
         if grpc_port is not None:
             data["grpc_port"] = grpc_port
         data["last_seen"] = time.time()
-        
+
         try:
             if "AnsysFWW" in proc_name:
                 data["project_path"] = GetActiveProject().FilePath
-        except:
+        except Exception:
             pass
-            
+
         try:
             import json
             with open(reg_file, "w") as fp:
                 json.dump(data, fp)
-        except:
+        except Exception:
             serialized = "{"
             serialized += '"pid": %d, ' % data["pid"]
             serialized += '"app_name": "%s", ' % data["app_name"].replace('\\', '\\\\').replace('"', '\\"')
             serialized += '"app_title": "%s", ' % data["app_title"].replace('\\', '\\\\').replace('"', '\\"')
-            if "socket_timer_port" in data:
-                serialized += '"socket_timer_port": %d, ' % data["socket_timer_port"]
             if "grpc_port" in data:
                 serialized += '"grpc_port": %d, ' % data["grpc_port"]
             if "project_path" in data:
@@ -220,84 +133,32 @@ def _register_instance(socket_port=None, grpc_port=None):
             serialized += "}"
             with open(reg_file, "w") as fp:
                 fp.write(serialized)
-                
-        _log("Registered: PID=%d (%s) with socket_port=%s, grpc_port=%s" % (pid, proc_name, str(socket_port), str(grpc_port)))
+
+        _log("Registered: PID=%d (%s) with grpc_port=%s" % (pid, proc_name, str(grpc_port)))
     except Exception as exc:
         _log("Failed to register app: " + str(exc))
 
 
-def start_mcp_socket_timer(analysis=None):
-    _debug_log("start_mcp_socket_timer callback entered")
-    _log("Starting non-blocking socket timer with: " + _SOCKET_TIMER_PATH)
-    namespace = _load_socket_timer_namespace()
-    state = namespace["start_socket_timer_bridge"]()
-    _log("Socket Timer Start state: " + str(state))
-    
-    socket_port = state.get("port")
-    if socket_port:
-        _register_instance(socket_port=socket_port)
-        
-    try:
-        start_auto_queue_timer()
-    except Exception as exc:
-        _log("Auto queue timer start after socket start failed: " + str(exc))
-
-
-def stop_mcp_socket_timer(analysis=None):
-    _debug_log("stop_mcp_socket_timer callback entered")
-    _log("Stopping non-blocking socket timer")
-    namespace = _load_socket_timer_namespace()
-    state = namespace["stop_socket_timer_bridge"]()
-    _log("Socket Timer Stop state: " + str(state))
-
-
-def _auto_start_mcp_socket_timer():
-    if not _AUTO_START_SOCKET_TIMER:
-        return
-    sentinel = "_WORKBENCH_MCP_MAIN_AUTOSTART_ATTEMPTED"
-    if getattr(_builtins, sentinel, False):
-        return
-    setattr(_builtins, sentinel, True)
-    try:
-        _log("Auto-starting Workbench MCP Socket Timer v7")
-        start_mcp_socket_timer()
-    except Exception as exc:
-        _log("Auto-start skipped or failed: " + str(exc))
-
-
-def _auto_start_queue_timer():
-    if not _AUTO_START_QUEUE_TIMER:
-        return
-    sentinel = "_WORKBENCH_MCP_AUTO_QUEUE_TIMER_ATTEMPTED"
-    if getattr(_builtins, sentinel, False):
-        return
-    setattr(_builtins, sentinel, True)
-    try:
-        start_auto_queue_timer()
-    except Exception as exc:
-        _log("Auto queue timer start skipped or failed: " + str(exc))
-
 def _auto_start_grpc_server():
-    """自動開啟 Mechanical 的 gRPC Server 供外部 PyMechanical (MCP) 連接。"""
+    """Auto-start the Mechanical gRPC server for external PyMechanical (MCP) clients."""
     sentinel = "_WORKBENCH_MCP_GRPC_STARTED"
     if getattr(_builtins, sentinel, False):
         return
     setattr(_builtins, sentinel, True)
-    
+
     import System
     proc_name = System.Diagnostics.Process.GetCurrentProcess().ProcessName
     if "AnsysWBU" not in proc_name:
         return
-        
+
     try:
         grpc_port = find_free_port(10000)
-        
         if hasattr(ExtAPI, "Application") and hasattr(ExtAPI.Application, "StartGrpcServer"):
             ExtAPI.Application.StartGrpcServer(grpc_port)
             _log("Auto-started Mechanical gRPC Server on port %d via ExtAPI.Application" % grpc_port)
             _register_instance(grpc_port=grpc_port)
             return
-            
+
         import Ansys.ACT.Mechanical
         Ansys.ACT.Mechanical.MechanicalAPI.Instance.ApplicationAPI.StartGrpcServer(grpc_port)
         _log("Auto-started Mechanical gRPC Server on port %d via MechanicalAPI" % grpc_port)
@@ -305,7 +166,12 @@ def _auto_start_grpc_server():
     except Exception as exc:
         _log("Failed to auto-start gRPC Server: " + str(exc))
 
+
+def show_mcp_info(analysis=None):
+    _log("MCP project root: " + _PROJECT_ROOT)
+    _log("MCP registry root: " + _QUEUE_ROOT)
+    _log("The MCP server connects to this Mechanical via the auto-started gRPC port (see registry).")
+
+
 _debug_log("main.py imported from " + __file__)
-_auto_start_mcp_socket_timer()
-_auto_start_queue_timer()
 _auto_start_grpc_server()

@@ -1,7 +1,17 @@
-from __future__ import annotations
+"""Workbench / Mechanical batch job tools.
 
-from dotenv import load_dotenv
-from fastmcp import FastMCP
+Async job launcher for headless one-shot runs (RunWB2 -R journal and
+ansys-mechanical.exe -i script), with job status/log tracking. This is the
+"batch subprocess" transport (needs no ACT plugin and no pre-running instance).
+
+The file-queue and socket-timer bridges were removed during the architecture
+refactor: they required an in-Mechanical plugin, duplicated the gRPC and
+Workbench-journal transports, and carried a cross-process env-coupling bug.
+Live in-application execution is provided by the Workbench-journal bridge in
+tools/workbench_bridge.py (execute_mechanical_script_live / execute_spaceclaim_script_live).
+"""
+
+from __future__ import annotations
 
 from ansys_unified_mcp.bridges.workbench_bridge import (
     detect_workbench_environment,
@@ -11,26 +21,6 @@ from ansys_unified_mcp.bridges.workbench_bridge import (
     list_workbench_jobs,
     read_workbench_job_log,
 )
-from ansys_unified_mcp.bridges.file_queue import (
-    list_queue as queue_list,
-    queue_execute_python,
-    queue_get_state,
-    queue_install_info,
-    queue_ping,
-    read_response as queue_read_response,
-    submit_request as queue_submit_request,
-    trigger_socket_process_queue,
-)
-from ansys_unified_mcp.bridges.socket_timer import (
-    socket_timer_execute_python,
-    socket_timer_ping,
-    socket_timer_state,
-    socket_timer_stop,
-)
-
-
-load_dotenv()
-
 from ansys_unified_mcp.shared import mcp
 
 
@@ -59,7 +49,7 @@ def mechanical_run_script_tool(
     project_file: str | None = None,
     script_args: str | None = None,
 ) -> dict:
-    """Launch ansys-mechanical.exe for a Mechanical Python script."""
+    """Launch ansys-mechanical.exe for a Mechanical Python script (headless batch)."""
     return launch_mechanical_script(
         script_path=script_path,
         revision=revision,
@@ -85,79 +75,3 @@ def workbench_job_log_tool(job_id: str, stream: str = "stdout", tail_chars: int 
 def workbench_list_jobs_tool(limit: int = 20) -> dict:
     """List recent Workbench or Mechanical jobs."""
     return list_workbench_jobs(limit=limit)
-
-
-@mcp.tool()
-def workbench_queue_install_info_tool() -> dict:
-    """Show paths and instructions for the Mechanical file queue bridge."""
-    return queue_install_info()
-
-
-@mcp.tool()
-def workbench_queue_list_tool() -> dict:
-    """List pending queue requests, responses, and recent archive entries."""
-    return queue_list()
-
-
-@mcp.tool()
-def workbench_queue_submit_tool(action: str, payload: dict | None = None) -> dict:
-    """Submit a raw request to the Mechanical file queue."""
-    return queue_submit_request(action=action, payload=payload)
-
-
-@mcp.tool()
-def workbench_queue_response_tool(request_id: str) -> dict:
-    """Read a queued Mechanical response by request id."""
-    return queue_read_response(request_id)
-
-
-@mcp.tool()
-def workbench_queue_ping_tool(wait_timeout: float = 2.0) -> dict:
-    """Submit a queue ping and wait briefly for the Mechanical-side response."""
-    return queue_ping(wait_timeout=wait_timeout)
-
-
-@mcp.tool()
-def workbench_queue_state_tool(wait_timeout: float = 2.0) -> dict:
-    """Read project state through the Mechanical queue bridge."""
-    return queue_get_state(wait_timeout=wait_timeout)
-
-
-@mcp.tool()
-def workbench_queue_execute_python_tool(code: str, wait_timeout: float = 2.0) -> dict:
-    """Execute Python inside Mechanical through the queue bridge."""
-    return queue_execute_python(code=code, wait_timeout=wait_timeout)
-
-
-@mcp.tool()
-def workbench_queue_process_with_socket_timer_tool(timeout: float = 2.0) -> dict:
-    """Ask the socket timer bridge to process pending queue requests."""
-    return trigger_socket_process_queue(timeout=timeout)
-
-
-@mcp.tool()
-def workbench_socket_timer_ping_tool(timeout: float = 10.0) -> dict:
-    """Ping the Mechanical socket timer bridge."""
-    return socket_timer_ping(timeout=timeout)
-
-
-@mcp.tool()
-def workbench_socket_timer_state_tool(timeout: float = 10.0) -> dict:
-    """Read state from the Mechanical socket timer bridge."""
-    return socket_timer_state(timeout=timeout)
-
-
-@mcp.tool()
-def workbench_socket_timer_execute_python_tool(code: str, timeout: float = 60.0) -> dict:
-    """Execute Python inside Mechanical through the socket timer bridge."""
-    return socket_timer_execute_python(code=code, timeout=timeout)
-
-
-@mcp.tool()
-def workbench_socket_timer_stop_tool(timeout: float = 10.0) -> dict:
-    """Stop the Mechanical socket timer bridge."""
-    return socket_timer_stop(timeout=timeout)
-
-
-if __name__ == "__main__":
-    mcp.run(transport='stdio')

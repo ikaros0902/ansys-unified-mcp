@@ -4,33 +4,22 @@
 from __future__ import annotations
 import json
 import os
-import sys
 from datetime import datetime
 from pathlib import Path
-from mcp.server.fastmcp import FastMCP
-
-_mechanical = None
-_port = 0
-__version__ = "1.0.0"
 
 from ansys_unified_mcp.shared import mcp
+from ansys_unified_mcp.products.mechanical import controller, _esc
 
-# Use forward slashes so embedded paths in IronPython strings are safe on Windows
-_OUTFILE = (Path(__file__).parent / "mech_out.txt").as_posix()
-_SCRIPTFILE = (Path(__file__).parent / "mech_script.py").as_posix()
+__version__ = "2.0.0"
 
 
 def _json(data):
     return json.dumps(data, indent=2, ensure_ascii=False)
 
 
-def _esc(s: str) -> str:
-    """Escape a user string for safe embedding in an IronPython double-quoted string literal."""
-    return s.replace("\\", "\\\\").replace('"', '\\"')
-
-
 def _check_connection():
-    if _mechanical is None:
+    """Return a standard error payload when no Mechanical session is bound."""
+    if not controller.is_connected():
         return _json(
             {"ok": False, "error": "Not connected to Mechanical. Call connect_to_mechanical first."}
         )
@@ -38,56 +27,8 @@ def _check_connection():
 
 
 def _run(script):
-    """Run script in Mechanical, capturing print() output via temp files."""
-    try:
-        # Write the user script to a file so we avoid string-escaping issues
-        with open(_SCRIPTFILE, "w", encoding="utf-8") as fh:
-            fh.write(script)
-
-        # Wrapper: redirect stdout, exec the script file, write output to disk.
-        # Uses 'with' for the output file so IronPython's .NET GC closes the
-        # handle before run_python_script() returns (plain open().write()
-        # leaves it locked). Error text is captured so callers see it too.
-        wrapper = (
-            "import sys as _sys\n"
-            "class _Cap:\n"
-            "    def __init__(self): self.d=[]\n"
-            "    def write(self,s): self.d.append(s)\n"
-            "    def flush(self): pass\n"
-            "_cap=_Cap()\n"
-            "_orig=_sys.stdout\n"
-            "_sys.stdout=_cap\n"
-            "try:\n"
-            "    import io as _io\n"
-            '    with _io.open(r"'
-            + _SCRIPTFILE.replace('"', '\\"')
-            + "\", encoding='utf-8') as _sf: _code=_sf.read()\n"
-            "    exec(_code, globals())\n"
-            "except Exception as _e:\n"
-            "    _cap.d.append('Script error: ' + str(_e) + '\\n')\n"
-            "finally:\n"
-            "    _sys.stdout=_orig\n"
-            '    with open(r"' + _OUTFILE.replace('"', '\\"') + "\", 'w') as _f:\n"
-            "        _f.write(''.join(_cap.d))\n"
-        )
-
-        _mechanical.run_python_script(wrapper)
-
-        try:
-            with open(_OUTFILE, "r", encoding="utf-8") as fh:
-                result = fh.read().strip()
-        except Exception:
-            result = ""
-
-        for path in (_OUTFILE, _SCRIPTFILE):
-            try:
-                os.remove(path)
-            except Exception:
-                pass
-
-        return result if result else "(done)"
-    except Exception as e:
-        return "Error: " + str(e)
+    """Run a script inside the current Mechanical session, capturing output."""
+    return controller.run_script(script)
 
 
 @mcp.tool()
@@ -100,76 +41,44 @@ def list_instances() -> str:
 
 @mcp.tool()
 def connect_to_mechanical(port: int = None, pid: int = None) -> str:
-    """Connect to ANSYS Mechanical via gRPC. 
+    """Connect to ANSYS Mechanical via gRPC.
     Args:
         port: gRPC connection port. If omitted, connects to the first running instance.
         pid: gRPC connection PID. Connects to the Mechanical instance with this PID.
     """
-    global _mechanical, _port
-    try:
-        import ansys.mechanical.core as mech
-        from ansys_unified_mcp.connection_manager import connection_manager
+    return _json(controller.connect(port=port, pid=pid))
 
-        target_port = port
-        if target_port is None:
-            instances = connection_manager.get_registered_instances()
-            mech_instances = [inst for inst in instances if inst.get("app_name") == "AnsysWBU" and "grpc_port" in inst]
-            
-            if pid is not None:
-                match = [inst for inst in mech_instances if inst["pid"] == pid]
-                if not match:
-                    return _json({"ok": False, "error": f"No registered Mechanical instance found with PID {pid}."})
-                target_port = int(match[0]["grpc_port"])
-            else:
-                if not mech_instances:
-                    scanned_port = connection_manager.scan_for_mechanical_grpc()
-                    if scanned_port is None:
-                        return _json({"ok": False, "error": "No running Mechanical instance registered or detected."})
-                    target_port = scanned_port
-                else:
-                    target_port = int(mech_instances[0]["grpc_port"])
 
-        if _mechanical is not None:
-            _mechanical = None
-            
-        _mechanical = mech.connect_to_mechanical(port=target_port)
-        _port = target_port
-        info = _run(
-            "model = ExtAPI.DataModel.Project.Model\n"
-            'print("Connected! Analyses: " + str(len(model.Analyses)))\n'
-            "for i, a in enumerate(model.Analyses):\n"
-            '    print("  [" + str(i) + "] " + str(a.Name) + " (" + str(a.AnalysisType) + ")")\n'
-        )
-        return _json({"ok": True, "port": target_port, "info": info})
-    except ImportError:
-        return _json({"ok": False, "error": "ansys-mechanical-core not installed."})
-    except Exception as e:
-        return _json({"ok": False, "error": str(e)})
+@mcp.tool()
+def launch_mechanical(batch: bool = True) -> str:
+    """Launch a new headless Mechanical instance via PyMechanical (no pre-running instance needed).
+    Args:
+        batch: Launch in batch (headless) mode. Set False for a visible session.
+    """
+    return _json(controller.launch(batch=batch))
 
 
 @mcp.tool()
 def disconnect_from_mechanical() -> str:
-    """Disconnect from Mechanical."""
-    global _mechanical, _port
+    """Disconnect the current Mechanical session."""
     err = _check_connection()
     if err:
         return err
-    _mechanical = None
-    _port = 0
-    return _json({"ok": True, "message": "Disconnected."})
+    return _json(controller.disconnect())
 
 
 @mcp.tool()
 def check_mechanical_connection() -> str:
-    """Check connection status."""
-    if _mechanical is None:
+    """Check connection status (lists all bound Mechanical sessions)."""
+    status = controller.status()
+    if not status["connected"]:
         return _json({"connected": False})
     info = _run(
         "model = ExtAPI.DataModel.Project.Model\n"
         "for i, a in enumerate(model.Analyses):\n"
         '    print("[" + str(i) + "] " + str(a.Name) + " (" + str(a.AnalysisType) + ")")\n'
     )
-    return _json({"connected": True, "port": _port, "info": info})
+    return _json({"connected": True, **status, "info": info})
 
 
 @mcp.tool()
@@ -1373,6 +1282,7 @@ def convert_part_to_point_mass(part_name: str, proximity_multiplier: float = 3.0
 
 
 def main():
+    import sys
     print("ANSYS Mechanical MCP Server v" + __version__, file=sys.stderr)
     print("Starting...", file=sys.stderr)
     mcp.run(transport='stdio')

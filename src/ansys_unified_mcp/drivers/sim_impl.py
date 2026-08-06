@@ -14,8 +14,6 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from mcp.server import Server
-from mcp.server.stdio import stdio_server
 from mcp.types import Tool, TextContent
 
 # ===================================================================
@@ -37,7 +35,6 @@ logger = logging.getLogger("ansys-mcp")
 # Global sessions
 # ---------------------------------------------------------------------------
 _fluent_session = None
-_mechanical_session = None
 _modeler = None       # PyAnsys Geometry Modeler
 _current_design = None  # track active design name
 
@@ -103,38 +100,6 @@ FLUENT_TOOLS = [
          inputSchema={"type": "object", "properties": {}}),
 ]
 
-MECHANICAL_TOOLS = [
-    Tool(name="mechanical_launch", description="連線/啟動 Ansys Mechanical（指定埠則連線現有例項，否則啟動 batch 模式）",
-         inputSchema={"type": "object", "properties": {
-             "port": {"type": "integer", "description": "連線現有例項的埠號，不填則啟動新 batch 例項"}
-         }}),
-    Tool(name="mechanical_import", description="匯入幾何檔案",
-         inputSchema={"type": "object", "properties": {"file_path": {"type": "string"}}, "required": ["file_path"]}),
-    Tool(name="mechanical_set_material", description="分配材料",
-         inputSchema={"type": "object", "properties": {"body": {"type": "string"}, "material": {"type": "string"}},
-             "required": ["body", "material"]}),
-    Tool(name="mechanical_mesh", description="劃分網格",
-         inputSchema={"type": "object", "properties": {"element_size": {"type": "number"},
-             "method": {"type": "string", "enum": ["automatic", "tetrahedrons", "hex_dominant"]}}}),
-    Tool(name="mechanical_apply_load", description="施載入荷/約束",
-         inputSchema={"type": "object", "properties": {
-             "load_type": {"type": "string", "enum": ["force", "pressure", "fixed_support", "displacement"]},
-             "location": {"type": "string"}, "magnitude": {"type": "number"},
-             "direction": {"type": "array", "items": {"type": "number"}}}, "required": ["load_type", "location"]}),
-    Tool(name="mechanical_solve", description="執行求解", inputSchema={"type": "object", "properties": {}}),
-    Tool(name="mechanical_get_result", description="提取結果",
-         inputSchema={"type": "object", "properties": {
-             "result_type": {"type": "string", "enum": ["total_deformation", "equivalent_stress", "equivalent_strain"]}},
-             "required": ["result_type"]}),
-    Tool(name="mechanical_list", description="列出幾何體/Named Selections",
-         inputSchema={"type": "object", "properties": {
-             "what": {"type": "string", "enum": ["bodies", "named_selections"], "default": "bodies"}}}),
-    Tool(name="mechanical_script", description="執行 IronPython 指令碼",
-         inputSchema={"type": "object", "properties": {"script": {"type": "string"}}, "required": ["script"]}),
-    Tool(name="mechanical_status", description="Mechanical 連線狀態", inputSchema={"type": "object", "properties": {}}),
-    Tool(name="mechanical_exit", description="關閉 Mechanical", inputSchema={"type": "object", "properties": {}}),
-]
-
 GEOMETRY_TOOLS = [
     Tool(name="geometry_launch", description="啟動 Geometry 建模器或連線現有 SpaceClaim 實例",
          inputSchema={"type": "object", "properties": {
@@ -175,7 +140,7 @@ GEOMETRY_TOOLS = [
     Tool(name="geometry_close", description="關閉 Geometry 建模器", inputSchema={"type": "object", "properties": {}}),
 ]
 
-ALL_TOOLS = FLUENT_TOOLS + MECHANICAL_TOOLS + GEOMETRY_TOOLS
+ALL_TOOLS = FLUENT_TOOLS + GEOMETRY_TOOLS
 
 # ===================================================================
 # GEOMETRY HELPERS
@@ -246,17 +211,15 @@ def _geom_create_sphere(name: str, radius: float, cx: float = 0, cy: float = 0, 
 # SERVER
 # ===================================================================
 
-app = Server("ansys-mcp")
-
-
-@app.list_tools()
-async def list_tools() -> list[Tool]:
-    return ALL_TOOLS
-
-
-@app.call_tool()
 async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
-    global _fluent_session, _mechanical_session, _modeler, _current_design
+    """Plain dispatcher invoked directly by the thin tools/ wrappers.
+
+    Previously this was a second mcp.server.Server request handler that was
+    never actually run; the redundant Server was removed during the
+    architecture refactor. Mechanical tools were also moved out to
+    products/mechanical.py, so only Fluent and Geometry are dispatched here.
+    """
+    global _fluent_session, _modeler, _current_design
     result = ""
 
     try:
@@ -458,159 +421,10 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
                 if map_mcp_call:
                     map_mcp_call(name, arguments)
 
-        # ==================== MECHANICAL ====================
-        elif name == "mechanical_launch":
-            import ansys.mechanical.core as pymechanical
-            port = arguments.get("port")
-            loop = asyncio.get_event_loop()
-            if port:
-                _mechanical_session = await loop.run_in_executor(
-                    None,
-                    lambda: pymechanical.connect_to_mechanical(
-                        port=int(port), transport_mode="insecure", loglevel="ERROR",
-                        connect_timeout=30, cleanup_on_exit=False,
-                    )
-                )
-                result = f"已連線 Mechanical (埠 {port}, 版本: {_mechanical_session.version})"
-            else:
-                _mechanical_session = await loop.run_in_executor(
-                    None,
-                    lambda: pymechanical.launch_mechanical(
-                        batch=True, transport_mode="insecure", start_timeout=120, loglevel="ERROR"
-                    )
-                )
-                result = f"Mechanical 已啟動 (版本: {_mechanical_session.version})"
-
-        elif name.startswith("mechanical_"):
-            if _mechanical_session is None:
-                result = "Mechanical 未連線，請先執行 mechanical_launch"
-            else:
-                m = _mechanical_session
-                if name == "mechanical_import":
-                    path = os.path.abspath(arguments["file_path"])
-                    script = f"ExtAPI.DataModel.Project.Model.Geometry.Import(Path=r'{path}')"
-                    m.run_python_script(script)
-                    result = f"已匯入: {arguments['file_path']}"
-                elif name == "mechanical_set_material":
-                    body_name = arguments["body"]
-                    material = arguments["material"]
-                    script = (
-                        "for body in ExtAPI.DataModel.Project.Model.Geometry.Children:\n"
-                        f"    if body.Name == '{body_name}': body.Material = '{material}'"
-                    )
-                    m.run_python_script(script)
-                    result = f"已分配材料: {body_name} -> {material}"
-                elif name == "mechanical_mesh":
-                    script_lines = []
-                    if "element_size" in arguments:
-                        script_lines.append(
-                            f"ExtAPI.DataModel.Project.Model.Mesh.ElementSize = "
-                            f"Quantity({arguments['element_size']}, 'mm')"
-                        )
-                    method = arguments.get("method", "automatic")
-                    script_lines.append("ExtAPI.DataModel.Project.Model.Mesh.GenerateMesh()")
-                    m.run_python_script("\n".join(script_lines))
-                    result = f"網格劃分完成 (method={method})"
-                elif name == "mechanical_apply_load":
-                    lt = arguments["load_type"]
-                    loc = arguments["location"]
-                    mag = arguments.get("magnitude")
-                    script_lines = [
-                        "analysis = ExtAPI.DataModel.Project.Model.Analyses[0]",
-                    ]
-                    if lt == "force":
-                        script_lines.append("obj = analysis.AddForce()")
-                    elif lt == "pressure":
-                        script_lines.append("obj = analysis.AddPressure()")
-                    elif lt == "fixed_support":
-                        script_lines.append("obj = analysis.AddFixedSupport()")
-                    elif lt == "displacement":
-                        script_lines.append("obj = analysis.AddDisplacement()")
-                    script_lines.append(
-                        f'obj.Location = DataModel.GetObjectsByName("{loc}")[0]'
-                    )
-                    if mag is not None:
-                        script_lines.append(f'obj.Magnitude.Input(Quantity({mag}, "N"))')
-                    m.run_python_script("\n".join(script_lines))
-                    result = f"已施加 {lt} @ {loc}"
-                elif name == "mechanical_solve":
-                    m.run_python_script(
-                        "ExtAPI.DataModel.Project.Model.Solve(WaitForComplete=True)"
-                    )
-                    result = "求解完成"
-                elif name == "mechanical_get_result":
-                    rt = arguments["result_type"]
-                    mapping = {
-                        "total_deformation": "AddTotalDeformation",
-                        "equivalent_stress": "AddEquivalentStress",
-                        "equivalent_strain": "AddEquivalentStrain",
-                    }
-                    if rt in mapping:
-                        script = (
-                            "sol = ExtAPI.DataModel.Project.Model.Analyses[0].Solution\n"
-                            f"obj = sol.{mapping[rt]}()\n"
-                            "obj.EvaluateAllResults()\n"
-                            "str(obj.Maximum) + '||' + str(obj.Minimum)"
-                        )
-                        raw = m.run_python_script(script)
-                        if "||" in raw:
-                            parts = raw.split("||")
-                            result = f"{rt}: Max={parts[0]}, Min={parts[1]}"
-                        else:
-                            result = f"{rt}: {raw}"
-                    else:
-                        result = f"不支援的結果型別: {rt}"
-                elif name == "mechanical_list":
-                    what = arguments.get("what", "bodies")
-                    if what == "bodies":
-                        script = (
-                            "bodies = ExtAPI.DataModel.Project.Model.Geometry.Children\n"
-                            "';'.join([b.Name for b in bodies])"
-                        )
-                        raw = m.run_python_script(script)
-                        if raw:
-                            names = raw.split(";")
-                            result = "幾何體:\n" + "\n".join(
-                                f"  [{i}] {n}" for i, n in enumerate(names)
-                            )
-                        else:
-                            result = "幾何體: 無"
-                    else:
-                        script = (
-                            "ns = ExtAPI.DataModel.Project.Model.NamedSelections\n"
-                            "';'.join([n.Name for n in ns.Children]) if ns else ''"
-                        )
-                        raw = m.run_python_script(script)
-                        if raw:
-                            names = raw.split(";")
-                            result = "Named Selections:\n" + "\n".join(
-                                f"  - {n}" for n in names
-                            )
-                        else:
-                            result = "Named Selections: 無"
-                elif name == "mechanical_script":
-                    result = m.run_python_script(arguments["script"])
-                elif name == "mechanical_status":
-                    script = (
-                        "bodies = ExtAPI.DataModel.Project.Model.Geometry.Children\n"
-                        "mesh = ExtAPI.DataModel.Project.Model.Mesh\n"
-                        "nc = int(mesh.Nodes) if mesh.Nodes else 0\n"
-                        "ec = int(mesh.Elements) if mesh.Elements else 0\n"
-                        "str(len(bodies)) + '|' + "
-                        "('meshed' if nc > 0 else 'not meshed') + '|' + "
-                        "str(nc) + '|' + str(ec)"
-                    )
-                    raw = m.run_python_script(script)
-                    if raw and "|" in raw:
-                        parts = raw.split("|")
-                        result = (
-                            f"Mechanical 已連線 | 幾何體: {parts[0]} 個 | "
-                            f"{parts[1]} | {parts[2]} nodes, {parts[3]} elements"
-                        )
-                    else:
-                        result = f"Mechanical 已連線 | {raw}"
-                elif name == "mechanical_exit":
-                    m.exit(force=True); _mechanical_session = None; result = "Mechanical 已關閉"
+        # ==================== MECHANICAL (moved out) ====================
+        # Mechanical is now handled by products/mechanical.py + tools/mechanical.py
+        # (single gRPC facade on the shared SessionRegistry). The former inline
+        # Mechanical dispatch branch was removed during the architecture refactor.
 
         # ==================== GEOMETRY ====================
         elif name == "geometry_launch":
@@ -762,12 +576,3 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
         result = f"錯誤 [{name}]: {exc}"
 
     return [TextContent(type="text", text=result)]
-
-
-async def main():
-    logger.info(f"ANSYS MCP Server — Fluent({len(FLUENT_TOOLS)}) + Mechanical({len(MECHANICAL_TOOLS)}) + Geometry({len(GEOMETRY_TOOLS)})")
-    async with stdio_server() as (read, write):
-        await app.run(read, write, app.create_initialization_options())
-
-if __name__ == "__main__":
-    asyncio.run(main())

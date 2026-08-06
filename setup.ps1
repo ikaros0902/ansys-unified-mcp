@@ -97,26 +97,40 @@ Write-Host "Generated config file: $mcpConfigPath" -ForegroundColor Green
 Write-Host ""
 Write-Host "[6/6] Configuring SpaceClaim Auto gRPC Startup..." -ForegroundColor Cyan
 
-$programDataSCAddins = "$env:ProgramData\SpaceClaim\AddIns"
-if (-Not (Test-Path $programDataSCAddins)) {
-    New-Item -ItemType Directory -Force -Path $programDataSCAddins | Out-Null
+# Use the detected ANSYS versions
+if ($ansysVersions.Count -eq 0) {
+    Write-Host "ERROR: No ANSYS versions detected. Cannot configure SpaceClaim gRPC." -ForegroundColor Red
+    exit 1
 }
 
-$manifestPath = Join-Path $programDataSCAddins "ApiServerAddIn.Manifest.xml"
-$manifestContent = @"
+# Use the first (or latest) detected version
+$primaryVersion = $ansysVersions[0]
+$scAddinsPath = "$env:ProgramData\SpaceClaim\AddIns"
+if (-Not (Test-Path $scAddinsPath)) {
+    New-Item -ItemType Directory -Force -Path $scAddinsPath | Out-Null
+}
+
+# Build the assembly path dynamically based on detected version
+$assemblyPath = "C:\Program Files\ANSYS Inc\v$primaryVersion\Addins\ApiServer\Presentation.ApiServerAddIn.dll"
+if (-Not (Test-Path $assemblyPath)) {
+    Write-Host "WARNING: ApiServer DLL not found at $assemblyPath. Skipping SpaceClaim gRPC config." -ForegroundColor Yellow
+} else {
+    $manifestPath = Join-Path $scAddinsPath "ApiServerAddIn.Manifest.xml"
+    $manifestContent = @"
 <?xml version="1.0" encoding="utf-8" ?>
-<!-- Auto-configured by ANSYS Unified MCP Server Setup -->
+<!-- Auto-configured by ANSYS Unified MCP Server Setup for v$primaryVersion -->
 <AddIns>
   <AddIn name="Discovery Api Server"
          description="Discovery remote API server."
-         assembly="C:\Program Files\ANSYS Inc\v251\Addins\ApiServer\Presentation.ApiServerAddIn.dll"
+         assembly="$assemblyPath"
          typename="Presentation.ApiServerAddIn.ApiServerAddIn"
          host="SameAppDomain"/>
 </AddIns>
 "@
 
-Set-Content -Path $manifestPath -Value $manifestContent -Encoding UTF8
-Write-Host "Configured SpaceClaim auto gRPC at: $manifestPath" -ForegroundColor Green
+    Set-Content -Path $manifestPath -Value $manifestContent -Encoding UTF8
+    Write-Host "Configured SpaceClaim auto gRPC (v$primaryVersion) at: $manifestPath" -ForegroundColor Green
+}
 
 Write-Host ""
 Write-Host "===========================================" -ForegroundColor Cyan

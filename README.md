@@ -51,16 +51,26 @@ MCP Agent 在啟動時會自動偵測正在執行的這些視窗並接管控制�
 
 ## 開發者資訊 (Project Structure)
 
-本專案已重構為標準 Python 套件：
+本專案採分層架構（單向依賴）：
 - `pyproject.toml`: 專案設定與相依性。
 - `src/ansys_unified_mcp/`: 核心原始碼目錄。
-  - `config.py`: 自動偵測與推導 ANSYS 系統路徑。
-  - `connection_manager.py`: 自動探測背景運作中的 ANSYS 進程與 Port。
-  - `server.py` / `__main__.py`: MCP 伺服器主程式。
-  - `tools/`: 各模組的 MCP 註冊工具 (Mechanical, Fluent, OptiSLang 等)。
-  - `drivers/`: 底層呼叫模組。
-  - `bridges/`: File IPC 等橋接工具。
-- `workbench_plugin/`: 將安裝至 ANSYS 的 ACT 外掛原始碼。
+  - `config.py`: ANSYS 路徑偵測（延遲、非致命；找不到 ANSYS 不會導致 server 崩潰）。
+  - `core/paths.py`: 單一 ANSYS 執行檔/CLI 路徑解析（合併原先散落三處的偵測）。
+  - `core/sessions.py`: `SessionRegistry` — 統一管理各產品的多個連線（多實例）。
+  - `connection_manager.py`: 探測背景運作中的 ANSYS 進程與 Port。
+  - `products/`: 每個產品一個 façade，持有 session 與傳輸（如 `mechanical.py`）。
+  - `tools/`: 薄薄的 `@mcp.tool` 包裝，委派給 `products/`。
+  - `drivers/sim_impl.py`: Fluent / Geometry 的呼叫實作。
+  - `bridges/workbench_bridge.py`: Workbench journal 橋接與批次啟動。
+  - `__main__.py`: MCP 伺服器進入點。
+- `workbench_plugin/`: 安裝至 ANSYS 的精簡 ACT 外掛（自動啟動 Mechanical gRPC server 並註冊實例）。
+
+### Mechanical 連線傳輸（重構後收斂為三種）
+1. **gRPC（PyMechanical）** — 主力。可「連線現有實例」（需 ACT 外掛自動開 gRPC）或「啟動新的無頭實例」。
+2. **Workbench journal（SendCommand）** — 備援，向活著的 Mechanical/SpaceClaim 視窗送腳本，避開 gRPC 授權阻擋。
+3. **批次子行程** — `ansys-mechanical.exe` / `RunWB2 -R` 一次性無頭作業，不需外掛、不需先開實例。
+
+> 先前的 file-queue 與 socket-timer 兩種傳輸已於架構重構中移除（與上述重複、且需未必安裝的外掛）。
 
 ## 疑難排解
 
@@ -72,6 +82,6 @@ MCP Agent 在啟動時會自動偵測正在執行的這些視窗並接管控制�
 ## 👥 多實例動態埠與引導規則
 
 為了支援在同一台電腦上同時開啟多個不同的 ANSYS 視窗（例如：同時開啟 Workbench、Mechanical、SpaceClaim 等多專案情境），v2.0 導入了動態埠與實例註冊表：
-1. **動態分配通訊埠**：各視窗啟動時會自動尋找可用的埠號綁定通訊（Socket 埠自 9885 起；gRPC 埠自 10000 起），避免互相佔用衝突。
+1. **動態分配通訊埠**：各視窗啟動時會自動尋找可用的 gRPC 埠（Mechanical 自 10000 起；SpaceClaim 自 50051 起）綁定通訊，避免互相佔用衝突。
 2. **自動註冊**：啟動後會自動在 `workbench_queue/registry/` 目錄中以 PID 命名寫入資訊檔（包含 PID、進程名稱、視窗標題與分配到的埠號）。當視窗關閉時，MCP 伺服器會自動清理過期實例。
 3. **主動詢問引導**：當 AI 客戶端收到「連線 ANSYS」指令且環境中有多個實例或模組時，**AI 必須先主動以多選單或問答方式詢問使用者要連接哪一個模組**，不可擅自盲目猜測連線。

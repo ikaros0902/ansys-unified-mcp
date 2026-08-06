@@ -27,6 +27,7 @@ import ansys_unified_mcp.tools.mechanical
 import ansys_unified_mcp.tools.sim_tools
 import ansys_unified_mcp.tools.optislang
 import ansys_unified_mcp.tools.connection_doctor
+import ansys_unified_mcp.tools.docs_tools
 
 # Import the auto connection manager (it runs its initialization upon import if needed)
 from ansys_unified_mcp.connection_manager import connection_manager
@@ -34,23 +35,18 @@ from ansys_unified_mcp.connection_manager import connection_manager
 def main():
     logger.info("Starting Unified ANSYS MCP Server v2.0...")
     
-    # 嘗試預先探測正在運作的 ANSYS 模組
-    fluent_port = connection_manager.attach_to_fluent()
-    if fluent_port:
-        logger.info(f"Auto-detected Fluent on port {fluent_port}")
-        
-    mech_port = connection_manager.scan_for_mechanical_grpc()
-    if mech_port:
-        logger.info(f"Auto-detected Mechanical on port {mech_port}")
-
-    sc_port = connection_manager.scan_for_spaceclaim_grpc()
-    if sc_port:
-        logger.info(f"Auto-detected SpaceClaim on port {sc_port}")
-        
-    wb_running = connection_manager.attach_to_workbench()
-    if wb_running:
-        logger.info("Auto-detected Workbench background process")
-
+    # 立即啟動 MCP server，不阻塞於連接偵測
+    # 背景連接掃描改為工具內懶加載，避免啟動延遲
+    # 
+    # 若需保留預掃描邏輯，改為異步背景線程：
+    # import threading
+    # def bg_scan():
+    #     fluent_port = connection_manager.attach_to_fluent()
+    #     if fluent_port:
+    #         logger.info(f"Auto-detected Fluent on port {fluent_port}")
+    #     ... (其他掃描)
+    # threading.Thread(target=bg_scan, daemon=True).start()
+    
     # Run with stdio transport to ensure no standard output corruption
     mcp.run(transport='stdio')
 

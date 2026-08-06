@@ -2,6 +2,9 @@
 
 __version__ = "2.0.0"
 
-from .config import config, AnsysConfig
+# Note: `config` is intentionally NOT imported here. Importing the instance at
+# package level would shadow the `ansys_unified_mcp.config` submodule and force
+# eager ANSYS detection on every package import. Import it explicitly where
+# needed: `from ansys_unified_mcp.config import config`.
 
-__all__ = ["config", "AnsysConfig"]
+__all__ = ["__version__"]

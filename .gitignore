@@ -30,3 +30,9 @@ scripts/
 mcp_config.json
 status.json
 *.wbjn
+
+# Docs search index (build artifact; rebuilt from Documentation_md)
+Documentation_clean/docs_index.sqlite
+
+# CodeGraph index (auto-generated; rebuild with 'codegraph init')
+.codegraph/

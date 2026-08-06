@@ -14,12 +14,19 @@ dependencies = [
     "ansys-fluent-core",
     "ansys-geometry-core",
     "ansys-optislang-core",
-    "lasso-python",
     "python-dotenv",
     "pydantic",
     "rich",
     "psutil"
 ]
 
+[project.optional-dependencies]
+dyna = ["lasso-python"]
+dev = ["pytest"]
+
 [project.scripts]
 ansys-unified-mcp = "ansys_unified_mcp.__main__:main"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
