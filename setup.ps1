@@ -110,9 +110,42 @@ if (-Not (Test-Path $scAddinsPath)) {
     New-Item -ItemType Directory -Force -Path $scAddinsPath | Out-Null
 }
 
-# Build the assembly path dynamically based on detected version
-$assemblyPath = "C:\Program Files\ANSYS Inc\v$primaryVersion\Addins\ApiServer\Presentation.ApiServerAddIn.dll"
-if (-Not (Test-Path $assemblyPath)) {
+# Resolve the actual ANSYS install root instead of assuming the default
+# "C:\Program Files\ANSYS Inc" location. Priority: AWP_ROOT<ver> env var
+# (set by the ANSYS installer itself, always correct) -> registry InstallDir
+# -> standard-location fallbacks.
+$installRoot = $null
+$awpRootVar = "AWP_ROOT$primaryVersion"
+$awpRootValue = [Environment]::GetEnvironmentVariable($awpRootVar, "Machine")
+if ($awpRootValue -and (Test-Path $awpRootValue)) {
+    $installRoot = $awpRootValue
+} else {
+    $regKey = "HKLM:\SOFTWARE\ANSYS, Inc.\ANSYS\$primaryVersion"
+    if (Test-Path $regKey) {
+        $regInstallDir = (Get-ItemProperty -Path $regKey -ErrorAction SilentlyContinue).InstallDir
+        if ($regInstallDir -and (Test-Path $regInstallDir)) {
+            $installRoot = $regInstallDir
+        }
+    }
+}
+if (-Not $installRoot) {
+    foreach ($base in @("C:\Program Files\ANSYS Inc", "D:\ANSYS Inc")) {
+        $candidate = Join-Path $base "v$primaryVersion"
+        if (Test-Path $candidate) {
+            $installRoot = $candidate
+            break
+        }
+    }
+}
+
+if (-Not $installRoot) {
+    Write-Host "WARNING: Could not resolve ANSYS v$primaryVersion install root (checked $awpRootVar, registry, and standard locations). Skipping SpaceClaim gRPC config." -ForegroundColor Yellow
+    $assemblyPath = $null
+} else {
+    $assemblyPath = Join-Path $installRoot "Addins\ApiServer\Presentation.ApiServerAddIn.dll"
+}
+
+if (-Not $assemblyPath -or -Not (Test-Path $assemblyPath)) {
     Write-Host "WARNING: ApiServer DLL not found at $assemblyPath. Skipping SpaceClaim gRPC config." -ForegroundColor Yellow
 } else {
     $manifestPath = Join-Path $scAddinsPath "ApiServerAddIn.Manifest.xml"

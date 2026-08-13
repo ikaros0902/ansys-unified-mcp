@@ -568,14 +568,163 @@ def mcp_status():
         print("Uptime:       " + str(int(time.time() - _mcp_start_time)) + "s")
     print("")
     print("Commands:")
-    print("  mcp_loop()    - Start blocking file-IPC loop")
+    print("  mcp_loop()    - Start polling (auto-detects GUI vs headless)")
     print("  poll_once()   - Process one command batch")
     print("  mcp_stop()    - Stop loop")
     print("  mcp_status()  - Show this status")
     print("=" * 60)
 
 
+_mcp_timer = None  # DispatcherTimer handle, set only when running in GUI/timer mode
+
+
+def _get_wpf_dispatcher():
+    """Return the Dispatcher of the running WPF Application, or None.
+
+    ``System.Windows.Application.Current`` is only non-null while a WPF
+    ``Application`` object is actively pumping its Dispatcher message loop
+    (i.e. a real GUI window is open and responsive). This lets us detect
+    whether it is safe to piggyback a DispatcherTimer on the host's own
+    message loop instead of running our own blocking while-loop.
+
+    This detection matters because WinForms' ``Application.DoEvents()``
+    (the previous approach) only pumps a WinForms message queue; it does
+    NOT pump a WPF Dispatcher. Against a WPF-based Framework Window
+    (observed here as ``AnsysFWW.exe``), that mismatch is why the old
+    blocking loop froze the UI even though it never raised an exception.
+    """
+    try:
+        import clr
+        clr.AddReference("PresentationFramework")
+        clr.AddReference("WindowsBase")
+        from System.Windows import Application as WpfApplication
+
+        app = WpfApplication.Current
+        if app is None:
+            _log("INFO", "_get_wpf_dispatcher: System.Windows.Application.Current is None")
+            return None
+        return app.Dispatcher
+    except Exception as e:
+        _log("INFO", "_get_wpf_dispatcher: detection failed: " + str(e))
+        return None
+
+
+def _do_periodic_work(last_status_time, cleanup_time):
+    """One unit of bridge housekeeping, shared by both loop strategies.
+
+    Returns (should_stop, last_status_time, cleanup_time).
+    """
+    now = time.time()
+    if now - last_status_time >= 2.0:
+        write_status("running", "Polling active")
+        last_status_time = now
+    if now - cleanup_time >= 30.0:
+        _cleanup_stale_commands()
+        cleanup_time = now
+    if os.path.exists(STOP_FILE):
+        try:
+            os.remove(STOP_FILE)
+        except Exception:
+            pass
+        return True, last_status_time, cleanup_time
+    poll_once()
+    return False, last_status_time, cleanup_time
+
+
+def _mcp_loop_timer(sleep_interval):
+    """Non-blocking strategy: a DispatcherTimer piggybacks on the host's own
+    already-running WPF message loop. Each Tick does one housekeeping unit
+    and returns immediately, so the UI stays fully responsive between ticks.
+    This function itself returns right away; the timer keeps firing on its
+    own for as long as the host application's message loop is alive.
+    """
+    global _mcp_timer
+    import clr
+
+    clr.AddReference("WindowsBase")
+    from System import TimeSpan
+    from System.Windows.Threading import DispatcherTimer
+
+    state = {"last_status_time": 0.0, "cleanup_time": 0.0}
+
+    def _on_tick(sender, args):
+        global _mcp_running
+        try:
+            should_stop, state["last_status_time"], state["cleanup_time"] = _do_periodic_work(
+                state["last_status_time"], state["cleanup_time"]
+            )
+        except Exception as e:
+            _log("ERROR", "mcp_loop tick: " + str(e))
+            _log("ERROR", traceback.format_exc())
+            should_stop = False
+        if should_stop:
+            _mcp_timer.Stop()
+            _mcp_running = False
+            write_status("stopped", "Polling stopped")
+            _log("INFO", "Bridge loop stopped (timer mode)")
+            print("Workbench MCP: loop stopped")
+
+    _mcp_timer = DispatcherTimer()
+    _mcp_timer.Interval = TimeSpan.FromSeconds(max(0.02, float(sleep_interval)))
+    _mcp_timer.Tick += _on_tick
+    _mcp_timer.Start()
+    _log("INFO", "Bridge loop started (timer mode, GUI stays responsive)")
+    print("Workbench MCP: listening for commands in " + COMMANDS_DIR + " (timer mode; UI stays responsive)")
+
+
+def _mcp_loop_blocking(sleep_interval):
+    """Blocking strategy: used only when there is no running WPF Dispatcher
+    to piggyback on (true headless batch instances with no window). There is
+    no GUI to freeze in that case, and the loop is what keeps the otherwise
+    script-driven batch process from exiting once the journal script itself
+    reaches its end.
+    """
+    global _mcp_running
+    _log("INFO", "Bridge loop started (blocking mode, headless)")
+    print("Workbench MCP: listening for commands in " + COMMANDS_DIR + " (blocking mode, headless)")
+
+    try:
+        import clr
+        clr.AddReference("System.Windows.Forms")
+        from System.Windows.Forms import Application
+    except Exception:
+        Application = None
+
+    last_status_time = 0.0
+    cleanup_time = 0.0
+    try:
+        while True:
+            if Application:
+                try:
+                    Application.DoEvents()
+                except Exception:
+                    pass
+            should_stop, last_status_time, cleanup_time = _do_periodic_work(last_status_time, cleanup_time)
+            if should_stop:
+                break
+            time.sleep(max(0.02, float(sleep_interval)))
+    except KeyboardInterrupt:
+        print("Workbench MCP: stopped by keyboard interrupt")
+    except Exception as e:
+        _log("ERROR", "mcp_loop: " + str(e))
+        _log("ERROR", traceback.format_exc())
+    _mcp_running = False
+    write_status("stopped", "Polling stopped")
+    _log("INFO", "Bridge loop stopped")
+    print("Workbench MCP: loop stopped")
+
+
 def mcp_loop(sleep_interval=0.1):
+    """Start polling for commands, auto-detecting the safest strategy.
+
+    - If a WPF Dispatcher message loop is already running (an interactive
+      Workbench GUI window is open), use a DispatcherTimer: this call
+      returns immediately and the UI stays fully responsive between ticks.
+    - Otherwise (headless batch instance, no window), fall back to the
+      classic blocking while-loop; there is no UI to freeze, and blocking is
+      what keeps the process alive after the journal script would otherwise
+      reach its end and exit.
+    """
     global _mcp_running, _mcp_commands_processed, _mcp_start_time
     ensure_dirs()
     if os.path.exists(STOP_FILE):
@@ -588,49 +737,11 @@ def mcp_loop(sleep_interval=0.1):
     _mcp_commands_processed = 0
     _mcp_start_time = time.time()
     write_status("running", "Polling active")
-    _log("INFO", "Bridge loop started")
-    print("Workbench MCP: listening for commands in " + COMMANDS_DIR)
 
-    last_status_time = 0.0
-    cleanup_time = 0.0
-    try:
-        import clr
-        clr.AddReference("System.Windows.Forms")
-        from System.Windows.Forms import Application
-    except Exception:
-        Application = None
-
-    try:
-        while True:
-            if Application:
-                try:
-                    Application.DoEvents()
-                except Exception:
-                    pass
-            now = time.time()
-            if now - last_status_time >= 2.0:
-                write_status("running", "Polling active")
-                last_status_time = now
-            if now - cleanup_time >= 30.0:
-                _cleanup_stale_commands()
-                cleanup_time = now
-            if os.path.exists(STOP_FILE):
-                try:
-                    os.remove(STOP_FILE)
-                except Exception:
-                    pass
-                break
-            poll_once()
-            time.sleep(max(0.02, float(sleep_interval)))
-    except KeyboardInterrupt:
-        print("Workbench MCP: stopped by keyboard interrupt")
-    except Exception as e:
-        _log("ERROR", "mcp_loop: " + str(e))
-        _log("ERROR", traceback.format_exc())
-    _mcp_running = False
-    write_status("stopped", "Polling stopped")
-    _log("INFO", "Bridge loop stopped")
-    print("Workbench MCP: loop stopped")
+    if _get_wpf_dispatcher() is not None:
+        _mcp_loop_timer(sleep_interval)
+    else:
+        _mcp_loop_blocking(sleep_interval)
 
 
 ensure_dirs()
@@ -644,4 +755,35 @@ print("Start: mcp_loop()")
 print("Stop:  mcp_stop()")
 print("=" * 60)
 
-mcp_loop()
+
+def _auto_loop_requested():
+    """Only auto-start the loop when explicitly opted-in.
+
+    The MCP-launched dedicated instance sets ANSYS_MCP_AUTO_LOOP=1 so the
+    bridge starts polling immediately without a manual mcp_loop() call. When
+    a user loads this journal into an INTERACTIVE Workbench Command Window
+    instead, the variable is absent, so we wait for an explicit mcp_loop()
+    call rather than starting automatically.
+
+    Note: since mcp_loop() now auto-detects a running WPF Dispatcher and uses
+    a non-blocking DispatcherTimer whenever one is present (see
+    _get_wpf_dispatcher / _mcp_loop_timer above), calling it here no longer
+    freezes an interactive GUI session. The opt-in flag is kept anyway so a
+    Command Window loaded interactively does not start polling before the
+    user is ready, not because of any remaining UI-freeze risk.
+    """
+    flag = os.environ.get("ANSYS_MCP_AUTO_LOOP", "").strip().lower()
+    return flag in ("1", "true", "yes", "on")
+
+
+if _auto_loop_requested():
+    mcp_loop()
+else:
+    print("")
+    print("Interactive mode detected (ANSYS_MCP_AUTO_LOOP not set).")
+    print("Bridge functions are loaded but polling is NOT running yet.")
+    print("Call mcp_loop() to start polling. If a Workbench GUI window is")
+    print("open, this uses a non-blocking DispatcherTimer and the window")
+    print("stays fully responsive; otherwise it falls back to a blocking")
+    print("loop (headless instances only, where there is no UI to freeze).")
+    print("=" * 60)

@@ -18,9 +18,13 @@ from __future__ import annotations
 import os
 
 from ansys_unified_mcp.core.sessions import registry
+from ansys_unified_mcp.core.timeout import BlockingCallTimeout, run_with_timeout
 
 PRODUCT = "optislang"
 KEY = "default"
+
+# Default budget for a single run_script() call (see core/timeout.py caveat).
+DEFAULT_SCRIPT_TIMEOUT = 60.0
 
 
 class OptislangController:
@@ -69,8 +73,12 @@ class OptislangController:
         registry.put(PRODUCT, KEY, osl)
         return {"ok": True, "version": self.version_string(), "project": project_path or "(new)"}
 
-    def run_script(self, script: str) -> dict:
-        """Run an optiSLang native Python script string in the connected server."""
+    def run_script(self, script: str, timeout: float = DEFAULT_SCRIPT_TIMEOUT) -> dict:
+        """Run an optiSLang native Python script string in the connected server.
+
+        Bounded by ``timeout`` seconds via a worker thread (see
+        core/timeout.py) since the underlying call has no native timeout.
+        """
         osl = self._session()
         if osl is None:
             return {"ok": False, "error": "尚未連線 optiSLang，請先呼叫 connect_optislang。"}
@@ -78,8 +86,10 @@ class OptislangController:
             return {"ok": False, "error": "script 不得為空。"}
         try:
             # run_python_script may return str or (success, output); stringify uniformly.
-            result = osl.run_python_script(script)
+            result = run_with_timeout(osl.run_python_script, script, timeout=timeout)
             return {"ok": True, "output": str(result)}
+        except BlockingCallTimeout as exc:
+            return {"ok": False, "error": str(exc)}
         except Exception as exc:  # noqa: BLE001
             return {"ok": False, "error": f"腳本執行失敗：{exc}"}
 

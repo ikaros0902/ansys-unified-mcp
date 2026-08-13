@@ -63,6 +63,21 @@ class SessionRegistry:
                 return True
             return False
 
+    def get_live(self, product: str, key: Optional[str] = None, probe_fn=None) -> Optional[Any]:
+        """Return a session, optionally testing it with probe_fn and dropping it if dead."""
+        session = self.get(product, key)
+        if session is None:
+            return None
+        if probe_fn is not None:
+            try:
+                if not probe_fn(session):
+                    self.drop(product, key or self.current_key(product))
+                    return None
+            except Exception:
+                self.drop(product, key or self.current_key(product))
+                return None
+        return session
+
     def drop(self, product: str, key: Optional[str] = None) -> Optional[Any]:
         """Remove and return a session. key=None drops the current session."""
         with self._lock:

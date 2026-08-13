@@ -23,10 +23,16 @@ import os
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parents[2]
 try:
     from dotenv import load_dotenv
     load_dotenv(ROOT / ".env")
+except Exception:
+    pass
+
+try:
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 except Exception:
     pass
 
@@ -81,13 +87,23 @@ def check_lsdyna(live: bool):
 
 
 def _find_lsdyna_exe():
+    try:
+        from ansys_unified_mcp.config import config
+        if config.available and config.root_path:
+            bin_dir = config.root_path / "ansys" / "bin" / "winx64"
+            for name in ("LSDYNA.exe", "lsdyna_dp.exe", "lsdyna_sp.exe", "lsdyna.exe"):
+                p = bin_dir / name
+                if p.exists():
+                    return str(p)
+    except Exception:
+        pass
     root = os.environ.get("ANSYS_ROOT")
     if not root:
         return None
-    for name in ("lsdyna_dp.exe", "lsdyna_sp.exe", "lsdyna.exe"):
-        hit = list(Path(root).rglob(name))
-        if hit:
-            return str(hit[0])
+    for name in ("LSDYNA.exe", "lsdyna_dp.exe", "lsdyna_sp.exe", "lsdyna.exe"):
+        p = Path(root) / f"v{os.environ.get('ANSYS_VERSION', '251')}" / "ansys" / "bin" / "winx64" / name
+        if p.exists():
+            return str(p)
     return None
 
 
@@ -187,6 +203,17 @@ def main():
     print("-" * 72)
     passed = sum(1 for s in results.values() if s == OK)
     print(f"通過 {passed}/{len(results)}")
+    
+    try:
+        from ansys_unified_mcp.core.timeout import pool_status
+        pool = pool_status()
+        s = f"\nThread Pool: {pool['pending']}/{pool['max_workers']} workers busy"
+        if pool["available"] == 0:
+            s += " [⚠ EXHAUSTED]"
+        print(s)
+    except Exception:
+        pass
+        
     # 任一 FAIL → 非零 exit，方便當 Loop Verification_Condition
     sys.exit(0 if all(s != FAIL for s in results.values()) else 1)
 

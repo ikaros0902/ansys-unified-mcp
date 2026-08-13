@@ -19,12 +19,19 @@ from __future__ import annotations
 
 import os
 import tempfile
+import time
 from pathlib import Path
 from typing import Any, Optional
 
 from ansys_unified_mcp.core.sessions import registry
+from ansys_unified_mcp.core.timeout import BlockingCallTimeout, run_with_timeout
 
 PRODUCT = "mechanical"
+
+# Default budget for a single run_script() call. The underlying gRPC call has
+# no native timeout, so this only bounds how long the *caller* waits before
+# getting an error back (see core/timeout.py for the caveat on cancellation).
+DEFAULT_SCRIPT_TIMEOUT = 60.0
 
 
 def _esc(s: str) -> str:
@@ -103,15 +110,33 @@ class MechanicalController:
         registry.put(PRODUCT, key, session)
         return {"ok": True, "key": key, "version": getattr(session, "version", "unknown")}
 
-    def run_script(self, script: str, key: Optional[str] = None) -> str:
-        """Run a Python script inside Mechanical, capturing print() output.
+    _PROBE_CACHE: dict[str, float] = {}
+    _PROBE_TTL = 10.0
 
-        Uses temp files so stdout is reliably captured across the gRPC boundary
-        and IronPython's .NET file handles are released before returning.
-        """
-        session = registry.get(PRODUCT, key)
+    def _probe_session(self, session) -> bool:
+        """Lightweight gRPC health check."""
+        key = str(id(session))
+        now = time.monotonic()
+        if key in self._PROBE_CACHE and (now - self._PROBE_CACHE[key]) < self._PROBE_TTL:
+            return True
+        try:
+            session.run_python_script("pass")
+            self._PROBE_CACHE[key] = now
+            return True
+        except Exception:
+            self._PROBE_CACHE.pop(key, None)
+            return False
+
+    def run_script(self, script: str, key: Optional[str] = None, timeout: float = DEFAULT_SCRIPT_TIMEOUT) -> str:
+        """Execute a Python script string in the connected Mechanical session."""
+        from ansys_unified_mcp.core.script_guard import check_script
+        is_safe, warnings = check_script(script, context="mechanical.run_script")
+        if not is_safe:
+            return "Error: Script blocked by security guard: " + "; ".join(warnings)
+            
+        session = registry.get_live(PRODUCT, key, probe_fn=self._probe_session)
         if session is None:
-            return "Error: Not connected to Mechanical."
+            return "Error: Not connected to Mechanical (session lost or closed)."
 
         tmp_dir = Path(tempfile.gettempdir())
         out_file = (tmp_dir / f"mech_out_{os.getpid()}.txt").as_posix()
@@ -140,7 +165,10 @@ class MechanicalController:
                 '    with open(r"' + out_file.replace('"', '\\"') + "\", 'w') as _f:\n"
                 "        _f.write(''.join(_cap.d))\n"
             )
-            session.run_python_script(wrapper)
+            try:
+                run_with_timeout(session.run_python_script, wrapper, timeout=timeout)
+            except BlockingCallTimeout as exc:
+                return "Error: " + str(exc)
 
             try:
                 with open(out_file, "r", encoding="utf-8") as fh:
@@ -165,7 +193,7 @@ class MechanicalController:
         return {"ok": True, "message": "Disconnected."}
 
     def is_connected(self, key: Optional[str] = None) -> bool:
-        return registry.get(PRODUCT, key) is not None
+        return registry.get_live(PRODUCT, key, probe_fn=self._probe_session) is not None
 
     def status(self) -> dict:
         keys = registry.keys(PRODUCT)

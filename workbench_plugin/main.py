@@ -27,11 +27,28 @@ except Exception:
 
 
 _PLUGIN_DIR = os.path.abspath(os.path.dirname(__file__))
-_PROJECT_ROOT = os.environ.get("WORKBENCH_MCP_ROOT") or os.path.abspath(os.path.join(_PLUGIN_DIR, ".."))
+def _resolve_queue_root():
+    env_queue = os.environ.get("WORKBENCH_MCP_QUEUE_ROOT")
+    if env_queue:
+        return env_queue
+    env_root = os.environ.get("WORKBENCH_MCP_ROOT")
+    if env_root:
+        return os.path.join(env_root, "workbench_queue")
+    cur = _PLUGIN_DIR
+    for _ in range(5):
+        if os.path.exists(os.path.join(cur, "pyproject.toml")):
+            return os.path.join(cur, "workbench_queue")
+        parent = os.path.dirname(cur)
+        if parent == cur:
+            break
+        cur = parent
+    fallback = r"D:\Ikaros\ANSYS-unified-MCP\workbench_queue"
+    if os.path.exists(r"D:\Ikaros\ANSYS-unified-MCP"):
+        return fallback
+    return os.path.join(_PLUGIN_DIR, "workbench_queue")
 
-# Registry root: prefer explicit env, else <project_root>/workbench_queue.
-# (No hardcoded machine-specific fallback.)
-_QUEUE_ROOT = os.environ.get("WORKBENCH_MCP_QUEUE_ROOT") or os.path.join(_PROJECT_ROOT, "workbench_queue")
+_QUEUE_ROOT = _resolve_queue_root()
+_PROJECT_ROOT = os.path.dirname(_QUEUE_ROOT)
 _DEBUG_LOG_FILE = os.path.join(_QUEUE_ROOT, "act_main_debug.log")
 
 
@@ -173,5 +190,35 @@ def show_mcp_info(analysis=None):
     _log("The MCP server connects to this Mechanical via the auto-started gRPC port (see registry).")
 
 
+def init_listener():
+    """載入並啟動 FileSystemWatcher 非同步監聽器"""
+    try:
+        import wb_event_listener
+        try:
+            reload(wb_event_listener)
+        except Exception:
+            pass
+        wb_event_listener.start_listener(_QUEUE_ROOT)
+        _log("Initialized wb_event_listener FileSystemWatcher on " + _QUEUE_ROOT)
+    except Exception as exc:
+        _log("Failed to initialize wb_event_listener: " + str(exc))
+
+
+def on_project_init(context=None):
+    """Workbench Project Schematic 載入時的回呼函式"""
+    _log("Workbench Project Schematic oninit callback triggered.")
+    try:
+        if context and hasattr(context, "ExtAPI"):
+            setattr(_builtins, "ExtAPI", context.ExtAPI)
+        elif "ExtAPI" in globals():
+            setattr(_builtins, "ExtAPI", globals()["ExtAPI"])
+    except Exception:
+        pass
+    _register_instance()
+    init_listener()
+
+
 _debug_log("main.py imported from " + __file__)
+_register_instance()
 _auto_start_grpc_server()
+init_listener()
