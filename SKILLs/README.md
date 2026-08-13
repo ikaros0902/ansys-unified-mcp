@@ -25,6 +25,7 @@ it never has to read the multi-MB source guides.
 | `ansys-ls-prepost` | ls-prepost (SCL/cfile/Python) | session_and_cfile, model_query, states_and_results, model_build, output_export, python_module_interface |
 | `act-extension-development` | ACT plugin dev (實戰) | *(inline)* IronPython quirks, FileSystemWatcher pattern, Wizard API, WPF Dispatcher |
 | `pymechanical-operations` | PyMechanical gRPC (實戰) | *(inline)* gRPC connect, remote script, Scoping API, Mesh automation |
+| `pcb-warpage-analysis` | PCB 熱變形分析 (實戰) | *(inline)* SpaceClaim 79層分體, ROM 複合材料 APDL, 靜定 3-2-1 邊界條件 |
 | `ansys-error-catalog` | 錯誤分類目錄 (實戰) | workbench_act, mechanical_scripting, spaceclaim_pygeometry, ironpython_general |
 
 ## ACT extensions (Mechanical/SpaceClaim)
@@ -90,6 +91,7 @@ Categories were aligned with the PyAnsys project organization:
 
 - `pdf-to-md` — convert source PDFs (`Documentation/`) to markdown
   (`Documentation_md/`). Upstream of the doc-index pipeline.
+- `pcb-warpage-analysis` — PCB 多層熱變形 ($Z$ 軸位移) 自動化分析：SpaceClaim 幾何建立、Rule of Mixtures 複合材料 APDL 生成、MultiZone 網格、靜定 3-2-1 邊界條件。
 - `act-extension-development` — ACT 外掛開發實戰知識：IronPython 陷阱、
   FileSystemWatcher 非同步架構、ACT Wizard 程式化呼叫。
 - `pymechanical-operations` — PyMechanical gRPC 遠端操作：連線、Scoping API、
