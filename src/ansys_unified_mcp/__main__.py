@@ -21,8 +21,15 @@ load_dotenv()
 from ansys_unified_mcp.shared import mcp
 
 # Import tools so they are registered with the MCP instance
-import ansys_unified_mcp.tools.workbench
 import ansys_unified_mcp.tools.workbench_bridge
+import os
+
+# PyWorkbench 通道尚未驗證，預設不載入。
+# 設定 ANSYS_MCP_ENABLE_PYWORKBENCH=1 啟用。
+if os.environ.get("ANSYS_MCP_ENABLE_PYWORKBENCH", "").strip() == "1":
+    import ansys_unified_mcp.tools.workbench_pyworkbench  # PyWorkbench (official client/server); UNVERIFIED, additive alongside the legacy bridge
+    logger.info("PyWorkbench tools enabled (UNVERIFIED).")
+
 import ansys_unified_mcp.tools.mechanical
 import ansys_unified_mcp.tools.sim_tools
 import ansys_unified_mcp.tools.optislang

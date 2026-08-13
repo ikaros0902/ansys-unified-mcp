@@ -128,8 +128,22 @@ def _default_project_name(analysis_type: str, fallback: str = "workbench_analysi
 def _read_json(path: Path) -> dict[str, Any]:
     try:
         return json.loads(path.read_text(encoding="utf-8"))
-    except Exception:
+    except (json.JSONDecodeError, OSError):
         return {}
+
+
+def _read_json_retry(path: Path, retries: int = 5, delay: float = 0.05) -> dict[str, Any]:
+    """Read JSON file with retry, to prevent reading half-written IPC files."""
+    for _ in range(retries):
+        try:
+            return json.loads(path.read_text(encoding="utf-8"))
+        except (json.JSONDecodeError, OSError):
+            time.sleep(delay)
+    return {}
+
+
+def _get_active_project_path() -> Optional[Path]:
+    return None
 
 
 def _write_json(path: Path, data: dict[str, Any]) -> None:
@@ -161,6 +175,11 @@ def _workbench_command(journal_path: Path, batch: bool) -> list[str]:
     args = [str(RUNWB2)]
     if batch:
         args.append("-B")
+    else:
+        # "-B" 缺席不會自動變成「顯示 GUI」；RunWB2 在完全沒指定模式時預設
+        # 不建立主視窗。必須明確加 "-I"（互動模式）才會真的跳出視窗，
+        # 對應官方 PyWorkbench launcher 的 show_gui=True 行為。
+        args.append("-I")
     args.extend(["-R", str(journal_path)])
     return args
 
@@ -180,7 +199,9 @@ def _send_command(cmd_type: str, timeout: float = DEFAULT_TIMEOUT, **kwargs: Any
     deadline = time.time() + float(timeout)
     while time.time() < deadline:
         if result_path.exists():
-            result = _read_json(result_path)
+            result = _read_json_retry(result_path)
+            if not result:
+                continue
             try:
                 result_path.unlink()
             except Exception:
@@ -289,6 +310,10 @@ def start_workbench_bridge(batch: bool = True, wait_seconds: int = 20) -> str:
 
     env = os.environ.copy()
     env["ANSYS_WORKBENCH_MCP_HOME"] = str(MCP_HOME)
+    # This is the MCP-launched DEDICATED bridge instance: opt in to the blocking
+    # polling loop so it stays alive. Interactive Workbench sessions that load the
+    # journal without this flag will NOT loop, keeping their console responsive.
+    env["ANSYS_MCP_AUTO_LOOP"] = "1"
     proc = subprocess.Popen(
         _workbench_command(BRIDGE_JOURNAL, batch=batch),
         cwd=str(SERVER_ROOT),

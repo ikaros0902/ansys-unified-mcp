@@ -4,6 +4,11 @@
   <author>Text-to-CAE</author>
   <description>Auto-starts the Mechanical gRPC server and registers the instance for the ANSYS Unified MCP server.</description>
   <script src="main.py" />
+  <interface context="Project">
+    <callbacks>
+      <oninit>on_project_init</oninit>
+    </callbacks>
+  </interface>
   <interface context="Mechanical">
     <toolbar name="Workbench MCP" caption="Workbench MCP">
       <entry name="MCP Info">

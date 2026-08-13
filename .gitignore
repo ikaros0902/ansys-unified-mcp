@@ -19,9 +19,13 @@ __pycache__/
 .vscode/
 .idea/
 
+# 本機 IDE / MCP 設定（含機器專屬絕對路徑與使用者名，不共享）
+.kiro/settings/
+
 # 執行日誌與暫存
 *.log
 *.txt
+!requirements.txt
 workbench_queue/*
 !workbench_queue/.gitkeep
 **/workbench_queue/*
@@ -29,13 +33,28 @@ workbench_queue/*
 
 # Generated files
 results/
-scripts/
+/scripts/
 mcp_config.json
 status.json
 *.wbjn
+# ...but never ignore the tracked source bridge journal
+!src/ansys_unified_mcp/scripts/ansys_workbench_bridge.wbjn
 
-# Docs search index (build artifact; rebuilt from Documentation_md)
-Documentation_clean/docs_index.sqlite
+# ANSYS documentation corpora — copyrighted + very large (~680 MB total).
+# Raw PDFs, converted markdown, cleaned copies and the FTS index are all
+# local-only / rebuildable. NEVER commit these (repo bloat + copyright).
+Documentation/
+Documentation_md/
+Documentation_clean/
 
 # CodeGraph index (auto-generated; rebuild with 'codegraph init')
 .codegraph/
+
+# Serena tooling cache
+.serena/
+
+# Local run outputs
+runs/
+
+# File-IPC command queue (runtime)
+src/ansys_unified_mcp/tools/commands/

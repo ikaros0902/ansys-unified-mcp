@@ -3,6 +3,7 @@ ansys-mechanical-core
 ansys-fluent-core
 ansys-geometry-core
 ansys-optislang-core
+ansys-workbench-core
 python-dotenv
 pydantic
 rich

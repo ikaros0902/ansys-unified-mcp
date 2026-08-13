@@ -487,13 +487,17 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
                         continue
 
                 if not connected:
-                    # 所有 port 都無回應，提示使用者在 SpaceClaim 中執行啟動腳本
+                    # 所有 port 都無回應，提示使用者在 SpaceClaim 中執行啟動腳本。
+                    # 路徑不寫死 C:\Program Files（安裝可能在其他磁碟機，如 D:），
+                    # 改用 AWP_ROOT<ver> 環境變數（ANSYS 安裝程式自動設定，永遠正確）。
+                    hint_root = os.environ.get("AWP_ROOT251") or r"<ANSYS_ROOT>\v251"
+                    dll_hint_path = os.path.join(hint_root, "Addins", "ApiServer", "Presentation.ApiServerAddIn.dll")
                     result = (
                         "❌ 找不到活躍的 SpaceClaim gRPC 服務（已掃描 50051-50055）。\n\n"
                         "請在 SpaceClaim Script Editor 中執行以下腳本以啟動連線服務：\n"
                         "  import System.Reflection, System\n"
                         "  asm = System.Reflection.Assembly.LoadFrom(\n"
-                        "    r'C:\\Program Files\\ANSYS Inc\\v251\\Addins\\ApiServer\\Presentation.ApiServerAddIn.dll')\n"
+                        f"    r'{dll_hint_path}')\n"
                         "  addon = System.Activator.CreateInstance(asm.GetType('Presentation.ApiServerAddIn.ApiServerAddIn'))\n"
                         "  addon.Initialize(); addon.Connect()\n\n"
                         "或執行 setup.ps1 並設定 Startup macro，讓 SpaceClaim 每次開啟時自動啟動。"

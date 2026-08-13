@@ -1,19 +1,29 @@
 # PyAnsys 對應、MCP 現況與後續規劃
 
-> 本檔記錄：①`.venv` 的 PyAnsys 安裝現況 ②圖片中 Workbench/授權模組 ↔ 官方 pyansys 套件 ↔ 官方 MCP ↔ 是否已安裝 的對照 ③專案後續規劃 roadmap。
+> 本檔記錄：①PyAnsys 安裝現況（`.venv` 與全域 3.14）②圖片中 Workbench/授權模組 ↔ 官方 pyansys 套件 ↔ 官方 MCP ↔ 是否已安裝 的對照 ③專案後續規劃 roadmap ④如何驗證 PyWorkbench 連線。
 > 來源：pyansys metapackage README（https://github.com/ansys/pyansys）。與 `context.md`（心智模型）、`ARCHITECTURE.md`（程式慣例）並列。
 
-## 1. 安裝現況（.venv）
+## 1. 安裝現況（兩個環境）
 
-- **`pyansys` metapackage：未安裝**（採個別安裝個別庫，非裝傘狀包）。
-- **已安裝（核心庫）**：
+> 重點：MCP server 跑在專案 `.venv`，**只有 `.venv` 內的套件對 MCP 可見**；全域 Python 3.14 供你一般 scripting，MCP 不使用。
+
+### 1a. `.venv`（MCP runtime）
+- `pyansys` metapackage：未安裝（採個別安裝）。
+- 已安裝核心庫：
   - `ansys-mechanical-core` 0.13.0（PyMechanical）
   - `ansys-geometry-core` 0.16.3（PyAnsys Geometry）
   - `ansys-fluent-core` 0.40.2（PyFluent）
   - `ansys-optislang-core` 1.5.0（PyOptislang）
-  - 輔助：`ansys-pythonnet`（embedded 必需）、`ansys-tools-common`、`ansys-units`、各 `ansys-api-*` gRPC stubs
-- **需要但未安裝**：`ansys-workbench-core`（PyWorkbench）、`ansys-dyna-core`（PyDYNA）、`ansys-sherlock-core`（PySherlock）、PyGranta、（視需要）`ansys-mapdl-core`、`ansys-dpf-core`、`ansys-meshing-prime`、PyAEDT。
-- **官方 MCP**：皆未安裝（`ansys-common-mcp`、`ansys-mapdl-mcp`、PyMechanical/PyFluent/PyCFX/PyAEDT/PyLumerical MCP）。
+  - **`ansys-workbench-core` 0.14.0（PyWorkbench）— 新增，供 MCP 用** ✅
+  - 輔助：`ansys-pythonnet`（embedded 必需）、`ansys-tools-common`、`ansys-units`、各 `ansys-api-*`
+- `.venv` 尚未裝：`ansys-dyna-core`、`ansys-sherlock-core`、PyGranta、`ansys-mapdl-core`、`ansys-dpf-core`、`ansys-meshing-prime`、PyAEDT（Phase 2 再視需要加）。
+
+### 1b. 全域（`C:\Python314`，user site）
+- **`pyansys` 2026.1.3 完整堆疊已安裝** ✅：含 `ansys-workbench-core` 0.14.0、`ansys-dyna-core` 0.12.1、`ansys-sherlock-core` 1.0.2、`pygranta` 2026.1.1、`ansys-mapdl-core`、`ansys-dpf-core`、`ansys-meshing-prime`、`pyaedt` 等約 40 庫。
+- 供全域 Python 3.14 一般 scripting；**MCP 不使用全域**。
+
+### 官方 MCP
+- 皆未安裝（`ansys-common-mcp`、`ansys-mapdl-mcp`、PyMechanical/PyFluent/PyCFX/PyAEDT/PyLumerical MCP）。
 
 > 官方目前有 MCP 的 6 個產品：Mechanical、MAPDL、Fluent、CFX、AEDT、Lumerical。
 
@@ -98,14 +108,18 @@
 
 ## 4. 後續規劃 Roadmap
 
-### Phase 0 — 決策與備份（進行中）
-- ✅ 重構已備份到分支 `refactor/unified-arch`（commit `b00c433`），並併入遠端 `941314b`（merge `6b6d9d0`）。
-- ✅ 完成本對應盤點與決策紀錄（本檔）。
+### Phase 0 — 決策與備份（✅ 完成）
+- ✅ 重構已備份到分支 `refactor/unified-arch`（commit `b00c433`），併入遠端 `941314b`（merge `6b6d9d0`）。
+- ✅ 對應盤點與決策紀錄（本檔），commit `64a1da2`。
 
-### Phase 1 — 穩定化 Workbench 層（對症斷線/閃退）
-- 安裝 `ansys-workbench-core`（PyWorkbench）。
-- 以 PyWorkbench client/server 取代手刻 batch journal + file-IPC bridge；保留舊 bridge 為 fallback，先小 spike 驗證穩定再切換。
-- 一併收斂佇列/路徑技術債（無悔清理）：統一 `workbench_queue` canonical 路徑、移除重複的 `bridges/` 與 `tools/` 兩份 `workbench_bridge.py`、清掉污染 `tools/` 的執行期資料。
+### Phase 1 — 穩定化 Workbench 層（對症斷線/閃退）（🔧 進行中）
+- ✅ 安裝 `ansys-workbench-core` 0.14.0 到 `.venv`（供 MCP）；全域另裝完整 `pyansys` 2026.1.3。
+- ✅ 新增 PyWorkbench 通道（**附 fallback、標記 UNVERIFIED**）：
+  - `products/workbench.py`：`WorkbenchController`（`connect`/`launch`/`run_script`/`run_script_file`/`start_mechanical_server`/`upload_file`/`download_project_archive`/`disconnect`/`status`，走 `SessionRegistry`）。
+  - `tools/workbench_pyworkbench.py`：8 個 additive 工具（`workbench_launch_server`/`connect_server`/`run_script_live`/`start_mechanical_server`/`upload_file`/`download_archive`/`disconnect_server`/`server_status`）。
+  - `__main__.py` 註冊新模組；舊 file-IPC bridge 與 batch launcher **保留為 fallback，未動**。
+- ⏳ **待驗證**（見第 5 節）：實機確認 PyWorkbench 連得上、穩定不斷線。驗證前程式碼維持 UNVERIFIED 標記。
+- ⏳ 驗證通過後才做：移除舊 file-IPC bridge、改寫既有 31 個 bridge 工具；無悔清理（`bridges/workbench_bridge.py`→`job_launcher.py` 改名、清 `tools/` 殘留執行期資料、佔位檔歸位）。
   （原「核心+清理」#2/#3 深修手刻 bridge 不再單獨做，隨 PyWorkbench 落地一併處理。）
 
 ### Phase 2 — 補齊產品庫與分層對稱
@@ -128,6 +142,47 @@
 - 擴充 docs 索引到全五產品（Fluent / SpaceClaim / LS-DYNA 待補）。
 - 每個 workflow skill 附驗證條件與範例。
 
-## 5. 相關文件
+## 5. 如何驗證 PyWorkbench 連線（UNVERIFIED → 驗證）
+
+> PyWorkbench 通道目前標記 **UNVERIFIED**——程式碼寫好但尚未實機連線。以下是驗證方式與「連上 vs 沒連上」判讀。**這些步驟會啟動 Workbench server（屬連線動作）**，由你決定何時執行。
+
+### 5.1 前置檢查
+- `.venv` 有 PyWorkbench：`.venv\Scripts\python.exe -m pip show ansys-workbench-core`（應為 0.14.0）。
+- 本機已安裝且可授權 Ansys Workbench（PyWorkbench 需在有 WB 的機器啟動 server）。
+
+### 5.2 方式 A：直接用 PyWorkbench（.venv）
+無副作用冒煙測試（只探測 template，不建系統、不求解）：
+
+```python
+from ansys.workbench.core import launch_workbench
+wb = launch_workbench(show_gui=True)          # 啟動 WB server + client（連線動作）
+print("server_version:", wb.server_version)   # 有版本字串 = 連上了
+print(wb.run_script_string(
+    "import json\n"
+    "tpl = GetTemplate(TemplateName='Static Structural', Solver='ANSYS')\n"
+    "wb_script_result = json.dumps({'template': str(tpl)})"))
+wb.exit()                                     # 關閉 server（PyWorkbench 慣例）
+```
+
+### 5.3 方式 B：透過本專案的 MCP 工具
+1. `workbench_launch_server`（或對已開的 server 用 `workbench_connect_server(port=...)`）→ 回 `{"ok": true, "key": ..., "server_version": ...}` 即連上。
+2. `workbench_server_status` → `{"connected": true, "sessions": [...], "current": ...}`。
+3. `workbench_run_script_live(script="import json\nwb_script_result=json.dumps({'ping':1})")` → 回 `{"ok": true, "output": ...}`。
+4. `workbench_disconnect_server` 結束（只離線，不關 server）。
+
+### 5.4 連上 vs 沒連上 判讀
+| 現象 | 判讀 |
+|---|---|
+| `server_version` 有值 / 工具回 `ok:true` 且含 `server_version` | ✅ 已連上 |
+| `run_script_string` 能回傳 `wb_script_result` 內容 | ✅ 雙向通道正常 |
+| 連續下多個 journal 全程不閃退 | ✅ 穩定（勝過手刻 batch 的 `0xC000013A`） |
+| `ok:false`，error 提及連線/逾時/找不到 WB | ❌ 未連上（查 WB 安裝、授權、port） |
+| `Error: Not connected to Workbench.` | 尚未 launch/connect，先做 5.2/5.3 第 1 步 |
+
+### 5.5 驗證通過後
+- 移除 `products/workbench.py`、`tools/workbench_pyworkbench.py` 的 `STATUS: UNVERIFIED` 註記（改為「已驗證 @日期」）。
+- 才進 Phase 1 收尾：移除舊 file-IPC bridge、改寫既有 bridge 工具、無悔清理。
+
+## 6. 相關文件
 - `context.md`：專案定位、四層架構、兩條執行通道、技術債。
 - `ARCHITECTURE.md`：分層職責、命名慣例、回傳信封。
