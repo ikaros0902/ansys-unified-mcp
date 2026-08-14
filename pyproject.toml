@@ -14,7 +14,6 @@ dependencies = [
     "ansys-fluent-core",
     "ansys-geometry-core",
     "ansys-optislang-core",
-    "ansys-workbench-core",
     "python-dotenv",
     "pydantic",
     "rich",
@@ -22,6 +21,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+workbench = ["ansys-workbench-core"]
 dyna = ["lasso-python"]
 dev = ["pytest"]
 
