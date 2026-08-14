@@ -95,6 +95,11 @@ config.py               偵測 ANSYS 安裝（registry / 環境變數），找�
 2. **產品分層尚未完全對稱**：`products/` 目前有 `mechanical.py` 與 `optislang.py`；**Fluent 實作仍在 `drivers/sim_impl.py`**（尚未收斂為 `products/fluent.py` 控制器）。這是剩餘的收斂目標。
 3. **session 模式已大致統一（optiSLang 已修）**：Mechanical 與 optiSLang 皆已用 `SessionRegistry`（見 `products/`）。優先修正的模組全域 `_osl` 技術債已移除。**剩餘**：Fluent（`drivers/sim_impl.py`）尚未確認是否全走 `SessionRegistry`，為後續收斂項。
 4. **文件涵蓋未齊**：`API_DOCS` 目前僅 5 檔、涵蓋 3 產品（mechanical / ls-prepost / optislang）。目標是涵蓋全部五產品（待補 fluent / spaceclaim / lsdyna），並以 `category` 把 api/scripting 與 guide/tutorial 分流。
+5. **`SKILLs/` 與 `.kiro/skills/` 持續同步問題**：已建立 `sync_skills.ps1` 解決。
+6. **Documentation Pipeline 中 2 個漏網檔未進入索引**：`LS-DYNA_Keyword_and_Theory_Manuals.md`, `Structural_Optimization_Analysis_Guide.md`。
+7. **Workbench 三通道競爭問題**：Batch subprocess / File-IPC / PyWorkbench gRPC 需決定主通道。
+8. **Fluent/Geometry 未收斂至 products/ 層**：仍使用全域變數。
+9. **測試覆蓋率僅 4/15 模組**。
 
 ## 7. 維護與擴充指引
 
