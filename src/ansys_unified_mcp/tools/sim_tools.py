@@ -241,13 +241,13 @@ async def fluent_reset_mapper() -> str:
 # sim_impl-based mechanical_* tools were removed during the architecture refactor.
 
 @mcp.tool(name='geometry_launch')
-async def geometry_launch(port: int = None, host: str = "localhost", transport_mode: str = "wnua", connect_timeout: int = 60) -> str:
+async def geometry_launch(port: int = None, host: str = "127.0.0.1", transport_mode: str = "insecure", connect_timeout: int = 15) -> str:
     """啟動 Geometry 建模器或連線現有 SpaceClaim 實例
 
     :param port: 連線已啟動 SpaceClaim 的 gRPC 埠號，不填則啟動新實例（啟動前會自動掃描 50051-50055 尋找已運行實例）
-    :param host: SpaceClaim 主機地址
-    :param transport_mode: gRPC 傳輸模式（Windows 預設 wnua）
-    :param connect_timeout: 連線/啟動超時秒數，預設60秒
+    :param host: SpaceClaim 主機地址（預設 127.0.0.1）
+    :param transport_mode: gRPC 傳輸模式（預設 insecure）
+    :param connect_timeout: 連線超時秒數，預設15秒
     """
     args = {}
     if port is not None:
