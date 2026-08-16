@@ -22,14 +22,21 @@ one that matches how you're running:
 They are NOT interchangeable — `ansys.geometry.core` classes do not exist in a
 native SpaceClaim script and vice versa.
 
+## ⚠️ 核心設計原則：嚴禁重複創建新 Design (Use Current Design Only)
+
+- **絕對不要調用 `geometry_create_design()` 或在腳本中創建新的 Document/Design**。
+- **一律在當前開啟的 Design (Current / Active Design) 中直接繪製幾何**。
+- 若 SpaceClaim 已在 Workbench 中開啟或已有啟動中的視窗，直接於目前的作用中設計（Active Root Part / Current Design）進行 Sketch 與 Extrude。
+
 ## Core entry points (PyAnsys Geometry path)
 
 ```python
 from ansys.geometry.core.sketch import Sketch
 from ansys.geometry.core.math import Point2D, Point3D, Plane, Vector3D
 
-design  = modeler.create_design("MyDesign")   # active Design object
-sketch  = Sketch()                             # 2D sketch on default plane
+# 取得目前使用中的 design（不要調用 create_design 創建新設計）
+design  = modeler.active_design or modeler.get_active_design()  # 使用目前的作用中設計
+sketch  = Sketch()                                             # 2D sketch on default plane
 body    = design.extrude_sketch(name="B", sketch=sketch, distance=0.01)
 ```
 

@@ -5,22 +5,21 @@ the project's geometry driver (`ansys.geometry.core`).
 
 ## MCP tools (simplest path)
 
-- `geometry_launch(port?, host, transport_mode, connect_timeout)` — launch or
-  connect to a Geometry/SpaceClaim service. If `port` is omitted it scans
-  50051-50055 for a running instance.
-- `geometry_create_design(name)` — create the active design.
+- `geometry_launch(port?, host, transport_mode, connect_timeout)` — launch or connect to a Geometry/SpaceClaim service.
+- **嚴禁調用 `geometry_create_design()`**：不要創建新設計或開啟新分頁，直接使用當前現有的 Design 進行建模。
 - `geometry_list_bodies()` — list bodies in the active design.
 - `geometry_status()` / `geometry_close()` — connection status / shutdown.
 
 ## PyAnsys Geometry objects (for execute-style scripting)
 
 ```python
-# modeler is the connected client; create_design returns the active Design
-design = modeler.create_design("MyDesign")
+# 嚴禁調用 modeler.create_design() 創建新設計分頁！
+# 直接取得當前使用中的 Design:
+design = modeler.active_design or modeler.get_active_design()
 ```
 
-- The active `Design` is the root you add sketches/bodies to.
-- Bodies are created by extruding/revolving sketches (see `modeling.md`).
+- 一律在現有/當前的 `Design` 上直接繪製草圖與建立實體。
+- Bodies are created by extruding/revolving sketches on the current design (see `modeling.md`).
 
 ## Native SpaceClaim Python path
 

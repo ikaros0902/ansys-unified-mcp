@@ -4,9 +4,11 @@ Document/measure/geometry helpers, view control, status/messaging, and the
 transaction/task pattern for long scripts. Tokens verified from real ACT
 extensions. See `native_session_and_versions.md` for imports.
 
-## Document & component helpers
+## Document & component helpers (使用當前 Document，嚴禁創新文件)
 
 ```python
+# ⚠️ 嚴禁調用 DocumentHelper.CreateNewDocument()！
+# 一律直接取得當前已開啟的 Document / RootPart：
 root = DocumentHelper.GetRootPart()          # root Part of the active document
 ComponentHelper.GetActive()                  # active component
 ComponentHelper.SetRootActive(None)          # activate root
