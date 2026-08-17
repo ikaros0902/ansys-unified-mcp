@@ -22,10 +22,11 @@ one that matches how you're running:
 They are NOT interchangeable — `ansys.geometry.core` classes do not exist in a
 native SpaceClaim script and vice versa.
 
-## ⚠️ 核心設計原則：嚴禁重複創建新 Design (Use Current Design Only)
+## ⚠️ 核心設計原則：嚴禁重複創建新 Design & 嚴格單位換算 (公尺 SI)
 
 - **絕對不要調用 `geometry_create_design()` 或在腳本中創建新的 Document/Design**。
 - **一律在當前開啟的 Design (Current / Active Design) 中直接繪製幾何**。
+- **長度單位一律為公尺 (Meter, m)**：PyAnsys Geometry (`geometry_*` 工具) 的尺寸參數強制為公尺。若使用者給予毫米 (mm)，請務必先除以 1000 換算（例如 50mm -> 0.05, 30mm -> 0.03, 20mm -> 0.02）再傳入工具！
 - 若 SpaceClaim 已在 Workbench 中開啟或已有啟動中的視窗，直接於目前的作用中設計（Active Root Part / Current Design）進行 Sketch 與 Extrude。
 
 ## Core entry points (PyAnsys Geometry path)
