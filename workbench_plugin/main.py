@@ -28,6 +28,7 @@ except Exception:
 
 _PLUGIN_DIR = os.path.abspath(os.path.dirname(__file__))
 def _resolve_queue_root():
+    # 此路徑邏輯與 core/paths.py 重複，但因 IronPython 環境限制無法共用
     env_queue = os.environ.get("WORKBENCH_MCP_QUEUE_ROOT")
     if env_queue:
         return env_queue

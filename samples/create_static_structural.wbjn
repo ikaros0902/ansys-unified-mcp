@@ -1,0 +1,10 @@
+# ANSYS Workbench Journal File
+# Create Static Structural System
+
+# Get the template for Static Structural
+template = GetTemplate('Static Structural')
+
+# Create the system from the template
+system = template.CreateSystem()
+
+# Save and complete

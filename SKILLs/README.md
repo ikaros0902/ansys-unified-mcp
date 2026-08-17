@@ -27,6 +27,7 @@ it never has to read the multi-MB source guides.
 | `pymechanical-operations` | PyMechanical gRPC (實戰) | *(inline)* gRPC connect, remote script, Scoping API, Mesh automation |
 | `pcb-warpage-analysis` | PCB 熱變形分析 (實戰) | *(inline)* SpaceClaim 79層分體, ROM 複合材料 APDL, 靜定 3-2-1 邊界條件 |
 | `ansys-error-catalog` | 錯誤分類目錄 (實戰) | workbench_act, mechanical_scripting, spaceclaim_pygeometry, ironpython_general |
+| `pdf-to-md` | PDF轉換 (工具) | *(inline)* PDF 文件轉換為 Markdown 工具 |
 
 ## ACT extensions (Mechanical/SpaceClaim)
 

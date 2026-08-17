@@ -10,6 +10,8 @@ from typing import Any
 
 from dotenv import load_dotenv
 
+from ansys_unified_mcp.core.paths import find_runwb2 as find_workbench_exe, find_mechanical_cli
+
 
 ROOT = Path(__file__).resolve().parents[1]
 load_dotenv(ROOT / ".env")
@@ -50,63 +52,7 @@ def _process_running(pid: int) -> bool:
             return False
 
 
-def _find_under(base: Path, name: str) -> Path | None:
-    if not base.exists():
-        return None
-    try:
-        matches = sorted(base.rglob(name), key=lambda p: p.stat().st_mtime, reverse=True)
-    except Exception:
-        return None
-    return matches[0] if matches else None
 
-
-def find_workbench_exe() -> Path | None:
-    """Find RunWB2.exe from env vars and common install locations."""
-    explicit = os.environ.get("ANSYS_WB_EXE") or os.environ.get("RUNWB2_EXE")
-    if explicit and Path(explicit).exists():
-        return Path(explicit)
-
-    candidates: list[Path] = []
-    ansys_root = os.environ.get("ANSYS_ROOT")
-    if ansys_root:
-        root = Path(ansys_root)
-        candidates.extend(
-            [
-                root / "Framework" / "bin" / "Win64" / "RunWB2.exe",
-                root / "Framework" / "bin" / "Win64" / "runwb2.exe",
-            ]
-        )
-    for key, value in os.environ.items():
-        if key.upper().startswith("AWP_ROOT"):
-            root = Path(value)
-            candidates.extend(
-                [
-                    root / "Framework" / "bin" / "Win64" / "RunWB2.exe",
-                    root / "Framework" / "bin" / "Win64" / "runwb2.exe",
-                ]
-            )
-
-    candidates.extend([Path("C:/Program Files/ANSYS Inc"), Path("C:/Program Files/Ansys Inc")])
-
-    for candidate in candidates:
-        if candidate.is_file():
-            return candidate
-        if candidate.is_dir():
-            found = _find_under(candidate, "RunWB2.exe") or _find_under(candidate, "runwb2.exe")
-            if found:
-                return found
-    return None
-
-
-def find_mechanical_cli() -> Path | None:
-    """Find the PyMechanical CLI installed in this MCP virtual environment."""
-    explicit = os.environ.get("ANSYS_MECHANICAL_CLI")
-    if explicit and Path(explicit).exists():
-        return Path(explicit)
-    cli = ROOT / ".venv" / "Scripts" / "ansys-mechanical.exe"
-    if cli.exists():
-        return cli
-    return None
 
 
 def detect_workbench_environment() -> dict[str, Any]:
