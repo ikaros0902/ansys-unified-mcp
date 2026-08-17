@@ -103,31 +103,40 @@ FLUENT_TOOLS = [
 GEOMETRY_TOOLS = [
     Tool(name="geometry_launch", description="啟動 Geometry 建模器或連線現有 SpaceClaim 實例",
          inputSchema={"type": "object", "properties": {
-             "port": {"type": "integer", "description": "連線已啟動 SpaceClaim 的 gRPC 埠號，不填則啟動新實例（啟動前會自動掃描 50051-50055 尋找已運行實例）"},
+             "port": {"type": "integer", "description": "連線已啟動 SpaceClaim 的 gRPC 埠號，不填則自動掃描 50051-50055 尋找已運行實例"},
              "host": {"type": "string", "default": "localhost", "description": "SpaceClaim 主機地址"},
-             "transport_mode": {"type": "string", "enum": ["wnua", "insecure", "uds"], "default": "wnua", "description": "gRPC 傳輸模式（Windows 預設 wnua）"},
-             "connect_timeout": {"type": "integer", "default": 60, "description": "連線/啟動超時秒數，預設60秒"}}}),
-    Tool(name="geometry_create_design", description="建立新的幾何設計",
+             "transport_mode": {"type": "string", "enum": ["wnua", "insecure", "uds"], "default": "insecure", "description": "gRPC 傳輸模式（預設 insecure）"},
+             "connect_timeout": {"type": "integer", "default": 15, "description": "連線超時秒數，預設15秒"}}}),
+    Tool(name="geometry_create_design", description="建立新的幾何設計（⚠️ 注意：若 SpaceClaim 中已有開啟的設計，請勿調用此工具，直接調用 create_block 等即可在當前設計中建模）",
          inputSchema={"type": "object", "properties": {"name": {"type": "string", "default": "Design"}},
              "required": ["name"]}),
-    Tool(name="geometry_create_block", description="建立立方體（v242: 用 sketch + extrude 實現）",
+    Tool(name="geometry_create_block", description="建立立方體（⚠️ 注意：所有尺寸單位皆為【公尺 m】！若使用者輸入 mm，請務必先除以 1000 轉換為公尺，例如 50mm 必須輸入 0.05）",
          inputSchema={"type": "object", "properties": {
-             "name": {"type": "string", "default": "Block"},
-             "length": {"type": "number", "default": 0.01}, "width": {"type": "number", "default": 0.01},
-             "height": {"type": "number", "default": 0.01},
-             "center_x": {"type": "number", "default": 0}, "center_y": {"type": "number", "default": 0},
-             "center_z": {"type": "number", "default": 0}}, "required": ["name"]}),
-    Tool(name="geometry_create_cylinder", description="建立圓柱體（extrude_sketch 方式）",
+             "name": {"type": "string", "default": "Block", "description": "方塊名稱"},
+             "length": {"type": "number", "default": 0.01, "description": "長度（單位：公尺 m。例：50mm 請傳入 0.05）"},
+             "width": {"type": "number", "default": 0.01, "description": "寬度（單位：公尺 m。例：30mm 請傳入 0.03）"},
+             "height": {"type": "number", "default": 0.01, "description": "高度（單位：公尺 m。例：20mm 請傳入 0.02）"},
+             "center_x": {"type": "number", "default": 0, "description": "中心 X 座標（單位：公尺 m）"},
+             "center_y": {"type": "number", "default": 0, "description": "中心 Y 座標（單位：公尺 m）"},
+             "center_z": {"type": "number", "default": 0, "description": "中心 Z 座標（單位：公尺 m）"}},
+             "required": ["name"]}),
+    Tool(name="geometry_create_cylinder", description="建立圓柱體（⚠️ 注意：所有尺寸單位皆為【公尺 m】！若使用者輸入 mm，請務必先除以 1000 轉換為公尺，例如 10mm 必須輸入 0.01）",
          inputSchema={"type": "object", "properties": {
-             "name": {"type": "string", "default": "Cylinder"},
-             "radius": {"type": "number", "default": 0.005}, "height": {"type": "number", "default": 0.01},
-             "center_x": {"type": "number", "default": 0}, "center_y": {"type": "number", "default": 0},
-             "center_z": {"type": "number", "default": 0}}, "required": ["name"]}),
-    Tool(name="geometry_create_sphere", description="建立球體",
+             "name": {"type": "string", "default": "Cylinder", "description": "圓柱體名稱"},
+             "radius": {"type": "number", "default": 0.005, "description": "半徑（單位：公尺 m。例：5mm 請傳入 0.005）"},
+             "height": {"type": "number", "default": 0.01, "description": "高度（單位：公尺 m。例：20mm 請傳入 0.02）"},
+             "center_x": {"type": "number", "default": 0, "description": "中心 X 座標（單位：公尺 m）"},
+             "center_y": {"type": "number", "default": 0, "description": "中心 Y 座標（單位：公尺 m）"},
+             "center_z": {"type": "number", "default": 0, "description": "中心 Z 座標（單位：公尺 m）"}},
+             "required": ["name"]}),
+    Tool(name="geometry_create_sphere", description="建立球體（⚠️ 注意：尺寸單位為【公尺 m】！例：半徑 10mm 請輸入 0.01）",
          inputSchema={"type": "object", "properties": {
-             "name": {"type": "string", "default": "Sphere"}, "radius": {"type": "number", "default": 0.005},
-             "center_x": {"type": "number", "default": 0}, "center_y": {"type": "number", "default": 0},
-             "center_z": {"type": "number", "default": 0}}, "required": ["name"]}),
+             "name": {"type": "string", "default": "Sphere", "description": "球體名稱"},
+             "radius": {"type": "number", "default": 0.005, "description": "半徑（單位：公尺 m。例：5mm 請傳入 0.005）"},
+             "center_x": {"type": "number", "default": 0, "description": "中心 X 座標（單位：公尺 m）"},
+             "center_y": {"type": "number", "default": 0, "description": "中心 Y 座標（單位：公尺 m）"},
+             "center_z": {"type": "number", "default": 0, "description": "中心 Z 座標（單位：公尺 m）"}},
+             "required": ["name"]}),
     Tool(name="geometry_export", description="匯出幾何為 STEP/IGES 格式",
          inputSchema={"type": "object", "properties": {
              "file_path": {"type": "string"},
@@ -147,12 +156,22 @@ ALL_TOOLS = FLUENT_TOOLS + GEOMETRY_TOOLS
 # ===================================================================
 
 def _geom_get_design():
-    """返回當前設計物件。依據官方文件：create_design 返回 Design，直接持有。"""
+    """返回當前設計物件。若 _current_design 為 None，自動調用 read_existing_design() 取得 SpaceClaim 當前視窗設計。"""
     global _current_design
     if _modeler is None:
         raise RuntimeError("Geometry 未連線，請先執行 geometry_launch")
     if _current_design is None:
-        raise RuntimeError("無活躍設計，請先執行 geometry_create_design")
+        try:
+            _current_design = _modeler.read_existing_design()
+            logger.info(f"自動讀取現有設計成功: {_current_design.name}")
+        except Exception as e:
+            logger.warning(f"自動讀取現有設計失敗: {e}")
+            try:
+                _current_design = _modeler.get_active_design()
+            except Exception:
+                pass
+    if _current_design is None:
+        raise RuntimeError("無法取得 SpaceClaim 當前作用中設計，請確認 SpaceClaim 視窗中已開啟設計。")
     return _current_design
 
 
@@ -429,20 +448,22 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
         # ==================== GEOMETRY ====================
         elif name == "geometry_launch":
             import grpc
-            from ansys.geometry.core import Modeler, launch_modeler
+            from ansys.geometry.core import Modeler
             loop = asyncio.get_event_loop()
             port = arguments.get("port")
             host = arguments.get("host", "localhost")
             transport_mode = arguments.get("transport_mode", "insecure")
-            connect_timeout = arguments.get("connect_timeout", 15)
+            # 限制內部逾時最多 8 秒，避免觸發 OpenClaw 30 秒中斷
+            raw_timeout = int(arguments.get("connect_timeout", 8))
+            connect_timeout = max(3, min(raw_timeout, 8))
 
-            def _grpc_ping(h, p, ping_timeout=3):
-                """用 grpc channel 快速確認 port 是否存活"""
+            def _grpc_ping(h, p, ping_timeout=0.4):
+                """快速確認 port 是否存活（探測 0.4s）"""
                 ch = grpc.insecure_channel(f"{h}:{p}")
                 try:
                     grpc.channel_ready_future(ch).result(timeout=ping_timeout)
                     return True
-                except grpc.FutureTimeoutError:
+                except Exception:
                     return False
                 finally:
                     ch.close()
@@ -453,21 +474,24 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
             if port:
                 # 模式 1：連接指定 port
                 if not _grpc_ping(host, port):
-                    raise ConnectionError(
-                        f"SpaceClaim gRPC 埠號 {port} 無回應。\n"
-                        f"請在 SpaceClaim Script Editor 中執行啟動腳本：\n"
-                        f"  start_api_server.py（位於 %APPDATA%\\SpaceClaim\\Published Scripts\\）"
+                    return (
+                        f"❌ SpaceClaim gRPC 埠號 {port} 無回應。\n"
+                        f"請在 SpaceClaim Script Editor 執行啟動腳本（start_api_server.py）。"
                     )
                 try:
                     _modeler = await asyncio.wait_for(
                         loop.run_in_executor(None, lambda: _make_modeler(host, port, transport_mode, connect_timeout)),
-                        timeout=connect_timeout + 5,
+                        timeout=connect_timeout,
                     )
-                    result = f"已連線 SpaceClaim Geometry 建模器 ({host}:{port})"
-                except asyncio.TimeoutError:
-                    raise TimeoutError(f"連線 SpaceClaim ({host}:{port}) 超時 ({connect_timeout}s)")
+                    try:
+                        _current_design = _modeler.read_existing_design()
+                        result = f"已連線 SpaceClaim ({host}:{port})，綁定當前設計 '{_current_design.name}'"
+                    except Exception:
+                        result = f"已連線 SpaceClaim ({host}:{port})"
+                except Exception as e:
+                    return f"❌ 連線 SpaceClaim ({host}:{port}) 失敗: {e}"
             else:
-                # 自動掃描常用 port（先 ping 確認再連線）
+                # 自動掃描常用 port（50051-50055）
                 scan_ports = [50051, 50052, 50053, 50054, 50055]
                 connected = False
                 for scan_port in scan_ports:
@@ -476,31 +500,31 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
                     try:
                         _modeler = await asyncio.wait_for(
                             loop.run_in_executor(None, lambda p=scan_port: _make_modeler(host, p, transport_mode, connect_timeout)),
-                            timeout=connect_timeout + 5,
+                            timeout=connect_timeout,
                         )
                         connected = True
-                        result = f"✅ 自動偵測到 SpaceClaim，已連線 ({host}:{scan_port})"
-                        logger.info(f"Auto-connected to SpaceClaim on port {scan_port}")
+                        try:
+                            _current_design = _modeler.read_existing_design()
+                            result = f"已連線 SpaceClaim ({host}:{scan_port})，綁定當前設計 '{_current_design.name}'"
+                        except Exception:
+                            result = f"已連線 SpaceClaim ({host}:{scan_port})"
+                        logger.info(f"Connected to SpaceClaim on port {scan_port}")
                         break
                     except Exception as e:
-                        logger.warning(f"Port {scan_port} ping OK but Modeler failed: {e}")
+                        logger.warning(f"Port {scan_port} failed: {e}")
                         continue
 
                 if not connected:
-                    # 所有 port 都無回應，提示使用者在 SpaceClaim 中執行啟動腳本。
-                    # 路徑不寫死 C:\Program Files（安裝可能在其他磁碟機，如 D:），
-                    # 改用 AWP_ROOT<ver> 環境變數（ANSYS 安裝程式自動設定，永遠正確）。
                     hint_root = os.environ.get("AWP_ROOT251") or r"<ANSYS_ROOT>\v251"
                     dll_hint_path = os.path.join(hint_root, "Addins", "ApiServer", "Presentation.ApiServerAddIn.dll")
                     result = (
-                        "❌ 找不到活躍的 SpaceClaim gRPC 服務（已掃描 50051-50055）。\n\n"
-                        "請在 SpaceClaim Script Editor 中執行以下腳本以啟動連線服務：\n"
+                        "❌ 未偵測到 SpaceClaim 服務（已掃描 50051-50055）。\n\n"
+                        "請在 SpaceClaim Script Editor 執行啟動腳本：\n"
                         "  import System.Reflection, System\n"
                         "  asm = System.Reflection.Assembly.LoadFrom(\n"
                         f"    r'{dll_hint_path}')\n"
                         "  addon = System.Activator.CreateInstance(asm.GetType('Presentation.ApiServerAddIn.ApiServerAddIn'))\n"
-                        "  addon.Initialize(); addon.Connect()\n\n"
-                        "或執行 setup.ps1 並設定 Startup macro，讓 SpaceClaim 每次開啟時自動啟動。"
+                        "  addon.Initialize(); addon.Connect()\n"
                     )
 
 

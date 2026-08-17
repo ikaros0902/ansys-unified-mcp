@@ -19,41 +19,37 @@ load_dotenv()
 
 # Import the shared FastMCP instance
 from ansys_unified_mcp.shared import mcp
-
-# Import tools so they are registered with the MCP instance
-import ansys_unified_mcp.tools.workbench_filebridge
 import os
 
-# PyWorkbench 通道尚未驗證，預設不載入。
-# 設定 ANSYS_MCP_ENABLE_PYWORKBENCH=1 啟用。
-if os.environ.get("ANSYS_MCP_ENABLE_PYWORKBENCH", "").strip() == "1":
-    import ansys_unified_mcp.tools.workbench_pyworkbench  # PyWorkbench (official client/server); UNVERIFIED, additive alongside the legacy bridge
-    logger.info("PyWorkbench tools enabled (UNVERIFIED).")
+# Dynamic Tool Routing: 根據 ANSYS_MCP_PROFILE 決定載入的工具模組
+# 可選值: 'geometry' (幾何建模), 'mechanical' (結構分析), 'fluent' (流體), 'workbench' (工作台流程), 'all' (全套工具)
+profile = os.environ.get("ANSYS_MCP_PROFILE", "all").strip().lower()
+logger.info(f"Dynamic Tool Routing active. Profile: '{profile}'")
 
-import ansys_unified_mcp.tools.mechanical
-import ansys_unified_mcp.tools.sim_tools
-import ansys_unified_mcp.tools.optislang
+# 核心通用診斷與文件工具（一律載入）
+import ansys_unified_mcp.tools.connection_doctor
 import ansys_unified_mcp.tools.docs_tools
+
+if profile in ("all", "full", "workbench", "wb"):
+    import ansys_unified_mcp.tools.workbench_filebridge
+    if os.environ.get("ANSYS_MCP_ENABLE_PYWORKBENCH", "").strip() == "1":
+        import ansys_unified_mcp.tools.workbench_pyworkbench
+        logger.info("PyWorkbench tools enabled.")
+
+if profile in ("all", "full", "mechanical", "structural"):
+    import ansys_unified_mcp.tools.mechanical
+
+if profile in ("all", "full", "optislang"):
+    import ansys_unified_mcp.tools.optislang
+
+if profile in ("all", "full", "geometry", "spaceclaim", "fluent", "cfd"):
+    import ansys_unified_mcp.tools.sim_tools
 
 # Import the auto connection manager (it runs its initialization upon import if needed)
 from ansys_unified_mcp.connection_manager import connection_manager
 
 def main():
     logger.info("Starting Unified ANSYS MCP Server v2.0...")
-    
-    # 立即啟動 MCP server，不阻塞於連接偵測
-    # 背景連接掃描改為工具內懶加載，避免啟動延遲
-    # 
-    # 若需保留預掃描邏輯，改為異步背景線程：
-    # import threading
-    # def bg_scan():
-    #     fluent_port = connection_manager.attach_to_fluent()
-    #     if fluent_port:
-    #         logger.info(f"Auto-detected Fluent on port {fluent_port}")
-    #     ... (其他掃描)
-    # threading.Thread(target=bg_scan, daemon=True).start()
-    
-    # Run with stdio transport to ensure no standard output corruption
     mcp.run(transport='stdio')
 
 if __name__ == "__main__":

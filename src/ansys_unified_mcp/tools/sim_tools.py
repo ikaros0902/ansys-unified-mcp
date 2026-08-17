@@ -1,9 +1,28 @@
 # -*- coding: utf-8 -*-
+import os
 from ansys_unified_mcp.shared import mcp
 from ansys_unified_mcp.drivers import sim_impl
 from typing import Any, List, Dict
 
-@mcp.tool(name='fluent_launch')
+profile = os.environ.get("ANSYS_MCP_PROFILE", "all").strip().lower()
+enable_fluent = profile in ("all", "full", "fluent", "cfd")
+enable_geometry = profile in ("all", "full", "geometry", "spaceclaim")
+
+def tool_fluent(name=None):
+    def decorator(fn):
+        if enable_fluent:
+            return mcp.tool(name=name)(fn) if name else mcp.tool()(fn)
+        return fn
+    return decorator
+
+def tool_geometry(name=None):
+    def decorator(fn):
+        if enable_geometry:
+            return mcp.tool(name=name)(fn) if name else mcp.tool()(fn)
+        return fn
+    return decorator
+
+@tool_fluent(name='fluent_launch')
 async def fluent_launch(processors: int = 4, cwd: str = None, port: int = None, ip: str = '127.0.0.1', password: str = None, connect_timeout: int = 30) -> str:
     """啟動 Fluent solver 或連線現有例項
     :param processors: 啟動新例項時的處理器數量
@@ -29,7 +48,7 @@ async def fluent_launch(processors: int = 4, cwd: str = None, port: int = None, 
     res = await sim_impl.call_tool('fluent_launch', args)
     return "\n".join([c.text for c in res])
 
-@mcp.tool(name='fluent_read_case')
+@tool_fluent(name='fluent_read_case')
 async def fluent_read_case(file_path: str) -> str:
     """載入 .cas 算例檔案
     :param file_path: 
@@ -40,7 +59,7 @@ async def fluent_read_case(file_path: str) -> str:
     res = await sim_impl.call_tool('fluent_read_case', args)
     return "\n".join([c.text for c in res])
 
-@mcp.tool(name='fluent_read_mesh')
+@tool_fluent(name='fluent_read_mesh')
 async def fluent_read_mesh(file_path: str) -> str:
     """載入 .msh 網格檔案
     :param file_path: 
@@ -51,7 +70,7 @@ async def fluent_read_mesh(file_path: str) -> str:
     res = await sim_impl.call_tool('fluent_read_mesh', args)
     return "\n".join([c.text for c in res])
 
-@mcp.tool(name='fluent_set_solver')
+@tool_fluent(name='fluent_set_solver')
 async def fluent_set_solver(viscous_model: str = None, energy: bool = None, transient: bool = None) -> str:
     """設定求解器（湍流模型/能量/瞬態）
     :param viscous_model: 
@@ -68,7 +87,7 @@ async def fluent_set_solver(viscous_model: str = None, energy: bool = None, tran
     res = await sim_impl.call_tool('fluent_set_solver', args)
     return "\n".join([c.text for c in res])
 
-@mcp.tool(name='fluent_set_boundary')
+@tool_fluent(name='fluent_set_boundary')
 async def fluent_set_boundary(zone: str, bc_type: str, params: dict = None) -> str:
     """設定邊界條件
     :param zone: 
@@ -85,7 +104,7 @@ async def fluent_set_boundary(zone: str, bc_type: str, params: dict = None) -> s
     res = await sim_impl.call_tool('fluent_set_boundary', args)
     return "\n".join([c.text for c in res])
 
-@mcp.tool(name='fluent_set_material')
+@tool_fluent(name='fluent_set_material')
 async def fluent_set_material(zone: str, material: str) -> str:
     """設定區域材料
     :param zone: 
@@ -99,7 +118,7 @@ async def fluent_set_material(zone: str, material: str) -> str:
     res = await sim_impl.call_tool('fluent_set_material', args)
     return "\n".join([c.text for c in res])
 
-@mcp.tool(name='fluent_initialize')
+@tool_fluent(name='fluent_initialize')
 async def fluent_initialize(method: str = 'hybrid') -> str:
     """初始化流場（hybrid/standard）
     :param method: 
@@ -110,7 +129,7 @@ async def fluent_initialize(method: str = 'hybrid') -> str:
     res = await sim_impl.call_tool('fluent_initialize', args)
     return "\n".join([c.text for c in res])
 
-@mcp.tool(name='fluent_iterate')
+@tool_fluent(name='fluent_iterate')
 async def fluent_iterate(iterations: int) -> str:
     """迭代計算
     :param iterations: 
@@ -121,7 +140,7 @@ async def fluent_iterate(iterations: int) -> str:
     res = await sim_impl.call_tool('fluent_iterate', args)
     return "\n".join([c.text for c in res])
 
-@mcp.tool(name='fluent_get_residuals')
+@tool_fluent(name='fluent_get_residuals')
 async def fluent_get_residuals() -> str:
     """獲取殘差值
     """
@@ -129,7 +148,7 @@ async def fluent_get_residuals() -> str:
     res = await sim_impl.call_tool('fluent_get_residuals', args)
     return "\n".join([c.text for c in res])
 
-@mcp.tool(name='fluent_save')
+@tool_fluent(name='fluent_save')
 async def fluent_save(prefix: str) -> str:
     """儲存 case/data
     :param prefix: 
@@ -140,7 +159,7 @@ async def fluent_save(prefix: str) -> str:
     res = await sim_impl.call_tool('fluent_save', args)
     return "\n".join([c.text for c in res])
 
-@mcp.tool(name='fluent_tui')
+@tool_fluent(name='fluent_tui')
 async def fluent_tui(command: str) -> str:
     """執行 Fluent TUI 命令
     :param command: 
@@ -151,7 +170,7 @@ async def fluent_tui(command: str) -> str:
     res = await sim_impl.call_tool('fluent_tui', args)
     return "\n".join([c.text for c in res])
 
-@mcp.tool(name='fluent_status')
+@tool_fluent(name='fluent_status')
 async def fluent_status() -> str:
     """Fluent 連線狀態
     """
@@ -159,7 +178,7 @@ async def fluent_status() -> str:
     res = await sim_impl.call_tool('fluent_status', args)
     return "\n".join([c.text for c in res])
 
-@mcp.tool(name='fluent_load_udf')
+@tool_fluent(name='fluent_load_udf')
 async def fluent_load_udf(source_file: str, compile: bool = False) -> str:
     """載入 UDF（自動處理 Windows 磁碟機代號路徑問題，解釋並驗證成功）
     :param source_file: UDF 原始檔絕對路徑（如 E:/path/to/file.c）
@@ -173,7 +192,7 @@ async def fluent_load_udf(source_file: str, compile: bool = False) -> str:
     res = await sim_impl.call_tool('fluent_load_udf', args)
     return "\n".join([c.text for c in res])
 
-@mcp.tool(name='fluent_hook_udf')
+@tool_fluent(name='fluent_hook_udf')
 async def fluent_hook_udf(zone_name: str, profile_name: str, phase_name: str = 'water', momentum_field: str = 'mass_flux') -> str:
     """將已載入的 UDF profile 掛鉤到邊界條件
     :param zone_name: 邊界條件區域名稱
@@ -193,7 +212,7 @@ async def fluent_hook_udf(zone_name: str, profile_name: str, phase_name: str = '
     res = await sim_impl.call_tool('fluent_hook_udf', args)
     return "\n".join([c.text for c in res])
 
-@mcp.tool(name='fluent_list_udfs')
+@tool_fluent(name='fluent_list_udfs')
 async def fluent_list_udfs(zone_name: str = None) -> str:
     """列出已載入的 UDF 和邊界條件掛鉤狀態
     :param zone_name: 檢查指定區域的 UDF 掛鉤狀態（可選）
@@ -204,7 +223,7 @@ async def fluent_list_udfs(zone_name: str = None) -> str:
     res = await sim_impl.call_tool('fluent_list_udfs', args)
     return "\n".join([c.text for c in res])
 
-@mcp.tool(name='fluent_exit')
+@tool_fluent(name='fluent_exit')
 async def fluent_exit() -> str:
     """關閉 Fluent
     """
@@ -212,7 +231,7 @@ async def fluent_exit() -> str:
     res = await sim_impl.call_tool('fluent_exit', args)
     return "\n".join([c.text for c in res])
 
-@mcp.tool(name='fluent_get_script')
+@tool_fluent(name='fluent_get_script')
 async def fluent_get_script() -> str:
     """獲取當前 MCP 操作序列對應的 .jou 指令碼（Skill 聯動：自動累積 MCP→TUI 對映）
     """
@@ -220,7 +239,7 @@ async def fluent_get_script() -> str:
     res = await sim_impl.call_tool('fluent_get_script', args)
     return "\n".join([c.text for c in res])
 
-@mcp.tool(name='fluent_get_mapping_report')
+@tool_fluent(name='fluent_get_mapping_report')
 async def fluent_get_mapping_report() -> str:
     """獲取 MCP 到 TUI 的完整對映報告
     """
@@ -228,7 +247,7 @@ async def fluent_get_mapping_report() -> str:
     res = await sim_impl.call_tool('fluent_get_mapping_report', args)
     return "\n".join([c.text for c in res])
 
-@mcp.tool(name='fluent_reset_mapper')
+@tool_fluent(name='fluent_reset_mapper')
 async def fluent_reset_mapper() -> str:
     """重置 TUI 對映器（清除歷史記錄）
     """
@@ -240,14 +259,14 @@ async def fluent_reset_mapper() -> str:
 # products/mechanical.py + the shared SessionRegistry). The duplicate
 # sim_impl-based mechanical_* tools were removed during the architecture refactor.
 
-@mcp.tool(name='geometry_launch')
-async def geometry_launch(port: int = None, host: str = "127.0.0.1", transport_mode: str = "insecure", connect_timeout: int = 15) -> str:
+@tool_geometry(name='geometry_launch')
+async def geometry_launch(port: int = None, host: str = "127.0.0.1", transport_mode: str = "insecure", connect_timeout: int = 30) -> str:
     """啟動 Geometry 建模器或連線現有 SpaceClaim 實例
 
     :param port: 連線已啟動 SpaceClaim 的 gRPC 埠號，不填則啟動新實例（啟動前會自動掃描 50051-50055 尋找已運行實例）
     :param host: SpaceClaim 主機地址（預設 127.0.0.1）
     :param transport_mode: gRPC 傳輸模式（預設 insecure）
-    :param connect_timeout: 連線超時秒數，預設15秒
+    :param connect_timeout: 連線超時秒數，預設30秒
     """
     args = {}
     if port is not None:
@@ -262,10 +281,10 @@ async def geometry_launch(port: int = None, host: str = "127.0.0.1", transport_m
     return "\n".join([c.text for c in res])
 
 
-@mcp.tool(name='geometry_create_design')
+@tool_geometry(name='geometry_create_design')
 async def geometry_create_design(name: str) -> str:
-    """建立新的幾何設計
-    :param name: 
+    """建立新的幾何設計（⚠️ 注意：若 SpaceClaim 中已有開啟的設計，請勿調用此工具，直接調用 create_block 等即可在當前設計中建模）
+    :param name: 設計名稱
     """
     args = {}
     if name is not None:
@@ -273,16 +292,16 @@ async def geometry_create_design(name: str) -> str:
     res = await sim_impl.call_tool('geometry_create_design', args)
     return "\n".join([c.text for c in res])
 
-@mcp.tool(name='geometry_create_block')
+@tool_geometry(name='geometry_create_block')
 async def geometry_create_block(name: str, length: float = 0.01, width: float = 0.01, height: float = 0.01, center_x: float = 0, center_y: float = 0, center_z: float = 0) -> str:
-    """建立立方體（v242: 用 sketch + extrude 實現）
-    :param name: 
-    :param length: 
-    :param width: 
-    :param height: 
-    :param center_x: 
-    :param center_y: 
-    :param center_z: 
+    """建立立方體（⚠️ 注意：所有尺寸單位皆為【公尺 m】！若使用者輸入 mm，請務必先除以 1000 轉換為公尺，例如 50mm 必須傳入 0.05，30mm 傳入 0.03，20mm 傳入 0.02）
+    :param name: 方塊名稱（例如 Block1）
+    :param length: 長度（單位：公尺 m。例：50mm 請傳入 0.05）
+    :param width: 寬度（單位：公尺 m。例：30mm 請傳入 0.03）
+    :param height: 高度（單位：公尺 m。例：20mm 請傳入 0.02）
+    :param center_x: 中心 X 座標（單位：公尺 m）
+    :param center_y: 中心 Y 座標（單位：公尺 m）
+    :param center_z: 中心 Z 座標（單位：公尺 m）
     """
     args = {}
     if name is not None:
@@ -302,15 +321,15 @@ async def geometry_create_block(name: str, length: float = 0.01, width: float = 
     res = await sim_impl.call_tool('geometry_create_block', args)
     return "\n".join([c.text for c in res])
 
-@mcp.tool(name='geometry_create_cylinder')
+@tool_geometry(name='geometry_create_cylinder')
 async def geometry_create_cylinder(name: str, radius: float = 0.005, height: float = 0.01, center_x: float = 0, center_y: float = 0, center_z: float = 0) -> str:
-    """建立圓柱體（extrude_sketch 方式）
-    :param name: 
-    :param radius: 
-    :param height: 
-    :param center_x: 
-    :param center_y: 
-    :param center_z: 
+    """建立圓柱體（⚠️ 注意：所有尺寸單位皆為【公尺 m】！例：半徑 5mm 傳入 0.005，高度 20mm 傳入 0.02）
+    :param name: 圓柱體名稱
+    :param radius: 半徑（單位：公尺 m。例：5mm 請傳入 0.005）
+    :param height: 高度（單位：公尺 m。例：20mm 請傳入 0.02）
+    :param center_x: 中心 X 座標（單位：公尺 m）
+    :param center_y: 中心 Y 座標（單位：公尺 m）
+    :param center_z: 中心 Z 座標（單位：公尺 m）
     """
     args = {}
     if name is not None:
@@ -328,14 +347,14 @@ async def geometry_create_cylinder(name: str, radius: float = 0.005, height: flo
     res = await sim_impl.call_tool('geometry_create_cylinder', args)
     return "\n".join([c.text for c in res])
 
-@mcp.tool(name='geometry_create_sphere')
+@tool_geometry(name='geometry_create_sphere')
 async def geometry_create_sphere(name: str, radius: float = 0.005, center_x: float = 0, center_y: float = 0, center_z: float = 0) -> str:
-    """建立球體
-    :param name: 
-    :param radius: 
-    :param center_x: 
-    :param center_y: 
-    :param center_z: 
+    """建立球體（⚠️ 注意：尺寸單位皆為【公尺 m】！例：半徑 10mm 請輸入 0.01）
+    :param name: 球體名稱
+    :param radius: 半徑（單位：公尺 m。例：5mm 請傳入 0.005）
+    :param center_x: 中心 X 座標（單位：公尺 m）
+    :param center_y: 中心 Y 座標（單位：公尺 m）
+    :param center_z: 中心 Z 座標（單位：公尺 m）
     """
     args = {}
     if name is not None:
@@ -351,7 +370,7 @@ async def geometry_create_sphere(name: str, radius: float = 0.005, center_x: flo
     res = await sim_impl.call_tool('geometry_create_sphere', args)
     return "\n".join([c.text for c in res])
 
-@mcp.tool(name='geometry_export')
+@tool_geometry(name='geometry_export')
 async def geometry_export(file_path: str, format: str = 'step') -> str:
     """匯出幾何為 STEP/IGES 格式
     :param file_path: 
@@ -365,7 +384,7 @@ async def geometry_export(file_path: str, format: str = 'step') -> str:
     res = await sim_impl.call_tool('geometry_export', args)
     return "\n".join([c.text for c in res])
 
-@mcp.tool(name='geometry_list_bodies')
+@tool_geometry(name='geometry_list_bodies')
 async def geometry_list_bodies() -> str:
     """列出當前設計中的所有幾何體
     """
@@ -373,7 +392,7 @@ async def geometry_list_bodies() -> str:
     res = await sim_impl.call_tool('geometry_list_bodies', args)
     return "\n".join([c.text for c in res])
 
-@mcp.tool(name='geometry_import_file')
+@tool_geometry(name='geometry_import_file')
 async def geometry_import_file(file_path: str) -> str:
     """匯入 CAD 檔案
     :param file_path: 
@@ -384,7 +403,7 @@ async def geometry_import_file(file_path: str) -> str:
     res = await sim_impl.call_tool('geometry_import_file', args)
     return "\n".join([c.text for c in res])
 
-@mcp.tool(name='geometry_status')
+@tool_geometry(name='geometry_status')
 async def geometry_status() -> str:
     """Geometry 建模器連線狀態
     """
@@ -392,7 +411,7 @@ async def geometry_status() -> str:
     res = await sim_impl.call_tool('geometry_status', args)
     return "\n".join([c.text for c in res])
 
-@mcp.tool(name='geometry_close')
+@tool_geometry(name='geometry_close')
 async def geometry_close() -> str:
     """關閉 Geometry 建模器
     """
