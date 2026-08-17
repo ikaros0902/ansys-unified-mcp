@@ -15,7 +15,7 @@
 | Session 管理（舊架構殘留） | 🔴 未收斂 | `drivers/sim_impl.py`（Fluent + Geometry/SpaceClaim）仍用模組全域變數 `_fluent_session`/`_modeler`，未走 `SessionRegistry` |
 | 回傳信封一致性 | 🟡 不一致 | `mechanical.py`/`optislang.py` 走 `{"ok":..}` 信封；`workbench_bridge.py`（舊 file-IPC bridge）常回純字串或 `Error: ...` |
 | 工具層命名 | 🟡 不一致 | Mechanical 工具多數無 `mechanical_` 前綴（如 `list_instances`、`add_force`）；optiSLang 前綴/無前綴混用 |
-| 測試覆蓋率 | 🔴 極窄 | 僅 2 個測試檔（`test_sessions.py`、`test_optislang_controller.py`），品質高但只覆蓋 `core/sessions.py` 和 `products/optislang.py`；Mechanical/Workbench/Fluent/Geometry/connection_manager 完全無測試 |
+| 測試覆蓋率 | 🟡 部分覆蓋 | 4 個測試檔（`test_sessions.py`, `test_mechanical_controller.py`, `test_optislang_controller.py`, `test_workbench_controller.py`） |
 | 連線層驗證 | 🔴 未驗證 | `products/workbench.py`、`tools/workbench_pyworkbench.py` 明確標註 `UNVERIFIED`，從未連過真實 Workbench server |
 | 文件檢索子系統 | 🟢 良好 | 28 份文件、涵蓋 5 產品（mechanical/lsdyna/ls-prepost/optislang/spaceclaim），FTS5 索引正常；僅缺 Fluent |
 | Timeout 機制 | 🟡 部分缺失 | `bridges/workbench_bridge.py` 的檔案 IPC 輪詢有 timeout（預設 30s）；但 gRPC 直連路徑（Mechanical/optiSLang controller 的 `run_script`）無 timeout，會無限等待 |
@@ -36,12 +36,9 @@
 - 影響：中高（功能限制 + 架構不一致，非當機風險）
 - 修法：仿照 `products/mechanical.py` 的模式，寫 `products/fluent.py`、`products/geometry.py` controller，session 存入 `registry`，`sim_impl.py` 改為委派。
 
-**C2. gRPC 直連路徑無 timeout，會無限卡住**
-- 位置：`products/mechanical.py` 的 `run_script()`（呼叫 `session.run_python_script(wrapper)`）、`products/optislang.py` 的 `run_script()`、`products/workbench.py` 的 `run_script()`
-- 問題：這三個都是直接呼叫底層 PyAnsys 物件的方法，沒有任何 timeout 包裝。若目標 App 卡住（例如 Mechanical 被一個 modal dialog 擋住、或 CAD 操作鎖死），呼叫會無限期阻塞，MCP server 的這次工具呼叫永遠不返回。
-- 對比：舊的 `bridges/workbench_bridge.py`（file-IPC 路徑）反而有 `DEFAULT_TIMEOUT = 30.0` 的輪詢逾時機制——新架構在這點上**退步**了。
-- 影響：高（會讓 AI 客戶端整個卡住，使用者只能砍 process）
-- 修法：`run_script` 內用 `concurrent.futures.ThreadPoolExecutor` + `future.result(timeout=N)` 包一層，逾時就回 `{"ok": false, "error": "timeout"}`（gRPC 呼叫本身無法從外部中斷，但至少能讓 MCP 工具呼叫及時返回並回報，不會讓客戶端卡死）。
+**C2. gRPC 直連路徑無 timeout，會無限卡住 (🟢 已修復)**
+- 位置：`products/mechanical.py`, `products/optislang.py`, `products/workbench.py`
+- 狀態：已實作 `core/timeout.py`，上述檔案均已套用 `run_with_timeout` 解決無限卡住問題。
 
 **C3. `products/workbench.py` 依賴的套件未在 `pyproject.toml`/`requirements.txt` 宣告**
 - 位置：`products/workbench.py` 內 `from ansys.workbench.core import launch_workbench`；`pyproject.toml` dependencies 只列了 `ansys-mechanical-core`/`ansys-fluent-core`/`ansys-geometry-core`/`ansys-optislang-core`，沒有 `ansys-workbench-core`
@@ -77,7 +74,7 @@
 先前（context compact 前）記錄的以下項目經重新核實**不成立**，特此更正：
 - ~~`core/session_registry.py` 有 `except Exception: pass` 吞掉異常~~ → 實際檔案是 `core/sessions.py`，內容乾淨、無此問題，且全專案掃描後找到的所有 `except ...: pass` 都是**合理的資源清理**場景（如 `os.remove()` 失敗時不中斷主流程、`psutil.NoSuchProcess` 掃描時忽略已消失的進程），不是吞掉關鍵錯誤。
 - ~~`connection_manager.py` 缺重複連線檢查~~ → 實際上 `_is_port_open()` 用 0.2s timeout socket 探測，設計合理；「連線但應用已死」的偵測屬於 C2（無 heartbeat/timeout）的子問題，已合併進 C2。
-- ~~無 `tests/` 目錄~~ → 實際存在 `tests/`，含 2 個高品質測試檔（`test_sessions.py` 4 個測試、`test_optislang_controller.py` 5 個測試，涵蓋 not-connected 邊界、multi-session、exception surfacing），但覆蓋範圍窄（詳見 D 節下方測試缺口）。
+- ~~無 `tests/` 目錄~~ → 實際存在 `tests/`，包含 4 個測試檔（`test_sessions.py`, `test_mechanical_controller.py`, `test_optislang_controller.py`, `test_workbench_controller.py`）。
 - ~~`products/mechanical.py` 有 `MechanicalWrapper` 且標 `UNVERIFIED`~~ → 實際類別是 `MechanicalController`，程式碼裡沒有 `UNVERIFIED` 標註（該標註只出現在 `products/workbench.py`），Mechanical 路徑的成熟度高於先前記錄。
 
 ---
@@ -136,3 +133,11 @@
 1. **先做 P0**：三項都不需要連線 ANSYS，你在 RDP 環境現在就能做，且直接降低「AI 呼叫卡死」這種對使用體驗傷害最大的風險（C2）。
 2. **C1（Fluent/Geometry 遷移）程式碼可以先寫、先過 review，但別急著刪 `sim_impl.py` 的舊變數**——等你有機會連上真實 Fluent/SpaceClaim 驗證新路徑行為一致後才切換，避免在沒驗證環境下大改連線邏輯。
 3. 之前 compact 前的審視記錄了幾個實際不存在的問題（見「已解決/非問題」節），代表**你的程式碼其實比我一開始評估的更成熟**，尤其 `core/sessions.py`、`config.py`、`connection_manager.py` 三個核心檔案品質相當扎實。真正的缺口集中在「新舊架構交接處」（Fluent/Geometry 沒跟上遷移、Workbench 沒驗證過、gRPC 路徑沒 timeout），而不是隨機分佈的粗糙 bug。
+
+---
+
+## 更新記錄
+
+- **2026-08-14**:
+  - 標註 C2 (gRPC Timeout) 為已修復：已實作 `core/timeout.py` 並套用於 `products/mechanical.py`, `optislang.py`, `workbench.py`。
+  - 更新測試覆蓋率：測試檔增加至 4 個（`test_sessions.py`, `test_mechanical_controller.py`, `test_optislang_controller.py`, `test_workbench_controller.py`）。

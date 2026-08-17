@@ -16,7 +16,7 @@ This skill documents the complete, robust workflow for performing automated PCB 
 flowchart TD
     A[MCP_Test.xlsx / Material CSVs] --> B[01_build_pcb_geometry.py]
     A --> C[02_calculate_rom_materials.py]
-    B --> D[SpaceClaim: 79 Solid Bodies + Share Topology]
+    B --> D[SpaceClaim: Solid Bodies + Share Topology]
     C --> E[APDL Macro: apdl_rom_materials.mac]
     D --> F[03_setup_mechanical_bc_and_solution.py]
     E --> F
@@ -55,9 +55,10 @@ flowchart TD
 ## Executable Scripts Reference
 
 All Python orchestration scripts are stored in:
-`F:\Ming_python\ansys-unified-mcp\scripts\pcb_warpage_analysis\`
+`SKILLs/pcb-warpage-analysis/scripts/`
 
-1. **`01_build_pcb_geometry.py`**: Builds PCB 79 layers in SpaceClaim with Share Topology enabled and UI refresh protection.
-2. **`02_calculate_rom_materials.py`**: Computes 23-point ROM composite properties and outputs valid `apdl_rom_materials.mac`.
-3. **`03_setup_mechanical_bc_and_solution.py`**: Mechanical ACT script for MultiZone meshing, APDL snippet import, 30°C initial temp, 220°C thermal condition, 3-2-1 support, and Z-displacement results.
-4. **`run_full_warpage_workflow.py`**: Master workflow runner that executes the end-to-end automation.
+1. **`scripts/01_build_pcb_geometry.py`**: Builds PCB 79 layers in SpaceClaim with Share Topology enabled and UI refresh protection.
+2. **`scripts/02_calculate_rom_materials.py`**: Computes 23-point ROM composite properties and outputs valid `apdl_rom_materials.mac`.
+3. **`scripts/03_setup_mechanical_bc_and_solution.py`**: Mechanical ACT script for MultiZone meshing, APDL snippet import, 30°C initial temp, 220°C thermal condition, 3-2-1 support, and Z-displacement results.
+4. **`scripts/run_full_warpage_workflow.py`**: Master workflow runner that executes the end-to-end automation.
+
