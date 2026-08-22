@@ -1,101 +1,26 @@
-# ANSYS Documentation Skills Index
+# ANSYS CAE Engineering Skills Index
 
-Per-product skills over the ANSYS documentation. Each skill is a lightweight
-**outline (`SKILL.md`) + a `reference/` folder of condensed, function-organized
-API files**. The agent loads only the one `reference/<function>.md` it needs, so
-it never has to read the multi-MB source guides.
+本目錄為 `ansys-unified-mcp` 專屬的 ANSYS CAE 技能庫，僅包含與 ANSYS 有限元分析、幾何建模、外掛開發與優化相關的專業工程技能：
 
-- **Category granularity** follows how PyAnsys organizes its libraries
-  (PyMechanical / PyAnsys Geometry / PyDYNA / PyOptiSLang).
-- **API content** is the native API the ANSYS MCP actually dispatches (ACT for
-  Mechanical, PyAnsys Geometry / native SpaceClaim, native optiSLang Python,
-  LS-DYNA `*KEYWORD` deck, LS-PrePost SCL/cfile/Python).
-- Each reference file cross-references the **MCP tools** that use that API, and
-  falls back to `search_ansys_docs` / `get_ansys_doc_chunk` for anything not
-  condensed.
+---
 
-## Skills & their reference categories
+## 專案核心 CAE 技能清單 (10 項)
 
-| Skill | Product | reference/ files |
-|---|---|---|
-| `ansys-mechanical` | mechanical (ACT) | act_scripting_foundation, geometry_and_selections, mesh, mesh_controls_advanced, materials, connections_and_contacts, boundary_conditions_and_loads, construction_geometry, analysis_setup, meshdata_and_elements, results_and_postprocessing, lsdyna_via_mechanical |
-| `ansys-spaceclaim` | spaceclaim / geometry | PyAnsys Geometry: session, sketching, modeling, design_and_bodies, import_export · Native V2x: native_session_and_versions, native_selection, native_commands, native_sketch_and_geometry, native_helpers_and_transaction |
-| `ansys-optislang` | optislang | session_and_project, nodes_and_actors, parameters_and_responses, algorithms, designs_and_results |
-| `ansys-lsdyna` | lsdyna (keyword deck) | materials, elements_sections_parts, contact_and_constraints, loads_and_initial, control_and_output, specialized_solvers |
-| `ansys-ls-prepost` | ls-prepost (SCL/cfile/Python) | session_and_cfile, model_query, states_and_results, model_build, output_export, python_module_interface |
-| `act-extension-development` | ACT plugin dev (實戰) | *(inline)* IronPython quirks, FileSystemWatcher pattern, Wizard API, WPF Dispatcher |
-| `pymechanical-operations` | PyMechanical gRPC (實戰) | *(inline)* gRPC connect, remote script, Scoping API, Mesh automation |
-| `pcb-warpage-analysis` | PCB 熱變形分析 (實戰) | *(inline)* SpaceClaim 79層分體, ROM 複合材料 APDL, 靜定 3-2-1 邊界條件 |
-| `ansys-error-catalog` | 錯誤分類目錄 (實戰) | workbench_act, mechanical_scripting, spaceclaim_pygeometry, ironpython_general |
-| `pdf-to-md` | PDF轉換 (工具) | *(inline)* PDF 文件轉換為 Markdown 工具 |
+| 技能名稱 | 專業領域 | 核心技術 / 觸發關鍵字 |
+| :--- | :--- | :--- |
+| **[`ansys-spaceclaim`](file:///F:/Ming_python/ansys-unified-mcp/SKILLs/ansys-spaceclaim/SKILL.md)** | **通用 3D CAD 建模** | `SpaceClaim畫圖`, `SpaceClaim建模`, `SCDM建模`, `畫長方體`, `畫圓柱體`, `CAD建模` |
+| **[`pcb-warpage-analysis`](file:///F:/Ming_python/ansys-unified-mcp/SKILLs/pcb-warpage-analysis/SKILL.md)** | **PCB 多層疊構熱翹曲分析** | `PCB熱翹曲`, `PCB疊構`, `ROM材料計算`, `3-2-1支承`, `熱翹曲分析` |
+| **[`ansys-mechanical`](file:///F:/Ming_python/ansys-unified-mcp/SKILLs/ansys-mechanical/SKILL.md)** | **Mechanical 結構與熱力學** | ACT Scripting, 網格控制, 載荷邊界, 結果後處理 (`ExtAPI`, `DataModel`) |
+| **[`ansys-optislang`](file:///F:/Ming_python/ansys-unified-mcp/SKILLs/ansys-optislang/SKILL.md)** | **optiSLang 最佳化設計** | 靈敏度分析, 多目標優化演算法, 代理模型, `actors.*` Python API |
+| **[`ansys-lsdyna`](file:///F:/Ming_python/ansys-unified-mcp/SKILLs/ansys-lsdyna/SKILL.md)** | **LS-DYNA 顯式動力學** | `*KEYWORD` 卡片建立, 衝擊與非線性材料, 接觸與求解器控制 |
+| **[`ansys-ls-prepost`](file:///F:/Ming_python/ansys-unified-mcp/SKILLs/ansys-ls-prepost/SKILL.md)** | **LS-PrePost 前後處理** | SCL / cfile / Python 腳本後處理, 動力學數據庫提取 |
+| **[`act-extension-development`](file:///F:/Ming_python/ansys-unified-mcp/SKILLs/act-extension-development/SKILL.md)** | **ACT 外掛開發實戰** | IronPython 避坑, `FileSystemWatcher` 檔案監聽, ACT Wizard XML 封裝 |
+| **[`pymechanical-operations`](file:///F:/Ming_python/ansys-unified-mcp/SKILLs/pymechanical-operations/SKILL.md)** | **PyMechanical 遠端操作** | gRPC 直連, Scoping API, 遠端腳本執行與網格自動化 |
+| **[`ansys-error-catalog`](file:///F:/Ming_python/ansys-unified-mcp/SKILLs/ansys-error-catalog/SKILL.md)** | **CAE 錯誤分類與排查** | Workbench, Mechanical, SpaceClaim, Fluent 常見報錯與除錯方案 |
+| **[`pdf-to-md`](file:///F:/Ming_python/ansys-unified-mcp/SKILLs/pdf-to-md/SKILL.md)** | **ANSYS 說明文檔轉換** | PDF 技術文檔轉換為標準 Markdown 知識庫工具 |
 
-## ACT extensions (Mechanical/SpaceClaim)
+---
 
-ACT is not a separate skill — an ACT extension is just a workflow that strings
-these product APIs together behind an XML wizard. The APIs its Python callbacks
-use live in the product skills:
-
-- Mechanical ACT callbacks (`onupdateStep(step)`, `ExtAPI`/`DataModel`/`Model`,
-  selection, mesh controls, remote points, construction geometry, LS-DYNA-via-
-  Mechanical) → `ansys-mechanical` (start at `act_scripting_foundation.md`).
-- SpaceClaim ACT callbacks (native `SpaceClaim.Api.V<ver>`) → `ansys-spaceclaim`
-  `native_*` files.
-- The XML wizard/step/property/callback packaging itself is workflow glue, not an
-  API; the authoritative reference is the ACT Customization/API/XML guides (not in
-  the MCP index; available under `ACT_Test/3.documents/md`).
-- **ACT 外掛開發的實戰陷阱**（IronPython 閉包限制、模組 reload、WPF Dispatcher）
-  → `act-extension-development` skill。
-
-## API layer per product (what the MCP dispatches)
-
-- **ansys-mechanical** — ACT scripting (`ExtAPI`, `DataModel`, `Model.Add*`), run
-  via `run_mechanical_script` / `execute_mechanical_script_live` and the
-  `add_*` / `generate_mesh` / `solve_analysis` convenience tools.
-- **ansys-spaceclaim** — PyAnsys Geometry (`ansys.geometry.core`: `Sketch`,
-  `extrude_sketch`, `revolve_sketch`) via the `geometry_*` tools; plus native
-  SpaceClaim Python via `execute_spaceclaim_script_live`.
-- **ansys-optislang** — native optiSLang Python (`actors.*`, `add_actor`) run
-  through `run_optislang_script`; session via `connect_optislang` /
-  `start_optislang_project`.
-- **ansys-lsdyna** — LS-DYNA `*KEYWORD` deck. No MCP dispatch tool; pure
-  documentation reference (build in LS-PrePost, launch with LS-Run).
-- **ansys-ls-prepost** — LS-PrePost SCL / cfile / Python data-center API. No MCP
-  dispatch tool; pure documentation reference.
-
-## How categories were derived
-
-Categories were aligned with the PyAnsys project organization:
-
-- **PyMechanical** — simulation workflow (geometry → mesh → materials →
-  connections → loads/BCs → analysis → results).
-- **PyAnsys Geometry** — getting started / sketching / modeling / design I/O.
-- **PyOptiSLang** — session / actors (nodes) / parameters & responses /
-  algorithms / designs.
-- **PyDYNA** — keyword families (consolidated: Mat, Element/Section/Part,
-  Contact/Constrained/Boundary, Load/Initial, Control/Database, specialized
-  solvers).
-- **LS-PrePost** — no PyAnsys equivalent; categories derived from the
-  `lsppscripting` doc workflow.
-
-## Underlying doc index
-
-- Raw markdown: `Documentation_md/<name>.md`.
-- Cleaned/indexed copies: `Documentation_clean/` with the FTS5 index at
-  `Documentation_clean/docs_index.sqlite` (classified by `product` and
-  `category`: `api_reference`, `api_scripting`, `guide`, `tutorial`).
-- MCP doc tools: `list_ansys_docs`, `search_ansys_docs(query, scope, doc, top_k)`,
-  `get_ansys_doc_chunk(doc, chunk_id, context)`.
-- FTS is keyword/substring — use single, exact API tokens; multi-word
-  natural-language queries often return nothing.
-
-## Other skills in this workspace
-
-- `pdf-to-md` — convert source PDFs (`Documentation/`) to markdown
-  (`Documentation_md/`). Upstream of the doc-index pipeline.
-- `pcb-warpage-analysis` — PCB 多層熱變形 ($Z$ 軸位移) 自動化分析：SpaceClaim 幾何建立、Rule of Mixtures 複合材料 APDL 生成、MultiZone 網格、靜定 3-2-1 邊界條件。
-- `act-extension-development` — ACT 外掛開發實戰知識：IronPython 陷阱、
-  FileSystemWatcher 非同步架構、ACT Wizard 程式化呼叫。
-- `pymechanical-operations` — PyMechanical gRPC 遠端操作：連線、Scoping API、
-  Mesh 控制自動化。
-- `ansys-error-catalog` — 錯誤分類目錄：按模組（Workbench/Mechanical/SpaceClaim/IronPython）
-  和 function 分類的錯誤紀錄與解決方案。
+## 統一規範
+- 全案通用/非 ANSYS 技能（如去 AI 味、Git 審查、Obsidian 筆記等）保留於全域技能庫，不污染本 CAE 倉庫。
+- 本倉庫保持 100% 純淨的 ANSYS 模擬、自動化與 MCP 驅動專用架構。

@@ -1,43 +1,95 @@
-# -*- coding: utf-8 -*-
 """
-SpaceClaim script: Build PCB Multi-Layer Geometry with Share Topology & UI Delay.
+01_build_pcb_geometry.py
+--------------------------------------------------------------------------------
+ANSYS SpaceClaim Geometry Generation Script for PCB Warpage Analysis
+- Reads PCB stackup layers and dimensions from Excel (MCP_Test.xlsx).
+- Builds 79 separate solid bodies from Top (L01) to Bottom (L79).
+- Enforces Share Topology = Share via sub-component to enable conformal mesh.
+- Adds 50ms UI buffer between layer extrusions to prevent GUI pane refresh crashes.
 """
-import time
 
-def build_pcb_geometry(num_layers=79, length=100.0, width=80.0, total_thickness=1.6):
-    """
-    建立 PCB 多層板幾何結構並設定 Share Topology。
-    ponytail: 加入 50ms 延遲以避免 GUI Property Pane 刷新異常。
-    """
-    print("開始建立 {} 層 PCB 幾何模型...".format(num_layers))
-    layer_thickness = total_thickness / num_layers
-    
-    # SpaceClaim API 環境呼叫樣板
-    try:
-        import SpaceClaim.Api.V22 as Api
-        from SpaceClaim.Api.V22.Geometry import Point, DesignVector, SharedTopologyType
+import os
+import sys
+import time
+import pandas as pd
+from ansys.geometry.core import Modeler
+from ansys.geometry.core.designer import SharedTopologyType
+from ansys.geometry.core.sketch import Sketch
+from ansys.geometry.core.math import Point2D, Plane, Point3D
+
+def build_pcb_geometry(excel_path: str, port: int = 50051):
+    print(f"Reading PCB Stackup Excel: {excel_path}")
+    df_param = pd.read_excel(excel_path, sheet_name='Parameters')
+    df_stack = pd.read_excel(excel_path, sheet_name='Stackup')
+
+    L_mm = float(df_param[df_param['Parameter'] == 'L']['Value'].values[0])
+    W_mm = float(df_param[df_param['Parameter'] == 'W']['Value'].values[0])
+    L_m = L_mm / 1000.0
+    W_m = W_mm / 1000.0
+
+    total_thickness_mm = df_stack['Thickness (mm)'].sum()
+    total_thickness_m = total_thickness_mm / 1000.0
+
+    print(f"Board Dimensions: L = {L_mm} mm ({L_m} m), W = {W_mm} mm ({W_m} m)")
+    print(f"Total PCB Thickness: {total_thickness_mm:.4f} mm ({len(df_stack)} Layers)")
+
+    # Connect to SpaceClaim gRPC
+    modeler = Modeler(port=port, transport_mode='wnua')
+    design = modeler.read_existing_design()
+    if not design:
+        design = modeler.create_design("SYS")
+    print(f"Connected to SpaceClaim active design: '{design.name}'")
+
+    # Clear previous geometry
+    for c in list(design.components):
+        try:
+            design.delete_component(c)
+        except Exception:
+            pass
+
+    for b in list(design.bodies):
+        try:
+            design.delete_body(b)
+        except Exception:
+            pass
+
+    time.sleep(0.2)
+
+    # Create sub-component and set Share Topology = Share
+    pcb_comp = design.add_component("PCB_Stackup_79L")
+    pcb_comp.set_shared_topology(SharedTopologyType.SHARETYPE_SHARE)
+    print(f"Created Component: '{pcb_comp.name}' with Share Topology = {pcb_comp.shared_topology}")
+
+    # Build layers from Top (L01) to Bottom (L79)
+    z_top_m = total_thickness_m
+    for idx, row in df_stack.iterrows():
+        layer_num = int(row.iloc[0])
+        thick_mm = float(row['Thickness (mm)'])
+        cu_pct = float(row['Cu (%)'])
+        mat = str(row['Material']).strip().replace('(', '_').replace(')', '')
         
-        doc = Api.Scripting.GetActiveDocument()
-        comp = doc.MainPart.CreateComponent("PCB_Stackup")
-        
-        for i in range(num_layers):
-            z_offset = i * layer_thickness
-            # 建立多層 Body 方塊
-            origin = Point.Create(0, 0, z_offset)
-            box = Api.Geometry.Body.CreateBlock(origin, DesignVector.Create(length, width, layer_thickness))
-            box.Name = "Layer_{:02d}".format(i + 1)
-            comp.Part.AddBody(box)
-            
-            # UI 刷新緩衝延遲 (50ms)
-            time.sleep(0.05)
-            
-        # 設定 Component Share Topology (關鍵：不得直接在 Root Design 設定)
-        comp.SetSharedTopology(SharedTopologyType.Share)
-        print("成功建立 PCB 79 層結構並啟動 Share Topology。")
-        return True
-    except Exception as e:
-        print("SpaceClaim API 執行提示: {}".format(e))
-        return False
+        thick_m = thick_mm / 1000.0
+        body_name = f"L{layer_num:02d}_{mat}_Cu{cu_pct:.1f}pct"
+        z_plane_m = z_top_m - thick_m
+
+        sketch = Sketch()
+        sketch.plane = Plane(Point3D([0, 0, z_plane_m]))
+        sketch.box(Point2D([0, 0]), L_m, W_m)
+
+        body = pcb_comp.extrude_sketch(name=body_name, sketch=sketch, distance=thick_m)
+        print(f"  [{layer_num:02d}/79] Extruded {body_name} | Thick: {thick_mm:.4f} mm | Z: [{z_plane_m*1000:.4f} ~ {z_top_m*1000:.4f}] mm")
+
+        z_top_m = z_plane_m
+        time.sleep(0.05)  # 50ms UI buffer protection
+
+    print("="*60)
+    print(f"SpaceClaim PCB Geometry Build Completed!")
+    print(f"Component: '{pcb_comp.name}' | Shared Topology: {pcb_comp.shared_topology}")
+    print(f"Bodies: {len(pcb_comp.bodies)} (Uncombined separate bodies)")
+    print("="*60)
 
 if __name__ == "__main__":
-    build_pcb_geometry()
+    excel_file = r"D:\ANSYS_MCP_Connect\PCB_Stackup_material\MCP_Test.xlsx"
+    if len(sys.argv) > 1:
+        excel_file = sys.argv[1]
+    build_pcb_geometry(excel_file)
