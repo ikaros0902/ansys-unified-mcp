@@ -1,7 +1,12 @@
 ---
 name: ansys-spaceclaim
-description: Condensed Ansys geometry API for the ANSYS MCP, covering two families — PyAnsys Geometry (ansys.geometry.core, via the geometry_* tools) and native SpaceClaim scripting (SpaceClaim.Api.V<ver>, via execute_spaceclaim_script_live and SpaceClaim ACT wizards). Use whenever the user creates or edits geometry, writes a SpaceClaim ACT extension (midsurface, defeature, share topology, BGA/array build), prepares/repairs CAD for simulation, or asks how Sketch/extrude/revolve, Selection, Midsurface, RevolveFaces, ForceShare, or ComponentHelper work. Load the matching reference/<function>.md before generating geometry code.
-keywords: spaceclaim, discovery, geometry, ACT, PyAnsys Geometry, ansys.geometry.core, SpaceClaim.Api, Sketch, extrude_sketch, revolve_sketch, Selection, Midsurface, Fill, RevolveFaces, ExtrudeFaces, SplitBody, ForceShare, ShareTopologyNamedSelection, FixImprint, ComponentHelper, DocumentHelper, PowerSelection, SketchRectangle, Point2D, midsurface, defeature, share topology, CAD, STEP, IGES
+description: 通用 ANSYS SpaceClaim (SCDM) 3D 幾何建模與 Python 腳本自動化技能。涵蓋 PyAnsys Geometry (ansys.geometry.core) 與原生 SpaceClaim ACT IronPython API (SpaceClaim.Api.V<ver>)。
+Use when:
+- The user requests 3D CAD modeling, sketching, extruding, creating blocks, boxes, cylinders, spheres, or direct geometry operations in ANSYS SpaceClaim.
+- Generating or executing SpaceClaim ACT Python / SCDM scripts (e.g. BlockBody.Create, Point.Create, length units, Sketch, Extrude).
+- Calling SpaceClaim MCP tools: geometry_launch, geometry_create_block, geometry_create_cylinder, geometry_create_design, geometry_export, execute_spaceclaim_script_live.
+- Trigger keywords (繁中/En): SpaceClaim畫圖, SpaceClaim建模, SCDM建模, 畫長方體, 畫圓柱體, SpaceClaim幾何, SpaceClaim腳本, SCDM腳本, CAD建模.
+keywords: spaceclaim, discovery, geometry, ACT, PyAnsys Geometry, ansys.geometry.core, SpaceClaim.Api, Sketch, extrude_sketch, revolve_sketch, Selection, Midsurface, Fill, RevolveFaces, ExtrudeFaces, SplitBody, ForceShare, ShareTopologyNamedSelection, FixImprint, ComponentHelper, DocumentHelper, PowerSelection, SketchRectangle, Point2D, midsurface, defeature, share topology, CAD, STEP, IGES, SpaceClaim畫圖, SpaceClaim建模, SCDM建模, 畫長方體, 畫圓柱體, SpaceClaim幾何, SpaceClaim腳本, SCDM腳本, CAD建模
 ---
 
 # Ansys Geometry / SpaceClaim API (condensed, by function)
