@@ -105,7 +105,7 @@ GEOMETRY_TOOLS = [
          inputSchema={"type": "object", "properties": {
              "port": {"type": "integer", "description": "連線已啟動 SpaceClaim 的 gRPC 埠號，不填則自動掃描 50051-50055 尋找已運行實例"},
              "host": {"type": "string", "default": "localhost", "description": "SpaceClaim 主機地址"},
-             "transport_mode": {"type": "string", "enum": ["wnua", "insecure", "uds"], "default": "insecure", "description": "gRPC 傳輸模式（預設 insecure）"},
+             "transport_mode": {"type": "string", "enum": ["wnua", "insecure", "uds"], "default": "wnua", "description": "gRPC 傳輸模式（Windows 預設 wnua，Linux/Docker 預設 insecure）"},
              "connect_timeout": {"type": "integer", "default": 15, "description": "連線超時秒數，預設15秒"}}}),
     Tool(name="geometry_create_design", description="建立新的幾何設計（⚠️ 注意：若 SpaceClaim 中已有開啟的設計，請勿調用此工具，直接調用 create_block 等即可在當前設計中建模）",
          inputSchema={"type": "object", "properties": {"name": {"type": "string", "default": "Design"}},
@@ -452,7 +452,7 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
             loop = asyncio.get_event_loop()
             port = arguments.get("port")
             host = arguments.get("host", "localhost")
-            transport_mode = arguments.get("transport_mode", "insecure")
+            transport_mode = arguments.get("transport_mode", "wnua" if sys.platform == "win32" else "insecure")
             # 限制內部逾時最多 8 秒，避免觸發 OpenClaw 30 秒中斷
             raw_timeout = int(arguments.get("connect_timeout", 8))
             connect_timeout = max(3, min(raw_timeout, 8))
