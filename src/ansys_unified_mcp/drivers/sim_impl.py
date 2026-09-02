@@ -142,6 +142,29 @@ GEOMETRY_TOOLS = [
              "file_path": {"type": "string"},
              "format": {"type": "string", "enum": ["step", "iges"], "default": "step"}},
              "required": ["file_path"]}),
+    Tool(name="geometry_sketch_and_extrude", description="於指定基準面繪製 2D 點陣列草圖（支援折線 polyline 或 NURBS 樣條曲線 spline 插值）並拉伸成 3D 實體（⚠️ 注意：所有座標與尺寸單位皆為【公尺 m】！若輸入為 mm 請除以 1000）",
+         inputSchema={"type": "object", "properties": {
+             "name": {"type": "string", "default": "ExtrudedBody", "description": "生成實體之名稱"},
+             "points": {"type": "array", "items": {"type": "array", "items": {"type": "number"}, "minItems": 2, "maxItems": 2}, "description": "2D 點陣列座標 [[x1, y1], [x2, y2], ...]（單位：公尺 m）"},
+             "plane": {"type": "string", "enum": ["XY", "XZ", "YZ"], "default": "XY", "description": "草圖基準面"},
+             "curve_type": {"type": "string", "enum": ["spline", "polyline"], "default": "spline", "description": "曲線連線類型"},
+             "distance": {"type": "number", "default": 0.01, "description": "拉伸距離（單位：公尺 m）"},
+             "is_closed": {"type": "boolean", "default": True, "description": "是否閉合草圖"},
+             "extrude_direction": {"type": "string", "enum": ["+", "-"], "default": "+", "description": "拉伸方向"}},
+             "required": ["name", "points"]}),
+    Tool(name="geometry_create_enclosure", description="為指定標的實體幾何自動生成外部流體包覆域 (Enclosure) 並執行布林相減扣除標的本體（⚠️ 注意：外擴延伸尺寸單位皆為【公尺 m】！若輸入為 mm 請除以 1000）",
+         inputSchema={"type": "object", "properties": {
+             "target_body_name": {"type": "string", "description": "標的固體幾何名稱"},
+             "enclosure_name": {"type": "string", "default": "FluidDomain", "description": "流體包覆域名稱"},
+             "shape": {"type": "string", "enum": ["box", "cylinder"], "default": "box", "description": "流體外流域形狀"},
+             "cushion_x_neg": {"type": "number", "default": 0.05, "description": "-X 方向外擴延伸距離（公尺 m）"},
+             "cushion_x_pos": {"type": "number", "default": 0.1, "description": "+X 方向外擴延伸距離（公尺 m）"},
+             "cushion_y_neg": {"type": "number", "default": 0.05, "description": "-Y 方向外擴延伸距離（公尺 m）"},
+             "cushion_y_pos": {"type": "number", "default": 0.05, "description": "+Y 方向外擴延伸距離（公尺 m）"},
+             "cushion_z_neg": {"type": "number", "default": 0.05, "description": "-Z 方向外擴延伸距離（公尺 m）"},
+             "cushion_z_pos": {"type": "number", "default": 0.05, "description": "+Z 方向外擴延伸距離（公尺 m）"},
+             "keep_target_body": {"type": "boolean", "default": False, "description": "布林相減後是否保留標的本體"}},
+             "required": ["target_body_name"]}),
     Tool(name="geometry_list_bodies", description="列出當前設計中的所有幾何體", inputSchema={"type": "object", "properties": {}}),
     Tool(name="geometry_import_file", description="匯入 CAD 檔案",
          inputSchema={"type": "object", "properties": {"file_path": {"type": "string"}}, "required": ["file_path"]}),
@@ -224,6 +247,89 @@ def _geom_create_sphere(name: str, radius: float, cx: float = 0, cy: float = 0, 
     sketch.arc(Point2D([0, radius]), Point2D([0, 0]), Point2D([0, 2 * radius]))
     body = d.revolve_sketch(name=name, sketch=sketch, axis="Y", angle=360)
     return f"球體 '{name}' 已建立: r={radius}m @ ({cx}, {cy}, {cz})"
+
+
+def _geom_sketch_and_extrude(name: str, points: list[list[float]], plane: str = "XY",
+                             curve_type: str = "spline", distance: float = 0.01,
+                             is_closed: bool = True, extrude_direction: str = "+") -> str:
+    from ansys.geometry.core.sketch import Sketch
+    from ansys.geometry.core.math import Point2D, Plane
+
+    d = _geom_get_design()
+    plane_map = {
+        "XY": Plane.xy(),
+        "XZ": Plane.xz(),
+        "YZ": Plane.yz()
+    }
+    sketch_plane = plane_map.get(plane.upper(), Plane.xy())
+    sketch = Sketch(plane=sketch_plane)
+
+    pts_2d = [Point2D([p[0], p[1]]) for p in points]
+    if len(pts_2d) < 2:
+        return "錯誤：點陣列至少需包含 2 個點。"
+
+    if curve_type.lower() == "spline":
+        sketch.nurbs_from_2d_points(pts_2d, tag=f"{name}_spline")
+        if is_closed:
+            sketch.segment(pts_2d[-1], pts_2d[0])
+    else:
+        for i in range(len(pts_2d) - 1):
+            sketch.segment(pts_2d[i], pts_2d[i + 1])
+        if is_closed:
+            sketch.segment(pts_2d[-1], pts_2d[0])
+
+    body = d.extrude_sketch(name=name, sketch=sketch, distance=distance, direction=extrude_direction)
+    return f"草圖實體 '{name}' 已成功拉伸建立: 點數={len(points)}, 曲線={curve_type}, 距離={distance}m, 基準面={plane}"
+
+
+def _geom_create_enclosure(target_body_name: str, enclosure_name: str = "FluidDomain",
+                           shape: str = "box", cushion_x_neg: float = 0.05,
+                           cushion_x_pos: float = 0.1, cushion_y_neg: float = 0.05,
+                           cushion_y_pos: float = 0.05, cushion_z_neg: float = 0.05,
+                           cushion_z_pos: float = 0.05, keep_target_body: bool = False) -> str:
+    d = _geom_get_design()
+    target_body = None
+    for b in d.bodies:
+        if b.name == target_body_name or b.id == target_body_name:
+            target_body = b
+            break
+
+    if target_body is None:
+        all_names = [b.name for b in d.bodies]
+        return f"錯誤：找不到標的實體 '{target_body_name}'。當前設計實體清單: {all_names}"
+
+    bbox = target_body.bounding_box
+    min_pt = bbox.min_point
+    max_pt = bbox.max_point
+
+    enc_min_x = min_pt.x - cushion_x_neg
+    enc_max_x = max_pt.x + cushion_x_pos
+    enc_min_y = min_pt.y - cushion_y_neg
+    enc_max_y = max_pt.y + cushion_y_pos
+    enc_min_z = min_pt.z - cushion_z_neg
+    enc_max_z = max_pt.z + cushion_z_pos
+
+    len_x = enc_max_x - enc_min_x
+    len_y = enc_max_y - enc_min_y
+    len_z = enc_max_z - enc_min_z
+
+    center_pt = [
+        (enc_min_x + enc_max_x) / 2.0,
+        (enc_min_y + enc_max_y) / 2.0,
+        (enc_min_z + enc_max_z) / 2.0
+    ]
+
+    enc_body = d.create_block(
+        name=enclosure_name,
+        length=len_x,
+        width=len_y,
+        height=len_z,
+        center=center_pt
+    )
+
+    enc_body.subtract(target_body, keep_other=keep_target_body)
+    return (f"流體外流域 '{enclosure_name}' 已建立並完成布林扣除: 尺寸={len_x:.4f}x{len_y:.4f}x{len_z:.4f}m, "
+            f"扣除標的='{target_body_name}', 保留原固體={keep_target_body}")
 
 
 # ===================================================================
@@ -559,6 +665,27 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
                         cx=arguments.get("center_x", 0),
                         cy=arguments.get("center_y", 0),
                         cz=arguments.get("center_z", 0))
+                elif name == "geometry_sketch_and_extrude":
+                    result = _geom_sketch_and_extrude(
+                        name=arguments.get("name", "ExtrudedBody"),
+                        points=arguments.get("points", []),
+                        plane=arguments.get("plane", "XY"),
+                        curve_type=arguments.get("curve_type", "spline"),
+                        distance=arguments.get("distance", 0.01),
+                        is_closed=arguments.get("is_closed", True),
+                        extrude_direction=arguments.get("extrude_direction", "+"))
+                elif name == "geometry_create_enclosure":
+                    result = _geom_create_enclosure(
+                        target_body_name=arguments["target_body_name"],
+                        enclosure_name=arguments.get("enclosure_name", "FluidDomain"),
+                        shape=arguments.get("shape", "box"),
+                        cushion_x_neg=arguments.get("cushion_x_neg", 0.05),
+                        cushion_x_pos=arguments.get("cushion_x_pos", 0.1),
+                        cushion_y_neg=arguments.get("cushion_y_neg", 0.05),
+                        cushion_y_pos=arguments.get("cushion_y_pos", 0.05),
+                        cushion_z_neg=arguments.get("cushion_z_neg", 0.05),
+                        cushion_z_pos=arguments.get("cushion_z_pos", 0.05),
+                        keep_target_body=arguments.get("keep_target_body", False))
                 elif name == "geometry_export":
                     path = os.path.abspath(arguments["file_path"])
                     fmt = arguments.get("format", "step")

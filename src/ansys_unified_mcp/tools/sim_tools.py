@@ -370,6 +370,73 @@ async def geometry_create_sphere(name: str, radius: float = 0.005, center_x: flo
     res = await sim_impl.call_tool('geometry_create_sphere', args)
     return "\n".join([c.text for c in res])
 
+@tool_geometry(name='geometry_sketch_and_extrude')
+async def geometry_sketch_and_extrude(name: str, points: list[list[float]], plane: str = 'XY', curve_type: str = 'spline', distance: float = 0.01, is_closed: bool = True, extrude_direction: str = '+') -> str:
+    """於指定基準面繪製 2D 點陣列草圖並拉伸成 3D 實體（⚠️ 注意：所有座標與尺寸單位皆為【公尺 m】！若輸入為 mm 請除以 1000）
+    :param name: 生成實體之名稱
+    :param points: 2D 點陣列座標清單，格式為 [[x1, y1], [x2, y2], ...]（單位：公尺 m）
+    :param plane: 草圖繪製之基準面 ('XY', 'XZ', 'YZ')
+    :param curve_type: 曲線連線類型 ('spline' 或 'polyline')
+    :param distance: 沿法向拉伸之距離/厚度（單位：公尺 m）
+    :param is_closed: 是否將最後一點連回第一點以形成封閉實體輪廓
+    :param extrude_direction: 沿基準面法向量的拉伸方向 ('+' 或 '-')
+    """
+    args = {}
+    if name is not None:
+        args['name'] = name
+    if points is not None:
+        args['points'] = points
+    if plane is not None:
+        args['plane'] = plane
+    if curve_type is not None:
+        args['curve_type'] = curve_type
+    if distance is not None:
+        args['distance'] = distance
+    if is_closed is not None:
+        args['is_closed'] = is_closed
+    if extrude_direction is not None:
+        args['extrude_direction'] = extrude_direction
+    res = await sim_impl.call_tool('geometry_sketch_and_extrude', args)
+    return "\n".join([c.text for c in res])
+
+@tool_geometry(name='geometry_create_enclosure')
+async def geometry_create_enclosure(target_body_name: str, enclosure_name: str = 'FluidDomain', shape: str = 'box', cushion_x_neg: float = 0.05, cushion_x_pos: float = 0.1, cushion_y_neg: float = 0.05, cushion_y_pos: float = 0.05, cushion_z_neg: float = 0.05, cushion_z_pos: float = 0.05, keep_target_body: bool = False) -> str:
+    """為指定標的實體幾何自動生成外部流體包覆域 (Enclosure) 並執行布林相減扣除標的本體
+    :param target_body_name: 標的固體幾何名稱
+    :param enclosure_name: 生成的流體包覆域名稱
+    :param shape: 流體外流域幾何形狀 ('box' 或 'cylinder')
+    :param cushion_x_neg: -X 方向外擴延伸距離（公尺 m）
+    :param cushion_x_pos: +X 方向外擴延伸距離（公尺 m）
+    :param cushion_y_neg: -Y 方向外擴延伸距離（公尺 m）
+    :param cushion_y_pos: +Y 方向外擴延伸距離（公尺 m）
+    :param cushion_z_neg: -Z 方向外擴延伸距離（公尺 m）
+    :param cushion_z_pos: +Z 方向外擴延伸距離（公尺 m）
+    :param keep_target_body: 布林相減後是否保留標的本體
+    """
+    args = {}
+    if target_body_name is not None:
+        args['target_body_name'] = target_body_name
+    if enclosure_name is not None:
+        args['enclosure_name'] = enclosure_name
+    if shape is not None:
+        args['shape'] = shape
+    if cushion_x_neg is not None:
+        args['cushion_x_neg'] = cushion_x_neg
+    if cushion_x_pos is not None:
+        args['cushion_x_pos'] = cushion_x_pos
+    if cushion_y_neg is not None:
+        args['cushion_y_neg'] = cushion_y_neg
+    if cushion_y_pos is not None:
+        args['cushion_y_pos'] = cushion_y_pos
+    if cushion_z_neg is not None:
+        args['cushion_z_neg'] = cushion_z_neg
+    if cushion_z_pos is not None:
+        args['cushion_z_pos'] = cushion_z_pos
+    if keep_target_body is not None:
+        args['keep_target_body'] = keep_target_body
+    res = await sim_impl.call_tool('geometry_create_enclosure', args)
+    return "\n".join([c.text for c in res])
+
 @tool_geometry(name='geometry_export')
 async def geometry_export(file_path: str, format: str = 'step') -> str:
     """匯出幾何為 STEP/IGES 格式
