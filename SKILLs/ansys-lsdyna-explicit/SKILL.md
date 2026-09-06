@@ -11,7 +11,14 @@ Use when:
 
 # LS-DYNA 顯式動力學與落摔分析技能 (ANSYS LS-DYNA Explicit Dynamics Skill)
 
-本技能提供標準的 LS-DYNA 顯式動力學衝擊模擬分析指引，包含使用 PyDYNA 物件導向介面自動化組裝關鍵字卡片（Keyword Deck）、落摔衝擊（Drop Test）標準工程流程，以及能量守恆、沙漏能與質量縮放之客觀驗證判準。
+> [!NOTE]
+> **架構收斂與指引說明**：
+> 本技能已完整整併至林明志標準架構主技能 **[`ansys-lsdyna`](../ansys-lsdyna/SKILL.md)**。
+> 顯式動力學與落摔衝擊專精指引請參閱：
+> - 主控手冊：[`ansys-lsdyna/SKILL.md`](../ansys-lsdyna/SKILL.md)
+> - 材料本構與失效子手冊：[`ansys-lsdyna/reference/material_cards.md`](../ansys-lsdyna/reference/material_cards.md)
+> - 經典落摔自動化腳本：[`ansys-lsdyna/scripts/run_drop_test_demo.py`](../ansys-lsdyna/scripts/run_drop_test_demo.py)
+> 本檔案保留作為過渡期歷史參照相容。
 
 ---
 

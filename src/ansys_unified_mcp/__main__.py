@@ -26,9 +26,11 @@ import os
 profile = os.environ.get("ANSYS_MCP_PROFILE", "all").strip().lower()
 logger.info(f"Dynamic Tool Routing active. Profile: '{profile}'")
 
-# 核心通用診斷與文件工具（一律載入）
+# 核心通用診斷、文件、非同步守護與高階意圖工況工具（一律載入）
 import ansys_unified_mcp.tools.connection_doctor
 import ansys_unified_mcp.tools.docs_tools
+import ansys_unified_mcp.tools.sentinel_tools
+import ansys_unified_mcp.tools.intent_tools
 
 if profile in ("all", "full", "workbench", "wb"):
     import ansys_unified_mcp.tools.workbench_filebridge

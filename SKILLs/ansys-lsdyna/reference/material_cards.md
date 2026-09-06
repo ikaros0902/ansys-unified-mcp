@@ -68,3 +68,71 @@ $#     cmo      con1      con2
   - `1.0`：由 `con1` 與 `con2` 明確指定剛體自由度固定。
 - **`con1`**：平移自由度約束代碼（`7` 代表限制 X, Y, Z 三向平移）。
 - **`con2`**：旋轉自由度約束代碼（`7` 代表限制 X, Y, Z 三向旋轉）。
+
+---
+
+## 四、動態多應變率硬化表：*DEFINE_TABLE 與 *DEFINE_CURVE
+
+在高速衝擊、穿甲與猛烈碰撞中（如彈丸撞擊金屬靶板 `ball_plate`），材料應變率可能瞬間跨越多個數量級（$10^{-3} \sim 10^3\text{ s}^{-1}$）。此時 Cowper-Symonds 冪律公式難以擬合全應變區間，推薦採用 `*DEFINE_TABLE` 關聯多條動態試驗真實應力-塑性應變曲線。
+
+```mermaid
+flowchart TD
+    M[*MAT_024 之 LCSS 欄位指定 Table ID 100] --> T[*DEFINE_TABLE ID=100]
+    T -->|應變率 0.001 /s| C1[*DEFINE_CURVE ID=101: 準靜態真實曲線]
+    T -->|應變率 1.0 /s| C2[*DEFINE_CURVE ID=102: 中等應變率真實曲線]
+    T -->|應變率 100.0 /s| C3[*DEFINE_CURVE ID=103: 高應變率真實曲線]
+    T -->|應變率 1000.0 /s| C4[*DEFINE_CURVE ID=104: 超高速衝擊真實曲線]
+```
+
+### 關鍵字卡片格式：
+```text
+*DEFINE_TABLE
+$#    tbid      sdir
+       100         0
+$#   value       lcid
+     0.001        101
+      1.00        102
+    100.00        103
+   1000.00        104
+*DEFINE_CURVE
+$#    lcid      sidr       sfa       sfo      offa      offo    dattyp     lcint
+       101         0       1.0       1.0       0.0       0.0         0         0
+$#                a1                  o1
+                0.00              350.00
+                0.05              420.00
+                0.15              510.00
+                0.30              580.00
+```
+
+---
+
+## 五、單元失效刪除卡片：*MAT_ADD_EROSION
+
+當材料經歷極限拉伸、剪切撕裂或穿甲穿透時，嚴重畸變的微小單元會使顯式積分 CFL 臨界時間步長驟降至趨近於零，引發計算停滯。使用 `*MAT_ADD_EROSION` 定義客觀斷裂準則，單元達到破壞閥值時自動自網格中刪除（Erode）：
+
+```text
+*MAT_ADD_EROSION
+$#     mid      excl    mxpres      mnsp    numfip       tcs      tdel     damp
+         1       0.0       0.0       0.0       0.0       0.0       0.0       0.0
+$#   volum     epsth     eps01      epsv     epst1      eps1      eps2      eps3
+       0.0       0.0       0.0       0.0       0.0       0.0       0.0       0.0
+$#    eps4      eps5      eps6      eps7      eps8      eps9     psoid      dflag
+       0.0       0.0       0.0       0.0       0.0       0.0         0         0
+$#    lcid      mnst     pconv      mxfp      epsrc     damtyp
+         0       0.0       0.0      0.45       0.0         0
+```
+
+### 核心失效控制參數：
+- **`mxfp` (Maximum Failure Plastic Strain)**：最大等效塑性應變失效閥值（如鋼靶板通常設定為 $0.35 \sim 0.50$）。
+- **`mxpres` (Maximum Tensile Pressure)**：最大容許拉伸靜水壓力（防止單元承受不合理負壓空化）。
+- **`mnsp` (Minimum Principal Strain)**：最小主應變極限（用於壓碎破壞）。
+
+---
+
+## 六、經典工程對照：ball_plate 彈丸撞擊金屬靶板參數
+
+| 部件角色 | 零件類型 | 推薦材料卡片 | 核心參數推薦 (ton-mm-s 系統) |
+| :--- | :--- | :--- | :--- |
+| **彈丸 (Ball / Projectile)** | 剛性實體單元 (SOLID) | `*MAT_020 (*MAT_RIGID)` | $\rho = 7.85\times 10^{-9}$, $E = 2.1\times 10^5$, $\nu = 0.30$, `CMO=0` (保留 6 自由度) |
+| **金屬靶板 (Plate)** | 彈塑性實體/殼單元 | `*MAT_024` + `*MAT_ADD_EROSION` | $\sigma_y = 355\text{ MPa}$, 多應變率 `*DEFINE_TABLE`, 失效塑性應變 $\varepsilon_p = 0.40$ |
+| **支撐夾具 (Fixture)** | 固定剛體面 | `*MAT_020 (*MAT_RIGID)` | `CMO=1`, `CON1=7`, `CON2=7` (完全剛性全約束) |

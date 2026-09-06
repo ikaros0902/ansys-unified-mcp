@@ -20,7 +20,14 @@ Use when:
 
 # ANSYS Mechanical 多物理場耦合與自動化分析技能
 
-本技能提供標準化的 ANSYS Mechanical 多物理場耦合自動化工作流程，整合 SpaceClaim PMDB 幾何直通、EngineeringData XML 材料庫導入、熱-結構序列耦合、Fluent CFD 數據映射以及無頭模式（Headless Mode）下的高解析度雲圖自動批次輸出。
+> [!NOTE]
+> **架構收斂與指引說明**：
+> 本技能已完整整併至林明志標準架構主技能 **[`ansys-mechanical`](../ansys-mechanical/SKILL.md)**。
+> 多物理場序列耦合與 CFD 負載映射專精指引請參閱：
+> - 主控手冊：[`ansys-mechanical/SKILL.md`](../ansys-mechanical/SKILL.md)
+> - 多物理場專精子手冊：[`ansys-mechanical/reference/multiphysics_mapping.md`](../ansys-mechanical/reference/multiphysics_mapping.md)
+> - 經典案例腳本：[`ansys-mechanical/scripts/run_taylor_bar_demo.py`](../ansys-mechanical/scripts/run_taylor_bar_demo.py)
+> 本檔案保留作為過渡期歷史參照相容。
 
 ---
 
