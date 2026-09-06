@@ -45,14 +45,14 @@ flowchart TD
 
 | 工程領域 / 任務情境 | 專精手冊 / 實作腳本 | 核心重點與關鍵規範 |
 |---|---|---|
-| **2D 參數化草圖與曲線** | [`reference/sketching.md`](file:///C:/Users/Ming/.gemini/config/skills/ansys-geometry-modeling/reference/sketching.md) | 基準面定義、NURBS 點陣列樣條插值、草圖閉合容差。 |
-| **3D 實體成形特徵** | [`reference/3d_features.md`](file:///C:/Users/Ming/.gemini/config/skills/ansys-geometry-modeling/reference/3d_features.md) | 拉伸、旋轉、掃掠路徑曲率安全原則、混成拓撲同構。 |
-| **外流域抽取與布林運算** | [`reference/booleans_enclosures.md`](file:///C:/Users/Ming/.gemini/config/skills/ansys-geometry-modeling/reference/booleans_enclosures.md) | CFD 邊界擴展規範 (2~3L, 6~8L)、單相流 vs CHT 模式。 |
-| **具名選擇自動標記** | [`reference/named_selections.md`](file:///C:/Users/Ming/.gemini/config/skills/ansys-geometry-modeling/reference/named_selections.md) | 外包圍盒空間極值過濾、面法向判別、命名規範與完備性。 |
-| **CAD 缺陷診斷判斷力庫** | [`reference/cad_diagnostics.md`](file:///C:/Users/Ming/.gemini/config/skills/ansys-geometry-modeling/reference/cad_diagnostics.md) | 微小面 (Sliver)、短邊、自交、流體滲漏判定標準與修復。 |
-| **無損 PMDB 導出規範** | [`reference/pmdb_export_rules.md`](file:///C:/Users/Ming/.gemini/config/skills/ansys-geometry-modeling/reference/pmdb_export_rules.md) | PMDB 格式優勢、Shared Topology 設置、下游網格接軌。 |
-| **外流域抽取示範腳本** | [`scripts/create_enclosure_demo.py`](file:///C:/Users/Ming/.gemini/config/skills/ansys-geometry-modeling/scripts/create_enclosure_demo.py) | 參數化翼型拉伸、外流域抽取、布林相減與自動導出。 |
-| **CAD 缺陷掃描腳本** | [`scripts/check_cad_defects.py`](file:///C:/Users/Ming/.gemini/config/skills/ansys-geometry-modeling/scripts/check_cad_defects.py) | 幾何實體水密性稽核、微小面/短邊過濾與 JSON 診斷報告。 |
+| **2D 參數化草圖與曲線** | [`reference/sketching.md`](reference/sketching.md) | 基準面定義、NURBS 點陣列樣條插值、草圖閉合容差。 |
+| **3D 實體成形特徵** | [`reference/3d_features.md`](reference/3d_features.md) | 拉伸、旋轉、掃掠路徑曲率安全原則、混成拓撲同構。 |
+| **外流域抽取與布林運算** | [`reference/booleans_enclosures.md`](reference/booleans_enclosures.md) | CFD 邊界擴展規範 (2~3L, 6~8L)、單相流 vs CHT 模式。 |
+| **具名選擇自動標記** | [`reference/named_selections.md`](reference/named_selections.md) | 外包圍盒空間極值過濾、面法向判別、命名規範與完備性。 |
+| **CAD 缺陷診斷判斷力庫** | [`reference/cad_diagnostics.md`](reference/cad_diagnostics.md) | 微小面 (Sliver)、短邊、自交、流體滲漏判定標準與修復。 |
+| **無損 PMDB 導出規範** | [`reference/pmdb_export_rules.md`](reference/pmdb_export_rules.md) | PMDB 格式優勢、Shared Topology 設置、下游網格接軌。 |
+| **外流域抽取示範腳本** | [`scripts/create_enclosure_demo.py`](scripts/create_enclosure_demo.py) | 參數化翼型拉伸、外流域抽取、布林相減與自動導出。 |
+| **CAD 缺陷掃描腳本** | [`scripts/check_cad_defects.py`](scripts/check_cad_defects.py) | 幾何實體水密性稽核、微小面/短邊過濾與 JSON 診斷報告。 |
 
 ---
 

@@ -84,7 +84,13 @@ flowchart LR
 | 載荷步、大變形與求解器控制 | [`reference/analysis_setup.md`](reference/analysis_setup.md) | Large Deflection、自動副步細分、Newton-Raphson 控制 |
 | 結果評估、雲圖導出與 DPF | [`reference/results_and_postprocessing.md`](reference/results_and_postprocessing.md) | 應力/變形提取、Graphics.ExportImage、DPF 高速場讀取 |
 | 收斂曲線診斷、無關性、奇異點 | [`reference/mechanical_judgment.md`](reference/mechanical_judgment.md) | 力殘差收斂判讀、GCI 無關性指標、聖維南原理判定 |
+| 多物理場耦合、CFD 負載映射與過渡 | [`reference/multiphysics_mapping.md`](reference/multiphysics_mapping.md) | 熱-結構弱耦合、Fluent 壓力/HTC 映射、聖維南平滑準則 |
 | 求解報錯（主元錯誤、不收斂）自愈 | [`reference/solver_diagnostics.md`](reference/solver_diagnostics.md) | Pivot Error、Convergence Failure 自愈對策表 |
+
+示範腳本推薦：
+- [`scripts/run_static_structural_demo.py`](scripts/run_static_structural_demo.py)：標準靜態剛強度與模態分析 ACT 示範。
+- [`scripts/run_taylor_bar_demo.py`](scripts/run_taylor_bar_demo.py)：泰勒桿高速衝擊大變形、OFHC 銅動態降伏推算與沙漏能診斷。
+- [`scripts/check_mesh_quality.py`](scripts/check_mesh_quality.py)：網格歪斜度與正交品質自動化預檢。
 
 ---
 

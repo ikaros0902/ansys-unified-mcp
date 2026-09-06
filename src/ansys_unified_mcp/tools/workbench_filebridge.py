@@ -22,8 +22,7 @@ import uuid
 from pathlib import Path
 from typing import Any
 
-from mcp.server.fastmcp import FastMCP
-
+from ansys_unified_mcp.shared import mcp
 
 __version__ = "0.2.0"
 

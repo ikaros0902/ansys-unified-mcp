@@ -155,6 +155,117 @@ class DropTestKeywordGenerator:
         ])
         return self
 
+    def add_part_and_section(
+        self,
+        pid: int,
+        secid: int,
+        mid: int,
+        section_type: str = "solid",
+        shell_thickness: float = 1.0,
+        elform: int = 1
+    ) -> "DropTestKeywordGenerator":
+        """
+        組裝 *PART 與對應的 *SECTION_SOLID 或 *SECTION_SHELL 拓撲關聯
+        :param pid: 部件 ID
+        :param secid: 斷面 ID
+        :param mid: 材料 ID
+        :param section_type: 'solid' (實體單元) 或 'shell' (薄殼單元)
+        :param shell_thickness: 若為薄殼單元時之厚度 (mm)
+        :param elform: 單元公式 (實體預設 1 常應變全域單元，薄殼預設 2 Belytschko-Tsay)
+        """
+        self.lines.extend([
+            "$ ----------------------------------------------------------------------",
+            f"$ 部件與斷面定義: PART={pid}, SECTION={secid}, MID={mid} ({section_type.upper()})",
+            "$ ----------------------------------------------------------------------",
+            "*PART",
+            f"Part_{pid}",
+            "$#     pid     secid       mid     eosid      hgid      grav    adpopt      tpid",
+            f"{pid:10d}{secid:10d}{mid:10d}         0         0         0         0         0"
+        ])
+        if section_type.lower() == "solid":
+            self.lines.extend([
+                "*SECTION_SOLID",
+                "$#   secid    elform       aet",
+                f"{secid:10d}{elform:10d}         0",
+                "$"
+            ])
+        else:
+            self.lines.extend([
+                "*SECTION_SHELL",
+                "$#   secid    elform      shrf       nip     propt   qr/irid     icomp     setyp",
+                f"{secid:10d}{elform:10d}      1.00         5         1         0         0         1",
+                "$#      t1        t2        t3        t4      nloc     marea      idof    edgset",
+                f"{shell_thickness:10.3f}{shell_thickness:10.3f}{shell_thickness:10.3f}{shell_thickness:10.3f}       0.0       0.0       0.0         0",
+                "$"
+            ])
+        return self
+
+    def add_strain_rate_table_mat024(
+        self,
+        mid: int,
+        tbid: int,
+        rate_curve_map: Dict[float, int],
+        density: float = 7.85e-9,
+        youngs: float = 2.10e5,
+        poisson: float = 0.30
+    ) -> "DropTestKeywordGenerator":
+        """
+        建立多應變率動態硬化表 *DEFINE_TABLE 與關聯之 *MAT_024 材料卡片
+        :param mid: 材料 ID
+        :param tbid: 表格 ID
+        :param rate_curve_map: 應變率與曲線 ID 映射表，例如 {0.001: 101, 1.0: 102, 100.0: 103}
+        """
+        self.lines.extend([
+            "$ ----------------------------------------------------------------------",
+            f"$ 多應變率動態硬化表: *DEFINE_TABLE ID={tbid}",
+            "$ ----------------------------------------------------------------------",
+            "*DEFINE_TABLE",
+            "$#    tbid      sdir",
+            f"{tbid:10d}         0",
+            "$#   value       lcid"
+        ])
+        for s_rate, lcid in sorted(rate_curve_map.items()):
+            self.lines.append(f"{s_rate:10.3e}{lcid:10d}")
+
+        self.lines.extend([
+            "$ ----------------------------------------------------------------------",
+            f"$ 材料本構: *MAT_024 (MID={mid}, LCSS=TABLE {tbid})",
+            "$ ----------------------------------------------------------------------",
+            "*MAT_PIECEWISE_LINEAR_PLASTICITY",
+            "$#     mid        ro         e        pr      sigy      etan      fail      tdel",
+            f"{mid:10d}{density:10.2e}{youngs:10.2e}{poisson:10.3f}       0.0       0.0     0.000     0.000",
+            "$#       c         p      lcss      lcsr        vp",
+            f"     0.000     0.000{tbid:10d}         0      0.00",
+            "$"
+        ])
+        return self
+
+    def add_mat_add_erosion(
+        self,
+        mid: int,
+        max_failure_plastic_strain: float = 0.40,
+        max_tensile_pressure: float = 0.0
+    ) -> "DropTestKeywordGenerator":
+        """
+        為指定材料卡片附加單元失效刪除準則 (*MAT_ADD_EROSION)
+        """
+        self.lines.extend([
+            "$ ----------------------------------------------------------------------",
+            f"$ 單元斷裂失效刪除: *MAT_ADD_EROSION (MID={mid}, MXFP={max_failure_plastic_strain})",
+            "$ ----------------------------------------------------------------------",
+            "*MAT_ADD_EROSION",
+            "$#     mid      excl    mxpres      mnsp    numfip       tcs      tdel     damp",
+            f"{mid:10d}       0.0{max_tensile_pressure:10.2f}       0.0       0.0       0.0       0.0       0.0",
+            "$#   volum     epsth     eps01      epsv     epst1      eps1      eps2      eps3",
+            "       0.0       0.0       0.0       0.0       0.0       0.0       0.0       0.0",
+            "$#    eps4      eps5      eps6      eps7      eps8      eps9     psoid      dflag",
+            "       0.0       0.0       0.0       0.0       0.0       0.0         0         0",
+            "$#    lcid      mnst     pconv      mxfp      epsrc     damtyp",
+            f"         0       0.0       0.0{max_failure_plastic_strain:10.3f}       0.0         0",
+            "$"
+        ])
+        return self
+
     def build_deck(self) -> str:
         """完成卡片輸出並加上 *END"""
         output_lines = list(self.lines)
@@ -178,17 +289,19 @@ def verify_glstat_energy_balance(
     if total_energy <= 0:
         return {"passed": False, "reason": "總能量非正數，數值可能發散"}
 
-    hg_ratio = (hourglass_energy / total_energy) * 100.0
+    hg_ratio_total = (hourglass_energy / total_energy) * 100.0
+    hg_ratio_internal = (hourglass_energy / max(internal_energy, 1e-6)) * 100.0
     passed = True
     reasons = []
 
-    if hg_ratio > 5.0:
+    # 雙軌檢驗：總能量佔比 (< 5%) 與 內能佔比 (< 10%)，徹底杜絕高速碰撞初期動能稀釋假象
+    if hg_ratio_total > 5.0 or (internal_energy > 0.01 * total_energy and hg_ratio_internal > 10.0):
         passed = False
-        reasons.append(f"沙漏能比例高達 {hg_ratio:.2f}% (超過 5% 嚴格紅線)，嚴禁放行結果！建議改用 IHQ=4 剛度阻尼或全積分單元。")
-    elif hg_ratio > 2.0:
-        reasons.append(f"沙漏能比例為 {hg_ratio:.2f}% (介於 2%~5% 合格邊緣)，建議抽查高應力區網格畸變。")
+        reasons.append(f"沙漏能超標 (總能佔比 {hg_ratio_total:.2f}%, 內能佔比 {hg_ratio_internal:.2f}%)，嚴禁放行！建議改用 IHQ=4 剛度阻尼或全積分單元。")
+    elif hg_ratio_total > 2.0 or (internal_energy > 0.01 * total_energy and hg_ratio_internal > 5.0):
+        reasons.append(f"沙漏能比例處於臨界區 (總能佔比 {hg_ratio_total:.2f}%, 內能佔比 {hg_ratio_internal:.2f}%)，建議抽查高應力區網格畸變。")
     else:
-        reasons.append(f"沙漏能比例為 {hg_ratio:.2f}% (< 2%)，數值品質極佳。")
+        reasons.append(f"沙漏能比例極低 (總能佔比 {hg_ratio_total:.2f}%, 內能佔比 {hg_ratio_internal:.2f}%)，數值品質極佳。")
 
     energy_drift = abs(total_energy - (kinetic_energy + internal_energy + hourglass_energy)) / total_energy
     if energy_drift > 0.10:
@@ -197,7 +310,8 @@ def verify_glstat_energy_balance(
 
     return {
         "passed": passed,
-        "hourglass_ratio_pct": hg_ratio,
+        "hourglass_ratio_pct": hg_ratio_total,
+        "hourglass_ratio_internal_pct": hg_ratio_internal,
         "diagnosis": " ； ".join(reasons)
     }
 

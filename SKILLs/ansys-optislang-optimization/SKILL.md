@@ -12,7 +12,14 @@ Use when:
 
 # ANSYS optiSLang 代理模型與最佳化技能 (Metamodeling & Optimization Skill)
 
-本技能提供使用 ANSYS optiSLang 進行參數敏感度分析、最佳預測代理模型（MOP, Metamodel of Optimal Prognosis）建構、關鍵變數篩選與多目標 Pareto 最佳化尋優之標準工程規範與自動化腳本指南。
+> [!NOTE]
+> **架構收斂與指引說明**：
+> 本技能已完整整併至林明志標準架構主技能 **[`ansys-optislang`](../ansys-optislang/SKILL.md)**。
+> 敏感度分析、MOP 最佳預測元模型與 Pareto 尋優專精指引請參閱：
+> - 主控手冊：[`ansys-optislang/SKILL.md`](../ansys-optislang/SKILL.md)
+> - MOP 代理模型子手冊：[`ansys-optislang/reference/mop_metamodel.md`](../ansys-optislang/reference/mop_metamodel.md)
+> - 經典 MOP 與 NSGA-II 尋優腳本：[`ansys-optislang/scripts/setup_mop_workflow_demo.py`](../ansys-optislang/scripts/setup_mop_workflow_demo.py)
+> 本檔案保留作為過渡期歷史參照相容。
 
 ---
 

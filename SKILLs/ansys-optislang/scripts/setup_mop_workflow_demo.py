@@ -19,6 +19,12 @@ class OptislangMOPWorkflowBuilder:
         self.responses: List[Dict[str, Any]] = []
         self.num_samples: int = 100
         self.sampling_method: str = "advanced_latin_hypercube"
+        self.optimization_settings: Dict[str, Any] = {
+            "enabled": True,
+            "algorithm": "NOAActor (NSGA-II)",
+            "max_evaluations": 1000,
+            "population_size": 50
+        }
 
     def set_sampling_settings(
         self,
@@ -28,6 +34,22 @@ class OptislangMOPWorkflowBuilder:
         """設定 DoE 抽樣數量與演算法 (預設進階拉丁超立方 LHS)"""
         self.num_samples = num_samples
         self.sampling_method = method
+        return self
+
+    def set_optimization_settings(
+        self,
+        enabled: bool = True,
+        algorithm: str = "NOAActor (NSGA-II)",
+        max_evaluations: int = 1000,
+        population_size: int = 50
+    ) -> "OptislangMOPWorkflowBuilder":
+        """配置基於 MOP ProxySolver 之全域/多目標最佳化設定"""
+        self.optimization_settings = {
+            "enabled": enabled,
+            "algorithm": algorithm,
+            "max_evaluations": max_evaluations,
+            "population_size": population_size
+        }
         return self
 
     def add_continuous_parameter(
@@ -98,9 +120,25 @@ class OptislangMOPWorkflowBuilder:
             "sens.set_setting('mop_kriging', True)",
             "sens.set_setting('mop_mls', True)",
             "sens.set_setting('cop_threshold', 0.80)",
-            "",
-            "# 5. 腳本配置完成",
-            "print('optiSLang Sensitivity 與 MOP 流程建立完畢！')"
+            ""
+        ])
+
+        if self.optimization_settings["enabled"]:
+            algo = self.optimization_settings["algorithm"]
+            max_evals = self.optimization_settings["max_evaluations"]
+            pop_size = self.optimization_settings["population_size"]
+            lines.extend([
+                "# 5. 建立基於 MOP ProxySolver 之 Pareto 最佳化尋優節點",
+                f"# opt = root_system.create_actor('{algo}')",
+                f"# opt.set_setting('max_number_of_samples', {max_evals})",
+                f"# opt.set_setting('population_size', {pop_size})",
+                "# opt.connect_to_proxy_solver(sens.get_proxy_solver())",
+                ""
+            ])
+
+        lines.extend([
+            "# 6. 腳本配置完成",
+            "print('optiSLang Sensitivity, MOP 與 Pareto 最佳化流程建立完畢！')"
         ])
 
         return "\n".join(lines)
@@ -179,50 +217,129 @@ def filter_parameters_by_tsi(tsi_dict: Dict[str, float], threshold: float = 0.05
 
 def diagnose_overfitting(r2: float, cop: float) -> Dict[str, Any]:
     """
-    診斷代理模型過擬合 (Overfitting) 現象
+    診斷代理模型過擬合 (Overfitting) 現象與複合預測品質
     """
     gap = r2 - cop
+    low_cop_warning = cop < 0.60
+
     if gap > 0.25:
-        return {
-            "is_overfitted": True,
-            "risk_level": "嚴重過擬合",
-            "diagnosis": f"決定係數 R^2={r2:.3f} 虛高，但預測係數 CoP={cop:.3f} 低落 (差距={gap:.3f})！模型已過度學習噪聲，強烈建議降低多項式階數或增加 LHS 樣本量。"
-        }
+        is_overfitted = True
+        risk_level = "嚴重過擬合"
+        diag = f"決定係數 R^2={r2:.3f} 虛高，但預測係數 CoP={cop:.3f} 低落 (差距={gap:.3f})！模型已過度學習噪聲，強烈建議降低多項式階數或增加 LHS 樣本量。"
     elif gap > 0.15:
-        return {
-            "is_overfitted": False,
-            "risk_level": "輕度偏差",
-            "diagnosis": f"R^2={r2:.3f} 與 CoP={cop:.3f} 差距 {gap:.3f} 在可接受邊緣，需留意局部非線性波動。"
-        }
+        is_overfitted = False
+        risk_level = "輕度偏差"
+        diag = f"R^2={r2:.3f} 與 CoP={cop:.3f} 差距 {gap:.3f} 在可接受邊緣，需留意局部非線性波動。"
     else:
-        return {
-            "is_overfitted": False,
-            "risk_level": "健康",
-            "diagnosis": f"R^2={r2:.3f} 與 CoP={cop:.3f} 吻合良好 (差距={gap:.3f})，模型泛化能力可靠。"
-        }
+        is_overfitted = False
+        risk_level = "健康"
+        diag = f"R^2={r2:.3f} 與 CoP={cop:.3f} 吻合良好 (差距={gap:.3f})，模型泛化能力可靠。"
+
+    # 複合判定：若 CoP < 0.60，即便差距 gap <= 0.25，亦標記模型總體預測品質過低或無預測力 (Action Item 4)
+    if low_cop_warning:
+        diag += f" 【⚠️ 警告: 預測係數 CoP={cop:.3f} < 0.60，模型總體預測品質過低或無預測力，嚴禁作為工程優化元模型！】"
+        risk_level += " (模型總體預測品質過低/無預測力)"
+
+    return {
+        "is_overfitted": is_overfitted,
+        "risk_level": risk_level,
+        "is_low_quality": low_cop_warning,
+        "diagnosis": diag
+    }
+
+
+def extract_pareto_frontier(
+    solutions: List[Dict[str, float]],
+    objectives: List[str]
+) -> List[Dict[str, float]]:
+    """
+    自候選解集中提取多目標非支配解 (Pareto Frontier)
+    假設所有目標均為極小化 (Minimization)
+    :param solutions: 包含目標值之候選解字典列表
+    :param objectives: 目標鍵值名稱列表
+    :return: 非支配 Pareto 最優前沿解集
+    """
+    pareto_front = []
+    for i, sol_a in enumerate(solutions):
+        dominated = False
+        for j, sol_b in enumerate(solutions):
+            if i == j:
+                continue
+            # 若 sol_b 在所有目標均不劣於 sol_a，且至少一個目標嚴格優於 sol_a，則 sol_a 被支配
+            not_worse = all(sol_b[obj] <= sol_a[obj] for obj in objectives)
+            strictly_better = any(sol_b[obj] < sol_a[obj] for obj in objectives)
+            if not_worse and strictly_better:
+                dominated = True
+                break
+        if not dominated:
+            pareto_front.append(sol_a)
+    return pareto_front
+
+
+def select_compromise_solution(
+    pareto_front: List[Dict[str, float]],
+    objectives: List[str],
+    weights: Optional[Dict[str, float]] = None
+) -> Dict[str, Any]:
+    """
+    基於 Utopia (理想點) 歸一化歐氏距離挑選最佳折衷解 (Compromise Solution)
+    :param pareto_front: Pareto 前沿解列表
+    :param objectives: 目標列表
+    :param weights: 各目標權重字典 (預設均等權重)
+    :return: 最佳折衷點與歸一化指標
+    """
+    if not pareto_front:
+        return {"error": "Pareto 前沿為空"}
+
+    if weights is None:
+        weights = {obj: 1.0 / len(objectives) for obj in objectives}
+
+    # 計算各目標的最小 (理想) 與最大 (最劣) 值
+    min_vals = {obj: min(s[obj] for s in pareto_front) for obj in objectives}
+    max_vals = {obj: max(s[obj] for s in pareto_front) for obj in objectives}
+
+    best_dist = float("inf")
+    best_solution = None
+
+    for sol in pareto_front:
+        dist_sq = 0.0
+        for obj in objectives:
+            span = max_vals[obj] - min_vals[obj]
+            norm_val = 0.0 if span == 0 else (sol[obj] - min_vals[obj]) / span
+            dist_sq += (weights.get(obj, 1.0) * norm_val) ** 2
+        dist = dist_sq ** 0.5
+        if dist < best_dist:
+            best_dist = dist
+            best_solution = sol
+
+    return {
+        "best_compromise_solution": best_solution,
+        "utopia_distance": round(best_dist, 4),
+        "ideal_utopia_point": min_vals
+    }
 
 
 if __name__ == "__main__":
-    # 範例執行：建立 5 參數結構最佳化 MOP 流程
-    builder = OptislangMOPWorkflowBuilder("Bracket_Structural_MOP")
-    builder.set_sampling_settings(num_samples=80, method="advanced_latin_hypercube")
-    builder.add_continuous_parameter("Rib_Thickness", 1.0, 5.0)
-    builder.add_continuous_parameter("Flange_Width", 20.0, 60.0)
-    builder.add_continuous_parameter("Fillet_Radius", 2.0, 8.0)
-    builder.add_continuous_parameter("Hole_Diameter", 10.0, 25.0)
-    builder.add_continuous_parameter("Material_Yield", 250.0, 400.0)
-    builder.add_response("Max_Equivalent_Stress", criterion="min", cop_threshold=0.85)
+    # 範例執行 1：建立 10 桿桁架 (Ten-Bar Truss) 多目標 MOP 尋優流程
+    builder = OptislangMOPWorkflowBuilder("Ten_Bar_Truss_MOP_Optimization")
+    builder.set_sampling_settings(num_samples=50, method="advanced_latin_hypercube")
+    builder.set_optimization_settings(enabled=True, algorithm="NOAActor (NSGA-II)", max_evaluations=1200)
+
+    for i in range(1, 11):
+        builder.add_continuous_parameter(f"Area_Bar_{i}", 0.1, 35.0, distribution="Uniform", reference_val=10.0)
+
     builder.add_response("Total_Mass", criterion="min", cop_threshold=0.95)
+    builder.add_response("Max_Displacement", criterion="min", cop_threshold=0.85)
 
     script_str = builder.generate_optislang_python_script()
     print("=== 生成的 optiSLang 原生 Python 腳本 ===")
     print(script_str)
 
-    # 執行 MOP 品質評估演示
+    # 範例執行 2：MOP 品質評估
     sample_cops = {
-        "Max_Equivalent_Stress": 0.88,
-        "Total_Mass": 0.98,
-        "Deformation_Z": 0.68
+        "Total_Mass": 0.99,
+        "Max_Displacement": 0.89,
+        "Bar_Max_Stress": 0.74
     }
     eval_res = evaluate_mop_quality(sample_cops)
     print("\n=== MOP 品質評估報告 ===")
@@ -230,13 +347,13 @@ if __name__ == "__main__":
     for k, v in eval_res["details"].items():
         print(f"- 響應 {k}: CoP={v['cop']:.2f} ({v['grade']}) -> {v['action']}")
 
-    # 執行 TSI 降維過濾演示
+    # 範例執行 3：TSI 敏感度過濾
     sample_tsi = {
-        "Rib_Thickness": 0.52,
-        "Flange_Width": 0.31,
-        "Fillet_Radius": 0.08,
-        "Hole_Diameter": 0.03,
-        "Material_Yield": 0.01
+        "Area_Bar_1": 0.38,
+        "Area_Bar_3": 0.29,
+        "Area_Bar_6": 0.18,
+        "Area_Bar_2": 0.08,
+        "Area_Bar_10": 0.02
     }
     tsi_res = filter_parameters_by_tsi(sample_tsi, threshold=0.05)
     print("\n=== TSI 降維過濾結論 ===")
@@ -244,7 +361,26 @@ if __name__ == "__main__":
     print(f"保留關鍵參數: {tsi_res['critical_parameters']}")
     print(f"剔除雜訊參數: {tsi_res['noise_parameters']}")
 
-    # 執行過擬合診斷演示
+    # 範例執行 4：過擬合診斷
     overfit_check = diagnose_overfitting(r2=0.98, cop=0.62)
     print("\n=== 過擬合診斷 ===")
     print(f"風險等級: {overfit_check['risk_level']}, 評語: {overfit_check['diagnosis']}")
+
+    # 範例執行 5：Pareto 前沿非支配解集提取與折衷解決策
+    candidate_solutions = [
+        {"id": 1, "Total_Mass": 1500.0, "Max_Displacement": 1.25},
+        {"id": 2, "Total_Mass": 1800.0, "Max_Displacement": 0.95},
+        {"id": 3, "Total_Mass": 2200.0, "Max_Displacement": 0.72},
+        {"id": 4, "Total_Mass": 1900.0, "Max_Displacement": 1.10},  # 被 id 2 支配
+        {"id": 5, "Total_Mass": 2500.0, "Max_Displacement": 0.65}
+    ]
+    pareto_pts = extract_pareto_frontier(candidate_solutions, ["Total_Mass", "Max_Displacement"])
+    print(f"\n=== Pareto 前沿解集提取 (共 {len(pareto_pts)} 個非支配點) ===")
+    for pt in pareto_pts:
+        print(f"  - 解 ID {pt['id']}: 質量 = {pt['Total_Mass']} lb, 最大位移 = {pt['Max_Displacement']} in")
+
+    compromise = select_compromise_solution(pareto_pts, ["Total_Mass", "Max_Displacement"])
+    best_sol = compromise["best_compromise_solution"]
+    print("\n=== Utopia 理想點最小歐式距離折衷解 ===")
+    print(f"  -> 最優折衷方案: 解 ID {best_sol['id']} (質量={best_sol['Total_Mass']}, 位移={best_sol['Max_Displacement']})")
+    print(f"  -> 歸一化 Utopia 距離: {compromise['utopia_distance']}")

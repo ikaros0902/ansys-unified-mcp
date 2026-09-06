@@ -54,9 +54,14 @@ docs_index.sqlite
 
 # Local run outputs & File-IPC command queue
 runs/
+jobs/*
+!jobs/.gitkeep
+scratch/
+.agents/
 src/**/tools/commands/
 src/**/tools/results/
 src/**/tools/runs/
 src/**/tools/scripts/
 src/**/tools/mcp.log
 src/**/tools/status.json
+
