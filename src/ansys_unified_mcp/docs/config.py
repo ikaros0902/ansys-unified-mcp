@@ -33,15 +33,17 @@ INDEX_PATH = CLEAN_DIR / "docs_index.sqlite"
 CHUNK_SIZE = 1400
 CHUNK_OVERLAP = 180
 
-# Recognized products. `workbench` is registered for completeness but currently
-# has no source document in Documentation_md (nothing to index yet).
-PRODUCTS = ("mechanical", "lsdyna", "ls-prepost", "optislang", "spaceclaim", "workbench")
+# Recognized products.
+PRODUCTS = (
+    "mechanical", "lsdyna", "ls-prepost", "optislang", "spaceclaim", "geometry",
+    "fluent", "dpf", "workbench", "pcb_warpage", "error_catalog", "general"
+)
 
 # Recognized categories.
-CATEGORIES = ("api_reference", "api_scripting", "guide", "tutorial")
+CATEGORIES = ("api_reference", "api_scripting", "guide", "tutorial", "skill", "architecture", "manual")
 
-# Categories that the default (narrow) search targets: the crisp API docs.
-PRIMARY_CATEGORIES = ("api_reference", "api_scripting")
+# Categories that the default (narrow) search targets: the crisp API docs & skills.
+PRIMARY_CATEGORIES = ("api_reference", "api_scripting", "skill")
 
 # Curated set. Every real doc in Documentation_md is indexed so it is
 # searchable, but `category` lets search route API lookups away from prose.
