@@ -14,7 +14,7 @@ from __future__ import annotations
 
 import json
 
-from ansys_unified_mcp.shared import mcp
+from ansys_unified_mcp.shared import mcp, aliased_tool
 from ansys_unified_mcp.products.optislang import controller
 
 
@@ -22,7 +22,7 @@ def _json(data) -> str:
     return json.dumps(data, indent=2, ensure_ascii=False)
 
 
-@mcp.tool()
+@aliased_tool(name="optislang_connect", alias="connect_optislang")
 def connect_optislang(project_path: str = "", ini_timeout: float = 60.0) -> str:
     """啟動並連線 optiSLang。
 
@@ -36,7 +36,7 @@ def connect_optislang(project_path: str = "", ini_timeout: float = 60.0) -> str:
     return _json(controller.connect(project_path=project_path, ini_timeout=ini_timeout))
 
 
-@mcp.tool()
+@aliased_tool(name="optislang_get_version", alias="optislang_version")
 def optislang_version() -> str:
     """回報目前連線 optiSLang 的已驗證版本字串（P1 冒煙用）。"""
     if not controller.is_connected():
@@ -44,7 +44,7 @@ def optislang_version() -> str:
     return _json({"ok": True, "version": controller.version_string()})
 
 
-@mcp.tool()
+@aliased_tool(name="optislang_run_script", alias="run_optislang_script")
 def run_optislang_script(script: str) -> str:
     """在連線的 optiSLang server 執行一段 optiSLang 原生 Python 腳本。
 
@@ -60,13 +60,13 @@ def run_optislang_script(script: str) -> str:
     return _json(controller.run_script(script))
 
 
-@mcp.tool()
+@aliased_tool(name="optislang_start_project", alias="start_optislang_project")
 def start_optislang_project() -> str:
     """執行（求解）目前 optiSLang 專案，阻塞至完成。"""
     return _json(controller.start_project())
 
 
-@mcp.tool()
+@aliased_tool(name="optislang_disconnect", alias="disconnect_optislang")
 def disconnect_optislang(shutdown: bool = True) -> str:
     """關閉 optiSLang 連線並釋放資源。
 
@@ -74,3 +74,4 @@ def disconnect_optislang(shutdown: bool = True) -> str:
         shutdown: True 則一併關閉 optiSLang 進程（dispose）。
     """
     return _json(controller.disconnect(shutdown=shutdown))
+

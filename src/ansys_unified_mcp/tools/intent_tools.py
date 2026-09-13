@@ -1,4 +1,4 @@
-﻿"""ANSYS Unified MCP 2.0 - 高階工程工況意圖工具 (Intent MCP Tools).
+"""ANSYS Unified MCP 2.0 - 高階工程工況意圖工具 (Intent MCP Tools).
 
 註冊 5 大系統級 CAE 工程工況工具：
 1. run_drop_test: 電子產品落摔衝擊工作流 (LS-DYNA 顯式動力學、前置閘門與沙漏能守護)
@@ -25,11 +25,12 @@ logger = logging.getLogger("ansys-unified-mcp.tools.intent")
 
 # 防禦性相容導入 FastMCP
 try:
-    from ansys_unified_mcp.shared import mcp
+    from ansys_unified_mcp.shared import mcp, aliased_tool
 except Exception:
     try:
         from mcp.server.fastmcp import FastMCP
         mcp = FastMCP("ansys-unified-mcp")
+        aliased_tool = mcp.tool
     except Exception:
         class _FallbackMCP:
             def tool(self, *args, **kwargs):
@@ -37,9 +38,10 @@ except Exception:
                     return fn
                 return decorator
         mcp = _FallbackMCP()
+        aliased_tool = mcp.tool
 
 
-@mcp.tool()
+@aliased_tool(name="workflow_run_drop_test", alias="run_drop_test")
 def run_drop_test(
     cad_path: str,
     drop_height_mm: float = 1000.0,
@@ -99,7 +101,7 @@ def run_drop_test(
     )
 
 
-@mcp.tool()
+@aliased_tool(name="workflow_run_shock_analysis", alias="run_shock_analysis")
 def run_shock_analysis(
     cad_path: str,
     pulse_shape: str = "half_sine",
@@ -147,7 +149,7 @@ def run_shock_analysis(
     )
 
 
-@mcp.tool()
+@aliased_tool(name="workflow_run_random_vibration", alias="run_random_vibration")
 def run_random_vibration(
     cad_path: str,
     psd_table: List[Tuple[float, float]],
@@ -201,7 +203,7 @@ def run_random_vibration(
     )
 
 
-@mcp.tool()
+@aliased_tool(name="workflow_run_thermal_warpage", alias="run_thermal_warpage")
 def run_thermal_warpage(
     cad_or_stackup_file: str,
     temperature_ref_c: float = 22.0,
@@ -247,7 +249,7 @@ def run_thermal_warpage(
     )
 
 
-@mcp.tool()
+@aliased_tool(name="workflow_train_surrogate_model", alias="train_surrogate_model")
 def train_surrogate_model(
     workflow_config: Optional[Dict[str, Any]] = None,
     design_parameters: Optional[List[Dict[str, Any]]] = None,

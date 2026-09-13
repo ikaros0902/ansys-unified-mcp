@@ -1,15 +1,12 @@
 ---
 name: ansys-geometry-modeling
-description: ANSYS 現代化幾何建模與前處理技能，基於 PyAnsys Geometry (ansys.geometry.core) 與 SpaceClaim / Discovery 引擎。提供 2D 參數化草圖拉伸特徵、流體外流域抽取 (Enclosure)、布林相減、CAD 具名選擇 (Named Selection) 標記與無損 PMDB 導出下游網格接軌。
-keywords: [PyAnsys Geometry, ansys.geometry.core, SpaceClaim, Discovery, 2D草圖, 樣條曲線, 實體拉伸, 旋轉特徵, 外流域抽取, Enclosure, 布林相減, 具名選擇, Named Selection, CAD缺陷診斷, PMDB導出, Fluent Meshing, PyPrimeMesh]
+description: ANSYS 現代化幾何前處理主控手冊 (PyAnsys Geometry)。涵蓋 2D 參數化草圖、3D 拉伸/旋轉、外流域抽取 (Enclosure)、CAD 診斷與無損 PMDB 導出。
 Use when:
-- 使用 PyAnsys Geometry (ansys.geometry.core) 進行 Python 程式化幾何前處理與 CAD 建模。
-- 繪製 2D 參數化草圖 (點陣列 NURBS 樣條插值、多段線、圓弧) 並執行 3D 拉伸 (Extrude) 或旋轉 (Revolve)。
-- 建立 CFD 外部流場外流域 (Enclosure) 並進行固體扣除之布林相減運算 (Subtract)。
-- 在 CAD 層級定義並標記具名選擇 (Named Selection) 以供 Mechanical、Fluent Meshing 或 PyPrimeMesh 接軌。
-- 執行幾何缺陷診斷（微小面 Sliver Faces、極短邊、自交邊、流體滲漏）與水密性稽核。
-- 匯出 ANSYS 原生無損幾何格式 (.pmdb, .fmd, .scdocx)。
-- 觸發關鍵字 (繁中/En): PyAnsys Geometry, ansys.geometry.core, 幾何建模, 參數化草圖, 樣條曲線, 實體拉伸, 旋轉成形, 抽取流體域, 建立Enclosure, 布林相減, 具名選擇, Named Selection, CAD診斷, 匯出PMDB, Fluent Meshing前處理, PyPrimeMesh幾何.
+  - 需使用 PyAnsys Geometry (ansys.geometry.core) 進行 Python 程式化 3D 幾何建模。
+  - 需建立流場外流域 (Enclosure) 並執行布林相減。
+  - 需標記具名選擇 (Named Selection) 並匯出 .pmdb 無損直通 Mechanical 或 Fluent。
+  - 限制: 長度單位強制為公尺 (m)；Windows 環境走 wnua 通道。
+  - 觸發關鍵字 (繁中/En): PyAnsys Geometry, 參數化幾何, 抽取外流域, Enclosure, 匯出PMDB.
 ---
 
 # ANSYS 現代化幾何建模與無損流轉主控手冊 (PyAnsys Geometry)

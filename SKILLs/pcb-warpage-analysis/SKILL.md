@@ -1,11 +1,11 @@
 ---
 name: pcb-warpage-analysis
-description: PCB 多層疊構熱翹曲（Thermal Warpage）自動化分析專用技能。
+description: PCB 多層疊構熱翹曲（Thermal Warpage）自動化分析專用技能。涵蓋 ROM 複合材料巨集、SpaceClaim 疊構建模與 3-2-1 靜定支承熱應力求解。
 Use when:
-- The user requests PCB multi-layer stackup thermal warpage simulation, Rule of Mixtures (ROM) composite material calculation (E, CTE, Poisson ratio).
-- Building 79-layer (or multi-layer) PCB stackup solid bodies from Excel (e.g. MCP_Test.xlsx) with Share Topology enabled.
-- Setting up ANSYS Mechanical MultiZone meshing, 3-2-1 statically determinate support (to prevent rigid body motion without artificial thermal stress), thermal boundary loads, and Z-axis warpage displacement contours.
-- Trigger keywords (繁中/En): PCB熱翹曲, PCB疊構, PCB堆疊, ROM材料計算, 3-2-1支承, 熱翹曲分析, PCB翹曲, PCB熱應力, 複合材料ROM.
+  - 需進行 PCB 多層疊構熱翹曲模擬或 Rule of Mixtures (ROM) 等效材料常數推算。
+  - 需自動化建立多層 PCB 實體幾何（啟用 Share Topology）並施加 3-2-1 靜定無熱應力支承。
+  - 限制: 需配合疊構參數表與 ANSYS Mechanical 環境。
+  - 觸發關鍵字 (繁中/En): PCB熱翹曲, PCB疊構, ROM材料計算, 3-2-1支承, PCB翹曲.
 ---
 
 # PCB Multi-Layer Thermal Warpage Analysis Skill

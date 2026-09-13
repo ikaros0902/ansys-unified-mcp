@@ -1,14 +1,12 @@
 ---
 name: ansys-spaceclaim-modeling
-description: 通用 ANSYS SpaceClaim (SCDM) 與 Discovery 3D 幾何建模與前處理技能。涵蓋 2D 參數化草圖拉伸特徵、流體外流域抽取 (Enclosure)、布林相減、CAD 具名選擇 (Named Selection) 標記與無損 PMDB 導出。
-keywords: [SpaceClaim, SCDM, Discovery, 2D草圖, 樣條曲線, 實體拉伸, 旋轉特徵, 外流域抽取, Enclosure, 布林相減, 具名選擇, Named Selection, CAD缺陷診斷, PMDB導出]
+description: ANSYS SpaceClaim (SCDM) 與 Discovery 幾何前處理主控手冊。涵蓋 2D 草圖拉伸、流場外流域抽取 (Enclosure)、布林相減、CAD 診斷與 PMDB 導出。
 Use when:
-- 使用者要求在 SpaceClaim 或 Discovery 中進行 3D CAD 建模、草圖繪製、拉伸、旋轉、掃掠或混成特徵。
-- 執行 CFD 外部流場外流域抽取 (Enclosure) 與布林相減 (Boolean Subtract)。
-- 標記 CAD 層級具名選擇 (Named Selection) 以供下游 Mechanical、Fluent Meshing 或 PyPrimeMesh 接軌。
-- 進行 CAD 幾何缺陷診斷（微小面 Sliver Faces、極短邊、自交邊、流體滲漏）與自動修復。
-- 匯出 ANSYS 原生無損幾何資料庫 (.pmdb) 或原生工程檔 (.scdocx)。
-- 觸發關鍵字 (繁中/En): SpaceClaim建模, SCDM腳本, Discovery幾何, 2D草圖, 樣條曲線, 實體拉伸, 旋轉成形, 抽取流體域, 建立Enclosure, 布林相減, 具名選擇, Named Selection, CAD診斷, 匯出PMDB.
+  - 需在 SpaceClaim 或 Discovery 中進行 3D 幾何建模、草圖特徵成形。
+  - 需建立流場外流域 (Enclosure) 並進行固體布林相減。
+  - 需排查 CAD 幾何缺陷（微小面、極短邊、自相交）或匯出 .pmdb 原生模型。
+  - 限制: 尺寸參數以公尺 (m) 為基準；不重複建立新設計。
+  - 觸發關鍵字 (繁中/En): SpaceClaim建模, SCDM幾何, Discovery前處理, 外流域抽取, PMDB導出.
 ---
 
 # ANSYS SpaceClaim 幾何前處理與無損流轉主控手冊

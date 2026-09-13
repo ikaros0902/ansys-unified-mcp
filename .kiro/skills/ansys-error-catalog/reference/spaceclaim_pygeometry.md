@@ -59,35 +59,3 @@ if design.bodies:
 3. 連線到錯誤的 SpaceClaim 實例
 
 **解決方案**: 確認 SpaceClaim 中有活動的設計，且幾何已匯入。
-
----
-
-## ERR-SC-004: `transport_mode` 參數未指定或誤設 'wnua' 導致 gRPC 連線超時
-
-**觸發場景**: 呼叫 `geometry_launch` 或以 `ansys.geometry.core.Modeler` 連線 SpaceClaim 時。
-
-**錯誤訊息**:
-```text
-ValueError: Transport mode must be specified. Use 'transport_mode' parameter with one of the possible options. Options are: 'insecure', 'uds', 'wnua', 'mtls'.
-```
-或
-```text
-TimeoutError / context deadline exceeded: MCP tool call timed out after 60s
-```
-
-**根因分析**:
-1. `ansys-geometry-core >= 0.16.0` 要求初始化 `Modeler` 時必須明確提供 `transport_mode`。
-2. 若誤設為 `transport_mode='wnua'`（Windows 具名管道），而 SpaceClaim 內嵌 ApiServer (`Presentation.ApiServerAddIn.dll`) 是以 TCP 50051 進行 insecure 監聽，gRPC 會在嘗試連線具名管道時永久阻塞超時。
-
-**解決方案**:
-連線時明確指定 `transport_mode='insecure'` 與 `host='127.0.0.1'`：
-
-```python
-from ansys.geometry.core import Modeler
-
-# 正確連線方式 (SpaceClaim 預設監聽 50051 埠號)
-m = Modeler(host="127.0.0.1", port=50051, transport_mode="insecure", timeout=15)
-```
-
-在 MCP 工具層面，需確保 `geometry_launch` 預設參數為 `host="127.0.0.1"`、`transport_mode="insecure"`、`connect_timeout=15`。
-
