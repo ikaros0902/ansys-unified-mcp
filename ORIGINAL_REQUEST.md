@@ -131,3 +131,36 @@ Integrity mode: development
 - [ ] 全套代碼通過 python -m py_compile 與 flake8/ruff 代碼品質檢查（0 語法錯誤）。
 - [ ] 模擬端到端執行測試（包含隨機振動模態質量不足阻斷案例、落摔沙漏超標早期中斷案例、熱翹曲 cell link 成功案例），產出合規之 overview.html 與 summary.json。
 
+## 2026-09-08T13:50:56Z
+
+實作 ANSYS Unified MCP 的 Phase 1 核心架構改造：全面完成 102 個工具的命名規範化與雙軌 alias 相容層、開發組合式高階工程工具，並建立完整的自動化回歸測試套件與等效性驗證。
+
+Working directory: F:\Ming_python\ansys-unified-mcp
+Integrity mode: development
+
+## Requirements
+
+### R1. 工具命名規範化與雙軌 Alias 相容
+在 `src/ansys_unified_mcp/tools/mechanical.py`、`workbench.py`、`optislang.py` 等模組中，將現有工具全面套用 `aliased_tool`。新名稱必須嚴格遵循 `<product>_<verb>_<object>` 規範（如 `mechanical_add_force`），同時保留舊別名（如 `add_force`），回傳格式一律統一為 `{"ok": bool, ...}` JSON 信封。
+
+### R2. 組合式高階工程分析工具
+新增 `src/ansys_unified_mcp/tools/mechanical_workflows.py`，封裝一鍵式高階工程操作（例如 `mechanical_setup_and_solve`、`mechanical_modal_analysis`），內部自動完成幾何指派、邊界條件、網格設定、求解與後處理結果驗證，回傳統整性分析報告。
+
+### R3. 自動化回歸測試與等效性校驗
+在 `tests/` 下建立或更新測試套件，針對所有重構工具進行自動化測試，驗證新規範名稱與舊別名調用時回傳結果完全等價，且全域 `pytest` 通過率維持在基準線以上。
+
+## Acceptance Criteria
+
+### AC1. 工具命名與信封相容性
+- [ ] `mechanical.py` 中 39 個工具皆完成 `aliased_tool` 雙軌註冊
+- [ ] 新標準名稱與舊別名在 FastMCP 中同時可查詢且可調用
+- [ ] 所有重構工具回傳值皆為標準 `{"ok": bool}` 信封結構
+
+### AC2. 組合式工具可用性
+- [ ] `mechanical_workflows.py` 成功註冊於主程式 `__main__.py`
+- [ ] 組合式工具能正確處理參數驗證，並在未連線時回傳標準錯誤信封
+
+### AC3. 測試與零回歸
+- [ ] 新增 `test_aliased_tools.py` 測試套件，100% 覆蓋雙軌別名等效性
+- [ ] 執行 `pytest` 無任何因工具重構引入之語法或邏輯錯誤
+

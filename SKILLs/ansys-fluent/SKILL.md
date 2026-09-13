@@ -1,16 +1,12 @@
 ---
 name: ansys-fluent
-description: ANSYS Fluent 流體力學與熱傳分析自動化主控手冊。基於 PyFluent (ansys-fluent-core) 與水密幾何網格工作流 (WGW)，涵蓋 Poly-Hexcore 體網格劃分、SST k-omega 湍流模型、共軛熱傳 (CHT)、Coupled 求解器偽瞬態控制、y+ 邊界層評估與發散自愈診斷。
-keywords: [ansys-fluent, pyfluent, cfd, watertight-meshing, poly-hexcore, sst-k-omega, coupled-solver, pseudo-transient, y-plus, divergence-remedy]
+description: ANSYS Fluent CFD 與共軛熱傳分析主控手冊。涵蓋 PyFluent 水密幾何 Poly-Hexcore 網格、SST k-omega 湍流模型、Coupled 求解與 y+ 評估。
 Use when:
-  - 需執行流體流動、強制/自然對流換熱、共軛熱傳 (CHT) 之自動化數值模擬。
-  - 需透過水密幾何工作流 (WGW) 自動生成高正交品質之 Poly-Hexcore (Mosaic) 體網格。
-  - 需配置 SST k-omega 湍流模型、能量方程式與流體/固體材料屬性。
-  - 需設定速度入口 (Velocity Inlet)、壓力出口 (Pressure Outlet) 及熱通量/恆溫壁面條件。
-  - 需透過 Coupled 演算法配合 Pseudo Transient 進行穩態高速強健收斂求解。
-  - 需進行流體專業判斷：評估壁面 y+ 是否合規、排查出口逆向回流 (Reversed flow) 與校核質量守恆不平衡度 (< 0.1%)。
-  - 需處理求解發散自愈：實施亞鬆弛因子 (URF) 或 Courant 數 (CFL) 階梯降階調節。
-  - 觸發關鍵字 (繁中/En): Fluent分析, PyFluent, CFD模擬, 水密幾何網格, Poly-Hexcore, 湍流模型, y+評估, 殘差發散自愈, 逆向回流排查.
+  - 需執行流體流動、對流散熱或共軛熱傳 (CHT) 之數值模擬。
+  - 需使用 PyFluent (ansys-fluent-core) 自動生成 Poly-Hexcore 網格並配置邊界條件。
+  - 需診斷出口回流、質量守恆不平衡度 (< 0.1%) 或發散降階自愈。
+  - 限制: 需具備 Fluent 環境與 PyFluent 套件。
+  - 觸發關鍵字 (繁中/En): Fluent分析, PyFluent, CFD模擬, 共軛熱傳, CHT, Poly-Hexcore.
 ---
 
 # ANSYS Fluent 流體力學與熱傳分析主控手冊

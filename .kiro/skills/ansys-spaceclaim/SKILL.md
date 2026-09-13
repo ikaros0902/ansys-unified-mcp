@@ -1,89 +1,50 @@
 ---
 name: ansys-spaceclaim
-description: 通用 ANSYS SpaceClaim (SCDM) 3D 幾何建模與 Python 腳本自動化技能。涵蓋 PyAnsys Geometry (ansys.geometry.core) 與原生 SpaceClaim ACT IronPython API (SpaceClaim.Api.V<ver>)。
+description: ANSYS SpaceClaim (SCDM) 幾何建模與 Python 腳本自動化技能。涵蓋 PyAnsys Geometry 與原生 SpaceClaim ACT IronPython API 雙軌控制。
 Use when:
-- The user requests 3D CAD modeling, sketching, extruding, creating blocks, boxes, cylinders, spheres, or direct geometry operations in ANSYS SpaceClaim.
-- Generating or executing SpaceClaim ACT Python / SCDM scripts (e.g. BlockBody.Create, Point.Create, length units, Sketch, Extrude).
-- Calling SpaceClaim MCP tools: geometry_launch, geometry_create_block, geometry_create_cylinder, geometry_create_design, geometry_export, execute_spaceclaim_script_live.
-- Trigger keywords (繁中/En): SpaceClaim畫圖, SpaceClaim建模, SCDM建模, 畫長方體, 畫圓柱體, SpaceClaim幾何, SpaceClaim腳本, SCDM腳本, CAD建模.
-keywords: spaceclaim, discovery, geometry, ACT, PyAnsys Geometry, ansys.geometry.core, SpaceClaim.Api, Sketch, extrude_sketch, revolve_sketch, Selection, Midsurface, Fill, RevolveFaces, ExtrudeFaces, SplitBody, ForceShare, ShareTopologyNamedSelection, FixImprint, ComponentHelper, DocumentHelper, PowerSelection, SketchRectangle, Point2D, midsurface, defeature, share topology, CAD, STEP, IGES, SpaceClaim畫圖, SpaceClaim建模, SCDM建模, 畫長方體, 畫圓柱體, SpaceClaim幾何, SpaceClaim腳本, SCDM腳本, CAD建模
+  - 需透過 SpaceClaim 執行 3D CAD 建模、草圖繪製、拉伸、旋轉或中面抽取。
+  - 需生成或執行 SpaceClaim 原生 ACT 腳本（`execute_spaceclaim_script_live`）。
+  - 需調用 MCP 工具：`geometry_create_block`、`geometry_create_cylinder` 等。
+  - 限制: 長度尺寸強制為公尺 (m)；嚴禁重複調用 create_design 創建新設計。
+  - 觸發關鍵字 (繁中/En): SpaceClaim建模, SCDM腳本, SpaceClaim幾何, 幾何前處理.
 ---
 
-# Ansys Geometry / SpaceClaim API (condensed, by function)
+# ANSYS SpaceClaim 幾何建模與腳本自動化主控手冊
 
-This project drives geometry through **two different API families**. Pick the
-one that matches how you're running:
+本技能支援透過兩種不同的 API 家族驅動 SpaceClaim 幾何：
 
-1. **PyAnsys Geometry** (`ansys.geometry.core`) — used by the MCP `geometry_*`
-   tools. Geometry is built with `Sketch` + `extrude_sketch`/`revolve_sketch`.
-   Files: `session.md`, `sketching.md`, `modeling.md`, `design_and_bodies.md`,
-   `import_export.md`.
-2. **Native SpaceClaim scripting** (`SpaceClaim.Api.V<ver>`) — used by
-   `execute_spaceclaim_script_live` and by SpaceClaim ACT wizards (recorded-script
-   API: `Selection`, `Midsurface`, `RevolveFaces`, `ForceShare`, `ComponentHelper`,
-   ...). Files: the `native_*.md` set below. This is what ACT SpaceClaim
-   extensions use.
+1. **PyAnsys Geometry (`ansys.geometry.core`)**：透過 MCP `geometry_*` 工具調用，適用於現代化 Python 直驅。
+2. **原生 SpaceClaim 腳本 (`SpaceClaim.Api.V<ver>`)**：透過 `execute_spaceclaim_script_live` 調用原生 IronPython API（如 `Selection`, `Midsurface`, `FixImprint`）。
 
-They are NOT interchangeable — `ansys.geometry.core` classes do not exist in a
-native SpaceClaim script and vice versa.
+---
 
-## ⚠️ 核心設計原則：嚴禁重複創建新 Design & 嚴格單位換算 (公尺 SI)
+## 一、核心設計原則與防呆邊界
 
-- **絕對不要調用 `geometry_create_design()` 或在腳本中創建新的 Document/Design**。
-- **一律在當前開啟的 Design (Current / Active Design) 中直接繪製幾何**。
-- **長度單位一律為公尺 (Meter, m)**：PyAnsys Geometry (`geometry_*` 工具) 的尺寸參數強制為公尺。若使用者給予毫米 (mm)，請務必先除以 1000 換算（例如 50mm -> 0.05, 30mm -> 0.03, 20mm -> 0.02）再傳入工具！
-- 若 SpaceClaim 已在 Workbench 中開啟或已有啟動中的視窗，直接於目前的作用中設計（Active Root Part / Current Design）進行 Sketch 與 Extrude。
+> [!CAUTION]
+> 1. **嚴禁重複創建新 Design**：
+>    一律在當前開啟的作用中設計（Current / Active Design）直接繪製幾何，絕對不要調用 `geometry_create_design()`。
+> 2. **嚴格單位換算（公尺 SI 制）**：
+>    PyAnsys Geometry 工具尺寸參數強制為公尺 (m)。若使用者給予毫米 (mm)，必須先除以 1000 換算後再傳入。
 
-## Core entry points (PyAnsys Geometry path)
+---
 
-```python
-from ansys.geometry.core.sketch import Sketch
-from ansys.geometry.core.math import Point2D, Point3D, Plane, Vector3D
+## 二、模組路由表 (Module Router)
 
-# 取得目前使用中的 design（不要調用 create_design 創建新設計）
-design  = modeler.active_design or modeler.get_active_design()  # 使用目前的作用中設計
-sketch  = Sketch()                                             # 2D sketch on default plane
-body    = design.extrude_sketch(name="B", sketch=sketch, distance=0.01)
-```
+深入操作請查閱 `reference/` 對應文件：
 
-- Lengths are in meters (SI). A block/cylinder is a sketch profile extruded a
-  distance; a sphere is a semicircle revolved 360°.
+### 1. PyAnsys Geometry 路線
+| 功能分類 | 參考文件 | 內容說明 |
+| :--- | :--- | :--- |
+| **連線與 Session** | [`reference/session.md`](reference/session.md) | Modeler 啟動、連線與 Body 列舉 |
+| **2D 草圖繪製** | [`reference/sketching.md`](reference/sketching.md) | `Sketch` 平面、圓形、多段線與圓弧 |
+| **3D 幾何成形** | [`reference/modeling.md`](reference/modeling.md) | `extrude_sketch`、`revolve_sketch` 拉伸與旋轉 |
+| **組件與具名選擇** | [`reference/design_and_bodies.md`](reference/design_and_bodies.md) | 拓撲樹、元件層級與 Named Selection |
+| **模型匯入匯出** | [`reference/import_export.md`](reference/import_export.md) | STEP / IGES 匯入與導出 |
 
-## Which reference file to open
-
-**PyAnsys Geometry path** (MCP `geometry_*` tools):
-
-| Function | File | Covers |
-|---|---|---|
-| Session & connect | `reference/session.md` | Launch/connect modeler, create design, list bodies |
-| Sketching | `reference/sketching.md` | `Sketch`, planes, `circle`/`box`/`arc`/`segment` |
-| Modeling | `reference/modeling.md` | `extrude_sketch`, `revolve_sketch`, block/cylinder/sphere patterns |
-| Design & bodies | `reference/design_and_bodies.md` | Design tree, bodies, components, named selections |
-| Import / export | `reference/import_export.md` | Import CAD, export STEP/IGES |
-
-**Native SpaceClaim scripting path** (`execute_spaceclaim_script_live` / ACT wizards):
-
-| Function | File | Covers |
-|---|---|---|
-| Session & versions | `reference/native_session_and_versions.md` | `SpaceClaim.Api.V<ver>` load + auto-detect, `clr.ImportExtensions`, units, `onupdateStep` |
-| Selection | `reference/native_selection.md` | `Selection` create/convert/filter/group, `PowerSelection` |
-| Commands | `reference/native_commands.md` | `Midsurface`/`Fill`/`Loft`/`RevolveFaces`/`ExtrudeFaces`/`SplitBody`/`Move`/`ForceShare`/`ShareTopologyNamedSelection`/`FixImprint` |
-| Sketch & geometry | `reference/native_sketch_and_geometry.md` | `SketchRectangle`/`SketchArc`/`Point2D`, `Vector`/`Direction`/`Plane`, shape/geometry queries |
-| Helpers, view, transactions | `reference/native_helpers_and_transaction.md` | `DocumentHelper`/`MeasureHelper`/`ViewHelper`, undo/redo, `TransactionHelper`/`WriteBlock`/`Task` |
-
-Anything not in these files — search the docs (below). Reference files are a
-curated subset of the most-used dispatch API.
-
-## Fallback: search the full docs
-
-- `search_ansys_docs(query, scope="all")` — `SpaceClaim_Documentation` is indexed
-  as a guide (product `spaceclaim`); search all scopes.
-- `get_ansys_doc_chunk(doc, chunk_id, context=1)` — pull the full chunk.
-- Use single, exact tokens; multi-word natural-language queries often miss.
-
-## MCP tools (dispatch surface)
-
-`geometry_launch`, `geometry_create_design`, `geometry_create_block`,
-`geometry_create_cylinder`, `geometry_create_sphere`, `geometry_export`,
-`geometry_import_file`, `geometry_list_bodies`, `geometry_status`,
-`geometry_close`, and `execute_spaceclaim_script_live` (native SpaceClaim Python).
+### 2. 原生 SpaceClaim IronPython 路線
+| 功能分類 | 參考文件 | 內容說明 |
+| :--- | :--- | :--- |
+| **版本與 Session** | [`reference/native_session_and_versions.md`](reference/native_session_and_versions.md) | `SpaceClaim.Api` 載入、單位與更新步進 |
+| **實體選擇器** | [`reference/native_selection.md`](reference/native_selection.md) | `Selection` 拓撲過濾與 `PowerSelection` |
+| **特徵與拓撲命令** | [`reference/native_commands.md`](reference/native_commands.md) | `Midsurface` 中面、`ForceShare` 拓撲共享、`Fill` 填補 |
+| **原生草圖** | [`reference/native_sketch_and_geometry.md`](reference/native_sketch_and_geometry.md) | `SketchRectangle`、`Point2D` 原生幾何建構 |

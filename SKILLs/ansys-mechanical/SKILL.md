@@ -1,16 +1,12 @@
 ---
 name: ansys-mechanical
-description: ANSYS Mechanical 結構與熱分析自動化技能。適用於對工程零件與裝配體進行靜態剛強度校核、模態固有頻率與振型提取、熱-結構耦合熱應力計算、接觸非線性收斂排查，以及應力集中與奇異點工程判定。
-keywords: [ansys-mechanical, static-structural, modal-analysis, thermal-stress, mesh-quality, contact-formulation, stress-singularity, solver-convergence, act-scripting]
+description: ANSYS Mechanical 結構剛強度、模態與熱-結構耦合分析主控手冊。涵蓋 ACT 腳本、非線性接觸、網格前檢與奇異點判定。
 Use when:
-  - 需對機械結構、金屬/複合材料零組件進行靜態強度、剛度與安全係數校核。
-  - 需評估結構振動特性，提取自由態或約束態模態固有頻率與相應振型。
-  - 需進行熱-結構序列耦合，將熱分析溫度場導入結構環境計算熱應變與熱應力。
-  - 需自動化設定網格控制（Sizing、Method）並執行網格品質量化檢驗。
-  - 需定義非線性接觸對（摩擦、無分離、綁定）並排除接觸震盪或穿透問題。
-  - 需排查求解器經典報錯（如主元錯誤 Pivot Error、非線性力殘差不收斂）。
-  - 需辨識應力奇異點 (Singularity) 與真實應力集中 (Concentration) 以防過度設計。
-  - 觸發關鍵字 (繁中/En): Mechanical分析, 靜態結構, 模態分析, 熱應力分析, 網格品質檢驗, 接觸非線性, 應力奇異點, 求解器報錯自愈, ACT腳本, PyMechanical.
+  - 需進行靜態結構強度剛度校核、固有頻率模態分析或熱應力序列耦合。
+  - 需透過 ACT / PyMechanical 腳本配置非線性接觸、網格控制與大變形求解。
+  - 需排查求解器主元錯誤 (Pivot Error)、殘差發散或聖維南應力奇異點。
+  - 限制: 需在 Mechanical ACT 環境或透過 PyMechanical 連線執行。
+  - 觸發關鍵字 (繁中/En): Mechanical分析, 靜態結構, 模態分析, 熱應力分析, PyMechanical, ACT腳本.
 ---
 
 # ANSYS Mechanical 結構與熱分析主控手冊

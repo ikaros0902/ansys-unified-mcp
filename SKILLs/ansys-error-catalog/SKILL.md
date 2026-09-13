@@ -1,9 +1,9 @@
 ---
 name: ansys-error-catalog
-description: >-
-  ANSYS 開發中遇到的錯誤分類目錄，按模組（Workbench/Mechanical/SpaceClaim/ACT）
-  和 function 分類，包含根因分析與解決方案。遇到 ANSYS 相關錯誤時載入此 skill。
-keywords: error, NameError, StandardError, gRPC, IronPython, Workbench, Mechanical, ACT, debug, troubleshooting
+description: ANSYS 與 IronPython 開發報錯目錄與排障指南。涵蓋 Workbench、Mechanical、SpaceClaim 與 ACT 報錯根因與修復對策。
+Use when:
+  - 遇到 ANSYS 執行期錯誤（如 IronPython NameError、StandardError、Scoping 遺失）。
+  - 觸發關鍵字 (繁中/En): ANSYS報錯, IronPython錯誤, Mechanical排障, ACT除錯.
 ---
 
 # ANSYS 錯誤分類目錄

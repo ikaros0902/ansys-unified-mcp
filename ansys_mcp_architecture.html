@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ANSYS Unified MCP · 系統架構拓撲</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --color-paper:      #f5f5f5;
+      --color-paper-2:    #ffffff;
+      --color-ink:        #2d3142;
+      --color-muted:      #4f5d75;
+      --color-soft:       #7a8399;
+      --color-accent:     #eb6c36;
+      --color-accent-tint: rgba(235, 108, 54, 0.08);
+      --color-link:       #2e5aa8;
+      --color-rule:       rgba(45, 49, 66, 0.10);
+      --color-rule-solid: #d8d9de;
+      --font-sans:        'Geist', 'Noto Sans TC', system-ui, sans-serif;
+      --font-serif:       'Instrument Serif', serif;
+      --font-mono:        'Geist Mono', ui-monospace, monospace;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--color-paper);
+      color: var(--color-ink);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2.5rem 1.5rem;
+    }
+
+    .frame {
+      max-width: 1080px;
+      width: 100%;
+    }
+
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--color-muted);
+      margin-bottom: 0.4rem;
+    }
+
+    h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(1.6rem, 2.5vw + 0.8rem, 2.2rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      color: var(--color-ink);
+      margin-bottom: 0.4rem;
+    }
+
+    .subtitle {
+      font-size: 0.92rem;
+      color: var(--color-muted);
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
+    }
+
+    .diagram-wrap {
+      background: var(--color-paper);
+      border-radius: 8px;
+      margin-bottom: 2rem;
+    }
+
+    svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    /* Summary cards grid */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 1fr 0.95fr;
+      gap: 1.25rem;
+      margin-top: 1rem;
+    }
+
+    .card {
+      background: var(--color-paper-2);
+      border: 1px solid var(--color-rule-solid);
+      border-radius: 6px;
+      padding: 1.25rem 1.35rem;
+    }
+
+    .card-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--color-soft);
+      margin-bottom: 0.4rem;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.65rem;
+    }
+
+    .card-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .card-dot.coral { background: var(--color-accent); }
+    .card-dot.ink   { background: var(--color-ink); }
+    .card-dot.link  { background: var(--color-link); }
+
+    .card h3 {
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--color-ink);
+    }
+
+    .card p {
+      font-size: 0.82rem;
+      color: var(--color-muted);
+      line-height: 1.5;
+      margin-bottom: 0.5rem;
+    }
+
+    .card ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .card li {
+      font-size: 0.78rem;
+      color: var(--color-ink);
+      line-height: 1.6;
+      position: relative;
+      padding-left: 0.9rem;
+    }
+
+    .card li::before {
+      content: "–";
+      position: absolute;
+      left: 0;
+      color: var(--color-soft);
+    }
+
+    footer {
+      margin-top: 2rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--color-rule);
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--color-soft);
+    }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <p class="eyebrow">系統架構 · Diagram Design</p>
+    <h1>ANSYS Unified MCP 現行架構拓撲</h1>
+    <p class="subtitle">精準呈現 FastMCP 雙軌別名層、SessionRegistry 中樞、gRPC 埠號拓撲 (Port 10000/50051) 與求解器批次子程序通道。</p>
+
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 1000 680" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ansys-mcp-title ansys-mcp-desc">
+        <title id="ansys-mcp-title">ANSYS Unified MCP 現行架構拓撲</title>
+        <desc id="ansys-mcp-desc">展示 AI Agent 透過 FastMCP 雙軌工具層、SessionRegistry 會話管理、雙軌執行通道驅動 ANSYS CAE 各產品之系統架構圖。</desc>
+        
+        <defs>
+          <pattern id="dots" width="24" height="24" patternUnits="userSpaceOnUse">
+            <circle cx="1" cy="1" r="0.9" fill="rgba(45,49,66,0.10)"/>
+          </pattern>
+          
+          <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/>
+          </marker>
+          <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#eb6c36"/>
+          </marker>
+          <marker id="arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#2e5aa8"/>
+          </marker>
+        </defs>
+
+        <!-- 背景底色與紋理 -->
+        <rect width="100%" height="100%" fill="#f5f5f5"/>
+        <rect width="100%" height="100%" fill="url(#dots)" opacity="0.6"/>
+
+        <!-- ==================================================================== -->
+        <!-- 區域容器 (Zone Rectangles) -->
+        <!-- ==================================================================== -->
+        <!-- 區域 1: 調度與工具介面層 -->
+        <rect x="32" y="60" width="936" height="132" rx="8"
+              fill="rgba(45,49,66,0.02)" stroke="rgba(45,49,66,0.10)" stroke-width="0.8"/>
+        <rect x="48" y="64" width="168" height="14" rx="2" fill="#f5f5f5"/>
+        <text x="132" y="75" fill="rgba(45,49,66,0.45)" font-size="8" font-family="'Geist Mono', monospace"
+              text-anchor="middle" letter-spacing="0.14em">1. CLIENT & TOOL SURFACE</text>
+
+        <!-- 區域 2: 控制器與會話中樞層 -->
+        <rect x="32" y="228" width="936" height="132" rx="8"
+              fill="rgba(45,49,66,0.02)" stroke="rgba(45,49,66,0.10)" stroke-width="0.8"/>
+        <rect x="48" y="232" width="188" height="14" rx="2" fill="#f5f5f5"/>
+        <text x="142" y="243" fill="rgba(45,49,66,0.45)" font-size="8" font-family="'Geist Mono', monospace"
+              text-anchor="middle" letter-spacing="0.14em">2. CONTROLLER & REGISTRY</text>
+
+        <!-- 區域 3: 雙軌通道與 CAE 求解引擎層 -->
+        <rect x="32" y="396" width="936" height="184" rx="8"
+              fill="rgba(45,49,66,0.02)" stroke="rgba(45,49,66,0.10)" stroke-width="0.8"/>
+        <rect x="48" y="400" width="204" height="14" rx="2" fill="#f5f5f5"/>
+        <text x="150" y="411" fill="rgba(45,49,66,0.45)" font-size="8" font-family="'Geist Mono', monospace"
+              text-anchor="middle" letter-spacing="0.14em">3. DUAL DISPATCH & SOLVERS</text>
+
+        <!-- ==================================================================== -->
+        <!-- 箭頭連接線 (Connectors) -->
+        <!-- ==================================================================== -->
+        <!-- 1. AI Agent -> FastMCP Server Hub -->
+        <line x1="248" y1="136" x2="388" y2="136" stroke="#eb6c36" stroke-width="1.4" marker-end="url(#arrow-accent)"/>
+
+        <!-- 2. FastMCP Server Hub -> Docs Tools -->
+        <line x1="612" y1="136" x2="752" y2="136" stroke="#2e5aa8" stroke-width="1.2" marker-end="url(#arrow-link)"/>
+
+        <!-- 3. FastMCP -> Mechanical & Geometry Controllers (正交直角路徑 r=8) -->
+        <path d="M 444,176 V 204 Q 444,212 436,212 H 156 Q 148,212 148,220 V 264"
+              fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+
+        <!-- 4. FastMCP -> SessionRegistry -->
+        <line x1="500" y1="176" x2="500" y2="264" stroke="#eb6c36" stroke-width="1.4" marker-end="url(#arrow-accent)"/>
+
+        <!-- 5. FastMCP -> Workbench Bridge -->
+        <path d="M 556,176 V 204 Q 556,212 564,212 H 844 Q 852,212 852,220 V 264"
+              fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+
+        <!-- 6. SessionRegistry <-> Controllers (水平雙向虛線) -->
+        <line x1="388" y1="304" x2="248" y2="304" stroke="#4f5d75" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+        <line x1="612" y1="304" x2="752" y2="304" stroke="#4f5d75" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+
+        <!-- 7. Controllers -> gRPC Live Session (垂直實線) -->
+        <line x1="148" y1="344" x2="148" y2="432" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+
+        <!-- 8. SessionRegistry -> Connection Manager (垂直實線 Accent) -->
+        <line x1="500" y1="344" x2="500" y2="432" stroke="#eb6c36" stroke-width="1.2" marker-end="url(#arrow-accent)"/>
+
+        <!-- 9. Workbench Bridge -> File IPC / Subprocess (垂直實線) -->
+        <line x1="852" y1="344" x2="852" y2="432" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+
+        <!-- ==================================================================== -->
+        <!-- 箭頭遮罩標籤 (Arrow Labels) -->
+        <!-- ==================================================================== -->
+        <rect x="286" y="116" width="64" height="12" rx="2" fill="#f5f5f5"/>
+        <text x="318" y="125" fill="#eb6c36" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">CALL_TOOL</text>
+
+        <rect x="646" y="116" width="72" height="12" rx="2" fill="#f5f5f5"/>
+        <text x="682" y="125" fill="#2e5aa8" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">FTS5_QUERY</text>
+
+        <rect x="256" y="200" width="80" height="12" rx="2" fill="#f5f5f5"/>
+        <text x="296" y="209" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">API_DISPATCH</text>
+
+        <rect x="508" y="210" width="72" height="12" rx="2" fill="#f5f5f5"/>
+        <text x="544" y="219" fill="#eb6c36" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">GET_SESSION</text>
+
+        <rect x="664" y="200" width="72" height="12" rx="2" fill="#f5f5f5"/>
+        <text x="700" y="209" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">QUEUE_JOB</text>
+
+        <rect x="288" y="292" width="60" height="12" rx="2" fill="#f5f5f5"/>
+        <text x="318" y="301" fill="#7a8399" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">LOOKUP</text>
+
+        <rect x="652" y="292" width="60" height="12" rx="2" fill="#f5f5f5"/>
+        <text x="682" y="301" fill="#7a8399" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">STATUS</text>
+
+        <rect x="156" y="380" width="72" height="12" rx="2" fill="#f5f5f5"/>
+        <text x="192" y="389" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">RUN_SCRIPT</text>
+
+        <rect x="508" y="380" width="64" height="12" rx="2" fill="#f5f5f5"/>
+        <text x="540" y="389" fill="#eb6c36" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">PORT_SCAN</text>
+
+        <rect x="860" y="380" width="64" height="12" rx="2" fill="#f5f5f5"/>
+        <text x="892" y="389" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">SUBPROCESS</text>
+
+        <!-- ==================================================================== -->
+        <!-- 節點元件 (Node Boxes) -->
+        <!-- ==================================================================== -->
+
+        <!-- ---------------- 節點 1: AI Agent Client ---------------- -->
+        <rect x="48" y="96" width="200" height="80" rx="6" fill="#f5f5f5"/>
+        <rect x="48" y="96" width="200" height="80" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+        <rect x="56" y="104" width="48" height="12" rx="2" fill="transparent" stroke="rgba(45,49,66,0.35)" stroke-width="0.8"/>
+        <text x="80" y="113" fill="#4f5d75" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">CLIENT</text>
+        <text x="148" y="138" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', 'Noto Sans TC', sans-serif" text-anchor="middle">AI Agent 調度客戶端</text>
+        <text x="148" y="156" fill="#7a8399" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">stdio / JSON-RPC 2.0</text>
+
+        <!-- ---------------- 節點 2: FastMCP Server Hub [FOCAL 1 - Coral] ---------------- -->
+        <rect x="388" y="96" width="224" height="80" rx="6" fill="#f5f5f5"/>
+        <rect x="388" y="96" width="224" height="80" rx="6" fill="rgba(235, 108, 54, 0.08)" stroke="#eb6c36" stroke-width="1.2"/>
+        <rect x="396" y="104" width="56" height="12" rx="2" fill="transparent" stroke="rgba(235, 108, 54, 0.6)" stroke-width="0.8"/>
+        <text x="424" y="113" fill="#eb6c36" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">MCP CORE</text>
+        <text x="500" y="138" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', 'Noto Sans TC', sans-serif" text-anchor="middle">FastMCP 雙軌工具層</text>
+        <text x="500" y="156" fill="#eb6c36" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">aliased_tool (102+ 工具)</text>
+
+        <!-- ---------------- 節點 3: Docs Tools Engine ---------------- -->
+        <rect x="752" y="96" width="200" height="80" rx="6" fill="#f5f5f5"/>
+        <rect x="752" y="96" width="200" height="80" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+        <rect x="760" y="104" width="68" height="12" rx="2" fill="transparent" stroke="rgba(45,49,66,0.35)" stroke-width="0.8"/>
+        <text x="794" y="113" fill="#4f5d75" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">KNOWLEDGE</text>
+        <text x="852" y="138" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', 'Noto Sans TC', sans-serif" text-anchor="middle">SQLite FTS5 離線手冊</text>
+        <text x="852" y="156" fill="#2e5aa8" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">search_ansys_docs</text>
+
+        <!-- ---------------- 節點 4: Mechanical & Geometry Controllers ---------------- -->
+        <rect x="48" y="264" width="200" height="80" rx="6" fill="#f5f5f5"/>
+        <rect x="48" y="264" width="200" height="80" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+        <rect x="56" y="272" width="76" height="12" rx="2" fill="transparent" stroke="rgba(45,49,66,0.35)" stroke-width="0.8"/>
+        <text x="94" y="281" fill="#4f5d75" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">CONTROLLERS</text>
+        <text x="148" y="306" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', 'Noto Sans TC', sans-serif" text-anchor="middle">結構與幾何控制器</text>
+        <text x="148" y="324" fill="#7a8399" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">Mechanical & Geometry Modeler</text>
+
+        <!-- ---------------- 節點 5: SessionRegistry [FOCAL 2 - Coral] ---------------- -->
+        <rect x="388" y="264" width="224" height="80" rx="6" fill="#f5f5f5"/>
+        <rect x="388" y="264" width="224" height="80" rx="6" fill="rgba(235, 108, 54, 0.08)" stroke="#eb6c36" stroke-width="1.2"/>
+        <rect x="396" y="272" width="64" height="12" rx="2" fill="transparent" stroke="rgba(235, 108, 54, 0.6)" stroke-width="0.8"/>
+        <text x="428" y="281" fill="#eb6c36" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">SINGLETON</text>
+        <text x="500" y="306" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', 'Noto Sans TC', sans-serif" text-anchor="middle">SessionRegistry 會話中樞</text>
+        <text x="500" y="324" fill="#eb6c36" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">多產品/埠號執行緒安全池</text>
+
+        <!-- ---------------- 節點 6: Workbench Bridge & Driver Hub ---------------- -->
+        <rect x="752" y="264" width="200" height="80" rx="6" fill="#f5f5f5"/>
+        <rect x="752" y="264" width="200" height="80" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+        <rect x="760" y="272" width="60" height="12" rx="2" fill="transparent" stroke="rgba(45,49,66,0.35)" stroke-width="0.8"/>
+        <text x="790" y="281" fill="#4f5d75" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">DRIVERS</text>
+        <text x="852" y="306" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', 'Noto Sans TC', sans-serif" text-anchor="middle">Workbench / DYNA 驅動</text>
+        <text x="852" y="324" fill="#7a8399" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">LSDynaDriver & Bridge</text>
+
+        <!-- ---------------- 節點 7: gRPC Live Session (Dispatch A) ---------------- -->
+        <rect x="48" y="432" width="276" height="116" rx="6" fill="#f5f5f5"/>
+        <rect x="48" y="432" width="276" height="116" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+        <rect x="56" y="440" width="76" height="12" rx="2" fill="transparent" stroke="rgba(45,49,66,0.35)" stroke-width="0.8"/>
+        <text x="94" y="449" fill="#4f5d75" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">DISPATCH A</text>
+        <text x="186" y="474" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', 'Noto Sans TC', sans-serif" text-anchor="middle">gRPC 即時通訊通道</text>
+        <text x="186" y="494" fill="#2e5aa8" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">Mechanical (10000) · SpaceClaim (50051)</text>
+        <line x1="64" y1="508" x2="308" y2="508" stroke="rgba(45,49,66,0.10)" stroke-width="0.8"/>
+        <text x="186" y="526" fill="#4f5d75" font-size="9" font-family="'Geist', 'Noto Sans TC', sans-serif" text-anchor="middle">Mechanical · SpaceClaim · Fluent · optiSLang</text>
+
+        <!-- ---------------- 節點 8: Connection Manager & Paths ---------------- -->
+        <rect x="360" y="432" width="280" height="116" rx="6" fill="#f5f5f5"/>
+        <rect x="360" y="432" width="280" height="116" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+        <rect x="368" y="440" width="76" height="12" rx="2" fill="transparent" stroke="rgba(45,49,66,0.35)" stroke-width="0.8"/>
+        <text x="406" y="449" fill="#4f5d75" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">DISCOVERY</text>
+        <text x="500" y="474" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', 'Noto Sans TC', sans-serif" text-anchor="middle">進程探查與路徑解析中樞</text>
+        <text x="500" y="494" fill="#7a8399" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">ConnectionManager & paths.py</text>
+        <line x1="376" y1="508" x2="624" y2="508" stroke="rgba(45,49,66,0.10)" stroke-width="0.8"/>
+        <text x="500" y="526" fill="#4f5d75" font-size="9" font-family="'Geist', 'Noto Sans TC', sans-serif" text-anchor="middle">自動探查 50051 (SCDM) 與 10000 (Mech) 埠號</text>
+
+        <!-- ---------------- 節點 9: File IPC & Batch Subprocess (Dispatch B) ---------------- -->
+        <rect x="676" y="432" width="276" height="116" rx="6" fill="#f5f5f5"/>
+        <rect x="676" y="432" width="276" height="116" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+        <rect x="684" y="440" width="76" height="12" rx="2" fill="transparent" stroke="rgba(45,49,66,0.35)" stroke-width="0.8"/>
+        <text x="722" y="449" fill="#4f5d75" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">DISPATCH B</text>
+        <text x="814" y="474" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', 'Noto Sans TC', sans-serif" text-anchor="middle">求解器子程序與檔案 IPC</text>
+        <text x="814" y="494" fill="#2e5aa8" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">lsdyna.exe i=run.k / RunWB2 -R</text>
+        <line x1="692" y1="508" x2="936" y2="508" stroke="rgba(45,49,66,0.10)" stroke-width="0.8"/>
+        <text x="814" y="526" fill="#4f5d75" font-size="9" font-family="'Geist', 'Noto Sans TC', sans-serif" text-anchor="middle">LS-DYNA 求解核心 · Workbench Journal 批次</text>
+
+        <!-- ==================================================================== -->
+        <!-- 圖例條 (Legend Strip) -->
+        <!-- ==================================================================== -->
+        <line x1="48" y1="620" x2="952" y2="620" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+        <text x="48" y="644" fill="#7a8399" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.14em">LEGEND</text>
+
+        <rect x="120" y="635" width="12" height="12" rx="2" fill="rgba(235, 108, 54, 0.08)" stroke="#eb6c36" stroke-width="1"/>
+        <text x="140" y="644" fill="#2d3142" font-size="8" font-family="'Geist', 'Noto Sans TC', sans-serif">核心中樞與會話池 (Focal Core)</text>
+
+        <rect x="330" y="635" width="12" height="12" rx="2" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+        <text x="350" y="644" fill="#2d3142" font-size="8" font-family="'Geist', 'Noto Sans TC', sans-serif">標準控制器與執行模組 (Service)</text>
+
+        <line x1="550" y1="641" x2="574" y2="641" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <text x="584" y="644" fill="#2d3142" font-size="8" font-family="'Geist', 'Noto Sans TC', sans-serif">同步呼叫 / 腳本注入</text>
+
+        <line x1="740" y1="641" x2="764" y2="641" stroke="#4f5d75" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+        <text x="774" y="644" fill="#2d3142" font-size="8" font-family="'Geist', 'Noto Sans TC', sans-serif">狀態查詢 / 實例探查</text>
+      </svg>
+    </div>
+
+    <!-- 摘要卡片群 (3 欄不同寬度網格) -->
+    <div class="cards-grid">
+      <div class="card">
+        <p class="card-eyebrow">GEOMETRY DISPATCH</p>
+        <div class="card-header">
+          <span class="card-dot link"></span>
+          <h3>SpaceClaim: 雙軌通道特徵</h3>
+        </div>
+        <p>SpaceClaim 依操作場景精準分流至兩種不同架構：</p>
+        <ul>
+          <li><strong>PyAnsys Geometry</strong>：<strong>確實走 gRPC 通道</strong>（預設埠號 <code>50051</code>），提供 Python 直驅 3D 建模。</li>
+          <li><strong>Workbench ACT 模式</strong>：在 Workbench 專案環境下則透過檔案 IPC 橋接傳遞 IronPython 腳本。</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <p class="card-eyebrow">EXPLICIT SOLVER</p>
+        <div class="card-header">
+          <span class="card-dot coral"></span>
+          <h3>LS-DYNA: GUI vs. 求解核心</h3>
+        </div>
+        <p>LS-DYNA 在架構上分為「前處理介面」與「數值求解器」：</p>
+        <ul>
+          <li><strong>Mechanical GUI 視窗</strong>：作為前處理時，可走 Mechanical 的 <strong>gRPC 通道 (Port 10001)</strong> 設定邊界。</li>
+          <li><strong>求解器核心 (lsdyna.exe)</strong>：數值計算本身<strong>非 gRPC</strong>，而是以子程序命令列 (<code>i=run.k</code>) 批次驅動並由 Sentinel 監控。</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <p class="card-eyebrow">SESSION CORE</p>
+        <div class="card-header">
+          <span class="card-dot ink"></span>
+          <h3>SessionRegistry 全域會話池</h3>
+        </div>
+        <p>集中式管理所有即時連線實例與通訊埠號：</p>
+        <ul>
+          <li><strong>Port 10000+</strong>：Mechanical (結構 / 模態 / 熱-結構耦合)。</li>
+          <li><strong>Port 50051+</strong>：SpaceClaim / Discovery (PyAnsys Geometry)。</li>
+          <li><strong>Port Scan</strong>：自動偵測 Windows 本機正在執行的 CAE 進程並掛載。</li>
+        </ul>
+      </div>
+    </div>
+
+    <footer>
+      <span>ANSYS UNIFIED MCP · ARCHITECTURE SPECIFICATION</span>
+      <span>UPDATED VIA DIAGRAM DESIGN · 2026</span>
+    </footer>
+  </div>
+</body>
+</html>

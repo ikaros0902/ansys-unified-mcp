@@ -7,14 +7,149 @@ import os
 from datetime import datetime
 from pathlib import Path
 
-from ansys_unified_mcp.shared import mcp
+from ansys_unified_mcp.shared import mcp, aliased_tool
 from ansys_unified_mcp.products.mechanical import controller, _esc
 
 __version__ = "2.0.0"
 
 
+def _to_bool_ok(val) -> bool:
+    """強制將 ok 欄位標準化為嚴格的布林值。"""
+    if isinstance(val, bool):
+        return val
+    if isinstance(val, str):
+        return val.strip().lower() not in ("false", "0", "null", "none", "")
+    if val is None:
+        return False
+    return bool(val)
+
+
+def _normalize_dict_envelope(data: dict) -> dict:
+    """標準化字典信封：
+    1. 若未提供 'ok' 鍵，且字典內含 'error' 鍵，則預設 ok: False；其餘預設 ok: True。
+    2. 強制將 'ok' 鍵型別轉為嚴格的 bool。
+    """
+    res = dict(data)
+    if "ok" not in res:
+        res["ok"] = False if "error" in res else True
+    else:
+        res["ok"] = _to_bool_ok(res["ok"])
+    return res
+
+
 def _json(data):
+    if isinstance(data, dict):
+        data = _normalize_dict_envelope(data)
     return json.dumps(data, indent=2, ensure_ascii=False)
+
+
+
+def _is_error_output(text: str) -> bool:
+    """Detect whether script stdout contains an unhandled Python/ACT exception or fatal error."""
+    if not text or not isinstance(text, str):
+        return False
+    lower = text.lower()
+    return any(err in lower for err in [
+        "exception:", "traceback", "syntaxerror:",
+        "nameerror:", "attributeerror:", "typeerror:", "indexerror:",
+        "keyerror:", "system.exception", "ansys.mechanical.core.errors",
+        "script error:", "system.nullreferenceexception", "system.invalidoperationexception",
+        "502 bad gateway", "500 internal server error"
+    ])
+
+
+def _wrap_raw_output(result: str, default_ok: bool = True) -> dict:
+    """Safely construct return envelope for raw script output, detecting exceptions."""
+    if not result or not result.strip():
+        return {
+            "ok": False,
+            "error": "Script execution returned empty output",
+            "raw_output": result,
+        }
+    is_err = _is_error_output(result)
+    payload = {
+        "ok": False if is_err else default_ok,
+        "raw_output": result,
+    }
+    if is_err:
+        payload["error"] = result.strip()
+    return payload
+
+
+def _safe_json_response(result: str, default_error: str = "Script execution failed") -> str:
+    """統一安全解析函式：
+    - 若 result 為合法字典，標準化信封（檢查 error 鍵、強制 ok 為 bool）後回傳。
+    - 若 result 為非字串非字典（例如 list），封裝成 {"ok": True, "data": result}；其餘型別如 None/int 回報失敗。
+    - 若 result 為字串：
+      1. 全局優先錯誤檢查：空字串、空白字串、_is_error_output 為 True，或包含致命錯誤關鍵字時，
+         絕不可因為任何行內有 JSON 而誤判成功，必須直接回傳 ok: False 的標準錯誤信封。
+      2. 嘗試整段直接解析為 JSON（若是 dict 則標準化，若是 list 則包裝）。
+      3. 嘗試逐行尋找合法 JSON（過濾 ACT 前置或後置雜訊日誌），解析為 dict 後標準化。
+      4. 若無法解析為 JSON，絕不能回傳 ok: True，必須回報標準失敗信封。
+    """
+    if isinstance(result, dict):
+        return _json(_normalize_dict_envelope(result))
+
+    if not isinstance(result, str):
+        if isinstance(result, list):
+            return _json({"ok": True, "data": result})
+        if result is None:
+            return _json({
+                "ok": False,
+                "error": f"{default_error}: input is None",
+                "raw_output": "",
+            })
+        result = str(result)
+
+    # 1. 全局優先錯誤與異常檢查 (Global Pre-validation)
+    if not result or not result.strip():
+        return _json({
+            "ok": False,
+            "error": f"{default_error}: empty output",
+            "raw_output": result,
+        })
+
+    fatal_keywords = [
+        "script error:", "traceback", "exception:", "syntaxerror:",
+        "system.exception", "system.nullreferenceexception",
+        "system.invalidoperationexception", "502 bad gateway",
+        "500 internal server error", "<html"
+    ]
+    lower = result.lower()
+    if _is_error_output(result) or any(kw in lower for kw in fatal_keywords):
+        return _json({
+            "ok": False,
+            "error": f"{default_error}: {result[:200]}",
+            "raw_output": result,
+        })
+
+    # 2. 嘗試整段直接解析為 JSON
+    try:
+        data = json.loads(result.strip())
+        if isinstance(data, dict):
+            return _json(_normalize_dict_envelope(data))
+        elif isinstance(data, list):
+            return _json({"ok": True, "data": data})
+    except Exception:
+        pass
+
+    # 3. 嘗試逐行尋找合法 JSON（處理含有 ACT 前置日誌輸出的情況）
+    for line in result.splitlines():
+        line = line.strip()
+        if line.startswith("{") and line.endswith("}"):
+            try:
+                data = json.loads(line)
+                if isinstance(data, dict):
+                    return _json(_normalize_dict_envelope(data))
+            except Exception:
+                pass
+
+    # 4. 若無法解析為 JSON，絕不能回傳 ok: True，必須回報失敗
+    return _json({
+        "ok": False,
+        "error": f"{default_error}: {result[:200]}",
+        "raw_output": result,
+    })
 
 
 def _check_connection():
@@ -31,15 +166,18 @@ def _run(script):
     return controller.run_script(script)
 
 
-@mcp.tool()
+@aliased_tool(name="mechanical_list_instances", alias="list_instances")
 def list_instances() -> str:
     """List all running and registered ANSYS instances (Mechanical, Workbench, etc.) and their ports."""
     from ansys_unified_mcp.connection_manager import connection_manager
-    instances = connection_manager.get_registered_instances()
-    return _json({"ok": True, "instances": instances})
+    try:
+        instances = connection_manager.get_registered_instances()
+        return _json({"ok": True, "instances": instances})
+    except Exception as e:
+        return _json({"ok": False, "error": f"Failed to list instances: {e}"})
 
 
-@mcp.tool()
+@aliased_tool(name="mechanical_connect", alias="connect_to_mechanical")
 def connect_to_mechanical(port: int = None, pid: int = None) -> str:
     """Connect to ANSYS Mechanical via gRPC.
     Args:
@@ -49,7 +187,7 @@ def connect_to_mechanical(port: int = None, pid: int = None) -> str:
     return _json(controller.connect(port=port, pid=pid))
 
 
-@mcp.tool()
+@aliased_tool(name="mechanical_launch", alias="launch_mechanical")
 def launch_mechanical(batch: bool = True) -> str:
     """Launch a new headless Mechanical instance via PyMechanical (no pre-running instance needed).
     Args:
@@ -58,7 +196,7 @@ def launch_mechanical(batch: bool = True) -> str:
     return _json(controller.launch(batch=batch))
 
 
-@mcp.tool()
+@aliased_tool(name="mechanical_disconnect", alias="disconnect_from_mechanical")
 def disconnect_from_mechanical() -> str:
     """Disconnect the current Mechanical session."""
     err = _check_connection()
@@ -67,21 +205,21 @@ def disconnect_from_mechanical() -> str:
     return _json(controller.disconnect())
 
 
-@mcp.tool()
+@aliased_tool(name="mechanical_check_connection", alias="check_mechanical_connection")
 def check_mechanical_connection() -> str:
     """Check connection status (lists all bound Mechanical sessions)."""
     status = controller.status()
-    if not status["connected"]:
-        return _json({"connected": False})
+    if not status.get("connected"):
+        return _json({"ok": False, "connected": False})
     info = _run(
         "model = ExtAPI.DataModel.Project.Model\n"
         "for i, a in enumerate(model.Analyses):\n"
         '    print("[" + str(i) + "] " + str(a.Name) + " (" + str(a.AnalysisType) + ")")\n'
     )
-    return _json({"connected": True, **status, "info": info})
+    return _json({"ok": True, "connected": True, **status, "info": info})
 
 
-@mcp.tool()
+@aliased_tool(name="mechanical_get_model_info", alias="get_model_info")
 def get_model_info() -> str:
     """Get model info: bodies, named selections, analyses."""
     err = _check_connection()
@@ -102,10 +240,10 @@ def get_model_info() -> str:
     try:
         return _json({"ok": True, "model_info": json.loads(result)})
     except Exception:
-        return _json({"ok": True, "raw_output": result})
+        return _safe_json_response(result)
 
 
-@mcp.tool()
+@aliased_tool(name="mechanical_list_materials", alias="list_materials")
 def list_materials() -> str:
     """List all materials in Engineering Data."""
     err = _check_connection()
@@ -120,10 +258,10 @@ def list_materials() -> str:
     try:
         return _json({"ok": True, **json.loads(result)})
     except Exception:
-        return _json({"ok": True, "raw_output": result})
+        return _safe_json_response(result)
 
 
-@mcp.tool()
+@aliased_tool(name="mechanical_assign_material", alias="assign_material")
 def assign_material(body_name: str, material_name: str) -> str:
     """Assign material to a body. Args: body_name, material_name"""
     err = _check_connection()
@@ -142,10 +280,17 @@ def assign_material(body_name: str, material_name: str) -> str:
         'print("Assigned" if assigned else "Body not found: ' + safe_body + '")\n'
     )
     result = _run(script)
-    return _json({"ok": "not found" not in result.lower(), "message": result})
+    if not result or not result.strip():
+        return _json({"ok": False, "error": "Script execution returned empty output", "message": result})
+    if _is_error_output(result) or "not found" in result.lower():
+        err_msg = result.strip() if _is_error_output(result) else f"Body not found: {body_name}"
+        return _json({"ok": False, "error": err_msg, "message": result})
+    if "assigned" not in result.lower():
+        return _json({"ok": False, "error": f"Unexpected script output: {result[:200]}", "message": result})
+    return _json({"ok": True, "message": result})
 
 
-@mcp.tool()
+@aliased_tool(name="mechanical_set_mesh_element_size", alias="set_mesh_element_size")
 def set_mesh_element_size(element_size_mm: float) -> str:
     """Set global mesh element size in mm. Args: element_size_mm"""
     err = _check_connection()
@@ -157,10 +302,17 @@ def set_mesh_element_size(element_size_mm: float) -> str:
         "model.Mesh.ElementSize = Quantity(" + str(size_m) + ', "m")\n'
         'print("Element size set to ' + str(element_size_mm) + 'mm")\n'
     )
-    return _json({"ok": True, "message": _run(script)})
+    result = _run(script)
+    if not result or not result.strip():
+        return _json({"ok": False, "error": "Script execution returned empty output", "raw_output": result})
+    if _is_error_output(result):
+        return _json({"ok": False, "error": f"Script execution failed: {result[:200]}", "raw_output": result})
+    if "element size set" not in result.lower():
+        return _json({"ok": False, "error": f"Unexpected script output: {result[:200]}", "raw_output": result})
+    return _json({"ok": True, "message": result})
 
 
-@mcp.tool()
+@aliased_tool(name="mechanical_generate_mesh", alias="generate_mesh")
 def generate_mesh() -> str:
     """Generate mesh. Visible live in Mechanical GUI."""
     err = _check_connection()
@@ -170,10 +322,16 @@ def generate_mesh() -> str:
         "ExtAPI.DataModel.Project.Model.Mesh.GenerateMesh()\n"
         'print("Mesh generated successfully.")\n'
     )
+    if not result or not result.strip():
+        return _json({"ok": False, "error": "Mesh generation failed: empty output", "raw_output": result})
+    if _is_error_output(result):
+        return _json({"ok": False, "error": f"Mesh generation failed: {result[:200]}", "raw_output": result})
+    if "mesh generated successfully" not in result.lower():
+        return _json({"ok": False, "error": f"Mesh generation failed: {result[:200]}", "raw_output": result})
     return _json({"ok": True, "message": result})
 
 
-@mcp.tool()
+@aliased_tool(name="mechanical_get_mesh_statistics", alias="get_mesh_statistics")
 def get_mesh_statistics() -> str:
     """Get mesh node and element counts."""
     err = _check_connection()
@@ -191,10 +349,10 @@ def get_mesh_statistics() -> str:
     try:
         return _json({"ok": True, "mesh_statistics": json.loads(result)})
     except Exception:
-        return _json({"ok": True, "raw_output": result})
+        return _safe_json_response(result)
 
 
-@mcp.tool()
+@aliased_tool(name="mechanical_add_fixed_support", alias="add_fixed_support")
 def add_fixed_support(named_selection: str, analysis_index: int = 0) -> str:
     """Add Fixed Support to a named selection. Args: named_selection, analysis_index"""
     err = _check_connection()
@@ -215,10 +373,10 @@ def add_fixed_support(named_selection: str, analysis_index: int = 0) -> str:
     try:
         return _json(json.loads(result))
     except Exception:
-        return _json({"ok": True, "raw_output": result})
+        return _safe_json_response(result)
 
 
-@mcp.tool()
+@aliased_tool(name="mechanical_add_force", alias="add_force")
 def add_force(
     named_selection: str,
     fx_n: float = 0.0,
@@ -249,10 +407,10 @@ def add_force(
     try:
         return _json(json.loads(result))
     except Exception:
-        return _json({"ok": True, "raw_output": result})
+        return _safe_json_response(result)
 
 
-@mcp.tool()
+@aliased_tool(name="mechanical_add_pressure", alias="add_pressure")
 def add_pressure(named_selection: str, magnitude_pa: float, analysis_index: int = 0) -> str:
     """Add Pressure load in Pascals. Args: named_selection, magnitude_pa, analysis_index"""
     err = _check_connection()
@@ -274,10 +432,10 @@ def add_pressure(named_selection: str, magnitude_pa: float, analysis_index: int 
     try:
         return _json(json.loads(result))
     except Exception:
-        return _json({"ok": True, "raw_output": result})
+        return _safe_json_response(result)
 
 
-@mcp.tool()
+@aliased_tool(name="mechanical_list_boundary_conditions", alias="list_boundary_conditions")
 def list_boundary_conditions(analysis_index: int = 0) -> str:
     """List all boundary conditions. Args: analysis_index"""
     err = _check_connection()
@@ -293,10 +451,10 @@ def list_boundary_conditions(analysis_index: int = 0) -> str:
     try:
         return _json({"ok": True, **json.loads(result)})
     except Exception:
-        return _json({"ok": True, "raw_output": result})
+        return _safe_json_response(result)
 
 
-@mcp.tool()
+@aliased_tool(name="mechanical_solve_analysis", alias="solve_analysis")
 def solve_analysis(analysis_index: int = 0) -> str:
     """Solve the analysis. Progress visible in GUI. Args: analysis_index"""
     err = _check_connection()
@@ -308,11 +466,20 @@ def solve_analysis(analysis_index: int = 0) -> str:
         'print("Solve complete. Status: " + str(analysis.Solution.Status))\n'
     )
     result = _run(script)
-    ok = "Script error:" not in result and "failed" not in result.lower()
-    return _json({"ok": ok, "message": result})
+    if not result or not result.strip():
+        return _json({"ok": False, "error": "Solve failed: empty output", "message": result})
+    ok = (
+        "solve complete" in result.lower()
+        and "script error:" not in result.lower()
+        and "failed" not in result.lower()
+        and not _is_error_output(result)
+    )
+    if not ok:
+        return _json({"ok": False, "error": f"Solve failed: {result[:200]}", "message": result})
+    return _json({"ok": True, "message": result})
 
 
-@mcp.tool()
+@aliased_tool(name="mechanical_get_solve_status", alias="get_solve_status")
 def get_solve_status(analysis_index: int = 0) -> str:
     """Get solve status. Args: analysis_index"""
     err = _check_connection()
@@ -327,10 +494,10 @@ def get_solve_status(analysis_index: int = 0) -> str:
     try:
         return _json({"ok": True, **json.loads(result)})
     except Exception:
-        return _json({"ok": True, "raw_output": result})
+        return _safe_json_response(result)
 
 
-@mcp.tool()
+@aliased_tool(name="mechanical_add_total_deformation_all_modes", alias="add_total_deformation_all_modes")
 def add_total_deformation_all_modes(num_modes: int = 6, analysis_index: int = 0) -> str:
     """Add Total Deformation for all modal modes. Args: num_modes, analysis_index"""
     err = _check_connection()
@@ -345,10 +512,16 @@ def add_total_deformation_all_modes(num_modes: int = 6, analysis_index: int = 0)
         'print("Total Deformation added for ' + str(num_modes) + ' modes.")\n'
     )
     result = _run(script)
+    if not result or not result.strip():
+        return _json({"ok": False, "error": "Failed to add deformation: empty output", "raw_output": result})
+    if _is_error_output(result):
+        return _json({"ok": False, "error": f"Failed to add deformation: {result[:200]}", "raw_output": result})
+    if "total deformation added" not in result.lower():
+        return _json({"ok": False, "error": f"Failed to add deformation: {result[:200]}", "raw_output": result})
     return _json({"ok": True, "message": result})
 
 
-@mcp.tool()
+@aliased_tool(name="mechanical_add_total_deformation", alias="add_total_deformation")
 def add_total_deformation(mode: int = 0, analysis_index: int = 0) -> str:
     """Add Total Deformation result. Args: mode (0=not modal), analysis_index"""
     err = _check_connection()
@@ -361,10 +534,16 @@ def add_total_deformation(mode: int = 0, analysis_index: int = 0) -> str:
         'print("Total Deformation added. Max: " + str(td.Maximum))\n'
     )
     result = _run(script)
+    if not result or not result.strip():
+        return _json({"ok": False, "error": "Failed to add deformation: empty output", "raw_output": result})
+    if _is_error_output(result):
+        return _json({"ok": False, "error": f"Failed to add deformation: {result[:200]}", "raw_output": result})
+    if "total deformation added" not in result.lower():
+        return _json({"ok": False, "error": f"Failed to add deformation: {result[:200]}", "raw_output": result})
     return _json({"ok": True, "message": result})
 
 
-@mcp.tool()
+@aliased_tool(name="mechanical_get_modal_frequencies", alias="get_modal_frequencies")
 def get_modal_frequencies(analysis_index: int = 0) -> str:
     """Get natural frequencies from modal analysis. Args: analysis_index"""
     err = _check_connection()
@@ -387,10 +566,10 @@ def get_modal_frequencies(analysis_index: int = 0) -> str:
     try:
         return _json({"ok": True, **json.loads(result)})
     except Exception:
-        return _json({"ok": True, "raw_output": result})
+        return _safe_json_response(result)
 
 
-@mcp.tool()
+@aliased_tool(name="mechanical_generate_report", alias="generate_report")
 def generate_report(output_path: str, analysis_index: int = 0, fmt: str = "docx") -> str:
     """Generate simulation report. Args: output_path, analysis_index, fmt (docx or txt)"""
     err = _check_connection()
@@ -529,13 +708,20 @@ def generate_report(output_path: str, analysis_index: int = 0, fmt: str = "docx"
         return _json({"ok": True, "report_path": str(out_txt)})
 
 
-@mcp.tool()
+@aliased_tool(name="mechanical_run_script", alias="run_mechanical_script")
 def run_mechanical_script(script: str) -> str:
     """Run custom Python script inside Mechanical ACT API. Args: script"""
     err = _check_connection()
     if err:
         return err
-    return _json({"ok": True, "output": _run(script)})
+    result = _run(script)
+    if not result or not result.strip():
+        return _json({"ok": False, "error": "Script execution returned empty output", "output": result})
+    if _is_error_output(result):
+        return _json({"ok": False, "error": f"Script execution failed: {result[:200]}", "output": result})
+    if result.strip().startswith("<html") or "502 bad gateway" in result.lower() or "500 internal server error" in result.lower():
+        return _json({"ok": False, "error": f"Script execution failed (server error): {result[:200]}", "output": result})
+    return _json({"ok": True, "output": result})
 
 
 # ---------------------------------------------------------------------------
@@ -554,7 +740,7 @@ _NS_LOOKUP = (
 # ---------------------------------------------------------------------------
 
 
-@mcp.tool()
+@aliased_tool(name="mechanical_list_named_selections", alias="list_named_selections")
 def list_named_selections() -> str:
     """List all named selections with face/body counts."""
     err = _check_connection()
@@ -573,10 +759,10 @@ def list_named_selections() -> str:
     try:
         return _json({"ok": True, **json.loads(result)})
     except Exception:
-        return _json({"ok": True, "raw_output": result})
+        return _safe_json_response(result)
 
 
-@mcp.tool()
+@aliased_tool(name="mechanical_delete_named_selection", alias="delete_named_selection")
 def delete_named_selection(name: str) -> str:
     """Delete a named selection by name. Args: name"""
     err = _check_connection()
@@ -594,7 +780,7 @@ def delete_named_selection(name: str) -> str:
     try:
         return _json(json.loads(result))
     except Exception:
-        return _json({"ok": True, "raw_output": result})
+        return _safe_json_response(result)
 
 
 # ---------------------------------------------------------------------------
@@ -602,7 +788,7 @@ def delete_named_selection(name: str) -> str:
 # ---------------------------------------------------------------------------
 
 
-@mcp.tool()
+@aliased_tool(name="mechanical_suppress_bodies", alias="suppress_bodies")
 def suppress_bodies(name_prefix: str = "", suppress: bool = True) -> str:
     """Suppress or unsuppress bodies by name prefix (empty = all bodies).
     Args: name_prefix, suppress (True=suppress, False=unsuppress)"""
@@ -623,10 +809,10 @@ def suppress_bodies(name_prefix: str = "", suppress: bool = True) -> str:
     try:
         return _json(json.loads(result))
     except Exception:
-        return _json({"ok": True, "raw_output": result})
+        return _safe_json_response(result)
 
 
-@mcp.tool()
+@aliased_tool(name="mechanical_list_point_masses", alias="list_point_masses")
 def list_point_masses() -> str:
     """List all Point Masses with CG, mass, pinball and scoped named selection."""
     err = _check_connection()
@@ -655,7 +841,7 @@ def list_point_masses() -> str:
     try:
         return _json({"ok": True, **json.loads(result)})
     except Exception:
-        return _json({"ok": True, "raw_output": result})
+        return _safe_json_response(result)
 
 
 # ---------------------------------------------------------------------------
@@ -663,7 +849,7 @@ def list_point_masses() -> str:
 # ---------------------------------------------------------------------------
 
 
-@mcp.tool()
+@aliased_tool(name="mechanical_add_frictionless_support", alias="add_frictionless_support")
 def add_frictionless_support(named_selection: str, analysis_index: int = 0) -> str:
     """Add Frictionless Support. Args: named_selection, analysis_index"""
     err = _check_connection()
@@ -683,10 +869,10 @@ def add_frictionless_support(named_selection: str, analysis_index: int = 0) -> s
     try:
         return _json(json.loads(result))
     except Exception:
-        return _json({"ok": True, "raw_output": result})
+        return _safe_json_response(result)
 
 
-@mcp.tool()
+@aliased_tool(name="mechanical_add_displacement", alias="add_displacement")
 def add_displacement(
     named_selection: str,
     x_mm: float | None = None,
@@ -729,10 +915,10 @@ def add_displacement(
     try:
         return _json(json.loads(result))
     except Exception:
-        return _json({"ok": True, "raw_output": result})
+        return _safe_json_response(result)
 
 
-@mcp.tool()
+@aliased_tool(name="mechanical_add_remote_displacement", alias="add_remote_displacement")
 def add_remote_displacement(
     named_selection: str,
     x_mm: float | None = None,
@@ -791,10 +977,10 @@ def add_remote_displacement(
     try:
         return _json(json.loads(result))
     except Exception:
-        return _json({"ok": True, "raw_output": result})
+        return _safe_json_response(result)
 
 
-@mcp.tool()
+@aliased_tool(name="mechanical_add_standard_gravity", alias="add_standard_gravity")
 def add_standard_gravity(
     analysis_index: int = 0,
     x_component: float = 0.0,
@@ -826,10 +1012,10 @@ def add_standard_gravity(
     try:
         return _json(json.loads(result))
     except Exception:
-        return _json({"ok": True, "raw_output": result})
+        return _safe_json_response(result)
 
 
-@mcp.tool()
+@aliased_tool(name="mechanical_add_remote_force", alias="add_remote_force")
 def add_remote_force(
     named_selection: str,
     fx_n: float = 0.0,
@@ -859,10 +1045,10 @@ def add_remote_force(
     try:
         return _json(json.loads(result))
     except Exception:
-        return _json({"ok": True, "raw_output": result})
+        return _safe_json_response(result)
 
 
-@mcp.tool()
+@aliased_tool(name="mechanical_add_moment", alias="add_moment")
 def add_moment(
     named_selection: str,
     mx_nm: float = 0.0,
@@ -892,7 +1078,7 @@ def add_moment(
     try:
         return _json(json.loads(result))
     except Exception:
-        return _json({"ok": True, "raw_output": result})
+        return _safe_json_response(result)
 
 
 # ---------------------------------------------------------------------------
@@ -900,7 +1086,7 @@ def add_moment(
 # ---------------------------------------------------------------------------
 
 
-@mcp.tool()
+@aliased_tool(name="mechanical_add_equivalent_stress", alias="add_equivalent_stress")
 def add_equivalent_stress(named_selection: str = "", analysis_index: int = 0) -> str:
     """Add Equivalent (von Mises) Stress result, optionally scoped to a named selection.
     Args: named_selection (empty = whole model), analysis_index"""
@@ -922,10 +1108,10 @@ def add_equivalent_stress(named_selection: str = "", analysis_index: int = 0) ->
     try:
         return _json(json.loads(result))
     except Exception:
-        return _json({"ok": True, "raw_output": result})
+        return _safe_json_response(result)
 
 
-@mcp.tool()
+@aliased_tool(name="mechanical_add_directional_deformation", alias="add_directional_deformation")
 def add_directional_deformation(
     axis: str = "Y", named_selection: str = "", analysis_index: int = 0
 ) -> str:
@@ -962,10 +1148,10 @@ def add_directional_deformation(
     try:
         return _json(json.loads(result))
     except Exception:
-        return _json({"ok": True, "raw_output": result})
+        return _safe_json_response(result)
 
 
-@mcp.tool()
+@aliased_tool(name="mechanical_add_principal_stress", alias="add_principal_stress")
 def add_principal_stress(which: str = "max", analysis_index: int = 0) -> str:
     """Add Principal Stress result. Args: which (max/mid/min), analysis_index"""
     err = _check_connection()
@@ -991,10 +1177,10 @@ def add_principal_stress(which: str = "max", analysis_index: int = 0) -> str:
     try:
         return _json(json.loads(result))
     except Exception:
-        return _json({"ok": True, "raw_output": result})
+        return _safe_json_response(result)
 
 
-@mcp.tool()
+@aliased_tool(name="mechanical_add_stress_tool", alias="add_stress_tool")
 def add_stress_tool(analysis_index: int = 0) -> str:
     """Add Stress Tool (safety factor, stress ratio) using material limits. Args: analysis_index"""
     err = _check_connection()
@@ -1012,10 +1198,10 @@ def add_stress_tool(analysis_index: int = 0) -> str:
     try:
         return _json(json.loads(result))
     except Exception:
-        return _json({"ok": True, "raw_output": result})
+        return _safe_json_response(result)
 
 
-@mcp.tool()
+@aliased_tool(name="mechanical_add_reaction_force", alias="add_reaction_force")
 def add_reaction_force(named_selection: str, analysis_index: int = 0) -> str:
     """Add Force Reaction probe at a named selection. Args: named_selection, analysis_index"""
     err = _check_connection()
@@ -1037,7 +1223,7 @@ def add_reaction_force(named_selection: str, analysis_index: int = 0) -> str:
     try:
         return _json(json.loads(result))
     except Exception:
-        return _json({"ok": True, "raw_output": result})
+        return _safe_json_response(result)
 
 
 def _build_pm_script(match_lines: str, ns_label: str, prox_mult: float = 3.0) -> str:
@@ -1218,13 +1404,21 @@ def _extract_json(raw: str):
         line = line.strip()
         if line.startswith("{"):
             try:
-                return json.loads(line)
+                data = json.loads(line)
+                if isinstance(data, dict):
+                    if "ok" not in data:
+                        data["ok"] = True
+                    return data
             except Exception:
                 pass
-    return {"ok": True, "raw_output": raw}
+    return {
+        "ok": False,
+        "error": f"Script execution failed: {raw[:200].strip()}",
+        "raw_output": raw,
+    }
 
 
-@mcp.tool()
+@aliased_tool(name="mechanical_convert_prefix_to_point_mass", alias="convert_prefix_to_point_mass")
 def convert_prefix_to_point_mass(body_name_prefix: str, proximity_multiplier: float = 3.0) -> str:
     """Convert all unsuppressed bodies whose name starts with body_name_prefix to a
     combined Point Mass, then create a Named Selection of all coplanar attachment
@@ -1250,10 +1444,10 @@ def convert_prefix_to_point_mass(body_name_prefix: str, proximity_multiplier: fl
         .replace("\t", "")
     )
     raw = _run(_build_pm_script(match, ns_label, proximity_multiplier))
-    return _json(_extract_json(raw))
+    return _safe_json_response(raw)
 
 
-@mcp.tool()
+@aliased_tool(name="mechanical_convert_part_to_point_mass", alias="convert_part_to_point_mass")
 def convert_part_to_point_mass(part_name: str, proximity_multiplier: float = 3.0) -> str:
     """Convert all unsuppressed bodies inside a named Part to a combined Point Mass,
     then create a Named Selection of all coplanar attachment faces on the nearest
@@ -1278,7 +1472,7 @@ def convert_part_to_point_mass(part_name: str, proximity_multiplier: float = 3.0
         .replace("\t", "")
     )
     raw = _run(_build_pm_script(match, ns_label, proximity_multiplier))
-    return _json(_extract_json(raw))
+    return _safe_json_response(raw)
 
 
 def main():

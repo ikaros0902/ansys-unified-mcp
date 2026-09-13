@@ -21,16 +21,16 @@ from ansys_unified_mcp.bridges.workbench_bridge import (
     list_workbench_jobs,
     read_workbench_job_log,
 )
-from ansys_unified_mcp.shared import mcp
+from ansys_unified_mcp.shared import mcp, aliased_tool
 
 
-@mcp.tool()
+@aliased_tool(name="workbench_detect_environment", alias="workbench_detect_tool")
 def workbench_detect_tool() -> dict:
     """Detect RunWB2.exe, PyMechanical CLI, ANSYS_ROOT, and job directories."""
     return detect_workbench_environment()
 
 
-@mcp.tool()
+@aliased_tool(name="workbench_run_journal", alias="workbench_run_journal_tool")
 def workbench_run_journal_tool(
     journal_path: str,
     cwd: str | None = None,
@@ -41,7 +41,7 @@ def workbench_run_journal_tool(
     return launch_workbench_journal(journal_path=journal_path, cwd=cwd, batch=batch, extra_args=extra_args)
 
 
-@mcp.tool()
+@aliased_tool(name="mechanical_run_batch_script", alias="mechanical_run_script_tool")
 def mechanical_run_script_tool(
     script_path: str,
     revision: int = 261,
@@ -59,19 +59,20 @@ def mechanical_run_script_tool(
     )
 
 
-@mcp.tool()
+@aliased_tool(name="workbench_get_job_status", alias="workbench_job_status_tool")
 def workbench_job_status_tool(job_id: str) -> dict:
     """Return status for a Workbench or Mechanical job launched by this MCP."""
     return get_workbench_job_status(job_id)
 
 
-@mcp.tool()
+@aliased_tool(name="workbench_get_job_log", alias="workbench_job_log_tool")
 def workbench_job_log_tool(job_id: str, stream: str = "stdout", tail_chars: int = 12000) -> dict:
     """Read stdout or stderr for a Workbench or Mechanical job."""
     return read_workbench_job_log(job_id=job_id, stream=stream, tail_chars=tail_chars)
 
 
-@mcp.tool()
+@aliased_tool(name="workbench_list_jobs", alias="workbench_list_jobs_tool")
 def workbench_list_jobs_tool(limit: int = 20) -> dict:
     """List recent Workbench or Mechanical jobs."""
     return list_workbench_jobs(limit=limit)
+

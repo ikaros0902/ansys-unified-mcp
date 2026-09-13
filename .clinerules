@@ -1,63 +1,54 @@
 # 全域與專案 Agent 指導核心規範 (.clinerules)
 
-本檔案為此專案的最高指導原則。所有 AI Agent（包括 Cline、Cursor、Antigravity、Kiro 等）在執行任何任務時，必須嚴格遵守以下所有條款。
+本檔案為此專案的最高指導原則。所有 AI Agent（包括 Cline、Antigravity、Cursor、Kiro 等）在執行任何任務時，必須嚴格遵守以下所有條款。
 
 ---
 
 ## 1. 繁體中文原生輸出原則 (嚴格執行)
 
-1. **使用者語言限制**：使用者使用繁體中文，所有對話、回覆、實施計畫 (Plan)、任務列表 (Task) 與技術解釋，**一律強制使用繁體中文 (Traditional Chinese)**。
-2. **禁止全英文輸出**：嚴禁輸出未翻譯的英文計畫或大量英文解釋。
-3. **路徑與關鍵字保留**：檔案路徑（如 `src/main.py`）、API 名稱、軟體專有名詞可保留原文，但功能描述與說明必須為繁體中文。
+1. **使用者語言限制**：使用者嚴格使用繁體中文，所有對話、回覆、實施計畫 (Plan)、任務列表 (Task) 與技術解釋，**一律強制使用繁體中文 (Traditional Chinese)**。
+2. **禁止未轉譯英文**：嚴禁輸出未翻譯的英文計畫或英文任務清單。
+3. **識別碼與路徑保留**：檔案路徑（如 `src/main.py`）、API 名稱、軟體專有名詞可保留原文，但功能描述與說明必須為繁體中文。
 
 ---
 
 ## 2. ANSYS CAE 雙軌制註解規範 (Dual-Track Commenting)
 
-* **一般程式碼 (Python / JS / Config)**：必須撰寫詳盡的**繁體中文註解**，清楚說明演算法、參數意義與業務邏輯。
-* **ANSYS 內嵌腳本 (ACT / IronPython / APDL / SpaceClaim Script)**：必須使用**全英文註解 (Strictly ASCII / English)**，防止 ANSYS 內部 IronPython 解譯器因 UTF-8 編碼問題導致執行崩潰或拋出 SyntaxError。
+* **一般程式碼 (Python / JS / Config / Shell)**：必須撰寫詳盡的**繁體中文註解**，清楚說明演算法邏輯與業務邊界。
+* **ANSYS 內嵌腳本 (ACT / IronPython / APDL / SpaceClaim Script)**：必須使用**全英文註解 (Strictly ASCII / English)**，防止 ANSYS 內部 IronPython 解譯器因 UTF-8 編碼問題導致執行期崩潰或拋出 SyntaxError。
 
 ---
 
-## 3. Loop Engineering 六大組件與三大設計原則
+## 3. 自主連續推進與閉環執行 (Autonomous Closed-Loop)
 
-### 三大設計原則
-1. **原則 1：驗證責任歸屬於人** ── 不盲目信任自動判定，每一項完成條件必須明確、可量測，且經得起人工覆核。
-2. **原則 2：保持對產出的理解力** ── 控制單輪產出規模，留下清晰的進度軌跡，不產生超出掌控的黑箱程式碼。
-3. **原則 3：避免認知投降** ── 關鍵高風險操作（如刪除檔案、覆蓋資料庫、提交主線）必須經由使用者人工確認。
-
-### 製造與檢查分離原則 (Maker-Checker Separation)
-* **實作者 (Implementer)** 與 **檢查者 (Reviewer)** 必須分離，嚴禁自我審查。
-* 執行 CAE 分析或寫入代碼後，必須透過客觀工具（如 `get_solve_status`, `get_mesh_statistics`, 單元測試）驗證，而非主觀猜測「應該完成了」。
-
-### Memory 更新規範
-每輪執行完畢，需在記錄檔中維護三區塊結構：
-* **進行中事項**：記錄負責角色、工作區與驗證狀態。
-* **已完成事項**：記錄已客觀通過驗證的事項。
-* **待分類事項**：新發現但尚未處理的工作。
+1. **全流程閉環導向**：
+   Agent 在安全權限邊界內應自主推進完整流程：
+   $$\text{理解目標} \longrightarrow \text{修改程式碼} \longrightarrow \text{執行測試} \longrightarrow \text{分析錯誤} \longrightarrow \text{除錯修復} \longrightarrow \text{重新驗證}$$
+   **嚴禁因單一檔案修改完成就停下等待確認**，必須持續執行直到客觀驗證條件完全達成。
+2. **權限邊界區隔**：
+   - **自主推進區**：本機檔案讀寫、單元/整合測試執行、靜態檢查、錯誤修復、相依性建置、向量資料庫檢索。
+   - **阻斷確認區**：破壞性刪除、外部生產發布、覆寫無備份檔案、強制推送 Git 歷史、操作私密金鑰。
 
 ---
 
-## 4. 安全與防護規範 (Safety Rules)
+## 4. 客觀驗證與製造/檢查分離 (Verification & Separation)
 
-1. **破壞性操作三級授權**：嚴禁未經確認執行刪除、重置 Git、強制覆蓋等高風險指令。
-2. **機敏資訊保護**：不得將 API 金鑰、密碼、Token 硬編碼在任何檔案中。
+1. **客觀完成標準**：
+   每個重要任務必須有客觀、可重複驗證的完成條件（如：`pytest` 測試 100% 綠燈、特定工具回傳 `{"ok": True}`、物理量誤差落在容許公差內）。嚴禁主觀猜測「應該完成了」。
+2. **製造與檢查分離 (Maker-Checker)**：
+   實作者與檢查者必須保持邊界；不以實作時的主觀假定代替客觀測試。
+3. **CAE 核心物理邊界標準**：
+   - 網格品質：歪斜度 Skewness < 0.85、正交品質 Orthogonal Quality > 0.15。
+   - 顯式動力學：沙漏能比例 < 5%、質量縮放增加比例 < 5%、總能量守恆。
+   - 模態分析：各主要方向有效質量比累積 $\ge 90\%$。
 
 ---
 
-## 5. 本專案 MCP 與 Skills (技能庫) 調度指引
+## 5. 本專案 MCP 與漸進式技能調度指引
 
-### MCP 伺服器
-* **ansys-unified-mcp**：提供 Workbench、Mechanical、SpaceClaim、Fluent、MAPDL、optiSLang 的完整自動化操作介面。
-
-### 專案專屬技能目錄 (`.kiro/skills/`)
-遇到特定 CAE 任務時，請優先參考對應技能的 `SKILL.md`：
-* `ansys-mechanical`：Mechanical ACT、網格控制、邊界載荷與求解後處理。
-* `ansys-spaceclaim`：幾何前處理、參數化建模與本機命令。
-* `ansys-lsdyna` / `ansys-ls-prepost`：顯式動力學分析、卡片與接觸設定。
-* `ansys-optislang`：最佳化流程設計、參數靈敏度分析。
-* `pcb-warpage-analysis`：PCB 多層熱翹曲分析與 Rule of Mixtures (ROM) 流程。
-* `ansys-error-catalog`：ANSYS / IronPython 常見報錯與除錯指南。
-
-### 全域技能庫位置
-* 全域通用技能庫位於：`C:\Users\Ming\.gemini\config\skills\`
+1. **MCP 核心原語 (Thin Generic Script Runner)**：
+   本專案核心為透過腳本執行器驅動 ANSYS 產品，所有工具回傳統一遵循標準 JSON 信封格式（`{"ok": bool, ...}`）。
+2. **漸進式技能載入 (Progressive Disclosure)**：
+   - 專案技能目錄位於 [`SKILLs/`](file:///F:/Ming_python/ansys-unified-mcp/SKILLs/)。
+   - 根層級 `SKILL.md` 僅作為 SOP 指引與模組路由器（$\le 150$ 行）。
+   - 具體 API 參數、長篇腳本與報錯自愈清單按需從 `reference/` 與 `scripts/` 讀取。

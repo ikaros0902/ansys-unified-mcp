@@ -87,16 +87,15 @@ class WorkbenchController:
         client_workdir: Optional[str] = None,
         security: str = "mtls",
     ) -> dict:
-        """Connect to an existing Workbench server (PyWorkbench)."""
-        try:
-            from ansys.workbench.core import connect_workbench
-        except ImportError:
-            return {"ok": False, "error": "ansys-workbench-core not installed."}
-
         key = str(port)
         if registry.get(PRODUCT, key) is not None:
             registry.set_current(PRODUCT, key)
             return {"ok": True, "port": port, "key": key, "note": "Reused existing session."}
+
+        try:
+            from ansys.workbench.core import connect_workbench
+        except ImportError:
+            return {"ok": False, "error": "ansys-workbench-core not installed."}
         try:
             client = connect_workbench(
                 port=port, client_workdir=client_workdir, host=host, security=security
