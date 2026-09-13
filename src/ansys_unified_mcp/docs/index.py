@@ -112,11 +112,77 @@ def build_index() -> dict:
                 "name": doc["name"], "status": "indexed",
                 "chunks": len(parts), "chars": len(cleaned),
             })
+
+        # 掃描並索引 SKILLs、.kiro/skills 與 steering/reference
+        processed_names = {d["name"] for d in cfg.API_DOCS}
+        scan_paths = [
+            (cfg.REPO_ROOT / "SKILLs", "skill"),
+            (cfg.REPO_ROOT / ".kiro" / "skills", "skill"),
+            (cfg.REPO_ROOT / "steering" / "reference", "architecture"),
+        ]
+
+        for base_dir, category in scan_paths:
+            if not base_dir.exists():
+                continue
+            for md_file in base_dir.rglob("*.md"):
+                rel_name = md_file.relative_to(cfg.REPO_ROOT).as_posix().replace("/", "_").replace(".md", "")
+                if rel_name in processed_names:
+                    continue
+                processed_names.add(rel_name)
+                title = md_file.stem.replace("_", " ").replace("-", " ").title()
+
+                lower_path = md_file.as_posix().lower()
+                if "fluent" in lower_path or "mixing_elbow" in lower_path:
+                    product = "fluent"
+                elif "dpf" in lower_path or "submodeling" in lower_path:
+                    product = "dpf"
+                elif "geometry" in lower_path:
+                    product = "geometry"
+                elif "spaceclaim" in lower_path:
+                    product = "spaceclaim"
+                elif "mechanical" in lower_path:
+                    product = "mechanical"
+                elif "lsdyna" in lower_path or "ls-dyna" in lower_path or "ls-prepost" in lower_path:
+                    product = "lsdyna"
+                elif "optislang" in lower_path:
+                    product = "optislang"
+                elif "parametric" in lower_path:
+                    product = "parametric_study"
+                elif "pcb" in lower_path:
+                    product = "pcb_warpage"
+                elif "workbench" in lower_path:
+                    product = "workbench"
+                elif "error" in lower_path:
+                    product = "error_catalog"
+                else:
+                    product = "general"
+
+                raw_text = md_file.read_text(encoding="utf-8", errors="replace")
+                if not raw_text.strip():
+                    continue
+
+                parts = _chunk_text(raw_text, cfg.CHUNK_SIZE, cfg.CHUNK_OVERLAP)
+                if not parts:
+                    continue
+
+                con.executemany(
+                    "INSERT INTO chunks(doc, ord, heading, body) VALUES (?, ?, ?, ?)",
+                    [(rel_name, i, _heading_of(p), p) for i, p in enumerate(parts)],
+                )
+                con.execute(
+                    "INSERT OR REPLACE INTO docs_meta VALUES (?, ?, ?, ?, ?, ?)",
+                    (rel_name, title, category, product, len(parts), len(raw_text)),
+                )
+                summary.append({
+                    "name": rel_name, "status": "indexed",
+                    "chunks": len(parts), "chars": len(raw_text),
+                })
+
         con.commit()
     finally:
         con.close()
 
-    return {"ok": True, "index_path": str(cfg.INDEX_PATH), "docs": summary}
+    return {"ok": True, "index_path": str(cfg.INDEX_PATH), "docs": summary, "indexed_count": len(summary)}
 
 
 def ensure_index(force: bool = False) -> Optional[dict]:

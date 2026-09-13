@@ -8,18 +8,52 @@ profile = os.environ.get("ANSYS_MCP_PROFILE", "all").strip().lower()
 enable_fluent = profile in ("all", "full", "fluent", "cfd")
 enable_geometry = profile in ("all", "full", "geometry", "spaceclaim")
 
+import json
+import functools
+
+def _envelope(result: Any) -> str:
+    """保證回傳格式一律為符合標準之 {"ok": bool, ...} JSON 信封"""
+    if isinstance(result, dict) and "ok" in result:
+        return json.dumps(result, ensure_ascii=False)
+    if isinstance(result, str):
+        text = result.strip()
+        if text.startswith("{") and text.endswith("}"):
+            try:
+                parsed = json.loads(text)
+                if isinstance(parsed, dict) and "ok" in parsed:
+                    return text
+            except Exception:
+                pass
+        is_err = "❌" in text or "錯誤" in text or "fail" in text.lower() or "error" in text.lower()
+        return json.dumps({"ok": not is_err, "output": text}, ensure_ascii=False)
+    return json.dumps({"ok": True, "output": str(result)}, ensure_ascii=False)
+
 def tool_fluent(name=None):
     def decorator(fn):
+        @functools.wraps(fn)
+        async def wrapper(*args, **kwargs):
+            try:
+                res = await fn(*args, **kwargs)
+                return _envelope(res)
+            except Exception as exc:
+                return json.dumps({"ok": False, "error": str(exc)}, ensure_ascii=False)
         if enable_fluent:
-            return mcp.tool(name=name)(fn) if name else mcp.tool()(fn)
-        return fn
+            return mcp.tool(name=name)(wrapper) if name else mcp.tool()(wrapper)
+        return wrapper
     return decorator
 
 def tool_geometry(name=None):
     def decorator(fn):
+        @functools.wraps(fn)
+        async def wrapper(*args, **kwargs):
+            try:
+                res = await fn(*args, **kwargs)
+                return _envelope(res)
+            except Exception as exc:
+                return json.dumps({"ok": False, "error": str(exc)}, ensure_ascii=False)
         if enable_geometry:
-            return mcp.tool(name=name)(fn) if name else mcp.tool()(fn)
-        return fn
+            return mcp.tool(name=name)(wrapper) if name else mcp.tool()(wrapper)
+        return wrapper
     return decorator
 
 @tool_fluent(name='fluent_launch')

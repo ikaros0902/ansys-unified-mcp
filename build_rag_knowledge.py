@@ -57,6 +57,7 @@ def build_knowledge_base():
 
     # Gather all markdown files
     scan_paths = [
+        (REPO_ROOT / "SKILLs", "skill"),
         (REPO_ROOT / ".kiro" / "skills", "skill"),
         (REPO_ROOT / "steering" / "reference", "architecture"),
         (REPO_ROOT / "Documentation_md", "manual"),
@@ -64,18 +65,28 @@ def build_knowledge_base():
 
     total_docs = 0
     total_chunks = 0
+    processed_names = set()
 
     for base_dir, category in scan_paths:
         if not base_dir.exists():
             continue
         for md_file in base_dir.rglob("*.md"):
             rel_name = md_file.relative_to(REPO_ROOT).as_posix().replace("/", "_").replace(".md", "")
+            if rel_name in processed_names:
+                continue
+            processed_names.add(rel_name)
             title = md_file.stem.replace("_", " ").replace("-", " ").title()
             
             # Identify product
             product = "general"
             lower_path = md_file.as_posix().lower()
-            if "spaceclaim" in lower_path:
+            if "fluent" in lower_path or "mixing_elbow" in lower_path:
+                product = "fluent"
+            elif "dpf" in lower_path or "submodeling" in lower_path:
+                product = "dpf"
+            elif "geometry" in lower_path:
+                product = "geometry"
+            elif "spaceclaim" in lower_path:
                 product = "spaceclaim"
             elif "mechanical" in lower_path:
                 product = "mechanical"
@@ -83,8 +94,12 @@ def build_knowledge_base():
                 product = "lsdyna"
             elif "optislang" in lower_path:
                 product = "optislang"
+            elif "parametric" in lower_path:
+                product = "parametric_study"
             elif "pcb" in lower_path:
                 product = "pcb_warpage"
+            elif "workbench" in lower_path:
+                product = "workbench"
             elif "error" in lower_path:
                 product = "error_catalog"
 

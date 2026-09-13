@@ -31,8 +31,10 @@ else:
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger("ansys-mcp")
 
+from ansys_unified_mcp.core.sessions import registry
+
 # ---------------------------------------------------------------------------
-# Global sessions
+# Global sessions (backed by SessionRegistry)
 # ---------------------------------------------------------------------------
 _fluent_session = None
 _modeler = None       # PyAnsys Geometry Modeler
@@ -379,6 +381,7 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
                         f"網路是否可達、防火牆是否放行埠 {port}"
                     )
                 ver = _fluent_session.get_fluent_version()
+                registry.put("fluent", str(port), _fluent_session)
                 result = f"已連線 Fluent (埠 {port}, 版本: {ver})"
             else:
                 _fluent_session = await loop.run_in_executor(
@@ -388,6 +391,7 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
                         dimension=3, cwd=arguments.get("cwd")
                     )
                 )
+                registry.put("fluent", "default", _fluent_session)
                 result = f"Fluent 已啟動 (版本: {_fluent_session.get_fluent_version()})"
 
         elif name.startswith("fluent_"):
@@ -540,7 +544,7 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
                 elif name == "fluent_status":
                     result = f"Fluent 已連線 | 版本: {s.get_fluent_version()}"
                 elif name == "fluent_exit":
-                    s.exit(); _fluent_session = None; result = "Fluent 已關閉"
+                    s.exit(); _fluent_session = None; registry.drop("fluent"); result = "Fluent 已關閉"
 
                 # --- MCP-TUI 自動對映（Skill 聯動） ---
                 if map_mcp_call:
@@ -589,6 +593,7 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
                         loop.run_in_executor(None, lambda: _make_modeler(host, port, transport_mode, connect_timeout)),
                         timeout=connect_timeout,
                     )
+                    registry.put("geometry", str(port), _modeler)
                     try:
                         _current_design = _modeler.read_existing_design()
                         result = f"已連線 SpaceClaim ({host}:{port})，綁定當前設計 '{_current_design.name}'"
@@ -609,6 +614,7 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
                             timeout=connect_timeout,
                         )
                         connected = True
+                        registry.put("geometry", str(scan_port), _modeler)
                         try:
                             _current_design = _modeler.read_existing_design()
                             result = f"已連線 SpaceClaim ({host}:{scan_port})，綁定當前設計 '{_current_design.name}'"
@@ -721,6 +727,7 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
                 elif name == "geometry_close":
                     _modeler.close()
                     _modeler = None
+                    registry.drop("geometry")
                     result = "Geometry 建模器已關閉"
 
         else:
