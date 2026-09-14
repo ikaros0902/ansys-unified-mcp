@@ -14,5 +14,5 @@ Use when:
 > 請直接查閱下列專責模組，無需載入舊版重複文檔：
 > - **主控手冊**：[`ansys-lsdyna/SKILL.md`](../ansys-lsdyna/SKILL.md)
 > - **材料本構與卡片子手冊**：[`ansys-lsdyna/reference/material_cards.md`](../ansys-lsdyna/reference/material_cards.md)
-> - **接觸、沙漏與時間步長子手冊**：[`ansys-lsdyna/reference/contacts_and_timestep.md`](../ansys-lsdyna/reference/contacts_and_timestep.md)
+> - **接觸、沙漏與時間步長子手冊**：[`ansys-lsdyna/reference/contacts.md`](../ansys-lsdyna/reference/contacts.md)
 > - **經典落摔自動化腳本**：[`ansys-lsdyna/scripts/run_drop_test_demo.py`](../ansys-lsdyna/scripts/run_drop_test_demo.py)

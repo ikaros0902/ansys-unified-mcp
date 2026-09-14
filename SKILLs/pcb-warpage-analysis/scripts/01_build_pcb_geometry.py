@@ -203,8 +203,9 @@ def build_pcb_geometry(excel_path: str, port: int = 50051, export_files: bool = 
     }
 
 if __name__ == "__main__":
+    default_excel = os.environ.get("PCB_STACKUP_EXCEL", str(Path(__file__).resolve().parent / "MCP_Test.xlsx"))
     parser = argparse.ArgumentParser(description="ANSYS SpaceClaim PCB 疊構幾何建模腳本")
-    parser.add_argument("excel", nargs="?", default=r"D:\ANSYS_MCP_Connect\PCB_Stackup_material\MCP_Test.xlsx", help="PCB 疊構 Excel 檔案路徑")
+    parser.add_argument("excel", nargs="?", default=default_excel, help="PCB 疊構 Excel 檔案路徑")
     parser.add_argument("--port", type=int, default=50051, help="SpaceClaim gRPC 連線埠號")
     parser.add_argument("--export", action="store_true", default=False, help="手動指定是否匯出幾何檔案（預設不匯出）")
     parser.add_argument("--formats", nargs="+", default=["scdocx", "step", "pmdb"], help="匯出格式清單 (scdocx step pmdb)")
