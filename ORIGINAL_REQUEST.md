@@ -206,4 +206,29 @@ Integrity mode: demo
 - [ ] 新增之 `tests/unit/test_connection_manager.py` 測試通過率 100%。
 - [ ] 全套單元測試 `pytest tests/unit/` 執行無報錯。
 
+## 2026-09-14T13:02:33Z
+
+針對 ansys-unified-mcp 專案，聚焦於「結構 (Structural)」、「幾何 (Geometry)」、「熱傳/電子散熱 (Thermal/Icepak)」、「高階網格 (PyPrimeMesh)」與「電子封裝 (Electronic Packaging)」五大核心領域，深度對標 ANSYS / PyAnsys 官方 Tutorial 與各大教學網站，產出高資訊密度的架構與規格評估報告以及分階段優化里程碑計畫。
+
+工作目錄：F:\Ming_python\ansys-unified-mcp
+誠信模式：demo
+
+參考資源：
+- Projects — PyAnsys (https://docs.pyansys.com/version/stable/projects.html)
+- ansys/pyansys: Delivering PyAnsys libraries as a bundle (https://github.com/ansys/pyansys)
+- PyAnsys for developers | Ansys Developer Portal (https://developer.synopsys.com/docs/pyansys)
+- 現有專案源碼：F:\Ming_python\ansys-unified-mcp
+
+需求清單：
+R1. 五大領域現行模組現況與架構瓶頸深度診斷 (Current Architecture Audit)
+R2. 官方 Tutorials 與各大教學資源全景映射 (Tutorials & Benchmark Mapping)
+R3. 架構與規格評估報告 (Architecture & Specification Report)
+R4. 分階段落地優化里程碑計畫 (Phased Implementation Roadmap)
+
+驗收標準：
+- 完整涵蓋結構、幾何、Thermal/Icepak、PyPrimeMesh、電子封裝五大領域。
+- 建立現行模組 vs 官方 Tutorial 範例庫對照矩陣（至少 8 個代表性經典案例）。
+- 產出 Phase 1 ~ 3 之清晰里程碑計畫，包含目標成果、輸入/輸出規格與驗收指標。
+
+
 
