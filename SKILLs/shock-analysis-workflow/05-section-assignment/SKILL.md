@@ -81,7 +81,7 @@ $#   secid    elform       aet
 ### 3.2 獨立測試腳本執行方式
 執行以下獨立測試腳本：
 ```powershell
-python d:/Ikaros/ANSYS-unified-MCP/SKILLs/shock-analysis-workflow/scripts/test_session_05.py
+python SKILLs/shock-analysis-workflow/scripts/test_session_05.py
 ```
 
 ### 3.3 驗證評估指標 (Verification Metrics)

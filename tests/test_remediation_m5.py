@@ -11,12 +11,15 @@ Worker Remediation M5 專用驗證測試套件：
 import os
 import sys
 import unittest
+from pathlib import Path
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
 
 # 加入相關模組路徑
-sys.path.insert(0, r"F:\Ming_python\ansys-unified-mcp\SKILLs\ansys-fluent\scripts")
-sys.path.insert(0, r"F:\Ming_python\ansys-unified-mcp\SKILLs\ansys-lsdyna\scripts")
-sys.path.insert(0, r"F:\Ming_python\ansys-unified-mcp\SKILLs\ansys-optislang\scripts")
-sys.path.insert(0, r"F:\Ming_python\ansys-unified-mcp\SKILLs\ansys-mechanical\scripts")
+sys.path.insert(0, str(REPO_ROOT / "SKILLs" / "ansys-fluent" / "scripts"))
+sys.path.insert(0, str(REPO_ROOT / "SKILLs" / "ansys-lsdyna" / "scripts"))
+sys.path.insert(0, str(REPO_ROOT / "SKILLs" / "ansys-optislang" / "scripts"))
+sys.path.insert(0, str(REPO_ROOT / "SKILLs" / "ansys-mechanical" / "scripts"))
 
 import check_fluent_mesh
 import run_drop_test_demo
@@ -123,8 +126,8 @@ class TestRemediationM5(unittest.TestCase):
 
     def test_action_item_5_shock_prevention_sop(self):
         """Action Item 5: 手冊增補升階數值激波防禦 SOP"""
-        diag_file = r"F:\Ming_python\ansys-unified-mcp\SKILLs\ansys-fluent\reference\fluent_diagnostics.md"
-        self.assertTrue(os.path.exists(diag_file))
+        diag_file = REPO_ROOT / "SKILLs" / "ansys-fluent" / "reference" / "fluent_diagnostics.md"
+        self.assertTrue(diag_file.exists())
         with open(diag_file, "r", encoding="utf-8") as f:
             content = f.read()
 

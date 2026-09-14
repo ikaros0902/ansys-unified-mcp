@@ -37,9 +37,9 @@ def _resolve_queue_root():
             break
         cur = parent
     # 專案預設備援路徑
-    fallback = r"D:\Ikaros\ANSYS-unified-MCP\workbench_queue"
-    if os.path.exists(r"D:\Ikaros\ANSYS-unified-MCP"):
-        return fallback
+    env_dir = os.environ.get("ANSYS_WORKBENCH_QUEUE_DIR")
+    if env_dir:
+        return env_dir
     return os.path.join(_PLUGIN_DIR, "workbench_queue")
 
 _QUEUE_ROOT = _resolve_queue_root()

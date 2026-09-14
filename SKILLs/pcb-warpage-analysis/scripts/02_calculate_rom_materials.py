@@ -141,7 +141,7 @@ def generate_rom_apdl_macro(folder_path: str, mac_output_path: str = None):
     return mac_output_path
 
 if __name__ == "__main__":
-    folder = r'D:\ANSYS_MCP_Connect\PCB_Stackup_material'
+    folder = os.environ.get("PCB_STACKUP_DIR", str(Path(__file__).resolve().parent))
     if len(sys.argv) > 1:
         folder = sys.argv[1]
     generate_rom_apdl_macro(folder)

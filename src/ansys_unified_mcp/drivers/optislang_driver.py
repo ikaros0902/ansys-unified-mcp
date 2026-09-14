@@ -1,4 +1,4 @@
-﻿"""ANSYS Unified MCP 2.0 - optiSLang 參數尋優與 MOP 代理模型驅動程式 (OptislangDriver).
+"""ANSYS Unified MCP 2.0 - optiSLang 參數尋優與 MOP 代理模型驅動程式 (OptislangDriver).
 
 封裝 optiSLang 參數敏感度分析、DOE 實驗設計與 MOP 代理模型建置：
 - 支援 Latin Hypercube Sampling (LHS) 與 Sobol 擬隨機採樣腳本生成
@@ -13,6 +13,7 @@ import json
 import logging
 import os
 import shutil
+import sys
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -111,7 +112,7 @@ print("optiSLang MOP 訓練完成。")
             cmd = [self.solver_bin, "--batch", "--run", str(input_file)]
         else:
             # 使用當前 Python 執行批次腳本
-            cmd = [r"F:\Ming_python\ansys-unified-mcp\.venv\Scripts\python.exe", str(input_file)]
+            cmd = [sys.executable, str(input_file)]  # fallback to current python.exe
         if extra_args:
             cmd.extend(extra_args)
         return cmd

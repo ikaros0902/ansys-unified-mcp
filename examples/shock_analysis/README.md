@@ -9,13 +9,15 @@ The shock pipeline automates standard half-sine pulse shock simulations (35G, 11
 ### Scripts Included
 
 1. **`execute_full_shock_act_pipeline.py`**
-   - **Purpose**: Full end-to-end shock analysis automation covering Sessions 01 to 06.
+   - **Purpose**: Full end-to-end shock analysis automation covering Sessions 01 to 08.
    - **Session 01**: Material auto-assignment mapping CAD names to materials (SGCC, AL6061-T6, SUS301, FR-4, Cycoloy C6200, STF, etc.).
    - **Session 02**: Contact & Joint creation (automatic Revolute Joint extraction for lever mechanisms).
    - **Session 03**: Mesh controls (MultiZone solid meshing and localized sizing on critical components).
    - **Session 04**: Remote Point generation (rigid behavior) for mass balancing and constraints.
-   - **Session 05**: Section assignment (shell thickness 0.8 mm on sheet/surface bodies).
+   - **Session 05**: Section assignment (shell thickness 0.8 mm on sheet/surface bodies, ELFORM=16, NIP=5).
    - **Session 06**: LS-DYNA explicit analysis settings (16.5 ms end time, 0.9 safety factor, 8 NCPUs, double precision, Type 6 hourglass control) and `.k` deck generation.
+   - **Session 07**: Solve dispatch and real-time `glstat` energy balance monitoring (0.90 ~ 1.10 tolerance gate).
+   - **Session 08**: Quantitative structural failure evaluation (Metal EPS < 0.01, BGA EPS < 0.0022, PASS/MARGINAL/FAIL) and automated reporting.
 
 2. **`run_shock_35g_pipeline.py`**
    - **Purpose**: Rapid 35G shock load setup and deck export.

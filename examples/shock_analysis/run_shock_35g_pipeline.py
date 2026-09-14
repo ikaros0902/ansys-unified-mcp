@@ -218,9 +218,13 @@ print("  -> Configured 6 Directional Velocity Profiles (35G / 11ms).")
 # 6. EXPORT / WRITE LS-DYNA .K DECKS (Session 06 / Solve)
 # ----------------------------------------------------
 print("[6/6] Writing LS-DYNA 35G Shock Input Decks (.k)...")
-out_dir = r"d:\\Ikaros\\ACT_Test\\Shock_35G_KFiles"
+base_temp = os.environ.get("TEMP", "C:/Temp")
+out_dir = os.path.join(base_temp, "Shock_35G_KFiles")
 if not os.path.exists(out_dir):
-    os.makedirs(out_dir)
+    try:
+        os.makedirs(out_dir)
+    except:
+        pass
 
 DataModel.Tree.Refresh()
 

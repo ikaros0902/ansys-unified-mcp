@@ -16,6 +16,7 @@ import os
 import re
 import sys
 import py_compile
+from pathlib import Path
 from typing import Dict, List, Tuple
 
 # 強制標準輸出為 UTF-8 編碼
@@ -24,8 +25,8 @@ if hasattr(sys.stdout, "reconfigure"):
 if hasattr(sys.stderr, "reconfigure"):
     sys.stderr.reconfigure(encoding="utf-8")
 
-PROJECT_BASE = r"F:\Ming_python\ansys-unified-mcp\SKILLs"
-GLOBAL_BASE = r"C:\Users\Ming\.gemini\config\skills"
+PROJECT_BASE = str(Path(__file__).resolve().parents[1] / "SKILLs")
+GLOBAL_BASE = str(Path.home() / ".gemini" / "config" / "skills")
 
 CORE_SKILLS = [
     "ansys-fluent",

@@ -1,4 +1,4 @@
-﻿"""ANSYS Unified MCP 2.0 - Icepak 電子散熱求解器驅動程式 (IcepakDriver).
+"""ANSYS Unified MCP 2.0 - Icepak 電子散熱求解器驅動程式 (IcepakDriver).
 
 封裝 ANSYS Icepak 電子封裝與系統級散熱分析：
 - 配置晶片功率熱源、熱傳導係數與自然/強制對流散熱邊界條件
@@ -13,6 +13,7 @@ import json
 import logging
 import os
 import shutil
+import sys
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -108,7 +109,7 @@ print("Icepak 求解完成並導出溫度場。")
         if self.solver_bin:
             cmd = [self.solver_bin, "-batch", str(input_file)]
         else:
-            cmd = [r"F:\Ming_python\ansys-unified-mcp\.venv\Scripts\python.exe", str(input_file)]
+            cmd = [sys.executable, str(input_file)]  # fallback to current python.exe
         if extra_args:
             cmd.extend(extra_args)
         return cmd

@@ -12,9 +12,9 @@ import sys
 import time
 import subprocess
 
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+DEFAULT_FOLDER = os.environ.get("PCB_STACKUP_DIR", SCRIPT_DIR)
 
-def run_workflow(folder_path: str = r"D:\ANSYS_MCP_Connect\PCB_Stackup_material"):
+def run_workflow(folder_path: str = DEFAULT_FOLDER):
     excel_path = os.path.join(folder_path, "MCP_Test.xlsx")
     mac_path = os.path.join(folder_path, "apdl_rom_materials.mac")
 
@@ -48,7 +48,7 @@ def run_workflow(folder_path: str = r"D:\ANSYS_MCP_Connect\PCB_Stackup_material"
     print("="*70)
 
 if __name__ == "__main__":
-    folder = r"D:\ANSYS_MCP_Connect\PCB_Stackup_material"
+    folder = DEFAULT_FOLDER
     if len(sys.argv) > 1:
         folder = sys.argv[1]
     run_workflow(folder)

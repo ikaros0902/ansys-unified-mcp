@@ -14,5 +14,5 @@ Use when:
 > 請直接查閱下列專責模組，無需載入舊版重複文檔：
 > - **主控手冊**：[`ansys-optislang/SKILL.md`](../ansys-optislang/SKILL.md)
 > - **MOP 代理模型專精子手冊**：[`ansys-optislang/reference/mop_metamodel.md`](../ansys-optislang/reference/mop_metamodel.md)
-> - **靈敏度分析與 DoE 抽樣子手冊**：[`ansys-optislang/reference/doe_and_sensitivity.md`](../ansys-optislang/reference/doe_and_sensitivity.md)
+> - **靈敏度分析與 DoE 抽樣子手冊**：[`ansys-optislang/reference/doe_sampling.md`](../ansys-optislang/reference/doe_sampling.md)
 > - **經典 MOP 流程腳本**：[`ansys-optislang/scripts/setup_mop_workflow_demo.py`](../ansys-optislang/scripts/setup_mop_workflow_demo.py)

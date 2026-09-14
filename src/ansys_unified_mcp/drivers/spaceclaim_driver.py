@@ -1,4 +1,4 @@
-﻿"""ANSYS Unified MCP 2.0 - SpaceClaim / Discovery 幾何前處理驅動程式 (SpaceClaimDriver).
+"""ANSYS Unified MCP 2.0 - SpaceClaim / Discovery 幾何前處理驅動程式 (SpaceClaimDriver).
 
 封裝 SpaceClaim 與 Discovery 幾何建模自動化：
 - 支援參數化草圖拉伸、特徵建立與布林運算腳本生成
@@ -13,6 +13,7 @@ import json
 import logging
 import os
 import shutil
+import sys
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -117,7 +118,7 @@ with open(r"{workspace / 'spaceclaim.log'}", "w", encoding="utf-8") as f:
         if self.solver_bin:
             cmd = [self.solver_bin, f"/RunScript={str(input_file)}", "/Headless=True"]
         else:
-            cmd = [r"F:\Ming_python\ansys-unified-mcp\.venv\Scripts\python.exe", str(input_file)]
+            cmd = [sys.executable, str(input_file)]  # fallback to current python.exe
         if extra_args:
             cmd.extend(extra_args)
         return cmd
