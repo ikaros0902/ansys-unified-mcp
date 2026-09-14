@@ -29,8 +29,8 @@ flowchart TD
 ```
 
 ## 核心腳本目錄
-`F:\Ming_python\ansys-unified-mcp\scripts\pcb_warpage_analysis\`
-1. `01_build_pcb_geometry.py`
-2. `02_calculate_rom_materials.py`
-3. `03_setup_mechanical_bc_and_solution.py`
-4. `run_full_warpage_workflow.py`
+本技能目錄內建腳本 `./scripts/`（或專案根目錄 `scripts/pcb_warpage_analysis/`）：
+1. `01_build_pcb_geometry.py`：SpaceClaim / Discovery 疊構幾何建模
+2. `02_calculate_rom_materials.py`：ROM 等效材料計算與 APDL Macro 輸出
+3. `03_setup_mechanical_bc_and_solution.py`：Mechanical 邊界條件設定與求解
+4. `run_full_warpage_workflow.py`：全自動化閉環批次執行腳本
