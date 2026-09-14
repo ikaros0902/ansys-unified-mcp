@@ -28,7 +28,7 @@ from ansys_unified_mcp.jobs.sandbox import JobSandbox
 class JobManager:
     """模擬作業集中管理器。"""
 
-    DEFAULT_JOBS_ROOT = Path("F:/Ming_python/ansys-unified-mcp/jobs")
+    DEFAULT_JOBS_ROOT = Path(__file__).resolve().parents[3] / "jobs"
 
     def __init__(self, base_jobs_dir: Optional[Path | str] = None) -> None:
         if base_jobs_dir:

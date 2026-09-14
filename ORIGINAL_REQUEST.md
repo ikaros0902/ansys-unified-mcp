@@ -164,3 +164,46 @@ Integrity mode: development
 - [ ] 新增 `test_aliased_tools.py` 測試套件，100% 覆蓋雙軌別名等效性
 - [ ] 執行 `pytest` 無任何因工具重構引入之語法或邏輯錯誤
 
+## 2026-09-14T01:43:24Z
+
+將本地未提交修改及未追蹤之衝擊分析、幾何清理與簡報資產，系統性收斂重構至 ANSYS Unified MCP 2.0 的 Phase 2（連線層）、Phase 3（工作流與技能庫）與 Phase 4（測試防線）體系中。
+
+Working directory: d:\Ikaros\ANSYS-unified-MCP
+Integrity mode: demo
+
+## Requirements
+
+### R1. 連線層擴充受控與單元測試閉環 (Phase 2)
+- 將 `src/ansys_unified_mcp/connection_manager.py` 的 gRPC 掃描範圍擴展（10000~10050、50051~50070）與 `find_all_instances`、`find_mechanical_instances` 多實例探測納入正式受控代碼。
+- 補齊 `tests/unit/test_connection_manager.py` 單元測試，透過 mock psutil 與 socket 達到 100% 邏輯覆蓋，確保不依賴真實 ANSYS 授權環境即可驗證。
+
+### R2. 衝擊分析技能庫生態系納管 (Phase 3)
+- 將 `SKILLs/shock-analysis-workflow/`（涵蓋 8 個 Session 子階段技能與內部測試腳本）納入專案版控。
+- 檢查各 `SKILL.md` 是否嚴格符合 101 行以內的漸進式揭露規範，確保與 `src/ansys_unified_mcp/workflows/shock_analysis.py` 介面契約對齊。
+- 修正 `scripts/sync_skills_bidirectional.py` 預設工作目錄至本機真實路徑（`d:\Ikaros\ANSYS-unified-MCP` 與 `C:\Users\4062863\.gemini\config\skills`），並驗證技能庫雙向同步與 SHA-256 完整性。
+
+### R3. 實跑管線與幾何清理腳本架構化歸位 (Phase 3)
+- 建立 `examples/shock_analysis/` 目錄，將 `run_shock_35g_pipeline.py`、`execute_full_shock_act_pipeline.py` 與 `audit_rm_deep.py` 移入，作為真實工程工況參照與端到端標竿。
+- 建立 `examples/geometry_cleanup/` 目錄，將 `sc_fast_cleanup.py`、`sc_delete_screws_and_panels.py` 與 `execute_cleanup.py` 移入，提供標準 SpaceClaim 幾何前處理實例。
+- 建立 `docs/presentations/` 目錄，將 `slides_detailed.md` 歸檔並於文檔索引中建立連結。
+
+### R4. 全域品質閘門與測試回歸 (Phase 4)
+- 修正 `pyproject.toml` 中的測試路徑配置（`pythonpath = ["src", "."]`），解決 `tests.mocks` 模組解析問題。
+- 執行全套 Tier 1 語法編譯檢查與 Tier 2 單元測試，確保無破壞性回歸。
+
+## Acceptance Criteria
+
+### 1. 代碼與目錄結構標準化
+- [ ] `git status` 工作目錄中無孤立未追蹤之臨時腳本或未歸位文檔。
+- [ ] `examples/shock_analysis/` 與 `examples/geometry_cleanup/` 結構完整，檔案皆具備 UTF-8 編碼與標準英文腳本註釋。
+- [ ] `docs/presentations/slides_detailed.md` 成功歸檔。
+
+### 2. 技能完整性與同步檢驗
+- [ ] `python scripts/sync_skills_bidirectional.py --verify-only` 檢驗結果為 100% 吻合 (PASS)。
+- [ ] `SKILLs/shock-analysis-workflow/` 所有技能文檔符合漸進式揭露規範。
+
+### 3. 自動化測試防線
+- [ ] 新增之 `tests/unit/test_connection_manager.py` 測試通過率 100%。
+- [ ] 全套單元測試 `pytest tests/unit/` 執行無報錯。
+
+

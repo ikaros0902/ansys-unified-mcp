@@ -18,6 +18,7 @@
   10. ansys-mechanical-multiphysics
   11. ansys-lsdyna-explicit
   12. ansys-optislang-optimization
+  13. shock-analysis-workflow
 """
 
 import argparse
@@ -48,6 +49,7 @@ CONTROLLED_SKILLS = [
     "ansys-mechanical-multiphysics",
     "ansys-lsdyna-explicit",
     "ansys-optislang-optimization",
+    "shock-analysis-workflow",
 ]
 
 # 忽略同步之目錄與副檔名
@@ -178,8 +180,8 @@ class BidirectionalSyncEngine:
         # 情境 C: 兩端皆存在，需依據主控規則與時間戳比對
         all_rels: Set[str] = set(p_files.keys()) | set(g_files.keys())
 
-        # 針對 lsdyna 與 optislang，全域端為林明志標準 6 本子手冊架構來源，專案端多餘的歷史舊手冊應清理
-        prune_project_orphans = skill_name in {"ansys-lsdyna", "ansys-optislang"}
+        # 防護專案端受控檔案，防止專案端最新手冊被意外刪除
+        prune_project_orphans = False
 
         for rel in sorted(all_rels):
             p_meta = p_files.get(rel)
@@ -213,10 +215,15 @@ class BidirectionalSyncEngine:
 
             # 3. 僅存在於全域端
             elif g_meta and not p_meta:
-                # 全域端新增檔案同步回專案端
-                dst = os.path.join(p_dir, rel.replace("/", os.sep))
-                self.log(f"[*] 檔案 {rel} 僅存在於全域端，同步至專案端")
-                self.copy_file(g_meta["abs_path"], dst)
+                # 若為受控技能且全域端檔案為過時舊版手冊，自全域端清理以鏡像專案端最新受控代碼
+                if skill_name in {"ansys-lsdyna", "ansys-optislang"}:
+                    self.log(f"[*] 檔案 {rel} 為全域端過時歷史檔案，自全域端清理以鏡像專案端架構")
+                    self.remove_file(g_meta["abs_path"])
+                else:
+                    # 全域端新增檔案同步回專案端
+                    dst = os.path.join(p_dir, rel.replace("/", os.sep))
+                    self.log(f"[*] 檔案 {rel} 僅存在於全域端，同步至專案端")
+                    self.copy_file(g_meta["abs_path"], dst)
 
         # 清理可能產生的空目錄
         self.clean_empty_dirs(p_dir)
@@ -351,13 +358,13 @@ def main():
     )
     parser.add_argument(
         "--project-dir",
-        default=r"F:\Ming_python\ansys-unified-mcp\SKILLs",
-        help=r"專案技能根目錄 (預設: F:\Ming_python\ansys-unified-mcp\SKILLs)",
+        default=r"d:\Ikaros\ANSYS-unified-MCP\SKILLs",
+        help=r"專案技能根目錄 (預設: d:\Ikaros\ANSYS-unified-MCP\SKILLs)",
     )
     parser.add_argument(
         "--global-dir",
-        default=r"C:\Users\Ming\.gemini\config\skills",
-        help=r"全域技能根目錄 (預設: C:\Users\Ming\.gemini\config\skills)",
+        default=r"C:\Users\4062863\.gemini\config\skills",
+        help=r"全域技能根目錄 (預設: C:\Users\4062863\.gemini\config\skills)",
     )
     parser.add_argument(
         "--dry-run",
@@ -372,7 +379,7 @@ def main():
     parser.add_argument(
         "--skills",
         nargs="+",
-        help="指定僅同步/驗證之特定技能名稱 (預設: 全數受控 12 項技能)",
+        help="指定僅同步/驗證之特定技能名稱 (預設: 全數受控 13 項技能)",
     )
 
     args = parser.parse_args()
