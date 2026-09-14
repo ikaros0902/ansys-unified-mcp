@@ -63,6 +63,11 @@ MCP Agent 在啟動時會自動偵測正在執行的這些視窗並接管控制�
   - `drivers/sim_impl.py`: Fluent / Geometry 的呼叫實作。
   - `bridges/workbench_bridge.py`: Workbench journal 橋接與批次啟動。
   - `__main__.py`: MCP 伺服器進入點。
+- `examples/`: 工程實例與標竿管線。
+  - [`examples/shock_analysis/`](examples/shock_analysis/README.md): 35G 衝擊管線、材料自動指派與 LS-DYNA .k 檔生成。
+  - [`examples/geometry_cleanup/`](examples/geometry_cleanup/README.md): SpaceClaim 與 PyAnsys Geometry 幾何清理與特徵消除。
+- `docs/`: 專案文檔與簡報資料（參見 [文檔索引](docs/index.md)）。
+  - [`docs/presentations/slides_detailed.md`](docs/presentations/slides_detailed.md): AI Agent 模擬助理架構提案簡報。
 - `workbench_plugin/`: 安裝至 ANSYS 的精簡 ACT 外掛（自動啟動 Mechanical gRPC server 並註冊實例）。
 
 ### Mechanical 連線傳輸（重構後收斂為三種）

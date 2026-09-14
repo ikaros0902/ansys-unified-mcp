@@ -30,4 +30,4 @@ ansys-unified-mcp = "ansys_unified_mcp.__main__:main"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-pythonpath = ["src"]
+pythonpath = ["src", "."]
