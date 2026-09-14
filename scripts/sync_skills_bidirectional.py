@@ -27,6 +27,7 @@ import os
 import shutil
 import sys
 from datetime import datetime
+from pathlib import Path
 from typing import Dict, List, Optional, Set, Tuple
 
 # 強制標準輸出為 UTF-8 編碼
@@ -352,19 +353,22 @@ def print_verification_report(report_list: List[Dict[str, any]]) -> None:
 
 
 def main():
+    default_project = str(Path(__file__).resolve().parents[1] / "SKILLs")
+    default_global = str(Path.home() / ".gemini" / "config" / "skills")
+
     parser = argparse.ArgumentParser(
         description="PyAnsys 技能生態系雙向鏡像同步與 SHA-256 驗證工具",
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument(
         "--project-dir",
-        default=r"d:\Ikaros\ANSYS-unified-MCP\SKILLs",
-        help=r"專案技能根目錄 (預設: d:\Ikaros\ANSYS-unified-MCP\SKILLs)",
+        default=default_project,
+        help=f"專案技能根目錄 (預設: {default_project})",
     )
     parser.add_argument(
         "--global-dir",
-        default=r"C:\Users\4062863\.gemini\config\skills",
-        help=r"全域技能根目錄 (預設: C:\Users\4062863\.gemini\config\skills)",
+        default=default_global,
+        help=f"全域技能根目錄 (預設: {default_global})",
     )
     parser.add_argument(
         "--dry-run",
