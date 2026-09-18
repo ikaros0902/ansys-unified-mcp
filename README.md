@@ -14,7 +14,9 @@
 
 ---
 
-## 🚀 快速安裝 (針對一般使用者 / 同事)
+## 🚀 快速安裝與標準部署手冊 (Deployment Guide)
+
+> 📖 **詳細安裝與生產部署手冊 (SOP)**：請參閱 **[`docs/DEPLOYMENT_SOP.md`](docs/DEPLOYMENT_SOP.md)**（含全新電腦環境配置、相依套件安裝、常駐 gRPC 設置與三重驗證 SOP）。
 
 您不再需要手動設定 Python 環境或尋找 ANSYS 安裝路徑！我們提供了一鍵安裝腳本。
 
