@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ANSYS Unified MCP · 2026 架構拓撲圖</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --color-paper:       #f5f5f5;
+      --color-paper-2:     #ffffff;
+      --color-ink:         #2d3142;
+      --color-muted:       #4f5d75;
+      --color-soft:        #7a8399;
+      --color-rule:        rgba(45, 49, 66, 0.12);
+      --color-rule-solid:  rgba(79, 93, 117, 0.25);
+      --color-accent:      #eb6c36;
+      --color-accent-tint: rgba(235, 108, 54, 0.08);
+      --color-link:        #2e5aa8;
+      --font-sans:         'Geist', 'Noto Sans TC', system-ui, sans-serif;
+      --font-serif:        'Instrument Serif', Georgia, serif;
+      --font-mono:         'Geist Mono', ui-monospace, Menlo, monospace;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--color-paper);
+      min-height: 100vh;
+      padding: 3rem 2rem;
+      color: var(--color-ink);
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      max-width: 1080px;
+      width: 100%;
+    }
+
+    /* ── Header ─────────────────────────────────────────────────── */
+    .header { margin-bottom: 2rem; }
+
+    .header-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--color-muted);
+      margin-bottom: 0.5rem;
+    }
+
+    h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(1.8rem, 3vw + 1rem, 2.6rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      color: var(--color-ink);
+      margin-bottom: 0.5rem;
+    }
+
+    .subtitle {
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: var(--color-muted);
+      max-width: 64ch;
+    }
+
+    /* ── Diagram container ────────────────────────────────────────── */
+    .diagram-container {
+      background: transparent;
+      border: none;
+      padding: 0;
+      overflow-x: auto;
+      margin-bottom: 2rem;
+    }
+
+    svg {
+      width: 100%;
+      min-width: 960px;
+      display: block;
+    }
+
+    /* ── Summary cards ───────────────────────────────────────────────── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: 1.15fr 1fr 0.95fr;
+      gap: 1.25rem;
+      margin-top: 1rem;
+    }
+
+    .card {
+      background: var(--color-paper-2);
+      border: 1px solid var(--color-rule-solid);
+      border-radius: 6px;
+      padding: 1.25rem 1.35rem;
+    }
+
+    .card-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--color-soft);
+      margin-bottom: 0.4rem;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.65rem;
+    }
+
+    .card-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .card-dot.coral { background: var(--color-accent); }
+    .card-dot.ink   { background: var(--color-ink); }
+    .card-dot.link  { background: var(--color-link); }
+
+    .card h3 {
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--color-ink);
+    }
+
+    .card p {
+      font-size: 0.82rem;
+      color: var(--color-muted);
+      line-height: 1.55;
+      margin-bottom: 0.5rem;
+    }
+
+    .card ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .card li {
+      font-size: 0.78rem;
+      color: var(--color-ink);
+      line-height: 1.6;
+      position: relative;
+      padding-left: 0.9rem;
+    }
+
+    .card li::before {
+      content: "–";
+      position: absolute;
+      left: 0;
+      color: var(--color-soft);
+    }
+
+    /* ── Footer ──────────────────────────────────────────────────── */
+    footer {
+      margin-top: 2rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--color-rule);
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--color-soft);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <p class="header-eyebrow">EDITORIAL ARCHITECTURE · DIAGRAM DESIGN</p>
+      <h1>ANSYS Unified MCP 現行系統架構拓撲</h1>
+      <p class="subtitle">展示 FastMCP 扁平信封契約閘道、前置物理安全閘門、沙盒隔離執行與 DPF 無頭後處理之五層式穩固拓撲架構。</p>
+    </div>
+
+    <div class="diagram-container">
+      <svg viewBox="0 0 1000 680" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="ansys-arch-title ansys-arch-desc">
+        <title id="ansys-arch-title">ANSYS Unified MCP 現行系統架構拓撲</title>
+        <desc id="ansys-arch-desc">展示 AI 代理客戶端透過 FastMCP 統一閘道、前置安全閘門、沙盒作業管理、雙通道求解器與 DPF 無頭後處理器運作的完整架構圖。</desc>
+
+        <defs>
+          <pattern id="dots" width="24" height="24" patternUnits="userSpaceOnUse">
+            <circle cx="1" cy="1" r="0.9" fill="rgba(45,49,66,0.10)"/>
+          </pattern>
+
+          <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/>
+          </marker>
+          <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#eb6c36"/>
+          </marker>
+          <marker id="arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+            <polygon points="0 0, 8 3, 0 6" fill="#2e5aa8"/>
+          </marker>
+        </defs>
+
+        <!-- 背景 -->
+        <rect width="100%" height="100%" fill="#f5f5f5"/>
+        <rect width="100%" height="100%" fill="url(#dots)" opacity="0.6"/>
+
+        <!-- ──────────────────────────────────────────────────────────── -->
+        <!-- 區域容器 (Zone Rectangles)                                    -->
+        <!-- ──────────────────────────────────────────────────────────── -->
+        <!-- 區域 1: 介面與前置守門層 -->
+        <rect x="32" y="48" width="936" height="152" rx="8"
+              fill="rgba(45,49,66,0.02)" stroke="rgba(45,49,66,0.10)" stroke-width="0.8"/>
+        <rect x="48" y="52" width="224" height="14" rx="2" fill="#f5f5f5"/>
+        <text x="160" y="63" fill="rgba(45,49,66,0.45)" font-size="8" font-family="'Geist Mono', monospace"
+              text-anchor="middle" letter-spacing="0.14em">1. INTERFACE &amp; PRE-FLIGHT GATEWAY</text>
+
+        <!-- 區域 2: 沙盒排程與執行守護層 -->
+        <rect x="32" y="224" width="936" height="176" rx="8"
+              fill="rgba(45,49,66,0.02)" stroke="rgba(45,49,66,0.10)" stroke-width="0.8"/>
+        <rect x="48" y="228" width="216" height="14" rx="2" fill="#f5f5f5"/>
+        <text x="156" y="239" fill="rgba(45,49,66,0.45)" font-size="8" font-family="'Geist Mono', monospace"
+              text-anchor="middle" letter-spacing="0.14em">2. SANDBOX EXECUTION &amp; WATCHDOG</text>
+
+        <!-- 區域 3: DPF 後處理與報告層 -->
+        <rect x="32" y="424" width="936" height="160" rx="8"
+              fill="rgba(45,49,66,0.02)" stroke="rgba(45,49,66,0.10)" stroke-width="0.8"/>
+        <rect x="48" y="428" width="200" height="14" rx="2" fill="#f5f5f5"/>
+        <text x="148" y="439" fill="rgba(45,49,66,0.45)" font-size="8" font-family="'Geist Mono', monospace"
+              text-anchor="middle" letter-spacing="0.14em">3. HEADLESS DPF &amp; REPORTING</text>
+
+        <!-- ──────────────────────────────────────────────────────────── -->
+        <!-- 連接線 (Connectors) - 優先繪製於節點下方                        -->
+        <!-- ──────────────────────────────────────────────────────────── -->
+
+        <!-- 1. AI Clients -> FastMCP Gateway (水平實線 Link) -->
+        <line x1="288" y1="128" x2="388" y2="128" stroke="#2e5aa8" stroke-width="1.2" marker-end="url(#arrow-link)"/>
+        <rect x="316" y="108" width="44" height="12" rx="2" fill="#f5f5f5"/>
+        <text x="338" y="117" fill="#2e5aa8" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">STDIO</text>
+
+        <!-- 2. FastMCP Gateway -> Pre-flight Gatekeeper (水平實線 Accent) -->
+        <line x1="612" y1="128" x2="712" y2="128" stroke="#eb6c36" stroke-width="1.2" marker-end="url(#arrow-accent)"/>
+        <rect x="636" y="108" width="52" height="12" rx="2" fill="#f5f5f5"/>
+        <text x="662" y="117" fill="#eb6c36" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">VERIFY</text>
+
+        <!-- 3. Pre-flight Gatekeeper -> Job Sandbox (垂直直通實線 Muted) -->
+        <line x1="824" y1="168" x2="824" y2="264" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <rect x="800" y="208" width="48" height="12" rx="2" fill="#f5f5f5"/>
+        <text x="824" y="217" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">PASSED</text>
+
+        <!-- 4. Job Sandbox -> Dual-Channel Solvers (水平實線 Muted) -->
+        <line x1="712" y1="304" x2="612" y2="304" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <rect x="636" y="284" width="52" height="12" rx="2" fill="#f5f5f5"/>
+        <text x="662" y="293" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">ISOLATE</text>
+
+        <!-- 5. Dual-Channel Solvers -> Sentinel Watchdog (水平虛線監控 Muted) -->
+        <line x1="388" y1="304" x2="288" y2="304" stroke="#4f5d75" stroke-width="1.0" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+        <rect x="312" y="284" width="52" height="12" rx="2" fill="#f5f5f5"/>
+        <text x="338" y="293" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">STREAM</text>
+
+        <!-- 6. Dual-Channel Solvers -> DPF Router (正交直角彎折路徑 r=8, Accent) -->
+        <path d="M 460,344 V 396 Q 460,404 452,404 H 338 Q 330,404 330,412 V 464"
+              fill="none" stroke="#eb6c36" stroke-width="1.2" marker-end="url(#arrow-accent)"/>
+        <rect x="352" y="398" width="76" height="12" rx="2" fill="#f5f5f5"/>
+        <text x="390" y="407" fill="#eb6c36" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">TERMINAL .RST</text>
+
+        <!-- 7. DPF Router -> Interactive Reporting (水平實線 Link) -->
+        <line x1="460" y1="504" x2="540" y2="504" stroke="#2e5aa8" stroke-width="1.2" marker-end="url(#arrow-link)"/>
+        <rect x="476" y="484" width="48" height="12" rx="2" fill="#f5f5f5"/>
+        <text x="500" y="493" fill="#2e5aa8" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">EXTRACT</text>
+
+        <!-- ──────────────────────────────────────────────────────────── -->
+        <!-- 節點 (Nodes)                                                -->
+        <!-- ──────────────────────────────────────────────────────────── -->
+
+        <g id="node-ai-client">
+          <rect x="64" y="88" width="224" height="80" rx="6" fill="#f5f5f5"/>
+          <rect x="64" y="88" width="224" height="80" rx="6" fill="rgba(79,93,117,0.06)" stroke="#7a8399" stroke-width="1"/>
+          <rect x="72" y="96" width="36" height="12" rx="2" fill="transparent" stroke="rgba(122,131,153,0.5)" stroke-width="0.8"/>
+          <text x="90" y="105" fill="#4f5d75" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">CLIENT</text>
+          <text x="176" y="132" fill="#2d3142" font-size="12" font-weight="600" text-anchor="middle">AI 代理客戶端</text>
+          <text x="176" y="150" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">Antigravity / Claude / Cursor</text>
+        </g>
+
+        <g id="node-fastmcp-gateway">
+          <rect x="388" y="88" width="224" height="80" rx="6" fill="#f5f5f5"/>
+          <rect x="388" y="88" width="224" height="80" rx="6" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1.2"/>
+          <rect x="396" y="96" width="48" height="12" rx="2" fill="transparent" stroke="rgba(235,108,54,0.5)" stroke-width="0.8"/>
+          <text x="420" y="105" fill="#eb6c36" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">GATEWAY</text>
+          <text x="500" y="132" fill="#2d3142" font-size="12" font-weight="600" text-anchor="middle">FastMCP 統一閘道</text>
+          <text x="500" y="150" fill="#eb6c36" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">Canonical Tools · as_envelope</text>
+        </g>
+
+        <g id="node-preflight-gatekeeper">
+          <rect x="712" y="88" width="224" height="80" rx="6" fill="#f5f5f5"/>
+          <rect x="712" y="88" width="224" height="80" rx="6" fill="rgba(235,108,54,0.04)" stroke="rgba(235,108,54,0.6)" stroke-width="1" stroke-dasharray="4,4"/>
+          <rect x="720" y="96" width="40" height="12" rx="2" fill="transparent" stroke="rgba(235,108,54,0.5)" stroke-width="0.8"/>
+          <text x="740" y="105" fill="#eb6c36" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">GUARD</text>
+          <text x="824" y="132" fill="#2d3142" font-size="12" font-weight="600" text-anchor="middle">前置物理安全閘門</text>
+          <text x="824" y="150" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">質量比 ≥90% · CTE/T_ref · 單位</text>
+        </g>
+
+        <g id="node-job-sandbox">
+          <rect x="712" y="264" width="224" height="80" rx="6" fill="#f5f5f5"/>
+          <rect x="712" y="264" width="224" height="80" rx="6" fill="rgba(45,49,66,0.05)" stroke="#4f5d75" stroke-width="1"/>
+          <rect x="720" y="272" width="48" height="12" rx="2" fill="transparent" stroke="rgba(79,93,117,0.4)" stroke-width="0.8"/>
+          <text x="744" y="281" fill="#4f5d75" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">SANDBOX</text>
+          <text x="824" y="308" fill="#2d3142" font-size="12" font-weight="600" text-anchor="middle">作業沙盒生命週期</text>
+          <text x="824" y="326" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">jobs/{ts}_{type} · 原始 CAD 唯讀</text>
+        </g>
+
+        <g id="node-dual-solvers">
+          <rect x="388" y="264" width="224" height="80" rx="6" fill="#f5f5f5"/>
+          <rect x="388" y="264" width="224" height="80" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+          <rect x="396" y="272" width="44" height="12" rx="2" fill="transparent" stroke="rgba(45,49,66,0.4)" stroke-width="0.8"/>
+          <text x="418" y="281" fill="#2d3142" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">SOLVER</text>
+          <text x="500" y="308" fill="#2d3142" font-size="12" font-weight="600" text-anchor="middle">雙通道求解驅動</text>
+          <text x="500" y="326" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">gRPC 連線探針 · Workbench 直通</text>
+        </g>
+
+        <g id="node-sentinel-watchdog">
+          <rect x="64" y="264" width="224" height="80" rx="6" fill="#f5f5f5"/>
+          <rect x="64" y="264" width="224" height="80" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+          <rect x="72" y="272" width="52" height="12" rx="2" fill="transparent" stroke="rgba(45,49,66,0.4)" stroke-width="0.8"/>
+          <text x="98" y="281" fill="#2d3142" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">SENTINEL</text>
+          <text x="176" y="308" fill="#2d3142" font-size="12" font-weight="600" text-anchor="middle">實時物理守護進程</text>
+          <text x="176" y="326" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">日誌解析 · 沙漏能 &gt;5% 早期熔斷</text>
+        </g>
+
+        <g id="node-dpf-router">
+          <rect x="200" y="464" width="260" height="80" rx="6" fill="#f5f5f5"/>
+          <rect x="200" y="464" width="260" height="80" rx="6" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1.2"/>
+          <rect x="208" y="472" width="48" height="12" rx="2" fill="transparent" stroke="rgba(235,108,54,0.5)" stroke-width="0.8"/>
+          <text x="232" y="481" fill="#eb6c36" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">ROUTER</text>
+          <text x="330" y="508" fill="#2d3142" font-size="12" font-weight="600" text-anchor="middle">DPF 無頭後處理路由</text>
+          <text x="330" y="526" fill="#eb6c36" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">終態隔離提取 · 隱式 .rst / 顯式日誌</text>
+        </g>
+
+        <g id="node-reporting-dashboard">
+          <rect x="540" y="464" width="260" height="80" rx="6" fill="#f5f5f5"/>
+          <rect x="540" y="464" width="260" height="80" rx="6" fill="rgba(45,49,66,0.05)" stroke="#4f5d75" stroke-width="1"/>
+          <rect x="548" y="472" width="48" height="12" rx="2" fill="transparent" stroke="rgba(79,93,117,0.4)" stroke-width="0.8"/>
+          <text x="572" y="481" fill="#4f5d75" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">REPORT</text>
+          <text x="670" y="508" fill="#2d3142" font-size="12" font-weight="600" text-anchor="middle">三位一體報告儀表板</text>
+          <text x="670" y="526" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">summary.json · overview.html · PNG</text>
+        </g>
+
+        <!-- ──────────────────────────────────────────────────────────── -->
+        <!-- 圖例 (Legend)                                                -->
+        <!-- ──────────────────────────────────────────────────────────── -->
+        <line x1="32" y1="608" x2="968" y2="608" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+        <text x="48" y="626" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.14em">LEGEND</text>
+
+        <rect x="136" y="618" width="16" height="10" rx="2" fill="rgba(235,108,54,0.12)" stroke="#eb6c36" stroke-width="1"/>
+        <text x="160" y="626" fill="#2d3142" font-size="8" font-family="'Geist', sans-serif">核心焦點節點</text>
+
+        <rect x="264" y="618" width="16" height="10" rx="2" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+        <text x="288" y="626" fill="#2d3142" font-size="8" font-family="'Geist', sans-serif">後端運算驅動</text>
+
+        <rect x="392" y="618" width="16" height="10" rx="2" fill="rgba(235,108,54,0.04)" stroke="rgba(235,108,54,0.6)" stroke-width="1" stroke-dasharray="2,2"/>
+        <text x="416" y="626" fill="#2d3142" font-size="8" font-family="'Geist', sans-serif">前置安全閘門</text>
+
+        <rect x="520" y="618" width="16" height="10" rx="2" fill="rgba(45,49,66,0.05)" stroke="#4f5d75" stroke-width="1"/>
+        <text x="544" y="626" fill="#2d3142" font-size="8" font-family="'Geist', sans-serif">沙盒狀態/產生物</text>
+
+        <line x1="664" y1="623" x2="692" y2="623" stroke="#eb6c36" stroke-width="1.2" marker-end="url(#arrow-accent)"/>
+        <text x="702" y="626" fill="#2d3142" font-size="8" font-family="'Geist', sans-serif">核心調度路徑</text>
+
+        <line x1="800" y1="623" x2="828" y2="623" stroke="#4f5d75" stroke-width="1.0" stroke-dasharray="3,2" marker-end="url(#arrow)"/>
+        <text x="838" y="626" fill="#2d3142" font-size="8" font-family="'Geist', sans-serif">非同步監控串流</text>
+      </svg>
+    </div>
+
+    <!-- ── 摘要卡片群 ─────────────────────────────────────────────── -->
+    <div class="cards-grid">
+      <div class="card">
+        <p class="card-eyebrow">TIER 1 · GATEWAY &amp; SAFETY</p>
+        <div class="card-header">
+          <span class="card-dot coral"></span>
+          <h3>介面規範與前置檢查</h3>
+        </div>
+        <p>在求解前檢查關鍵物理量，避免無效運算或數值發散：</p>
+        <ul>
+          <li><strong>回傳格式統一</strong>：工具層一律回傳字典結構（包含 <code>ok</code> 欄位），方便程式化斷言。</li>
+          <li><strong>物理門檻防護</strong>：三向有效模態質量比需達 90%，確認單位制與割線 CTE。</li>
+          <li><strong>自愈引導</strong>：檢查未通過時退回請求，並附上具體修改方向。</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <p class="card-eyebrow">TIER 2 · EXECUTION &amp; SENTINEL</p>
+        <div class="card-header">
+          <span class="card-dot ink"></span>
+          <h3>沙盒隔離與運算監控</h3>
+        </div>
+        <p>隔離每次模擬的輸入與輸出檔案，維護連線穩定：</p>
+        <ul>
+          <li><strong>獨立沙盒目錄</strong>：每次計算建立獨立 <code>jobs/{timestamp}_{type}/</code> 資料夾，原始 CAD 設為唯讀。</li>
+          <li><strong>連線逾時處理</strong>：檢測 gRPC 連線狀態，調用逾時即主動剔除異常連線。</li>
+          <li><strong>進度監看</strong>：背景讀取求解日誌，當沙漏能超過 5% 時主動中止，節省運算時間。</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <p class="card-eyebrow">TIER 3 · DPF &amp; SSOT SKILLS</p>
+        <div class="card-header">
+          <span class="card-dot link"></span>
+          <h3>後處理提取與技能共用</h3>
+        </div>
+        <p>待計算完成後再讀取結果，並共用技能手冊：</p>
+        <ul>
+          <li><strong>避免檔案鎖衝突</strong>：求解器確認完成後，複製 <code>.rst</code> 至沙盒再交由 DPF 提取雲圖。</li>
+          <li><strong>標準成果輸出</strong>：自動整理 <code>summary.json</code> 關鍵數值、白底雲圖與 <code>overview.html</code> 報告。</li>
+          <li><strong>目錄連接點共用</strong>：專案以 <code>SKILLs/</code> 為主，透過 NTFS Junction 映射至各 IDE 目錄。</li>
+        </ul>
+      </div>
+    </div>
+
+    <footer>
+      <span>ANSYS UNIFIED MCP · ARCHITECTURE SPECIFICATION 2026</span>
+      <span>EDITORIAL PALETTE · TYPE-ARCHITECTURE · BALANCED DETAIL</span>
+    </footer>
+  </div>
+</body>
+</html>
