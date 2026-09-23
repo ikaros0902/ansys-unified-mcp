@@ -387,6 +387,132 @@ class TestConcreteDriversPrepareAndExtract:
         with pytest.raises(SolverDriverError):
             driver.build_command(fake_script)
 
+    @staticmethod
+    def _write_icepak_config(job_dir: Path, ambient_c: float, power_w: float) -> None:
+        """Write a minimal Icepak job config so extract_artifacts can read ambient/power."""
+        inputs_dir = job_dir / "inputs"
+        inputs_dir.mkdir(parents=True, exist_ok=True)
+        (inputs_dir / "job_config.json").write_text(
+            json.dumps({"ambient_temperature_c": ambient_c, "chip_power_w": power_w}),
+            encoding="utf-8",
+        )
+
+    def test_icepak_real_solver_uses_parsed_log_temperature(
+        self, sandbox: JobSandbox, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """真實求解器存在時，max_temp_c 須取自求解器日誌的 Max_T=，而非經驗公式。"""
+        driver = IcepakDriver()
+        job_dir = getattr(sandbox, "root_dir", getattr(sandbox, "job_dir", None))
+        monkeypatch.setattr(driver, "is_available", lambda: True)
+
+        ambient_c, power_w = 25.0, 65.0
+        self._write_icepak_config(job_dir, ambient_c, power_w)
+
+        log_file = driver.get_log_file_path(job_dir)
+        log_file.parent.mkdir(parents=True, exist_ok=True)
+        log_file.write_text(
+            "ANSYS Icepak Thermal Solver Initialized\n"
+            "ITERATION [1/20] Continuity=1.2e-4 Energy=8.5e-6 Max_T=41.20 C\n"
+            "ITERATION [20/20] Continuity=3.1e-5 Energy=4.4e-7 Max_T=73.65 C\n"
+            "Icepak Solution Converged.\n",
+            encoding="utf-8",
+        )
+
+        results = driver.extract_artifacts(job_dir)
+
+        empirical = round(ambient_c + power_w * 1.55, 1)
+        assert results["is_synthetic"] is False
+        assert results["temperature_source"] == "solver_log"
+        # Last Max_T= in the log wins, and it must differ from the empirical formula.
+        assert results["max_temperature_c"] == pytest.approx(73.7, abs=1e-6)
+        assert results["max_temperature_c"] != empirical
+
+    def test_icepak_real_solver_falls_back_when_log_unparseable(
+        self, sandbox: JobSandbox, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """真實求解器日誌無可解析 Max_T= 時，須優雅回退至經驗公式且不拋出例外。"""
+        driver = IcepakDriver()
+        job_dir = getattr(sandbox, "root_dir", getattr(sandbox, "job_dir", None))
+        monkeypatch.setattr(driver, "is_available", lambda: True)
+
+        ambient_c, power_w = 30.0, 40.0
+        self._write_icepak_config(job_dir, ambient_c, power_w)
+
+        log_file = driver.get_log_file_path(job_dir)
+        log_file.parent.mkdir(parents=True, exist_ok=True)
+        log_file.write_text(
+            "ANSYS Icepak Thermal Solver Initialized\n"
+            "ITERATION [3/20] Continuity=1.2e-4 Energy=8.5e-6 Max_T=NOT_A_NUMBER\n"
+            "Solver aborted before writing temperature summary.\n",
+            encoding="utf-8",
+        )
+
+        results = driver.extract_artifacts(job_dir)
+
+        assert results["is_synthetic"] is False
+        assert results["temperature_source"] == "empirical_correlation"
+        assert results["max_temperature_c"] == pytest.approx(round(ambient_c + power_w * 1.55, 1))
+
+    def test_icepak_real_solver_falls_back_when_log_missing(
+        self, sandbox: JobSandbox, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """真實求解器尚未產出日誌檔時，須回退至經驗公式。"""
+        driver = IcepakDriver()
+        job_dir = getattr(sandbox, "root_dir", getattr(sandbox, "job_dir", None))
+        monkeypatch.setattr(driver, "is_available", lambda: True)
+
+        ambient_c, power_w = 22.0, 55.0
+        self._write_icepak_config(job_dir, ambient_c, power_w)
+        assert not driver.get_log_file_path(job_dir).exists()
+
+        results = driver.extract_artifacts(job_dir)
+
+        assert results["temperature_source"] == "empirical_correlation"
+        assert results["max_temperature_c"] == pytest.approx(round(ambient_c + power_w * 1.55, 1))
+
+    def test_icepak_synthetic_mode_ignores_log_and_uses_formula(self, sandbox: JobSandbox) -> None:
+        """Synthetic 模式即使日誌含 Max_T=，仍須沿用經驗公式（合成資料既有行為）。"""
+        driver = IcepakDriver()
+        job_dir = getattr(sandbox, "root_dir", getattr(sandbox, "job_dir", None))
+        assert driver.is_available() is False
+
+        ambient_c, power_w = 25.0, 45.0
+        self._write_icepak_config(job_dir, ambient_c, power_w)
+        driver.prepare_job(
+            job_dir,
+            {"ambient_temperature_c": ambient_c, "chip_power_w": power_w, "allow_synthetic": True},
+        )
+
+        log_file = driver.get_log_file_path(job_dir)
+        log_file.parent.mkdir(parents=True, exist_ok=True)
+        log_file.write_text(
+            "ITERATION [20/20] Continuity=1.0e-5 Energy=1.0e-7 Max_T=999.00 C\n",
+            encoding="utf-8",
+        )
+
+        results = driver.extract_artifacts(job_dir)
+
+        assert results["is_synthetic"] is True
+        assert results["temperature_source"] == "empirical_correlation"
+        assert results["max_temperature_c"] == pytest.approx(round(ambient_c + power_w * 1.55, 1))
+
+    def test_icepak_parse_solver_max_temperature_returns_none_without_token(
+        self, sandbox: JobSandbox
+    ) -> None:
+        """_parse_solver_max_temperature 在日誌缺少 Max_T= 時須回傳 None，而非預設值。"""
+        driver = IcepakDriver()
+        job_dir = getattr(sandbox, "root_dir", getattr(sandbox, "job_dir", None))
+
+        assert driver._parse_solver_max_temperature(job_dir) is None
+
+        log_file = driver.get_log_file_path(job_dir)
+        log_file.parent.mkdir(parents=True, exist_ok=True)
+        log_file.write_text("ANSYS Icepak Thermal Solver Initialized\n", encoding="utf-8")
+        assert driver._parse_solver_max_temperature(job_dir) is None
+
+        log_file.write_text("ITERATION [5/20] Max_T=88.10 C\n", encoding="utf-8")
+        assert driver._parse_solver_max_temperature(job_dir) == pytest.approx(88.10)
+
 
 # ==============================================================================
 # 4. MockSolverDriver 與 FakeProcess 高保真離線模擬驅動測試

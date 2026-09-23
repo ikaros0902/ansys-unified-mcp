@@ -237,6 +237,46 @@ print("Icepak 求解完成並導出溫度場 (SYNTHETIC)。")
             "is_converged": converged,
         }
 
+    def _parse_solver_max_temperature(self, job_dir: Path) -> Optional[float]:
+        """Parse the real solver log and return the last reported ``Max_T=`` value.
+
+        Shares the ``Max_T=`` token convention with :meth:`parse_progress`, but
+        unlike that method it reports ``None`` instead of a default value when no
+        temperature can be recovered. This lets callers distinguish "solver log
+        really reported 25.0 C" from "nothing was parsed", so they can decide
+        whether a fallback is required.
+
+        Args:
+            job_dir: Job sandbox directory.
+
+        Returns:
+            The last successfully parsed maximum temperature in Celsius, or
+            ``None`` when the log is missing, unreadable, or contains no
+            parseable ``Max_T=`` token.
+        """
+        log_file = self.get_log_file_path(job_dir)
+        if not log_file.exists():
+            return None
+
+        try:
+            text = log_file.read_text(encoding="utf-8", errors="ignore")
+        except OSError as exc:
+            logger.warning(f"[{self.solver_name}] Unable to read solver log {log_file}: {exc}")
+            return None
+
+        max_t: Optional[float] = None
+        for line in text.splitlines():
+            if "Max_T=" not in line:
+                continue
+            try:
+                token = line.split("Max_T=")[1].split()[0]
+                max_t = float(token.rstrip("Cc").strip())
+            except (IndexError, ValueError):
+                # Malformed or truncated Max_T token: keep the last valid value.
+                continue
+
+        return max_t
+
     def extract_artifacts(self, job_dir: Path) -> Dict[str, Any]:
         """後處理產出白底溫度雲圖與溫度場數據庫檔案。"""
         artifacts_dir = job_dir / "artifacts"
@@ -254,17 +294,36 @@ print("Icepak 求解完成並導出溫度場 (SYNTHETIC)。")
 
         chip_power = float(config.get("chip_power_w", 45.0))
         ambient_temp = float(config.get("ambient_temperature_c", 25.0))
-        max_temp_c = round(ambient_temp + chip_power * 1.55, 1)
         is_synthetic = not self.is_available()
+
+        # Temperature resolution policy:
+        # - Real solver present: trust the solved Max_T= value parsed from the solver log.
+        # - Synthetic mode, or solver log without a parseable Max_T=: fall back to the
+        #   empirical correlation so downstream artifacts still receive a usable value.
+        max_temp_c = round(ambient_temp + chip_power * 1.55, 1)
+        temperature_source = "empirical_correlation"
+        if not is_synthetic:
+            parsed_max_t = self._parse_solver_max_temperature(job_dir)
+            if parsed_max_t is not None:
+                max_temp_c = round(parsed_max_t, 1)
+                temperature_source = "solver_log"
+            else:
+                logger.warning(
+                    f"[{self.solver_name}] No parseable Max_T= found in solver log; "
+                    "falling back to empirical correlation for max temperature."
+                )
 
         # 1. 產生標準白底溫度場雲圖
         temp_png = images_dir / "thermal_temperature_contour.png"
+        # A parsed solver temperature is external data and may sit below ambient,
+        # so normalize the contour range to keep min_val <= max_val.
+        contour_min = min(ambient_temp, max_temp_c)
         generate_white_contour_png(
             output_path=temp_png,
             title=f"ANSYS Icepak - Steady Thermal Temperature Distribution (T_max={max_temp_c:.1f} °C)",
             metric_name="Temperature",
             unit="°C",
-            min_val=ambient_temp,
+            min_val=contour_min,
             max_val=max_temp_c,
             contour_type="thermal",
         )
@@ -324,6 +383,7 @@ print("Icepak 求解完成並導出溫度場 (SYNTHETIC)。")
             "metrics": metrics.model_dump(),
             "verdict": verdict.value,
             "max_temperature_c": max_temp_c,
+            "temperature_source": temperature_source,
             "artifacts": artifact_dict,
             "is_synthetic": is_synthetic,
             "mock_reason": mock_reason,

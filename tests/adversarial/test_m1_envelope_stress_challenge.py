@@ -28,10 +28,9 @@ from ansys_unified_mcp.tools.mechanical import _safe_json_response, _is_error_ou
 
 # 歷史漏洞探查測試：此檔案用於在修復前證明 14 處漏洞存在。
 # 漏洞已於 M1 全數修復完畢，現由 test_final_stress_harness.py 擔任驗收守護。
-pytestmark = pytest.mark.xfail(
-    reason="Historic vulnerability probe: vulnerabilities proved here have been resolved and are verified in test_final_stress_harness.py",
-    strict=False,
-)
+# 因此 Tier 1 (TestSafeJsonResponseUnitStress) 的防禦斷言現已實際通過，
+# 改為正式守門測試（不再標記 xfail）；僅 Tier 2 / Tier 3 兩個「證明漏洞存在」
+# 的探查類別維持 xfail（其斷言預期漏洞仍在，修復後必然失敗）。
 
 
 def run_async(coro):
@@ -292,6 +291,11 @@ class TestSafeJsonResponseUnitStress:
 # Tier 2: Vulnerability Hunting Probes (Empirical Proof of Flaws)
 # ===========================================================================
 
+@pytest.mark.xfail(
+    reason="Historic vulnerability probe: these assertions expect the pre-M1 false-positive behaviour, "
+           "which has since been fixed. Regression cover now lives in test_final_stress_harness.py.",
+    strict=False,
+)
 class TestAdversarialVulnerabilityProbes:
     """Targeted adversarial scenarios demonstrating concrete breakthroughs and false positives."""
 
@@ -359,6 +363,11 @@ class TestAdversarialVulnerabilityProbes:
 # Tier 3: All 39 Tools Adversarial Injection Analysis
 # ===========================================================================
 
+@pytest.mark.xfail(
+    reason="Historic vulnerability probe: these assertions expect the pre-M1 14 false-positive tool entry points, "
+           "which have since been fixed. Regression cover now lives in test_final_stress_harness.py.",
+    strict=False,
+)
 class TestAll39MechanicalToolsAdversarialStress:
     """Stress testing all 39 mechanical tools when controller is online but run_script returns crash/garbage."""
 
