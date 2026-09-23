@@ -5,20 +5,7 @@
 責任歸屬：Worker Sync M3
 依據規範：林明志標準架構與雙軌制註解規範。
 
-受控技能清單：
-  1. ansys-fluent
-  2. ansys-mechanical
-  3. ansys-lsdyna
-  4. ansys-optislang
-  5. ansys-geometry-modeling
-  6. ansys-spaceclaim-modeling
-  7. ansys-parametric-study
-  8. ansys-submodeling-dpf
-  9. pcb-warpage-analysis
-  10. ansys-mechanical-multiphysics
-  11. ansys-lsdyna-explicit
-  12. ansys-optislang-optimization
-  13. shock-analysis-workflow
+受控技能清單：動態掃描 SKILLs/ 下所有含 SKILL.md 的子目錄（見 discover_controlled_skills）。
 """
 
 import argparse
@@ -36,22 +23,30 @@ if hasattr(sys.stdout, "reconfigure"):
 if hasattr(sys.stderr, "reconfigure"):
     sys.stderr.reconfigure(encoding="utf-8")
 
-# 預設受控技能目錄清單
-CONTROLLED_SKILLS = [
-    "ansys-fluent",
-    "ansys-mechanical",
-    "ansys-lsdyna",
-    "ansys-optislang",
-    "ansys-geometry-modeling",
-    "ansys-spaceclaim-modeling",
-    "ansys-parametric-study",
-    "ansys-submodeling-dpf",
-    "pcb-warpage-analysis",
-    "ansys-mechanical-multiphysics",
-    "ansys-lsdyna-explicit",
-    "ansys-optislang-optimization",
-    "shock-analysis-workflow",
-]
+
+def discover_controlled_skills(skills_root: str) -> List[str]:
+    """
+    動態掃描指定根目錄下所有含 SKILL.md 的子目錄，作為受控技能清單。
+    確保 SKILLs/（唯一真實來源）新增技能時，同步腳本自動涵蓋，不需手動維護清單。
+    """
+    discovered = []
+    if not os.path.isdir(skills_root):
+        return discovered
+    for entry in sorted(os.listdir(skills_root)):
+        entry_path = os.path.join(skills_root, entry)
+        if not os.path.isdir(entry_path):
+            continue
+        if entry.startswith(".") or entry.startswith("__"):
+            continue
+        if os.path.isfile(os.path.join(entry_path, "SKILL.md")):
+            discovered.append(entry)
+    return discovered
+
+
+# 預設受控技能目錄清單：動態掃描 SKILLs/ 根目錄取得
+CONTROLLED_SKILLS = discover_controlled_skills(
+    str(Path(__file__).resolve().parents[1] / "SKILLs")
+)
 
 # 忽略同步之目錄與副檔名
 IGNORED_DIRS = {"__pycache__", ".git", ".idea", ".vscode"}
@@ -216,15 +211,10 @@ class BidirectionalSyncEngine:
 
             # 3. 僅存在於全域端
             elif g_meta and not p_meta:
-                # 若為受控技能且全域端檔案為過時舊版手冊，自全域端清理以鏡像專案端最新受控代碼
-                if skill_name in {"ansys-lsdyna", "ansys-optislang"}:
-                    self.log(f"[*] 檔案 {rel} 為全域端過時歷史檔案，自全域端清理以鏡像專案端架構")
-                    self.remove_file(g_meta["abs_path"])
-                else:
-                    # 全域端新增檔案同步回專案端
-                    dst = os.path.join(p_dir, rel.replace("/", os.sep))
-                    self.log(f"[*] 檔案 {rel} 僅存在於全域端，同步至專案端")
-                    self.copy_file(g_meta["abs_path"], dst)
+                # SKILLs/ 為唯一真實來源（Single Source of Truth）：
+                # 全域端獨有檔案視為過時孤立檔案，一律清理以確保 1:1 鏡像。
+                self.log(f"[*] 檔案 {rel} 僅存在於全域端，非受控來源之孤立檔案，自全域端清理")
+                self.remove_file(g_meta["abs_path"])
 
         # 清理可能產生的空目錄
         self.clean_empty_dirs(p_dir)

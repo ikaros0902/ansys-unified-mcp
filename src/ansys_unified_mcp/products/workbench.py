@@ -24,12 +24,18 @@ path.
 
 from __future__ import annotations
 
+import time
 from typing import Optional
 
+from ansys_unified_mcp.core.script_guard import check_script
 from ansys_unified_mcp.core.sessions import registry
 from ansys_unified_mcp.core.timeout import BlockingCallTimeout, run_with_timeout
 
 PRODUCT = "workbench"
+
+# Module-level probe cache and TTL (shared with controller class)
+_PROBE_CACHE: dict[str, float] = {}
+_PROBE_TTL = 10.0
 
 # Default budget for a single run_script()/run_script_file() call (see
 # core/timeout.py caveat: this bounds the caller's wait, not the server call).
@@ -39,8 +45,30 @@ DEFAULT_SCRIPT_TIMEOUT = 60.0
 class WorkbenchController:
     """Owns Workbench (PyWorkbench) client sessions via the shared SessionRegistry."""
 
+    _PROBE_CACHE = _PROBE_CACHE
+    _PROBE_TTL = _PROBE_TTL
+
+    def _probe_session(self, client) -> bool:
+        """Lightweight liveness check, cached for ``_PROBE_TTL`` seconds per client.
+
+        Mirrors ``MechanicalController._probe_session``: a cheap no-op journal
+        call (``"pass"``) surfaces a dead/unresponsive gRPC channel without
+        paying the cost on every single tool invocation.
+        """
+        key = str(id(client))
+        now = time.monotonic()
+        if key in self._PROBE_CACHE and (now - self._PROBE_CACHE[key]) < self._PROBE_TTL:
+            return True
+        try:
+            client.run_script_string("pass")
+            self._PROBE_CACHE[key] = now
+            return True
+        except Exception:
+            self._PROBE_CACHE.pop(key, None)
+            return False
+
     def _client(self, key: Optional[str] = None):
-        return registry.get(PRODUCT, key)
+        return registry.get_live(PRODUCT, key, probe_fn=self._probe_session)
 
     def launch(
         self,
@@ -120,6 +148,10 @@ class WorkbenchController:
         thread (see core/timeout.py) since the underlying call has no native
         timeout.
         """
+        is_safe, warnings = check_script(script, context="workbench.run_script")
+        if not is_safe:
+            return "Error: Script blocked by security guard: " + "; ".join(warnings)
+
         client = self._client(key)
         if client is None:
             return "Error: Not connected to Workbench."
@@ -128,7 +160,12 @@ class WorkbenchController:
                 client.run_script_string, script, log_level=log_level, timeout=timeout
             )
         except BlockingCallTimeout as exc:
-            return "Error: " + str(exc)
+            target_key = key or registry.current_key(PRODUCT)
+            registry.drop(PRODUCT, target_key)
+            self._PROBE_CACHE.pop(str(id(client)), None)
+            if target_key:
+                self._PROBE_CACHE.pop(str(target_key), None)
+            return "Error: " + str(exc) + " (Workbench session timed out and was evicted from registry)"
         except Exception as exc:  # noqa: BLE001
             return "Error: " + str(exc)
         return str(result) if result is not None else "(done)"
@@ -144,6 +181,19 @@ class WorkbenchController:
 
         Bounded by ``timeout`` seconds via a worker thread (see core/timeout.py).
         """
+        file_content = script_file_name
+        try:
+            from pathlib import Path
+            p = Path(script_file_name)
+            if p.exists() and p.is_file():
+                file_content = p.read_text(encoding="utf-8")
+        except Exception:
+            pass
+
+        is_safe, warnings = check_script(file_content, context="workbench.run_script_file")
+        if not is_safe:
+            return "Error: Script blocked by security guard: " + "; ".join(warnings)
+
         client = self._client(key)
         if client is None:
             return "Error: Not connected to Workbench."
@@ -152,7 +202,12 @@ class WorkbenchController:
                 client.run_script_file, script_file_name, log_level=log_level, timeout=timeout
             )
         except BlockingCallTimeout as exc:
-            return "Error: " + str(exc)
+            target_key = key or registry.current_key(PRODUCT)
+            registry.drop(PRODUCT, target_key)
+            self._PROBE_CACHE.pop(str(id(client)), None)
+            if target_key:
+                self._PROBE_CACHE.pop(str(target_key), None)
+            return "Error: " + str(exc) + " (Workbench session timed out and was evicted from registry)"
         except Exception as exc:  # noqa: BLE001
             return "Error: " + str(exc)
         return str(result) if result is not None else "(done)"
@@ -203,7 +258,7 @@ class WorkbenchController:
         return {"ok": True, "message": "Disconnected (Workbench server left running)."}
 
     def is_connected(self, key: Optional[str] = None) -> bool:
-        return registry.get(PRODUCT, key) is not None
+        return self._client(key) is not None
 
     def status(self) -> dict:
         keys = registry.keys(PRODUCT)

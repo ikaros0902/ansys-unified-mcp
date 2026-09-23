@@ -25,6 +25,13 @@ def run_async(coro):
     return asyncio.run(coro)
 
 
+@pytest.fixture(autouse=True)
+def _expose_aliases_for_symmetry_check(monkeypatch):
+    """R4 工具面剪枝後 alias 預設不暴露；本套件專驗相容模式下的別名對稱性，故顯式開啟。"""
+    monkeypatch.delenv("ANSYS_MCP_PRUNE_ALIASES", raising=False)
+    monkeypatch.setenv("ANSYS_MCP_EXPOSE_ALIASES", "1")
+
+
 # Complete list of 39 (canonical_name, legacy_alias, sample_kwargs)
 MECHANICAL_39_TOOL_SPECS = [
     ("mechanical_list_instances", "list_instances", {}),

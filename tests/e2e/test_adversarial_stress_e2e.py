@@ -266,18 +266,24 @@ class TestAsyncStateMachineAndAbortResilience:
             assert resp["ok"]
             job_id = resp["job_id"]
 
-            # 等待進程樹在作業系統中繁衍完成
-            time.sleep(1.2)
-
+            # 檢索子進程樹 PID 列表（輪詢等待 worker 執行緒與子進程啟動，避免 Windows 排程延遲）
             record = queue._jobs.get(job_id)
             assert record is not None
+            for _ in range(50):
+                if record.process is not None:
+                    break
+                time.sleep(0.1)
             assert record.process is not None
             parent_pid = record.process.pid
             assert psutil.pid_exists(parent_pid), "父進程未正常啟動"
 
-            # 檢索子進程樹 PID 列表
             parent_proc = psutil.Process(parent_pid)
-            children_pids = [c.pid for c in parent_proc.children(recursive=True)]
+            children_pids = []
+            for _ in range(50):
+                children_pids = [c.pid for c in parent_proc.children(recursive=True)]
+                if children_pids:
+                    break
+                time.sleep(0.1)
             assert len(children_pids) >= 1, "未偵測到繁衍之子進程"
 
             # 執行優雅終止

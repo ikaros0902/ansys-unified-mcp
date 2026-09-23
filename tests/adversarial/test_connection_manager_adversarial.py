@@ -335,18 +335,18 @@ def test_concurrent_get_registered_instances_file_race(tmp_path):
 
     def worker():
         try:
-            with patch("psutil.pid_exists", return_value=False):
-                # All PIDs dead, all threads try to unlink
-                res = cm.get_registered_instances(registry_dir=reg_dir)
-                assert isinstance(res, list)
+            # All PIDs dead, all threads try to unlink
+            res = cm.get_registered_instances(registry_dir=reg_dir)
+            assert isinstance(res, list)
         except Exception as e:
             errors.append(e)
 
-    threads = [threading.Thread(target=worker) for _ in range(10)]
-    for t in threads:
-        t.start()
-    for t in threads:
-        t.join()
+    with patch("psutil.pid_exists", return_value=False):
+        threads = [threading.Thread(target=worker) for _ in range(10)]
+        for t in threads:
+            t.start()
+        for t in threads:
+            t.join()
 
     assert errors == [], f"Concurrent race errors: {errors}"
     # All dead files should have been removed

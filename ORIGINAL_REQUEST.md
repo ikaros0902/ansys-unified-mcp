@@ -230,5 +230,50 @@ R4. 分階段落地優化里程碑計畫 (Phased Implementation Roadmap)
 - 建立現行模組 vs 官方 Tutorial 範例庫對照矩陣（至少 8 個代表性經典案例）。
 - 產出 Phase 1 ~ 3 之清晰里程碑計畫，包含目標成果、輸入/輸出規格與驗收指標。
 
+## 2026-09-23T05:11:28Z
+
+# Teamwork Project Prompt — Launched
+
+> Requested team: Full team (Orchestrator, Lead Developer, Gatekeeper/Reviewer)
+
+ANSYS Unified MCP 架構演進與穩固性重塑工程：落實 2026 PyAnsys 官方戰略，修補物理數據真實性，消除雙軌與三重維護債，實施健全的連線健康探測與無頭結果萃取。
+
+Working directory: d:/Ikaros/ANSYS-unified-MCP
+Integrity mode: development
+
+## Requirements
+
+### R1. 物理數據真實性修復 (Icepak Driver Hardening)
+- 徹底消除 `src/ansys_unified_mcp/drivers/icepak_driver.py` 在未安裝 `icepak.exe` 時靜默生成固定 85.4°C 虛構 CSV (`temperature_field.csv`) 的偽造行為。
+- 當無實體求解器授權或二進位檔時，必須明確拋出錯誤或在回傳信封中顯式標記 `is_synthetic: True`，禁止無提示的偽造數值輸出污染下游分析。
+
+### R2. Skills 目錄收斂與去三重化 (Skills De-duplication)
+- 將專案根目錄中重複存在的 `SKILLs/`、`.kiro/skills/`、`.cline/skills/` 三套逐字完全相同的目錄結構收斂為單一權威來源 (`SKILLs/`)。
+- 透過符號連結 (Symlink) 或相容機制維持工具相容性，徹底杜絕三倍維護債。
+
+### R3. PyWorkbench 連線控制器健全性增強 (Workbench Controller Robustness)
+- 在 `src/ansys_unified_mcp/products/workbench.py` (`WorkbenchController`) 實裝連線健康探測機制 (`_probe_session`)，對齊 `MechanicalController` 的心跳檢驗。
+- 修復 `run_with_timeout` 逾時後的 Session 中毒問題：當底層 gRPC 調用逾時，必須主動將該 Session 從 `SessionRegistry` 中作廢剔除，防止死鎖線程污染後續調用。
+- 保留舊版 File-Bridge 作為環境變數開關 (`ANSYS_MCP_ENABLE_PYWORKBENCH`) 的 Fallback，待實機冒煙測試完全驗收。
+
+### R4. MCP 工具鏈去別名化與瘦身 (Tool Surface Pruning)
+- 清理 `src/ansys_unified_mcp/shared.py` 中自動註冊的 `[DEPRECATED ALIAS for ...]` 別名機制，將客戶端看到的工具總數自虛胖的 114 個收斂至約 18 個核心 Canonical 原語。
+- 保留 `mechanical_run_script` 與 `workbench_run_script_live` 通用直通能力，並嚴格保留高階工況（落摔、衝擊、隨機振動、熱翹曲）對 `core/script_guard.py` 與 `gatekeeper/rules/*` 物理邊界的強制前檢。
+
+### R5. DPF 綠地模組整合 (DPF Sandbox Reader)
+- 引入 `ansys-dpf-core`，建立獨立無頭後處理管線。
+- 嚴格落實「終態 (TERMINAL) 後 + Sandbox 副本」隔離原則：僅在求解器運算結束後，針對沙盒複製的 `.rst`檔進行提取，徹底避免求解器與 DPF 爭搶檔案鎖。
+- 明確區隔分析類型：隱式結構與隨機振動走 DPF `.rst` 管線；LS-DYNA 顯式落摔走 `d3plot`/`glstat` 專用解析管線。
+
+## Acceptance Criteria
+
+### 程式碼與測試質量門禁
+- [ ] 執行 `pytest tests/` 全套測試，0 失敗（維持現有 100% 通過基準）。
+- [ ] 新增 `tests/unit/test_workbench_health_probe.py` 單元測試，驗證 `WorkbenchController` 於連線中斷及逾時情境下能正確探測並作廢中毒 Session。
+- [ ] `icepak_driver.py` 在無求解器環境下執行時，斷言其回傳明確報錯或標記 `is_synthetic: True`，且全儲存庫無硬編碼 85.4°C 靜默偽造邏輯。
+- [ ] 專案中僅保留 `SKILLs/` 為單一實體目錄，其餘 `.kiro/skills` 與 `.cline/skills` 透過相容機制鏈接，無重複維護檔案。
+- [ ] MCP 伺服器啟動時，暴露之 Canonical 工具清單簡潔無重複 Deprecated 別名。
+
+
 
 

@@ -58,7 +58,6 @@ def build_knowledge_base():
     # Gather all markdown files
     scan_paths = [
         (REPO_ROOT / "SKILLs", "skill"),
-        (REPO_ROOT / ".kiro" / "skills", "skill"),
         (REPO_ROOT / "steering" / "reference", "architecture"),
         (REPO_ROOT / "Documentation_md", "manual"),
     ]
