@@ -30,7 +30,7 @@ class FakeWorkbenchClient:
 
     def run_script_string(self, script, log_level="error"):
         self.run_script_string_calls.append((script, log_level))
-        if self.sleep_seconds:
+        if self.sleep_seconds and script != "pass":
             time.sleep(self.sleep_seconds)
         return f"result:{script}"
 
@@ -61,9 +61,11 @@ class _FakeWorkbenchCoreModule:
 def controller():
     for key in list(registry.keys(PRODUCT)):
         registry.drop(PRODUCT, key)
+    WorkbenchController._PROBE_CACHE.clear()
     yield WorkbenchController()
     for key in list(registry.keys(PRODUCT)):
         registry.drop(PRODUCT, key)
+    WorkbenchController._PROBE_CACHE.clear()
 
 
 @pytest.fixture
@@ -143,11 +145,11 @@ def test_run_script_success_via_registry(controller):
 
     out = controller.run_script("wb_script_result = 42", key="launched")
     assert out == "result:wb_script_result = 42"
-    assert fake.run_script_string_calls == [("wb_script_result = 42", "error")]
+    assert ("wb_script_result = 42", "error") in fake.run_script_string_calls
 
 
-def test_run_script_timeout_returns_error_promptly(controller):
-    fake = FakeWorkbenchClient(sleep_seconds=0.3)
+def test_run_script_timeout_evicts_session_from_registry(controller):
+    fake = FakeWorkbenchClient(sleep_seconds=0.5)
     registry.put(PRODUCT, "launched", fake)
 
     started = time.monotonic()
@@ -156,7 +158,72 @@ def test_run_script_timeout_returns_error_promptly(controller):
 
     assert out.startswith("Error:")
     assert "timeout" in out.lower()
-    assert elapsed < 0.3
+    assert "evicted from registry" in out
+    assert elapsed < 0.5
+    # The stale session must be dropped so a subsequent call reports "not connected"
+    # instead of reusing a session bound to a hung worker thread.
+    assert registry.get(PRODUCT, "launched") is None
+    assert controller.is_connected(key="launched") is False
+
+
+def test_run_script_file_timeout_evicts_session_from_registry(controller):
+    class _SlowFileClient(FakeWorkbenchClient):
+        def run_script_file(self, script_file_name, log_level="error"):
+            time.sleep(0.5)
+            return f"fileresult:{script_file_name}"
+
+    fake = _SlowFileClient()
+    registry.put(PRODUCT, "launched", fake)
+
+    started = time.monotonic()
+    out = controller.run_script_file("slow.wbjn", key="launched", timeout=0.05)
+    elapsed = time.monotonic() - started
+
+    assert out.startswith("Error:")
+    assert "timeout" in out.lower()
+    assert "evicted from registry" in out
+    assert elapsed < 0.5
+    assert registry.get(PRODUCT, "launched") is None
+
+
+def test_probe_session_reports_dead_client_and_evicts_it(controller):
+    """A client whose run_script_string() always raises must be treated as dead."""
+
+    class _DeadClient(FakeWorkbenchClient):
+        def run_script_string(self, script, log_level="error"):
+            raise ConnectionError("simulated: peer closed the connection")
+
+    fake = _DeadClient()
+    registry.put(PRODUCT, "launched", fake)
+
+    # _client() (used by run_script/run_script_file/etc.) goes through
+    # registry.get_live() with the probe, so a dead client must not be handed
+    # back to a caller, and must be evicted from the registry as a side effect.
+    assert controller._client(key="launched") is None
+    assert registry.get(PRODUCT, "launched") is None
+
+
+def test_probe_session_caches_healthy_result_within_ttl(controller):
+    """A repeated probe within the TTL window must not re-invoke run_script_string."""
+    fake = FakeWorkbenchClient()
+
+    assert controller._probe_session(fake) is True
+    assert controller._probe_session(fake) is True
+    assert fake.run_script_string_calls == [("pass", "error")]
+
+
+def test_run_script_reports_not_connected_when_probe_fails(controller):
+    """run_script() must route through the same dead-session detection as _client()."""
+
+    class _DeadClient(FakeWorkbenchClient):
+        def run_script_string(self, script, log_level="error"):
+            raise ConnectionError("simulated: peer closed the connection")
+
+    fake = _DeadClient()
+    registry.put(PRODUCT, "launched", fake)
+
+    assert controller.run_script("print(1)", key="launched") == "Error: Not connected to Workbench."
+    assert registry.get(PRODUCT, "launched") is None
 
 
 def test_run_script_file_success(controller):

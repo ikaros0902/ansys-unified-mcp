@@ -323,9 +323,69 @@ class TestConcreteDriversPrepareAndExtract:
 
         # 3. Icepak
         icepak = IcepakDriver()
-        ice_script = icepak.prepare_job(job_dir, {"ambient_temperature_c": 25.0, "power_w": 65.0})
+        ice_script = icepak.prepare_job(
+            job_dir, {"ambient_temperature_c": 25.0, "power_w": 65.0, "allow_synthetic": True}
+        )
         assert ice_script.exists()
         assert "Icepak" in ice_script.read_text(encoding="utf-8")
+
+    def test_icepak_prepare_job_raises_without_allow_synthetic(self, sandbox: JobSandbox) -> None:
+        """本機無真實 Icepak 安裝、未授權 allow_synthetic 時，prepare_job 必須拋出 SolverDriverError。"""
+        driver = IcepakDriver()
+        job_dir = getattr(sandbox, "root_dir", getattr(sandbox, "job_dir", None))
+        assert driver.is_available() is False
+
+        with pytest.raises(SolverDriverError):
+            driver.prepare_job(job_dir, {"ambient_temperature_c": 25.0, "chip_power_w": 65.0})
+
+    def test_icepak_prepare_job_allows_synthetic_with_explicit_flag(self, sandbox: JobSandbox) -> None:
+        """明確傳入 allow_synthetic=True 時，允許生成合成腳本並附帶明確警示標記。"""
+        driver = IcepakDriver()
+        job_dir = getattr(sandbox, "root_dir", getattr(sandbox, "job_dir", None))
+
+        script_path = driver.prepare_job(
+            job_dir, {"ambient_temperature_c": 25.0, "chip_power_w": 65.0, "allow_synthetic": True}
+        )
+        assert script_path.exists()
+        content = script_path.read_text(encoding="utf-8")
+        assert "SYNTHETIC TEST DATA - DO NOT USE FOR PRODUCTION ANALYSIS" in content
+
+    def test_icepak_extract_artifacts_marks_is_synthetic_true_without_real_solver(
+        self, sandbox: JobSandbox
+    ) -> None:
+        """本機無真實 Icepak 安裝時，extract_artifacts 產出之 metadata 須標記 is_synthetic=True。"""
+        driver = IcepakDriver()
+        job_dir = getattr(sandbox, "root_dir", getattr(sandbox, "job_dir", None))
+
+        driver.prepare_job(
+            job_dir, {"ambient_temperature_c": 25.0, "chip_power_w": 65.0, "allow_synthetic": True}
+        )
+        results = driver.extract_artifacts(job_dir)
+        assert results["is_synthetic"] is True
+
+    def test_icepak_extract_artifacts_marks_is_synthetic_false_with_real_solver(
+        self, sandbox: JobSandbox, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """模擬本機已偵測到真實 Icepak 安裝時，extract_artifacts 產出之 metadata 須標記 is_synthetic=False。"""
+        driver = IcepakDriver()
+        job_dir = getattr(sandbox, "root_dir", getattr(sandbox, "job_dir", None))
+
+        monkeypatch.setattr(driver, "is_available", lambda: True)
+        driver.prepare_job(job_dir, {"ambient_temperature_c": 25.0, "chip_power_w": 65.0})
+        results = driver.extract_artifacts(job_dir)
+        assert results["is_synthetic"] is False
+
+    def test_icepak_build_command_rejects_synthetic_disguised_script(self, sandbox: JobSandbox) -> None:
+        """本機無真實 Icepak 安裝時，build_command 對非授權 synthetic 腳本必須拒絕執行。"""
+        driver = IcepakDriver()
+        job_dir = getattr(sandbox, "root_dir", getattr(sandbox, "job_dir", None))
+        workspace = job_dir / "workspace"
+        workspace.mkdir(parents=True, exist_ok=True)
+        fake_script = workspace / "not_authorized.py"
+        fake_script.write_text("print('should not run')\n", encoding="utf-8")
+
+        with pytest.raises(SolverDriverError):
+            driver.build_command(fake_script)
 
 
 # ==============================================================================

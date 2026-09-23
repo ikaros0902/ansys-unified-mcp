@@ -113,11 +113,10 @@ def build_index() -> dict:
                 "chunks": len(parts), "chars": len(cleaned),
             })
 
-        # 掃描並索引 SKILLs、.kiro/skills 與 steering/reference
+        # 掃描並索引 SKILLs 與 steering/reference
         processed_names = {d["name"] for d in cfg.API_DOCS}
         scan_paths = [
             (cfg.REPO_ROOT / "SKILLs", "skill"),
-            (cfg.REPO_ROOT / ".kiro" / "skills", "skill"),
             (cfg.REPO_ROOT / "steering" / "reference", "architecture"),
         ]
 

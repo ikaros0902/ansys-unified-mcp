@@ -877,6 +877,7 @@ def create_workbench_analysis_system(
     marker = "ANSYS_WORKBENCH_MCP_DONE"
 
     geometry_literal = repr(geometry_file)
+    model_fallback_line = "        model = None\n"
     refresh_line = "        model.Refresh()\n" if refresh_model else ""
     journal = f"""# encoding: utf-8
 import traceback
@@ -910,7 +911,7 @@ try:
         geometry.SetFile(FilePath={geometry_literal})
     try:
         model = system.GetContainer(ComponentName="Model")
-{refresh_line if refresh_model else "        model = None\n"}    except Exception:
+{refresh_line if refresh_model else model_fallback_line}    except Exception:
         model = None
     Save(FilePath={str(project_file)!r}, Overwrite=True)
     w("Analysis type: " + {analysis_key!r})

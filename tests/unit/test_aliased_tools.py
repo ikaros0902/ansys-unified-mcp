@@ -2,12 +2,19 @@
 
 import asyncio
 import json
+import pytest
 from ansys_unified_mcp.shared import mcp, aliased_tool
 import ansys_unified_mcp.tools.mechanical
 import ansys_unified_mcp.tools.mechanical_workflows
 import ansys_unified_mcp.tools.workbench
 import ansys_unified_mcp.tools.optislang
 import ansys_unified_mcp.tools.intent_tools
+
+
+@pytest.fixture(autouse=True)
+def _expose_aliases_for_testing(monkeypatch):
+    """Ensure aliases are exposed for legacy alias compatibility verification."""
+    monkeypatch.setenv("ANSYS_MCP_EXPOSE_ALIASES", "1")
 
 
 def test_aliased_tools_registered():
@@ -103,4 +110,27 @@ def test_mechanical_envelope_fixes():
 
     ok_envelope = _wrap_raw_output("Normal status")
     assert ok_envelope["ok"] is True
+
+
+def test_alias_pruning_via_env_var(monkeypatch):
+    """Verify that setting ANSYS_MCP_PRUNE_ALIASES=1 skips registering deprecated aliases."""
+    import os
+    from fastmcp import FastMCP
+    from ansys_unified_mcp.shared import aliased_tool
+
+    test_mcp = FastMCP("test-prune")
+    monkeypatch.setenv("ANSYS_MCP_PRUNE_ALIASES", "1")
+
+    # Patch global mcp in shared temporarily
+    monkeypatch.setattr("ansys_unified_mcp.shared.mcp", test_mcp)
+
+    @aliased_tool(name="canonical_tool", alias="legacy_alias")
+    def sample_func():
+        return "ok"
+
+    tools = asyncio.run(test_mcp.list_tools())
+    tool_names = [t.name for t in tools]
+    assert "canonical_tool" in tool_names
+    assert "legacy_alias" not in tool_names
+
 

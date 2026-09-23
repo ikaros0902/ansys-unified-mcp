@@ -80,6 +80,10 @@ asyncio.run(verify())
 def test_profile_routing(profile_val):
     env = os.environ.copy()
     env["ANSYS_MCP_PROFILE"] = profile_val
+    # R4 工具面剪枝後 deprecated alias 預設不暴露；本測試驗證 profile 路由是否涵蓋
+    # canonical 與 legacy alias 全集，故於相容模式下執行。
+    env["ANSYS_MCP_EXPOSE_ALIASES"] = "1"
+    env.pop("ANSYS_MCP_PRUNE_ALIASES", None)
     env["PYTHONPATH"] = str(repo_root / "src")
     res = subprocess.run(
         [python_exe, "-c", check_script],

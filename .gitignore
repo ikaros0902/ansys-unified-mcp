@@ -21,6 +21,8 @@ __pycache__/
 
 # 本機 IDE / Obsidian 設定
 .kiro/settings/
+.kiro/skills
+.cline/skills
 .obsidian/
 **/.obsidian/
 

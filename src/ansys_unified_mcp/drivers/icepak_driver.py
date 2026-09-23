@@ -60,8 +60,24 @@ class IcepakDriver(BaseSolverDriver):
 
         return False, "未偵測到 Icepak 本機安裝 (支援熱流固耦合沙盒模擬與溫度場映射模式)。"
 
+    def is_available(self) -> bool:
+        """回報本機是否已偵測到真實 Icepak 可執行檔 (不含 synthetic 後備模式)。"""
+        available, _ = self.validate_prerequisites()
+        return available
+
     def prepare_job(self, job_dir: Path, config: Dict[str, Any]) -> Path:
-        """生成 Icepak 熱求解腳本與溫度場映射定義 (icepak_batch.py)。"""
+        """生成 Icepak 熱求解腳本或（在明確授權下）合成測試數據腳本。
+
+        Args:
+            job_dir: 作業沙盒目錄
+            config: 工作流配置參數。若本機無真實 Icepak 安裝，須明確帶入
+                ``allow_synthetic=True`` 才允許生成合成 (synthetic) 測試數據；
+                否則直接拋出 SolverDriverError，防止未經授權的假數據流入生產分析。
+
+        Raises:
+            SolverDriverError: 本機無真實 Icepak 安裝且 config 未授權
+                ``allow_synthetic=True`` 時拋出。
+        """
         workspace = job_dir / "workspace"
         workspace.mkdir(parents=True, exist_ok=True)
 
@@ -69,17 +85,61 @@ class IcepakDriver(BaseSolverDriver):
         chip_power_w = float(config.get("chip_power_w", 45.0))
         convection_coeff = float(config.get("convection_coeff_w_m2k", 20.0))
 
+        if not self.is_available():
+            allow_synthetic = bool(config.get("allow_synthetic", False))
+            if not allow_synthetic:
+                raise SolverDriverError(
+                    "ANSYS Icepak 求解器未在本機偵測到安裝路徑，無法生成真實求解腳本。"
+                    "若僅需離線測試合成 (synthetic) 資料流，請明確傳入 allow_synthetic=True。"
+                )
+            logger.warning(f"[{self.solver_name}] Running in SYNTHETIC mock mode")
+            print("[WARNING] Running in SYNTHETIC mock mode")
+            script_path = workspace / "icepak_batch.py"
+            content = self._build_synthetic_script(ambient_temp_c, chip_power_w, convection_coeff)
+            script_path.write_text(content, encoding="utf-8")
+            return script_path
+
         script_path = workspace / "icepak_batch.py"
-        content = f"""# ANSYS Icepak 熱分析自動化批次腳本
+        content = self._build_real_script(ambient_temp_c, chip_power_w, convection_coeff)
+        script_path.write_text(content, encoding="utf-8")
+        return script_path
+
+    def _build_real_script(
+        self, ambient_temp_c: float, chip_power_w: float, convection_coeff: float
+    ) -> str:
+        """生成呼叫真實 Icepak 求解器的批次腳本骨架。"""
+        return f"""# ANSYS Icepak 熱分析自動化批次腳本
 # Ambient: {ambient_temp_c} C | Chip Power: {chip_power_w} W | h: {convection_coeff} W/m^2-K
-import os
 import sys
 from pathlib import Path
 
 workspace = Path(__file__).parent
 log_file = workspace / "icepak.log"
 
+# 此腳本應由真實 Icepak 求解器 (icepak.exe -batch) 執行，
+# 讀取幾何、材料與邊界條件卡並輸出真實迭代日誌與溫度場數據。
 with open(log_file, "w", encoding="utf-8") as f:
+    f.write("ANSYS Icepak Thermal Solver Initialized\\n")
+    f.write(f"Ambient Temperature: {ambient_temp_c} C, Heat Source: {chip_power_w} W\\n")
+"""
+
+    def _build_synthetic_script(
+        self, ambient_temp_c: float, chip_power_w: float, convection_coeff: float
+    ) -> str:
+        """生成僅供離線測試用的合成 (synthetic) 假數據腳本，附帶明確警示標記。"""
+        return f"""# WARNING: SYNTHETIC TEST DATA - DO NOT USE FOR PRODUCTION ANALYSIS
+# ANSYS Icepak 熱分析自動化批次腳本 (SYNTHETIC MOCK MODE)
+# Ambient: {ambient_temp_c} C | Chip Power: {chip_power_w} W | h: {convection_coeff} W/m^2-K
+import sys
+from pathlib import Path
+
+workspace = Path(__file__).parent
+log_file = workspace / "icepak.log"
+
+print("[WARNING] Running in SYNTHETIC mock mode")
+
+with open(log_file, "w", encoding="utf-8") as f:
+    f.write("# WARNING: SYNTHETIC TEST DATA - DO NOT USE FOR PRODUCTION ANALYSIS\\n")
     f.write("ANSYS Icepak Thermal Solver Initialized\\n")
     f.write(f"Ambient Temperature: {ambient_temp_c} C, Heat Source: {chip_power_w} W\\n")
     for step in range(1, 21):
@@ -88,28 +148,50 @@ with open(log_file, "w", encoding="utf-8") as f:
     f.write("Icepak Solution Converged.\\n")
     f.write("Temperature Field Exported: temperature_field.csv\\n")
 
-# 生成溫度場數據中繼檔案供熱翹曲無損讀取
+# 生成合成溫度場數據中繼檔案 (SYNTHETIC - 供離線測試熱翹曲下游讀取介面用)
 temp_csv = workspace / "temperature_field.csv"
 with open(temp_csv, "w", encoding="utf-8") as f:
+    f.write("# WARNING: SYNTHETIC TEST DATA - DO NOT USE FOR PRODUCTION ANALYSIS\\n")
     f.write("NodeID,X,Y,Z,Temperature_C\\n")
+    delta_t_max = {chip_power_w} * 1.55
     for nid in range(1, 101):
-        f.write(f"{{nid}},0.0,0.0,0.0,85.4\\n")
+        xi = ((nid - 1) % 10) * 0.005
+        yi = ((nid - 1) // 10) * 0.005
+        r_norm_sq = ((xi - 0.0225) / 0.0225) ** 2 + ((yi - 0.0225) / 0.0225) ** 2
+        decay = max(0.0, 1.0 - 0.5 * min(1.0, r_norm_sq))
+        node_temp = round({ambient_temp_c} + delta_t_max * decay, 2)
+        f.write(f"{{nid}},{{xi:.4f}},{{yi:.4f}},0.0,{{node_temp:.2f}}\\n")
 
-print("Icepak 求解完成並導出溫度場。")
+print("Icepak 求解完成並導出溫度場 (SYNTHETIC)。")
 """
-        script_path.write_text(content, encoding="utf-8")
-        return script_path
 
     def build_command(
         self,
         input_file: Path,
         extra_args: Optional[List[str]] = None,
     ) -> List[str]:
-        """組裝 Icepak 啟動命令。"""
+        """組裝 Icepak 啟動命令。
+
+        真實模式下必須使用已偵測到的 Icepak 可執行檔；若本機無真實安裝，
+        僅在腳本本身已標記為 synthetic (由 prepare_job 之 allow_synthetic
+        授權生成) 時，才允許以目前 Python 解譯器執行該合成腳本。
+        """
         if self.solver_bin:
-            cmd = [self.solver_bin, "-batch", str(input_file)]
-        else:
-            cmd = [sys.executable, str(input_file)]  # fallback to current python.exe
+            return [self.solver_bin, "-batch", str(input_file)] + (extra_args or [])
+
+        script_text = ""
+        try:
+            script_text = Path(input_file).read_text(encoding="utf-8")
+        except OSError:
+            pass
+
+        if "SYNTHETIC" not in script_text:
+            raise SolverDriverError(
+                "ANSYS Icepak 求解器未在本機偵測到安裝路徑，且指定的輸入腳本並非"
+                "已授權之 synthetic 測試腳本，拒絕以 Python 解譯器直接執行。"
+            )
+
+        cmd = [sys.executable, str(input_file)]
         if extra_args:
             cmd.extend(extra_args)
         return cmd
@@ -173,6 +255,7 @@ print("Icepak 求解完成並導出溫度場。")
         chip_power = float(config.get("chip_power_w", 45.0))
         ambient_temp = float(config.get("ambient_temperature_c", 25.0))
         max_temp_c = round(ambient_temp + chip_power * 1.55, 1)
+        is_synthetic = not self.is_available()
 
         # 1. 產生標準白底溫度場雲圖
         temp_png = images_dir / "thermal_temperature_contour.png"
@@ -188,13 +271,26 @@ print("Icepak 求解完成並導出溫度場。")
 
         # 2. 溫度場中繼導出檔
         temp_field = workspace / "temperature_field.csv"
-        if not temp_field.exists():
-            temp_field.write_text("NodeID,X,Y,Z,Temperature_C\n1,0,0,0,85.4\n", encoding="utf-8")
+        if not temp_field.exists() and is_synthetic:
+            delta_t_max = chip_power * 1.55
+            lines = [
+                "# WARNING: SYNTHETIC TEST DATA - DO NOT USE FOR PRODUCTION ANALYSIS",
+                "NodeID,X,Y,Z,Temperature_C",
+            ]
+            for nid in range(1, 101):
+                xi = ((nid - 1) % 10) * 0.005
+                yi = ((nid - 1) // 10) * 0.005
+                r_norm_sq = ((xi - 0.0225) / 0.0225) ** 2 + ((yi - 0.0225) / 0.0225) ** 2
+                decay = max(0.0, 1.0 - 0.5 * min(1.0, r_norm_sq))
+                node_temp = round(ambient_temp + delta_t_max * decay, 2)
+                lines.append(f"{nid},{xi:.4f},{yi:.4f},0.0,{node_temp:.2f}")
+            temp_field.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
         artifact_dict = {
             "temperature_contour": str(temp_png.relative_to(job_dir)),
-            "temperature_field_csv": str(temp_field.relative_to(job_dir)),
         }
+        if temp_field.exists():
+            artifact_dict["temperature_field_csv"] = str(temp_field.relative_to(job_dir))
 
         metrics = PhysicalMetrics(
             final_convergence_residual=8.5e-6,
@@ -205,6 +301,8 @@ print("Icepak 求解完成並導出溫度場。")
         if max_temp_c >= 105.0:
             failure_reasons.append(f"晶片最高結溫超標: {max_temp_c:.1f} °C >= 105.0 °C 限值")
 
+        mock_reason = "NO_ICEPAK_SOLVER_DETECTED" if is_synthetic else None
+
         summary_path = artifacts_dir / "summary.json"
         if summary_path.exists():
             try:
@@ -213,13 +311,21 @@ print("Icepak 求解完成並導出溫度場。")
                 summary_obj.verdict = verdict
                 summary_obj.failure_reasons.extend(failure_reasons)
                 summary_obj.artifacts.update(artifact_dict)
+                execution_data = summary_obj.execution.model_dump()
+                execution_data["is_synthetic"] = is_synthetic
+                if mock_reason:
+                    execution_data["mock_reason"] = mock_reason
+                summary_obj.execution = ExecutionMetadata.model_validate(execution_data)
                 summary_path.write_text(summary_obj.model_dump_json(indent=2), encoding="utf-8")
             except Exception as e:
                 logger.error(f"更新 Icepak summary.json 失敗: {e}")
 
-        return {
+        result_dict = {
             "metrics": metrics.model_dump(),
             "verdict": verdict.value,
             "max_temperature_c": max_temp_c,
             "artifacts": artifact_dict,
+            "is_synthetic": is_synthetic,
+            "mock_reason": mock_reason,
         }
+        return result_dict

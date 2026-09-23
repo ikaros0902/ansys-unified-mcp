@@ -42,6 +42,9 @@ if profile in ("all", "full", "mechanical", "structural"):
     import ansys_unified_mcp.tools.mechanical
     import ansys_unified_mcp.tools.mechanical_workflows
 
+if profile in ("all", "full", "mechanical", "structural", "dpf"):
+    import ansys_unified_mcp.tools.dpf_tools
+
 
 if profile in ("all", "full", "optislang"):
     import ansys_unified_mcp.tools.optislang
