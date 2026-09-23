@@ -41,21 +41,30 @@
 
 ## 3. 回傳信封慣例
 
-**目標規則**：所有 `@mcp.tool()` 回傳 JSON 字串，統一用 `_json(...)` 包裝，內容為固定信封：
+**規則**：所有 `@mcp.tool()` 回傳 **dict**（非 JSON 字串），統一用 `shared.as_envelope(...)` 正規化，內容為扁平信封：
 
-- 成功：`{"ok": true, ...其他欄位}`
-- 失敗：`{"ok": false, "error": "可讀的錯誤訊息"}`
+- 成功：`{"ok": True, ...其他欄位}`
+- 失敗：`{"ok": False, "error": "可讀的錯誤訊息"}`
 
-其中 `_json` 的標準實作：
+payload 直接放頂層，**不包一層 `data`**；也不加 `meta` / `elapsed_ms` 等欄位。
+
+**為何回 dict 而非 JSON 字串**：FastMCP 會自行序列化 dict，回字串等於雙重序列化，且迫使呼叫端先 `json.loads` 才能判斷成敗，使 `result["ok"]` 這類客觀驗收斷言無法成立。
+
+標準用法（工具層各檔一律如此匯入，不要再自行定義本地 `_json`）：
 
 ```python
-def _json(data) -> str:
-    return json.dumps(data, indent=2, ensure_ascii=False)
+from ansys_unified_mcp.shared import mcp, as_envelope as _envelope
+
+@mcp.tool()
+def some_tool(...) -> dict:
+    return _envelope(controller.do_something(...))
 ```
 
-`ensure_ascii=False` 讓中文錯誤訊息可讀。未連線時各工具開頭呼叫 `_check_connection()`，回傳統一的 `{"ok": false, "error": ...}`。
+`as_envelope` 為容錯正規化：dict 補齊缺少的 `ok` 後原樣回傳；str 優先解析為 JSON 物件，失敗則包成 `{"ok": True, "output": <原字串>}`；`None` → `{"ok": True}`。失敗信封可用 `shared.error_envelope(msg, **extra)` 建立。未連線時各工具開頭呼叫 `_check_connection()`，回傳統一的失敗信封。
 
-現況偏差：`mechanical.py` / `optislang.py` / `docs_tools.py` 大致遵循此信封；`bridges/workbench_bridge.py` 的 `_format_bridge_result` 有時回**純字串**（成功輸出或 `Error: ...`）而非 `ok` 信封。收斂方向：讓 Workbench 路徑也回一致的 `ok` 信封。
+**守門機制**：`tests/unit/test_envelope_contract.py` 以 AST 掃描全部工具模組，任一 `@mcp.tool` / `@aliased_tool` / 自製裝飾器工廠（如 `sim_tools.py` 的 `@tool_fluent`）標註非 dict 即測試失敗。不依賴 `TOOL_REGISTRY`，因為裸 `@mcp.tool` 註冊的工具不會進入該字典。
+
+**例外**：`@mcp.resource` 回傳 `str` 屬正常（resource 本質為文字內容），不受此慣例約束。
 
 ## 4. 新增功能檢查清單
 

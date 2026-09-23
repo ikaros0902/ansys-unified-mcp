@@ -18,14 +18,14 @@ class TestChapter2CodebaseFacts:
     """Adversarial verification of Chapter 2 cited facts."""
 
     def test_sim_tools_decorator_and_envelope(self):
-        """1.1 驗證 sim_tools.py 的自製裝飾器與危險字串信封檢查。"""
+        """1.1 驗證 sim_tools.py 的自製裝飾器與 shared._envelope 使用。"""
         file_path = src_root / "ansys_unified_mcp" / "tools" / "sim_tools.py"
         assert file_path.exists(), "sim_tools.py 必須存在"
         content = file_path.read_text(encoding="utf-8")
 
-        # 驗證 _envelope 函數存在且包含關鍵字匹配邏輯
-        assert "def _envelope(" in content
-        assert 'is_err = "❌" in text or "錯誤" in text or "fail" in text.lower() or "error" in text.lower()' in content
+        # 驗證已從 shared 匯入 _envelope，而非定義本地版本
+        assert "from ansys_unified_mcp.shared import" in content
+        assert "as_envelope as _envelope" in content or "as_envelope" in content
         assert "def tool_geometry(" in content
         assert "def tool_fluent(" in content
         assert "@aliased_tool" not in content, "sim_tools.py 不得含有 @aliased_tool (證實報告所指未採用別名裝飾器)"

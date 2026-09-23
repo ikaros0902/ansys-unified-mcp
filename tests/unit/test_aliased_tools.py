@@ -59,28 +59,25 @@ def test_aliased_tools_registered():
 def test_composite_workflow_graceful_failure_when_disconnected():
     """Verify composite workflows return graceful error envelope when not connected."""
     # Test setup and solve when disconnected
-    result_str = ansys_unified_mcp.tools.mechanical_workflows.setup_and_solve_static_structural(
+    data = ansys_unified_mcp.tools.mechanical_workflows.setup_and_solve_static_structural(
         body_name="Solid",
         material_name="Structural Steel",
         fixed_support_ns="Fixed",
         load_ns="Load",
         force_magnitude_n=100.0,
     )
-    data = json.loads(result_str)
     assert data["ok"] is False
     assert "尚未連線" in data["error"] or "Not connected" in data["error"]
 
     # Test modal when disconnected
-    result_modal = ansys_unified_mcp.tools.mechanical_workflows.setup_and_solve_modal(
+    modal_data = ansys_unified_mcp.tools.mechanical_workflows.setup_and_solve_modal(
         fixed_support_ns="Fixed",
         num_modes=6,
     )
-    modal_data = json.loads(result_modal)
     assert modal_data["ok"] is False
 
     # Test diagnose when disconnected
-    result_diag = ansys_unified_mcp.tools.mechanical_workflows.diagnose_model_health()
-    diag_data = json.loads(result_diag)
+    diag_data = ansys_unified_mcp.tools.mechanical_workflows.diagnose_model_health()
     assert diag_data["ok"] is False
 
 
@@ -93,7 +90,7 @@ def test_mechanical_envelope_fixes():
     )
 
     # 1. check_mechanical_connection must contain 'ok': False when disconnected
-    res = json.loads(check_mechanical_connection())
+    res = check_mechanical_connection()
     assert "ok" in res
     assert res["ok"] is False
     assert res["connected"] is False

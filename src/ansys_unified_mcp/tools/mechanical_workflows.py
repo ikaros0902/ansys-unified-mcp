@@ -11,23 +11,22 @@ import json
 import logging
 from typing import Any, Dict, List, Optional
 
-from ansys_unified_mcp.shared import mcp, aliased_tool
+from ansys_unified_mcp.shared import mcp, aliased_tool, as_envelope as _envelope
 from ansys_unified_mcp.products.mechanical import controller, _esc
 
 logger = logging.getLogger("ansys-unified-mcp.tools.mechanical_workflows")
 
 
-def _json(data: Any) -> str:
-    return json.dumps(data, indent=2, ensure_ascii=False)
 
 
-def _check_connection() -> Optional[str]:
+
+def _check_connection() -> Optional[dict]:
     """若未連線至 Mechanical 則回傳標準錯誤信封。"""
     if not controller.is_connected():
-        return _json({
+        return {
             "ok": False,
             "error": "尚未連線至 ANSYS Mechanical。請先呼叫 mechanical_connect 或 mechanical_launch 建立 Session。"
-        })
+        }
     return None
 
 
@@ -41,7 +40,7 @@ def setup_and_solve_static_structural(
     force_direction: List[float] = [0.0, -1.0, 0.0],
     mesh_element_size_mm: float = 5.0,
     analysis_index: int = 0,
-) -> str:
+) -> dict:
     """一鍵式靜態結構分析 (組合式工作流)。
 
     依序自動完成：指派材料 → 設定網格尺寸 → 劃分網格 → 施加固定支撐 → 施加力載荷 → 
@@ -142,9 +141,9 @@ else:
     raw_output = controller.run_script(script)
     try:
         data = json.loads(raw_output)
-        return _json(data)
+        return _envelope(data)
     except Exception:
-        return _json({
+        return _envelope({
             "ok": "error" not in raw_output.lower(),
             "raw_output": raw_output
         })
@@ -156,7 +155,7 @@ def setup_and_solve_modal(
     num_modes: int = 6,
     mesh_element_size_mm: float = 5.0,
     analysis_index: int = 0,
-) -> str:
+) -> dict:
     """一鍵式模態分析 (組合式工作流)。
 
     依序自動完成：設定邊界約束 → 劃分網格 → 設定提取階數 → 求解 → 提取前 N 階固有頻率表格。
@@ -224,16 +223,16 @@ else:
     raw_output = controller.run_script(script)
     try:
         data = json.loads(raw_output)
-        return _json(data)
+        return _envelope(data)
     except Exception:
-        return _json({
+        return _envelope({
             "ok": "error" not in raw_output.lower(),
             "raw_output": raw_output
         })
 
 
 @aliased_tool(name="mechanical_diagnose_model_health", alias="diagnose_model_health")
-def diagnose_model_health() -> str:
+def diagnose_model_health() -> dict:
     """診斷目前 Mechanical 模型的工程健康度與潛在奇異點。
 
     快速盤點幾何實體、材料指派完整性、接觸面狀態、網格單元品質與未約束剛體風險。
@@ -276,9 +275,9 @@ print(json.dumps(report))
     raw_output = controller.run_script(script)
     try:
         data = json.loads(raw_output)
-        return _json(data)
+        return _envelope(data)
     except Exception:
-        return _json({
+        return _envelope({
             "ok": True,
             "raw_output": raw_output
         })
