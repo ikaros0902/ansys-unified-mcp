@@ -32,12 +32,14 @@ flowchart LR
 
 ## 二、模組路由表 (Module Router)
 
-深入操作手冊請參閱 `reference/`：
+深入操作手冊規劃外置於 `reference/`；下列文件**尚未建立**，故以純文字列示，待實際撰寫後再恢復為連結。
 
-| 操作主題 | 專精文件 | 核心內容 |
-| :--- | :--- | :--- |
-| **gRPC 連線與腳本環境** | [`reference/grpc_connection.md`](reference/grpc_connection.md) | 連線配置、多視窗處理、`run_python_script` 特性 |
-| **幾何 Scoping 與網格控制** | [`reference/scoping_and_mesh.md`](reference/scoping_and_mesh.md) | `SelectionInfo`、`GeoData` 提取、Sizing、MultiZone |
+| 操作主題 | 專精文件 | 狀態 | 核心內容 |
+| :--- | :--- | :--- | :--- |
+| **gRPC 連線與腳本環境** | `reference/grpc_connection.md` | 待建立 | 連線配置、多視窗處理、`run_python_script` 特性 |
+| **幾何 Scoping 與網格控制** | `reference/scoping_and_mesh.md` | 待建立 | `SelectionInfo`、`GeoData` 提取、Sizing、MultiZone |
+
+> 實作參考可暫先查閱 `scripts/` 下的可執行範例。
 
 ---
 
