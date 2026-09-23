@@ -28,31 +28,33 @@ if hasattr(sys.stderr, "reconfigure"):
 PROJECT_BASE = str(Path(__file__).resolve().parents[1] / "SKILLs")
 GLOBAL_BASE = str(Path.home() / ".gemini" / "config" / "skills")
 
-CORE_SKILLS = [
-    "ansys-fluent",
-    "ansys-mechanical",
-    "ansys-lsdyna",
-    "ansys-optislang",
-    "ansys-geometry-modeling",
-    "ansys-spaceclaim-modeling",
-    "ansys-parametric-study",
-    "pcb-warpage-analysis",
-]
 
-ALL_CONTROLLED_SKILLS = [
-    "ansys-fluent",
-    "ansys-mechanical",
-    "ansys-lsdyna",
-    "ansys-optislang",
-    "ansys-geometry-modeling",
-    "ansys-spaceclaim-modeling",
-    "ansys-parametric-study",
-    "ansys-submodeling-dpf",
-    "pcb-warpage-analysis",
-    "ansys-mechanical-multiphysics",
-    "ansys-lsdyna-explicit",
-    "ansys-optislang-optimization",
-]
+def discover_skills(skills_root: str) -> list:
+    """
+    動態掃描指定根目錄下所有含 SKILL.md 的子目錄，作為受控技能清單。
+
+    原實作為兩份硬編碼清單（CORE_SKILLS 8 項、ALL_CONTROLLED_SKILLS 12 項），
+    導致新增技能不會被稽核涵蓋——act-extension-development 與
+    pymechanical-operations 的路由表死鏈因此長期未被偵測。
+    改為動態掃描後，SKILLs/ 下任何技能一律納入稽核範圍。
+    """
+    discovered = []
+    if not os.path.isdir(skills_root):
+        return discovered
+    for entry in sorted(os.listdir(skills_root)):
+        entry_path = os.path.join(skills_root, entry)
+        if not os.path.isdir(entry_path):
+            continue
+        if entry.startswith(".") or entry.startswith("__"):
+            continue
+        if os.path.isfile(os.path.join(entry_path, "SKILL.md")):
+            discovered.append(entry)
+    return discovered
+
+
+# 受控技能清單一律由 SKILLs/（唯一真實來源）動態掃描取得
+ALL_CONTROLLED_SKILLS = discover_skills(PROJECT_BASE)
+CORE_SKILLS = ALL_CONTROLLED_SKILLS
 
 # 純簡體字清單
 PURE_SIMPLIFIED = {

@@ -106,11 +106,13 @@ class BidirectionalSyncEngine:
         global_base: str,
         controlled_skills: Optional[List[str]] = None,
         dry_run: bool = False,
+        prune_global: bool = False,
     ):
         self.project_base = os.path.abspath(project_base)
         self.global_base = os.path.abspath(global_base)
         self.controlled_skills = controlled_skills or CONTROLLED_SKILLS
         self.dry_run = dry_run
+        self.prune_global = prune_global
         self.action_logs: List[str] = []
 
     def log(self, message: str) -> None:
@@ -211,10 +213,17 @@ class BidirectionalSyncEngine:
 
             # 3. 僅存在於全域端
             elif g_meta and not p_meta:
-                # SKILLs/ 為唯一真實來源（Single Source of Truth）：
-                # 全域端獨有檔案視為過時孤立檔案，一律清理以確保 1:1 鏡像。
-                self.log(f"[*] 檔案 {rel} 僅存在於全域端，非受控來源之孤立檔案，自全域端清理")
-                self.remove_file(g_meta["abs_path"])
+                # 預設行為為「補回專案端」而非刪除：全域端獨有檔案常是尚未回流專案端的
+                # 新增 reference/ 或 scripts/ 內容，直接刪除會造成資料永久遺失，
+                # 並使專案端 SKILL.md 路由表產生死鏈。
+                # 僅在明確指定 prune_global 時，才視其為過時孤立檔案並清理。
+                if self.prune_global:
+                    self.log(f"[*] 檔案 {rel} 僅存在於全域端，依 --prune-global 自全域端清理")
+                    self.remove_file(g_meta["abs_path"])
+                else:
+                    dst = os.path.join(p_dir, rel.replace("/", os.sep))
+                    self.log(f"[*] 檔案 {rel} 僅存在於全域端，回補至專案端")
+                    self.copy_file(g_meta["abs_path"], dst)
 
         # 清理可能產生的空目錄
         self.clean_empty_dirs(p_dir)
@@ -371,6 +380,11 @@ def main():
         help="僅執行 SHA-256 完整性核驗，不執行同步",
     )
     parser.add_argument(
+        "--prune-global",
+        action="store_true",
+        help="將全域端獨有檔案視為過時孤立檔案並刪除（預設為回補至專案端，避免資料遺失）",
+    )
+    parser.add_argument(
         "--skills",
         nargs="+",
         help="指定僅同步/驗證之特定技能名稱 (預設: 全數受控 13 項技能)",
@@ -385,6 +399,7 @@ def main():
         global_base=args.global_dir,
         controlled_skills=skills_to_process,
         dry_run=args.dry_run,
+        prune_global=args.prune_global,
     )
 
     if not args.verify_only:
