@@ -387,7 +387,7 @@ def main():
     parser.add_argument(
         "--skills",
         nargs="+",
-        help="指定僅同步/驗證之特定技能名稱 (預設: 全數受控 13 項技能)",
+        help=f"指定僅同步/驗證之特定技能名稱 (預設: 全數受控 {len(CONTROLLED_SKILLS)} 項技能)",
     )
 
     args = parser.parse_args()
