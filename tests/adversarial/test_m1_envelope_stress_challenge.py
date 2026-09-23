@@ -196,21 +196,29 @@ MECHANICAL_39_TOOL_SPECS = [
 # Helper Validation Function
 # ===========================================================================
 
-def validate_envelope(output_str: str, expect_ok: bool = None, allow_non_bool_ok: bool = False) -> dict:
-    """Validate that output_str complies with the envelope specification:
-    1. Valid JSON string
-    2. Parsed root object is a dict
-    3. Root object contains 'ok' key
-    4. data['ok'] is strictly a boolean (unless allow_non_bool_ok=True)
-    5. If expect_ok is not None, assert data['ok'] == expect_ok
-    """
-    assert isinstance(output_str, str), f"Output must be str, got {type(output_str)}"
-    try:
-        data = json.loads(output_str)
-    except Exception as e:
-        pytest.fail(f"Output is not valid JSON: {e}\nRaw output:\n{output_str[:500]}")
+def validate_envelope(output: dict, expect_ok: bool = None, allow_non_bool_ok: bool = False) -> dict:
+    """Validate that output complies with the flat dict envelope specification:
+    1. Output is already a dict (tools return dict, not a JSON string)
+    2. Root object contains 'ok' key
+    3. data['ok'] is strictly a boolean (unless allow_non_bool_ok=True)
+    4. If expect_ok is not None, assert data['ok'] == expect_ok
 
-    assert isinstance(data, dict), f"Root JSON object must be dict, got {type(data)}: {data}"
+    Contract note: the tool layer previously returned JSON strings. It now returns
+    flat dict envelopes per ARCHITECTURE.md section 3, because FastMCP serializes
+    dicts itself and a string return forced callers to json.loads before they could
+    tell success from failure. A JSON string is still accepted here and parsed, so
+    that any helper that has not been migrated yet is still validated rather than
+    silently skipped.
+    """
+    if isinstance(output, str):
+        try:
+            data = json.loads(output)
+        except Exception as e:
+            pytest.fail(f"Output is neither dict nor valid JSON: {e}\nRaw output:\n{output[:500]}")
+    else:
+        data = output
+
+    assert isinstance(data, dict), f"Envelope must be a dict, got {type(data)}: {data}"
     assert "ok" in data, f"Envelope missing 'ok' key: {data}"
 
     if not allow_non_bool_ok:

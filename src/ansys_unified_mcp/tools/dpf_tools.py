@@ -7,19 +7,12 @@
 
 from __future__ import annotations
 
-import json
-
-from ansys_unified_mcp.shared import mcp
+from ansys_unified_mcp.shared import mcp, as_envelope as _envelope
 from ansys_unified_mcp.products.dpf import controller
 
 
-def _json(data: dict) -> str:
-    """統一輸出符合標準之 JSON 信封字串。"""
-    return json.dumps(data, indent=2, ensure_ascii=False)
-
-
 @mcp.tool()
-def dpf_extract_structural_results(rst_path: str, copy_to_sandbox: bool = True) -> str:
+def dpf_extract_structural_results(rst_path: str, copy_to_sandbox: bool = True) -> dict:
     """從 Mechanical .rst 結果檔抽取結構化關鍵指標（節點/單元數、最大變形、
     最大等效應力、時間/頻率步清單）。
 
@@ -29,15 +22,15 @@ def dpf_extract_structural_results(rst_path: str, copy_to_sandbox: bool = True) 
             求解器爭搶檔案鎖。
     """
     result = controller.extract_structural_results(rst_path, copy_to_sandbox=copy_to_sandbox)
-    return _json(result)
+    return _envelope(result)
 
 
 @mcp.tool()
-def dpf_get_model_summary(rst_path: str) -> str:
+def dpf_get_model_summary(rst_path: str) -> dict:
     """回傳 .rst 結果檔的模型摘要：節點/單元數與可用結果資訊。
 
     Args:
         rst_path: .rst 結果檔絕對路徑。
     """
     result = controller.get_model_summary(rst_path)
-    return _json(result)
+    return _envelope(result)

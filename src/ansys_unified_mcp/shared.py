@@ -1,9 +1,84 @@
 from __future__ import annotations
+import json
 import os
 from typing import Callable, Any, Sequence
 from fastmcp import FastMCP
 
 mcp = FastMCP("ansys-unified-mcp")
+
+# 純字串輸出的失敗標記。
+# 前段沿用 sim_tools 原有的啟發式（❌ / 錯誤 / fail / error），後段補上
+# Mechanical ACT 與 HTTP 層的例外標記。偏向從寬攔截：漏報失敗（工具實際
+# 失敗卻回 ok=True）比誤報失敗嚴重得多，後者僅需人工複看，前者會讓錯誤
+# 在自動化流程中被無聲放行。
+_ERROR_MARKERS: tuple[str, ...] = (
+    "❌",
+    "錯誤",
+    "fail",
+    "error",
+    "exception:",
+    "traceback",
+    "system.exception",
+    "script error:",
+    "502 bad gateway",
+    "500 internal server error",
+)
+
+
+def looks_like_error(text: str) -> bool:
+    """判斷純文字輸出是否帶有失敗標記（供 as_envelope 判定字串輸出的成敗）。"""
+    if not text or not isinstance(text, str):
+        return False
+    lowered = text.lower()
+    return any(marker in lowered for marker in _ERROR_MARKERS)
+
+
+def as_envelope(data: Any = None) -> dict:
+    """
+    將工具回傳值正規化為扁平信封 dict（ARCHITECTURE.md 第 3 節慣例）：
+
+    - 成功：``{"ok": True, ...其他欄位}``
+    - 失敗：``{"ok": False, "error": "可讀的錯誤訊息"}``
+
+    工具層一律回傳 dict 而非 JSON 字串：FastMCP 會自行序列化，回字串等於
+    雙重序列化，且會迫使呼叫端先 ``json.loads`` 才能判斷成敗，使
+    ``result["ok"]`` 這類客觀驗收斷言無法成立。
+
+    本函式容忍既有各種回傳形態，使遷移可逐檔進行：
+
+    - dict：補齊缺少的 ``ok``（預設 True）後原樣回傳
+    - str：優先嘗試解析為 JSON 物件；失敗則依 :func:`looks_like_error` 判定成敗後，
+      包裝為 ``{"ok": <判定結果>, "output": <原字串>}``
+    - None：視為無輸出的成功，回傳 ``{"ok": True}``
+    - 其他型別：包裝為 ``{"ok": True, "result": <值>}``
+    """
+    if data is None:
+        return {"ok": True}
+
+    if isinstance(data, dict):
+        if "ok" not in data:
+            # 僅含 error 欄位者視為失敗，其餘預設成功
+            data = {"ok": not bool(data.get("error")), **data}
+        return data
+
+    if isinstance(data, str):
+        text = data.strip()
+        if text.startswith("{"):
+            try:
+                parsed = json.loads(text)
+            except (ValueError, TypeError):
+                parsed = None
+            if isinstance(parsed, dict):
+                return as_envelope(parsed)
+        # 純文字輸出（如求解器 stdout）須偵測失敗標記，否則工具失敗會被回報為成功
+        return {"ok": not looks_like_error(text), "output": data}
+
+    return {"ok": True, "result": data}
+
+
+def error_envelope(message: str, **extra: Any) -> dict:
+    """建立失敗信封：``{"ok": False, "error": message, ...extra}``"""
+    return {"ok": False, "error": message, **extra}
 
 # Environment flag: When "1", FastMCP will register deprecated alias tools.
 # By default ("0"), only canonical tools are registered for a clean, lean tool surface.

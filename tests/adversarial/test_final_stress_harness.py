@@ -183,7 +183,8 @@ def test_section_2_safe_json_sandwich_logs():
     all_passed = True
     for desc, payload in sandwich_cases:
         resp = _safe_json_response(payload)
-        data = json.loads(resp)
+        # 工具層已改回傳扁平 dict 信封（ARCHITECTURE.md 第 3 節），無需再行解析
+        data = resp
         ok_val = data.get("ok")
         is_bool = (type(ok_val) is bool)
         is_false = (ok_val is False)
@@ -217,8 +218,9 @@ def test_section_3_missing_ok_dict():
 
     all_passed = True
     for desc, inp, expected_ok in test_dicts:
-        resp = _safe_json_response(inp) if isinstance(inp, str) else json.dumps(_normalize_dict_envelope(inp))
-        data = json.loads(resp)
+        resp = _safe_json_response(inp) if isinstance(inp, str) else _normalize_dict_envelope(inp)
+        # 工具層已改回傳扁平 dict 信封（ARCHITECTURE.md 第 3 節），無需再行解析
+        data = resp
         ok_val = data.get("ok")
         is_bool = (type(ok_val) is bool)
         matches = (ok_val is expected_ok)

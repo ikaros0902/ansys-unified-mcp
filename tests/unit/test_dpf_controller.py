@@ -246,7 +246,7 @@ def test_mcp_tool_dpf_extract_structural_results_returns_json_envelope(tmp_path)
 
     missing = tmp_path / "missing.rst"
     raw = dpf_tools.dpf_extract_structural_results(str(missing))
-    payload = json.loads(raw)
+    payload = raw
     assert payload["ok"] is False
     assert "RST file not found" in payload["error"]
 
@@ -256,7 +256,7 @@ def test_mcp_tool_dpf_get_model_summary_returns_json_envelope(tmp_path):
 
     missing = tmp_path / "missing.rst"
     raw = dpf_tools.dpf_get_model_summary(str(missing))
-    payload = json.loads(raw)
+    payload = raw
     assert payload["ok"] is False
     assert "RST file not found" in payload["error"]
 
@@ -271,6 +271,6 @@ def test_mcp_tool_dpf_extract_structural_results_success(tmp_path):
     with patch.dict(sys.modules, {"ansys.dpf.core": fake_dpf}):
         raw = dpf_tools.dpf_extract_structural_results(str(rst), copy_to_sandbox=False)
 
-    payload = json.loads(raw)
+    payload = raw
     assert payload["ok"] is True
     assert payload["metrics"]["num_nodes"] == 120
