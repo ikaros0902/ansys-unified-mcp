@@ -21,6 +21,7 @@ SOURCE_DIR = REPO_ROOT / "SKILLs"
 TARGET_DIRS = [
     REPO_ROOT / ".kiro" / "skills",
     REPO_ROOT / ".cline" / "skills",
+    REPO_ROOT / ".agents" / "skills",
 ]
 
 
