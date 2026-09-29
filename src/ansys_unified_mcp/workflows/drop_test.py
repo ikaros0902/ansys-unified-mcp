@@ -1,4 +1,4 @@
-﻿"""ANSYS Unified MCP 2.0 - 落摔衝擊高階工況工作流 (run_drop_test).
+"""ANSYS Unified MCP 2.0 - 落摔衝擊高階工況工作流 (run_drop_test).
 
 整合端到端顯式動力學求解與物理健康監控閉環：
 1. 前置安全閘門 (Gatekeeper) 硬性檢核：
@@ -24,6 +24,7 @@ from ansys_unified_mcp.drivers.lsdyna_driver import LSDynaDriver
 from ansys_unified_mcp.gatekeeper import Gatekeeper
 from ansys_unified_mcp.jobs.sandbox import JobSandbox
 from ansys_unified_mcp.reporting.generator import ReportGenerator
+from ansys_unified_mcp.gatekeeper.evidence import create_manifest
 
 logger = logging.getLogger("ansys-unified-mcp.workflows.drop_test")
 
@@ -71,7 +72,12 @@ def run_drop_test(
 
     vel_vector = [impact_velocity_mps * g for g in gravity_direction]
 
-    # 2. 前置物理閘門 (Gatekeeper) 綜合檢核
+    # 2. 建立 Phase 3 Evidence Gate 清單 (針對 CAD 檔案)
+    manifest = None
+    if Path(cad_path).exists():
+        manifest = create_manifest(cad_path, semantic_ids=["DROP_TARGET_BODY"])
+
+    # 3. 前置物理閘門 (Gatekeeper) 綜合檢核
     gatekeeper = Gatekeeper()
     gate_context = {
         "velocity_vector": vel_vector,
@@ -87,6 +93,10 @@ def run_drop_test(
         "time_unit": "s",
         "stress_unit": "Pa",
     }
+    
+    if manifest:
+        gate_context["evidence_manifest"] = manifest
+
 
     gate_report = gatekeeper.validate(workflow_type="drop_test", context=gate_context)
     if not gate_report.passed:

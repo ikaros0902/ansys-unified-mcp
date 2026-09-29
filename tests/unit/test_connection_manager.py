@@ -1,4 +1,4 @@
-"""Unit tests for ConnectionManager in ansys_unified_mcp.connection_manager.
+"""Unit tests for ConnectionManager in ansys_unified_mcp.bridges.connection_manager.
 
 Full logic coverage with mock psutil and socket; 0 reliance on ANSYS licenses or processes.
 """
@@ -12,7 +12,7 @@ from unittest.mock import MagicMock, call, patch
 import psutil
 import pytest
 
-from ansys_unified_mcp.connection_manager import (
+from ansys_unified_mcp.bridges.connection_manager import (
     ConnectionManager,
     connection_manager,
 )
@@ -602,7 +602,7 @@ def test_get_registered_instances_default_directory(tmp_path, monkeypatch):
 
     # 1. 預設目錄不存在時回傳空串列
     monkeypatch.setattr(
-        "ansys_unified_mcp.connection_manager._DEFAULT_REGISTRY_DIR",
+        "ansys_unified_mcp.bridges.connection_manager._DEFAULT_REGISTRY_DIR",
         tmp_path / "non_existent",
     )
     assert cm.get_registered_instances() == []
@@ -616,7 +616,7 @@ def test_get_registered_instances_default_directory(tmp_path, monkeypatch):
     dead_file.write_text(json.dumps({"pid": 888}), encoding="utf-8")
 
     monkeypatch.setattr(
-        "ansys_unified_mcp.connection_manager._DEFAULT_REGISTRY_DIR",
+        "ansys_unified_mcp.bridges.connection_manager._DEFAULT_REGISTRY_DIR",
         mock_reg_dir,
     )
     with patch("psutil.pid_exists", side_effect=lambda pid: pid == 777):

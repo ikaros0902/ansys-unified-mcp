@@ -8,7 +8,7 @@ documents into context.
 from __future__ import annotations
 
 from ansys_unified_mcp.shared import mcp, as_envelope as _envelope
-from ansys_unified_mcp.docs import index as docs_index
+from ansys_unified_mcp.analytics.docsearch import index as docs_index
 
 
 @mcp.tool()

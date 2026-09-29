@@ -33,9 +33,9 @@ from ansys_unified_mcp.shared import (
 # Ensure relevant tool modules are imported
 import ansys_unified_mcp.tools.sentinel_tools
 import ansys_unified_mcp.tools.intent_tools
-import ansys_unified_mcp.tools.mechanical
-import ansys_unified_mcp.tools.optislang
-import ansys_unified_mcp.tools.workbench_filebridge
+import ansys_unified_mcp.tools.mechanical_tools
+import ansys_unified_mcp.tools.optislang_tools
+import ansys_unified_mcp.tools.workbench_tools
 
 
 def run_async(coro):

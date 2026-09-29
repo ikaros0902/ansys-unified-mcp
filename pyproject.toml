@@ -85,8 +85,10 @@ ignore = [
 # SelectionTypeEnum 等為求解器注入的全域名稱，CPython 端必然判為未定義，
 # 故這些目錄免除 F821；其語法正確性由 scripts/audit_architecture_compliance.py
 # 的 py_compile 檢查獨立把關。
+"skills/**/*.py" = ["F821"]
 "SKILLs/**/*.py" = ["F821"]
+"deploy/**/*.py" = ["F821"]
+"examples/**/*.py" = ["F821"]
 "scripts/pcb_warpage_analysis/*.py" = ["F821"]
 "workbench_plugin/**/*.py" = ["F821"]
 "samples/*.py" = ["F821"]
-"examples/**/*.py" = ["F821"]

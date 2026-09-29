@@ -24,8 +24,8 @@ import pytest
 from unittest.mock import patch
 
 from ansys_unified_mcp.shared import mcp
-import ansys_unified_mcp.tools.mechanical as mechanical_mod
-from ansys_unified_mcp.tools.mechanical import _safe_json_response, _is_error_output
+import ansys_unified_mcp.products.mechanical as mechanical_mod
+from ansys_unified_mcp.products.mechanical_api import _safe_json_response, _is_error_output
 
 # 歷史漏洞探查測試：此檔案用於在修復前證明 14 處漏洞存在。
 # 漏洞已於 M1 全數修復完畢，現由 test_final_stress_harness.py 擔任驗收守護。

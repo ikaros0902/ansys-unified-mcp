@@ -40,17 +40,22 @@ logs/*
 !logs/.gitkeep
 workbench_queue/*
 !workbench_queue/.gitkeep
+!workbench_queue/*/.gitkeep
 **/workbench_queue/*
 !**/workbench_queue/.gitkeep
+!**/workbench_queue/*/.gitkeep
 
 # Generated files & workbench journals
 results/
 mcp_config.json
 status.json
 !samples/
+!examples/samples/
 *.wbjn
 !samples/*.wbjn
+!examples/samples/*.wbjn
 !src/ansys_unified_mcp/scripts/ansys_workbench_bridge.wbjn
+!src/ansys_unified_mcp/products/workbench/scripts/ansys_workbench_bridge.wbjn
 
 # ANSYS documentation corpora — copyrighted + very large (~680 MB total).
 # 用通配涵蓋 Documentation / Documentation_md / Documentation_clean 及任何改名或新增的變體，

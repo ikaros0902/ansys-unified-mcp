@@ -22,7 +22,7 @@ from unittest.mock import MagicMock, patch
 import psutil
 import pytest
 
-from ansys_unified_mcp.connection_manager import (
+from ansys_unified_mcp.bridges.connection_manager import (
     ConnectionManager,
     connection_manager,
 )

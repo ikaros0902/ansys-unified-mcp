@@ -19,7 +19,7 @@ from sync_skills_bidirectional import (  # noqa: E402
 )
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-SOURCE_ROOT = REPO_ROOT / "SKILLs"
+SOURCE_ROOT = (REPO_ROOT / "skills") if (REPO_ROOT / "skills").is_dir() else (REPO_ROOT / "SKILLs")
 KIRO_ROOT = REPO_ROOT / ".kiro" / "skills"
 
 

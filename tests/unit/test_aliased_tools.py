@@ -4,10 +4,10 @@ import asyncio
 import json
 import pytest
 from ansys_unified_mcp.shared import mcp, aliased_tool
-import ansys_unified_mcp.tools.mechanical
-import ansys_unified_mcp.tools.mechanical_workflows
-import ansys_unified_mcp.tools.workbench
-import ansys_unified_mcp.tools.optislang
+import ansys_unified_mcp.tools.mechanical_tools
+import ansys_unified_mcp.tools.mechanical_workflow_tools
+import ansys_unified_mcp.tools.workbench_tools
+import ansys_unified_mcp.tools.optislang_tools
 import ansys_unified_mcp.tools.intent_tools
 
 
@@ -59,7 +59,7 @@ def test_aliased_tools_registered():
 def test_composite_workflow_graceful_failure_when_disconnected():
     """Verify composite workflows return graceful error envelope when not connected."""
     # Test setup and solve when disconnected
-    data = ansys_unified_mcp.tools.mechanical_workflows.setup_and_solve_static_structural(
+    data = ansys_unified_mcp.tools.mechanical_workflow_tools.setup_and_solve_static_structural(
         body_name="Solid",
         material_name="Structural Steel",
         fixed_support_ns="Fixed",
@@ -70,21 +70,21 @@ def test_composite_workflow_graceful_failure_when_disconnected():
     assert "尚未連線" in data["error"] or "Not connected" in data["error"]
 
     # Test modal when disconnected
-    modal_data = ansys_unified_mcp.tools.mechanical_workflows.setup_and_solve_modal(
+    modal_data = ansys_unified_mcp.tools.mechanical_workflow_tools.setup_and_solve_modal(
         fixed_support_ns="Fixed",
         num_modes=6,
     )
     assert modal_data["ok"] is False
 
     # Test diagnose when disconnected
-    diag_data = ansys_unified_mcp.tools.mechanical_workflows.diagnose_model_health()
+    diag_data = ansys_unified_mcp.tools.mechanical_workflow_tools.diagnose_model_health()
     assert diag_data["ok"] is False
 
 
 def test_mechanical_envelope_fixes():
     """Verify check_mechanical_connection has ok field and _wrap_raw_output detects errors."""
-    from ansys_unified_mcp.tools.mechanical import (
-        check_mechanical_connection,
+    from ansys_unified_mcp.tools.mechanical_tools import check_mechanical_connection
+    from ansys_unified_mcp.products.mechanical_api import (
         _wrap_raw_output,
         _is_error_output,
     )

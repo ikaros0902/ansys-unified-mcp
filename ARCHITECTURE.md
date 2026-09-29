@@ -1,7 +1,7 @@
 # ARCHITECTURE — 分層職責與程式慣例
 
 > 本檔定義 `ansys-unified-mcp` 的**分層職責**與**程式慣例**（命名、回傳信封），是維護與擴充時的準則。
-> 專案全貌與心智模型見 `contexts/context.md`；本檔聚焦「怎麼寫才一致」。
+> 專案全貌與心智模型見 `agents/contexts/context.md`；本檔聚焦「怎麼寫才一致」。
 > 註：部分現況尚未符合下列慣例（已於各節標出「現況偏差」），這些是漸進收斂的目標，不是要求你一次改完。
 
 ## 1. 分層職責
@@ -17,7 +17,7 @@
 
 **目標形態**：每個產品應為 `tools/<product>.py`（工具）+ `products/<product>.py`（控制器）**成對出現**，控制器一律用 `SessionRegistry` 管 session。
 
-現況偏差（持續收斂中）：`products/` 目前有 `mechanical.py` 與 `optislang.py`（session 皆走 `SessionRegistry`）；**Fluent 實作仍在 `drivers/sim_impl.py`**、SpaceClaim（geometry）工具仍混在 `tools/sim_tools.py`，尚未各自成對出現。收斂方向見 `contexts/context.md` 第 6 節。
+現況偏差（持續收斂中）：`products/` 目前有 `mechanical.py` 與 `optislang.py`（session 皆走 `SessionRegistry`）；**Fluent 實作仍在 `drivers/sim_impl.py`**、SpaceClaim（geometry）工具仍混在 `tools/sim_tools.py`，尚未各自成對出現。收斂方向見 `agents/contexts/context.md` 第 6 節。
 
 ## 2. 工具命名慣例
 
@@ -72,7 +72,7 @@ def some_tool(...) -> dict:
 1. 放進對應 `tools/<product>.py`。
 2. 依第 2 節命名（`<product>_<verb>_<object>`）。
 3. 開頭 `_check_connection()`；回傳走第 3 節信封。
-4. 底層優先用 script runner 組腳本（見 `contexts/context.md` 第 2 節），避免綁死版本相關高階 API。
+4. 底層優先用 script runner 組腳本（見 `agents/contexts/context.md` 第 2 節），避免綁死版本相關高階 API。
 5. docstring 要清楚（用途、參數、範例）——這是維護者與 AI 的介面。
 
 新增**一個產品**：
@@ -84,5 +84,5 @@ def some_tool(...) -> dict:
 
 ## 5. 相關文件
 
-- `contexts/context.md`：專案定位、四層架構、兩條執行通道、thin script runner 設計理由、已知技術債。
+- `agents/contexts/context.md`：專案定位、四層架構、兩條執行通道、thin script runner 設計理由、已知技術債。
 - `README.md`：安裝與啟動（如存在）。

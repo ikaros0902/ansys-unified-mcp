@@ -25,7 +25,8 @@ if hasattr(sys.stdout, "reconfigure"):
 if hasattr(sys.stderr, "reconfigure"):
     sys.stderr.reconfigure(encoding="utf-8")
 
-PROJECT_BASE = str(Path(__file__).resolve().parents[1] / "SKILLs")
+_skills_candidate = Path(__file__).resolve().parents[1] / "skills"
+PROJECT_BASE = str(_skills_candidate if _skills_candidate.is_dir() else Path(__file__).resolve().parents[1] / "SKILLs")
 GLOBAL_BASE = str(Path.home() / ".gemini" / "config" / "skills")
 
 

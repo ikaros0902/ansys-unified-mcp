@@ -4,7 +4,15 @@ import os
 from typing import Callable, Any, Sequence
 from fastmcp import FastMCP
 
-mcp = FastMCP("ansys-unified-mcp")
+INSTRUCTIONS = """You are controlling ANSYS Unified MCP.
+
+This server provides tools across multiple physics domains (Mechanical, Fluent, SpaceClaim, optiSLang, etc.).
+Prefer using `auto` transport for tools that support it (it will try fast socket first, then fallback to file queues).
+For live interactions, ensure the corresponding app or bridge is running before issuing commands.
+Use Sentinel tools to monitor long-running background simulations.
+"""
+
+mcp = FastMCP("ansys-unified-mcp", instructions=INSTRUCTIONS)
 
 # 純字串輸出的失敗標記。
 # 前段沿用 sim_tools 原有的啟發式（❌ / 錯誤 / fail / error），後段補上

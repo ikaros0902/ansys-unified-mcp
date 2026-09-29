@@ -43,9 +43,10 @@ def discover_controlled_skills(skills_root: str) -> List[str]:
     return discovered
 
 
-# 預設受控技能目錄清單：動態掃描 SKILLs/ 根目錄取得
+# 預設受控技能目錄清單：動態掃描 skills/ 根目錄取得
+_skills_candidate = Path(__file__).resolve().parents[1] / "skills"
 CONTROLLED_SKILLS = discover_controlled_skills(
-    str(Path(__file__).resolve().parents[1] / "SKILLs")
+    str(_skills_candidate if _skills_candidate.is_dir() else Path(__file__).resolve().parents[1] / "SKILLs")
 )
 
 # 忽略同步之目錄與副檔名

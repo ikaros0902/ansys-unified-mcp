@@ -75,7 +75,7 @@ MCP Agent 在啟動時會自動偵測正在執行的這些視窗並接管控制�
   - [`docs/testing/`](docs/testing/): 測試基礎設施規範。
   - [`docs/diagrams/`](docs/diagrams/): 互動式架構圖（HTML）。
   - [`docs/archive/`](docs/archive/README.md): 歷史快照，不可作為現況依據。
-- `workbench_plugin/`: 安裝至 ANSYS 的精簡 ACT 外掛（自動啟動 Mechanical gRPC server 並註冊實例）。
+- `deploy/act_plugins/`: 安裝至 ANSYS 的精簡 ACT 外掛（自動啟動 Mechanical gRPC server 並註冊實例）。
 
 ### Mechanical 連線傳輸（重構後收斂為三種）
 1. **gRPC（PyMechanical）** — 主力。可「連線現有實例」（需 ACT 外掛自動開 gRPC）或「啟動新的無頭實例」。
