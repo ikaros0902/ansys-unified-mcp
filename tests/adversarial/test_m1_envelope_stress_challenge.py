@@ -23,6 +23,7 @@ import json
 import pytest
 from unittest.mock import patch
 
+from ansys_unified_mcp.shared import mcp
 import ansys_unified_mcp.tools.mechanical as mechanical_mod
 from ansys_unified_mcp.tools.mechanical import _safe_json_response, _is_error_output
 

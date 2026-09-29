@@ -90,7 +90,7 @@ with open(log_file, "w", encoding="utf-8") as f:
     f.write("ANSYS optiSLang Metamodel of Optimal Prognosis (MOP) Execution\\n")
     f.write(f"Sampling Method: {sampling_method}, Number of Designs: {num_samples}\\n")
     for i in range(1, {num_samples} + 1):
-        f.write(f"DESIGN_EVALUATION [{i}/{num_samples}] Finished successfully.\\n")
+        f.write(f"DESIGN_EVALUATION [{{i}}/{num_samples}] Finished successfully.\\n")
     f.write("DOE Sampling finished. Constructing MOP approximations...\\n")
     f.write("Polynomial Model: CoP = 0.742\\n")
     f.write("Moving Least Squares: CoP = 0.816\\n")

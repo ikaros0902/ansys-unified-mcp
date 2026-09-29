@@ -113,7 +113,6 @@ def test_alias_pruning_via_env_var(monkeypatch):
     """Verify that setting ANSYS_MCP_PRUNE_ALIASES=1 skips registering deprecated aliases."""
     import os
     from fastmcp import FastMCP
-    from ansys_unified_mcp.shared import aliased_tool
 
     test_mcp = FastMCP("test-prune")
     monkeypatch.setenv("ANSYS_MCP_PRUNE_ALIASES", "1")

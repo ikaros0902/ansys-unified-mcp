@@ -1,3 +1,15 @@
+> ## ⚠️ 歷史快照（ARCHIVED）— 請勿作為現況依據
+>
+> 本檔案存放於 `docs/archive/`，屬**歷史快照**，保留目的僅為追溯當時的決策脈絡。
+> 檔內規格與範圍**均已過期**，不得作為專案現況判斷、驗收基準或實作依據。
+> 專案現況請參閱 [`README.md`](../../README.md)、[`ARCHITECTURE.md`](../../ARCHITECTURE.md) 與 [文件索引](../index.md)。
+>
+> **已查證的具體落差**：
+> - 本檔僅涵蓋 **Phase 1** 的規格範圍，專案已推進至其後階段，檔內工具數量與架構描述不反映現況。
+> - 與 [`ORIGINAL_REQUEST.md`](ORIGINAL_REQUEST.md) 為同批需求的不同視角，兩者內容不完全一致。
+
+---
+
 # Project: ANSYS Unified MCP Phase 1 核心架構改造
 
 ## Architecture

@@ -1,3 +1,16 @@
+> ## ⚠️ 歷史快照（ARCHIVED）— 請勿作為現況依據
+>
+> 本檔案存放於 `docs/archive/`，屬**歷史快照**，保留目的僅為追溯當時的決策脈絡。
+> 檔內數據與結論**均已過期**，不得作為專案現況判斷、驗收基準或實作依據。
+> 專案現況請參閱 [`README.md`](../../README.md)、[`ARCHITECTURE.md`](../../ARCHITECTURE.md) 與 [文件索引](../index.md)。
+>
+> **已查證的具體落差**：
+> - 稱 `src/ansys_unified_mcp/` 為「約 24 個 Python 檔」— 現況為 **81 個**。
+> - 審視範圍寫 `refactor/unified-arch` 分支 — 該分支已不是主線，現為 **master**。
+> - 提及 `requirements.txt` — 專案**無此檔案**，相依套件由 `pyproject.toml` 與 `uv.lock` 管理。
+
+---
+
 # ANSYS-unified-MCP 程式碼審視報告
 
 範圍：`refactor/unified-arch` 分支，`src/ansys_unified_mcp/` 全部原始碼（約 24 個 Python 檔）

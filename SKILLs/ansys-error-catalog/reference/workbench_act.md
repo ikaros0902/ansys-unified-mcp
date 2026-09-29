@@ -11,7 +11,7 @@
 ```
 Error when invoking function 'show_mcp_info'.
 Traceback (most recent call last):
-  File "C:\Users\REDACTED_UID\AppData\Roaming\Ansys\v251\ACT\extensions\WorkbenchMCP\main.py", line 187, in show_mcp_info
+  File "%USERPROFILE%\AppData\Roaming\Ansys\v251\ACT\extensions\WorkbenchMCP\main.py", line 187, in show_mcp_info
 NameError: global name '_PROJECT_ROOT' is not defined
 ```
 

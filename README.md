@@ -16,7 +16,7 @@
 
 ## 🚀 快速安裝與標準部署手冊 (Deployment Guide)
 
-> 📖 **詳細安裝與生產部署手冊 (SOP)**：請參閱 **[`docs/DEPLOYMENT_SOP.md`](docs/DEPLOYMENT_SOP.md)**（含全新電腦環境配置、相依套件安裝、常駐 gRPC 設置與三重驗證 SOP）。
+> 📖 **詳細安裝與生產部署手冊 (SOP)**：請參閱 **[`docs/deployment/DEPLOYMENT_SOP.md`](docs/deployment/DEPLOYMENT_SOP.md)**（含全新電腦環境配置、相依套件安裝、常駐 gRPC 設置與三重驗證 SOP）。
 
 您不再需要手動設定 Python 環境或尋找 ANSYS 安裝路徑！我們提供了一鍵安裝腳本。
 
@@ -68,8 +68,13 @@ MCP Agent 在啟動時會自動偵測正在執行的這些視窗並接管控制�
 - `examples/`: 工程實例與標竿管線。
   - [`examples/shock_analysis/`](examples/shock_analysis/README.md): 35G 衝擊管線、材料自動指派與 LS-DYNA .k 檔生成。
   - [`examples/geometry_cleanup/`](examples/geometry_cleanup/README.md): SpaceClaim 與 PyAnsys Geometry 幾何清理與特徵消除。
-- `docs/`: 專案文檔與簡報資料（參見 [文檔索引](docs/index.md)）。
-  - [`docs/presentations/slides_detailed.md`](docs/presentations/slides_detailed.md): AI Agent 模擬助理架構提案簡報。
+- `docs/`: 專案文檔（參見 [文檔索引](docs/index.md)）。
+  - [`docs/architecture/`](docs/architecture/): 架構與規格評估白皮書。
+  - [`docs/planning/`](docs/planning/): 優化與里程碑計畫書。
+  - [`docs/deployment/`](docs/deployment/): 安裝與部署 SOP。
+  - [`docs/testing/`](docs/testing/): 測試基礎設施規範。
+  - [`docs/diagrams/`](docs/diagrams/): 互動式架構圖（HTML）。
+  - [`docs/archive/`](docs/archive/README.md): 歷史快照，不可作為現況依據。
 - `workbench_plugin/`: 安裝至 ANSYS 的精簡 ACT 外掛（自動啟動 Mechanical gRPC server 並註冊實例）。
 
 ### Mechanical 連線傳輸（重構後收斂為三種）

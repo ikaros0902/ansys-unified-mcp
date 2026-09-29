@@ -11,7 +11,7 @@
 > 1. **全衝擊管線升級 (Session 01 ~ 08 全閉環)**：
 >    目前 `execute_full_shock_act_pipeline.py` 明確僅執行至 Session 06，缺少 Session 07（求解調度與能量監控）及 Session 08（後處理與量化失效判定）。我們將全面升級為端到端 01 ~ 08 完整閉環，並將輸出路徑徹底解耦為專案動態目錄。
 > 2. **消除所有殘留硬編碼 (跨平台與跨機遷移相容性)**：
->    全面移除散落在 `SKILLs/`、`src/`、`workbench_plugin/`、`examples/`、`scripts/` 與 `tests/` 中的 `d:\Ikaros`、`D:\ANSYS_MCP_Connect`、`F:\Ming_python` 等寫死路徑，改採 `Path(__file__).resolve()` 與 `sys.executable`。
+>    全面移除散落在 `SKILLs/`、`src/`、`workbench_plugin/`、`examples/`、`scripts/` 與 `tests/` 中的 `d:\Ikaros`、`D:\ANSYS_MCP_Connect`、`%WORKBENCH_MCP_ROOT%` 等寫死路徑，改採 `Path(__file__).resolve()` 與 `sys.executable`。
 
 ---
 
@@ -33,9 +33,9 @@
 
 ### 3. 全專案其他模組之硬編碼路徑盤點
 - **驅動層 (`src/ansys_unified_mcp/drivers/`)**：
-  - `icepak_driver.py` (L111): 寫死 `r"F:\Ming_python\ansys-unified-mcp\.venv\Scripts\python.exe"`。
-  - `optislang_driver.py` (L114): 寫死 `r"F:\Ming_python\ansys-unified-mcp\.venv\Scripts\python.exe"`。
-  - `spaceclaim_driver.py` (L120): 寫死 `r"F:\Ming_python\ansys-unified-mcp\.venv\Scripts\python.exe"`。
+  - `icepak_driver.py` (L111): 寫死 `r"%WORKBENCH_MCP_ROOT%\.venv\Scripts\python.exe"`。
+  - `optislang_driver.py` (L114): 寫死 `r"%WORKBENCH_MCP_ROOT%\.venv\Scripts\python.exe"`。
+  - `spaceclaim_driver.py` (L120): 寫死 `r"%WORKBENCH_MCP_ROOT%\.venv\Scripts\python.exe"`。
 - **PCB 熱翹曲管線 (`SKILLs/pcb-warpage-analysis/scripts/`)**：
   - `01_build_pcb_geometry.py` (L207): 寫死 `r"D:\ANSYS_MCP_Connect\PCB_Stackup_material\MCP_Test.xlsx"`。
   - `02_calculate_rom_materials.py` (L144): 寫死 `folder = r'D:\ANSYS_MCP_Connect\PCB_Stackup_material'`。
@@ -43,8 +43,8 @@
 - **Workbench 外掛監聽 (`workbench_plugin/`)**：
   - `wb_event_listener.py` (L40) 與 `main.py` (L46): 寫死 `fallback = r"D:\Ikaros\ANSYS-unified-MCP\workbench_queue"`。
 - **合規檢查與測試腳本**：
-  - `scripts/audit_architecture_compliance.py` (L27-28): 寫死 `F:\Ming_python` 與 `C:\Users\Ming`。
-  - `tests/test_remediation_m5.py` (L16-19, L126): 寫死 `F:\Ming_python`。
+  - `scripts/audit_architecture_compliance.py` (L27-28): 寫死 `%WORKBENCH_MCP_ROOT%` 與 `%USERPROFILE%`。
+  - `tests/test_remediation_m5.py` (L16-19, L126): 寫死 `%WORKBENCH_MCP_ROOT%`。
 
 ---
 
@@ -52,63 +52,63 @@
 
 ### 第一階段：補齊 Session 05 ~ 08 參考文檔、規格擴充與小批次獨立驗證腳本
 
-#### [NEW] [section_controls_and_shell_thickness.md](file:///F:/Ming_python/ansys-unified-mcp/SKILLs/shock-analysis-workflow/05-section-assignment/reference/section_controls_and_shell_thickness.md)
+#### [NEW] [section_controls_and_shell_thickness.md](../../SKILLs/shock-analysis-workflow/05-section-assignment/reference/section_controls_and_shell_thickness.md)
 - 撰寫薄板中面抽取後的厚度指派技術手冊、LS-DYNA `*SECTION_SHELL` 完全積分公式 (ELFORM=16, NIP=5) 與實體單元 (ELFORM=10/1) 之控制原理。
 
-#### [NEW] [shock_pulse_and_boundary_conditions.md](file:///F:/Ming_python/ansys-unified-mcp/SKILLs/shock-analysis-workflow/06-constraint-load/reference/shock_pulse_and_boundary_conditions.md)
+#### [NEW] [shock_pulse_and_boundary_conditions.md](../../SKILLs/shock-analysis-workflow/06-constraint-load/reference/shock_pulse_and_boundary_conditions.md)
 - 撰寫 6 向半正弦脈衝加速度轉速度積分曲線、`*BOUNDARY_PRESCRIBED_MOTION_RIGID` 與數值阻尼 `*DAMPING_GLOBAL` 設置手冊。
 
-#### [NEW] [test_session_06.py](file:///F:/Ming_python/ansys-unified-mcp/SKILLs/shock-analysis-workflow/scripts/test_session_06.py)
+#### [NEW] [test_session_06.py](../../SKILLs/shock-analysis-workflow/scripts/test_session_06.py)
 - 撰寫 Session 06 獨立驗證腳本：連線至 Port 10000，檢驗 6 個方向的衝擊速度歷史曲線、時間步長安全係數 (TSSFAC=0.9)、IHQ=6 沙漏設定與求解精確度 Double Precision。
 
-#### [MODIFY] [SKILL.md (Session 07)](file:///F:/Ming_python/ansys-unified-mcp/SKILLs/shock-analysis-workflow/07-solve-monitor/SKILL.md)
+#### [MODIFY] [SKILL.md (Session 07)](../../SKILLs/shock-analysis-workflow/07-solve-monitor/SKILL.md)
 - 將 24 行極簡手冊重構擴充至 120+ 行標準規範，納入求解器監控狀態機、`glstat` 即時解析與異常阻斷機制。
 
-#### [NEW] [energy_balance_tracking.md](file:///F:/Ming_python/ansys-unified-mcp/SKILLs/shock-analysis-workflow/07-solve-monitor/reference/energy_balance_tracking.md)
+#### [NEW] [energy_balance_tracking.md](../../SKILLs/shock-analysis-workflow/07-solve-monitor/reference/energy_balance_tracking.md)
 - 撰寫 LS-DYNA 能量平衡比追蹤手冊，詳細說明 Total Energy / (Initial Energy + External Work) 比值在 0.9 ~ 1.1 區間的判定算法與沙漏能佔比超標處理。
 
-#### [NEW] [test_session_07.py](file:///F:/Ming_python/ansys-unified-mcp/SKILLs/shock-analysis-workflow/scripts/test_session_07.py)
+#### [NEW] [test_session_07.py](../../SKILLs/shock-analysis-workflow/scripts/test_session_07.py)
 - 撰寫 Session 07 獨立驗證腳本：驗證求解器呼叫管線、`glstat` 數值模擬解析器以及能量比異常中斷邏輯。
 
-#### [MODIFY] [SKILL.md (Session 08)](file:///F:/Ming_python/ansys-unified-mcp/SKILLs/shock-analysis-workflow/08-post-process-report/SKILL.md)
+#### [MODIFY] [SKILL.md (Session 08)](../../SKILLs/shock-analysis-workflow/08-post-process-report/SKILL.md)
 - 擴充 Session 08 規格：定義完整的金屬、塑料、BGA 焊點失效指標評估演算法、自動多視角截圖與 Office 自動化報告輸出規範。
 
-#### [NEW] [failure_criteria_and_strain_limits.md](file:///F:/Ming_python/ansys-unified-mcp/SKILLs/shock-analysis-workflow/08-post-process-report/reference/failure_criteria_and_strain_limits.md)
+#### [NEW] [failure_criteria_and_strain_limits.md](../../SKILLs/shock-analysis-workflow/08-post-process-report/reference/failure_criteria_and_strain_limits.md)
 - 撰寫後處理失效判定準則技術手冊：包含金屬 EPS 0.01 貫穿、BGA 焊點 EPS 0.0022、塑膠降伏強度判定標準。
 
-#### [NEW] [test_session_08.py](file:///F:/Ming_python/ansys-unified-mcp/SKILLs/shock-analysis-workflow/scripts/test_session_08.py)
+#### [NEW] [test_session_08.py](../../SKILLs/shock-analysis-workflow/scripts/test_session_08.py)
 - 撰寫 Session 08 獨立驗證腳本：驗證應變場提取、量化矩陣判定（PASS / MARGINAL / FAIL）與自動生成結構完整性報告流程。
 
 ---
 
 ### 第二階段：重構衝擊全流程腳本為 Session 01 ~ 08 完整閉環
 
-#### [MODIFY] [execute_full_shock_act_pipeline.py](file:///F:/Ming_python/ansys-unified-mcp/examples/shock_analysis/execute_full_shock_act_pipeline.py)
+#### [MODIFY] [execute_full_shock_act_pipeline.py](../../examples/shock_analysis/execute_full_shock_act_pipeline.py)
 - 將原本僅執行至 Session 06 的流程擴充為完整的 Session 01 ~ 08 閉環：
   - 整合 Session 07：求解調度、LS-DYNA 關鍵字導出與能量監控。
   - 整合 Session 08：後處理應變提取與失效指標 PASS/FAIL 評估。
 - 移除 `d:\Ikaros\ACT_Test\Shock_35G_KFiles` 硬編碼，改採相對於專案目錄的動態路徑。
 
-#### [MODIFY] [run_shock_35g_pipeline.py](file:///F:/Ming_python/ansys-unified-mcp/examples/shock_analysis/run_shock_35g_pipeline.py)
+#### [MODIFY] [run_shock_35g_pipeline.py](../../examples/shock_analysis/run_shock_35g_pipeline.py)
 - 移除 `d:\Ikaros\ACT_Test\Shock_35G_KFiles` 硬編碼，改採相對於專案目錄的動態路徑。
 
 ---
 
 ### 第三階段：全庫殘留硬編碼徹底清除與路徑解耦
 
-#### [MODIFY] [Session 01 ~ 05 SKILL.md](file:///F:/Ming_python/ansys-unified-mcp/SKILLs/shock-analysis-workflow/)
+#### [MODIFY] [Session 01 ~ 05 SKILL.md](../../SKILLs/shock-analysis-workflow/)
 - 修正各 Session `SKILL.md` 中的執行命令，移除 `d:/Ikaros/ANSYS-unified-MCP`，改為使用標準相對路徑。
 
-#### [MODIFY] [pcb-warpage-analysis scripts](file:///F:/Ming_python/ansys-unified-mcp/SKILLs/pcb-warpage-analysis/scripts/)
+#### [MODIFY] [pcb-warpage-analysis scripts](../../SKILLs/pcb-warpage-analysis/scripts/)
 - `01_build_pcb_geometry.py`、`02_calculate_rom_materials.py`、`run_full_warpage_workflow.py`：移除 `D:\ANSYS_MCP_Connect` 寫死路徑，改為預設相對於腳本同層之範例目錄或支援命令列引數傳入。
 
-#### [MODIFY] [drivers](file:///F:/Ming_python/ansys-unified-mcp/src/ansys_unified_mcp/drivers/)
-- `icepak_driver.py`、`optislang_driver.py`、`spaceclaim_driver.py`：移除寫死的 `F:\Ming_python\...` Python 執行檔路徑，改為使用 `sys.executable`。
+#### [MODIFY] [drivers](../../src/ansys_unified_mcp/drivers/)
+- `icepak_driver.py`、`optislang_driver.py`、`spaceclaim_driver.py`：移除寫死的 `%WORKBENCH_MCP_ROOT%\...` Python 執行檔路徑，改為使用 `sys.executable`。
 
-#### [MODIFY] [workbench_plugin](file:///F:/Ming_python/ansys-unified-mcp/workbench_plugin/)
+#### [MODIFY] [workbench_plugin](../../workbench_plugin/)
 - `wb_event_listener.py`、`main.py`：移除寫死 `D:\Ikaros`，改為使用環境變數或專案動態目錄 fallback。
 
-#### [MODIFY] [audit_architecture_compliance.py](file:///F:/Ming_python/ansys-unified-mcp/scripts/audit_architecture_compliance.py) & [test_remediation_m5.py](file:///F:/Ming_python/ansys-unified-mcp/tests/test_remediation_m5.py)
+#### [MODIFY] [audit_architecture_compliance.py](../../scripts/audit_architecture_compliance.py) & [test_remediation_m5.py](../../tests/test_remediation_m5.py)
 - 移除寫死的絕對路徑，改採 `Path(__file__).resolve()` 動態取得專案根目錄與使用者目錄。
 
 ---

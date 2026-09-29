@@ -11,6 +11,8 @@ __pycache__/
 *.py[cod]
 *$py.class
 *.so
+.pytest_cache/
+.ruff_cache/
 
 # 環境變數與設定
 .env
@@ -31,6 +33,11 @@ __pycache__/
 *.log
 *.txt
 !requirements.txt
+# 稽核日誌目錄（避免本機大量 audit log 納入版本控制），僅保留佔位檔。
+# 必須寫 logs/* 而非 logs/：git 無法對「已被排除的目錄」內的檔案做 !negation，
+# 寫成 logs/ 會讓 !logs/.gitkeep 失效（與既有 jobs/* 的寫法一致）。
+logs/*
+!logs/.gitkeep
 workbench_queue/*
 !workbench_queue/.gitkeep
 **/workbench_queue/*
@@ -46,10 +53,14 @@ status.json
 !src/ansys_unified_mcp/scripts/ansys_workbench_bridge.wbjn
 
 # ANSYS documentation corpora — copyrighted + very large (~680 MB total).
-Documentation/
-Documentation_md/
-Documentation_clean/
+# 用通配涵蓋 Documentation / Documentation_md / Documentation_clean 及任何改名或新增的變體，
+# 避免只列精確目錄名而漏網（語料位置可由 ANSYS_DOCS_ROOT 移出 repo）。
+Documentation*/
 docs_index.sqlite
+# 瀏覽器未完成下載之暫存檔
+*.下載
+*.crdownload
+*.part
 
 # CodeGraph index & Serena tooling cache
 .codegraph/

@@ -20,7 +20,7 @@ import subprocess
 import time
 import uuid
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 
 from ansys_unified_mcp.shared import mcp, as_envelope as _envelope
 from ansys_unified_mcp.config import config
@@ -35,6 +35,8 @@ COMMANDS_DIR = MCP_HOME / "commands"
 RESULTS_DIR = MCP_HOME / "results"
 SCRIPTS_DIR = MCP_HOME / "scripts"
 RUNS_DIR = MCP_HOME / "runs"
+LOGS_DIR = MCP_HOME / "logs"
+WORKBENCH_QUEUE_DIR = MCP_HOME / "workbench_queue"
 STATUS_FILE = MCP_HOME / "status.json"
 STOP_FILE = MCP_HOME / "stop.flag"
 LOG_FILE = MCP_HOME / "mcp.log"
@@ -134,6 +136,19 @@ def _write_json(path: Path, data: dict[str, Any]) -> None:
     tmp = path.with_suffix(path.suffix + ".tmp")
     tmp.write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
     tmp.replace(path)
+
+
+def _ensure_dirs() -> None:
+    for d in (COMMANDS_DIR, RESULTS_DIR, LOGS_DIR, WORKBENCH_QUEUE_DIR):
+        d.mkdir(parents=True, exist_ok=True)
+
+
+def _as_path(p: str | Path) -> Path:
+    return Path(p).resolve() if not isinstance(p, Path) else p
+
+
+def _json(obj: Any) -> str:
+    return json.dumps(obj, ensure_ascii=False)
 
 
 def _run_process(args: list[str], cwd: Path, timeout_seconds: int) -> dict[str, Any]:

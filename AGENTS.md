@@ -20,7 +20,7 @@
 - **專案心智模型與分層**：[`contexts/context.md`](./contexts/context.md)
 - **系統架構與工具命名信封慣例**：[`ARCHITECTURE.md`](./ARCHITECTURE.md)
 - **PyAnsys 與 ANSYS 映射路線**：[`contexts/pyansys-mapping-and-roadmap.md`](./contexts/pyansys-mapping-and-roadmap.md)
-- **測試基礎設施與執行指令**：[`TEST_INFRA.md`](./TEST_INFRA.md)
+- **測試基礎設施與執行指令**：[`docs/testing/TEST_INFRA.md`](./docs/testing/TEST_INFRA.md)
 
 ---
 

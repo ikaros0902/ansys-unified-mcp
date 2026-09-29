@@ -1,3 +1,16 @@
+> ## ⚠️ 歷史快照（ARCHIVED）— 請勿作為現況依據
+>
+> 本檔案存放於 `docs/archive/`，屬**歷史快照**，保留目的僅為追溯當時的決策脈絡。
+> 檔內資源盤點、版本與路徑**均已過期**，不得作為專案現況判斷、驗收基準或實作依據。
+> 專案現況請參閱 [`README.md`](../../README.md)、[`ARCHITECTURE.md`](../../ARCHITECTURE.md) 與 [文件索引](../index.md)。
+>
+> **已查證的具體落差**：
+> - 稱「10 項純淨 ANSYS CAE 專業技能」— 現況 `SKILLs/` 下已有 **20 個技能目錄**。
+> - 寫定 ANSYS 2025 R1 (`v251`) 為唯一底座版本 — 實際支援版本已不限於此，請以安裝環境探測結果為準。
+> - 含已失效的 `F:` 磁碟絕對路徑（本次重構已遮罩為 `%WORKBENCH_MCP_ROOT%`），原始路徑在現行機器上不存在。
+
+---
+
 # ANSYS MCP 全自動化開發藍圖與多模型動態路由架構計畫
 
 ## 一、目前您擁有的全部資源盤點 (Resource Inventory)
@@ -15,7 +28,7 @@
 │    ├─ Workbench 專案管理 (PyWorkbench + FileBridge + Plugin Queue)                │
 │    └─ optiSLang 參數最佳化與靈敏度分析 (PyOptiSLang)                             │
 ├──────────────────────────────────────────────────────────────────────────────────┤
-│ 2. 統一中繼伺服器 (F:\Ming_python\ansys-unified-mcp)                             │
+│ 2. 統一中繼伺服器 (%WORKBENCH_MCP_ROOT%)                                         │
 │    ├─ 40+ 個 FastMCP 原生工具 (覆蓋 geometry_*, mechanical_*, fluent_*, optislang)│
 │    ├─ 本地 SQLite FTS5 全文檢索 RAG (Documentation_clean\docs_index.sqlite)       │
 │    └─ 10 項純淨 ANSYS CAE 專業技能 (SKILLs/ 目錄)                                │

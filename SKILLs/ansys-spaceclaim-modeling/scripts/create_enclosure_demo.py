@@ -163,7 +163,7 @@ def run_enclosure_pipeline(
     design.export_to_scdocx(scdocx_file)
     
     print("================================================================================")
-    print(f"[成功完成] 無損幾何檔案已輸出:")
+    print("[成功完成] 無損幾何檔案已輸出:")
     print(f"  - PMDB 資料庫 : {pmdb_file}")
     print(f"  - SpaceClaim  : {scdocx_file}")
     print("================================================================================")

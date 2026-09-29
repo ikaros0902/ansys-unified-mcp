@@ -22,7 +22,7 @@
 ## 二、 標準安裝與部署步驟 (Step-by-Step)
 
 ### 步驟 1：取得專案代碼
-開啟 **PowerShell** 或 **命令提示字元 (CMD)**，切換至目標工作目錄（例如 `D:\Projects` 或 `F:\Ming_python`）：
+開啟 **PowerShell** 或 **命令提示字元 (CMD)**，切換至目標工作目錄（例如 `D:\Projects` 或 `%USERPROFILE%\repos`）：
 ```powershell
 git clone https://github.com/ikaros0902/ansys-unified-mcp.git
 cd ansys-unified-mcp

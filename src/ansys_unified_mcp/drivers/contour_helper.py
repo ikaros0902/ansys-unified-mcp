@@ -159,8 +159,8 @@ def generate_white_contour_png(
     info_box_x = 60
     info_box_y = height - 120
     draw.rectangle([(info_box_x, info_box_y), (info_box_x + 420, info_box_y + 80)], fill=(248, 250, 252, 220), outline=(203, 213, 225, 255), width=1)
-    draw.text((info_box_x + 15, info_box_y + 12), f"Solver: ANSYS Mechanical / Unified MCP 2.0", fill=(100, 116, 139, 255), font=font_bar)
-    draw.text((info_box_x + 15, info_box_y + 42), f"Background: Pure White (#FFFFFF) | Aspect: 16:9", fill=(100, 116, 139, 255), font=font_bar)
+    draw.text((info_box_x + 15, info_box_y + 12), "Solver: ANSYS Mechanical / Unified MCP 2.0", fill=(100, 116, 139, 255), font=font_bar)
+    draw.text((info_box_x + 15, info_box_y + 42), "Background: Pure White (#FFFFFF) | Aspect: 16:9", fill=(100, 116, 139, 255), font=font_bar)
 
     # 儲存圖片
     img.save(str(output_path), "PNG")

@@ -1,3 +1,15 @@
+> ## ⚠️ 歷史快照（ARCHIVED）— 請勿作為現況依據
+>
+> 本檔案存放於 `docs/archive/`，屬**歷史快照**，保留目的僅為追溯當時的決策脈絡。
+> 檔內測試數據與通過率**均已過期**，不得作為專案現況判斷、驗收基準或實作依據。
+> 測試現況請參閱 [`docs/testing/TEST_INFRA.md`](../testing/TEST_INFRA.md)。
+>
+> **已查證的具體落差**：
+> - 稱測試規模為「10 個測試檔 / 115 個測試用例」— 現況 `tests/` 下已有 **37 個 `test_*.py`**，用例數亦已不同。
+> - 檔內「100% PASS」為當時單次發布快照，不代表目前測試狀態。
+
+---
+
 # ANSYS Unified MCP 2.0 測試就緒發布報告 (TEST_READY.md)
 
 **發布日期**：2026-09-06  
@@ -29,7 +41,7 @@
 ### 2.1 Tier 1: 靜態語法編譯檢查 (py_compile)
 - **指令**：
   ```powershell
-  & "F:\Ming_python\ansys-unified-mcp\.venv\Scripts\python.exe" -m py_compile tests/unit/test_base_drivers.py tests/unit/test_workbench_links.py tests/e2e/__init__.py tests/e2e/test_e2e_random_vibration_gate.py tests/e2e/test_e2e_drop_test_hourglass.py tests/e2e/test_e2e_thermal_warpage_cell_link.py
+  & "%WORKBENCH_MCP_ROOT%\.venv\Scripts\python.exe" -m py_compile tests/unit/test_base_drivers.py tests/unit/test_workbench_links.py tests/e2e/__init__.py tests/e2e/test_e2e_random_vibration_gate.py tests/e2e/test_e2e_drop_test_hourglass.py tests/e2e/test_e2e_thermal_warpage_cell_link.py
   ```
 - **結果**：Exit Code 0，無任何 SyntaxError 或編譯警告。
 
@@ -65,19 +77,19 @@
 
 ### 3.1 執行全量單元與端到端測試套件
 ```powershell
-$env:PYTHONPATH="F:\Ming_python\ansys-unified-mcp\src"
+$env:PYTHONPATH="%WORKBENCH_MCP_ROOT%\src"
 C:\Python314\python.exe -m pytest tests/unit/ tests/e2e/ -v
 ```
 
 ### 3.2 僅執行三大合成端到端場景
 ```powershell
-$env:PYTHONPATH="F:\Ming_python\ansys-unified-mcp\src"
+$env:PYTHONPATH="%WORKBENCH_MCP_ROOT%\src"
 C:\Python314\python.exe -m pytest tests/e2e/ -v
 ```
 
 ### 3.3 執行靜態語法檢查
 ```powershell
-& "F:\Ming_python\ansys-unified-mcp\.venv\Scripts\python.exe" -m py_compile tests/unit/test_base_drivers.py tests/unit/test_workbench_links.py tests/e2e/__init__.py tests/e2e/test_e2e_random_vibration_gate.py tests/e2e/test_e2e_drop_test_hourglass.py tests/e2e/test_e2e_thermal_warpage_cell_link.py
+& "%WORKBENCH_MCP_ROOT%\.venv\Scripts\python.exe" -m py_compile tests/unit/test_base_drivers.py tests/unit/test_workbench_links.py tests/e2e/__init__.py tests/e2e/test_e2e_random_vibration_gate.py tests/e2e/test_e2e_drop_test_hourglass.py tests/e2e/test_e2e_thermal_warpage_cell_link.py
 ```
 
 ---

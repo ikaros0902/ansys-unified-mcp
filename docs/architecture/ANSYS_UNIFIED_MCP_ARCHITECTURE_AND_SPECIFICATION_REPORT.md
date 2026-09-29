@@ -3,7 +3,7 @@
 > **文件版本**：v2.0-Official-Release  
 > **發布日期**：2026-09-14  
 > **專案代號**：`ansys-unified-mcp`  
-> **基準目錄**：`F:\Ming_python\ansys-unified-mcp`  
+> **基準目錄**：`%WORKBENCH_MCP_ROOT%`  
 > **對標生態**：PyAnsys Ecosystem (`docs.pyansys.com`)、`ansys/pyansys` Bundle、`ansys/example-data`、Ansys Developer Portal  
 > **執筆角色**：Specification & Architecture Worker (`teamwork_preview_worker`)  
 > **文檔定位**：官方級架構白皮書、介面契約標準與 Phase 1 ~ 3 分階段工程實施規格書  
@@ -252,7 +252,7 @@
 #### 1. 代碼庫檢核結果
 - 在 `ansys-unified-mcp` 全專案 `src/` 目錄中，搜尋 `ansys-meshing-prime`、`from ansys.meshing import prime` 或 `primemesh`，**結果全數為 0**。
 - 檢視 `pyproject.toml` 與虛擬環境依賴清單，**未安裝 `ansys-meshing-prime`**。
-- 專案僅在 `contexts/pyansys-mapping-and-roadmap.md:19` 與 `docs/ANSYS_MCP_EVALUATION_AND_OPTIMIZATION_PLAN.md:52` 中將其標註為待辦缺失項。
+- 專案僅在 `contexts/pyansys-mapping-and-roadmap.md:19` 與 `docs/planning/ANSYS_MCP_EVALUATION_AND_OPTIMIZATION_PLAN.md:52` 中將其標註為待辦缺失項。
 
 #### 2. 現行網格能力與能力邊界
 當前專案的網格功能分散於兩處：

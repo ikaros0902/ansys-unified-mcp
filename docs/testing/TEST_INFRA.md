@@ -36,43 +36,43 @@
 ### 2.1 環境設置與前置
 本專案支援使用 Python 3.14 環境，透過環境變數 `PYTHONPATH` 指向 `src` 目錄：
 ```powershell
-$env:PYTHONPATH="F:\Ming_python\ansys-unified-mcp\src"
+$env:PYTHONPATH="%WORKBENCH_MCP_ROOT%\src"
 ```
 
 ### 2.2 Tier 1: 靜態語法與風格檢查
 ```powershell
 # 1. 語法編譯檢查 (必須全數編譯通過，Exit Code 0)
-& "F:\Ming_python\ansys-unified-mcp\.venv\Scripts\python.exe" -m py_compile (Get-ChildItem -Path "src", "tests" -Filter "*.py" -Recurse | Select-Object -ExpandProperty FullName)
+& "%WORKBENCH_MCP_ROOT%\.venv\Scripts\python.exe" -m py_compile (Get-ChildItem -Path "src", "tests" -Filter "*.py" -Recurse | Select-Object -ExpandProperty FullName)
 
 # 2. Ruff 代碼品質檢查 (針對重大錯誤)
-uvx ruff check src/ tests/ --select E9,F63,F7,F82
+uvx ruff check .
 ```
 
 ### 2.3 Tier 2: 離線單元測試
 ```powershell
-$env:PYTHONPATH="F:\Ming_python\ansys-unified-mcp\src"
-C:\Python314\python.exe -m pytest tests/unit/ -v
+$env:PYTHONPATH="%WORKBENCH_MCP_ROOT%\src"
+python -m pytest tests/unit/ -v
 ```
 
 針對核心模組單獨執行：
 ```powershell
 # 僅測試作業沙盒
-C:\Python314\python.exe -m pytest tests/unit/test_job_sandbox.py -v
+python -m pytest tests/unit/test_job_sandbox.py -v
 
 # 僅測試物理安全閘門
-C:\Python314\python.exe -m pytest tests/unit/test_preflight_gatekeeper.py -v
+python -m pytest tests/unit/test_preflight_gatekeeper.py -v
 ```
 
 ### 2.4 Tier 3: 合成端到端場景測試
 ```powershell
-$env:PYTHONPATH="F:\Ming_python\ansys-unified-mcp\src"
-C:\Python314\python.exe -m pytest tests/e2e/ -v
+$env:PYTHONPATH="%WORKBENCH_MCP_ROOT%\src"
+python -m pytest tests/e2e/ -v
 ```
 
 ### 2.5 全套自動化回歸一鍵執行
 ```powershell
-$env:PYTHONPATH="F:\Ming_python\ansys-unified-mcp\src"
-C:\Python314\python.exe -m pytest tests/ -v --durations=10
+$env:PYTHONPATH="%WORKBENCH_MCP_ROOT%\src"
+python -m pytest tests/ -v --durations=10
 ```
 
 ---

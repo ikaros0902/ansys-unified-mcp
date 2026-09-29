@@ -132,7 +132,7 @@ def test_section_1_fourteen_tools_stress():
         total_false_positives += len(fps_noise)
         print(f"[FAIL] 12 個業務工具在缺乏成功關鍵字之雜訊下觸發假陽性: {fps_noise}")
     else:
-        print(f"[PASS] 12 個業務工具在無成功關鍵字雜訊下 100% 輸出 ok: False (0/12 FP)")
+        print("[PASS] 12 個業務工具在無成功關鍵字雜訊下 100% 輸出 ok: False (0/12 FP)")
 
     print(f"\n--> 14 個工具入口全項極限壓力測試總假陽性數量: {total_false_positives}")
     assert total_false_positives == 0, f"存在假陽性，總數: {total_false_positives}"

@@ -126,7 +126,7 @@ def run_shock_analysis(
             for sub in range(1, 11):
                 t = (sub / 10.0) * (pulse_duration_ms * 1e-3 * 3.0)
                 f.write(f" INCREMENT 1 SUBSTEP {sub} TIME= {t:.6e}\n")
-                f.write(f" FORCE CONVERGENCE VALUE = 1.25E-04 CRITERION= 5.00E-03\n")
+                f.write(" FORCE CONVERGENCE VALUE = 1.25E-04 CRITERION= 5.00E-03\n")
             f.write("SOLUTION IS CONVERGED\n")
 
         # 計算動態放大係數 (DAF) 與等效應力

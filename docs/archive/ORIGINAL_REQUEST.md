@@ -1,10 +1,23 @@
+> ## ⚠️ 歷史快照（ARCHIVED）— 請勿作為現況依據
+>
+> 本檔案存放於 `docs/archive/`，屬**歷史快照**，保留目的僅為追溯當時的決策脈絡。
+> 檔內需求描述與路徑**均已過期**，不得作為專案現況判斷、驗收基準或實作依據。
+> 專案現況請參閱 [`README.md`](../../README.md)、[`ARCHITECTURE.md`](../../ARCHITECTURE.md) 與 [文件索引](../index.md)。
+>
+> **已查證的具體落差**：
+> - 本檔為**原始需求書**（最早紀錄標註日期 2026-09-05），描述的是當時的預期目標，非已交付現況。
+> - 同一檔內**新舊工作目錄並存且互相矛盾**（早期段落用已失效的 `F:` 磁碟路徑，後期段落改用 `d:\Ikaros\ANSYS-unified-MCP`）；本次重構已將失效的絕對路徑遮罩為 `%WORKBENCH_MCP_ROOT%` / `%USERPROFILE%`。
+> - 與 [`PROJECT.md`](PROJECT.md) 為同批需求的不同視角，兩者內容不完全一致。
+
+---
+
 # Original User Request
 
 ## 2026-09-05T13:44:11Z
 
 以 PyAnsys 官方範例數據庫（ansys/example-data）與核心工作流（ansys/pyansys）為工程基準，全面優化、更新既有技能（Mechanical、LS-DYNA、optiSLang、SpaceClaim/Geometry），並正式新增「ansys-fluent」流體分析完整技能，落實林明志標準架構（主控 < 200 行 + reference/ 子手冊 + scripts/ 端到端可執行腳本 + 判斷力/自愈庫），並完成雙向同步與地端模型考評驗證。
 
-Working directory: F:\Ming_python\ansys-unified-mcp\SKILLs 及 C:\Users\Ming\.gemini\config\skills
+Working directory: %WORKBENCH_MCP_ROOT%\SKILLs 及 %USERPROFILE%\.gemini\config\skills
 Integrity mode: development
 
 ## 參考資料與數據庫來源
@@ -29,7 +42,7 @@ Integrity mode: development
 - 所有產品線之 SKILL.md 嚴格控制在 200 行以內。
 - 知識深度分流至 reference/*.md（每本約 100~200 行）。
 - 所有文檔說明、思考過程與代碼註解一律採用專業繁體中文（ANSYS ACT 原生巨集保持全英文雙軌制）。
-- 所有新產生的技能與手冊必須 100% 雙向同步至 C:\Users\Ming\.gemini\config\skills\ 與 F:\Ming_python\ansys-unified-mcp\SKILLs\。
+- 所有新產生的技能與手冊必須 100% 雙向同步至 %USERPROFILE%\.gemini\config\skills\ 與 %WORKBENCH_MCP_ROOT%\SKILLs\。
 
 ### R4. 自動化量化考評與地端驗證
 - 編寫/擴充自動化驗證測試套件 scratch/verify_all_skills_llamacpp.py（涵蓋 Mechanical、LS-DYNA、optiSLang、SpaceClaim 及新加入的 Fluent 共 5 大模組）。
@@ -55,17 +68,17 @@ Integrity mode: development
 
 以林明志專家教學的系統級架構為標竿，徹底打破單純的「Skill 提示詞補丁」思維，針對使用者涵蓋 Workbench、Structural (Static/Transient)、LS-DYNA、Vibration (Modal/Harmonic/Random/Spectrum)、optiSLang、SpaceClaim/Discovery、LS-Run/LS-Prepost、Icepak 等全產品線與六大核心分析工況（衝擊、落摔、隨機振動、熱翹曲、零件分析、代理模型），實施 ANSYS MCP 2.0 全域架構重塑。全面建立「非同步求解沙盒、實時物理守護、Workbench 原生拓撲直通、前置安全閘門與自包含互動式 HTML 報告閉環」。
 
-Working directory: F:\Ming_python\ansys-unified-mcp
+Working directory: %WORKBENCH_MCP_ROOT%
 Integrity mode: development
 
 ## 參考資料與架構對齊基準
 - 參考標竿：https://github.com/linmingchih/Training-Material（打造 AI 模擬助理三層式架構、Job 目錄隔離、Pre-flight 檢驗、overview.html 報告生成）
-- 現有代碼庫：F:\Ming_python\ansys-unified-mcp（具備 Drivers、Controllers、Skills 基礎）
+- 現有代碼庫：%WORKBENCH_MCP_ROOT%（具備 Drivers、Controllers、Skills 基礎）
 
 ## Requirements
 
 ### R1. 模擬作業生命週期與沙盒目錄隔離 (Job Sandbox & Artifact Lifecycle)
-- 獨立沙盒結構：在 F:\Ming_python\ansys-unified-mcp\jobs\ 下，每次模擬執行均自動建立獨立命名空間 jobs/{timestamp}_{analysis_type}_{tag}/。
+- 獨立沙盒結構：在 %WORKBENCH_MCP_ROOT%\jobs\ 下，每次模擬執行均自動建立獨立命名空間 jobs/{timestamp}_{analysis_type}_{tag}/。
 - 原始資產絕對唯讀：原始 CAD 模型（PMDB/STEP/SCDOC）、材料庫 XML、基礎模板保持唯讀，任何運算產生物（網格、日誌、rst、d3plot）僅能寫入沙盒內部。
 - 標準交付物矩陣：作業完成後，沙盒內部必須自動生成三位一體之標準成果：
   1. summary.json：機器可讀之關鍵純量指標（最大應力、安全係數、最大翹曲位移、一階頻率、沙漏能比率、PASS/FAIL 判定）。
@@ -135,7 +148,7 @@ Integrity mode: development
 
 實作 ANSYS Unified MCP 的 Phase 1 核心架構改造：全面完成 102 個工具的命名規範化與雙軌 alias 相容層、開發組合式高階工程工具，並建立完整的自動化回歸測試套件與等效性驗證。
 
-Working directory: F:\Ming_python\ansys-unified-mcp
+Working directory: %WORKBENCH_MCP_ROOT%
 Integrity mode: development
 
 ## Requirements
@@ -180,7 +193,7 @@ Integrity mode: demo
 ### R2. 衝擊分析技能庫生態系納管 (Phase 3)
 - 將 `SKILLs/shock-analysis-workflow/`（涵蓋 8 個 Session 子階段技能與內部測試腳本）納入專案版控。
 - 檢查各 `SKILL.md` 是否嚴格符合 101 行以內的漸進式揭露規範，確保與 `src/ansys_unified_mcp/workflows/shock_analysis.py` 介面契約對齊。
-- 修正 `scripts/sync_skills_bidirectional.py` 預設工作目錄至本機真實路徑（`d:\Ikaros\ANSYS-unified-MCP` 與 `C:\Users\REDACTED_UID\.gemini\config\skills`），並驗證技能庫雙向同步與 SHA-256 完整性。
+- 修正 `scripts/sync_skills_bidirectional.py` 預設工作目錄至本機真實路徑（`d:\Ikaros\ANSYS-unified-MCP` 與 `%USERPROFILE%\.gemini\config\skills`），並驗證技能庫雙向同步與 SHA-256 完整性。
 
 ### R3. 實跑管線與幾何清理腳本架構化歸位 (Phase 3)
 - 建立 `examples/shock_analysis/` 目錄，將 `run_shock_35g_pipeline.py`、`execute_full_shock_act_pipeline.py` 與 `audit_rm_deep.py` 移入，作為真實工程工況參照與端到端標竿。
@@ -210,14 +223,14 @@ Integrity mode: demo
 
 針對 ansys-unified-mcp 專案，聚焦於「結構 (Structural)」、「幾何 (Geometry)」、「熱傳/電子散熱 (Thermal/Icepak)」、「高階網格 (PyPrimeMesh)」與「電子封裝 (Electronic Packaging)」五大核心領域，深度對標 ANSYS / PyAnsys 官方 Tutorial 與各大教學網站，產出高資訊密度的架構與規格評估報告以及分階段優化里程碑計畫。
 
-工作目錄：F:\Ming_python\ansys-unified-mcp
+工作目錄：%WORKBENCH_MCP_ROOT%
 誠信模式：demo
 
 參考資源：
 - Projects — PyAnsys (https://docs.pyansys.com/version/stable/projects.html)
 - ansys/pyansys: Delivering PyAnsys libraries as a bundle (https://github.com/ansys/pyansys)
 - PyAnsys for developers | Ansys Developer Portal (https://developer.synopsys.com/docs/pyansys)
-- 現有專案源碼：F:\Ming_python\ansys-unified-mcp
+- 現有專案源碼：%WORKBENCH_MCP_ROOT%
 
 需求清單：
 R1. 五大領域現行模組現況與架構瓶頸深度診斷 (Current Architecture Audit)

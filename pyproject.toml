@@ -24,7 +24,7 @@ dependencies = [
 [project.optional-dependencies]
 workbench = ["ansys-workbench-core"]
 dyna = ["lasso-python"]
-dev = ["pytest"]
+dev = ["pytest", "ruff"]
 
 [project.scripts]
 ansys-unified-mcp = "ansys_unified_mcp.__main__:main"
@@ -32,3 +32,61 @@ ansys-unified-mcp = "ansys_unified_mcp.__main__:main"
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src", "."]
+
+# ===== Ruff 靜態檢查（Tier 1 閘門，見 docs/testing/TEST_INFRA.md）=====
+[tool.ruff]
+line-length = 100
+target-version = "py310"  # 對齊 requires-python = ">=3.10"
+# 文件語料、執行輸出與佇列目錄不含需檢查的原始碼
+extend-exclude = [
+    "Documentation",
+    "Documentation_md",
+    "Documentation_clean",
+    "logs",
+    "runs",
+    "jobs",
+    "workbench_queue",
+    "scratch",
+]
+
+[tool.ruff.lint]
+# 選用 E/F/W 後，依實測（初測 1728 筆）剔除純格式與既有技術債類規則，
+# 讓此閘門聚焦在「會造成執行期錯誤」的訊號上，而非製造 81 個 py 檔的雜訊。
+select = ["E", "F", "W"]
+ignore = [
+    # --- 純格式範疇，屬 ruff format 職責，非正確性問題 ---
+    # E501（854 筆）：既有長行（config.py 的 API_DOCS 表格、內嵌 journal 字串）。
+    # line-length 仍保留給 formatter 參考，但不作為閘門錯誤。
+    "E501",
+    # E402（29 筆）：__main__.py 刻意在 load_dotenv() 之後才動態 import 工具模組，
+    # 屬 Dynamic Tool Routing 的設計決策而非缺陷。
+    "E402",
+    # E702（6 筆，集中於 drivers/sim_impl.py）：以分號並列的緊湊寫法，
+    # 為既有風格選擇，無正確性影響。
+    "E702",
+    # W291 / W292 / W293（309 筆）：行尾空白、檔尾換行、空行含空白。
+    "W291",
+    "W292",
+    "W293",
+    # --- 既有技術債，需專責清理提交，不在本次改動範圍 ---
+    # F401（242 筆：tests 約 118、src 約 116）未使用 import；
+    # F841（29 筆）未使用區域變數。
+    # 兩者皆為存量債務，一次性移除會動到大量業務檔案，故先排除；
+    # 清理時可用 `ruff check --select F401,F841 --fix` 單獨處理。
+    "F401",
+    "F841",
+]
+# 「I」(isort) 經評估後暫不納入：I001 現有 129 筆全為 import 排序差異，
+# 需要一次專責的 `ruff check --select I --fix` 格式化提交才能收斂。
+# 待該提交完成後可再加入 select。
+
+[tool.ruff.lint.per-file-ignores]
+# ACT / IronPython 內嵌腳本在 ANSYS 進程內執行，ExtAPI、DataModel、Quantity、
+# SelectionTypeEnum 等為求解器注入的全域名稱，CPython 端必然判為未定義，
+# 故這些目錄免除 F821；其語法正確性由 scripts/audit_architecture_compliance.py
+# 的 py_compile 檢查獨立把關。
+"SKILLs/**/*.py" = ["F821"]
+"scripts/pcb_warpage_analysis/*.py" = ["F821"]
+"workbench_plugin/**/*.py" = ["F821"]
+"samples/*.py" = ["F821"]
+"examples/**/*.py" = ["F821"]

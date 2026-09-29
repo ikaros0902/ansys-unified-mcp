@@ -19,13 +19,30 @@ when the scope is widened (see docs/index.py search()).
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
+from dotenv import load_dotenv
+
 # Repo root = parents[3]: docs/ -> ansys_unified_mcp/ -> src/ -> repo
+# REPO_ROOT 仍代表「程式碼倉庫根目錄」，index.py 靠它掃 SKILLs/ 與
+# steering/reference/ 的 RAG 語料，那些內容留在 repo 內，不隨 DOCS_ROOT 外移。
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
-SOURCE_DIR = REPO_ROOT / "Documentation_md"
-CLEAN_DIR = REPO_ROOT / "Documentation_clean"
+# 本模組會在 MCP 主進程之外被直接匯入（單元測試、索引重建腳本、一次性查詢），
+# 這些情境不保證 __main__.py 的 load_dotenv() 已先跑過，ANSYS_DOCS_ROOT 會讀不到。
+# 故此處顯式載入專案根目錄 .env；python-dotenv 重複呼叫安全，且預設 override=False，
+# 因此行程環境變數（shell 的 $env:）優先權高於 .env，不會被 .env 蓋掉。
+load_dotenv(REPO_ROOT / ".env")
+
+# ANSYS 官方文件語料受版權保護且體積龐大（約 680 MB），不適合納入版控，
+# 故允許用環境變數 ANSYS_DOCS_ROOT 把語料根目錄指向 repo 外部路徑。
+# 未設定或設為空字串時退回 REPO_ROOT，維持既有行為不破壞。
+_DOCS_ROOT_ENV = os.environ.get("ANSYS_DOCS_ROOT", "").strip()
+DOCS_ROOT = Path(_DOCS_ROOT_ENV) if _DOCS_ROOT_ENV else REPO_ROOT
+
+SOURCE_DIR = DOCS_ROOT / "Documentation_md"
+CLEAN_DIR = DOCS_ROOT / "Documentation_clean"
 INDEX_PATH = CLEAN_DIR / "docs_index.sqlite"
 
 # Chunking (characters). Windows kept small enough to be digestible in a single
