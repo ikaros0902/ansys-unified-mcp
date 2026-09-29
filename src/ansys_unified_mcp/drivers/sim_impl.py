@@ -562,7 +562,7 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
             loop = asyncio.get_event_loop()
             port = arguments.get("port")
             host = arguments.get("host", "localhost")
-            transport_mode = arguments.get("transport_mode", "wnua" if sys.platform == "win32" else "insecure")
+            transport_mode = arguments.get("transport_mode", "insecure")
             # 限制內部逾時最多 8 秒，避免觸發 OpenClaw 30 秒中斷
             raw_timeout = int(arguments.get("connect_timeout", 8))
             connect_timeout = max(3, min(raw_timeout, 8))
