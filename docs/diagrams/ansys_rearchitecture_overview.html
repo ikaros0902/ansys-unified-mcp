@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>CAE-Agent-Hub 垂直切片架構</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&family=Noto+Sans+KR:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --paper: #f5f5f5;
+      --ink: #2d3142;
+      --muted: #4f5d75;
+      --soft: #7a8399;
+      --accent: #eb6c36;
+      --accent-tint: rgba(235, 108, 54, 0.05);
+      --rule: rgba(45, 49, 66, 0.12);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 3rem;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: 'Geist', sans-serif;
+      line-height: 1.5;
+    }
+    header {
+      margin-bottom: 3rem;
+    }
+    .eyebrow {
+      font-family: 'Geist Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin: 0 0 0.5rem 0;
+    }
+    h1 {
+      font-family: 'Instrument Serif', serif;
+      font-size: 2.5rem;
+      font-weight: 400;
+      margin: 0;
+    }
+    .diagram-container {
+      margin-bottom: 4rem;
+      width: 100%;
+      max-width: 900px;
+    }
+    svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .cards {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 24px;
+      max-width: 900px;
+    }
+    .card {
+      background: #ffffff;
+      border: 1px solid var(--rule);
+      border-radius: 6px;
+      padding: 1.5rem;
+    }
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 1rem;
+    }
+    .card-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+    .card-dot.accent { background: var(--accent); }
+    .card-dot.ink { background: var(--ink); }
+    .card h3 {
+      font-family: 'Geist', sans-serif;
+      font-size: 1.125rem;
+      font-weight: 600;
+      margin: 0;
+    }
+    .card p, .card li {
+      font-size: 0.875rem;
+      color: var(--muted);
+      margin-bottom: 0.75rem;
+    }
+    .card ul {
+      margin: 0;
+      padding-left: 1.25rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <p class="eyebrow">ANSYS MCP REARCHITECTURE</p>
+    <h1>CAE-Agent-Hub 垂直切片架構</h1>
+  </header>
+
+  <div class="diagram-container">
+    <svg viewBox="0 0 840 480" role="img" aria-labelledby="rearch-title rearch-desc">
+      <title id="rearch-title">ANSYS MCP 模組垂直切片與 Gatekeeper 安全架構圖</title>
+      <desc id="rearch-desc">系統分為三層：前端 AI Agent、中間層 ANSYS MCP 伺服器 (包含 Gatekeeper 安全防線與獨立的軟體模組)、以及後端 ANSYS 實體求解器引擎。</desc>
+      
+      <defs>
+        <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+          <polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/>
+        </marker>
+        <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+          <polygon points="0 0, 8 3, 0 6" fill="#eb6c36"/>
+        </marker>
+      </defs>
+
+      <!-- Zones (Backgrounds) -->
+      <!-- Zone 1: Client -->
+      <rect x="40" y="20" width="140" height="420" rx="8" fill="rgba(45,49,66,0.02)" stroke="rgba(45,49,66,0.10)" stroke-width="0.8"/>
+      <rect x="52" y="24" width="72" height="12" rx="2" fill="#f5f5f5"/>
+      <text x="88" y="33" fill="rgba(45,49,66,0.40)" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.14em">CLIENT TIER</text>
+
+      <!-- Zone 2: MCP Server -->
+      <rect x="220" y="20" width="440" height="420" rx="8" fill="rgba(45,49,66,0.02)" stroke="rgba(45,49,66,0.10)" stroke-width="0.8"/>
+      <rect x="232" y="24" width="104" height="12" rx="2" fill="#f5f5f5"/>
+      <text x="284" y="33" fill="rgba(45,49,66,0.40)" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.14em">UNIFIED MCP (PYTHON)</text>
+
+      <!-- Zone 3: Backend -->
+      <rect x="700" y="20" width="100" height="420" rx="8" fill="rgba(45,49,66,0.02)" stroke="rgba(45,49,66,0.10)" stroke-width="0.8"/>
+      <rect x="712" y="24" width="76" height="12" rx="2" fill="#f5f5f5"/>
+      <text x="750" y="33" fill="rgba(45,49,66,0.40)" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.14em">CAE ENGINES</text>
+
+
+      <!-- Arrows (drawn before nodes) -->
+      <!-- Agent -> Gatekeeper -->
+      <path d="M 160,230 H 240" fill="none" stroke="#eb6c36" stroke-width="1.2" marker-end="url(#arrow-accent)"/>
+      <rect x="176" y="210" width="48" height="12" rx="2" fill="#f5f5f5"/>
+      <text x="200" y="219" fill="#eb6c36" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">JSON-RPC</text>
+
+      <!-- Gatekeeper -> Bridges -->
+      <path d="M 360,230 H 400" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <rect x="356" y="210" width="48" height="12" rx="2" fill="#f5f5f5"/>
+      <text x="380" y="219" fill="#7a8399" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">VALIDATE</text>
+
+      <!-- Bridges -> Mechanical (Up) -->
+      <path d="M 440,200 V 118 Q 440,110 448,110 H 520" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      
+      <!-- Bridges -> Fluent (Straight) -->
+      <path d="M 480,230 H 520" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+
+      <!-- Bridges -> SpaceClaim (Down) -->
+      <path d="M 440,260 V 342 Q 440,350 448,350 H 520" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <rect x="460" y="330" width="48" height="12" rx="2" fill="#f5f5f5"/>
+      <text x="484" y="339" fill="#7a8399" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">DISPATCH</text>
+
+      <!-- Products -> Solvers -->
+      <path d="M 640,110 H 720" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <path d="M 640,230 H 720" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <path d="M 640,350 H 720" fill="none" stroke="#4f5d75" stroke-width="1.2" marker-end="url(#arrow)"/>
+      <!-- Label on the middle solver line -->
+      <rect x="656" y="210" width="48" height="12" rx="2" fill="#f5f5f5"/>
+      <text x="680" y="219" fill="#7a8399" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">GRPC / IPC</text>
+
+
+      <!-- Nodes -->
+      <!-- AI Agent -->
+      <rect x="60" y="200" width="100" height="60" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <rect x="68" y="206" width="36" height="12" rx="2" fill="transparent" stroke="rgba(45,49,66,0.4)" stroke-width="0.8"/>
+      <text x="86" y="215" fill="rgba(45,49,66,0.8)" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">LLM</text>
+      <text x="110" y="234" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">AI Agent</text>
+      
+      <!-- Gatekeeper (Focal) -->
+      <rect x="240" y="200" width="120" height="60" rx="6" fill="rgba(235,108,54,0.05)" stroke="#eb6c36" stroke-width="1.2"/>
+      <rect x="248" y="206" width="48" height="12" rx="2" fill="transparent" stroke="rgba(235,108,54,0.4)" stroke-width="0.8"/>
+      <text x="272" y="215" fill="rgba(235,108,54,0.8)" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">SECURITY</text>
+      <text x="300" y="234" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Gatekeeper</text>
+      <text x="300" y="248" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">core/evidence</text>
+
+      <!-- Bridges -->
+      <rect x="400" y="200" width="80" height="60" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <rect x="408" y="206" width="36" height="12" rx="2" fill="transparent" stroke="rgba(45,49,66,0.4)" stroke-width="0.8"/>
+      <text x="426" y="215" fill="rgba(45,49,66,0.8)" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">BUS</text>
+      <text x="440" y="234" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Bridges</text>
+
+      <!-- Mechanical -->
+      <rect x="520" y="80" width="120" height="60" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <rect x="528" y="86" width="44" height="12" rx="2" fill="transparent" stroke="rgba(45,49,66,0.4)" stroke-width="0.8"/>
+      <text x="550" y="95" fill="rgba(45,49,66,0.8)" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">PRODUCT</text>
+      <text x="580" y="114" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Mechanical</text>
+      <text x="580" y="128" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">products/mech</text>
+
+      <!-- Fluent -->
+      <rect x="520" y="200" width="120" height="60" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <rect x="528" y="206" width="44" height="12" rx="2" fill="transparent" stroke="rgba(45,49,66,0.4)" stroke-width="0.8"/>
+      <text x="550" y="215" fill="rgba(45,49,66,0.8)" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">PRODUCT</text>
+      <text x="580" y="234" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Fluent CFD</text>
+      <text x="580" y="248" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">products/fluent</text>
+
+      <!-- SpaceClaim -->
+      <rect x="520" y="320" width="120" height="60" rx="6" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <rect x="528" y="326" width="44" height="12" rx="2" fill="transparent" stroke="rgba(45,49,66,0.4)" stroke-width="0.8"/>
+      <text x="550" y="335" fill="rgba(45,49,66,0.8)" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">PRODUCT</text>
+      <text x="580" y="354" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">SpaceClaim</text>
+      <text x="580" y="368" fill="#4f5d75" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">products/geom</text>
+
+      <!-- ANSYS Solvers (Large Block) -->
+      <rect x="720" y="80" width="60" height="300" rx="6" fill="rgba(45,49,66,0.05)" stroke="rgba(45,49,66,0.3)" stroke-width="1"/>
+      <rect x="728" y="86" width="44" height="12" rx="2" fill="transparent" stroke="rgba(45,49,66,0.4)" stroke-width="0.8"/>
+      <text x="750" y="95" fill="rgba(45,49,66,0.8)" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">HOST</text>
+      <text x="750" y="114" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">ANSYS</text>
+      <text x="750" y="128" fill="#2d3142" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Solvers</text>
+
+      <!-- Legend -->
+      <line x1="30" y1="460" x2="810" y2="460" stroke="rgba(45,49,66,0.10)" stroke-width="0.8"/>
+      <text x="30" y="474" fill="#4f5d75" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.14em">LEGEND</text>
+      <rect x="90" y="468" width="8" height="8" rx="2" fill="rgba(235,108,54,0.05)" stroke="#eb6c36" stroke-width="1.2"/>
+      <text x="106" y="475" fill="#4f5d75" font-size="9" font-family="'Geist', sans-serif">Security / Enforcement (Focal)</text>
+      <rect x="250" y="468" width="8" height="8" rx="2" fill="#ffffff" stroke="#2d3142" stroke-width="1"/>
+      <text x="266" y="475" fill="#4f5d75" font-size="9" font-family="'Geist', sans-serif">Standard Module / Bridge</text>
+      <rect x="400" y="468" width="8" height="8" rx="2" fill="rgba(45,49,66,0.05)" stroke="rgba(45,49,66,0.3)" stroke-width="1"/>
+      <text x="416" y="475" fill="#4f5d75" font-size="9" font-family="'Geist', sans-serif">External Executable</text>
+
+    </svg>
+  </div>
+
+  <div class="cards">
+    <div class="card">
+      <p class="eyebrow">DEVELOPER VIEW (開發視角)</p>
+      <div class="card-header">
+        <span class="card-dot ink"></span>
+        <h3>卡匣式垂直切片 (Decoupling)</h3>
+      </div>
+      <p>解決了過去 <code>tools</code> 與 <code>drivers</code> 程式碼互相依賴的「大鍋炒」痛點。</p>
+      <ul>
+        <li><strong>通訊分離</strong>：底層 File Queue 與 Socket 統一收斂至 <code>bridges/</code> 層，不再與業務邏輯綁定。</li>
+        <li><strong>獨立卡匣</strong>：Mechanical、Fluent 等產品邏輯完全獨立於 <code>products/</code>，增刪功能互不干擾。</li>
+        <li><strong>易於測試</strong>：Mocking 更直覺，單元測試覆蓋率與除錯效率顯著提升。</li>
+      </ul>
+    </div>
+    
+    <div class="card">
+      <p class="eyebrow">EXECUTIVE VIEW (管理視角)</p>
+      <div class="card-header">
+        <span class="card-dot accent"></span>
+        <h3>降低維護成本與容錯防線</h3>
+      </div>
+      <p>從單體實驗腳本，轉型為具備防禦機制的高可維護企業級自動化平台。</p>
+      <ul>
+        <li><strong>零浪費防呆</strong>：<code>Gatekeeper</code> 層會在呼叫耗時的 ANSYS 求解器前，自動攔截參數錯誤與單位衝突，大幅節省無效運算算力。</li>
+        <li><strong>平滑擴充</strong>：外掛式的產品架構，未來導入新模擬軟體可無痛熱插拔。</li>
+        <li><strong>降低交接成本</strong>：底層標準化降低了新進工程師理解架構的門檻。</li>
+      </ul>
+    </div>
+  </div>
+
+</body>
+</html>
