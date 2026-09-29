@@ -1,4 +1,4 @@
-﻿# ANSYS Unified MCP Server 安裝與部署標準作業手冊 (Deployment SOP)
+# ANSYS Unified MCP Server 安裝與部署標準作業手冊 (Deployment SOP)
 
 本手冊專為需要將 **ANSYS Unified MCP Server** 部署至其他工程師電腦、測試機或伺服器環境之人員編寫。遵照本作業程序，可確保在全新的 Windows 環境中順利完成安裝、環境配置、外掛部署與 AI 客戶端連線。
 
@@ -11,8 +11,8 @@
 | 項目 | 最低規格需求 | 備註說明 |
 | :--- | :--- | :--- |
 | **作業系統** | Windows 10 / 11 64-bit 或 Windows Server | 結構/幾何核心需調用 Windows 本機求解器介面。 |
-| **Python** | **Python 3.10 ~ 3.12 (64-bit)** | 安裝時**務必勾選**「Add Python to PATH」。 |
-| **ANSYS 軟體** | **ANSYS 2024 R1 (v241) ~ 2025 R1 (v251)** | 支援 Workbench, Mechanical, Fluent, SpaceClaim, optiSLang。 |
+| **Python** | **Python >= 3.10 (支援 3.10 ~ 3.14, 64-bit)** | 安裝時**務必勾選**「Add Python to PATH」；亦可透過 `uv` 管理。 |
+| **ANSYS 軟體** | **ANSYS 2020 R2 (v202) ~ 2025 R1 (v251)** | 支援 Workbench, Mechanical, Fluent, SpaceClaim, optiSLang 等核心模組。 |
 | **授權 (License)** | 具備對應 ANSYS 求解器有效 License | 需確認本機能正常開啟 ANSYS GUI。 |
 | **版本控管** | Git for Windows | 用於拉取與同步倉庫代碼。 |
 | **AI 客戶端** | 支援 MCP 的工具 | 如 Antigravity, Claude Desktop, Cursor, Windsurf, VSCode 等。 |
@@ -122,8 +122,11 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
 ```
 *(請將 `C:\\path\\to\\ansys-unified-mcp` 替換為實際目錄，反斜線需寫為雙反斜線 `\\`)*
 
-#### 方案 B：Antigravity / Cursor / Windsurf
-直接在專案或全域的 `mcp_config.json` 加入：
+#### 方案 B：Antigravity (Google AGY)
+在專案或全域的 `mcp_config.json` 加入配置：
+* **專案層級**：`<專案根目錄>/.agents/mcp_config.json`
+* **全域層級**：`%USERPROFILE%\.gemini\config\mcp_config.json`
+
 ```json
 {
   "mcpServers": {
@@ -138,6 +141,8 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
   }
 }
 ```
+*(請將路徑替換為實際目錄，建議使用正斜線 `/` 避免跳脫問題)*
+
 > 💡 **進階特性**：`mcp_server.py` 已內建自動加入 `src` 目錄與 stderr 隔離日誌，是最穩健的啟動入口。
 
 ---
@@ -146,12 +151,14 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
 
 安裝完成後，依序執行以下 3 關驗證：
 
-### 關卡 1：套件與 174 項工具載入驗證 (語法級)
+### 關卡 1：套件與核心工具載入驗證 (語法級)
 在命令列執行此單行指令：
 ```powershell
 .\.venv\Scripts\python.exe -c "import sys, asyncio; sys.path.insert(0, 'src'); import ansys_unified_mcp.__main__; from ansys_unified_mcp.shared import mcp; tools = asyncio.run(mcp.list_tools()); print(f'載入成功！共註冊 {len(tools)} 個工具。')"
 ```
-* **預期結果**：輸出 `載入成功！共註冊 174 個工具。`。
+* **預期結果**：
+  * **預設精簡模式 (Tool Pruning)**：輸出 `載入成功！共註冊 124 個工具。`（自動過濾 50+ 個過時別名，大幅精簡 LLM 上下文）。
+  * **完整別名模式**：若環境變數 `$env:ANSYS_MCP_EXPOSE_ALIASES="1"`，則輸出 `共註冊 176 個工具。`。
 
 ---
 
@@ -161,6 +168,7 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
 .\.venv\Scripts\python.exe -c "import sys; sys.path.insert(0, 'src'); from ansys_unified_mcp.config import get_config; cfg = get_config(); print('版本:', cfg.version); print('Workbench:', cfg.workbench_exe.exists()); print('Mechanical:', cfg.mechanical_exe.exists()); print('Fluent:', cfg.fluent_exe.exists()); print('狀態:', cfg.available)"
 ```
 * **預期結果**：
+  * `版本: 202`（或目標電腦的 ANSYS 版本代號）
   * `Workbench: True`
   * `Mechanical: True`
   * `Fluent: True`
@@ -197,10 +205,22 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
   2. 開啟 SpaceClaim，確認工作管理員中是否有 `SpaceClaim.exe` 正在執行。
   3. 執行指令 `netstat -ano | findstr 50051` 確認埠號 50051 是否處於 `LISTENING` 狀態。
 
-### Q4: 電腦記憶體有限，只想用結構或流體，不想一次載入 174 個工具？
+### Q4: 電腦記憶體有限，只想用結構或流體，不想一次載入全部工具？
 * **解法**：支援**動態路由 (Dynamic Routing)**。在 MCP 的 `env` 中設定 `ANSYS_MCP_PROFILE`：
   - `mechanical`：僅載入力學與結構分析工具。
   - `fluent`：僅載入流體力學與 CHT 工具。
   - `geometry`：僅載入幾何建模工具。
   - `workbench`：僅載入工作台流程調度工具。
   - `all`：載入完整全套工具（預設）。
+
+### Q5: 目標電腦只有 ANSYS 舊版（如 2020 R2 / v202），安裝是否相容？
+* **現象**：舊版 ANSYS 登錄檔位於 `HKLM:\SOFTWARE\ANSYS, Inc.\v202`，系統變數為 `AWP_ROOT202`。
+* **解法**：專案 `setup.ps1` 與 `config.py` 已實裝 5 重自動檢測機制（`.env` -> 系統變數 `AWP_ROOT*` -> 登錄檔 -> 檔案目錄），只需在 `.env` 確認 `ANSYS_VERSION=202` 與 `ANSYS_ROOT`，系統即可無縫辨識舊版執行檔。
+
+### Q6: 關卡 1 執行只顯示「124 個工具」，為什麼不是 174 個？
+* **現象**：`mcp.list_tools()` 預設輸出 124 個工具。
+* **說明**：此為正常安全特性。專案預設啟動了工具裁剪（Tool Pruning），封裝了 50 個重複的歷史別名，僅暴露 124 個標準核心工具（Canonical Primitives），避免浪費 LLM Context Window。若需要完整歷史別名，在環境變數加入 `ANSYS_MCP_EXPOSE_ALIASES=1` 即可見全部 176 個工具。
+
+### Q7: 執行 `setup.ps1` 出現 `WARNING: ApiServer DLL not found... Skipping SpaceClaim gRPC config`？
+* **現象**：在 ANSYS 2020 R2 等舊版中，找不到 `Presentation.ApiServerAddIn.dll`。
+* **說明**：這是正常的！SpaceClaim gRPC 服務是 ANSYS 2023/2024+ 引入的新特性。在 2020 R2 等版本中，幾何自動化將走原生 SpaceClaim ACT IronPython 腳本批次模式（`ansys-spaceclaim` 技能之雙軌架構），不影響幾何建模與前處理功能。

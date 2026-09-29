@@ -37,20 +37,77 @@ Write-Host "Installing dependencies..."
 # 3. Detect ANSYS
 Write-Host "[3/5] Detecting ANSYS installations..."
 $ansysVersions = @()
+
+# Source 1: Check .env file if present
+$envFile = Join-Path $ScriptDir ".env"
+if (Test-Path $envFile) {
+    Get-Content $envFile | ForEach-Object {
+        if ($_ -match "^\s*ANSYS_VERSION\s*=\s*(\d+)") {
+            $ver = $matches[1]
+            if ($ver -notin $ansysVersions) {
+                $ansysVersions += $ver
+                Write-Host "Found ANSYS version from .env: v$ver" -ForegroundColor Green
+            }
+        }
+    }
+}
+
+# Source 2: Check AWP_ROOT<ver> environment variables
+Get-ChildItem env:AWP_ROOT* -ErrorAction SilentlyContinue | ForEach-Object {
+    if ($_.Name -match "^AWP_ROOT(\d+)$") {
+        $ver = $matches[1]
+        if ($ver -notin $ansysVersions) {
+            $ansysVersions += $ver
+            Write-Host "Found ANSYS version from environment ($($_.Name)): v$ver" -ForegroundColor Green
+        }
+    }
+}
+
+# Source 3: Check Registry HKLM:\SOFTWARE\ANSYS, Inc.\ANSYS
 $registryPath = "HKLM:\SOFTWARE\ANSYS, Inc.\ANSYS"
 if (Test-Path $registryPath) {
-    $keys = Get-ChildItem -Path $registryPath
+    $keys = Get-ChildItem -Path $registryPath -ErrorAction SilentlyContinue
     foreach ($key in $keys) {
         $ver = $key.PSChildName
-        if ($ver -match "^\d+$") {
+        if ($ver -match "^\d+$" -and $ver -notin $ansysVersions) {
             $ansysVersions += $ver
-            Write-Host "Found ANSYS version: v$ver" -ForegroundColor Green
+            Write-Host "Found ANSYS version from registry: v$ver" -ForegroundColor Green
+        }
+    }
+}
+
+# Source 4: Check Registry HKLM:\SOFTWARE\ANSYS, Inc.\v*
+$registryParent = "HKLM:\SOFTWARE\ANSYS, Inc."
+if (Test-Path $registryParent) {
+    $keys = Get-ChildItem -Path $registryParent -ErrorAction SilentlyContinue
+    foreach ($key in $keys) {
+        if ($key.PSChildName -match "^v(\d+)$") {
+            $ver = $matches[1]
+            if ($ver -notin $ansysVersions) {
+                $ansysVersions += $ver
+                Write-Host "Found ANSYS version from registry subkey: v$ver" -ForegroundColor Green
+            }
+        }
+    }
+}
+
+# Source 5: Check filesystem standard locations
+foreach ($base in @("C:\Program Files\ANSYS Inc", "D:\ANSYS Inc")) {
+    if (Test-Path $base) {
+        Get-ChildItem -Path $base -Directory -ErrorAction SilentlyContinue | ForEach-Object {
+            if ($_.Name -match "^v(\d+)$") {
+                $ver = $matches[1]
+                if ($ver -notin $ansysVersions) {
+                    $ansysVersions += $ver
+                    Write-Host "Found ANSYS version from filesystem: v$ver" -ForegroundColor Green
+                }
+            }
         }
     }
 }
 
 if ($ansysVersions.Count -eq 0) {
-    Write-Host "Warning: No ANSYS registry key found. Fallback to v251." -ForegroundColor Yellow
+    Write-Host "Warning: No ANSYS installation detected. Fallback to v251." -ForegroundColor Yellow
     $ansysVersions += "251"
 }
 
