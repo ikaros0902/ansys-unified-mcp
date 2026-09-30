@@ -55,7 +55,7 @@ from ansys_unified_mcp.bridges.connection_manager import connection_manager
 
 def main():
     logger.info("Starting Unified ANSYS MCP Server v2.0...")
-    mcp.run(transport='stdio')
+    mcp.run(transport='stdio', show_banner=False)
 
 if __name__ == "__main__":
     main()
