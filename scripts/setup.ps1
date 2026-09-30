@@ -114,7 +114,10 @@ if ($ansysVersions.Count -eq 0) {
 
 # 4. Deploy ACT Plugin
 Write-Host "[4/5] Deploying ACT Plugin & Hooks..."
-$pluginSource = Join-Path $RepoRoot "deploy\act_plugins"
+$pluginSource = Join-Path $RepoRoot "scripts\deploy\act_plugins"
+if (-Not (Test-Path $pluginSource)) {
+    $pluginSource = Join-Path $RepoRoot "deploy\act_plugins"
+}
 foreach ($ver in $ansysVersions) {
     $targetDir = "$env:APPDATA\Ansys\v$ver\ACT\extensions"
     

@@ -88,6 +88,7 @@ ignore = [
 "skills/**/*.py" = ["F821"]
 "SKILLs/**/*.py" = ["F821"]
 "deploy/**/*.py" = ["F821"]
+"scripts/deploy/**/*.py" = ["F821"]
 "examples/**/*.py" = ["F821"]
 "scripts/pcb_warpage_analysis/*.py" = ["F821"]
 "workbench_plugin/**/*.py" = ["F821"]

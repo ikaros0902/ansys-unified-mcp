@@ -14,17 +14,14 @@
 
 ---
 
-## 🚀 快速安裝與標準部署手冊 (Deployment Guide)
+## 🚀 快速安裝與標準部署 SOP (Quickstart Guide)
 
-> 📖 **詳細安裝與生產部署手冊 (SOP)**：請參閱 **[`docs/deployment/DEPLOYMENT_SOP.md`](docs/deployment/DEPLOYMENT_SOP.md)**（含全新電腦環境配置、相依套件安裝、常駐 gRPC 設置與三重驗證 SOP）。
+> 📖 **完整安裝與連線 SOP**：請直接閱讀根目錄 **[`INSTALL_SOP.md`](INSTALL_SOP.md)**。
 
-您不再需要手動設定 Python 環境或尋找 ANSYS 安裝路徑！我們提供了一鍵安裝腳本。
-
-1. **下載本專案** (或 `git clone`) 到您的電腦上。
-2. 在專案資料夾上點擊右鍵，選擇 **「使用 PowerShell 執行 (Run with PowerShell)」**，或是打開 PowerShell 並輸入：
-   ```powershell
-   .\setup.ps1
-   ```
+您不需要手動設定複雜的 Python 環境或尋找 ANSYS 安裝路徑！在專案目錄下打開 PowerShell 執行：
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\setup.ps1
+```
 3. 腳本會自動完成以下工作：
    - 建立 Python 虛擬環境 (`.venv`)
    - 安裝所有必要的相依套件 (PyAnsys 等)
