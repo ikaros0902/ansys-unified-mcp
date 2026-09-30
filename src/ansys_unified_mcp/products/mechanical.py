@@ -52,9 +52,27 @@ class MechanicalController:
         mech = [i for i in instances if i.get("app_name") == "AnsysWBU" and "grpc_port" in i]
         if pid is not None:
             match = [i for i in mech if i.get("pid") == pid]
-            if not match:
-                return None, f"No registered Mechanical instance with PID {pid}."
-            return int(match[0]["grpc_port"]), None
+            if match:
+                return int(match[0]["grpc_port"]), None
+            # Fallback 1: 檢查指定 PID 是否監聽於 Mechanical 常見埠 (10000..10050)
+            try:
+                import psutil
+                if psutil.pid_exists(pid):
+                    p = psutil.Process(pid)
+                    try:
+                        conns = p.net_connections(kind="tcp") if hasattr(p, "net_connections") else p.connections(kind="tcp")
+                        for conn in conns:
+                            if conn.status == psutil.CONN_LISTEN and 10000 <= conn.laddr.port <= 10050:
+                                return int(conn.laddr.port), None
+                    except Exception:
+                        pass
+            except Exception:
+                pass
+            # Fallback 2: 檢查系統中目前是否有正在監聽的 Mechanical gRPC 埠
+            scanned = connection_manager.scan_for_mechanical_grpc()
+            if scanned is not None:
+                return scanned, None
+            return None, f"No registered or active Mechanical instance found with PID {pid}."
         if mech:
             return int(mech[0]["grpc_port"]), None
         scanned = connection_manager.scan_for_mechanical_grpc()
@@ -127,7 +145,7 @@ class MechanicalController:
             self._PROBE_CACHE.pop(key, None)
             return False
 
-    def run_script(self, script: str, key: Optional[str] = None, timeout: float = DEFAULT_SCRIPT_TIMEOUT) -> str:
+    def run_script(self, script: str, key: Optional[str] = None, timeout: Optional[float] = DEFAULT_SCRIPT_TIMEOUT) -> str:
         """Execute a Python script string in the connected Mechanical session."""
         from ansys_unified_mcp.core.script_guard import check_script
         is_safe, warnings = check_script(script, context="mechanical.run_script")
@@ -166,7 +184,10 @@ class MechanicalController:
                 "        _f.write(''.join(_cap.d))\n"
             )
             try:
-                run_with_timeout(session.run_python_script, wrapper, timeout=timeout)
+                if timeout is not None and timeout > 0:
+                    run_with_timeout(session.run_python_script, wrapper, timeout=timeout)
+                else:
+                    session.run_python_script(wrapper)
             except BlockingCallTimeout as exc:
                 return "Error: " + str(exc)
 

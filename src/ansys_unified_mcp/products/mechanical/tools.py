@@ -121,9 +121,9 @@ def list_boundary_conditions(analysis_index: int = 0) -> dict:
 
 
 @aliased_tool(name="mechanical_solve_analysis", alias="solve_analysis")
-def solve_analysis(analysis_index: int = 0) -> dict:
-    """Solve the analysis. Progress visible in GUI. Args: analysis_index"""
-    return as_envelope(mechanical_api.solve_analysis(analysis_index=analysis_index))
+def solve_analysis(analysis_index: int = 0, timeout_seconds: float = 3600.0) -> dict:
+    """Solve the analysis. Progress visible in GUI. Args: analysis_index, timeout_seconds (default 3600s)"""
+    return as_envelope(mechanical_api.solve_analysis(analysis_index=analysis_index, timeout_seconds=timeout_seconds))
 
 
 @aliased_tool(name="mechanical_get_solve_status", alias="get_solve_status")
@@ -157,9 +157,9 @@ def generate_report(output_path: str, analysis_index: int = 0, fmt: str = "docx"
 
 
 @aliased_tool(name="mechanical_run_script", alias="run_mechanical_script")
-def run_mechanical_script(script: str) -> dict:
-    """Run custom Python script inside Mechanical ACT API. Args: script"""
-    return as_envelope(mechanical_api.run_mechanical_script(script=script))
+def run_mechanical_script(script: str, timeout_seconds: Optional[float] = None) -> dict:
+    """Run custom Python script inside Mechanical ACT API. Args: script, timeout_seconds"""
+    return as_envelope(mechanical_api.run_mechanical_script(script=script, timeout_seconds=timeout_seconds))
 
 
 @aliased_tool(name="mechanical_list_named_selections", alias="list_named_selections")

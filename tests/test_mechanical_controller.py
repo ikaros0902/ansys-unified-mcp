@@ -112,3 +112,29 @@ def test_connect_without_package_reports_clean_error(controller, monkeypatch):
 
     result = controller.connect(port=10000)
     assert result == {"ok": False, "error": "ansys-mechanical-core not installed."}
+
+
+def test_run_script_no_timeout_bypasses_guard(controller):
+    """When timeout is None or <= 0, run_script should execute directly without timeout guard."""
+    fake = FakeMechanicalSession(sleep_seconds=0.05)
+    registry.put(PRODUCT, "10000", fake)
+
+    out = controller.run_script("print('no-timeout')", key="10000", timeout=None)
+    assert out == "no-timeout"
+
+    out_zero = controller.run_script("print('zero-timeout')", key="10000", timeout=0)
+    assert out_zero == "zero-timeout"
+
+
+def test_resolve_target_port_pid_fallback(controller, monkeypatch):
+    """When PID is not in registered instances, fallback to scanned port if available."""
+    from ansys_unified_mcp.bridges.connection_manager import connection_manager
+
+    # 模擬 registered_instances 空，但 scan_for_mechanical_grpc 掃到了 10000
+    monkeypatch.setattr(connection_manager, "get_registered_instances", lambda: [])
+    monkeypatch.setattr(connection_manager, "scan_for_mechanical_grpc", lambda: 10000)
+
+    port, err = controller._resolve_target_port(port=None, pid=99999)
+    assert err is None
+    assert port == 10000
+

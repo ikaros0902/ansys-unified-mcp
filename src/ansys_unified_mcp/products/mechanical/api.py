@@ -3,6 +3,7 @@ import json
 import os
 from datetime import datetime
 from pathlib import Path
+from typing import Optional
 
 from ansys_unified_mcp.products.mechanical.facade import controller, _esc
 
@@ -154,8 +155,10 @@ def _check_connection() -> dict | None:
     return None
 
 
-def _run(script):
+def _run(script: str, timeout: Optional[float] = None) -> str:
     """Run a script inside the current Mechanical session, capturing output."""
+    if timeout is not None:
+        return controller.run_script(script, timeout=timeout)
     return controller.run_script(script)
 
 
@@ -432,8 +435,8 @@ def list_boundary_conditions(analysis_index: int = 0) -> dict:
         return (_parse_mechanical_output(result))
 
 
-def solve_analysis(analysis_index: int = 0) -> dict:
-    """Solve the analysis. Progress visible in GUI. Args: analysis_index"""
+def solve_analysis(analysis_index: int = 0, timeout_seconds: Optional[float] = 3600.0) -> dict:
+    """Solve the analysis. Progress visible in GUI. Args: analysis_index, timeout_seconds (default 3600.0)"""
     err = _check_connection()
     if err:
         return err
@@ -442,7 +445,7 @@ def solve_analysis(analysis_index: int = 0) -> dict:
         "analysis.Solution.Solve(True)\n"
         'print("Solve complete. Status: " + str(analysis.Solution.Status))\n'
     )
-    result = _run(script)
+    result = _run(script, timeout=timeout_seconds)
     if not result or not result.strip():
         return ({"ok": False, "error": "Solve failed: empty output", "message": result})
     ok = (
@@ -680,12 +683,12 @@ def generate_report(output_path: str, analysis_index: int = 0, fmt: str = "docx"
         return ({"ok": True, "report_path": str(out_txt)})
 
 
-def run_mechanical_script(script: str) -> dict:
-    """Run custom Python script inside Mechanical ACT API. Args: script"""
+def run_mechanical_script(script: str, timeout_seconds: Optional[float] = None) -> dict:
+    """Run custom Python script inside Mechanical ACT API. Args: script, timeout_seconds"""
     err = _check_connection()
     if err:
         return err
-    result = _run(script)
+    result = _run(script, timeout=timeout_seconds)
     if not result or not result.strip():
         return ({"ok": False, "error": "Script execution returned empty output", "output": result})
     if _is_error_output(result):
