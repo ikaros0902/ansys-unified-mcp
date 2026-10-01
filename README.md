@@ -1,6 +1,6 @@
 # ANSYS Unified MCP Server
 
-這是一個專為 AI Agent (Claude, Cursor 等) 設計的模型上下文協議 (Model Context Protocol, MCP) 伺服器，能夠讓 AI 直接連線並操控您本機的 ANSYS 軟體系列。
+這是一個專為 AI Agent (Claude, Cursor 等) 設計的模型上下文協議 (Model Context Protocol, MCP) 伺服器，能夠讓 AI 直接連線並操控本機的 ANSYS 軟體系列。
 
 ## 支援的 ANSYS 模組
 

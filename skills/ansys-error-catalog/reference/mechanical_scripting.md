@@ -142,3 +142,57 @@ print(analysis.Solver.Name)
 """)
 # 根據回傳判斷是 Static Structural 還是 LS-DYNA
 ```
+
+---
+
+## ERR-MECH-008: ACT DataModel 物件缺少 `Id` 屬性
+
+**觸發場景**: 嘗試讀取網格控制項（如 `AutomaticMethod`、`Sizing`）的 `.Id`。
+**錯誤訊息**: `AttributeError: 'AutomaticMethod' object has no attribute 'Id'`。
+**根因**: 幾何實體核心才具備 `.Id`（如 `GeoBody.Id`、`GeoFace.Id`），ACT DataModel 物件樹之識別符為 `.ObjectId`。
+**解決方案**: 識別樹中物件唯一性一律使用 `.ObjectId`：
+```python
+grouped_ids = set([item.ObjectId for item in folder.Children])
+```
+
+---
+
+## ERR-MECH-009: `MethodType` 枚舉缺少 `QuadTri`
+
+**觸發場景**: 對 Sheet Body 設定面網格時嘗試指派 `method.Method = MethodType.QuadTri`。
+**錯誤訊息**: `AttributeError: type object 'MethodType' has no attribute 'QuadTri'`。
+**根因**: ANSYS Mechanical ACT 中薄板若要使用 MultiZone Quad/Tri，枚舉值依然是 `MethodType.MultiZone`，底層視對象為 Sheet 會自動處理為面網格。
+**解決方案**: Solid 與 Sheet 一律統一使用 `MethodType.MultiZone`：
+```python
+method.Method = MethodType.MultiZone
+```
+
+---
+
+## ERR-MECH-010: `MeshData` 物件層級存取錯誤
+
+**觸發場景**: 嘗試直接透過 `ExtAPI.DataModel.MeshData` 讀取網格資料庫。
+**錯誤訊息**: `AttributeError: 'MechanicalDataModel' object has no attribute 'MeshData'`。
+**根因**: `MeshData` 附屬於 `Mesh` 物件層級下，正確路徑為 `ExtAPI.DataModel.Project.Model.Mesh.MeshData` 或 `mesh.MeshData`。
+**解決方案**: 
+```python
+mesh_data = ExtAPI.DataModel.Project.Model.Mesh.MeshData
+region = mesh_data.MeshRegionById(geo_body.Id)
+node_count = region.NodeCount if region else 0
+```
+
+---
+
+## ERR-MECH-011: 動態新建網格控制項游離於樹狀目錄外
+
+**觸發場景**: 透過 `mesh.AddAutomaticMethod()` 或 `mesh.AddSizing()` 動態新建控制項時，物件暴露在 Model Tree 根目錄外。
+**根因**: ACT API 新建物件之預設 Parent 為 `Mesh`，若未顯式納入資料夾，會破壞 Model Tree 資料夾結構。
+**解決方案**: 新建控制項後，立即呼叫資料夾歸類指令：
+```python
+new_method = mesh.AddAutomaticMethod()
+# 收納入對應資料夾
+folder.AddObject(new_method)
+# 或重新 Group
+ExtAPI.DataModel.Tree.Group(folder_controls)
+```
+

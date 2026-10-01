@@ -34,7 +34,7 @@ from ansys_unified_mcp.shared import (
 import ansys_unified_mcp.tools.sentinel_tools
 import ansys_unified_mcp.tools.intent_tools
 import ansys_unified_mcp.tools.mechanical_tools
-import ansys_unified_mcp.tools.optislang_tools
+import ansys_unified_mcp.products.optislang.tools
 import ansys_unified_mcp.tools.workbench_tools
 
 
