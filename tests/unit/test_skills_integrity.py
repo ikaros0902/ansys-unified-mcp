@@ -12,7 +12,7 @@ from pathlib import Path
 import pytest
 
 # 匯入同步引擎的共用掃描/發現函式，避免重複實作邏輯
-sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts" / "maintenance"))
 from sync_skills_bidirectional import (  # noqa: E402
     discover_controlled_skills,
     scan_skill_files,

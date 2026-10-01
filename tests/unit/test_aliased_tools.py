@@ -7,7 +7,7 @@ from ansys_unified_mcp.shared import mcp, aliased_tool
 import ansys_unified_mcp.tools.mechanical_tools
 import ansys_unified_mcp.tools.mechanical_workflow_tools
 import ansys_unified_mcp.tools.workbench_tools
-import ansys_unified_mcp.tools.optislang_tools
+import ansys_unified_mcp.products.optislang.tools
 import ansys_unified_mcp.tools.intent_tools
 
 
