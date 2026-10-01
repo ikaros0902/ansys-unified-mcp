@@ -33,21 +33,21 @@ phase_gate:
 
 ## 二、模組路由表 (Module Router)
 
-深入操作請查閱 `reference/` 對應文件：
+深入操作請查閱 `references/` 對應文件：
 
 ### 1. PyAnsys Geometry 路線
 | 功能分類 | 參考文件 | 內容說明 |
 | :--- | :--- | :--- |
-| **連線與 Session** | [`reference/session.md`](reference/session.md) | Modeler 啟動、連線與 Body 列舉 |
-| **2D 草圖繪製** | [`reference/sketching.md`](reference/sketching.md) | `Sketch` 平面、圓形、多段線與圓弧 |
-| **3D 幾何成形** | [`reference/modeling.md`](reference/modeling.md) | `extrude_sketch`、`revolve_sketch` 拉伸與旋轉 |
-| **組件與具名選擇** | [`reference/design_and_bodies.md`](reference/design_and_bodies.md) | 拓撲樹、元件層級與 Named Selection |
-| **模型匯入匯出** | [`reference/import_export.md`](reference/import_export.md) | STEP / IGES 匯入與導出 |
+| **連線與 Session** | [`references/session.md`](references/session.md) | Modeler 啟動、連線與 Body 列舉 |
+| **2D 草圖繪製** | [`references/sketching.md`](references/sketching.md) | `Sketch` 平面、圓形、多段線與圓弧 |
+| **3D 幾何成形** | [`references/modeling.md`](references/modeling.md) | `extrude_sketch`、`revolve_sketch` 拉伸與旋轉 |
+| **組件與具名選擇** | [`references/design_and_bodies.md`](references/design_and_bodies.md) | 拓撲樹、元件層級與 Named Selection |
+| **模型匯入匯出** | [`references/import_export.md`](references/import_export.md) | STEP / IGES 匯入與導出 |
 
 ### 2. 原生 SpaceClaim IronPython 路線
 | 功能分類 | 參考文件 | 內容說明 |
 | :--- | :--- | :--- |
-| **版本與 Session** | [`reference/native_session_and_versions.md`](reference/native_session_and_versions.md) | `SpaceClaim.Api` 載入、單位與更新步進 |
-| **實體選擇器** | [`reference/native_selection.md`](reference/native_selection.md) | `Selection` 拓撲過濾與 `PowerSelection` |
-| **特徵與拓撲命令** | [`reference/native_commands.md`](reference/native_commands.md) | `Midsurface` 中面、`ForceShare` 拓撲共享、`Fill` 填補 |
-| **原生草圖** | [`reference/native_sketch_and_geometry.md`](reference/native_sketch_and_geometry.md) | `SketchRectangle`、`Point2D` 原生幾何建構 |
+| **版本與 Session** | [`references/native_session_and_versions.md`](references/native_session_and_versions.md) | `SpaceClaim.Api` 載入、單位與更新步進 |
+| **實體選擇器** | [`references/native_selection.md`](references/native_selection.md) | `Selection` 拓撲過濾與 `PowerSelection` |
+| **特徵與拓撲命令** | [`references/native_commands.md`](references/native_commands.md) | `Midsurface` 中面、`ForceShare` 拓撲共享、`Fill` 填補 |
+| **原生草圖** | [`references/native_sketch_and_geometry.md`](references/native_sketch_and_geometry.md) | `SketchRectangle`、`Point2D` 原生幾何建構 |

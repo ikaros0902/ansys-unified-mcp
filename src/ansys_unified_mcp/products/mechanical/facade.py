@@ -20,6 +20,7 @@ from __future__ import annotations
 import os
 import tempfile
 import time
+import uuid
 from pathlib import Path
 from typing import Any, Optional
 
@@ -92,9 +93,14 @@ class MechanicalController:
             return {"ok": False, "error": err}
 
         key = str(target_port)
-        if registry.get(PRODUCT, key) is not None:
-            registry.set_current(PRODUCT, key)
-            return {"ok": True, "port": target_port, "note": "Reused existing session.", "key": key}
+        existing = registry.get(PRODUCT, key)
+        if existing is not None:
+            if self._probe_session(existing):
+                registry.set_current(PRODUCT, key)
+                return {"ok": True, "port": target_port, "note": "Reused existing session.", "key": key}
+            # 探針檢測失敗：死 Session 主動自快取與註冊表驅逐，隨後重新建立連線
+            self._PROBE_CACHE.pop(str(id(existing)), None)
+            registry.drop(PRODUCT, key)
 
         try:
             session = mech.connect_to_mechanical(port=target_port)
@@ -157,8 +163,9 @@ class MechanicalController:
             return "Error: Not connected to Mechanical (session lost or closed)."
 
         tmp_dir = Path(tempfile.gettempdir())
-        out_file = (tmp_dir / f"mech_out_{os.getpid()}.txt").as_posix()
-        script_file = (tmp_dir / f"mech_script_{os.getpid()}.py").as_posix()
+        req_id = uuid.uuid4().hex
+        out_file = (tmp_dir / f"mech_out_{req_id}.txt").as_posix()
+        script_file = (tmp_dir / f"mech_script_{req_id}.py").as_posix()
         try:
             with open(script_file, "w", encoding="utf-8") as fh:
                 fh.write(script)
@@ -198,6 +205,15 @@ class MechanicalController:
                 result = ""
             return result if result else "(done)"
         except Exception as exc:  # noqa: BLE001
+            # 通訊層或致命異常：立即清理探針快取並從註冊表驅逐故障 Session
+            self._PROBE_CACHE.pop(str(id(session)), None)
+            target_key = key or registry.current_key(PRODUCT)
+            if target_key and registry.get(PRODUCT, target_key) is session:
+                registry.drop(PRODUCT, target_key)
+            else:
+                for k in registry.keys(PRODUCT):
+                    if registry.get(PRODUCT, k) is session:
+                        registry.drop(PRODUCT, k)
             return "Error: " + str(exc)
         finally:
             for path in (out_file, script_file):

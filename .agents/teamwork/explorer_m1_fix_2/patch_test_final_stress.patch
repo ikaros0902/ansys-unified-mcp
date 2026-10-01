@@ -1,0 +1,32 @@
+--- a/tests/adversarial/test_final_stress_harness.py
++++ b/tests/adversarial/test_final_stress_harness.py
+@@ -137,4 +137,5 @@
+     print(f"\n--> 14 個工具入口全項極限壓力測試總假陽性數量: {total_false_positives}")
+     assert total_false_positives == 0, f"存在假陽性，總數: {total_false_positives}"
++    return True
+ 
+ 
+@@ -197,4 +198,5 @@
+ 
+     assert all_passed, "夾心日誌測試存在未攔截的失敗！"
++    return True
+ 
+ 
+@@ -233,4 +235,5 @@
+ 
+     assert all_passed, "字典信封標準化測試失敗！"
++    return True
+ 
+ 
+@@ -279,4 +282,5 @@
+ 
+     assert all_passed, "布林型別轉換未達成嚴格 bool 保證！"
++    return True
+ 
+ 
+@@ -327,4 +331,5 @@
+     assert total_fps == 0, f"全量審計發現假陽性！空字串: {len(fps_empty)}, HTML 502: {len(fps_html)}"
+     print(f"[PASS] 全量 {c_empty} 個工具在空字串與 HTML 502 下假陽性數量 100% 歸零！")
++    return True
+ 
+ 

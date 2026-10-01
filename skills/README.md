@@ -7,14 +7,10 @@
 ## 專案核心 CAE 技能清單 (16 項)
 
 | 技能名稱 | 專業領域 | 核心技術 / 觸發關鍵字 |
-| :
-phase_gate:
-  requires: []
-  produces: []
---- | :--- | :--- |
-| **[`ansys-spaceclaim`](ansys-spaceclaim/SKILL.md)** | **SpaceClaim 建模與腳本雙軌控制** | PyAnsys Geometry 與原生 ACT IronPython 雙軌 API；`SpaceClaim建模`, `SCDM腳本`, `SpaceClaim幾何`, `幾何前處理` |
-| **[`ansys-spaceclaim-modeling`](ansys-spaceclaim-modeling/SKILL.md)** | **SpaceClaim / Discovery 幾何前處理** | 2D 草圖拉伸, 外流域抽取, 布林相減, CAD 缺陷診斷, PMDB 導出；`SCDM幾何`, `Discovery前處理`, `外流域抽取`, `PMDB導出` |
+| :--- | :--- | :--- |
 | **[`ansys-geometry-modeling`](ansys-geometry-modeling/SKILL.md)** | **PyAnsys Geometry 現代化幾何** | `ansys.geometry.core` 參數化草圖 / 拉伸旋轉, Named Selection, 無損 PMDB 直通；`PyAnsys Geometry`, `參數化幾何`, `Enclosure`, `匯出PMDB` |
+| **[`ansys-spaceclaim`](ansys-spaceclaim/SKILL.md)** | **SpaceClaim 建模與腳本雙軌控制** | PyAnsys Geometry 與原生 ACT IronPython 雙軌 API；`SpaceClaim建模`, `SCDM腳本`, `SpaceClaim幾何`, `幾何前處理` |
+| **[`ansys-mesh`](ansys-mesh/SKILL.md)** | **Mechanical / LS-DYNA 網格工程與 CFL 調優** | 自動網格劃分 (AutoMesh), 網格干涉檢查, CFL 最小時間步長量測, Node Merge / 局部 Pinch 調優；`ansys-mesh`, `網格劃分`, `網格品質`, `CFL步長`, `網格調優` |
 | **[`pcb-warpage-analysis`](pcb-warpage-analysis/SKILL.md)** | **PCB 多層疊構熱翹曲分析** | ROM 複合材料巨集, Share Topology 疊構建模, 3-2-1 靜定支承；`PCB熱翹曲`, `PCB疊構`, `ROM材料計算`, `3-2-1支承` |
 | **[`ansys-mechanical`](ansys-mechanical/SKILL.md)** | **Mechanical 結構、模態與熱耦合** | ACT Scripting (`ExtAPI`, `DataModel`), 非線性接觸, 網格前檢, 主元錯誤與應力奇異點判定；`靜態結構`, `模態分析`, `熱應力分析` |
 | **[`ansys-submodeling-dpf`](ansys-submodeling-dpf/SKILL.md)** | **DPF 結果提取與局部子模型** | `on_coordinates` 形函數插值, `LocalMapdlPool` 併發求解, 聖維南切面連續性驗證；`子模型分析`, `Submodeling`, `DPF結果提取` |
@@ -29,7 +25,7 @@ phase_gate:
 | **[`ansys-error-catalog`](ansys-error-catalog/SKILL.md)** | **CAE 錯誤分類與排查** | Workbench, Mechanical, SpaceClaim, ACT 報錯根因與修復對策；`ANSYS報錯`, `IronPython錯誤`, `Mechanical排障`, `ACT除錯` |
 | **[`pdf-to-md`](pdf-to-md/SKILL.md)** | **ANSYS 說明文檔轉換** | `pymupdf4llm` 抽取純文字與表格, 逐頁標記, 產出 RAG / 檢索用 Markdown；`PDF轉Markdown`, `文檔轉換`, `說明書建索引` |
 
-> 註：原 `ansys-lsdyna-explicit`、`ansys-mechanical-multiphysics`、`ansys-optislang-optimization` 三個僅含一行路由指引的 stub 技能已於重整中移除，其路由職責分別由 **`ansys-lsdyna`**、**`ansys-mechanical`**、**`ansys-optislang`** 主技能完整涵蓋。
+> 註：原 `ansys-spaceclaim-modeling` 與 `ansys-geometry-modeling` 完全重複，已於重整中移除並整併至 `ansys-geometry-modeling` 與 `ansys-spaceclaim`；原 `ansys-lsdyna-explicit`、`ansys-mechanical-multiphysics`、`ansys-optislang-optimization` 三個僅含一行路由指引的 stub 技能亦已於重整中移除，其路由職責分別由 **`ansys-lsdyna`**、**`ansys-mechanical`**、**`ansys-optislang`** 主技能完整涵蓋。
 
 ---
 

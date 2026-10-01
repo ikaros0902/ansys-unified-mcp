@@ -1,0 +1,654 @@
+{
+  "act-extension-development": [
+    {
+      "path": "SKILL.md",
+      "size": 2636
+    },
+    {
+      "path": "reference/filesystemwatcher_pattern.md",
+      "size": 1282
+    },
+    {
+      "path": "reference/ironpython_quirks.md",
+      "size": 1627
+    },
+    {
+      "path": "reference/wizard_api.md",
+      "size": 1009
+    },
+    {
+      "path": "scripts/act_wizard_automation.py",
+      "size": 1890
+    },
+    {
+      "path": "scripts/file_system_watcher_listener.py",
+      "size": 2646
+    },
+    {
+      "path": "scripts/invoke_act_wizard.py",
+      "size": 1148
+    },
+    {
+      "path": "scripts/wb_event_listener.py",
+      "size": 1848
+    }
+  ],
+  "ansys-error-catalog": [
+    {
+      "path": "SKILL.md",
+      "size": 1968
+    },
+    {
+      "path": "reference/ironpython_general.md",
+      "size": 4556
+    },
+    {
+      "path": "reference/mechanical_scripting.md",
+      "size": 6335
+    },
+    {
+      "path": "reference/spaceclaim_pygeometry.md",
+      "size": 1864
+    },
+    {
+      "path": "reference/workbench_act.md",
+      "size": 4892
+    },
+    {
+      "path": "scripts/diagnose_ironpython.py",
+      "size": 1085
+    },
+    {
+      "path": "scripts/error_diagnostic_helper.py",
+      "size": 1326
+    }
+  ],
+  "ansys-fluent": [
+    {
+      "path": "SKILL.md",
+      "size": 7226
+    },
+    {
+      "path": "reference/boundary_conditions.md",
+      "size": 5796
+    },
+    {
+      "path": "reference/fluent_diagnostics.md",
+      "size": 5707
+    },
+    {
+      "path": "reference/fluent_judgment.md",
+      "size": 5436
+    },
+    {
+      "path": "reference/physics_models.md",
+      "size": 6834
+    },
+    {
+      "path": "reference/solver_settings.md",
+      "size": 5781
+    },
+    {
+      "path": "reference/watertight_meshing.md",
+      "size": 6205
+    },
+    {
+      "path": "scripts/check_fluent_mesh.py",
+      "size": 11053
+    },
+    {
+      "path": "scripts/run_mixing_elbow_e2e.py",
+      "size": 11666
+    }
+  ],
+  "ansys-geometry-modeling": [
+    {
+      "path": "SKILL.md",
+      "size": 6008
+    },
+    {
+      "path": "reference/3d_features.md",
+      "size": 4970
+    },
+    {
+      "path": "reference/booleans_enclosures.md",
+      "size": 6575
+    },
+    {
+      "path": "reference/cad_diagnostics.md",
+      "size": 5503
+    },
+    {
+      "path": "reference/named_selections.md",
+      "size": 6073
+    },
+    {
+      "path": "reference/pmdb_export_rules.md",
+      "size": 5771
+    },
+    {
+      "path": "reference/sketching.md",
+      "size": 5471
+    },
+    {
+      "path": "scripts/check_cad_defects.py",
+      "size": 7978
+    },
+    {
+      "path": "scripts/create_enclosure_demo.py",
+      "size": 11341
+    }
+  ],
+  "ansys-ls-prepost": [
+    {
+      "path": "SKILL.md",
+      "size": 3599
+    },
+    {
+      "path": "reference/model_build.md",
+      "size": 1464
+    },
+    {
+      "path": "reference/model_query.md",
+      "size": 2171
+    },
+    {
+      "path": "reference/output_export.md",
+      "size": 1528
+    },
+    {
+      "path": "reference/python_module_interface.md",
+      "size": 3592
+    },
+    {
+      "path": "reference/session_and_cfile.md",
+      "size": 1835
+    },
+    {
+      "path": "reference/states_and_results.md",
+      "size": 1677
+    },
+    {
+      "path": "scripts/lspp_cfile_runner.py",
+      "size": 956
+    },
+    {
+      "path": "scripts/lspp_scl_data_center.py",
+      "size": 1132
+    }
+  ],
+  "ansys-lsdyna": [
+    {
+      "path": "SKILL.md",
+      "size": 5165
+    },
+    {
+      "path": "reference/contacts.md",
+      "size": 2788
+    },
+    {
+      "path": "reference/energy_diagnostics.md",
+      "size": 3322
+    },
+    {
+      "path": "reference/initial_boundary.md",
+      "size": 2746
+    },
+    {
+      "path": "reference/mass_scaling_rules.md",
+      "size": 3177
+    },
+    {
+      "path": "reference/material_cards.md",
+      "size": 7587
+    },
+    {
+      "path": "reference/parts_and_sections.md",
+      "size": 4249
+    },
+    {
+      "path": "scripts/run_drop_test_demo.py",
+      "size": 16888
+    }
+  ],
+  "ansys-mechanical": [
+    {
+      "path": "SKILL.md",
+      "size": 7807
+    },
+    {
+      "path": "reference/act_scripting_foundation.md",
+      "size": 6070
+    },
+    {
+      "path": "reference/analysis_setup.md",
+      "size": 4317
+    },
+    {
+      "path": "reference/boundary_conditions_and_loads.md",
+      "size": 5962
+    },
+    {
+      "path": "reference/connections_and_contacts.md",
+      "size": 5506
+    },
+    {
+      "path": "reference/construction_geometry.md",
+      "size": 2650
+    },
+    {
+      "path": "reference/geometry_and_selections.md",
+      "size": 4303
+    },
+    {
+      "path": "reference/lsdyna_via_mechanical.md",
+      "size": 5222
+    },
+    {
+      "path": "reference/materials.md",
+      "size": 5516
+    },
+    {
+      "path": "reference/mechanical_judgment.md",
+      "size": 6706
+    },
+    {
+      "path": "reference/mesh.md",
+      "size": 5771
+    },
+    {
+      "path": "reference/meshdata_and_elements.md",
+      "size": 1899
+    },
+    {
+      "path": "reference/mesh_controls_advanced.md",
+      "size": 3796
+    },
+    {
+      "path": "reference/multiphysics_mapping.md",
+      "size": 5281
+    },
+    {
+      "path": "reference/results_and_postprocessing.md",
+      "size": 5714
+    },
+    {
+      "path": "reference/solver_diagnostics.md",
+      "size": 6521
+    },
+    {
+      "path": "scripts/check_mesh_quality.py",
+      "size": 5464
+    },
+    {
+      "path": "scripts/mechanical_act_setup.py",
+      "size": 1321
+    },
+    {
+      "path": "scripts/mechanical_script_runner.py",
+      "size": 886
+    },
+    {
+      "path": "scripts/run_static_structural_demo.py",
+      "size": 9758
+    },
+    {
+      "path": "scripts/run_taylor_bar_demo.py",
+      "size": 11312
+    }
+  ],
+  "ansys-mesh": [
+    {
+      "path": "SKILL.md",
+      "size": 9605
+    },
+    {
+      "path": "reference/cfl_tuning_and_group_batching.md",
+      "size": 6352
+    },
+    {
+      "path": "reference/local_controls_and_washers.md",
+      "size": 4783
+    },
+    {
+      "path": "reference/mesh_methods_and_geometry_healing.md",
+      "size": 6485
+    },
+    {
+      "path": "reference/metrics_and_quality_standards.md",
+      "size": 8487
+    },
+    {
+      "path": "scripts/auto_mesh_generator.py",
+      "size": 8603
+    },
+    {
+      "path": "scripts/cfl_mesh_tuner_fast.py",
+      "size": 12724
+    },
+    {
+      "path": "scripts/check_mesh_quality.py",
+      "size": 7782
+    }
+  ],
+  "ansys-optislang": [
+    {
+      "path": "SKILL.md",
+      "size": 5141
+    },
+    {
+      "path": "reference/doe_sampling.md",
+      "size": 2830
+    },
+    {
+      "path": "reference/mop_metamodel.md",
+      "size": 5827
+    },
+    {
+      "path": "reference/optimization_algorithms.md",
+      "size": 2434
+    },
+    {
+      "path": "reference/optislang_judgment.md",
+      "size": 3164
+    },
+    {
+      "path": "reference/sensitivity_matrix.md",
+      "size": 2435
+    },
+    {
+      "path": "scripts/setup_mop_workflow_demo.py",
+      "size": 15680
+    }
+  ],
+  "ansys-parametric-study": [
+    {
+      "path": "SKILL.md",
+      "size": 2555
+    },
+    {
+      "path": "reference/dx_to_optislang.md",
+      "size": 2057
+    },
+    {
+      "path": "scripts/workbench_dx_optislang_bridge.py",
+      "size": 3008
+    }
+  ],
+  "ansys-spaceclaim": [
+    {
+      "path": "SKILL.md",
+      "size": 3223
+    },
+    {
+      "path": "reference/design_and_bodies.md",
+      "size": 1268
+    },
+    {
+      "path": "reference/import_export.md",
+      "size": 925
+    },
+    {
+      "path": "reference/modeling.md",
+      "size": 1863
+    },
+    {
+      "path": "reference/native_commands.md",
+      "size": 4089
+    },
+    {
+      "path": "reference/native_helpers_and_transaction.md",
+      "size": 3289
+    },
+    {
+      "path": "reference/native_selection.md",
+      "size": 2862
+    },
+    {
+      "path": "reference/native_session_and_versions.md",
+      "size": 3958
+    },
+    {
+      "path": "reference/native_sketch_and_geometry.md",
+      "size": 3148
+    },
+    {
+      "path": "reference/session.md",
+      "size": 1670
+    },
+    {
+      "path": "reference/sketching.md",
+      "size": 1478
+    },
+    {
+      "path": "scripts/spaceclaim_geometry_builder.py",
+      "size": 1162
+    },
+    {
+      "path": "scripts/spaceclaim_grpc_starter.py",
+      "size": 692
+    }
+  ],
+  "ansys-spaceclaim-modeling": [
+    {
+      "path": "SKILL.md",
+      "size": 5929
+    },
+    {
+      "path": "reference/3d_features.md",
+      "size": 4970
+    },
+    {
+      "path": "reference/booleans_enclosures.md",
+      "size": 6575
+    },
+    {
+      "path": "reference/cad_diagnostics.md",
+      "size": 5503
+    },
+    {
+      "path": "reference/named_selections.md",
+      "size": 6073
+    },
+    {
+      "path": "reference/pmdb_export_rules.md",
+      "size": 5771
+    },
+    {
+      "path": "reference/sketching.md",
+      "size": 5471
+    },
+    {
+      "path": "scripts/check_cad_defects.py",
+      "size": 7978
+    },
+    {
+      "path": "scripts/create_enclosure_demo.py",
+      "size": 11341
+    }
+  ],
+  "ansys-submodeling-dpf": [
+    {
+      "path": "SKILL.md",
+      "size": 3358
+    },
+    {
+      "path": "reference/dpf_interpolation.md",
+      "size": 4504
+    },
+    {
+      "path": "reference/mapdl_pool.md",
+      "size": 2295
+    },
+    {
+      "path": "reference/saint_venant_validation.md",
+      "size": 2463
+    },
+    {
+      "path": "scripts/run_submodeling_pipeline.py",
+      "size": 3165
+    }
+  ],
+  "antigravity-notebooklm": [
+    {
+      "path": "SKILL.md",
+      "size": 1614
+    }
+  ],
+  "pcb-warpage-analysis": [
+    {
+      "path": "SKILL.md",
+      "size": 1866
+    },
+    {
+      "path": "scripts/01_build_pcb_geometry.py",
+      "size": 8993
+    },
+    {
+      "path": "scripts/02_calculate_rom_materials.py",
+      "size": 6275
+    },
+    {
+      "path": "scripts/03_setup_mechanical_bc_and_solution.py",
+      "size": 7726
+    },
+    {
+      "path": "scripts/run_full_warpage_workflow.py",
+      "size": 2209
+    }
+  ],
+  "pdf-to-md": [
+    {
+      "path": "convert.py",
+      "size": 3617
+    },
+    {
+      "path": "SKILL.md",
+      "size": 2621
+    }
+  ],
+  "pymechanical-operations": [
+    {
+      "path": "SKILL.md",
+      "size": 2561
+    },
+    {
+      "path": "reference/grpc_connection.md",
+      "size": 1035
+    },
+    {
+      "path": "reference/scoping_and_mesh.md",
+      "size": 1263
+    },
+    {
+      "path": "scripts/pymechanical_automesh.py",
+      "size": 2123
+    },
+    {
+      "path": "scripts/pymechanical_runner.py",
+      "size": 690
+    }
+  ],
+  "shock-analysis-workflow": [
+    {
+      "path": "SKILL.md",
+      "size": 1605
+    },
+    {
+      "path": "01-material-assignment/SKILL.md",
+      "size": 3544
+    },
+    {
+      "path": "01-material-assignment/reference/material_mapping.md",
+      "size": 6107
+    },
+    {
+      "path": "02-contact-creation/SKILL.md",
+      "size": 3615
+    },
+    {
+      "path": "02-contact-creation/reference/contact_formulations.md",
+      "size": 5085
+    },
+    {
+      "path": "03-mesh-tuning/SKILL.md",
+      "size": 4680
+    },
+    {
+      "path": "03-mesh-tuning/reference/mesh_quality_criteria.md",
+      "size": 2838
+    },
+    {
+      "path": "04-connection-rm/SKILL.md",
+      "size": 4042
+    },
+    {
+      "path": "04-connection-rm/reference/remote_point_algorithms.md",
+      "size": 2697
+    },
+    {
+      "path": "05-section-assignment/SKILL.md",
+      "size": 4903
+    },
+    {
+      "path": "05-section-assignment/reference/section_controls_and_shell_thickness.md",
+      "size": 4507
+    },
+    {
+      "path": "06-constraint-load/SKILL.md",
+      "size": 3723
+    },
+    {
+      "path": "06-constraint-load/reference/shock_pulse_and_boundary_conditions.md",
+      "size": 3636
+    },
+    {
+      "path": "07-solve-monitor/SKILL.md",
+      "size": 4309
+    },
+    {
+      "path": "07-solve-monitor/reference/energy_balance_tracking.md",
+      "size": 3834
+    },
+    {
+      "path": "08-post-process-report/SKILL.md",
+      "size": 4623
+    },
+    {
+      "path": "08-post-process-report/reference/failure_criteria_and_strain_limits.md",
+      "size": 3269
+    },
+    {
+      "path": "scripts/test_session_01.py",
+      "size": 8640
+    },
+    {
+      "path": "scripts/test_session_02.py",
+      "size": 4673
+    },
+    {
+      "path": "scripts/test_session_03.py",
+      "size": 5077
+    },
+    {
+      "path": "scripts/test_session_04.py",
+      "size": 5065
+    },
+    {
+      "path": "scripts/test_session_05.py",
+      "size": 4495
+    },
+    {
+      "path": "scripts/test_session_06.py",
+      "size": 4756
+    },
+    {
+      "path": "scripts/test_session_07.py",
+      "size": 5169
+    },
+    {
+      "path": "scripts/test_session_08.py",
+      "size": 4519
+    }
+  ]
+}

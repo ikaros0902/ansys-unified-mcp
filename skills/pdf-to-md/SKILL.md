@@ -29,19 +29,19 @@ indexing and RAG. Built on plain `pymupdf` text extraction — fast (~1s per
 
 ## How to run
 
-The converter lives next to this file: `convert.py`. Run it with the project's
+The converter script is located at: `scripts/convert.py`. Run it with the project's
 venv Python so `pymupdf4llm` is available.
 
 Convert a whole folder (default output = sibling `<folder>_md`):
 
 ```powershell
-& ".venv\Scripts\python.exe" ".kiro\skills\pdf-to-md\convert.py" "Documentation"
+& ".venv\Scripts\python.exe" "skills\pdf-to-md\scripts\convert.py" "Documentation"
 ```
 
 Convert a single file, custom output dir, overwrite existing:
 
 ```powershell
-& ".venv\Scripts\python.exe" ".kiro\skills\pdf-to-md\convert.py" "Documentation\Ansys_Mechanical_Users_Guide.pdf" -o "Documentation_md" --force
+& ".venv\Scripts\python.exe" "skills\pdf-to-md\scripts\convert.py" "Documentation\Ansys_Mechanical_Users_Guide.pdf" -o "Documentation_md" --force
 ```
 
 Options:

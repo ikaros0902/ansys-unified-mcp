@@ -19,6 +19,7 @@ from ansys_unified_mcp.products.mechanical import tools as _tools  # noqa: F401 
 def __getattr__(name: str):
     if name == "MechanicalDriver":
         from ansys_unified_mcp.products.mechanical.driver import MechanicalDriver
+        globals()[name] = MechanicalDriver
         return MechanicalDriver
     raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
 

@@ -13,7 +13,7 @@ from pathlib import Path
 _repo_src = str(Path(__file__).resolve().parents[3] / "src")
 if _repo_src not in sys.path:
     sys.path.insert(0, _repo_src)
-from ansys_unified_mcp.products.mechanical import MechanicalController
+from ansys_unified_mcp.products.mechanical.facade import MechanicalController
 
 SAMPLE_COMPONENTS = [
     {"name": "CHASSIS_BASE_SHEET", "category": "METAL", "max_eps": 0.0045, "penetrated": False},

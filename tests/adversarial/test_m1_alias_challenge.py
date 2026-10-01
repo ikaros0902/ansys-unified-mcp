@@ -17,7 +17,7 @@ import pytest
 from unittest.mock import patch
 
 from ansys_unified_mcp.shared import mcp
-import ansys_unified_mcp.products.mechanical as mechanical_mod
+import ansys_unified_mcp.products.mechanical.facade as mechanical_mod
 
 
 def run_async(coro):

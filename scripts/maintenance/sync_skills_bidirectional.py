@@ -44,10 +44,11 @@ def discover_controlled_skills(skills_root: str) -> List[str]:
 
 
 # 預設受控技能目錄清單：動態掃描 skills/ 根目錄取得
-_skills_candidate = Path(__file__).resolve().parents[1] / "skills"
-CONTROLLED_SKILLS = discover_controlled_skills(
-    str(_skills_candidate if _skills_candidate.is_dir() else Path(__file__).resolve().parents[1] / "SKILLs")
-)
+_project_root = Path(__file__).resolve().parents[2]
+_skills_candidate = _project_root / "skills"
+_project_base = str(_skills_candidate if _skills_candidate.is_dir() else _project_root / "SKILLs")
+CONTROLLED_SKILLS = discover_controlled_skills(_project_base)
+
 
 # 忽略同步之目錄與副檔名
 IGNORED_DIRS = {"__pycache__", ".git", ".idea", ".vscode"}
@@ -353,7 +354,7 @@ def print_verification_report(report_list: List[Dict[str, any]]) -> None:
 
 
 def main():
-    default_project = str(Path(__file__).resolve().parents[1] / "SKILLs")
+    default_project = _project_base
     default_global = str(Path.home() / ".gemini" / "config" / "skills")
 
     parser = argparse.ArgumentParser(
@@ -394,6 +395,9 @@ def main():
     args = parser.parse_args()
 
     skills_to_process = args.skills if args.skills else CONTROLLED_SKILLS
+    if not skills_to_process:
+        print("[致命門禁阻斷] 受控技能清單為空 (0 項)！嚴禁空跑！(Exit code: 1)")
+        sys.exit(1)
 
     engine = BidirectionalSyncEngine(
         project_base=args.project_dir,

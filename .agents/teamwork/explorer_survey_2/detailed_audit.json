@@ -1,0 +1,699 @@
+[
+  {
+    "rel_path": "act-extension-development/SKILL.md",
+    "rel_folder": "act-extension-development",
+    "folder_name": "act-extension-development",
+    "line_count": 56,
+    "has_fm": true,
+    "fm_valid": true,
+    "fm_parse_error": null,
+    "name": "act-extension-development",
+    "is_kebab": true,
+    "name_matches_folder": true,
+    "has_description": true,
+    "description_len": 72,
+    "description": "ANSYS ACT 擴充外掛開發、IronPython 限制、FileSystemWatcher 事件監聽與 Wizard API 自動化技能。",
+    "child_dirs": [
+      "reference",
+      "scripts"
+    ],
+    "child_files": [
+      "SKILL.md"
+    ],
+    "has_scripts": true,
+    "has_references": false,
+    "has_reference_singular": true,
+    "code_block_count": 1,
+    "code_block_lines": 5
+  },
+  {
+    "rel_path": "ansys-error-catalog/SKILL.md",
+    "rel_folder": "ansys-error-catalog",
+    "folder_name": "ansys-error-catalog",
+    "line_count": 40,
+    "has_fm": true,
+    "fm_valid": true,
+    "fm_parse_error": null,
+    "name": "ansys-error-catalog",
+    "is_kebab": true,
+    "name_matches_folder": true,
+    "has_description": true,
+    "description_len": 82,
+    "description": "ANSYS 與 IronPython 開發報錯目錄與排障指南。涵蓋 Workbench、Mechanical、SpaceClaim 與 ACT 報錯根因與修復對策。",
+    "child_dirs": [
+      "reference",
+      "scripts"
+    ],
+    "child_files": [
+      "SKILL.md"
+    ],
+    "has_scripts": true,
+    "has_references": false,
+    "has_reference_singular": true,
+    "code_block_count": 0,
+    "code_block_lines": 0
+  },
+  {
+    "rel_path": "ansys-fluent/SKILL.md",
+    "rel_folder": "ansys-fluent",
+    "folder_name": "ansys-fluent",
+    "line_count": 101,
+    "has_fm": true,
+    "fm_valid": true,
+    "fm_parse_error": null,
+    "name": "ansys-fluent",
+    "is_kebab": true,
+    "name_matches_folder": true,
+    "has_description": true,
+    "description_len": 97,
+    "description": "ANSYS Fluent CFD 與共軛熱傳分析主控手冊。涵蓋 PyFluent 水密幾何 Poly-Hexcore 網格、SST k-omega 湍流模型、Coupled 求解與 y+ 評估。",
+    "child_dirs": [
+      "reference",
+      "scripts"
+    ],
+    "child_files": [
+      "SKILL.md"
+    ],
+    "has_scripts": true,
+    "has_references": false,
+    "has_reference_singular": true,
+    "code_block_count": 1,
+    "code_block_lines": 20
+  },
+  {
+    "rel_path": "ansys-geometry-modeling/SKILL.md",
+    "rel_folder": "ansys-geometry-modeling",
+    "folder_name": "ansys-geometry-modeling",
+    "line_count": 74,
+    "has_fm": true,
+    "fm_valid": true,
+    "fm_parse_error": null,
+    "name": "ansys-geometry-modeling",
+    "is_kebab": true,
+    "name_matches_folder": true,
+    "has_description": true,
+    "description_len": 95,
+    "description": "ANSYS 現代化幾何前處理主控手冊 (PyAnsys Geometry)。涵蓋 2D 參數化草圖、3D 拉伸/旋轉、外流域抽取 (Enclosure)、CAD 診斷與無損 PMDB 導出。",
+    "child_dirs": [
+      "reference",
+      "scripts"
+    ],
+    "child_files": [
+      "SKILL.md"
+    ],
+    "has_scripts": true,
+    "has_references": false,
+    "has_reference_singular": true,
+    "code_block_count": 1,
+    "code_block_lines": 7
+  },
+  {
+    "rel_path": "ansys-ls-prepost/SKILL.md",
+    "rel_folder": "ansys-ls-prepost",
+    "folder_name": "ansys-ls-prepost",
+    "line_count": 56,
+    "has_fm": true,
+    "fm_valid": true,
+    "fm_parse_error": null,
+    "name": "ansys-ls-prepost",
+    "is_kebab": true,
+    "name_matches_folder": true,
+    "has_description": true,
+    "description_len": 523,
+    "description": "Condensed Ansys LS-PrePost scripting reference (SCL command language, command files, and the Python data-center API), organized by function (session/cfile, model query, states & results, model build, output/export). Use whenever the user automates LS-PrePost, writes cfile / SCL / LS-PrePost Python scripts, queries model or d3plot data (nodes, elements, stress, displacement), fringes computed results, or builds/edits an LS-DYNA model in LS-PrePost. For the LS-DYNA solver keyword deck itself, use the ansys-lsdyna skill.",
+    "child_dirs": [
+      "reference",
+      "scripts"
+    ],
+    "child_files": [
+      "SKILL.md"
+    ],
+    "has_scripts": true,
+    "has_references": false,
+    "has_reference_singular": true,
+    "code_block_count": 1,
+    "code_block_lines": 5
+  },
+  {
+    "rel_path": "ansys-lsdyna/SKILL.md",
+    "rel_folder": "ansys-lsdyna",
+    "folder_name": "ansys-lsdyna",
+    "line_count": 67,
+    "has_fm": true,
+    "fm_valid": true,
+    "fm_parse_error": null,
+    "name": "ansys-lsdyna",
+    "is_kebab": true,
+    "name_matches_folder": true,
+    "has_description": true,
+    "description_len": 59,
+    "description": "LS-DYNA 顯式動力學工程主控手冊，專注於落摔試驗 (Drop test)、高速碰撞、衝擊響應與材料塑性失效分析。",
+    "child_dirs": [
+      "reference",
+      "scripts"
+    ],
+    "child_files": [
+      "SKILL.md"
+    ],
+    "has_scripts": true,
+    "has_references": false,
+    "has_reference_singular": true,
+    "code_block_count": 1,
+    "code_block_lines": 12
+  },
+  {
+    "rel_path": "ansys-mechanical/SKILL.md",
+    "rel_folder": "ansys-mechanical",
+    "folder_name": "ansys-mechanical",
+    "line_count": 104,
+    "has_fm": true,
+    "fm_valid": true,
+    "fm_parse_error": null,
+    "name": "ansys-mechanical",
+    "is_kebab": true,
+    "name_matches_folder": true,
+    "has_description": true,
+    "description_len": 66,
+    "description": "ANSYS Mechanical 結構剛強度、模態與熱-結構耦合分析主控手冊。涵蓋 ACT 腳本、非線性接觸、網格前檢與奇異點判定。",
+    "child_dirs": [
+      "reference",
+      "scripts"
+    ],
+    "child_files": [
+      "SKILL.md"
+    ],
+    "has_scripts": true,
+    "has_references": false,
+    "has_reference_singular": true,
+    "code_block_count": 2,
+    "code_block_lines": 13
+  },
+  {
+    "rel_path": "ansys-mesh/SKILL.md",
+    "rel_folder": "ansys-mesh",
+    "folder_name": "ansys-mesh",
+    "line_count": 147,
+    "has_fm": true,
+    "fm_valid": true,
+    "fm_parse_error": null,
+    "name": "ansys-mesh",
+    "is_kebab": true,
+    "name_matches_folder": true,
+    "has_description": true,
+    "description_len": 138,
+    "description": "ANSYS Mechanical 與 LS-DYNA 網格工程主控手冊。涵蓋網格品質指標體系、自適應 Sizing/Method、分區樹目錄整理、分區劃分與排障、網格干涉檢查、全域 CFL 步長量測，以及基於 Node Merge / MeshTuner 的局部步長調優流程。",
+    "child_dirs": [
+      "reference",
+      "scripts"
+    ],
+    "child_files": [
+      "SKILL.md"
+    ],
+    "has_scripts": true,
+    "has_references": false,
+    "has_reference_singular": true,
+    "code_block_count": 3,
+    "code_block_lines": 35
+  },
+  {
+    "rel_path": "ansys-optislang/SKILL.md",
+    "rel_folder": "ansys-optislang",
+    "folder_name": "ansys-optislang",
+    "line_count": 65,
+    "has_fm": true,
+    "fm_valid": true,
+    "fm_parse_error": null,
+    "name": "ansys-optislang",
+    "is_kebab": true,
+    "name_matches_folder": true,
+    "has_description": true,
+    "description_len": 56,
+    "description": "ANSYS optiSLang 參數敏感度分析、MOP 最佳預測元模型與多目標 Pareto 尋優工程主控手冊。",
+    "child_dirs": [
+      "reference",
+      "scripts"
+    ],
+    "child_files": [
+      "SKILL.md"
+    ],
+    "has_scripts": true,
+    "has_references": false,
+    "has_reference_singular": true,
+    "code_block_count": 1,
+    "code_block_lines": 12
+  },
+  {
+    "rel_path": "ansys-parametric-study/SKILL.md",
+    "rel_folder": "ansys-parametric-study",
+    "folder_name": "ansys-parametric-study",
+    "line_count": 54,
+    "has_fm": true,
+    "fm_valid": true,
+    "fm_parse_error": null,
+    "name": "ansys-parametric-study",
+    "is_kebab": true,
+    "name_matches_folder": true,
+    "has_description": true,
+    "description_len": 61,
+    "description": "ANSYS Workbench DesignXplorer (DX) 參數集研究與 optiSLang 雙軌選型優化技能。",
+    "child_dirs": [
+      "reference",
+      "scripts"
+    ],
+    "child_files": [
+      "SKILL.md"
+    ],
+    "has_scripts": true,
+    "has_references": false,
+    "has_reference_singular": true,
+    "code_block_count": 1,
+    "code_block_lines": 8
+  },
+  {
+    "rel_path": "ansys-spaceclaim/SKILL.md",
+    "rel_folder": "ansys-spaceclaim",
+    "folder_name": "ansys-spaceclaim",
+    "line_count": 53,
+    "has_fm": true,
+    "fm_valid": true,
+    "fm_parse_error": null,
+    "name": "ansys-spaceclaim",
+    "is_kebab": true,
+    "name_matches_folder": true,
+    "has_description": true,
+    "description_len": 104,
+    "description": "ANSYS SpaceClaim (SCDM) 幾何建模與 Python 腳本自動化技能。涵蓋 PyAnsys Geometry 與原生 SpaceClaim ACT IronPython API 雙軌控制。",
+    "child_dirs": [
+      "reference",
+      "scripts"
+    ],
+    "child_files": [
+      "SKILL.md"
+    ],
+    "has_scripts": true,
+    "has_references": false,
+    "has_reference_singular": true,
+    "code_block_count": 0,
+    "code_block_lines": 0
+  },
+  {
+    "rel_path": "ansys-spaceclaim-modeling/SKILL.md",
+    "rel_folder": "ansys-spaceclaim-modeling",
+    "folder_name": "ansys-spaceclaim-modeling",
+    "line_count": 74,
+    "has_fm": true,
+    "fm_valid": true,
+    "fm_parse_error": null,
+    "name": "ansys-spaceclaim-modeling",
+    "is_kebab": true,
+    "name_matches_folder": true,
+    "has_description": true,
+    "description_len": 98,
+    "description": "ANSYS SpaceClaim (SCDM) 與 Discovery 幾何前處理主控手冊。涵蓋 2D 草圖拉伸、流場外流域抽取 (Enclosure)、布林相減、CAD 診斷與 PMDB 導出。",
+    "child_dirs": [
+      "reference",
+      "scripts"
+    ],
+    "child_files": [
+      "SKILL.md"
+    ],
+    "has_scripts": true,
+    "has_references": false,
+    "has_reference_singular": true,
+    "code_block_count": 1,
+    "code_block_lines": 7
+  },
+  {
+    "rel_path": "ansys-submodeling-dpf/SKILL.md",
+    "rel_folder": "ansys-submodeling-dpf",
+    "folder_name": "ansys-submodeling-dpf",
+    "line_count": 58,
+    "has_fm": true,
+    "fm_valid": true,
+    "fm_parse_error": null,
+    "name": "ansys-submodeling-dpf",
+    "is_kebab": true,
+    "name_matches_folder": true,
+    "has_description": true,
+    "description_len": 79,
+    "description": "ANSYS DPF 高速結果場提取與局部子模型（Submodeling）自動化分析技能。涵蓋形函數空間座標插值、MAPDL 併發求解池與聖維南切面連續性驗證。",
+    "child_dirs": [
+      "reference",
+      "scripts"
+    ],
+    "child_files": [
+      "SKILL.md"
+    ],
+    "has_scripts": true,
+    "has_references": false,
+    "has_reference_singular": true,
+    "code_block_count": 1,
+    "code_block_lines": 5
+  },
+  {
+    "rel_path": "antigravity-notebooklm/SKILL.md",
+    "rel_folder": "antigravity-notebooklm",
+    "folder_name": "antigravity-notebooklm",
+    "line_count": 66,
+    "has_fm": true,
+    "fm_valid": true,
+    "fm_parse_error": null,
+    "name": "antigravity-notebooklm",
+    "is_kebab": true,
+    "name_matches_folder": true,
+    "has_description": true,
+    "description_len": 83,
+    "description": "在 AntiGravity 串接 NotebookLM MCP 與 nlm CLI 工具。支援查詢 Google NotebookLM 中的筆記、來源資料與語義問答。",
+    "child_dirs": [],
+    "child_files": [
+      "SKILL.md"
+    ],
+    "has_scripts": false,
+    "has_references": false,
+    "has_reference_singular": false,
+    "code_block_count": 5,
+    "code_block_lines": 23
+  },
+  {
+    "rel_path": "pcb-warpage-analysis/SKILL.md",
+    "rel_folder": "pcb-warpage-analysis",
+    "folder_name": "pcb-warpage-analysis",
+    "line_count": 39,
+    "has_fm": true,
+    "fm_valid": true,
+    "fm_parse_error": null,
+    "name": "pcb-warpage-analysis",
+    "is_kebab": true,
+    "name_matches_folder": true,
+    "has_description": true,
+    "description_len": 85,
+    "description": "PCB 多層疊構熱翹曲（Thermal Warpage）自動化分析專用技能。涵蓋 ROM 複合材料巨集、SpaceClaim 疊構建模與 3-2-1 靜定支承熱應力求解。",
+    "child_dirs": [
+      "scripts"
+    ],
+    "child_files": [
+      "SKILL.md"
+    ],
+    "has_scripts": true,
+    "has_references": false,
+    "has_reference_singular": false,
+    "code_block_count": 1,
+    "code_block_lines": 9
+  },
+  {
+    "rel_path": "pdf-to-md/SKILL.md",
+    "rel_folder": "pdf-to-md",
+    "folder_name": "pdf-to-md",
+    "line_count": 64,
+    "has_fm": true,
+    "fm_valid": true,
+    "fm_parse_error": null,
+    "name": "pdf-to-md",
+    "is_kebab": true,
+    "name_matches_folder": true,
+    "has_description": true,
+    "description_len": 318,
+    "description": "Convert PDF documents to token-lean Markdown for downstream RAG/search. Extracts clean text, tables, and per-page markers using pymupdf4llm. Skips images (no OCR). Use when the user wants to turn PDFs (manuals, docs, guides) into Markdown, prepare documentation for an MCP/search index, or asks to \"convert PDF to md\".",
+    "child_dirs": [
+      "__pycache__"
+    ],
+    "child_files": [
+      "convert.py",
+      "SKILL.md"
+    ],
+    "has_scripts": false,
+    "has_references": false,
+    "has_reference_singular": false,
+    "code_block_count": 2,
+    "code_block_lines": 2
+  },
+  {
+    "rel_path": "pymechanical-operations/SKILL.md",
+    "rel_folder": "pymechanical-operations",
+    "folder_name": "pymechanical-operations",
+    "line_count": 55,
+    "has_fm": true,
+    "fm_valid": true,
+    "fm_parse_error": null,
+    "name": "pymechanical-operations",
+    "is_kebab": true,
+    "name_matches_folder": true,
+    "has_description": true,
+    "description_len": 50,
+    "description": "PyMechanical gRPC 連線、遠端腳本執行、幾何 Scoping 與網格控制自動化技能。",
+    "child_dirs": [
+      "reference",
+      "scripts"
+    ],
+    "child_files": [
+      "SKILL.md"
+    ],
+    "has_scripts": true,
+    "has_references": false,
+    "has_reference_singular": true,
+    "code_block_count": 1,
+    "code_block_lines": 5
+  },
+  {
+    "rel_path": "shock-analysis-workflow/SKILL.md",
+    "rel_folder": "shock-analysis-workflow",
+    "folder_name": "shock-analysis-workflow",
+    "line_count": 32,
+    "has_fm": true,
+    "fm_valid": true,
+    "fm_parse_error": null,
+    "name": "shock-analysis-workflow",
+    "is_kebab": true,
+    "name_matches_folder": true,
+    "has_description": true,
+    "description_len": 120,
+    "description": "End-to-end automated pipeline for ANSYS Mechanical LS-DYNA Shock / Drop analysis, coordinating 8 modular session skills.",
+    "child_dirs": [
+      "01-material-assignment",
+      "02-contact-creation",
+      "03-mesh-tuning",
+      "04-connection-rm",
+      "05-section-assignment",
+      "06-constraint-load",
+      "07-solve-monitor",
+      "08-post-process-report",
+      "scripts"
+    ],
+    "child_files": [
+      "SKILL.md"
+    ],
+    "has_scripts": true,
+    "has_references": false,
+    "has_reference_singular": false,
+    "code_block_count": 1,
+    "code_block_lines": 7
+  },
+  {
+    "rel_path": "shock-analysis-workflow/01-material-assignment/SKILL.md",
+    "rel_folder": "shock-analysis-workflow/01-material-assignment",
+    "folder_name": "01-material-assignment",
+    "line_count": 78,
+    "has_fm": true,
+    "fm_valid": true,
+    "fm_parse_error": null,
+    "name": "shock-session-material-assignment",
+    "is_kebab": true,
+    "name_matches_folder": false,
+    "has_description": true,
+    "description_len": 80,
+    "description": "自動化材料指派會話（Material Assignment Session），整合 ACT 關鍵字比對引擎、BOM 查表、SMT 元件正則匹配與小批次驗證機制。",
+    "child_dirs": [
+      "reference"
+    ],
+    "child_files": [
+      "SKILL.md"
+    ],
+    "has_scripts": false,
+    "has_references": false,
+    "has_reference_singular": true,
+    "code_block_count": 2,
+    "code_block_lines": 13
+  },
+  {
+    "rel_path": "shock-analysis-workflow/02-contact-creation/SKILL.md",
+    "rel_folder": "shock-analysis-workflow/02-contact-creation",
+    "folder_name": "02-contact-creation",
+    "line_count": 76,
+    "has_fm": true,
+    "fm_valid": true,
+    "fm_parse_error": null,
+    "name": "shock-session-contact-creation",
+    "is_kebab": true,
+    "name_matches_folder": false,
+    "has_description": true,
+    "description_len": 123,
+    "description": "自動化接觸對與運動副建立會話（Contact & Joint Creation Session），整合 Mech_bonded 與 MECH_RM_Joint_Creation 邏輯，支援 Mobile/Reference 自動配對與小批次驗證。",
+    "child_dirs": [
+      "reference"
+    ],
+    "child_files": [
+      "SKILL.md"
+    ],
+    "has_scripts": false,
+    "has_references": false,
+    "has_reference_singular": true,
+    "code_block_count": 2,
+    "code_block_lines": 9
+  },
+  {
+    "rel_path": "shock-analysis-workflow/03-mesh-tuning/SKILL.md",
+    "rel_folder": "shock-analysis-workflow/03-mesh-tuning",
+    "folder_name": "03-mesh-tuning",
+    "line_count": 93,
+    "has_fm": true,
+    "fm_valid": true,
+    "fm_parse_error": null,
+    "name": "shock-session-mesh-tuning",
+    "is_kebab": true,
+    "name_matches_folder": false,
+    "has_description": true,
+    "description_len": 61,
+    "description": "網格劃分優先級、幾何與初始穿透干涉預檢、LS-DYNA 顯式時間步長 (dt >= 2e-8 s) 調校與小批次驗證會話。",
+    "child_dirs": [
+      "reference"
+    ],
+    "child_files": [
+      "SKILL.md"
+    ],
+    "has_scripts": false,
+    "has_references": false,
+    "has_reference_singular": true,
+    "code_block_count": 2,
+    "code_block_lines": 10
+  },
+  {
+    "rel_path": "shock-analysis-workflow/04-connection-rm/SKILL.md",
+    "rel_folder": "shock-analysis-workflow/04-connection-rm",
+    "folder_name": "04-connection-rm",
+    "line_count": 82,
+    "has_fm": true,
+    "fm_valid": true,
+    "fm_parse_error": null,
+    "name": "shock-session-connection-rm",
+    "is_kebab": true,
+    "name_matches_folder": false,
+    "has_description": true,
+    "description_len": 97,
+    "description": "遠端點 (Remote Point)、遠端質量 (Remote Mass) 配置會話，包含過度約束防呆 (Error 20110)、空 NS 過濾、Deformable 設定與飛出零件拓撲預檢。",
+    "child_dirs": [
+      "reference"
+    ],
+    "child_files": [
+      "SKILL.md"
+    ],
+    "has_scripts": false,
+    "has_references": false,
+    "has_reference_singular": true,
+    "code_block_count": 2,
+    "code_block_lines": 13
+  },
+  {
+    "rel_path": "shock-analysis-workflow/05-section-assignment/SKILL.md",
+    "rel_folder": "shock-analysis-workflow/05-section-assignment",
+    "folder_name": "05-section-assignment",
+    "line_count": 95,
+    "has_fm": true,
+    "fm_valid": true,
+    "fm_parse_error": null,
+    "name": "shock-session-section-assignment",
+    "is_kebab": true,
+    "name_matches_folder": false,
+    "has_description": true,
+    "description_len": 77,
+    "description": "中面薄板厚度指派、LS-DYNA 截面性質與單元公式 (ELFORM=16 Shells, ELFORM=10/1 Solids) 配置與小批次驗證會話。",
+    "child_dirs": [
+      "reference"
+    ],
+    "child_files": [
+      "SKILL.md"
+    ],
+    "has_scripts": false,
+    "has_references": false,
+    "has_reference_singular": true,
+    "code_block_count": 5,
+    "code_block_lines": 26
+  },
+  {
+    "rel_path": "shock-analysis-workflow/06-constraint-load/SKILL.md",
+    "rel_folder": "shock-analysis-workflow/06-constraint-load",
+    "folder_name": "06-constraint-load",
+    "line_count": 76,
+    "has_fm": true,
+    "fm_valid": true,
+    "fm_parse_error": null,
+    "name": "shock-session-constraint-load",
+    "is_kebab": true,
+    "name_matches_folder": false,
+    "has_description": true,
+    "description_len": 87,
+    "description": "Shock dynamic boundary conditions and exact company standard LS-DYNA Analysis Settings.",
+    "child_dirs": [
+      "reference"
+    ],
+    "child_files": [
+      "SKILL.md"
+    ],
+    "has_scripts": false,
+    "has_references": false,
+    "has_reference_singular": true,
+    "code_block_count": 1,
+    "code_block_lines": 25
+  },
+  {
+    "rel_path": "shock-analysis-workflow/07-solve-monitor/SKILL.md",
+    "rel_folder": "shock-analysis-workflow/07-solve-monitor",
+    "folder_name": "07-solve-monitor",
+    "line_count": 95,
+    "has_fm": true,
+    "fm_valid": true,
+    "fm_parse_error": null,
+    "name": "shock-session-solve-monitor",
+    "is_kebab": true,
+    "name_matches_folder": false,
+    "has_description": true,
+    "description_len": 58,
+    "description": "LS-DYNA 求解器調度、即時 glstat 能量平衡比 (0.9~1.1) 監控、沙漏能檢測與異常硬性阻斷會話。",
+    "child_dirs": [
+      "reference"
+    ],
+    "child_files": [
+      "SKILL.md"
+    ],
+    "has_scripts": false,
+    "has_references": false,
+    "has_reference_singular": true,
+    "code_block_count": 3,
+    "code_block_lines": 27
+  },
+  {
+    "rel_path": "shock-analysis-workflow/08-post-process-report/SKILL.md",
+    "rel_folder": "shock-analysis-workflow/08-post-process-report",
+    "folder_name": "08-post-process-report",
+    "line_count": 97,
+    "has_fm": true,
+    "fm_valid": true,
+    "fm_parse_error": null,
+    "name": "shock-session-post-process-report",
+    "is_kebab": true,
+    "name_matches_folder": false,
+    "has_description": true,
+    "description_len": 68,
+    "description": "LS-DYNA 模擬結果後處理、塑性應變場 (EPS) 提取、基於公司標準失效矩陣之客觀 PASS/FAIL 判定與自動化報告生成會話。",
+    "child_dirs": [
+      "reference"
+    ],
+    "child_files": [
+      "SKILL.md"
+    ],
+    "has_scripts": false,
+    "has_references": false,
+    "has_reference_singular": true,
+    "code_block_count": 3,
+    "code_block_lines": 40
+  }
+]

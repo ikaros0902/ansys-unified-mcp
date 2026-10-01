@@ -2,7 +2,7 @@
 
 $ErrorActionPreference = "Stop"
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Definition
-$RepoRoot = Split-Path -Parent $ScriptDir
+$RepoRoot = Split-Path -Parent (Split-Path -Parent $ScriptDir)
 
 Write-Host "==========================================" -ForegroundColor Cyan
 Write-Host "  ANSYS Unified MCP Server v2.0 Setup" -ForegroundColor Cyan
@@ -40,7 +40,7 @@ Write-Host "[3/5] Detecting ANSYS installations..."
 $ansysVersions = @()
 
 # Source 1: Check .env file if present
-$envFile = Join-Path $ScriptDir ".env"
+$envFile = Join-Path $RepoRoot ".env"
 if (Test-Path $envFile) {
     Get-Content $envFile | ForEach-Object {
         if ($_ -match "^\s*ANSYS_VERSION\s*=\s*(\d+)") {

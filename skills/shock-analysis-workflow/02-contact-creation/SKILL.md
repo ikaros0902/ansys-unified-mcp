@@ -1,5 +1,5 @@
 ---
-name: shock-session-contact-creation
+name: 02-contact-creation
 description: 自動化接觸對與運動副建立會話（Contact & Joint Creation Session），整合 Mech_bonded 與 MECH_RM_Joint_Creation 邏輯，支援 Mobile/Reference 自動配對與小批次驗證。
 phase_gate:
   requires: []
@@ -40,7 +40,7 @@ flowchart TD
 - **全域單表面接觸 (`*CONTACT_AUTOMATIC_SINGLE_SURFACE`)**：注入 SOFT=1、動靜摩擦係數 0.2 之整機自防穿透卡片。
 
 > 完整演算法程式碼與 LS-DYNA 卡片定義，詳見專門手冊：
-> - [`reference/contact_formulations.md`](reference/contact_formulations.md)
+> - [`references/contact_formulations.md`](references/contact_formulations.md)
 
 ---
 
@@ -59,7 +59,7 @@ flowchart TD
 ### 4.2 獨立測試腳本執行方式
 執行以下獨立測試腳本：
 ```powershell
-python SKILLs/shock-analysis-workflow/scripts/test_session_02.py
+python skills/shock-analysis-workflow/scripts/test_session_02.py
 ```
 
 ### 4.3 驗證評估指標 (Verification Metrics)
@@ -73,4 +73,4 @@ python SKILLs/shock-analysis-workflow/scripts/test_session_02.py
 
 | 手冊名稱 | 內容摘要 |
 | :--- | :--- |
-| [`reference/contact_formulations.md`](reference/contact_formulations.md) | 運動副腳本、Pinball 綁定接觸對配置與單表面接觸卡片 |
+| [`references/contact_formulations.md`](references/contact_formulations.md) | 運動副腳本、Pinball 綁定接觸對配置與單表面接觸卡片 |

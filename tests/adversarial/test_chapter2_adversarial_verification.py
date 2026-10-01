@@ -82,9 +82,13 @@ class TestChapter2CodebaseFacts:
             driver.is_available = orig_avail
 
     def test_extapi_act_string_concatenation(self):
-        """1.4 驗證 ExtAPI ACT 字串拼接在 products/mechanical.py 與 tools/mechanical_workflows.py 中的存在。"""
-        mech_prod = src_root / "ansys_unified_mcp" / "products" / "mechanical.py"
+        """1.4 驗證 ExtAPI ACT 字串拼接在 products/mechanical/facade.py 與 tools/mechanical_workflows.py 中的存在。"""
+        mech_prod = src_root / "ansys_unified_mcp" / "products" / "mechanical" / "facade.py"
+        legacy_prod = src_root / "ansys_unified_mcp" / "products" / "mechanical.py"
         mech_wf = src_root / "ansys_unified_mcp" / "tools" / "mechanical_workflow_tools.py"
+
+        # 驗證舊版單一檔案已被物理移除，且重構後的 Facade 與工作流檔案均存在
+        assert not legacy_prod.exists(), f"舊版 products/mechanical.py 必須已被消除: {legacy_prod}"
         assert mech_prod.exists() and mech_wf.exists()
 
         content_prod = mech_prod.read_text(encoding="utf-8")
@@ -119,12 +123,18 @@ class TestChapter2CodebaseFacts:
             assert "ansys-sherlock-core" not in py_text
 
     def test_tool_count_136_ast_verification(self):
-        """3.1 驗證 tools/*.py 中 AST 定義之工具函數總數為 136 個。"""
-        tools_dir = src_root / "ansys_unified_mcp" / "tools"
+        """3.1 驗證 tools/*.py 與 products/*/tools.py 中 AST 定義之工具函數總數為 138 個。"""
+        package_dir = src_root / "ansys_unified_mcp"
+        tools_dir = package_dir / "tools"
+        products_dir = package_dir / "products"
         tool_counts = {}
+        unique_tools = {}
 
-        for p in sorted(tools_dir.glob("*.py")):
-            if p.name == "__init__.py" or p.name == "connection_doctor.py":
+        # 掃描 tools/*.py 以及 products/*/tools.py（如 geometry 與 optislang 等產品工具）
+        target_files = sorted(set(list(tools_dir.glob("*.py")) + list(products_dir.glob("*/tools.py"))))
+
+        for p in target_files:
+            if p.name in ("__init__.py", "connection_doctor.py"):
                 continue
             tree = ast.parse(p.read_text(encoding="utf-8"))
             funcs = 0
@@ -134,10 +144,12 @@ class TestChapter2CodebaseFacts:
                         dec_str = ast.unparse(dec)
                         if any(k in dec_str for k in ["aliased_tool", "mcp.tool", "tool_fluent", "tool_geometry"]):
                             funcs += 1
+                            unique_tools[node.name] = str(p.relative_to(package_dir))
                             break
-            tool_counts[p.name] = funcs
+            rel_name = str(p.relative_to(package_dir))
+            tool_counts[rel_name] = funcs
 
-        total_funcs = sum(tool_counts.values())
+        total_funcs = len(unique_tools)
         # Chapter 2 基線 136 個工具 + R5 新增之 DPF 工具 (2 個: dpf_extract_structural_results, dpf_get_model_summary)
         assert total_funcs == 138, f"AST 解析工具總數應為 138，實測: {total_funcs} (各模組: {tool_counts})"
 

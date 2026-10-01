@@ -40,7 +40,7 @@ flowchart TD
 
 | 分析主題 | 專精文件 | 核心內容 |
 | :--- | :--- | :--- |
-| **DX vs. optiSLang 決策矩陣** | [`reference/dx_to_optislang.md`](reference/dx_to_optislang.md) | 雙軌選型量化標準、遷移矩陣與 CoP 門檻 |
+| **DX vs. optiSLang 決策矩陣** | [`references/dx_to_optislang.md`](references/dx_to_optislang.md) | 雙軌選型量化標準、遷移矩陣與 CoP 門檻 |
 | **參數集批次自動化腳本** | [`scripts/workbench_dx_optislang_bridge.py`](scripts/workbench_dx_optislang_bridge.py) | Workbench Journal 腳本生成與選型評估器 |
 
 ---

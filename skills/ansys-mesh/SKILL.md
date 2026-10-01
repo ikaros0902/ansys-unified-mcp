@@ -145,3 +145,14 @@ dt >= 50 ns}
 >    終端強制中斷網格進程會破壞 Mechanical COM 通訊管線，導致主程序拋出 `MeshProgress.htm` 釋放例外並崩潰。網格處理必須透過非同步超時機制自然排查。
 > 5. **嚴禁全裝配體盲目重劃分**：
 >    已達標零件無需重新劃分。調優階段只選取目標瓶頸幾何進行微調與局部更新，維持其餘已達標零件的網格拓撲不變。
+
+---
+
+## 五、專精參考手冊導引 (References Router)
+
+| 工程領域 / 任務情境 | 專精手冊 | 核心重點與關鍵規範 |
+|---|---|---|
+| **CFL 步長調優與分群隔離** | [`references/cfl_tuning_and_group_batching.md`](references/cfl_tuning_and_group_batching.md) | Group Batching 演算法、CFL 瓶頸定位、Node Merge 縫合微小特徵。 |
+| **局部控制與墊圈結構** | [`references/local_controls_and_washers.md`](references/local_controls_and_washers.md) | 孔邊 Edge Sizing、圓孔 Washer 墊圈幾何拓撲、局部 Pinch 控制項。 |
+| **網格劃分方法與幾何修復** | [`references/mesh_methods_and_geometry_healing.md`](references/mesh_methods_and_geometry_healing.md) | MultiZone、Sweep、Tet 方法選擇依據，CAD 拓撲微小特徵修復。 |
+| **網格品質指標體系** | [`references/metrics_and_quality_standards.md`](references/metrics_and_quality_standards.md) | 雅可比比率 (Jacobian Ratio)、翹曲度、長寬比門檻標準與 Interface Check。 |

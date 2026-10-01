@@ -37,12 +37,12 @@ example.cfile  ── runpython script.py arg1 arg2 ──►  Python/SCL script
 
 | Function | File | Covers |
 |---|---|---|
-| Session & cfile | `reference/session_and_cfile.md` | SCL vs cfile vs Python, `runscript`/`runpython`, passing args |
-| Model query | `reference/model_query.md` | Data-center getters, typecodes, parameter names, selection buffer |
-| States & results | `reference/states_and_results.md` | `SCLSwitchStateTo`, stress/strain tensors, displacement vectors, fringe, binout |
-| Model build | `reference/model_build.md` | Create nodes/elements, drag to solid, curves, delete/write parts |
-| Output & export | `reference/output_export.md` | Write to message/user files, fringe back into LSPP, export parts |
-| Python module interface | `reference/python_module_interface.md` | `LsPrePost.execute_command`, `DataCenter.get_data`, `cmd_result_get_value`, real SCL command tokens (genselect/fringe/print png/movie/state) |
+| Session & cfile | `references/session_and_cfile.md` | SCL vs cfile vs Python, `runscript`/`runpython`, passing args |
+| Model query | `references/model_query.md` | Data-center getters, typecodes, parameter names, selection buffer |
+| States & results | `references/states_and_results.md` | `SCLSwitchStateTo`, stress/strain tensors, displacement vectors, fringe, binout |
+| Model build | `references/model_build.md` | Create nodes/elements, drag to solid, curves, delete/write parts |
+| Output & export | `references/output_export.md` | Write to message/user files, fringe back into LSPP, export parts |
+| Python module interface | `references/python_module_interface.md` | `LsPrePost.execute_command`, `DataCenter.get_data`, `cmd_result_get_value`, real SCL command tokens (genselect/fringe/print png/movie/state) |
 
 ## Fallback: search the full docs
 

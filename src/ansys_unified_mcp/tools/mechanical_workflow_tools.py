@@ -12,7 +12,7 @@ import logging
 from typing import Any, Dict, List, Optional
 
 from ansys_unified_mcp.shared import mcp, aliased_tool, as_envelope as _envelope
-from ansys_unified_mcp.products.mechanical import controller, _esc
+from ansys_unified_mcp.products.mechanical.facade import controller, _esc
 
 logger = logging.getLogger("ansys-unified-mcp.tools.mechanical_workflows")
 

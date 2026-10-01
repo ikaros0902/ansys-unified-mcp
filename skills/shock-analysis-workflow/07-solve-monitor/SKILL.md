@@ -1,5 +1,5 @@
 ---
-name: shock-session-solve-monitor
+name: 07-solve-monitor
 description: LS-DYNA 求解器調度、即時 glstat 能量平衡比 (0.9~1.1) 監控、沙漏能檢測與異常硬性阻斷會話。
 phase_gate:
   requires: []
@@ -85,7 +85,7 @@ def dispatch_and_monitor_solve(analysis):
 
 ### 5.1 獨立測試腳本執行方式
 ```powershell
-python SKILLs/shock-analysis-workflow/scripts/test_session_07.py
+python skills/shock-analysis-workflow/scripts/test_session_07.py
 ```
 
 ### 5.2 驗證指標清單 (Verification Metrics)
@@ -93,3 +93,11 @@ python SKILLs/shock-analysis-workflow/scripts/test_session_07.py
 - **爆炸阻斷門禁 (Explosion Blocking Gate)**：100% 成功攔截異常數據
 - **沙漏能超標阻斷 (Hourglass Gate)**：100% 成功攔截 $>10\%$ 狀態
 - **求解器進程健康度 (Solver Process Health)**：0 殘留孤兒進程
+
+---
+
+## 6. 相關參考手冊 (Related References)
+
+| 手冊名稱 | 內容摘要 |
+| :--- | :--- |
+| [`references/energy_balance_tracking.md`](references/energy_balance_tracking.md) | glstat 能量平衡監控、沙漏能與接觸能門禁判讀及阻斷演算法 |

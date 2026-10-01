@@ -76,7 +76,8 @@ runs/
 jobs/*
 !jobs/.gitkeep
 scratch/
-.agents/
+.agents/*
+!.agents/teamwork/
 src/**/tools/commands/
 src/**/tools/results/
 src/**/tools/runs/

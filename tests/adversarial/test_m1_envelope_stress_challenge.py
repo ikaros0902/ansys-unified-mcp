@@ -24,7 +24,7 @@ import pytest
 from unittest.mock import patch
 
 from ansys_unified_mcp.shared import mcp
-import ansys_unified_mcp.products.mechanical as mechanical_mod
+import ansys_unified_mcp.products.mechanical.facade as mechanical_mod
 from ansys_unified_mcp.products.mechanical_api import _safe_json_response, _is_error_output
 
 # 歷史漏洞探查測試：此檔案用於在修復前證明 14 處漏洞存在。

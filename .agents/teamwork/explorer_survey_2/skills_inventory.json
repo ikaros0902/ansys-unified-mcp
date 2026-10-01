@@ -1,0 +1,402 @@
+[
+  {
+    "folder": "act-extension-development",
+    "has_skill_md": true,
+    "line_count": 56,
+    "has_frontmatter": true,
+    "yaml_valid": true,
+    "name_in_yaml": "act-extension-development",
+    "name_kebab": true,
+    "name_matches_folder": true,
+    "desc_in_yaml": "ANSYS ACT 擴充外掛開發、IronPython 限制、FileSystemWatcher 事件監聽與 Wizard API 自動化技能。",
+    "subdirs": [
+      "reference",
+      "scripts"
+    ],
+    "has_scripts": true,
+    "has_references": false,
+    "has_reference_singular": true,
+    "code_block_lines": 5,
+    "large_code_blocks_count": 0,
+    "large_code_blocks": []
+  },
+  {
+    "folder": "ansys-error-catalog",
+    "has_skill_md": true,
+    "line_count": 40,
+    "has_frontmatter": true,
+    "yaml_valid": true,
+    "name_in_yaml": "ansys-error-catalog",
+    "name_kebab": true,
+    "name_matches_folder": true,
+    "desc_in_yaml": "ANSYS 與 IronPython 開發報錯目錄與排障指南。涵蓋 Workbench、Mechanical、SpaceClaim 與 ACT 報錯根因與修復對策。",
+    "subdirs": [
+      "reference",
+      "scripts"
+    ],
+    "has_scripts": true,
+    "has_references": false,
+    "has_reference_singular": true,
+    "code_block_lines": 0,
+    "large_code_blocks_count": 0,
+    "large_code_blocks": []
+  },
+  {
+    "folder": "ansys-fluent",
+    "has_skill_md": true,
+    "line_count": 101,
+    "has_frontmatter": true,
+    "yaml_valid": true,
+    "name_in_yaml": "ansys-fluent",
+    "name_kebab": true,
+    "name_matches_folder": true,
+    "desc_in_yaml": "ANSYS Fluent CFD 與共軛熱傳分析主控手冊。涵蓋 PyFluent 水密幾何 Poly-Hexcore 網格、SST k-omega 湍流模型、Coupled 求解與 y+ 評估。",
+    "subdirs": [
+      "reference",
+      "scripts"
+    ],
+    "has_scripts": true,
+    "has_references": false,
+    "has_reference_singular": true,
+    "code_block_lines": 20,
+    "large_code_blocks_count": 1,
+    "large_code_blocks": [
+      {
+        "lang": "python",
+        "lines": 20,
+        "preview": [
+          "import ansys.fluent.core as pyfluent",
+          "",
+          "# 1. 網格劃分會話 (Meshing Mode)"
+        ]
+      }
+    ]
+  },
+  {
+    "folder": "ansys-geometry-modeling",
+    "has_skill_md": true,
+    "line_count": 74,
+    "has_frontmatter": true,
+    "yaml_valid": true,
+    "name_in_yaml": "ansys-geometry-modeling",
+    "name_kebab": true,
+    "name_matches_folder": true,
+    "desc_in_yaml": "ANSYS 現代化幾何前處理主控手冊 (PyAnsys Geometry)。涵蓋 2D 參數化草圖、3D 拉伸/旋轉、外流域抽取 (Enclosure)、CAD 診斷與無損 PMDB 導出。",
+    "subdirs": [
+      "reference",
+      "scripts"
+    ],
+    "has_scripts": true,
+    "has_references": false,
+    "has_reference_singular": true,
+    "code_block_lines": 7,
+    "large_code_blocks_count": 0,
+    "large_code_blocks": []
+  },
+  {
+    "folder": "ansys-ls-prepost",
+    "has_skill_md": true,
+    "line_count": 56,
+    "has_frontmatter": true,
+    "yaml_valid": true,
+    "name_in_yaml": "ansys-ls-prepost",
+    "name_kebab": true,
+    "name_matches_folder": true,
+    "desc_in_yaml": "Condensed Ansys LS-PrePost scripting reference (SCL command language, command files, and the Python data-center API), organized by function (session/cfile, model query, states & results, model build, output/export). Use whenever the user automates LS-PrePost, writes cfile / SCL / LS-PrePost Python scripts, queries model or d3plot data (nodes, elements, stress, displacement), fringes computed results, or builds/edits an LS-DYNA model in LS-PrePost. For the LS-DYNA solver keyword deck itself, use the ansys-lsdyna skill.",
+    "subdirs": [
+      "reference",
+      "scripts"
+    ],
+    "has_scripts": true,
+    "has_references": false,
+    "has_reference_singular": true,
+    "code_block_lines": 5,
+    "large_code_blocks_count": 0,
+    "large_code_blocks": []
+  },
+  {
+    "folder": "ansys-lsdyna",
+    "has_skill_md": true,
+    "line_count": 67,
+    "has_frontmatter": true,
+    "yaml_valid": true,
+    "name_in_yaml": "ansys-lsdyna",
+    "name_kebab": true,
+    "name_matches_folder": true,
+    "desc_in_yaml": "LS-DYNA 顯式動力學工程主控手冊，專注於落摔試驗 (Drop test)、高速碰撞、衝擊響應與材料塑性失效分析。",
+    "subdirs": [
+      "reference",
+      "scripts"
+    ],
+    "has_scripts": true,
+    "has_references": false,
+    "has_reference_singular": true,
+    "code_block_lines": 12,
+    "large_code_blocks_count": 0,
+    "large_code_blocks": []
+  },
+  {
+    "folder": "ansys-mechanical",
+    "has_skill_md": true,
+    "line_count": 104,
+    "has_frontmatter": true,
+    "yaml_valid": true,
+    "name_in_yaml": "ansys-mechanical",
+    "name_kebab": true,
+    "name_matches_folder": true,
+    "desc_in_yaml": "ANSYS Mechanical 結構剛強度、模態與熱-結構耦合分析主控手冊。涵蓋 ACT 腳本、非線性接觸、網格前檢與奇異點判定。",
+    "subdirs": [
+      "reference",
+      "scripts"
+    ],
+    "has_scripts": true,
+    "has_references": false,
+    "has_reference_singular": true,
+    "code_block_lines": 13,
+    "large_code_blocks_count": 0,
+    "large_code_blocks": []
+  },
+  {
+    "folder": "ansys-mesh",
+    "has_skill_md": true,
+    "line_count": 147,
+    "has_frontmatter": true,
+    "yaml_valid": true,
+    "name_in_yaml": "ansys-mesh",
+    "name_kebab": true,
+    "name_matches_folder": true,
+    "desc_in_yaml": "ANSYS Mechanical 與 LS-DYNA 網格工程主控手冊。涵蓋網格品質指標體系、自適應 Sizing/Method、分區樹目錄整理、分區劃分與排障、網格干涉檢查、全域 CFL 步長量測，以及基於 Node Merge / MeshTuner 的局部步長調優流程。",
+    "subdirs": [
+      "reference",
+      "scripts"
+    ],
+    "has_scripts": true,
+    "has_references": false,
+    "has_reference_singular": true,
+    "code_block_lines": 35,
+    "large_code_blocks_count": 1,
+    "large_code_blocks": [
+      {
+        "lang": "mermaid",
+        "lines": 17,
+        "preview": [
+          "flowchart TD",
+          "    S1[1. AutoMesh 幾何分類配置",
+          "Sheet: Quad-Dom / PCBA: MultiZone / Solid: Tet / Hole: EdgeSizing] --> S2[2. Go to Mesh Controls 樹目錄分區歸類"
+        ]
+      }
+    ]
+  },
+  {
+    "folder": "ansys-optislang",
+    "has_skill_md": true,
+    "line_count": 65,
+    "has_frontmatter": true,
+    "yaml_valid": true,
+    "name_in_yaml": "ansys-optislang",
+    "name_kebab": true,
+    "name_matches_folder": true,
+    "desc_in_yaml": "ANSYS optiSLang 參數敏感度分析、MOP 最佳預測元模型與多目標 Pareto 尋優工程主控手冊。",
+    "subdirs": [
+      "reference",
+      "scripts"
+    ],
+    "has_scripts": true,
+    "has_references": false,
+    "has_reference_singular": true,
+    "code_block_lines": 12,
+    "large_code_blocks_count": 0,
+    "large_code_blocks": []
+  },
+  {
+    "folder": "ansys-parametric-study",
+    "has_skill_md": true,
+    "line_count": 54,
+    "has_frontmatter": true,
+    "yaml_valid": true,
+    "name_in_yaml": "ansys-parametric-study",
+    "name_kebab": true,
+    "name_matches_folder": true,
+    "desc_in_yaml": "ANSYS Workbench DesignXplorer (DX) 參數集研究與 optiSLang 雙軌選型優化技能。",
+    "subdirs": [
+      "reference",
+      "scripts"
+    ],
+    "has_scripts": true,
+    "has_references": false,
+    "has_reference_singular": true,
+    "code_block_lines": 8,
+    "large_code_blocks_count": 0,
+    "large_code_blocks": []
+  },
+  {
+    "folder": "ansys-spaceclaim",
+    "has_skill_md": true,
+    "line_count": 53,
+    "has_frontmatter": true,
+    "yaml_valid": true,
+    "name_in_yaml": "ansys-spaceclaim",
+    "name_kebab": true,
+    "name_matches_folder": true,
+    "desc_in_yaml": "ANSYS SpaceClaim (SCDM) 幾何建模與 Python 腳本自動化技能。涵蓋 PyAnsys Geometry 與原生 SpaceClaim ACT IronPython API 雙軌控制。",
+    "subdirs": [
+      "reference",
+      "scripts"
+    ],
+    "has_scripts": true,
+    "has_references": false,
+    "has_reference_singular": true,
+    "code_block_lines": 0,
+    "large_code_blocks_count": 0,
+    "large_code_blocks": []
+  },
+  {
+    "folder": "ansys-spaceclaim-modeling",
+    "has_skill_md": true,
+    "line_count": 74,
+    "has_frontmatter": true,
+    "yaml_valid": true,
+    "name_in_yaml": "ansys-spaceclaim-modeling",
+    "name_kebab": true,
+    "name_matches_folder": true,
+    "desc_in_yaml": "ANSYS SpaceClaim (SCDM) 與 Discovery 幾何前處理主控手冊。涵蓋 2D 草圖拉伸、流場外流域抽取 (Enclosure)、布林相減、CAD 診斷與 PMDB 導出。",
+    "subdirs": [
+      "reference",
+      "scripts"
+    ],
+    "has_scripts": true,
+    "has_references": false,
+    "has_reference_singular": true,
+    "code_block_lines": 7,
+    "large_code_blocks_count": 0,
+    "large_code_blocks": []
+  },
+  {
+    "folder": "ansys-submodeling-dpf",
+    "has_skill_md": true,
+    "line_count": 58,
+    "has_frontmatter": true,
+    "yaml_valid": true,
+    "name_in_yaml": "ansys-submodeling-dpf",
+    "name_kebab": true,
+    "name_matches_folder": true,
+    "desc_in_yaml": "ANSYS DPF 高速結果場提取與局部子模型（Submodeling）自動化分析技能。涵蓋形函數空間座標插值、MAPDL 併發求解池與聖維南切面連續性驗證。",
+    "subdirs": [
+      "reference",
+      "scripts"
+    ],
+    "has_scripts": true,
+    "has_references": false,
+    "has_reference_singular": true,
+    "code_block_lines": 5,
+    "large_code_blocks_count": 0,
+    "large_code_blocks": []
+  },
+  {
+    "folder": "antigravity-notebooklm",
+    "has_skill_md": true,
+    "line_count": 66,
+    "has_frontmatter": true,
+    "yaml_valid": true,
+    "name_in_yaml": "antigravity-notebooklm",
+    "name_kebab": true,
+    "name_matches_folder": true,
+    "desc_in_yaml": "在 AntiGravity 串接 NotebookLM MCP 與 nlm CLI 工具。支援查詢 Google NotebookLM 中的筆記、來源資料與語義問答。",
+    "subdirs": [],
+    "has_scripts": false,
+    "has_references": false,
+    "has_reference_singular": false,
+    "code_block_lines": 23,
+    "large_code_blocks_count": 0,
+    "large_code_blocks": []
+  },
+  {
+    "folder": "pcb-warpage-analysis",
+    "has_skill_md": true,
+    "line_count": 39,
+    "has_frontmatter": true,
+    "yaml_valid": true,
+    "name_in_yaml": "pcb-warpage-analysis",
+    "name_kebab": true,
+    "name_matches_folder": true,
+    "desc_in_yaml": "PCB 多層疊構熱翹曲（Thermal Warpage）自動化分析專用技能。涵蓋 ROM 複合材料巨集、SpaceClaim 疊構建模與 3-2-1 靜定支承熱應力求解。",
+    "subdirs": [
+      "scripts"
+    ],
+    "has_scripts": true,
+    "has_references": false,
+    "has_reference_singular": false,
+    "code_block_lines": 9,
+    "large_code_blocks_count": 0,
+    "large_code_blocks": []
+  },
+  {
+    "folder": "pdf-to-md",
+    "has_skill_md": true,
+    "line_count": 64,
+    "has_frontmatter": true,
+    "yaml_valid": true,
+    "name_in_yaml": "pdf-to-md",
+    "name_kebab": true,
+    "name_matches_folder": true,
+    "desc_in_yaml": "Convert PDF documents to token-lean Markdown for downstream RAG/search. Extracts clean text, tables, and per-page markers using pymupdf4llm. Skips images (no OCR). Use when the user wants to turn PDFs (manuals, docs, guides) into Markdown, prepare documentation for an MCP/search index, or asks to \"convert PDF to md\".",
+    "subdirs": [
+      "__pycache__"
+    ],
+    "has_scripts": false,
+    "has_references": false,
+    "has_reference_singular": false,
+    "code_block_lines": 2,
+    "large_code_blocks_count": 0,
+    "large_code_blocks": []
+  },
+  {
+    "folder": "pymechanical-operations",
+    "has_skill_md": true,
+    "line_count": 55,
+    "has_frontmatter": true,
+    "yaml_valid": true,
+    "name_in_yaml": "pymechanical-operations",
+    "name_kebab": true,
+    "name_matches_folder": true,
+    "desc_in_yaml": "PyMechanical gRPC 連線、遠端腳本執行、幾何 Scoping 與網格控制自動化技能。",
+    "subdirs": [
+      "reference",
+      "scripts"
+    ],
+    "has_scripts": true,
+    "has_references": false,
+    "has_reference_singular": true,
+    "code_block_lines": 5,
+    "large_code_blocks_count": 0,
+    "large_code_blocks": []
+  },
+  {
+    "folder": "shock-analysis-workflow",
+    "has_skill_md": true,
+    "line_count": 32,
+    "has_frontmatter": true,
+    "yaml_valid": true,
+    "name_in_yaml": "shock-analysis-workflow",
+    "name_kebab": true,
+    "name_matches_folder": true,
+    "desc_in_yaml": "End-to-end automated pipeline for ANSYS Mechanical LS-DYNA Shock / Drop analysis, coordinating 8 modular session skills.",
+    "subdirs": [
+      "01-material-assignment",
+      "02-contact-creation",
+      "03-mesh-tuning",
+      "04-connection-rm",
+      "05-section-assignment",
+      "06-constraint-load",
+      "07-solve-monitor",
+      "08-post-process-report",
+      "scripts"
+    ],
+    "has_scripts": true,
+    "has_references": false,
+    "has_reference_singular": false,
+    "code_block_lines": 7,
+    "large_code_blocks_count": 0,
+    "large_code_blocks": []
+  }
+]

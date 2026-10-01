@@ -38,13 +38,13 @@ flowchart LR
 
 ## 二、模組路由表 (Module Router)
 
-深入操作手冊與實作範例請參閱 `reference/` 與 `scripts/`：
+深入操作手冊與實作範例請參閱 `references/` 與 `scripts/`：
 
 | 分析主題 | 專精文件 | 核心內容 |
 | :--- | :--- | :--- |
-| **DPF 場提取與形函數插值** | [`reference/dpf_interpolation.md`](reference/dpf_interpolation.md) | 位移/應力算子、`on_coordinates` 向量場映射 |
-| **MAPDL 併發求解池** | [`reference/mapdl_pool.md`](reference/mapdl_pool.md) | `LocalMapdlPool` 平行求解多個局部區域 |
-| **聖維南連續性誤差驗證** | [`reference/saint_venant_validation.md`](reference/saint_venant_validation.md) | 切面相對誤差計算與自動判定放行標準 |
+| **DPF 場提取與形函數插值** | [`references/dpf_interpolation.md`](references/dpf_interpolation.md) | 位移/應力算子、`on_coordinates` 向量場映射 |
+| **MAPDL 併發求解池** | [`references/mapdl_pool.md`](references/mapdl_pool.md) | `LocalMapdlPool` 平行求解多個局部區域 |
+| **聖維南連續性誤差驗證** | [`references/saint_venant_validation.md`](references/saint_venant_validation.md) | 切面相對誤差計算與自動判定放行標準 |
 | **端到端完整管線腳本** | [`scripts/run_submodeling_pipeline.py`](scripts/run_submodeling_pipeline.py) | 提取 $\rightarrow$ 插值 $\rightarrow$ 求解 $\rightarrow$ 驗證全流程腳本 |
 
 ---

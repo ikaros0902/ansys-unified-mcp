@@ -19,7 +19,7 @@ import time
 import pytest
 
 from ansys_unified_mcp.core.sessions import registry
-from ansys_unified_mcp.products.mechanical import MechanicalController, PRODUCT
+from ansys_unified_mcp.products.mechanical.facade import MechanicalController, PRODUCT
 
 
 class FakeMechanicalSession:
