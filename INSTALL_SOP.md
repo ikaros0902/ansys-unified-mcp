@@ -9,7 +9,7 @@
 開啟 **PowerShell**（以系統管理員身分或一般使用者皆可），進入本專案目錄執行：
 
 ```powershell
-powershell -ExecutionPolicy Bypass -File scripts\setup.ps1
+powershell -ExecutionPolicy Bypass -File scripts\maintenance\setup.ps1
 ```
 
 > **本腳本會自動完成以下所有工作**：

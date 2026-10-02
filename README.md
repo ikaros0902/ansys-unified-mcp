@@ -1,6 +1,6 @@
 # ANSYS Unified MCP Server
 
-這是一個專為 AI Agent (Claude, Cursor 等) 設計的模型上下文協議 (Model Context Protocol, MCP) 伺服器，能夠讓 AI 直接連線並操控本機的 ANSYS 軟體系列。
+這是一個專為 AI Agent (Claude, Cursor 等) 設計的模型上下文協議 (Model Context Protocol, MCP) 伺服器，能夠讓 AI 直接連線並操控你本機的 ANSYS 軟體系列。
 
 ## 支援的 ANSYS 模組
 
@@ -18,10 +18,13 @@
 
 > 📖 **完整安裝與連線 SOP**：請直接閱讀根目錄 **[`INSTALL_SOP.md`](INSTALL_SOP.md)**。
 
-您不需要手動設定複雜的 Python 環境或尋找 ANSYS 安裝路徑！在專案目錄下打開 PowerShell 執行：
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts\setup.ps1
-```
+您不再需要手動設定 Python 環境或尋找 ANSYS 安裝路徑！我們提供了一鍵安裝腳本。
+
+1. **下載本專案**（或 `git clone`）到您的電腦上。
+2. 在專案目錄下打開 PowerShell，執行：
+   ```powershell
+   powershell -ExecutionPolicy Bypass -File scripts\maintenance\setup.ps1
+   ```
 3. 腳本會自動完成以下工作：
    - 建立 Python 虛擬環境 (`.venv`)
    - 安裝所有必要的相依套件 (PyAnsys 等)
