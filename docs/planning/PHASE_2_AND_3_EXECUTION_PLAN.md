@@ -1,7 +1,13 @@
 # ANSYS Unified MCP 重構實施計畫：Phase 2 & Phase 3
 
-> **專案路徑**：`F:\Ming_python\ansys-unified-mcp`  
-> **關聯文件**：[ANSYS_MCP_MASTER_PLAN_V4.md](file:///F:/Ming_python/ansys-unified-mcp/docs/planning/ANSYS_MCP_MASTER_PLAN_V4.md)  
+> [!CAUTION]
+> 本文件為執行計畫草稿，**Phase 2 與 Phase 3 均尚未實作**。文件內「專案路徑」與
+> 關聯文件連結指向舊工作目錄 `F:\Ming_python\ansys-unified-mcp`，現況專案路徑為
+> `D:\Ikaros\ANSYS-unified-MCP`，連結可能已失效。當前實際架構見
+> [ARCHITECTURE.md](../ARCHITECTURE.md)。
+
+> **專案路徑**：`<專案根目錄>`（原文撰寫時為 `F:\Ming_python\ansys-unified-mcp`，現況為 `D:\Ikaros\ANSYS-unified-MCP`）  
+> **關聯文件**：[ANSYS_MCP_MASTER_PLAN_V4.md](./ANSYS_MCP_MASTER_PLAN_V4.md)  
 > **核心標準**：對標 Model Context Protocol (MCP) 核心規範與 ANSYS 官方生態 (`ansys-mechanical-mcp`、`ansys-mapdl-mcp`)
 
 ---

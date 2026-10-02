@@ -17,6 +17,55 @@ _envelope = as_envelope
 logger = logging.getLogger("ansys-unified-mcp.products.mechanical.tools")
 
 
+@mcp.resource("ansys://mechanical/model-tree")
+def mechanical_model_tree_resource() -> str:
+    """唯讀讀取 Mechanical 目前模型樹（Bodies、Named Selections、Analyses），不觸發任何 Tool 呼叫額度。
+
+    對應 Phase 3 任務 3.3（docs/reviews/2026-10-02-phase2-3-feasibility-assessment.md）。
+    內部委派 MechanicalController.run_script 執行既有 get_model_info 查詢腳本
+    （與 mechanical_get_model_info 工具共用同一段 ACT 查詢邏輯，不重複實作）。
+    """
+    if not controller.is_connected():
+        return json.dumps({"ok": False, "error": "尚未連線至 ANSYS Mechanical。"}, ensure_ascii=False)
+    result = controller.run_script(
+        "import json\n"
+        "model = ExtAPI.DataModel.Project.Model\n"
+        "info = {}\n"
+        "bodies = []\n"
+        "for body in model.Geometry.GetChildren(DataModelObjectCategory.Body, True):\n"
+        '    bodies.append({"name": str(body.Name), "material": str(body.Material) if hasattr(body, "Material") else "N/A"})\n'
+        'info["bodies"] = bodies\n'
+        'info["named_selections"] = [str(ns.Name) for ns in model.GetChildren(DataModelObjectCategory.NamedSelection, True)]\n'
+        'info["analyses"] = [{"name": str(a.Name), "type": str(a.AnalysisType)} for a in model.Analyses]\n'
+        "print(json.dumps(info))\n"
+    )
+    try:
+        return json.dumps({"ok": True, "model_tree": json.loads(result)}, ensure_ascii=False, indent=2)
+    except (ValueError, TypeError):
+        return json.dumps({"ok": False, "error": "無法解析模型樹輸出", "raw": result}, ensure_ascii=False)
+
+
+@mcp.resource("ansys://mechanical/materials")
+def mechanical_materials_resource() -> str:
+    """唯讀讀取 Mechanical Engineering Data 中已載入的材料清單，不觸發任何 Tool 呼叫額度。
+
+    內部委派 MechanicalController.run_script，與 mechanical_list_materials 工具
+    共用同一段 ACT 查詢腳本。
+    """
+    if not controller.is_connected():
+        return json.dumps({"ok": False, "error": "尚未連線至 ANSYS Mechanical。"}, ensure_ascii=False)
+    result = controller.run_script(
+        "import json\n"
+        "model = ExtAPI.DataModel.Project.Model\n"
+        "materials = [str(m.Name) for m in model.Materials.Children]\n"
+        'print(json.dumps({"materials": materials}))\n'
+    )
+    try:
+        return json.dumps({"ok": True, **json.loads(result)}, ensure_ascii=False, indent=2)
+    except (ValueError, TypeError):
+        return json.dumps({"ok": False, "error": "無法解析材料清單輸出", "raw": result}, ensure_ascii=False)
+
+
 @aliased_tool(name="mechanical_list_instances", alias="list_instances")
 def list_instances() -> dict:
     """List all running and registered ANSYS instances (Mechanical, Workbench, etc.) and their ports."""

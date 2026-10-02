@@ -1,9 +1,11 @@
 # encoding: utf-8
-"""Workbench ACT 非同步 FileSystemWatcher 事件監聽器 (Ponytail mode).
+"""Workbench ACT asynchronous FileSystemWatcher event listener (Ponytail mode).
 
-使用 System.IO.FileSystemWatcher 監聽 commands 目錄下的 *.json 檔案，
-當收到 Created / Changed 事件時非同步讀取並執行 script，結果寫回 results/result_<id>.json。
-平時 0% 占用 UI 執行緒，不會造成介面卡頓。
+Uses System.IO.FileSystemWatcher to watch the commands directory for *.json
+files. When a Created / Changed event is received, the script is read and
+executed asynchronously, and the result is written back to
+results/result_<id>.json. Idles at 0% UI-thread usage, so it never causes
+interface stutter.
 """
 
 from __future__ import print_function
@@ -27,7 +29,7 @@ def _resolve_queue_root():
     env_root = os.environ.get("WORKBENCH_MCP_ROOT")
     if env_root:
         return os.path.join(env_root, "workbench_queue")
-    # 搜尋專案根目錄
+    # Search upward for the project root
     cur = _PLUGIN_DIR
     for _ in range(5):
         if os.path.exists(os.path.join(cur, "pyproject.toml")):
@@ -36,7 +38,7 @@ def _resolve_queue_root():
         if parent == cur:
             break
         cur = parent
-    # 專案預設備援路徑
+    # Project default fallback path
     env_dir = os.environ.get("ANSYS_WORKBENCH_QUEUE_DIR")
     if env_dir:
         return env_dir
@@ -53,7 +55,7 @@ _processed_ids = set()
 
 
 def _log(msg):
-    """寫入日誌檔與 ExtAPI/Console"""
+    """Write to the log file and to ExtAPI/Console."""
     try:
         if not os.path.isdir(_QUEUE_ROOT):
             os.makedirs(_QUEUE_ROOT)
@@ -66,7 +68,7 @@ def _log(msg):
 
 
 def _read_json_retry(filepath, retries=5, delay=0.05):
-    """讀取 JSON 檔，含檔案寫入鎖定重試機制"""
+    """Read a JSON file with retries to tolerate a concurrent file-write lock."""
     for _ in range(retries):
         try:
             with open(filepath, "r") as fp:
@@ -85,13 +87,13 @@ class _OutputCollector(object):
 
 
 def _do_workbench_refresh_all(exec_globals):
-    """執行最完整的 Workbench 專案與 Model (Cell 4) 刷新。"""
+    """Perform the most thorough Workbench project and Model (Cell 4) refresh available."""
     try:
         import __builtin__ as _builtins
     except Exception:
         import builtins as _builtins
 
-    # 1. 嘗試 Workbench Journal 原生 GetAllSystems() 刷新 Model container
+    # 1. Try the native Workbench Journal GetAllSystems() to refresh the Model container
     get_systems = exec_globals.get("GetAllSystems") or getattr(_builtins, "GetAllSystems", None)
     if not get_systems:
         try:
@@ -117,7 +119,7 @@ def _do_workbench_refresh_all(exec_globals):
         except Exception:
             pass
 
-    # 2. 嘗試全域 Update()
+    # 2. Try the global Update()
     update_fn = exec_globals.get("Update") or getattr(_builtins, "Update", None)
     if update_fn:
         try:
@@ -125,13 +127,13 @@ def _do_workbench_refresh_all(exec_globals):
         except Exception:
             pass
 
-    # 3. 嘗試 ExtAPI DataModel 組件層級 (Components) 精準刷新
+    # 3. Try a targeted refresh at the ExtAPI DataModel Components level
     ext_api = exec_globals.get("ExtAPI") or getattr(_builtins, "ExtAPI", None)
     if ext_api and hasattr(ext_api, "DataModel") and hasattr(ext_api.DataModel, "Project"):
         proj = ext_api.DataModel.Project
         if hasattr(proj, "Systems"):
             for sys_item in proj.Systems:
-                # 專門刷新 System 下的 Component 節點 (如 Model / Geometry)
+                # Specifically refresh the Component nodes under this System (e.g. Model / Geometry)
                 if hasattr(sys_item, "Components"):
                     for comp in sys_item.Components:
                         if hasattr(comp, "Refresh"):
@@ -157,7 +159,7 @@ def _do_workbench_refresh_all(exec_globals):
 
 
 def _execute_script(payload, cmd_id):
-    """執行指令內含之 Python 腳本或 Workbench 命令"""
+    """Execute the Python script or Workbench command carried in the payload."""
     cmd_type = payload.get("type", "")
     script = payload.get("script") or payload.get("code")
 
@@ -211,7 +213,8 @@ def _execute_script(payload, cmd_id):
 
 
 def _dispatch_execution(payload, cmd_id):
-    """在 WPF UI 執行緒執行腳本 (若 GUI 存在) 確保安全，無 GUI 則直執行"""
+    """Run the script on the WPF UI thread when a GUI exists (for thread safety);
+    otherwise run it directly."""
     try:
         import clr
         clr.AddReference("PresentationFramework")
@@ -235,7 +238,7 @@ def _dispatch_execution(payload, cmd_id):
 
 
 def _write_result(cmd_id, result):
-    """將執行結果寫入 results/result_<id>.json 及 results/<id>.json"""
+    """Write the execution result to results/result_<id>.json and results/<id>.json."""
     if not os.path.isdir(_RESULTS_DIR):
         try:
             os.makedirs(_RESULTS_DIR)
@@ -263,7 +266,7 @@ def _write_result(cmd_id, result):
 
 
 def _on_file_changed(sender, event_args):
-    """FileSystemWatcher 事件處理函式 (觸發於 .NET ThreadPool 背景執行緒)"""
+    """FileSystemWatcher event handler (fires on a .NET ThreadPool background thread)."""
     try:
         filepath = event_args.FullPath
         filename = event_args.Name
@@ -274,7 +277,7 @@ def _on_file_changed(sender, event_args):
         base_name = os.path.splitext(filename)[0]
         cmd_id = base_name[4:] if base_name.startswith("cmd_") else base_name
 
-        # 防重複觸發去重鎖
+        # De-dup lock to prevent re-triggering on the same command
         with _processed_lock:
             if cmd_id in _processed_ids:
                 return
@@ -289,7 +292,7 @@ def _on_file_changed(sender, event_args):
         result = _dispatch_execution(payload, cmd_id)
         _write_result(cmd_id, result)
 
-        # 刪除已處理之 command 檔案
+        # Remove the command file once it has been processed
         try:
             if os.path.exists(filepath):
                 os.remove(filepath)
@@ -301,7 +304,7 @@ def _on_file_changed(sender, event_args):
 
 
 def start_listener(queue_root=None):
-    """啟動 FileSystemWatcher 非同步監聽器"""
+    """Start the asynchronous FileSystemWatcher listener."""
     global _watcher, _QUEUE_ROOT, _COMMANDS_DIR, _RESULTS_DIR
 
     if _watcher is not None and _watcher.EnableRaisingEvents:
@@ -334,7 +337,7 @@ def start_listener(queue_root=None):
 
 
 def stop_listener():
-    """停止 FileSystemWatcher 監聽器"""
+    """Stop the FileSystemWatcher listener."""
     global _watcher
     if _watcher is not None:
         try:
@@ -347,5 +350,5 @@ def stop_listener():
 
 
 def is_listening():
-    """查詢監聽器是否運作中"""
+    """Query whether the listener is currently active."""
     return _watcher is not None and _watcher.EnableRaisingEvents

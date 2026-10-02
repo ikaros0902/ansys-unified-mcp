@@ -18,17 +18,23 @@ class TestChapter2CodebaseFacts:
     """Adversarial verification of Chapter 2 cited facts."""
 
     def test_sim_tools_decorator_and_envelope(self):
-        """1.1 驗證 sim_tools.py 的自製裝飾器與 shared._envelope 使用。"""
-        file_path = src_root / "ansys_unified_mcp" / "tools" / "fluent_tools.py"
-        assert file_path.exists(), "sim_tools.py 必須存在"
-        content = file_path.read_text(encoding="utf-8")
+        """1.1 驗證 fluent_tools.py 已確認為與 products/fluent/tools.py 逐行一致之重複死代碼並移除。
 
-        # 驗證已從 shared 匯入 _envelope，而非定義本地版本
+        原始斷言鎖定 tools/fluent_tools.py 存在且不含 @aliased_tool（對應白皮書第二章所述
+        0% alias 覆蓋率事實）。2026-10-02 稽核確認該檔案與 products/fluent/tools.py 完全
+        重複、且無任何模組或測試 import 它（__main__.py 僅載入 products/fluent/tools.py），
+        故依 Phase 1 止血計畫刪除。本測試更新為驗證「重複檔案已不存在，且正本仍在原位」。
+        """
+        duplicate_path = src_root / "ansys_unified_mcp" / "tools" / "fluent_tools.py"
+        canonical_path = src_root / "ansys_unified_mcp" / "products" / "fluent" / "tools.py"
+
+        assert not duplicate_path.exists(), "tools/fluent_tools.py 應已被移除（確認為重複死代碼）"
+        assert canonical_path.exists(), "products/fluent/tools.py（正本）必須存在"
+
+        content = canonical_path.read_text(encoding="utf-8")
         assert "from ansys_unified_mcp.shared import" in content
         assert "as_envelope as _envelope" in content or "as_envelope" in content
-        pass
-        pass
-        assert "@aliased_tool" not in content, "fluent_tools.py 不得含有 @aliased_tool (證實報告所指未採用別名裝飾器)"
+        assert "@aliased_tool" not in content, "products/fluent/tools.py 不得含有 @aliased_tool（Fluent 工具不走別名機制）"
 
     def test_drop_test_glstat_generation(self):
         """1.2 驗證 drop_test.py 內部沙盒的虛擬 glstat 生成邏輯。"""
@@ -195,11 +201,15 @@ asyncio.run(main())
         )
 
     def test_alias_coverage_distribution(self):
-        """3.3 驗證各模組別名覆蓋率數據之真實性。"""
+        """3.3 驗證各模組別名覆蓋率數據之真實性。
+
+        2026-10-02 更新：原始斷言的 sim_tools.py（即 tools/fluent_tools.py）已確認為
+        products/fluent/tools.py 的重複死代碼並移除，改以正本驗證同一事實（0% alias 覆蓋率）。
+        """
         # 依據報告 2.6.1：
         # mechanical.py (39), mechanical_workflows.py (3), optislang.py (5), intent_tools.py (5) 具備 100% aliased_tool
-        # sim_tools.py (31) 與 workbench_filebridge.py (31) 為 0%
-        sim_file = src_root / "ansys_unified_mcp" / "tools" / "fluent_tools.py"
+        # fluent（products/fluent/tools.py）與 workbench_filebridge.py 為 0%
+        sim_file = src_root / "ansys_unified_mcp" / "products" / "fluent" / "tools.py"
         wb_file = src_root / "ansys_unified_mcp" / "tools" / "workbench_tools.py"
         mech_file = src_root / "ansys_unified_mcp" / "tools" / "mechanical_tools.py"
 

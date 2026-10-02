@@ -28,7 +28,8 @@ except Exception:
 
 _PLUGIN_DIR = os.path.abspath(os.path.dirname(__file__))
 def _resolve_queue_root():
-    # 此路徑邏輯與 core/paths.py 重複，但因 IronPython 環境限制無法共用
+    # This path-resolution logic duplicates core/paths.py, but the IronPython
+    # runtime cannot import that module, so it is re-implemented here.
     env_queue = os.environ.get("WORKBENCH_MCP_QUEUE_ROOT")
     if env_queue:
         return env_queue
@@ -83,10 +84,26 @@ def _log(message):
 def find_free_port(start_port, max_attempts=100):
     import socket
     for port in range(start_port, start_port + max_attempts):
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        # 1. First try an active connect(): success means a server is already
+        #    listening on this port (occupied).
+        occupied = False
         try:
-            s.bind(('127.0.0.1', port))
+            s_test = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            s_test.settimeout(0.2)
+            s_test.connect(('127.0.0.1', port))
+            s_test.close()
+            occupied = True
+        except Exception:
+            pass
+
+        if occupied:
+            continue
+
+        # 2. Connect failed, so verify the port is truly free by binding to
+        #    0.0.0.0 (no SO_REUSEADDR, to avoid a false-positive bind).
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        try:
+            s.bind(('0.0.0.0', port))
             s.close()
             return port
         except socket.error:
@@ -192,7 +209,7 @@ def show_mcp_info(analysis=None):
 
 
 def init_listener():
-    """載入並啟動 FileSystemWatcher 非同步監聽器"""
+    """Load and start the FileSystemWatcher-based asynchronous listener."""
     try:
         import wb_event_listener
         try:
@@ -205,8 +222,45 @@ def init_listener():
         _log("Failed to initialize wb_event_listener: " + str(exc))
 
 
+def _start_spaceclaim_port_watcher():
+    """Background daemon thread that keeps Workbench's API_PORT environment
+    variable pointed at the latest free port.
+
+    When the user opens multiple SpaceClaim systems in sequence from within
+    Workbench (System A, System B, ...), each new SpaceClaim process inherits
+    the parent (Workbench) process's environment at launch time. Keeping
+    API_PORT continuously updated means each successive SpaceClaim instance
+    automatically binds to the next free port (50051 -> 50052 -> 50053 ...)
+    without any manual intervention.
+    """
+    sentinel = "_WORKBENCH_MCP_SC_WATCHER_STARTED"
+    if getattr(_builtins, sentinel, False):
+        return
+    setattr(_builtins, sentinel, True)
+
+    import threading
+    def _loop():
+        last_port = None
+        while True:
+            try:
+                port = find_free_port(50051)
+                if port != last_port:
+                    import System
+                    System.Environment.SetEnvironmentVariable("API_PORT", str(port))
+                    _debug_log("SpaceClaim dynamic watcher set API_PORT to %d" % port)
+                    last_port = port
+            except Exception as e:
+                _debug_log("Watcher loop error: " + str(e))
+            time.sleep(1.0)
+
+    t = threading.Thread(target=_loop)
+    t.daemon = True
+    t.start()
+    _log("Started background SpaceClaim dynamic port watcher.")
+
+
 def on_project_init(context=None):
-    """Workbench Project Schematic 載入時的回呼函式"""
+    """Callback invoked when the Workbench Project Schematic loads."""
     _log("Workbench Project Schematic oninit callback triggered.")
     try:
         if context and hasattr(context, "ExtAPI"):
@@ -215,6 +269,7 @@ def on_project_init(context=None):
             setattr(_builtins, "ExtAPI", globals()["ExtAPI"])
     except Exception:
         pass
+    _start_spaceclaim_port_watcher()
     _register_instance()
     init_listener()
 

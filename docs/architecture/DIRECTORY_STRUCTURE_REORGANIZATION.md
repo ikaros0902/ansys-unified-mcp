@@ -1,6 +1,6 @@
 # ANSYS Unified MCP 目錄樹架構收斂與精簡規範
 
-**模組路徑**：`F:\Ming_python\ansys-unified-mcp`  
+**模組路徑**：`<專案根目錄>`（原文撰寫時為 `F:\Ming_python\ansys-unified-mcp`，現況為 `D:\Ikaros\ANSYS-unified-MCP`）  
 **更新日期**：2026-09-30  
 **版本**：2.1  
 
@@ -40,7 +40,7 @@
 ## 三、 重組後之 5 大架構分層目錄樹（收斂至 11 個核心目錄）
 
 ```text
-F:\Ming_python\ansys-unified-mcp\
+<專案根目錄>\   # 原文撰寫時為 F:\Ming_python\ansys-unified-mcp，現況為 D:\Ikaros\ANSYS-unified-MCP
 │
 ├── 📂 [1. 核心原始碼層 Core Source]
 │   └── src/ansys_unified_mcp/   # FastMCP 伺服器、產品控制器 (products)、求解驅動 (drivers)、連線管理 (bridges)

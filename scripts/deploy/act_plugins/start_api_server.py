@@ -1,17 +1,19 @@
-# SpaceClaim 啟動腳本 — 自動在背景開啟 gRPC API Server (port 50051)
-# 此腳本由 setup.ps1 自動複製至 %APPDATA%\SpaceClaim\Published Scripts\
-# 請在 SpaceClaim 中設定此腳本為啟動腳本：
-#   File > SpaceClaim Options > File Options > Startup macro > 指向此檔案
+# SpaceClaim startup script - auto-starts the gRPC API Server (port 50051) in the background.
+# This script is auto-copied by setup.ps1 to %APPDATA%\SpaceClaim\Published Scripts\
+# Configure this script as the SpaceClaim startup macro:
+#   File > SpaceClaim Options > File Options > Startup macro > point to this file
 #
-# 路徑解析：不假設 ANSYS 安裝在預設的 "C:\Program Files\ANSYS Inc"，改為
-# 依序嘗試 AWP_ROOT<ver> 環境變數（ANSYS 安裝程式本身會設定，永遠正確）與
-# 常見安裝位置，避免在非預設磁碟機（如 D:）安裝時找不到 DLL。
+# Path resolution: does not assume ANSYS is installed at the default
+# "C:\Program Files\ANSYS Inc". Instead, it tries the AWP_ROOT<ver> environment
+# variable (always set correctly by the ANSYS installer) first, then falls
+# back to common install locations, so the DLL is still found when ANSYS is
+# installed on a non-default drive (e.g. D:).
 
 import os
 import System.Reflection
 import System
 
-# 依偏好順序列出候選版本；找到第一個實際存在 DLL 的版本就使用它。
+# Candidate versions in preference order; the first one with an existing DLL wins.
 _CANDIDATE_VERSIONS = ["251", "252", "261", "242", "241"]
 _STANDARD_ROOTS = [r"C:\Program Files\ANSYS Inc", r"D:\ANSYS Inc"]
 

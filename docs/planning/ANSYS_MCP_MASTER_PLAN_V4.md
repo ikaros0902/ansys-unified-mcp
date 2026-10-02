@@ -1,5 +1,10 @@
 # ANSYS Unified MCP 重構大計畫 (Master Plan v4.0 - 官方架構對齊版)
 
+> [!NOTE]
+> 本文件為尚未實作之架構願景（Phase 2 & 3 重構方向），描述的 split-server /
+> 多實例動態埠架構**非當前實作**。當前實際架構為單一統一伺服器，見
+> [ARCHITECTURE.md](../ARCHITECTURE.md)。本文件僅供決策參考，執行與否尚待確認。
+
 ## [Goal Description]
 本計畫深度對標 ANSYS 官方最新開源專案（`ansys-mechanical-mcp`、`ansys-mapdl-mcp` 與 `pyansys` 官方生態），徹底解決：
 1. **多實例 (Multiple Instances) Port 衝突與辨識問題**：官方生態為何無法自動遞增 Port，以及我們如何透過動態埠管理與伺服器實例化解決。

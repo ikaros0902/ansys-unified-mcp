@@ -23,7 +23,7 @@
 | --- | --- |
 | [`CODE_AUDIT_REPORT.md`](CODE_AUDIT_REPORT.md) | 舊分支 `refactor/unified-arch` 的程式碼審視快照；稱「約 24 個 Python 檔」（現為 81）、提及不存在的 `requirements.txt`。 |
 | [`TEST_READY.md`](TEST_READY.md) | 單次測試就緒發布快照；稱「10 個測試檔 / 115 用例」（現為 37 個 `test_*.py`）。 |
-| [`ANSYS_AUTOMATION_MASTER_PLAN.md`](ANSYS_AUTOMATION_MASTER_PLAN.md) | 早期自動化藍圖；稱「10 項技能」（現有 16 項技能）、寫定 ANSYS 2025 R1 v251、含已失效的 `F:` 磁碟路徑。 |
+| [`ANSYS_AUTOMATION_MASTER_PLAN.md`](ANSYS_AUTOMATION_MASTER_PLAN.md) | 早期自動化藍圖；稱「10 項技能」（現況技能清單與數量見 [`skills/README.md`](../../skills/README.md)）、寫定 ANSYS 2025 R1 v251、含已失效的 `F:` 磁碟路徑。 |
 | [`ORIGINAL_REQUEST.md`](ORIGINAL_REQUEST.md) | 原始需求書（最早紀錄標註 2026-09-05）；描述預期目標而非交付現況，且同檔內新舊工作目錄並存不一致。 |
 | [`PROJECT.md`](PROJECT.md) | Phase 1 規格書；與 `ORIGINAL_REQUEST.md` 為同批需求的不同視角，範圍僅及 Phase 1。 |
 | [`ANSYS_MCP_DELIVERY_WALKTHROUGH.md`](ANSYS_MCP_DELIVERY_WALKTHROUGH.md) | 主題為個人全域設定庫（dotfiles）跨機器同步，與本專案程式碼無直接關係；內含大量已失效的 `file:///` 本機絕對路徑。 |

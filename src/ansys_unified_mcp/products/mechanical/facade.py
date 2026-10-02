@@ -97,7 +97,7 @@ class MechanicalController:
         if existing is not None:
             if self._probe_session(existing):
                 registry.set_current(PRODUCT, key)
-                return {"ok": True, "port": target_port, "note": "Reused existing session.", "key": key}
+                return {"ok": True, "port": target_port, "pid": self._find_pid(target_port), "note": "Reused existing session.", "key": key}
             # 探針檢測失敗：死 Session 主動自快取與註冊表驅逐，隨後重新建立連線
             self._PROBE_CACHE.pop(str(id(existing)), None)
             registry.drop(PRODUCT, key)
@@ -115,7 +115,7 @@ class MechanicalController:
             '    print("  [" + str(i) + "] " + str(a.Name) + " (" + str(a.AnalysisType) + ")")\n',
             key=key,
         )
-        return {"ok": True, "port": target_port, "key": key, "info": info}
+        return {"ok": True, "port": target_port, "pid": self._find_pid(target_port), "key": key, "info": info}
 
     def launch(self, batch: bool = True) -> dict:
         """Launch a new headless Mechanical instance via PyMechanical."""
@@ -130,9 +130,23 @@ class MechanicalController:
         except Exception as exc:  # noqa: BLE001
             return {"ok": False, "error": str(exc)}
 
-        key = str(getattr(session, "_port", None) or "launched")
+        launched_port = getattr(session, "_port", None)
+        key = str(launched_port or "launched")
         registry.put(PRODUCT, key, session)
-        return {"ok": True, "key": key, "version": getattr(session, "version", "unknown")}
+        return {
+            "ok": True,
+            "key": key,
+            "port": launched_port,
+            "pid": self._find_pid(launched_port) if launched_port else None,
+            "version": getattr(session, "version", "unknown"),
+        }
+
+    def _find_pid(self, port: Optional[int]) -> Optional[int]:
+        """以埠號反查監聽進程 PID，供回傳信封顯示（Port 可視化，杜絕黑盒子）。"""
+        if port is None:
+            return None
+        from ansys_unified_mcp.bridges.connection_manager import connection_manager
+        return connection_manager.find_pid_by_port(int(port))
 
     _PROBE_CACHE: dict[str, float] = {}
     _PROBE_TTL = 10.0
