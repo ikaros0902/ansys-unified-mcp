@@ -174,6 +174,22 @@ def test_simple_boxes_no_holes_has_no_bottom_pedestal():
     assert s["plate"][0][1] == pytest.approx(10 * MM) and s["plate"][1][1] == pytest.approx(12 * MM)
 
 
+def test_simple_boxes_contact_body_and_all_fins():
+    """CPU 散熱片：銅底與框架底面齊平 → 以銅底為下凸、底板從銅底頂面起；十字形鰭片取全部外框。"""
+    planes = [_hplane(14.735, False, -93.0, -14.1, -638.1, -520.1, 9000.0),
+              _hplane(19.235, True, -93.0, -14.1, -638.1, -520.1, 3000.0)]
+    rects = [(-90.62 * MM, -16.50 * MM, -617.05 * MM, -541.05 * MM, 38.835 * MM),   # 76 長兩側＋中間
+             (-71.10 * MM, -36.60 * MM, -634.60 * MM, -523.60 * MM, 39.435 * MM)]   # 111 長中間鰭片
+    lo, hi = (-93.0 * MM, 14.735 * MM, -638.1 * MM), (-14.1 * MM, 39.435 * MM, -520.1 * MM)
+    cbox = ((-80.7 * MM, 14.73 * MM, -618.3 * MM), (-26.4 * MM, 16.23 * MM, -539.8 * MM))
+    s = S._simple_heatsink_boxes(planes, [], rects, lo, hi, 14.735 * MM, 19.235 * MM,
+                                 contact_box=cbox, fin_box="all")
+    mm = lambda box: tuple(round(v / MM, 3) for p in box for v in p)
+    assert mm(s["bottom"]) == (-80.7, 14.73, -618.3, -26.4, 16.23, -539.8)
+    assert mm(s["plate"]) == (-93.0, 16.23, -638.1, -14.1, 19.235, -520.1)
+    assert mm(s["top"]) == (-90.62, 19.235, -634.6, -16.5, 39.435, -523.6)
+
+
 def test_mount_hole_rejects_split_but_partial_faces():
     """兩片半圓孔壁累加為完整圓周 → 孔；單片四分之一圓 → 圓角。"""
     half = [_cyl(0.0, 0.0, 2.0, 0.0, 2.0, True, math.pi)] * 2

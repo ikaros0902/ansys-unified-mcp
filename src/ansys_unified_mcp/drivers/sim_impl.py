@@ -196,7 +196,9 @@ GEOMETRY_TOOLS = [
              "hole_min_dia_mm": {"type": "number", "default": 2.5, "description": "視為鎖孔的最小孔喉直徑（mm）。鎖孔 = 底板上完整圓周、開口於鰭片根部（容許倒角）的內凹 Y 向圓柱，同軸多段取最小半徑（孔喉）；小於門檻者忽略。"},
              "extra_sources": {"type": "array", "items": {"type": "string"}, "description": "多 body 散熱片：額外併入的 body 名稱或 glob（例 ['ICX_HS_1U_FIN_*', '1U_CUBASE']），只比對主 body 同一 component instance 內的實體 body；螺絲/彈簧等不要列入"},
              "body_densities": {"type": "object", "additionalProperties": {"type": ["number", "string"]}, "description": "逐 body 密度：{名稱或 glob: kg/m³ 或材料名}，例 {'1U_CUBASE': 'copper'}；未列者用 density/material"},
-             "all_instances": {"type": "boolean", "default": False, "description": "是否處理所有含 source 的 component（同 master 只處理一次）；預設只處理第一個"}},
+             "all_instances": {"type": "boolean", "default": False, "description": "是否處理所有含 source 的 component（同 master 只處理一次）；預設只處理第一個"},
+             "contact_body": {"type": "string", "description": "接觸體 body 名稱或 glob（須為 source 或 extra_sources 之一），例 CPU 散熱片的銅底 '1U_CUBASE'：下凸＝其範圍與厚度，底面 named selection 只含其底面。銅底與框架底面齊平時使用"},
+             "fin_box": {"type": "string", "enum": ["largest", "all"], "default": "largest", "description": "上凸範圍：largest＝面積最大的一排鰭片；all＝所有鰭片外框（十字形等多排鰭片配置）"}},
              "required": ["source"]}),
     Tool(name="geometry_midsurface", description="對 SpaceClaim 中目前「已選取」的 body 批次建立中曲面 (midsurface)。呼叫前請先在 SpaceClaim 視窗選取欲抽中面的鈑金/薄殼 body。採面積最大優先的對向面配對 + 動態相切鏈補強（複雜件強制加入相切面以對抗壓折邊遺失）；可選鈑金件判斷與抽中面後隱藏原始 body。單位：厚度為 mm。",
          inputSchema={"type": "object", "properties": {
@@ -897,27 +899,41 @@ def _hole_plate_span(planes, h):
     return yb, min(ups)
 
 
-def _simple_heatsink_boxes(planes, holes, rects, lo, hi, y_bot, y_root):
+def _simple_heatsink_boxes(planes, holes, rects, lo, hi, y_bot, y_root, contact_box=None, fin_box="largest"):
     """凸字形簡化的三個方塊（world 公尺，各為 (lo_xyz, hi_xyz) 或 None）：無階梯、無圓角。
 
     - plate（底板）：X-Z 取整體包圍盒；Y 從板底到鰭片根部。板底 = 鎖孔所在板材下表面
       （_hole_plate_span，多孔取最低）；無鎖孔則為主接合底面（即無下凸）。
-    - top（上凸）：面積最大的一個鰭片填實矩形，鰭片根部 → 鰭片頂。
+    - top（上凸）：fin_box="largest" 取面積最大的一個鰭片填實矩形；"all" 取所有鰭片矩形的外框
+      （十字形鰭片配置）。鰭片根部 → 鰭片頂。
     - bottom（下凸）：主接合底面（面積 ≥ 該層最大面 10% 的面）的 X-Z 包圍盒，主接合底面 → 板底；
       若包圍盒蓋到鎖孔，則裁成與上凸同 X-Z 範圍，避免下凸填到鎖孔下方。
+    - contact_box（接觸體包圍盒，例如 CPU 散熱片的銅底）：給定時下凸 = 接觸體範圍與厚度，
+      板底改為接觸體頂面（銅底與框架底面齊平時，下凸才能與框架區分，接觸面 named selection 只含銅底）。
     """
     y_mid = y_root if y_root is not None else y_bot
     spans = [s for s in (_hole_plate_span(planes, h) for h in holes) if s is not None]
     y_pb = min(s[0] for s in spans) if spans else y_bot
+    if contact_box is not None:
+        y_pb = contact_box[1][1]
     y_pb = min(max(y_pb, y_bot), y_mid)
 
     plate = ((lo[0], y_pb, lo[2]), (hi[0], y_mid, hi[2])) if y_mid - y_pb > 1e-5 else None
 
-    x0, x1, z0, z1, yt = max(rects, key=lambda r: (r[1] - r[0]) * (r[3] - r[2]))
+    if fin_box == "all":
+        x0, x1 = min(r[0] for r in rects), max(r[1] for r in rects)
+        z0, z1 = min(r[2] for r in rects), max(r[3] for r in rects)
+        yt = max(r[4] for r in rects)
+    else:
+        x0, x1, z0, z1, yt = max(rects, key=lambda r: (r[1] - r[0]) * (r[3] - r[2]))
     top = ((x0, y_mid, z0), (x1, yt, z1)) if yt - y_mid > 1e-5 else None
 
     bottom = None
-    if y_pb - y_bot > 1e-5:
+    if contact_box is not None:
+        (cx0, cy0, cz0), (cx1, _cy1, cz1) = contact_box
+        if y_pb - cy0 > 1e-5:
+            bottom = ((cx0, cy0, cz0), (cx1, y_pb, cz1))
+    elif y_pb - y_bot > 1e-5:
         faces = [(f, a) for f, y, a, up in planes if not up and abs(y - y_bot) <= _HS_EPS]
         a_max = max((a for _f, a in faces), default=0.0)
         exts = [e for e in (_face_extent(f) for f, a in faces if a >= _HS_BOTTOM_AREA_RATIO * a_max) if e]
@@ -1146,8 +1162,11 @@ def _body_density(body, default_rho, body_densities):
 
 
 def _simplify_heatsink_group(design, bodies, base_name, default_rho, body_densities,
-                             keep_source, named_selection, name_density_suffix, hole_min_dia_mm):
+                             keep_source, named_selection, name_density_suffix, hole_min_dia_mm,
+                             contact_body=None, fin_box="largest"):
     """簡化一組散熱片 body（同一 component instance），回傳結果 dict；失敗時清除暫存並拋例外。"""
+    import fnmatch
+
     from ansys.geometry.core.misc import UNITS
 
     src = bodies[0]
@@ -1196,7 +1215,16 @@ def _simplify_heatsink_group(design, bodies, base_name, default_rho, body_densit
             return max(cands, key=lambda b: b.volume.m_as(UNITS.m ** 3))
 
         # --- 4. 凸字形方塊組（world 座標，建於根設計）：底板 + 上凸（鰭片）+ 下凸（接觸面），無階梯/圓角 ---
-        shape = _simple_heatsink_boxes(planes, holes, rects, lo, hi, y_bot, y_root)
+        contact_box = None
+        if contact_body:
+            cbs = [b for b in bodies if fnmatch.fnmatchcase(b.name, contact_body)]
+            if not cbs:
+                raise ValueError(f"contact_body '{contact_body}' 不在本組 body 中（需為 source 或 extra_sources 之一）")
+            boxes_c = [_bbox_m(b) for b in cbs]
+            contact_box = (tuple(min(bx[0][i] for bx in boxes_c) for i in range(3)),
+                           tuple(max(bx[1][i] for bx in boxes_c) for i in range(3)))
+        shape = _simple_heatsink_boxes(planes, holes, rects, lo, hi, y_bot, y_root,
+                                       contact_box=contact_box, fin_box=fin_box)
         boxes = []
         for key in ("plate", "top", "bottom"):
             if shape[key] is not None:
@@ -1318,14 +1346,16 @@ def _geom_simplify_heatsink(source: str, result_name: str = None,
                             hole_min_dia_mm: float = 2.5,
                             extra_sources: list[str] | None = None,
                             body_densities: dict | None = None,
-                            all_instances: bool = False) -> str:
-    """將散熱片簡化：保留底面特徵與鎖孔、鰭片區填實，並反推等效密度。
+                            all_instances: bool = False,
+                            contact_body: str | None = None,
+                            fin_box: str = "largest") -> str:
+    """將散熱片簡化為凸字形方塊組（底板＋上凸＋下凸＋鎖孔直圓柱），並反推等效密度。
 
     流程（每組 = 同一 component instance 內的 source + extra_sources）：
       1. 量測原始體積，以密度（material 預設或 body_densities 逐 body）算質量 m。
-      2. 以原始 body copy 為母體（多 body 先聯集），分析主接合底面/鰭片根部/鎖孔/鰭片排。
-      3. 鰭片區填實塊聯集；鎖孔以孔喉圓柱貫穿扣除；拆分不相連殘塊只留最大者。
-      4. 主接合底面建立 named selection；ρ_equiv = m / V_sim 附加於 body 名稱。
+      2. 分析主接合底面/鰭片根部/鎖孔/鰭片排，以方塊重建（見 _simple_heatsink_boxes）；
+         contact_body 指定接觸體（下凸）、fin_box 指定上凸取最大一排或全部鰭片外框。
+      3. 鎖孔以 Y 向直圓柱貫穿；主接合底面建立 named selection；ρ_equiv = m / V_sim 附加於 body 名稱。
     """
     design = _geom_get_design()
     groups = _resolve_heatsink_groups(design, source, extra_sources, all_instances)
@@ -1348,7 +1378,8 @@ def _geom_simplify_heatsink(source: str, result_name: str = None,
             ns = f"{ns}_{idx:02d}"
         try:
             r = _simplify_heatsink_group(design, bodies, base, rho, body_densities, keep_source,
-                                         ns, name_density_suffix, hole_min_dia_mm)
+                                         ns, name_density_suffix, hole_min_dia_mm,
+                                         contact_body=contact_body, fin_box=fin_box)
             reports.append(_format_heatsink_result(r, material, rho, hole_min_dia_mm))
         except Exception as e:
             errors.append(f"✗ component '{bodies[0].parent_component.name}': {e}（暫存幾何已清除）")
@@ -1374,9 +1405,23 @@ _SCREENSHOT_FORMATS = {"png": "png", "jpg": "jpg", "jpeg": "jpg", "bmp": "bmp",
 _SCREENSHOT_SCRIPT = r'''
 # -*- coding: utf-8 -*-
 # SpaceClaim server-side IronPython screenshot script (ASCII only).
-# script_args: out_path, img_format(png/jpg/bmp/tiff/gif), fit(1/0), view, bodies(newline separated)
+# script_args: out_path_hex, img_format(png/jpg/bmp/tiff/gif), fit(1/0), view,
+#              bodies_hex(newline separated names)
+# *_hex = UTF-8 bytes as hex: non-ASCII (e.g. CJK body names / paths) passed directly in
+# script_args fails to decode on the server, so they travel as ASCII hex and are decoded via .NET.
 import sys
 result = {}
+
+def _utf8_hex(h):
+    import System
+    h = str(h or "")
+    n = len(h) // 2
+    if n == 0:
+        return u""
+    arr = System.Array.CreateInstance(System.Byte, n)
+    for i in range(n):
+        arr[i] = System.Byte(int(h[2 * i:2 * i + 2], 16))
+    return System.Text.Encoding.UTF8.GetString(arr)
 
 def _load_api():
     import System
@@ -1474,11 +1519,11 @@ def _all_bodies(api, w):
 
 try:
     import System
-    out_path = _arg(argsDict, "out_path", "")
+    out_path = _utf8_hex(_arg(argsDict, "out_path_hex", ""))
     img_format = str(_arg(argsDict, "img_format", "png") or "png").lower()
     fit = str(_arg(argsDict, "fit", "1")) in ("1", "true", "True")
     view = str(_arg(argsDict, "view", "current") or "current").lower()
-    body_names = [n for n in str(_arg(argsDict, "bodies", "") or "").split("\n") if n]
+    body_names = [n for n in _utf8_hex(_arg(argsDict, "bodies_hex", "")).split("\n") if n]
 
     api, api_ver = _load_api()
     result["api"] = api_ver
@@ -1613,12 +1658,13 @@ def _geom_screenshot(file_path: str, image_format: str | None = None,
         except Exception as e:
             return _err(f"無法建立輸出目錄 '{out_dir}': {e}")
 
+    # 非 ASCII（中文 body 名稱/路徑）直接放 script_args 會在 server 端解碼失敗，改傳 UTF-8 hex
     script_args = {
-        "out_path": out_path,
+        "out_path_hex": out_path.encode("utf-8").hex(),
         "img_format": fmt,
         "fit": "1" if fit else "0",
         "view": view,
-        "bodies": "\n".join(bodies or []),
+        "bodies_hex": "\n".join(bodies or []).encode("utf-8").hex(),
     }
 
     tmp = tempfile.NamedTemporaryFile("w", suffix=".py", delete=False, encoding="utf-8")
@@ -2954,7 +3000,9 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
                         hole_min_dia_mm=arguments.get("hole_min_dia_mm", 2.5),
                         extra_sources=arguments.get("extra_sources"),
                         body_densities=arguments.get("body_densities"),
-                        all_instances=arguments.get("all_instances", False))
+                        all_instances=arguments.get("all_instances", False),
+                        contact_body=arguments.get("contact_body"),
+                        fin_box=arguments.get("fin_box", "largest"))
                 elif name == "geometry_midsurface":
                     result = _geom_midsurface(
                         max_thickness_mm=arguments.get("max_thickness_mm", 6.0),

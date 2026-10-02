@@ -249,14 +249,14 @@ async def geometry_simplify_ram_batch(motherboard: str, ram: str, socket: str, r
     return "\n".join([c.text for c in res])
 
 @tool_geometry(name='geometry_simplify_heatsink')
-async def geometry_simplify_heatsink(source: str, result_name: str = None, density: float = None, material: str = 'aluminum', keep_source: bool = True, named_selection: str = 'hs_bottom', name_density_suffix: bool = True, hole_min_dia_mm: float = 2.5, extra_sources: List[str] = None, body_densities: Dict[str, Any] = None, all_instances: bool = False) -> dict:
+async def geometry_simplify_heatsink(source: str, result_name: str = None, density: float = None, material: str = 'aluminum', keep_source: bool = True, named_selection: str = 'hs_bottom', name_density_suffix: bool = True, hole_min_dia_mm: float = 2.5, extra_sources: List[str] = None, body_densities: Dict[str, Any] = None, all_instances: bool = False, contact_body: str = None, fin_box: str = 'largest') -> dict:
     """將散熱片 (heatsink) 簡化為凸字形方塊組（底板＋上凸＋下凸＋鎖孔直圓柱），並反推等效密度
 
     適用擠型/壓鑄/折片/針狀鰭片，單一或多 body 組件。流程（高度軸為 world Y）：
       1. 量測原始體積，以常見散熱片密度（預設鋁 2700 kg/m³；body_densities 可逐 body 指定）估算質量 m。
-      2. 分析原始幾何：主接合底面、鰭片根部、鰭片排（取最大一排）、鎖孔位置與孔徑。
-      3. 以方塊重建：底板（包圍盒 X-Z，板底→鰭片根部）、上凸（最大鰭片排，根部→鰭片頂）、
-         下凸（主接合底面範圍，接觸面→板底）；無階梯、無圓角，螺絲/彈簧/推銷不保留。
+      2. 分析原始幾何：主接合底面、鰭片根部、鰭片排、鎖孔位置與孔徑。
+      3. 以方塊重建：底板（包圍盒 X-Z，板底→鰭片根部）、上凸（最大一排或全部鰭片外框，根部→鰭片頂）、
+         下凸（主接合底面範圍或 contact_body，接觸面→板底）；無階梯、無圓角，螺絲/彈簧/推銷不保留。
       4. 鎖孔以 Y 向直圓柱貫穿。
       5. 主接合底面建立 named selection；ρ_equiv = m / V_sim 附加於新 body 名稱後綴（_rho<整數 kg/m³>）。
     結果建於原始 body 所屬 component；原始 body 預設保留。單位內算為公尺、回報為毫米。
@@ -271,13 +271,16 @@ async def geometry_simplify_heatsink(source: str, result_name: str = None, densi
     :param extra_sources: 多 body 散熱片額外併入的 body 名稱或 glob（例 ['ICX_HS_1U_FIN_*', '1U_CUBASE']），限主 body 同一 component instance；螺絲/彈簧勿列入
     :param body_densities: 逐 body 密度 {名稱或 glob: kg/m³ 或材料名}，例 {'1U_CUBASE': 'copper'}
     :param all_instances: 是否處理所有含 source 的 component（同 master 只處理一次）
+    :param contact_body: 接觸體 body 名稱或 glob（例 CPU 散熱片銅底 '1U_CUBASE'）：下凸＝其範圍與厚度，底面 named selection 只含其底面
+    :param fin_box: 上凸範圍 'largest'（最大一排鰭片，預設）或 'all'（所有鰭片外框，十字形配置用）
     """
     args = {}
     for key, val in (('source', source), ('result_name', result_name), ('density', density),
                      ('material', material), ('keep_source', keep_source),
                      ('named_selection', named_selection), ('name_density_suffix', name_density_suffix),
                      ('hole_min_dia_mm', hole_min_dia_mm), ('extra_sources', extra_sources),
-                     ('body_densities', body_densities), ('all_instances', all_instances)):
+                     ('body_densities', body_densities), ('all_instances', all_instances),
+                     ('contact_body', contact_body), ('fin_box', fin_box)):
         if val is not None:
             args[key] = list(val) if key == 'extra_sources' else val
     res = await sim_impl.call_tool('geometry_simplify_heatsink', args)

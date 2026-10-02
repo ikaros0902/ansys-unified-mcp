@@ -24,6 +24,22 @@ phase_gate:
 | 單一 body（擠型/壓鑄，螺絲常與本體同 body） | 一個 body 就含底板＋鰭片 | `source=<名稱>` |
 | 多 body 組件（銅底＋熱管板＋獨立鰭片＋上蓋） | 鰭片是許多同名 body | `source=<底座名>`、`extra_sources=[鰭片/熱管板/上蓋 名稱或 glob]` |
 | 同一散熱片放了多個（各自 component） | 同名 body 出現在不同 component | `all_instances=true`（共用 master 的 instance 只做一次） |
+| CPU 散熱片（銅底與框架底面齊平） | 銅底被框架包圍、底面同高 | 加 `contact_body=<銅底名>`：下凸＝銅底、接觸面 NS 只含銅底 |
+| 十字形 / 多排鰭片 | 中間鰭片較長、兩側較短 | `fin_box="all"`：上凸包住所有鰭片外框（預設 `largest` 只取最大一排） |
+
+CPU 散熱片範例（1U，兩顆 CPU 各一個 component）：
+
+```
+geometry_simplify_heatsink(
+  source="1U_CUBASE",
+  extra_sources=["EGS_HS_1U_FRAME-FIN_FRAME", "PRT0007", "PRT0008", "ICX_HS_1U_FIN_*"],
+  body_densities={"1U_CUBASE": "copper", "PRT000*": "copper"},
+  contact_body="1U_CUBASE", fin_box="all", all_instances=true,
+  result_name="CPU_HS_1U_sim", named_selection="hs_bottom_cpu")
+```
+排除：TIM（`K39279-001`）、頂部薄片（`K35889-002`）、螺絲/彈簧（`J93604-*`、`K37*`）、2U 版本（`EGS--2U_*`）。
+50 個 body 的組件單顆約 2–3 分鐘；若 SpaceClaim 先前回報內部錯誤（`Object reference not set…`），
+重啟 SpaceClaim 後再跑，避免卡死。
 
 - 多 body 組件：`extra_sources` **只放散熱體本身**（底座、熱管板、鰭片、框架、上蓋）；
   **不要放螺絲、彈簧、背板、導熱墊 (TIM)、另一個尺寸版本的散熱片**。不確定時列出該 component 的 body 請使用者勾選。
