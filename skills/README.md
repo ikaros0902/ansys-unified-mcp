@@ -4,7 +4,7 @@
 
 ---
 
-## 專案核心 CAE 技能清單 (16 項)
+## 專案核心 CAE 技能清單 (17 項)
 
 | 技能名稱 | 專業領域 | 核心技術 / 觸發關鍵字 |
 | :
@@ -15,6 +15,8 @@ phase_gate:
 | **[`ansys-spaceclaim`](ansys-spaceclaim/SKILL.md)** | **SpaceClaim 建模與腳本雙軌控制** | PyAnsys Geometry 與原生 ACT IronPython 雙軌 API；`SpaceClaim建模`, `SCDM腳本`, `SpaceClaim幾何`, `幾何前處理` |
 | **[`ansys-spaceclaim-modeling`](ansys-spaceclaim-modeling/SKILL.md)** | **SpaceClaim / Discovery 幾何前處理** | 2D 草圖拉伸, 外流域抽取, 布林相減, CAD 缺陷診斷, PMDB 導出；`SCDM幾何`, `Discovery前處理`, `外流域抽取`, `PMDB導出` |
 | **[`ansys-geometry-modeling`](ansys-geometry-modeling/SKILL.md)** | **PyAnsys Geometry 現代化幾何** | `ansys.geometry.core` 參數化草圖 / 拉伸旋轉, Named Selection, 無損 PMDB 直通；`PyAnsys Geometry`, `參數化幾何`, `Enclosure`, `匯出PMDB` |
+| **[`simplify-ram`](simplify-ram/SKILL.md)** | **RAM 幾何簡化流程** | 先索取主機板 / RAM / socket 三個 body 名稱，再以 `geometry_simplify_ram(_batch)` 合併成板面方塊並建底面 NS；`簡化RAM`, `簡化記憶體`, `simplify RAM` |
+| **[`simplify-heatsink`](simplify-heatsink/SKILL.md)** | **散熱片幾何簡化流程** | `geometry_simplify_heatsink` 鰭片填實、保留底面特徵與圓形鎖孔、移除螺絲，反推等效密度命名 `_rho<kg/m³>`；單一或多 body 組件；`簡化heatsink`, `簡化散熱片`, `simplify heatsink` |
 | **[`pcb-warpage-analysis`](pcb-warpage-analysis/SKILL.md)** | **PCB 多層疊構熱翹曲分析** | ROM 複合材料巨集, Share Topology 疊構建模, 3-2-1 靜定支承；`PCB熱翹曲`, `PCB疊構`, `ROM材料計算`, `3-2-1支承` |
 | **[`ansys-mechanical`](ansys-mechanical/SKILL.md)** | **Mechanical 結構、模態與熱耦合** | ACT Scripting (`ExtAPI`, `DataModel`), 非線性接觸, 網格前檢, 主元錯誤與應力奇異點判定；`靜態結構`, `模態分析`, `熱應力分析` |
 | **[`ansys-submodeling-dpf`](ansys-submodeling-dpf/SKILL.md)** | **DPF 結果提取與局部子模型** | `on_coordinates` 形函數插值, `LocalMapdlPool` 併發求解, 聖維南切面連續性驗證；`子模型分析`, `Submodeling`, `DPF結果提取` |
