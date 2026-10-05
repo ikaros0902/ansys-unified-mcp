@@ -1,9 +1,7 @@
 """Unit tests for MCP Resources (任務 3.3, docs/reviews/2026-10-02-phase2-3-feasibility-assessment.md).
 
-涵蓋 ansys://mechanical/model-tree、ansys://mechanical/materials、ansys://geometry/model-tree。
-ansys://geometry/named-selections 未實作：查證 drivers/sim_impl.py 的 call_tool 分派表後確認
-全專案無任何既有具名選擇查詢能力可供包裝，屬需要新寫 PyAnsys Geometry 邏輯的獨立功能需求，
-不在本次「擴充既有模式至更多端點」範圍內，故不實作。
+涵蓋 ansys://mechanical/model-tree、ansys://mechanical/materials、
+ansys://geometry/model-tree、ansys://geometry/named-selections。
 """
 
 from __future__ import annotations
@@ -93,3 +91,18 @@ def test_geometry_model_tree_resource_delegates_to_list_bodies():
 
     mock_call_tool.assert_called_once_with("geometry_list_bodies", {})
     assert result == '{"ok": true, "bodies": ["Block1"]}'
+
+
+def test_geometry_named_selections_resource_delegates_to_list_named_selections():
+    """geometry named-selections resource 應委派至既有 geometry_list_named_selections 的 sim_impl.call_tool 邏輯。"""
+    from ansys_unified_mcp.products.geometry.tools import geometry_named_selections_resource
+
+    fake_content = type("FakeContent", (), {"text": '{"ok": true, "named_selections": ["NS_Fixed"]}'})()
+    with patch(
+        "ansys_unified_mcp.products.geometry.tools.sim_impl.call_tool",
+        new=AsyncMock(return_value=[fake_content]),
+    ) as mock_call_tool:
+        result = run_async(geometry_named_selections_resource())
+
+    mock_call_tool.assert_called_once_with("geometry_list_named_selections", {})
+    assert result == '{"ok": true, "named_selections": ["NS_Fixed"]}'

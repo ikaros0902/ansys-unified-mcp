@@ -168,6 +168,7 @@ GEOMETRY_TOOLS = [
              "keep_target_body": {"type": "boolean", "default": False, "description": "布林相減後是否保留標的本體"}},
              "required": ["target_body_name"]}),
     Tool(name="geometry_list_bodies", description="列出當前設計中的所有幾何體", inputSchema={"type": "object", "properties": {}}),
+    Tool(name="geometry_list_named_selections", description="列出當前設計中的所有具名選擇 (Named Selection)", inputSchema={"type": "object", "properties": {}}),
     Tool(name="geometry_import_file", description="匯入 CAD 檔案",
          inputSchema={"type": "object", "properties": {"file_path": {"type": "string"}}, "required": ["file_path"]}),
     Tool(name="geometry_status", description="Geometry 建模器連線狀態", inputSchema={"type": "object", "properties": {}}),
@@ -714,6 +715,14 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
                         result = f"幾何體 ({len(bodies)}):\n" + "\n".join(lines)
                     else:
                         result = "當前設計無幾何體"
+                elif name == "geometry_list_named_selections":
+                    d = _geom_get_design()
+                    named_selections = d.named_selections
+                    if named_selections:
+                        lines = [f"  [{i}] {ns.name} (id={ns.id})" for i, ns in enumerate(named_selections)]
+                        result = f"具名選擇 ({len(named_selections)}):\n" + "\n".join(lines)
+                    else:
+                        result = "當前設計無具名選擇"
                 elif name == "geometry_import_file":
                     path = os.path.abspath(arguments["file_path"])
                     if not os.path.exists(path):
