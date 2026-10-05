@@ -31,6 +31,7 @@ import ansys_unified_mcp.tools.connection_tools
 import ansys_unified_mcp.tools.docs_tools
 import ansys_unified_mcp.tools.sentinel_tools
 import ansys_unified_mcp.tools.intent_tools
+import ansys_unified_mcp.tools.session_manager_tools
 
 if profile in ("all", "full", "workbench", "wb"):
     import ansys_unified_mcp.products.workbench.tools

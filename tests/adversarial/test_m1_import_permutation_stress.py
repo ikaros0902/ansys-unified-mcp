@@ -79,7 +79,7 @@ print("IDENTITY_VERIFIED")
             "from ansys_unified_mcp.products.mechanical import MechanicalDriver",
             "from ansys_unified_mcp.drivers import MechanicalDriver",
             "import ansys_unified_mcp.tools",
-            "from ansys_unified_mcp.tools.mechanical_tools import *",
+            "from ansys_unified_mcp.products.mechanical.tools import *",
         ],
     )
     def test_entrypoint_isolation_in_fresh_process(self, first_import):

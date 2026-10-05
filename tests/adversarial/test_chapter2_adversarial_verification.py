@@ -88,10 +88,10 @@ class TestChapter2CodebaseFacts:
             driver.is_available = orig_avail
 
     def test_extapi_act_string_concatenation(self):
-        """1.4 驗證 ExtAPI ACT 字串拼接在 products/mechanical/facade.py 與 tools/mechanical_workflows.py 中的存在。"""
+        """1.4 驗證 ExtAPI ACT 字串拼接在 products/mechanical/facade.py 與 products/mechanical/tools.py 中的存在。"""
         mech_prod = src_root / "ansys_unified_mcp" / "products" / "mechanical" / "facade.py"
         legacy_prod = src_root / "ansys_unified_mcp" / "products" / "mechanical.py"
-        mech_wf = src_root / "ansys_unified_mcp" / "tools" / "mechanical_workflow_tools.py"
+        mech_wf = src_root / "ansys_unified_mcp" / "products" / "mechanical" / "tools.py"
 
         # 驗證舊版單一檔案已被物理移除，且重構後的 Facade 與工作流檔案均存在
         assert not legacy_prod.exists(), f"舊版 products/mechanical.py 必須已被消除: {legacy_prod}"
@@ -163,8 +163,10 @@ class TestChapter2CodebaseFacts:
         """3.2 驗證 mechanical profile 動態路由下 FastMCP 暴露之工具總數。
 
         R4 工具面剪枝後，deprecated alias 預設不暴露：
-        - ANSYS_MCP_EXPOSE_ALIASES=0（預設）：57 個 canonical 工具。
-        - ANSYS_MCP_EXPOSE_ALIASES=1（相容模式）：104 個（57 canonical + 47 alias）。
+        - ANSYS_MCP_EXPOSE_ALIASES=0（預設）：61 個 canonical 工具
+          （57 基線 + 4 個跨產品統一 session 管理工具 ans_session_connect/
+          launch/status/disconnect，無條件載入於所有 profile）。
+        - ANSYS_MCP_EXPOSE_ALIASES=1（相容模式）：108 個（61 canonical + 47 alias）。
         """
         script = """
 import os, asyncio
@@ -191,13 +193,14 @@ asyncio.run(main())
             return int(match.group(1))
 
         pruned_count = _count("0")
-        assert pruned_count == 57, (
-            f"R4 剪枝預設下 mechanical profile 工具總數應為 57 個 canonical，實測: {pruned_count}"
+        assert pruned_count == 61, (
+            f"R4 剪枝預設下 mechanical profile 工具總數應為 61 個 canonical"
+            f"（57 基線 + 4 個 ans_session_* session 管理工具），實測: {pruned_count}"
         )
 
         exposed_count = _count("1")
-        assert exposed_count == 104, (
-            f"相容模式下 mechanical profile 工具總數應為 104（含 alias），實測: {exposed_count}"
+        assert exposed_count == 108, (
+            f"相容模式下 mechanical profile 工具總數應為 108（含 alias），實測: {exposed_count}"
         )
 
     def test_alias_coverage_distribution(self):
@@ -205,18 +208,21 @@ asyncio.run(main())
 
         2026-10-02 更新：原始斷言的 sim_tools.py（即 tools/fluent_tools.py）已確認為
         products/fluent/tools.py 的重複死代碼並移除，改以正本驗證同一事實（0% alias 覆蓋率）。
+        2026-10-05 更新：tools/workbench_tools.py 與 tools/mechanical_tools.py 確認為
+        products/workbench/tools.py 與 products/mechanical/tools.py 的完全重複死代碼並移除，
+        斷言改指正本路徑。
         """
         # 依據報告 2.6.1：
         # mechanical.py (39), mechanical_workflows.py (3), optislang.py (5), intent_tools.py (5) 具備 100% aliased_tool
         # fluent（products/fluent/tools.py）與 workbench_filebridge.py 為 0%
         sim_file = src_root / "ansys_unified_mcp" / "products" / "fluent" / "tools.py"
-        wb_file = src_root / "ansys_unified_mcp" / "tools" / "workbench_tools.py"
-        mech_file = src_root / "ansys_unified_mcp" / "tools" / "mechanical_tools.py"
+        wb_file = src_root / "ansys_unified_mcp" / "products" / "workbench" / "tools.py"
+        mech_file = src_root / "ansys_unified_mcp" / "products" / "mechanical" / "tools.py"
 
         sim_text = sim_file.read_text(encoding="utf-8")
         wb_text = wb_file.read_text(encoding="utf-8")
         mech_text = mech_file.read_text(encoding="utf-8")
 
         assert "@aliased_tool" not in sim_text
-        pass
-        assert mech_text.count("@aliased_tool") == 39
+        assert wb_text.count("@aliased_tool") == 6
+        assert mech_text.count("@aliased_tool") == 42
