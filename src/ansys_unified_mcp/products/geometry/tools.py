@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
+import asyncio
+import itertools
 import os
+from fastmcp.server.dependencies import get_context
 from ansys_unified_mcp.shared import mcp, as_envelope as _envelope
 from ansys_unified_mcp.drivers import sim_impl
 from typing import Any, List, Dict
@@ -16,6 +19,23 @@ def tool_geometry(name=None):
                 return _envelope({"ok": False, "error": str(exc)})
         return mcp.tool(name=name)(wrapper) if name else mcp.tool()(wrapper)
     return decorator
+
+
+def _progress_notifier():
+    """回傳可於工作執行緒呼叫的 progress(msg)：轉送為 MCP progress notification。
+
+    無 MCP request context（例如直接以 Python 呼叫）時回傳 None。
+    """
+    try:
+        ctx = get_context()
+    except RuntimeError:
+        return None
+    loop = asyncio.get_running_loop()
+    step = itertools.count(1)
+
+    def notify(msg: str) -> None:
+        asyncio.run_coroutine_threadsafe(ctx.report_progress(next(step), None, msg), loop)
+    return notify
 
 @tool_geometry(name='geometry_launch')
 async def geometry_launch(port: int = None, host: str = "127.0.0.1", transport_mode: str = "insecure", connect_timeout: int = 30) -> dict:
@@ -196,60 +216,56 @@ async def geometry_create_enclosure(target_body_name: str, enclosure_name: str =
     return "\n".join([c.text for c in res])
 
 @tool_geometry(name='geometry_simplify_ram')
-async def geometry_simplify_ram(motherboard: str, ram: str, socket: str, result_name: str = 'RAM_simplified', named_selection: str = 'mb_bonded') -> dict:
-    """將單一 RAM 卡 + 其 socket 簡化為一座落於主機板頂面的方塊，並於方塊底面（板接合面）建立 named selection【呼叫前必須先向使用者索取主機板、RAM、socket 三個 body 名稱，不可猜測或自行從 body 清單推斷】
+async def geometry_simplify_ram(motherboard: str, ram: str, socket: str, result_name: str = 'RAM_simplified', named_selection: str = 'ram_bottom', move_to_component: bool = True, component_name: str = 'RAM_simplified', hide_source: bool = True) -> dict:
+    """將單一 RAM 卡 + 其 socket 簡化為一座落於主機板頂面的「凸字形」兩段體，並於底面（板接合面）建立 named selection【呼叫前必須先向使用者索取主機板、RAM、socket 三個 body 名稱，不可猜測或自行從 body 清單推斷】
 
-    規則（高度軸為 Y）：footprint(X-Z)=RAM 與 socket 的合併包圍盒；方塊底=主機板頂面（板 max Y），方塊頂=RAM 頂（RAM max Y）。原始 body 保留不動，僅新增一個方塊 body。單位內算為公尺、回報為毫米。
+    規則（高度軸為 Y，凸字形＝下寬上窄）：下段寬基座＝socket 的 X-Z footprint，Y 從主機板頂面（板 max Y）→ socket 頂；上段窄凸柱＝RAM 的 X-Z footprint，Y 從 socket 頂 → RAM 頂（RAM max Y）；兩段聯集為單一 body。socket 頂落在無效區間時退回單一合併包圍盒方塊。預設將結果移入新 component，並抑制原始 RAM/socket 實體（下游網格/求解排除）。單位內算為公尺、回報為毫米。
     :param motherboard: 主機板 body 名稱（其頂面即方塊底面），例如 'JVPCB1074973E'
     :param ram: RAM 卡 body 名稱，例如 'DIMM_DDR5_EGS'
     :param socket: RAM socket body 名稱，例如 'J33'
     :param result_name: 生成的簡化方塊 body 名稱
     :param named_selection: 方塊底面接合面的 named selection 名稱
+    :param move_to_component: 是否將簡化方塊移入新 component（預設 True）
+    :param component_name: move_to_component 時新建的 component 名稱
+    :param hide_source: 是否抑制 (suppress) 原始 RAM 與 socket body，使其在下游被排除（預設 True）
     """
     args = {}
-    if motherboard is not None:
-        args['motherboard'] = motherboard
-    if ram is not None:
-        args['ram'] = ram
-    if socket is not None:
-        args['socket'] = socket
-    if result_name is not None:
-        args['result_name'] = result_name
-    if named_selection is not None:
-        args['named_selection'] = named_selection
+    for key, val in (('motherboard', motherboard), ('ram', ram), ('socket', socket),
+                     ('result_name', result_name), ('named_selection', named_selection),
+                     ('move_to_component', move_to_component), ('component_name', component_name),
+                     ('hide_source', hide_source)):
+        if val is not None:
+            args[key] = val
     res = await sim_impl.call_tool('geometry_simplify_ram', args)
     return "\n".join([c.text for c in res])
 
 @tool_geometry(name='geometry_simplify_ram_batch')
-async def geometry_simplify_ram_batch(motherboard: str, ram: str, socket: str, result_prefix: str = 'RAM_simplified', ns_prefix: str = 'mb_bonded', tol_mm: float = 2.0) -> dict:
+async def geometry_simplify_ram_batch(motherboard: str, ram: str, socket: str, result_prefix: str = 'RAM_simplified', ns_prefix: str = 'ram_bottom', tol_mm: float = 2.0, move_to_component: bool = True, component_name: str = 'RAM_simplified', hide_source: bool = True) -> dict:
     """批次簡化所有同名 RAM+socket 配對（依 X 中心位置自動就近配對）【呼叫前必須先向使用者索取主機板、RAM、socket 三個 body 名稱，不可猜測或自行從 body 清單推斷】
 
-    每一對成為一座落於主機板頂面的方塊，各自建立底面 named selection，依 X 順序編號（<result_prefix>_01、<ns_prefix>_01…）。適用於同一板上多條相同的 DIMM/socket 陣列（例如 32× DIMM + 32× socket）。原始 body 保留不動。
+    每一對成為一座落於主機板頂面的「凸字形」兩段體（下段寬基座＝socket footprint；上段窄凸柱＝RAM footprint），各自建立底面 named selection，依 X 順序編號（<result_prefix>_01、<ns_prefix>_01…）。適用於同一板上多條相同的 DIMM/socket 陣列（例如 32× DIMM + 32× socket）。預設將所有結果移入同一新 component，並抑制配對成功的原始 RAM/socket 實體（下游網格/求解排除）。
     :param motherboard: 主機板 body 名稱（頂面=各方塊底面）
     :param ram: RAM 卡 body 名稱（陣列中重複出現）
     :param socket: socket body 名稱（陣列中重複出現）
     :param result_prefix: 方塊 body 名稱前綴（自動編號）
     :param ns_prefix: 底面 named selection 名稱前綴（自動編號）
     :param tol_mm: 將 RAM 與 socket 視為一對的最大 X 中心距離（單位：毫米 mm）
+    :param move_to_component: 是否將所有簡化方塊移入同一新 component（預設 True）
+    :param component_name: move_to_component 時新建的 component 名稱
+    :param hide_source: 是否抑制 (suppress) 配對成功的原始 RAM 與 socket body，使其在下游被排除（預設 True）
     """
     args = {}
-    if motherboard is not None:
-        args['motherboard'] = motherboard
-    if ram is not None:
-        args['ram'] = ram
-    if socket is not None:
-        args['socket'] = socket
-    if result_prefix is not None:
-        args['result_prefix'] = result_prefix
-    if ns_prefix is not None:
-        args['ns_prefix'] = ns_prefix
-    if tol_mm is not None:
-        args['tol_mm'] = tol_mm
+    for key, val in (('motherboard', motherboard), ('ram', ram), ('socket', socket),
+                     ('result_prefix', result_prefix), ('ns_prefix', ns_prefix), ('tol_mm', tol_mm),
+                     ('move_to_component', move_to_component), ('component_name', component_name),
+                     ('hide_source', hide_source)):
+        if val is not None:
+            args[key] = val
     res = await sim_impl.call_tool('geometry_simplify_ram_batch', args)
     return "\n".join([c.text for c in res])
 
 @tool_geometry(name='geometry_simplify_heatsink')
-async def geometry_simplify_heatsink(source: str, result_name: str = None, density: float = None, material: str = 'aluminum', keep_source: bool = True, named_selection: str = 'hs_bottom', name_density_suffix: bool = True, hole_min_dia_mm: float = 2.5, extra_sources: List[str] = None, body_densities: Dict[str, Any] = None, all_instances: bool = False, contact_body: str = None, fin_box: str = 'largest') -> dict:
+async def geometry_simplify_heatsink(source: str, result_name: str = None, density: float = None, material: str = 'aluminum', keep_source: bool = True, named_selection: str = 'hs_bottom', name_density_suffix: bool = True, hole_min_dia_mm: float = 2.5, extra_sources: List[str] = None, body_densities: Dict[str, Any] = None, all_instances: bool = False, contact_body: str = None, fin_box: str = 'largest', hole_select: str = 'screw', timeout_s: float = 600, diagnose_only: bool = False) -> dict:
     """將散熱片 (heatsink) 簡化為凸字形方塊組（底板＋上凸＋下凸＋鎖孔直圓柱），並反推等效密度
 
     適用擠型/壓鑄/折片/針狀鰭片，單一或多 body 組件。流程（高度軸為 world Y）：
@@ -273,6 +289,9 @@ async def geometry_simplify_heatsink(source: str, result_name: str = None, densi
     :param all_instances: 是否處理所有含 source 的 component（同 master 只處理一次）
     :param contact_body: 接觸體 body 名稱或 glob（例 CPU 散熱片銅底 '1U_CUBASE'）：下凸＝其範圍與厚度，底面 named selection 只含其底面
     :param fin_box: 上凸範圍 'largest'（最大一排鰭片，預設）或 'all'（所有鰭片外框，十字形配置用）
+    :param hole_select: 鎖孔篩選模式 'screw'（預設，只保留外側螺絲鎖孔、排除中央定位銷孔）/'outer'（純依徑向取外側一圈）/'all'（保留所有偵測到的孔，舊行為）
+    :param timeout_s: 整體逾時秒數（預設 600）；超過即在下一個階段邊界中止並清除暫存幾何。各階段以 MCP progress 通知回報
+    :param diagnose_only: 僅做幾何偵測與孔診斷（不建立簡化方塊、不做布林運算，秒級回傳）；用於排查孔偵測問題
     """
     args = {}
     for key, val in (('source', source), ('result_name', result_name), ('density', density),
@@ -280,10 +299,11 @@ async def geometry_simplify_heatsink(source: str, result_name: str = None, densi
                      ('named_selection', named_selection), ('name_density_suffix', name_density_suffix),
                      ('hole_min_dia_mm', hole_min_dia_mm), ('extra_sources', extra_sources),
                      ('body_densities', body_densities), ('all_instances', all_instances),
-                     ('contact_body', contact_body), ('fin_box', fin_box)):
+                     ('contact_body', contact_body), ('fin_box', fin_box), ('hole_select', hole_select),
+                     ('timeout_s', timeout_s), ('diagnose_only', diagnose_only)):
         if val is not None:
             args[key] = list(val) if key == 'extra_sources' else val
-    res = await sim_impl.call_tool('geometry_simplify_heatsink', args)
+    res = await sim_impl.call_tool('geometry_simplify_heatsink', args, progress=_progress_notifier())
     return "\n".join([c.text for c in res])
 
 @tool_geometry(name='geometry_midsurface')

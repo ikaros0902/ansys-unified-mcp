@@ -9,10 +9,13 @@
 
 import asyncio
 import logging
+import math
 import os
 import sys
+import threading
+import time
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 from mcp.types import Tool, TextContent
 
@@ -173,7 +176,10 @@ GEOMETRY_TOOLS = [
              "ram": {"type": "string", "description": "RAM 卡 body 名稱，例 'DIMM_DDR5_EGS'"},
              "socket": {"type": "string", "description": "RAM socket body 名稱，例 'J33'"},
              "result_name": {"type": "string", "default": "RAM_simplified", "description": "生成簡化方塊 body 名稱"},
-             "named_selection": {"type": "string", "default": "mb_bonded", "description": "方塊底面接合面的 named selection 名稱"}},
+             "named_selection": {"type": "string", "default": "ram_bottom", "description": "方塊底面接合面的 named selection 名稱"},
+             "move_to_component": {"type": "boolean", "default": True, "description": "是否將簡化方塊移入新 component（名稱見 component_name）"},
+             "component_name": {"type": "string", "default": "RAM_simplified", "description": "move_to_component 時新建的 component 名稱"},
+             "hide_source": {"type": "boolean", "default": True, "description": "是否抑制 (suppress) 原始 RAM 與 socket body，使其在下游網格/求解被排除"}},
              "required": ["motherboard", "ram", "socket"]}),
     Tool(name="geometry_simplify_ram_batch", description="【呼叫前必須先向使用者索取主機板、RAM、socket 三個 body 名稱，不可猜測或自行從 body 清單推斷】批次簡化所有同名 RAM+socket 配對（依 X 中心位置自動就近配對）。每對成為一座落於主機板頂面的方塊，各自建立底面 named selection，依 X 順序編號 <result_prefix>_01、<ns_prefix>_01…。適用於多條相同 DIMM/socket 陣列。原始 body 保留不動。",
          inputSchema={"type": "object", "properties": {
@@ -181,8 +187,11 @@ GEOMETRY_TOOLS = [
              "ram": {"type": "string", "description": "RAM 卡 body 名稱（陣列中重複出現）"},
              "socket": {"type": "string", "description": "socket body 名稱（陣列中重複出現）"},
              "result_prefix": {"type": "string", "default": "RAM_simplified", "description": "方塊 body 名稱前綴（自動編號）"},
-             "ns_prefix": {"type": "string", "default": "mb_bonded", "description": "底面 named selection 名稱前綴（自動編號）"},
-             "tol_mm": {"type": "number", "default": 2.0, "description": "RAM 與 socket 視為一對的最大 X 中心距離（單位：毫米 mm）"}},
+             "ns_prefix": {"type": "string", "default": "ram_bottom", "description": "底面 named selection 名稱前綴（自動編號）"},
+             "tol_mm": {"type": "number", "default": 2.0, "description": "RAM 與 socket 視為一對的最大 X 中心距離（單位：毫米 mm）"},
+             "move_to_component": {"type": "boolean", "default": True, "description": "是否將所有簡化方塊移入同一新 component（名稱見 component_name）"},
+             "component_name": {"type": "string", "default": "RAM_simplified", "description": "move_to_component 時新建的 component 名稱"},
+             "hide_source": {"type": "boolean", "default": True, "description": "是否抑制 (suppress) 配對成功的原始 RAM 與 socket body，使其在下游網格/求解被排除"}},
              "required": ["motherboard", "ram", "socket"]}),
     Tool(name="geometry_simplify_heatsink", description="散熱片 (heatsink) 簡化為凸字形方塊組（擠型/壓鑄/折片/針狀鰭片，單一或多 body 組件皆可）：底板（包圍盒 X-Z，鎖孔所在板底→鰭片根部）＋上凸（最大一排鰭片範圍，鰭片根部→鰭片頂）＋下凸（主接合底面範圍，接觸面→板底），無階梯、無圓角，螺絲/彈簧/推銷不保留；鎖孔（原始完整圓周的 Y 向挖孔）以 Y 向直圓柱貫穿；主接合底面建立 named selection。量測原始體積，以常見散熱片密度（預設鋁 2700 kg/m³，可逐 body 指定）估算質量，於質量守恆下反推簡化體應設定的等效密度（kg/m³），附加於新 body 名稱後綴 _rho<整數>。結果建於原始 body 所屬 component（共用 master 的各 instance 皆會出現），原始 body 預設保留。高度軸為 world Y。",
          inputSchema={"type": "object", "properties": {
@@ -198,7 +207,10 @@ GEOMETRY_TOOLS = [
              "body_densities": {"type": "object", "additionalProperties": {"type": ["number", "string"]}, "description": "逐 body 密度：{名稱或 glob: kg/m³ 或材料名}，例 {'1U_CUBASE': 'copper'}；未列者用 density/material"},
              "all_instances": {"type": "boolean", "default": False, "description": "是否處理所有含 source 的 component（同 master 只處理一次）；預設只處理第一個"},
              "contact_body": {"type": "string", "description": "接觸體 body 名稱或 glob（須為 source 或 extra_sources 之一），例 CPU 散熱片的銅底 '1U_CUBASE'：下凸＝其範圍與厚度，底面 named selection 只含其底面。銅底與框架底面齊平時使用"},
-             "fin_box": {"type": "string", "enum": ["largest", "all"], "default": "largest", "description": "上凸範圍：largest＝面積最大的一排鰭片；all＝所有鰭片外框（十字形等多排鰭片配置）"}},
+             "fin_box": {"type": "string", "enum": ["largest", "all"], "default": "largest", "description": "上凸範圍：largest＝面積最大的一排鰭片；all＝所有鰭片外框（十字形等多排鰭片配置）"},
+             "hole_select": {"type": "string", "enum": ["screw", "outer", "all"], "default": "screw", "description": "鎖孔篩選模式：screw（預設）＝只保留真正的外側螺絲鎖孔（優先取同軸有螺絲/彈簧者，否則取外側徑向最遠的一圈），排除中央定位銷孔；outer＝純依距中心徑向距離取外側一圈；all＝保留偵測到的所有孔（舊行為）"},
+             "timeout_s": {"type": "number", "default": 600, "description": "整體逾時秒數；超過即在下一個階段邊界中止並清除暫存幾何（預設 600s）"},
+             "diagnose_only": {"type": "boolean", "default": False, "description": "僅做幾何偵測與孔診斷（不建立簡化方塊、不做布林運算，秒級回傳）；用於排查孔偵測問題"}},
              "required": ["source"]}),
     Tool(name="geometry_midsurface", description="對 SpaceClaim 中目前「已選取」的 body 批次建立中曲面 (midsurface)。呼叫前請先在 SpaceClaim 視窗選取欲抽中面的鈑金/薄殼 body。採面積最大優先的對向面配對 + 動態相切鏈補強（複雜件強制加入相切面以對抗壓折邊遺失）；可選鈑金件判斷與抽中面後隱藏原始 body。單位：厚度為 mm。",
          inputSchema={"type": "object", "properties": {
@@ -440,11 +452,12 @@ def _bbox_m(body):
     return lo2, hi2
 
 
-def _make_box_from_bbox(design, name, lo, hi):
+def _make_box_from_bbox(design, name, lo, hi, target=None):
     """以軸對齊包圍盒 [lo, hi]（公尺）建立實心方塊並回傳 Body。
 
     於 z = lo_z 平面草繪 X-Y footprint，再沿 +Z 拉伸盒高。
     （延續 spaceclaim_mcp.py 的建盒策略；此處所有座標皆為公尺。）
+    target 不為 None 時將方塊建於該 component（否則建於 design 根）。
     """
     from ansys.geometry.core.math import Plane, Point2D, Point3D, UnitVector3D
     from ansys.geometry.core.misc import UNITS, Distance
@@ -466,7 +479,8 @@ def _make_box_from_bbox(design, name, lo, hi):
         width=Distance(width, UNITS.m),
         height=Distance(height, UNITS.m),
     )
-    return design.extrude_sketch(name, sketch, Distance(depth, UNITS.m))
+    owner = target if target is not None else design
+    return owner.extrude_sketch(name, sketch, Distance(depth, UNITS.m))
 
 
 def _bottom_face_by_y(body):
@@ -502,30 +516,60 @@ def _mm(v):
     return round(v * 1000.0, 4)
 
 
-def _build_ram_block(design, ram_body, socket_body, mb_top_y, result_name, ns_name):
-    """建立單一 RAM+socket 簡化方塊（座落於板面），並建立底面 named selection。
+def _build_ram_block(design, ram_body, socket_body, mb_top_y, result_name, ns_name, target=None):
+    """建立單一 RAM+socket 簡化為「凸字形」兩段體（座落於板面），並建立底面 named selection。
 
-    footprint(X,Z) = RAM 與 socket 的合併包圍盒；
-    底 = 主機板頂面 (mb_top_y)；頂 = RAM 頂 (max Y of RAM)。回傳結果 dict（公尺內算、毫米回報）。
+    凸字形（高度軸 Y，剖面上寬下窄的相反——下寬上窄）：
+      - 下段（寬基座）：socket 的 X-Z footprint，Y 從主機板頂面 (mb_top_y) → socket 頂 (socket max Y)。
+      - 上段（窄凸柱）：RAM 的 X-Z footprint，Y 從 socket 頂 → RAM 頂 (RAM max Y)。
+      - 兩段聯集成單一 body；底面（基座底）建立 named selection。
+    若 socket 頂未落在基座底與 RAM 頂之間（退化情形），退回單一合併包圍盒方塊。
+    target 不為 None 時方塊建於該 component。
     """
     ram_lo, ram_hi = _bbox_m(ram_body)
     sock_lo, sock_hi = _bbox_m(socket_body)
 
-    x_min = min(ram_lo[0], sock_lo[0])
-    x_max = max(ram_hi[0], sock_hi[0])
-    z_min = min(ram_lo[2], sock_lo[2])
-    z_max = max(ram_hi[2], sock_hi[2])
-    y_bottom = mb_top_y        # 主機板頂面
-    y_top = ram_hi[1]          # RAM 頂
+    y_bottom = mb_top_y        # 主機板頂面（基座底）
+    y_mid = sock_hi[1]         # socket 頂（基座/凸柱交界）
+    y_top = ram_hi[1]          # RAM 頂（凸柱頂）
     if y_top <= y_bottom:
         raise ValueError(
             f"RAM 頂 (Y={y_top*1000:.3f}mm) 未高於主機板頂面 (Y={y_bottom*1000:.3f}mm)；"
             "請確認零件名稱 / 方向（高度軸應為 Y）。"
         )
 
-    lo = (x_min, y_bottom, z_min)
-    hi = (x_max, y_top, z_max)
-    block = _make_box_from_bbox(design, result_name, lo, hi)
+    # 下段（基座）＝ socket footprint；上段（凸柱）＝ RAM footprint
+    base_lo = (sock_lo[0], y_bottom, sock_lo[2])
+    base_hi = (sock_hi[0], y_mid, sock_hi[2])
+    top_lo = (ram_lo[0], y_mid, ram_lo[2])
+    top_hi = (ram_hi[0], y_top, ram_hi[2])
+
+    _EPS = 1e-6  # 1µm：段高容差
+
+    convex = y_bottom + _EPS < y_mid < y_top - _EPS
+    if convex:
+        # 兩段凸字形：各自建塊再聯集
+        base = _make_box_from_bbox(design, result_name, base_lo, base_hi, target=target)
+        top = _make_box_from_bbox(design, f"{result_name}_tmp_top", top_lo, top_hi, target=target)
+        try:
+            base.unite([top], keep_other=False)
+            block = base
+        except Exception as e:
+            logger.warning(f"凸字形聯集失敗，退回合併包圍盒方塊: {e}")
+            _safe_delete(top)
+            _safe_delete(base)
+            convex = False
+
+    if not convex:
+        # 退化情形：socket 頂不在有效區間內，退回單一合併包圍盒方塊
+        x_min = min(ram_lo[0], sock_lo[0])
+        x_max = max(ram_hi[0], sock_hi[0])
+        z_min = min(ram_lo[2], sock_lo[2])
+        z_max = max(ram_hi[2], sock_hi[2])
+        base_lo = (x_min, y_bottom, z_min)
+        base_hi = (x_max, y_top, z_max)
+        top_lo = top_hi = None
+        block = _make_box_from_bbox(design, result_name, base_lo, base_hi, target=target)
 
     bottom = _bottom_face_by_y(block)
     ns_created = False
@@ -536,19 +580,44 @@ def _build_ram_block(design, ram_body, socket_body, mb_top_y, result_name, ns_na
         except Exception as e:
             logger.warning(f"建立 named selection '{ns_name}' 失敗: {e}")
 
+    overall_lo = base_lo
+    overall_hi = (base_hi if not convex else top_hi)
     return {
         "result_body": result_name,
-        "block_min_mm": [_mm(v) for v in lo],
-        "block_max_mm": [_mm(v) for v in hi],
-        "block_size_mm": [_mm(hi[i] - lo[i]) for i in range(3)],
+        "result_body_obj": block,
+        "shape": "convex" if convex else "box",
+        "base_size_mm": [_mm(base_hi[i] - base_lo[i]) for i in range(3)],
+        "top_size_mm": ([_mm(top_hi[i] - top_lo[i]) for i in range(3)] if convex else None),
+        "block_min_mm": [_mm(v) for v in overall_lo],
+        "block_max_mm": [_mm(v) for v in overall_hi],
+        "block_size_mm": [_mm(overall_hi[i] - overall_lo[i]) for i in range(3)],
         "named_selection": ns_name if ns_created else None,
         "named_selection_created": ns_created,
     }
 
 
+def _hide_source_body(body):
+    """抑制 (suppress) 原始實體 body，使其在下游（網格/求解）被排除。
+
+    PyAnsys Geometry Python 端無可靠的「視覺隱藏」API；set_suppressed(True)
+    是把原始實體排除於下游的正確語意（SpaceClaim 樹中會標為抑制）。
+    回傳是否成功。
+    """
+    try:
+        if body is not None and body.is_alive:
+            body.set_suppressed(True)
+            return True
+    except Exception as e:
+        logger.warning(f"抑制原始 body '{getattr(body, 'name', '?')}' 失敗: {e}")
+    return False
+
+
 def _geom_simplify_ram(motherboard: str, ram: str, socket: str,
                        result_name: str = "RAM_simplified",
-                       named_selection: str = "mb_bonded") -> str:
+                       named_selection: str = "ram_bottom",
+                       move_to_component: bool = True,
+                       component_name: str = "RAM_simplified",
+                       hide_source: bool = True) -> str:
     """將單一 RAM 卡 + 其 socket 簡化為一座落於主機板上的方塊。"""
     design = _geom_get_design()
 
@@ -558,12 +627,30 @@ def _geom_simplify_ram(motherboard: str, ram: str, socket: str,
             raise ValueError(f"找不到名為 '{nm}' 的 body（請先 geometry_list_bodies 確認名稱）。")
         return matches[0]
 
+    ram_b = _first(ram)
+    sock_b = _first(socket)
     mb_top_y = _bbox_m(_first(motherboard))[1][1]  # 主機板 max Y
-    info = _build_ram_block(design, _first(ram), _first(socket), mb_top_y, result_name, named_selection)
+
+    target = design.add_component(component_name) if move_to_component else None
+    info = _build_ram_block(design, ram_b, sock_b, mb_top_y, result_name, named_selection, target=target)
+
+    hidden = 0
+    if hide_source:
+        hidden += 1 if _hide_source_body(ram_b) else 0
+        hidden += 1 if _hide_source_body(sock_b) else 0
+
+    comp_note = f"（已移入新 component '{component_name}'）" if move_to_component else ""
+    hide_note = f"，已抑制 {hidden} 個原始實體" if hide_source else ""
+    shape_note = "凸字形（socket 寬基座 + RAM 窄凸柱）" if info.get("shape") == "convex" else "單一方塊（退化）"
+    tier_line = (
+        f"  下段基座 (mm): {info['base_size_mm']}  上段凸柱 (mm): {info['top_size_mm']}\n"
+        if info.get("shape") == "convex" else ""
+    )
     return (
-        f"✓ RAM 簡化完成：'{result_name}' 座落於 '{motherboard}' 頂面。\n"
+        f"✓ RAM 簡化完成：'{result_name}' 座落於 '{motherboard}' 頂面，形狀={shape_note}{comp_note}{hide_note}。\n"
         f"  合併來源: {ram} + {socket}\n"
-        f"  方塊尺寸 (mm): {info['block_size_mm']}  min={info['block_min_mm']} max={info['block_max_mm']}\n"
+        f"  整體尺寸 (mm): {info['block_size_mm']}  min={info['block_min_mm']} max={info['block_max_mm']}\n"
+        f"{tier_line}"
         f"  主機板頂面 Y={_mm(mb_top_y)}mm，RAM 頂 Y={info['block_max_mm'][1]}mm\n"
         f"  底面 named selection: {info['named_selection']} (created={info['named_selection_created']})"
     )
@@ -601,9 +688,16 @@ def _pair_by_x(rams, sockets, tol_m=0.002):
 
 def _geom_simplify_ram_batch(motherboard: str, ram: str, socket: str,
                              result_prefix: str = "RAM_simplified",
-                             ns_prefix: str = "mb_bonded",
-                             tol_mm: float = 2.0) -> str:
-    """批次簡化所有同名 RAM+socket 配對（依 X 位置自動配對），各自成塊並建底面 NS。"""
+                             ns_prefix: str = "ram_bottom",
+                             tol_mm: float = 2.0,
+                             move_to_component: bool = True,
+                             component_name: str = "RAM_simplified",
+                             hide_source: bool = True) -> str:
+    """批次簡化所有同名 RAM+socket 配對（依 X 位置自動配對），各自成塊並建底面 NS。
+
+    move_to_component=True 時所有簡化方塊建於同一新 component；
+    hide_source=True 時配對成功的原始 RAM 與 socket body 會被抑制 (suppress)，於下游排除。
+    """
     design = _geom_get_design()
 
     mb_matches = _find_bodies_by_name(motherboard)
@@ -620,23 +714,31 @@ def _geom_simplify_ram_batch(motherboard: str, ram: str, socket: str,
 
     pairs = _pair_by_x(rams, sockets, tol_m=tol_mm / 1000.0)
 
+    target = design.add_component(component_name) if move_to_component else None
+
     results, errors = [], []
+    hidden = 0
     for idx, (_x, ram_b, sock_b) in enumerate(pairs, start=1):
         rn = f"{result_prefix}_{idx:02d}"
         ns = f"{ns_prefix}_{idx:02d}"
         try:
-            results.append(_build_ram_block(design, ram_b, sock_b, mb_top_y, rn, ns))
+            results.append(_build_ram_block(design, ram_b, sock_b, mb_top_y, rn, ns, target=target))
+            if hide_source:
+                hidden += 1 if _hide_source_body(ram_b) else 0
+                hidden += 1 if _hide_source_body(sock_b) else 0
         except Exception as e:
             errors.append({"index": idx, "result_body": rn, "error": str(e)})
 
     ns_count = sum(1 for r in results if r["named_selection_created"])
+    comp_note = f"，簡化方塊置於新 component '{component_name}'" if move_to_component else ""
     lines = [
-        f"✓ RAM 批次簡化完成（主機板 '{motherboard}' 頂面 Y={_mm(mb_top_y)}mm）",
+        f"✓ RAM 批次簡化完成（主機板 '{motherboard}' 頂面 Y={_mm(mb_top_y)}mm{comp_note}）",
         f"  RAM 數={len(rams)}, socket 數={len(sockets)}, 配對={len(pairs)}, "
-        f"建塊={len(results)}, 建立 NS={ns_count}",
+        f"建塊={len(results)}, 建立 NS={ns_count}"
+        + (f", 抑制原始實體={hidden}" if hide_source else ""),
     ]
     for r in results:
-        lines.append(f"  - {r['result_body']}: size(mm)={r['block_size_mm']} NS={r['named_selection']}")
+        lines.append(f"  - {r['result_body']}: shape={r.get('shape', 'box')} size(mm)={r['block_size_mm']} NS={r['named_selection']}")
     if errors:
         lines.append(f"  ⚠ {len(errors)} 個配對失敗:")
         for e in errors:
@@ -805,9 +907,14 @@ def _fin_root_y(planes, walls, y_bot, y_top):
     return max(levels, key=lambda y: levels[y])
 
 
+_HS_CONE_MAX_HALF_ANGLE = math.radians(15.0)  # 拔模錐孔上限；45° 倒角等更陡錐面不視為孔壁
+
+
 def _y_cylinders(body):
     """列出 body 上軸向沿 Y 的圓柱面：list[dict(cx, cz, r, ylo, yhi, concave, angle)]（公尺/弧度）。
 
+    壓鑄件鎖孔常帶拔模斜度而成為小半錐角的錐面，半錐角 ≤ _HS_CONE_MAX_HALF_ANGLE 者
+    一併視為圓柱，半徑取面中點至軸心距離（≈ 中段孔徑）。
     concave（內凹＝孔壁）判定：面外法向指向軸心 → 法向與徑向向量內積 < 0。
     angle：該面涵蓋的圓周角 ≈ 面積 / (r·高)，用於區分完整孔（2π）與圓角（π/2）。
     """
@@ -816,14 +923,22 @@ def _y_cylinders(body):
     out = []
     for f in body.faces:
         try:
-            if f.surface_type != SurfaceType.SURFACETYPE_CYLINDER:
+            is_cone = f.surface_type == SurfaceType.SURFACETYPE_CONE
+            if f.surface_type != SurfaceType.SURFACETYPE_CYLINDER and not is_cone:
                 continue
             cyl = f.shape.geometry
             if abs(float(cyl.dir_z.y)) < 0.9:
                 continue
             cx, cz = _q_m(cyl.origin.x), _q_m(cyl.origin.z)
-            r = _q_m(cyl.radius)
             p = f.point(0.5, 0.5)
+            if is_cone:
+                ha = cyl.half_angle
+                ha = ha.m_as("radian") if hasattr(ha, "m_as") else float(ha)
+                if abs(ha) > _HS_CONE_MAX_HALF_ANGLE:
+                    continue
+                r = math.hypot(_q_m(p.x) - cx, _q_m(p.z) - cz)
+            else:
+                r = _q_m(cyl.radius)
             n = f.normal(0.5, 0.5)
             dot = float(n.x) * (_q_m(p.x) - cx) + float(n.z) * (_q_m(p.z) - cz)
             ext = _face_extent(f)
@@ -850,33 +965,140 @@ def _detect_mount_holes(cyls, min_radius_m, concentric_tol_m=2e-4):
     """
     import math
 
-    segs = {}
+    # 以「同軸中心」分群（忽略半徑差異），累加該中心所有內凹 Y 圓柱分片的圓周角。
+    # 沉孔/counterbore 的孔會被切成「大徑沉孔環 + 小徑孔喉」兩段不同半徑，各自可能都
+    # 不足完整圓周；但同一中心累加後 ≥ 0.9·2π 即視為真實挖孔，孔徑取該中心最小半徑（孔喉）。
+    centers = {}
     for c in cyls:
         if not c["concave"] or c["r"] < min_radius_m:
             continue
-        key = (round(c["cx"] / concentric_tol_m), round(c["cz"] / concentric_tol_m), round(c["r"] / 1e-5))
-        s = segs.setdefault(key, dict(c, angle=0.0))
-        s["angle"] += c["angle"]
-    full = [s for s in segs.values() if s["angle"] >= 0.9 * 2 * math.pi]
+        key = (round(c["cx"] / concentric_tol_m), round(c["cz"] / concentric_tol_m))
+        g = centers.setdefault(key, {"cx": c["cx"], "cz": c["cz"], "angle": 0.0,
+                                     "rmin": c["r"], "segs": []})
+        g["angle"] += c["angle"]
+        g["rmin"] = min(g["rmin"], c["r"])
+        g["segs"].append(c)
+    full = [g for g in centers.values() if g["angle"] >= 0.9 * 2 * math.pi]
 
     holes = []
-    for s in full:
-        for h in holes:
-            if abs(h["cx"] - s["cx"]) <= concentric_tol_m and abs(h["cz"] - s["cz"]) <= concentric_tol_m:
-                h["radius"] = min(h["radius"], s["r"])
-                break
-        else:
-            holes.append({"cx": s["cx"], "cz": s["cz"], "radius": s["r"]})
+    for g in full:
+        holes.append({"cx": g["cx"], "cz": g["cz"], "radius": g["rmin"]})
 
     for h in holes:
         coax = [c for c in cyls
                 if abs(c["cx"] - h["cx"]) <= concentric_tol_m and abs(c["cz"] - h["cz"]) <= concentric_tol_m]
-        walls = [s for s in full
-                 if abs(s["cx"] - h["cx"]) <= concentric_tol_m and abs(s["cz"] - h["cz"]) <= concentric_tol_m]
-        h["ylo"], h["yhi"] = min(s["ylo"] for s in walls), max(s["yhi"] for s in walls)
+        concave = [c for c in coax if c["concave"]]
+        h["ylo"] = min(c["ylo"] for c in concave) if concave else 0.0
+        h["yhi"] = max(c["yhi"] for c in concave) if concave else 0.0
         h["clearance"] = max([c["r"] for c in coax] + [h["radius"]])
         h["screw_r"] = max([c["r"] for c in coax if not c["concave"]] + [0.0])
     return holes
+
+
+def _diag_corner_cylinders(cyls, bbox_lo, bbox_hi, concentric_tol_m=2e-4, near_corner_m=25e-3):
+    """[診斷] 統計靠近四角的同軸 Y 圓柱群，回傳每群 (cx,cz,最小/最大半徑,總圓周角,是否完整圓周)。
+
+    用於找出外側螺絲鎖孔為何未被 _detect_mount_holes 偵測（圓周角不足？半徑不符？外凸？）。
+    """
+    import math
+    cx0, cz0 = (bbox_lo[0] + bbox_hi[0]) / 2.0, (bbox_lo[2] + bbox_hi[2]) / 2.0
+    corners = [(bbox_lo[0], bbox_lo[2]), (bbox_hi[0], bbox_lo[2]),
+               (bbox_hi[0], bbox_hi[2]), (bbox_lo[0], bbox_hi[2])]
+    groups = {}
+    for c in cyls:
+        if not any(abs(c["cx"] - qx) <= near_corner_m and abs(c["cz"] - qz) <= near_corner_m
+                   for qx, qz in corners):
+            continue
+        key = (round(c["cx"] / concentric_tol_m), round(c["cz"] / concentric_tol_m))
+        g = groups.setdefault(key, {"cx": c["cx"], "cz": c["cz"], "rmin": c["r"], "rmax": c["r"],
+                                    "ang_cc": 0.0, "ang_cx": 0.0})
+        g["rmin"] = min(g["rmin"], c["r"])
+        g["rmax"] = max(g["rmax"], c["r"])
+        if c["concave"]:
+            g["ang_cc"] += c["angle"]
+        else:
+            g["ang_cx"] += c["angle"]
+    out = []
+    for g in groups.values():
+        g["radial"] = ((g["cx"] - cx0) ** 2 + (g["cz"] - cz0) ** 2) ** 0.5
+        g["full"] = g["ang_cc"] >= 0.9 * 2 * math.pi
+        out.append(g)
+    # 內凹（孔壁）優先、再依徑向最外優先，方便診斷真實鎖孔分佈
+    out.sort(key=lambda g: (-g["ang_cc"], -g["radial"]))
+    return out
+
+
+def _select_screw_holes(holes, bbox_lo, bbox_hi, hole_select="screw", outer_margin=0.6):
+    """從所有偵測到的孔中挑出真正的「螺絲鎖孔」，排除內側定位點 (locating pin) 孔。
+
+    CPU/power 散熱片四角各有一個外側螺絲鎖孔（鎖上主機板/背板），其斜內側常緊貼一個
+    較小的定位銷孔。兩孔徑向距離相近，單純用全域徑向門檻無法分離，故改用「角落分群 →
+    每群取最外一孔」策略：
+
+    - "all"：不過濾，保留所有孔（原始行為）。
+    - "screw"（預設）：優先保留「同軸有外凸螺絲/彈簧/墊圈」(screw_r > 0) 的孔——真實鎖孔
+      最可靠的訊號；若模型未建螺絲（全部 screw_r == 0），退回 "outer" 的角落分群判定。
+    - "outer"：依孔相對散熱片 X-Z 中心落在哪個象限分成四個角落群，每群只保留「距中心
+      徑向距離最遠」的一孔（即最外側螺絲鎖孔），其餘內側孔（定位銷）剔除；再以
+      outer_margin × 全域最大徑向距離過濾掉明顯偏內的孤立孔。
+
+    bbox_lo/bbox_hi：散熱片 world 包圍盒（公尺），用以取 X-Z 幾何中心。
+    回傳過濾後的 holes（原 list 的子集，順序不變）。
+    """
+    if not holes or hole_select == "all":
+        return holes
+
+    cx0 = (bbox_lo[0] + bbox_hi[0]) / 2.0
+    cz0 = (bbox_lo[2] + bbox_hi[2]) / 2.0
+
+    def _radius(h):
+        return ((h["cx"] - cx0) ** 2 + (h["cz"] - cz0) ** 2) ** 0.5
+
+    def _outer_by_corner(subset, use_screw_tiebreak=False):
+        """四象限分群，每群保留徑向最遠一孔；再剔除明顯偏內的孤立孔。
+
+        use_screw_tiebreak=True 時，同角落內兩孔徑向距離相近（差 < corner_tol）者，
+        改以「有無同軸螺絲 (screw_r)」或較大 clearance 作為該角落代表。
+        """
+        if len(subset) <= 1:
+            return subset
+        corner_tol = 3e-3  # 3mm：同角落兩孔徑向距離差在此內視為相近
+        quads = {}  # (sign_x, sign_z) -> 該象限代表孔
+        for h in subset:
+            qx = 1 if (h["cx"] - cx0) >= 0 else -1
+            qz = 1 if (h["cz"] - cz0) >= 0 else -1
+            cur = quads.get((qx, qz))
+            if cur is None:
+                quads[(qx, qz)] = h
+                continue
+            dr = _radius(h) - _radius(cur)
+            if dr > corner_tol:
+                quads[(qx, qz)] = h          # 明顯更外 → 取代
+            elif dr < -corner_tol:
+                pass                          # 明顯更內 → 保留原本
+            elif use_screw_tiebreak:
+                # 徑向相近：優先有螺絲者，其次 clearance（含螺頭/墊圈）較大者，再取較外者
+                hk = (h.get("screw_r", 0.0) > 0.0, h.get("clearance", h["radius"]), _radius(h))
+                ck = (cur.get("screw_r", 0.0) > 0.0, cur.get("clearance", cur["radius"]), _radius(cur))
+                if hk > ck:
+                    quads[(qx, qz)] = h
+            elif _radius(h) > _radius(cur):
+                quads[(qx, qz)] = h
+        picked = list(quads.values())
+        # 剔除明顯偏內的象限代表（例如某角落根本沒有外側鎖孔，只有中央定位孔）
+        r_max = max(_radius(h) for h in picked)
+        if r_max > 1e-9:
+            picked = [h for h in picked if _radius(h) >= outer_margin * r_max]
+        # 維持原 holes 順序
+        keep = {id(h) for h in picked}
+        return [h for h in holes if id(h) in keep]
+
+    if hole_select == "outer":
+        return _outer_by_corner(holes, use_screw_tiebreak=False)
+
+    # "screw"：以角落分群取最外一孔為主（紅＝外側螺絲孔，藍＝內側定位孔），
+    #           同角落兩孔徑向相近時才以 screw_r / clearance 作決勝。
+    return _outer_by_corner(holes, use_screw_tiebreak=True)
 
 
 def _hole_plate_span(planes, h):
@@ -1163,12 +1385,17 @@ def _body_density(body, default_rho, body_densities):
 
 def _simplify_heatsink_group(design, bodies, base_name, default_rho, body_densities,
                              keep_source, named_selection, name_density_suffix, hole_min_dia_mm,
-                             contact_body=None, fin_box="largest"):
-    """簡化一組散熱片 body（同一 component instance），回傳結果 dict；失敗時清除暫存並拋例外。"""
+                             contact_body=None, fin_box="largest", hole_select="screw", progress=None,
+                             diagnose_only=False):
+    """簡化一組散熱片 body（同一 component instance），回傳結果 dict；失敗時清除暫存並拋例外。
+
+    progress(msg)：於各階段開始時呼叫；逾時由其拋 TimeoutError，走既有清除暫存流程。
+    """
     import fnmatch
 
     from ansys.geometry.core.misc import UNITS
 
+    _p = progress or (lambda _msg: None)
     src = bodies[0]
     comp = src.parent_component
     comp_id = comp.id
@@ -1188,6 +1415,7 @@ def _simplify_heatsink_group(design, bodies, base_name, default_rho, body_densit
     pad = 1e-3  # 1mm：暫存切割體外擴量，確保布林乾淨
     try:
         # --- 2. 母體：原始 body 的 copy（多 body 則聯集成一體）---
+        _p(f"複製並聯集 {len(bodies)} 個 body")
         work = src.copy(comp, base_name)
         if len(bodies) > 1:
             others = [b.copy(comp, f"{base_name}_tmp_part") for b in bodies[1:]]
@@ -1195,6 +1423,7 @@ def _simplify_heatsink_group(design, bodies, base_name, default_rho, body_densit
             work.unite(others, keep_other=False)
 
         # --- 3. 幾何特徵分析（world 座標）---
+        _p("分析底面 / 鰭片 / 鎖孔幾何特徵")
         lo, hi = _bbox_m(work)
         y_top = hi[1]
         planes = _horizontal_planes(work)
@@ -1204,9 +1433,28 @@ def _simplify_heatsink_group(design, bodies, base_name, default_rho, body_densit
         walls = _vertical_walls(work)
         y_root = _fin_root_y(planes, walls, y_bot, y_top)
         cyls = _y_cylinders(work)
-        holes = _detect_mount_holes(cyls, min_radius_m=max(hole_min_dia_mm, 0.0) / 2000.0)
+        all_holes = _detect_mount_holes(cyls, min_radius_m=max(hole_min_dia_mm, 0.0) / 2000.0)
+        # 篩出真正的外側螺絲鎖孔，排除中央定位銷孔（locating pin）
+        holes = _select_screw_holes(all_holes, lo, hi, hole_select=hole_select)
+        # [診斷] 針對四角統計所有同軸內凹 Y 圓柱（含未達完整圓周門檻者），找出紅色螺絲孔為何漏偵
+        corner_diag = _diag_corner_cylinders(cyls, lo, hi)
+        if diagnose_only:
+            # 僅做幾何偵測與診斷，略過昂貴的方塊重建與布林運算；清除暫存母體後直接回傳。
+            for b in temps:
+                _safe_delete(b)
+            _safe_delete(work)
+            return {
+                "result_body": "(diagnose_only)", "component": comp.name, "parts": parts,
+                "v_orig": v_orig, "mass": mass, "v_sim": v_orig, "rho_equiv": mass / v_orig,
+                "lo": lo, "hi": hi, "y_bot": y_bot, "y_root": y_root, "y_top": y_top,
+                "shape": {"plate": None, "top": None, "bottom": None}, "fin_axis": "none",
+                "holes": holes, "all_holes": all_holes, "corner_diag": corner_diag,
+                "removed_count": 0, "removed_vol": 0.0,
+                "named_selection": None, "ns_faces": 0,
+            }
         fill_from = y_root if y_root is not None else y_bot
-        rects, fin_axis = _fin_fill_rects(work, fill_from, y_top, holes, lo, hi)
+        # 鰭片側壁避讓仍以「所有孔」的 clearance 判定，避免被捨棄孔附近的螺絲側平面誤判成鰭片
+        rects, fin_axis = _fin_fill_rects(work, fill_from, y_top, all_holes, lo, hi)
 
         def _largest():
             """布林後母體可能被拆成多塊，且原 handle 不一定留在主體上（可能落在小碎片）→ 重取體積最大者。"""
@@ -1225,6 +1473,7 @@ def _simplify_heatsink_group(design, bodies, base_name, default_rho, body_densit
                            tuple(max(bx[1][i] for bx in boxes_c) for i in range(3)))
         shape = _simple_heatsink_boxes(planes, holes, rects, lo, hi, y_bot, y_root,
                                        contact_box=contact_box, fin_box=fin_box)
+        _p(f"建立凸字形方塊組並扣 {len(holes)} 個鎖孔")
         boxes = []
         for key in ("plate", "top", "bottom"):
             if shape[key] is not None:
@@ -1247,6 +1496,7 @@ def _simplify_heatsink_group(design, bodies, base_name, default_rho, body_densit
 
         # --- 5. 將方塊組放進原始 body 所屬 component：母體 ∪ 方塊組 → ∩ 方塊組（= 方塊組本身）---
         #        直接 copy 根設計的 body 到 component instance 會套用 instance 變換而錯位，故以布林轉入。
+        _p("將方塊組轉入原 component（布林）")
         blk2 = blk.copy(design, f"{base_name}_tmp_shape")
         temps.append(blk2)
         work.unite([blk], keep_other=False)
@@ -1262,7 +1512,8 @@ def _simplify_heatsink_group(design, bodies, base_name, default_rho, body_densit
         raise
 
     # 只留體積最大者為簡化體；其餘（螺絲頭、彈簧、推銷、墊圈等不相連殘塊）清除
-    candidates = [b for b in _comp_bodies(design, comp_id) if b.id not in before_ids]
+    _p("清除殘塊、建立 named selection 與命名")
+    candidates =[b for b in _comp_bodies(design, comp_id) if b.id not in before_ids]
     vols = {b.id: b.volume.m_as(UNITS.m ** 3) for b in candidates}
     main = max(candidates, key=lambda b: vols[b.id])
     leftovers = [b for b in candidates if b.id != main.id]
@@ -1303,7 +1554,8 @@ def _simplify_heatsink_group(design, bodies, base_name, default_rho, body_densit
         "result_body": final_name, "component": comp.name, "parts": parts,
         "v_orig": v_orig, "mass": mass, "v_sim": v_sim, "rho_equiv": rho_equiv,
         "lo": lo, "hi": hi, "y_bot": y_bot, "y_root": y_root, "y_top": y_top,
-        "shape": shape, "fin_axis": fin_axis, "holes": holes,
+        "shape": shape, "fin_axis": fin_axis, "holes": holes, "all_holes": all_holes,
+        "corner_diag": corner_diag,
         "removed_count": len(leftovers), "removed_vol": removed_vol,
         "named_selection": named_selection if ns_created else None,
         "ns_faces": len(bottom_faces),
@@ -1331,6 +1583,15 @@ def _format_heatsink_result(r, material, default_rho, hole_min_dia_mm):
                                     ("下凸", r["shape"]["bottom"])) if b is not None),
         f"  鎖孔 {len(r['holes'])} 個（Y 向直圓柱，孔徑 ≥{hole_min_dia_mm}mm）: "
         + ", ".join(f"Ø{_mm(h['radius']*2)}@({_mm(h['cx'])},{_mm(h['cz'])})" for h in r["holes"]),
+        f"  [診斷] 偵測到全部孔 {len(r.get('all_holes', []))} 個: "
+        + ", ".join(f"Ø{_mm(h['radius']*2)}@({_mm(h['cx'])},{_mm(h['cz'])})"
+                    f"[screw_r={_mm(h.get('screw_r',0)*2)},clr={_mm(h.get('clearance',0)*2)}]"
+                    for h in r.get("all_holes", [])),
+        f"  [診斷] 四角同軸Y圓柱群(僅內凹,凹角大/外側優先): "
+        + "; ".join([f"@({_mm(g['cx'])},{_mm(g['cz'])})r={_mm(g['rmin']*2)}~{_mm(g['rmax']*2)}"
+                     f"径距{_mm(g['radial'])}凹角{g['ang_cc']/3.14159:.2f}π"
+                     f"{'[完整孔]' if g['full'] else '[未達完整]'}"
+                     for g in r.get("corner_diag", []) if g.get("ang_cc", 0) > 0.01][:20]),
         f"  簡化後體積 V_sim = {r['v_sim']*1e9:.3f} mm³",
         f"  底面 named selection: {r['named_selection']}（{r['ns_faces']} 面）",
         f"  ★ 反推等效密度 ρ_equiv = m / V_sim = {r['rho_equiv']:.3f} kg/m³",
@@ -1348,7 +1609,10 @@ def _geom_simplify_heatsink(source: str, result_name: str = None,
                             body_densities: dict | None = None,
                             all_instances: bool = False,
                             contact_body: str | None = None,
-                            fin_box: str = "largest") -> str:
+                            fin_box: str = "largest",
+                            hole_select: str = "screw",
+                            progress=None,
+                            diagnose_only: bool = False) -> str:
     """將散熱片簡化為凸字形方塊組（底板＋上凸＋下凸＋鎖孔直圓柱），並反推等效密度。
 
     流程（每組 = 同一 component instance 內的 source + extra_sources）：
@@ -1357,7 +1621,9 @@ def _geom_simplify_heatsink(source: str, result_name: str = None,
          contact_body 指定接觸體（下凸）、fin_box 指定上凸取最大一排或全部鰭片外框。
       3. 鎖孔以 Y 向直圓柱貫穿；主接合底面建立 named selection；ρ_equiv = m / V_sim 附加於 body 名稱。
     """
+    _p = progress or (lambda _msg: None)
     design = _geom_get_design()
+    _p(f"搜尋散熱片 body '{source}'")
     groups = _resolve_heatsink_groups(design, source, extra_sources, all_instances)
     if not groups:
         all_names = sorted({b.name for b in design.bodies})
@@ -1379,8 +1645,14 @@ def _geom_simplify_heatsink(source: str, result_name: str = None,
         try:
             r = _simplify_heatsink_group(design, bodies, base, rho, body_densities, keep_source,
                                          ns, name_density_suffix, hole_min_dia_mm,
-                                         contact_body=contact_body, fin_box=fin_box)
+                                         contact_body=contact_body, fin_box=fin_box,
+                                         hole_select=hole_select,
+                                         progress=lambda m, i=idx: _p(f"[{i}/{len(groups)}] {m}"),
+                                         diagnose_only=diagnose_only)
             reports.append(_format_heatsink_result(r, material, rho, hole_min_dia_mm))
+        except TimeoutError as e:
+            errors.append(f"✗ component '{bodies[0].parent_component.name}': {e}（暫存幾何已清除，其餘組未處理）")
+            break
         except Exception as e:
             errors.append(f"✗ component '{bodies[0].parent_component.name}': {e}（暫存幾何已清除）")
 
@@ -2619,8 +2891,61 @@ def _geom_create_hole_groups(diameter_min_mm: float = 2.0, diameter_max_mm: floa
 # SERVER
 # ===================================================================
 
-async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
+_GEOM_LONG_LOCK = threading.Lock()  # 同時只跑一個長時間 geometry 工作（共用同一 SpaceClaim 連線）
+_GEOM_LONG_GRACE_S = 60.0           # 超過 timeout_s 後再等多久仍未停下才先行回應客戶端
+
+
+async def _run_geom_long(fn: Callable[[Callable[[str], None]], str], timeout_s: float,
+                         notify: Callable[[str], None] | None = None, label: str = "geometry 工作") -> str:
+    """於工作執行緒執行同步的長時間 geometry 工作，避免阻塞 event loop，並提供逾時與進度。
+
+    fn(progress) 需在各階段開始時呼叫 progress(msg)：
+      - 記錄 log 並轉交 notify（MCP progress notification）；
+      - 超過 timeout_s（或已被取消）時拋 TimeoutError，由 fn 既有的例外流程清除暫存幾何。
+    單一布林運算無法中途打斷；若超過 timeout_s + 寬限仍未停下，先回應客戶端逾時，
+    工作則於下一個階段邊界自行中止（期間拒絕其他長時間工作）。
+    """
+    if not _GEOM_LONG_LOCK.acquire(blocking=False):
+        return "錯誤：另一個長時間 geometry 工作仍在執行（可能是先前逾時、正在收尾者），請稍候再試"
+    t0 = time.monotonic()
+    cancelled = threading.Event()
+
+    def progress(msg: str) -> None:
+        elapsed = time.monotonic() - t0
+        if cancelled.is_set() or elapsed > timeout_s:
+            raise TimeoutError(f"{label}超過逾時 {timeout_s:.0f}s，於「{msg}」前中止（已執行 {elapsed:.0f}s）")
+        logger.info(f"[{label} {elapsed:6.1f}s] {msg}")
+        if notify:
+            try:
+                notify(f"[{elapsed:.0f}s] {msg}")
+            except Exception as e:  # 進度回報失敗不影響主流程
+                logger.debug(f"進度回報失敗: {e}")
+
+    def _job():
+        try:
+            return fn(progress)
+        finally:
+            _GEOM_LONG_LOCK.release()
+
+    fut = asyncio.get_running_loop().run_in_executor(None, _job)
+    # 不用 wait_for：Python 3.11+ 的 asyncio.TimeoutError 即內建 TimeoutError，會與工作自身的逾時混淆
+    done, _pending = await asyncio.wait({fut}, timeout=timeout_s + _GEOM_LONG_GRACE_S)
+    if not done:
+        cancelled.set()
+        fut.add_done_callback(lambda f: f.cancelled() or not f.exception()
+                              or logger.warning(f"{label}（逾時後背景收尾）: {f.exception()}"))
+        return (f"錯誤：{label}逾時（>{timeout_s + _GEOM_LONG_GRACE_S:.0f}s），SpaceClaim 仍卡在單一布林運算；"
+                f"工作將於下一個階段邊界自行中止並清除暫存幾何，完成前其他長時間工作會被拒絕")
+    result = fut.result()
+    return f"{result}\n（耗時 {time.monotonic() - t0:.1f}s）"
+
+
+async def call_tool(name: str, arguments: dict[str, Any],
+                    progress: Callable[[str], None] | None = None) -> list[TextContent]:
     """Plain dispatcher invoked directly by the thin tools/ wrappers.
+
+    progress: 長時間工具（目前為 geometry_simplify_heatsink）的階段進度回呼，
+    於工作執行緒中呼叫，需自行處理跨執行緒（見 products/geometry/tools.py）。
 
     Previously this was a second mcp.server.Server request handler that was
     never actually run; the redundant Server was removed during the
@@ -2979,17 +3304,24 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
                         ram=arguments["ram"],
                         socket=arguments["socket"],
                         result_name=arguments.get("result_name", "RAM_simplified"),
-                        named_selection=arguments.get("named_selection", "mb_bonded"))
+                        named_selection=arguments.get("named_selection", "ram_bottom"),
+                        move_to_component=arguments.get("move_to_component", True),
+                        component_name=arguments.get("component_name", "RAM_simplified"),
+                        hide_source=arguments.get("hide_source", True))
                 elif name == "geometry_simplify_ram_batch":
                     result = _geom_simplify_ram_batch(
                         motherboard=arguments["motherboard"],
                         ram=arguments["ram"],
                         socket=arguments["socket"],
                         result_prefix=arguments.get("result_prefix", "RAM_simplified"),
-                        ns_prefix=arguments.get("ns_prefix", "mb_bonded"),
-                        tol_mm=arguments.get("tol_mm", 2.0))
+                        ns_prefix=arguments.get("ns_prefix", "ram_bottom"),
+                        tol_mm=arguments.get("tol_mm", 2.0),
+                        move_to_component=arguments.get("move_to_component", True),
+                        component_name=arguments.get("component_name", "RAM_simplified"),
+                        hide_source=arguments.get("hide_source", True))
                 elif name == "geometry_simplify_heatsink":
-                    result = _geom_simplify_heatsink(
+                    result = await _run_geom_long(lambda prog: _geom_simplify_heatsink(
+                        progress=prog,
                         source=arguments["source"],
                         result_name=arguments.get("result_name"),
                         density=arguments.get("density"),
@@ -3002,7 +3334,11 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
                         body_densities=arguments.get("body_densities"),
                         all_instances=arguments.get("all_instances", False),
                         contact_body=arguments.get("contact_body"),
-                        fin_box=arguments.get("fin_box", "largest"))
+                        fin_box=arguments.get("fin_box", "largest"),
+                        hole_select=arguments.get("hole_select", "screw"),
+                        diagnose_only=arguments.get("diagnose_only", False)),
+                        timeout_s=float(arguments.get("timeout_s", 600)), notify=progress,
+                        label="散熱片簡化")
                 elif name == "geometry_midsurface":
                     result = _geom_midsurface(
                         max_thickness_mm=arguments.get("max_thickness_mm", 6.0),
@@ -3053,10 +3389,34 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
                     result = f"已匯出 ({fmt}): {actual}"
                 elif name == "geometry_list_bodies":
                     d = _geom_get_design()
-                    bodies = d.bodies
-                    if bodies:
-                        lines = [f"  [{i}] {b.name} (id={b.id})" for i, b in enumerate(bodies)]
-                        result = f"幾何體 ({len(bodies)}):\n" + "\n".join(lines)
+                    # 遞迴列出所有 body（含子元件），並附上所屬 component 路徑，
+                    # 以便辨識 RAM / socket / 主機板。頂層 d.bodies 只含最外層，
+                    # 裝配體的實體多半位於子 component 內。
+                    rows = []
+
+                    def _walk(comp, path):
+                        here = path + ("/" if path else "") + getattr(comp, "name", "")
+                        for b in getattr(comp, "bodies", []) or []:
+                            rows.append((b.name, b.id, here))
+                        for sub in getattr(comp, "components", []) or []:
+                            _walk(sub, here)
+
+                    try:
+                        _walk(d, "")
+                    except Exception:
+                        # 後備：至少回傳 get_all_bodies（扁平，無路徑）
+                        try:
+                            flat = d.get_all_bodies()
+                        except Exception:
+                            flat = d.bodies
+                        rows = [(b.name, b.id, "") for b in flat]
+
+                    if rows:
+                        lines = [
+                            f"  [{i}] {nm} (id={bid})" + (f"  <component: {comp_path}>" if comp_path else "")
+                            for i, (nm, bid, comp_path) in enumerate(rows)
+                        ]
+                        result = f"幾何體 ({len(rows)}):\n" + "\n".join(lines)
                     else:
                         result = "當前設計無幾何體"
                 elif name == "geometry_import_file":

@@ -135,6 +135,20 @@ def test_mount_hole_any_original_hole_regardless_of_height():
     assert (holes[0]["ylo"], holes[0]["yhi"]) == pytest.approx((12.1 * MM, 13.6 * MM))
 
 
+def test_mount_hole_counterbore_split_across_radii():
+    """沉孔(counterbore)被切成大徑沉孔環+小徑孔喉兩段不同半徑，各自不足完整圓周，
+    但同一中心累加 >= 0.9*2π 即視為真實挖孔，孔徑取孔喉(最小半徑)。
+    （對應 CPU 散熱片外側紅色螺絲鎖孔之前漏偵的情況）"""
+    cyls = [
+        _cyl(-87.68, -634.03, 5.0, 24.0, 26.0, True, math.pi * 1.5),   # 大徑沉孔環 1.5π
+        _cyl(-87.68, -634.03, 2.5, 20.0, 24.0, True, math.pi * 1.5),   # 小徑孔喉 1.5π（單獨皆不足2π）
+    ]
+    holes = S._detect_mount_holes(cyls, min_radius_m=2.0 * MM)
+    assert len(holes) == 1
+    assert holes[0]["radius"] == pytest.approx(2.5 * MM)   # 孔喉
+    assert holes[0]["clearance"] == pytest.approx(5.0 * MM)
+
+
 def test_hole_plate_span_ignores_coaxial_recesses_above_plate():
     """孔上方的彈簧座/沉孔（同軸內凹）不可把板厚上界拉到鰭片頂。"""
     cover = lambda y, up: (_plane_face((0, 1 if up else -1, 0), -220, -160, y, y, -380, -340), y * MM, 1e-4, up)
@@ -201,6 +215,107 @@ def test_mount_hole_rejects_split_but_partial_faces():
 def test_mount_hole_threshold_filters_small_holes():
     holes = S._detect_mount_holes(CYLS, min_radius_m=4.0 * MM)
     assert holes == []
+
+
+def _cone_face(cx, cz, r_mid, ylo, yhi, half_angle, area_mm2):
+    """建立假 Y 向錐面 face（內凹孔壁）：面中點位於軸心 +Z 側 r_mid 處、法向指向軸心。"""
+    geom = SimpleNamespace(origin=_pt(cx, (ylo + yhi) / 2, cz), dir_z=SimpleNamespace(x=0.0, y=-1.0, z=0.0),
+                           radius=r_mid * MM, half_angle=half_angle)
+    edges = [SimpleNamespace(start=_pt(cx, ylo, cz - r_mid), end=_pt(cx, yhi, cz - r_mid))]
+    return SimpleNamespace(
+        surface_type=SurfaceType.SURFACETYPE_CONE,
+        shape=SimpleNamespace(geometry=geom),
+        point=lambda u, v: _pt(cx, (ylo + yhi) / 2, cz + r_mid),
+        normal=lambda u, v: SimpleNamespace(x=0.0, y=-0.02, z=-1.0),
+        edges=edges,
+        area=area_mm2 * 1e-6,
+    )
+
+
+def test_y_cylinders_accepts_draft_cone_holes_rejects_chamfers():
+    """EGS CPU 散熱片框架實測：拔模錐孔（半錐角 1.27°，Ø5.3）視為孔壁；45° 倒角錐面排除。"""
+    draft = _cone_face(-82.36, -527.803, 2.65, 14.735, 19.235, 0.02225, 74.948)
+    chamfer = _cone_face(-79.46, -541.103, 1.65, 14.735, 15.235, math.pi / 4, 1.833)
+    cyls = S._y_cylinders(SimpleNamespace(faces=[draft, chamfer]))
+    assert len(cyls) == 1
+    c = cyls[0]
+    assert c["concave"] and c["r"] == pytest.approx(2.65 * MM)
+    assert c["angle"] == pytest.approx(FULL, rel=0.01)
+    holes = S._detect_mount_holes(cyls, min_radius_m=1.25 * MM)
+    assert [(round(h["cx"] / MM, 2), round(h["radius"] * 2 / MM, 1)) for h in holes] == [(-82.36, 5.3)]
+
+
+# --- 螺絲鎖孔 vs 中央/內側定位銷孔篩選（角落分群：每角取最外一孔）---------------
+
+# 散熱片 X-Z 包圍盒：四角外側螺絲孔 + 內側定位銷孔
+_HS_LO = (-100.0 * MM, 0.0, -100.0 * MM)
+_HS_HI = (100.0 * MM, 20.0 * MM, 100.0 * MM)
+
+
+def _hole(cx, cz, radius_mm, screw_r_mm=0.0):
+    return {"cx": cx * MM, "cz": cz * MM, "radius": radius_mm * MM,
+            "clearance": max(radius_mm, screw_r_mm) * MM, "screw_r": screw_r_mm * MM}
+
+
+def test_select_screw_holes_corner_keeps_outer_drops_inner_pin():
+    """每角兩孔：外側螺絲孔（紅）+ 斜內側定位孔（藍，更靠中心）→ 僅保留四個外角孔。"""
+    corners = [(-90, -90), (90, -90), (90, 90), (-90, 90)]
+    holes = []
+    for cx, cz in corners:
+        holes.append(_hole(cx, cz, 2.5))                      # 紅：外角螺絲孔
+        holes.append(_hole(cx * 0.78, cz * 0.78, 1.5))       # 藍：斜內側定位孔（更靠中心）
+    picked = S._select_screw_holes(holes, _HS_LO, _HS_HI, hole_select="screw")
+    assert len(picked) == 4
+    # 全部為外角（|cx| 與 |cz| 皆接近 90），非內側 0.78 倍者
+    assert all(abs(abs(h["cx"]) - 90 * MM) < 1e-6 for h in picked)
+
+
+def test_select_screw_holes_inner_pin_has_screw_outer_still_wins():
+    """關鍵情境：內側定位孔帶 screw_r，外角螺絲孔不帶 → 仍須保留外角孔，不被 screw_r 誤導。"""
+    holes = [
+        _hole(-90, -90, 2.5),                 # 紅：外角螺絲孔，無建模螺絲
+        _hole(-70, -70, 1.5, screw_r_mm=4.5), # 藍：內側定位孔，帶同軸銷/螺絲
+        _hole(90, 90, 2.5),
+        _hole(70, 70, 1.5, screw_r_mm=4.5),
+    ]
+    picked = S._select_screw_holes(holes, _HS_LO, _HS_HI, hole_select="screw")
+    assert len(picked) == 2
+    assert all(abs(abs(h["cx"]) - 90 * MM) < 1e-6 for h in picked)
+
+
+def test_select_screw_holes_close_pair_screw_tiebreak():
+    """同角兩孔徑向相近（差 < 3mm）→ 以 screw_r 決勝取有螺絲者。"""
+    holes = [
+        _hole(-90, -90, 2.5),                 # 無螺絲
+        _hole(-89, -89, 2.5, screw_r_mm=4.5), # 幾乎同位置但帶螺絲 → 應取此
+    ]
+    picked = S._select_screw_holes(holes, _HS_LO, _HS_HI, hole_select="screw")
+    assert len(picked) == 1
+    assert picked[0]["screw_r"] == pytest.approx(4.5 * MM)
+
+
+def test_select_screw_holes_outer_mode_corner_based():
+    """outer 模式：角落分群，每角取最外一孔，不理會 screw_r。"""
+    holes = [
+        _hole(-90, -90, 2.5),
+        _hole(-60, -60, 2.5, screw_r_mm=4.5),  # 內側即使有螺絲也不取
+        _hole(90, 90, 2.5),
+    ]
+    picked = S._select_screw_holes(holes, _HS_LO, _HS_HI, hole_select="outer")
+    assert len(picked) == 2
+    assert all(abs(abs(h["cx"]) - 90 * MM) < 1e-6 for h in picked)
+
+
+def test_select_screw_holes_all_mode_keeps_everything():
+    holes = [_hole(-90, -90, 2.5), _hole(-70, -70, 1.5), _hole(0, 0, 1.5)]
+    picked = S._select_screw_holes(holes, _HS_LO, _HS_HI, hole_select="all")
+    assert len(picked) == 3
+
+
+def test_select_screw_holes_empty_and_single():
+    assert S._select_screw_holes([], _HS_LO, _HS_HI) == []
+    one = [_hole(0, 0, 2.5)]
+    assert S._select_screw_holes(one, _HS_LO, _HS_HI, hole_select="outer") == one
 
 
 def _fin_body():
