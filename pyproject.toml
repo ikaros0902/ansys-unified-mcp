@@ -32,6 +32,12 @@ ansys-unified-mcp = "ansys_unified_mcp.__main__:main"
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src", "."]
+# 預設排除整合測試：裸 `pytest` 僅跑單元/e2e/adversarial 層，避免意外觸碰真實
+# 外部 ANSYS 服務。欲實跑整合測試請明確加 `-m integration`。
+addopts = "-m 'not integration'"
+markers = [
+    "integration: 需真實外部 ANSYS 服務（如 SpaceClaim gRPC）才能實跑的整合測試，無服務時自動 skip。",
+]
 
 # ===== Ruff 靜態檢查（Tier 1 閘門，見 docs/testing/TEST_INFRA.md）=====
 [tool.ruff]
