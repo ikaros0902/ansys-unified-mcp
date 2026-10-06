@@ -1,0 +1,203 @@
+
+# -*- coding: utf-8 -*-
+# SpaceClaim server-side IronPython screenshot script (ASCII only).
+# script_args: out_path_hex, img_format(png/jpg/bmp/tiff/gif), fit(1/0), view,
+#              bodies_hex(newline separated names)
+# *_hex = UTF-8 bytes as hex: non-ASCII (e.g. CJK body names / paths) passed directly in
+# script_args fails to decode on the server, so they travel as ASCII hex and are decoded via .NET.
+import sys
+result = {}
+
+def _utf8_hex(h):
+    import System
+    h = str(h or "")
+    n = len(h) // 2
+    if n == 0:
+        return u""
+    arr = System.Array.CreateInstance(System.Byte, n)
+    for i in range(n):
+        arr[i] = System.Byte(int(h[2 * i:2 * i + 2], 16))
+    return System.Text.Encoding.UTF8.GetString(arr)
+
+def _load_api():
+    import System
+    # Prefer the newest API assembly actually loaded, then fall back to a fixed list
+    loaded = []
+    for asm in System.AppDomain.CurrentDomain.GetAssemblies():
+        try:
+            nm = asm.GetName().Name
+        except Exception:
+            continue
+        if nm and nm.startswith("SpaceClaim.Api.V") and nm.count(".") == 2:
+            loaded.append(nm.split(".")[-1])
+    def _ver(v):
+        try:
+            return int(v[1:])
+        except Exception:
+            return 0
+    names = sorted(set(loaded), key=_ver, reverse=True)
+    names += ["V262", "V261", "V252", "V251", "V242", "V241", "V232", "V231", "V22", "V21", "V20", "V19"]
+    for v in names:
+        try:
+            mod = __import__("SpaceClaim.Api." + v, fromlist=["Window", "WindowExportFormat"])
+            mod.Window
+            return mod, v
+        except Exception:
+            continue
+    raise RuntimeError("No usable SpaceClaim.Api.Vxxx namespace found")
+
+def _arg(d, k, default):
+    # argsDict is a .NET Dictionary[str, object]; it has no Python .get()
+    try:
+        if d.ContainsKey(k):
+            return d[k]
+    except Exception:
+        try:
+            return d[k]
+        except Exception:
+            pass
+    return default
+
+def _warn(key, msg):
+    if result.get(key):
+        result[key] = result[key] + "; " + str(msg)
+    else:
+        result[key] = str(msg)
+
+# View definition: (screen right dir, screen up dir); view normal = right x up (Y-up frame)
+_VIEW_AXES = {
+    "front":  ((1, 0, 0), (0, 1, 0)),
+    "back":   ((-1, 0, 0), (0, 1, 0)),
+    "top":    ((1, 0, 0), (0, 0, -1)),
+    "bottom": ((1, 0, 0), (0, 0, 1)),
+    "right":  ((0, 0, -1), (0, 1, 0)),
+    "left":   ((0, 0, 1), (0, 1, 0)),
+    "iso":    ((1, 0, -1), (-1, 2, -1)),
+}
+
+def _set_view(api, w, view):
+    Frame, Point, Direction = api.Geometry.Frame, api.Geometry.Point, api.Geometry.Direction
+    rx, up = _VIEW_AXES[view]
+    frame = Frame.Create(Point.Origin, Direction.Create(*rx), Direction.Create(*up))
+    errs = []
+    # Window.SetProjection expects a Matrix (V251): the projection maps world -> view,
+    # i.e. the inverse of the mapping of the view frame
+    try:
+        w.SetProjection(_sc(api, "Matrix").CreateMapping(frame).Inverse, True, False)
+        return
+    except Exception:
+        errs.append("Window.SetProjection(Matrix): " + str(sys.exc_info()[1]))
+    try:
+        w.SetProjection(frame, True, False)
+        return
+    except Exception:
+        errs.append("Window.SetProjection(Frame): " + str(sys.exc_info()[1]))
+    raise RuntimeError(" | ".join(errs))
+
+def _sc(api, name):
+    # SpaceClaim injects ViewHelper/Selection/Matrix as script globals; fall back to the API namespaces
+    g = globals()
+    if name in g:
+        return g[name]
+    for ns in ("Scripting", "Geometry"):
+        try:
+            return getattr(getattr(api, ns), name)
+        except Exception:
+            pass
+    raise RuntimeError("SpaceClaim API symbol not found: " + name)
+
+def _all_bodies(api, w):
+    part = w.Document.MainPart
+    try:
+        return list(part.GetDescendants[api.IDesignBody]())
+    except Exception:
+        return list(part.Bodies)
+
+try:
+    import System
+    out_path = _utf8_hex(_arg(argsDict, "out_path_hex", ""))
+    img_format = str(_arg(argsDict, "img_format", "png") or "png").lower()
+    fit = str(_arg(argsDict, "fit", "1")) in ("1", "true", "True")
+    view = str(_arg(argsDict, "view", "current") or "current").lower()
+    body_names = [n for n in _utf8_hex(_arg(argsDict, "bodies_hex", "")).split("\n") if n]
+
+    api, api_ver = _load_api()
+    result["api"] = api_ver
+    Window = api.Window
+    WindowExportFormat = api.WindowExportFormat
+    enum_name = {"png": "Png", "jpg": "Jpeg", "bmp": "Bmp", "tiff": "Tiff", "gif": "Gif"}[img_format]
+    fmt = getattr(WindowExportFormat, enum_name, None)
+
+    w = Window.ActiveWindow
+    if fmt is None:
+        result["ok"] = "no"
+        result["error"] = "WindowExportFormat of this SpaceClaim version does not support " + enum_name
+    elif w is None:
+        result["ok"] = "no"
+        result["error"] = "no active window (Window.ActiveWindow is None); SpaceClaim may be running without GUI"
+    else:
+        # Remember the original view so it can be restored
+        orig_proj = None
+        try:
+            orig_proj = w.Projection
+        except Exception:
+            pass
+        hidden = []
+        try:
+            if body_names:
+                bodies = _all_bodies(api, w)
+                wanted = set(body_names)
+                found = set([b.Name for b in bodies if b.Name in wanted])
+                missing = [n for n in body_names if n not in found]
+                if missing:
+                    raise RuntimeError("body not found: " + ", ".join(missing))
+                # Per-body SetVisibility does not hide component occurrences reliably;
+                # ViewHelper.HideOthers isolates the selection and ShowAll restores it.
+                keep = [b for b in bodies if b.Name in wanted]
+                try:
+                    _sc(api, "ViewHelper").HideOthers(_sc(api, "Selection").Create(keep))
+                    hidden.append("__all__")
+                except Exception:
+                    _warn("isolate_warn", sys.exc_info()[1])
+                result["hidden_count"] = str(len(bodies) - len(keep))
+
+            if view != "current":
+                try:
+                    _set_view(api, w, view)
+                except Exception:
+                    _warn("view_warn", sys.exc_info()[1])
+
+            if fit:
+                try:
+                    w.ZoomExtents()
+                except Exception:
+                    _warn("fit_warn", sys.exc_info()[1])
+
+            # Delete any old file first so a failed Export is not mistaken for success
+            if System.IO.File.Exists(out_path):
+                System.IO.File.Delete(out_path)
+            w.Export(fmt, out_path)
+            result["ok"] = "yes" if System.IO.File.Exists(out_path) else "no"
+            if result["ok"] != "yes":
+                result["error"] = "Export produced no file"
+            result["out_path"] = out_path
+            try:
+                result["bytes"] = str(System.IO.FileInfo(out_path).Length)
+            except Exception:
+                pass
+        finally:
+            if hidden:
+                try:
+                    _sc(api, "ViewHelper").ShowAll()
+                except Exception:
+                    _warn("restore_warn", "ShowAll: " + str(sys.exc_info()[1]))
+            if orig_proj is not None and (fit or view != "current"):
+                try:
+                    w.SetProjection(orig_proj, True, False)
+                except Exception:
+                    _warn("restore_warn", "view restore failed: " + str(sys.exc_info()[1]))
+except Exception:
+    import sys as _s
+    e = _s.exc_info()[1]
+    result["ok"] = "no"
+    result["error"] = str(e)

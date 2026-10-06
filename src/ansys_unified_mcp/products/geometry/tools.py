@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
+import asyncio
+import itertools
 import os
+from fastmcp.server.dependencies import get_context
 from ansys_unified_mcp.shared import mcp, as_envelope as _envelope
 from ansys_unified_mcp.drivers import sim_impl
 from typing import Any, List, Dict
@@ -16,6 +19,23 @@ def tool_geometry(name=None):
                 return _envelope({"ok": False, "error": str(exc)})
         return mcp.tool(name=name)(wrapper) if name else mcp.tool()(wrapper)
     return decorator
+
+
+def _progress_notifier():
+    """回傳可於工作執行緒呼叫的 progress(msg)：轉送為 MCP progress notification。
+
+    無 MCP request context（例如直接以 Python 呼叫）時回傳 None。
+    """
+    try:
+        ctx = get_context()
+    except RuntimeError:
+        return None
+    loop = asyncio.get_running_loop()
+    step = itertools.count(1)
+
+    def notify(msg: str) -> None:
+        asyncio.run_coroutine_threadsafe(ctx.report_progress(next(step), None, msg), loop)
+    return notify
 
 @tool_geometry(name='geometry_launch')
 async def geometry_launch(port: int = None, host: str = "127.0.0.1", transport_mode: str = "insecure", connect_timeout: int = 30) -> dict:
@@ -195,6 +215,254 @@ async def geometry_create_enclosure(target_body_name: str, enclosure_name: str =
     res = await sim_impl.call_tool('geometry_create_enclosure', args)
     return "\n".join([c.text for c in res])
 
+@tool_geometry(name='geometry_simplify_ram')
+async def geometry_simplify_ram(motherboard: str, ram: str, socket: str, result_name: str = 'RAM_simplified', named_selection: str = 'ram_bottom', move_to_component: bool = True, component_name: str = 'RAM_simplified', hide_source: bool = True) -> dict:
+    """將單一 RAM 卡 + 其 socket 簡化為一座落於主機板頂面的「凸字形」兩段體，並於底面（板接合面）建立 named selection【呼叫前必須先向使用者索取主機板、RAM、socket 三個 body 名稱，不可猜測或自行從 body 清單推斷】
+
+    規則（高度軸為 Y，凸字形＝下寬上窄）：下段寬基座＝socket 的 X-Z footprint，Y 從主機板頂面（板 max Y）→ socket 頂；上段窄凸柱＝RAM 的 X-Z footprint，Y 從 socket 頂 → RAM 頂（RAM max Y）；兩段聯集為單一 body。socket 頂落在無效區間時退回單一合併包圍盒方塊。預設將結果移入新 component，並抑制原始 RAM/socket 實體（下游網格/求解排除）。單位內算為公尺、回報為毫米。
+    :param motherboard: 主機板 body 名稱（其頂面即方塊底面），例如 'JVPCB1074973E'
+    :param ram: RAM 卡 body 名稱，例如 'DIMM_DDR5_EGS'
+    :param socket: RAM socket body 名稱，例如 'J33'
+    :param result_name: 生成的簡化方塊 body 名稱
+    :param named_selection: 方塊底面接合面的 named selection 名稱
+    :param move_to_component: 是否將簡化方塊移入新 component（預設 True）
+    :param component_name: move_to_component 時新建的 component 名稱
+    :param hide_source: 是否抑制 (suppress) 原始 RAM 與 socket body，使其在下游被排除（預設 True）
+    """
+    args = {}
+    for key, val in (('motherboard', motherboard), ('ram', ram), ('socket', socket),
+                     ('result_name', result_name), ('named_selection', named_selection),
+                     ('move_to_component', move_to_component), ('component_name', component_name),
+                     ('hide_source', hide_source)):
+        if val is not None:
+            args[key] = val
+    res = await sim_impl.call_tool('geometry_simplify_ram', args)
+    return "\n".join([c.text for c in res])
+
+@tool_geometry(name='geometry_simplify_ram_batch')
+async def geometry_simplify_ram_batch(motherboard: str, ram: str, socket: str, result_prefix: str = 'RAM_simplified', ns_prefix: str = 'ram_bottom', tol_mm: float = 2.0, move_to_component: bool = True, component_name: str = 'RAM_simplified', hide_source: bool = True) -> dict:
+    """批次簡化所有同名 RAM+socket 配對（依 X 中心位置自動就近配對）【呼叫前必須先向使用者索取主機板、RAM、socket 三個 body 名稱，不可猜測或自行從 body 清單推斷】
+
+    每一對成為一座落於主機板頂面的「凸字形」兩段體（下段寬基座＝socket footprint；上段窄凸柱＝RAM footprint），各自建立底面 named selection，依 X 順序編號（<result_prefix>_01、<ns_prefix>_01…）。適用於同一板上多條相同的 DIMM/socket 陣列（例如 32× DIMM + 32× socket）。預設將所有結果移入同一新 component，並抑制配對成功的原始 RAM/socket 實體（下游網格/求解排除）。
+    :param motherboard: 主機板 body 名稱（頂面=各方塊底面）
+    :param ram: RAM 卡 body 名稱（陣列中重複出現）
+    :param socket: socket body 名稱（陣列中重複出現）
+    :param result_prefix: 方塊 body 名稱前綴（自動編號）
+    :param ns_prefix: 底面 named selection 名稱前綴（自動編號）
+    :param tol_mm: 將 RAM 與 socket 視為一對的最大 X 中心距離（單位：毫米 mm）
+    :param move_to_component: 是否將所有簡化方塊移入同一新 component（預設 True）
+    :param component_name: move_to_component 時新建的 component 名稱
+    :param hide_source: 是否抑制 (suppress) 配對成功的原始 RAM 與 socket body，使其在下游被排除（預設 True）
+    """
+    args = {}
+    for key, val in (('motherboard', motherboard), ('ram', ram), ('socket', socket),
+                     ('result_prefix', result_prefix), ('ns_prefix', ns_prefix), ('tol_mm', tol_mm),
+                     ('move_to_component', move_to_component), ('component_name', component_name),
+                     ('hide_source', hide_source)):
+        if val is not None:
+            args[key] = val
+    res = await sim_impl.call_tool('geometry_simplify_ram_batch', args)
+    return "\n".join([c.text for c in res])
+
+@tool_geometry(name='geometry_simplify_heatsink')
+async def geometry_simplify_heatsink(source: str, result_name: str = None, density: float = None, material: str = 'aluminum', keep_source: bool = True, named_selection: str = 'hs_bottom', name_density_suffix: bool = True, hole_min_dia_mm: float = 2.5, extra_sources: List[str] = None, body_densities: Dict[str, Any] = None, all_instances: bool = False, contact_body: str = None, fin_box: str = 'largest', hole_select: str = 'screw', timeout_s: float = 600, diagnose_only: bool = False) -> dict:
+    """將散熱片 (heatsink) 簡化為凸字形方塊組（底板＋上凸＋下凸＋鎖孔直圓柱），並反推等效密度
+
+    適用擠型/壓鑄/折片/針狀鰭片，單一或多 body 組件。流程（高度軸為 world Y）：
+      1. 量測原始體積，以常見散熱片密度（預設鋁 2700 kg/m³；body_densities 可逐 body 指定）估算質量 m。
+      2. 分析原始幾何：主接合底面、鰭片根部、鰭片排、鎖孔位置與孔徑。
+      3. 以方塊重建：底板（包圍盒 X-Z，板底→鰭片根部）、上凸（最大一排或全部鰭片外框，根部→鰭片頂）、
+         下凸（主接合底面範圍或 contact_body，接觸面→板底）；無階梯、無圓角，螺絲/彈簧/推銷不保留。
+      4. 鎖孔以 Y 向直圓柱貫穿。
+      5. 主接合底面建立 named selection；ρ_equiv = m / V_sim 附加於新 body 名稱後綴（_rho<整數 kg/m³>）。
+    結果建於原始 body 所屬 component；原始 body 預設保留。單位內算為公尺、回報為毫米。
+    :param source: 散熱片主 body 名稱，例如 'ENDURANCE-POWER-BRICK-HS-241018'
+    :param result_name: 簡化體 body 名稱（不填則為 <source>_sim）
+    :param density: 散熱片材料密度 (kg/m³)，不填則依 material 預設
+    :param material: 常見散熱片材料（aluminum=2700, copper=8960 kg/m³），決定預設密度
+    :param keep_source: 是否保留原始散熱片 body（預設保留）
+    :param named_selection: 簡化體主接合底面的 named selection 名稱
+    :param name_density_suffix: 是否將反推等效密度附加於新 body 名稱後綴
+    :param hole_min_dia_mm: 視為鎖孔的最小孔喉直徑 (mm)；預設 2.5mm
+    :param extra_sources: 多 body 散熱片額外併入的 body 名稱或 glob（例 ['ICX_HS_1U_FIN_*', '1U_CUBASE']），限主 body 同一 component instance；螺絲/彈簧勿列入
+    :param body_densities: 逐 body 密度 {名稱或 glob: kg/m³ 或材料名}，例 {'1U_CUBASE': 'copper'}
+    :param all_instances: 是否處理所有含 source 的 component（同 master 只處理一次）
+    :param contact_body: 接觸體 body 名稱或 glob（例 CPU 散熱片銅底 '1U_CUBASE'）：下凸＝其範圍與厚度，底面 named selection 只含其底面
+    :param fin_box: 上凸範圍 'largest'（最大一排鰭片，預設）或 'all'（所有鰭片外框，十字形配置用）
+    :param hole_select: 鎖孔篩選模式 'screw'（預設，只保留外側螺絲鎖孔、排除中央定位銷孔）/'outer'（純依徑向取外側一圈）/'all'（保留所有偵測到的孔，舊行為）
+    :param timeout_s: 整體逾時秒數（預設 600）；超過即在下一個階段邊界中止並清除暫存幾何。各階段以 MCP progress 通知回報
+    :param diagnose_only: 僅做幾何偵測與孔診斷（不建立簡化方塊、不做布林運算，秒級回傳）；用於排查孔偵測問題
+    """
+    args = {}
+    for key, val in (('source', source), ('result_name', result_name), ('density', density),
+                     ('material', material), ('keep_source', keep_source),
+                     ('named_selection', named_selection), ('name_density_suffix', name_density_suffix),
+                     ('hole_min_dia_mm', hole_min_dia_mm), ('extra_sources', extra_sources),
+                     ('body_densities', body_densities), ('all_instances', all_instances),
+                     ('contact_body', contact_body), ('fin_box', fin_box), ('hole_select', hole_select),
+                     ('timeout_s', timeout_s), ('diagnose_only', diagnose_only)):
+        if val is not None:
+            args[key] = list(val) if key == 'extra_sources' else val
+    res = await sim_impl.call_tool('geometry_simplify_heatsink', args, progress=_progress_notifier())
+    return "\n".join([c.text for c in res])
+
+@tool_geometry(name='geometry_midsurface')
+async def geometry_midsurface(max_thickness_mm: float = 6.0, main_surface_ratio: float = 0.7,
+                              area_difference_ratio: float = 0.1, complex_area_diff: float = 0.05,
+                              enable_sheet_metal_check: bool = True,
+                              hide_source_bodies: bool = True) -> dict:
+    """對目前「已選取」的 body 批次建立中曲面 (midsurface)【呼叫前請先在 SpaceClaim 視窗選取欲抽中面的鈑金/薄殼 body】
+
+    採面積最大優先的對向面配對，並以動態相切鏈補強：面積差超過 complex_area_diff 時改用強制相切鏈模式，對抗壓折邊遺失。可選鈑金件判斷（未通過者略過）與抽中面後隱藏原始 body。單位：厚度為毫米 mm。
+    :param max_thickness_mm: 判定為薄件/對向面的最大板厚（mm）；對向面間距 >0 且 <= 此值才視為配對
+    :param main_surface_ratio: 鈑金件判斷：主要對向面（含相切鏈）面積占整體面積的最小比例
+    :param area_difference_ratio: 一對對向面可接受的相對面積差上限（0~1）
+    :param complex_area_diff: 面積差超過此值即視為複雜件，改用強制相切鏈模式建立中面
+    :param enable_sheet_metal_check: 是否啟用鈑金件判斷
+    :param hide_source_bodies: 成功抽中面後是否隱藏原始實體 body
+    """
+    args = {}
+    for key, val in (('max_thickness_mm', max_thickness_mm),
+                     ('main_surface_ratio', main_surface_ratio),
+                     ('area_difference_ratio', area_difference_ratio),
+                     ('complex_area_diff', complex_area_diff),
+                     ('enable_sheet_metal_check', enable_sheet_metal_check),
+                     ('hide_source_bodies', hide_source_bodies)):
+        if val is not None:
+            args[key] = val
+    res = await sim_impl.call_tool('geometry_midsurface', args)
+    return "\n".join([c.text for c in res])
+
+@tool_geometry(name='geometry_create_hole_groups')
+async def geometry_create_hole_groups(diameter_min_mm: float = 2.0, diameter_max_mm: float = 20.0,
+                                      mode: int = 0, pairing_strategy: str = "Ignore Component",
+                                      distance_min_mm: float = 0.0, distance_max_mm: float = 10.0,
+                                      holes_axis_dist_max_mm: float = 1.0, deg_max_circles: float = 10.0,
+                                      grp_name_create: str = "Scr_AllHoles", index_grp_start: int = 1,
+                                      rm_grp_create: bool = True, rm_grp_name_create: str = "Scr_RMgrp",
+                                      index_rm_start: int = 1, grp_name_not_go: str = "NOTGoConnections",
+                                      enable_distance_grouping: bool = False,
+                                      distance_level1_mm: float = 5.0,
+                                      distance_level2_mm: float = 20.0) -> dict:
+    """偵測圓孔並建立 named selection 群組，再對同軸、距離在門檻內的孔兩兩配對建立 RM 連接群組【呼叫前請先在 SpaceClaim 視窗選取目標 body/edge】
+
+    mode=0 時自動偵測整圓與半圓孔；mode=1 直接使用選取的任意邊。可選同件/跨件配對策略與距離分級（Near/Medium/Far）。單位：直徑與距離皆為毫米 mm。
+    :param diameter_min_mm: 偵測圓孔的最小直徑（mm）
+    :param diameter_max_mm: 偵測圓孔的最大直徑（mm）
+    :param mode: 0=僅圓孔邊（自動偵測整圓/半圓）；1=直接使用選取的任意邊
+    :param pairing_strategy: 配對策略 'Ignore Component'（忽略元件階層，含跨元件）或 'Within Component'（僅同元件內）
+    :param distance_min_mm: 兩孔配對的最小間距（mm）
+    :param distance_max_mm: 兩孔配對的最大間距（mm）
+    :param holes_axis_dist_max_mm: 兩孔軸線間最大偏移距離（mm），超過視為不同軸
+    :param deg_max_circles: 非圓曲線孔配對時兩面法向最大夾角（度）
+    :param grp_name_create: 孔群組 named selection 名稱前綴
+    :param index_grp_start: 孔群組名稱起始索引
+    :param rm_grp_create: 是否執行孔配對並建立 RM 連接群組
+    :param rm_grp_name_create: RM 連接群組 named selection 名稱前綴
+    :param index_rm_start: RM 群組名稱起始索引
+    :param grp_name_not_go: 排除清單群組名稱：其成員 edge 不參與配對
+    :param enable_distance_grouping: 是否依配對間距分級（Near/Medium/Far）為 RM 群組加後綴
+    :param distance_level1_mm: 距離分級門檻 1（mm）：<= 此值為 Near
+    :param distance_level2_mm: 距離分級門檻 2（mm）：<= 此值為 Medium，否則 Far
+    """
+    args = {}
+    for key, val in (('diameter_min_mm', diameter_min_mm), ('diameter_max_mm', diameter_max_mm),
+                     ('mode', mode), ('pairing_strategy', pairing_strategy),
+                     ('distance_min_mm', distance_min_mm), ('distance_max_mm', distance_max_mm),
+                     ('holes_axis_dist_max_mm', holes_axis_dist_max_mm),
+                     ('deg_max_circles', deg_max_circles),
+                     ('grp_name_create', grp_name_create), ('index_grp_start', index_grp_start),
+                     ('rm_grp_create', rm_grp_create), ('rm_grp_name_create', rm_grp_name_create),
+                     ('index_rm_start', index_rm_start), ('grp_name_not_go', grp_name_not_go),
+                     ('enable_distance_grouping', enable_distance_grouping),
+                     ('distance_level1_mm', distance_level1_mm),
+                     ('distance_level2_mm', distance_level2_mm)):
+        if val is not None:
+            args[key] = val
+    res = await sim_impl.call_tool('geometry_create_hole_groups', args)
+    return "\n".join([c.text for c in res])
+
+# 回傳給模型的影像長邊上限（超過則縮圖；需 Pillow，缺少時回傳原圖）
+_SCREENSHOT_MAX_EDGE = 1568
+
+
+def _screenshot_image_content(path: str):
+    """讀取本機截圖檔並轉為 MCP ImageContent；必要時縮圖。回傳 (content, note)。"""
+    from fastmcp.utilities.types import Image
+    try:
+        from PIL import Image as PILImage
+    except ImportError:
+        PILImage = None
+
+    if PILImage is None:
+        ext = os.path.splitext(path)[1].lower().lstrip('.')
+        if ext not in ('png', 'jpg', 'jpeg', 'gif'):
+            return None, f"未安裝 Pillow，無法將 .{ext} 轉為可回傳的影像"
+        return Image(path=path).to_image_content(), None
+
+    import io
+    with PILImage.open(path) as im:
+        im.load()
+        note = None
+        if max(im.size) > _SCREENSHOT_MAX_EDGE:
+            orig = im.size
+            im.thumbnail((_SCREENSHOT_MAX_EDGE, _SCREENSHOT_MAX_EDGE))
+            note = f"回傳影像已由 {orig[0]}x{orig[1]} 縮為 {im.size[0]}x{im.size[1]}（檔案為原尺寸）"
+        buf = io.BytesIO()
+        im.convert('RGB').save(buf, format='PNG')
+    return Image(data=buf.getvalue(), format='png').to_image_content(), note
+
+
+@mcp.tool(name='geometry_screenshot')
+async def geometry_screenshot(file_path: str, image_format: str = None, fit: bool = True,
+                              view: str = 'current', bodies: List[str] = None,
+                              return_image: bool = True):
+    """將 SpaceClaim 3D 視窗出圖為影像檔，並（預設）把影像一併回傳供目視確認幾何或簡化結果
+
+    透過 Modeler.run_script_file 送伺服器端腳本呼叫 Window.Export 出圖（PyAnsys Geometry 25.1 無 graphics 套件時仍可用）。需 SpaceClaim 有作用中的 GUI 視窗；出圖後會還原原視角與 body 可見性。
+    :param file_path: 輸出影像路徑（相對路徑會轉絕對；目錄不存在自動建立；無副檔名則依格式補上）
+    :param image_format: 影像格式 png/jpg/jpeg/bmp/tif/tiff/gif；省略則依副檔名推斷，與副檔名不一致會報錯
+    :param fit: 截圖前是否 ZoomExtents 全景縮放
+    :param view: 視角 current/iso/front/back/top/bottom/left/right（Y 朝上座標系）
+    :param bodies: 僅顯示這些 body（依名稱），其他暫時隱藏，截圖後還原
+    :param return_image: 是否把影像內容一併回傳（檔案需在本機可讀；過大會縮圖）
+    """
+    from fastmcp.tools.base import ToolResult
+    from mcp.types import TextContent
+    import json
+
+    args = {'file_path': file_path, 'fit': fit, 'view': view}
+    if image_format:
+        args['image_format'] = image_format
+    if bodies:
+        args['bodies'] = list(bodies)
+    try:
+        res = await sim_impl.call_tool('geometry_screenshot', args)
+        env = _envelope("\n".join([c.text for c in res]))
+    except Exception as exc:
+        env = _envelope({"ok": False, "error": str(exc)})
+
+    content = []
+    if env.get("ok") and return_image:
+        path = env.get("file_path")
+        if path and os.path.isfile(path):
+            try:
+                img, note = _screenshot_image_content(path)
+                if img is not None:
+                    content.append(img)
+                    env["image_returned"] = True
+                if note:
+                    env.setdefault("warnings", []).append(note)
+            except Exception as exc:
+                env.setdefault("warnings", []).append(f"影像讀取失敗: {exc}")
+        else:
+            env.setdefault("warnings", []).append(
+                "截圖檔不在本機（SpaceClaim 可能在遠端/容器執行），未回傳影像")
+        env.setdefault("image_returned", False)
+
+    content.insert(0, TextContent(type="text", text=json.dumps(env, ensure_ascii=False)))
+    return ToolResult(content=content, structured_content=env, is_error=not env.get("ok"))
+
 @tool_geometry(name='geometry_export')
 async def geometry_export(file_path: str, format: str = 'step') -> dict:
     """匯出幾何為 STEP/IGES 格式
@@ -207,6 +475,24 @@ async def geometry_export(file_path: str, format: str = 'step') -> dict:
     if format is not None:
         args['format'] = format
     res = await sim_impl.call_tool('geometry_export', args)
+    return "\n".join([c.text for c in res])
+
+@tool_geometry(name='geometry_suppress_and_hide')
+async def geometry_suppress_and_hide(patterns: List[str], exclude: List[str] = None,
+                                     suppress: bool = True, hide: bool = True) -> dict:
+    """依 body 名稱（支援 glob 萬用字元）批次設定『Suppress for Physics』並隱藏
+
+    用於幾何簡化完成後，將原始實體自下游網格/求解排除。透過 SpaceClaim 伺服器端
+    腳本執行（50051 gRPC），不需 Workbench 橋接器或 ACT 情境。
+    :param patterns: 要抑制/隱藏的 body 名稱樣式，支援 glob（例 ['ICX_HS_1U_FIN_*', 'DIMM_DDR5_EGS']）
+    :param exclude: 排除樣式；符合者不處理（例 ['*_simplified_*'] 以保護簡化結果）
+    :param suppress: 是否設定 Suppress for Physics
+    :param hide: 是否隱藏（取消可見性）
+    """
+    args = {'patterns': list(patterns or []), 'suppress': suppress, 'hide': hide}
+    if exclude:
+        args['exclude'] = list(exclude)
+    res = await sim_impl.call_tool('geometry_suppress_and_hide', args)
     return "\n".join([c.text for c in res])
 
 @tool_geometry(name='geometry_list_bodies')
