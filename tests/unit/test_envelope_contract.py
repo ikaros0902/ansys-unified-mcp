@@ -31,6 +31,11 @@ PRODUCTS_DIR = Path(__file__).resolve().parents[2] / "src" / "ansys_unified_mcp"
 # 工廠 @tool_fluent / @tool_geometry；白名單會讓這 38 個工具逃過守門。
 _TOOL_DECORATOR_HINT = "tool"
 
+# 回傳影像內容的工具合法回傳 fastmcp ToolResult (夾帶 ImageContent) 而非 dict 信封，
+# 這是 MCP 傳遞二進位影像的標準做法, 無法塞進純 dict。此類工具以具名例外豁免
+# dict 契約, 但仍須在工具內部維持 structured_content 的 ok 語意。
+_IMAGE_TOOL_EXEMPTIONS = frozenset({"geometry_screenshot"})
+
 
 def _decorator_names(node: ast.FunctionDef) -> set[str]:
     """擷取函式所有裝飾器的最末層屬性名稱（含 @x.tool() 形式）"""
@@ -80,6 +85,9 @@ def test_all_mcp_tools_return_dict():
     """所有 MCP 工具的回傳標註必須為 dict，不得為 str（否則客觀驗收斷言無法成立）"""
     offenders: list[str] = []
     for file_name, func_name, lineno, returns in _iter_tool_functions():
+        # 回傳影像的工具合法回 ToolResult, 豁免 dict 契約 (見 _IMAGE_TOOL_EXEMPTIONS)
+        if func_name in _IMAGE_TOOL_EXEMPTIONS:
+            continue
         if returns is None:
             offenders.append(f"{file_name}:{lineno} {func_name}() 缺少回傳型別標註")
             continue

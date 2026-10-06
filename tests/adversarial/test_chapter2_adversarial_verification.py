@@ -160,7 +160,8 @@ class TestChapter2CodebaseFacts:
         # + 方案 D per-session 可見性 ans_session_set_workspace (1) + geometry_execute_batch 批次執行入口 (1) = 145
         # + LS-DYNA PyDYNA 離線 keyword deck 垂直切片 (dyna_create_keyword_deck,
         #   dyna_export_keyword_file, dyna_list_keyword_types 共 3 個) = 148
-        assert total_funcs == 148, f"AST 解析工具總數應為 148，實測: {total_funcs} (各模組: {tool_counts})"
+        # + geometry 散熱片/RAM 簡化合併 (geometry_screenshot 等 7 個 geometry 工具, PR #2) = 155
+        assert total_funcs == 155, f"AST 解析工具總數應為 155，實測: {total_funcs} (各模組: {tool_counts})"
 
     def test_tool_count_102_mechanical_profile(self):
         """3.2 驗證 mechanical profile 動態路由下 FastMCP 暴露之工具總數。
