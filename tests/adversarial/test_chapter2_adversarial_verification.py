@@ -156,8 +156,8 @@ class TestChapter2CodebaseFacts:
             tool_counts[rel_name] = funcs
 
         total_funcs = len(unique_tools)
-        # Chapter 2 基線 136 個工具 + R5 新增之 DPF 工具 (2 個: dpf_extract_structural_results, dpf_get_model_summary)
-        assert total_funcs == 138, f"AST 解析工具總數應為 138，實測: {total_funcs} (各模組: {tool_counts})"
+        # Chapter 2 基線 136 個工具 + R5 新增之 DPF 工具 (2 個) + Phase 3 新增之 session_manager (4 個) 與 geometry_list_named_selections (1 個) = 143 個
+        assert total_funcs == 143, f"AST 解析工具總數應為 143，實測: {total_funcs} (各模組: {tool_counts})"
 
     def test_tool_count_102_mechanical_profile(self):
         """3.2 驗證 mechanical profile 動態路由下 FastMCP 暴露之工具總數。
