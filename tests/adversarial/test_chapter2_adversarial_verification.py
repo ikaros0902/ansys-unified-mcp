@@ -156,17 +156,19 @@ class TestChapter2CodebaseFacts:
             tool_counts[rel_name] = funcs
 
         total_funcs = len(unique_tools)
-        # Chapter 2 基線 136 個工具 + R5 新增之 DPF 工具 (2 個) + Phase 3 新增之 session_manager (4 個) 與 geometry_list_named_selections (1 個) = 143 個
-        assert total_funcs == 143, f"AST 解析工具總數應為 143，實測: {total_funcs} (各模組: {tool_counts})"
+        # Chapter 2 基線 136 + R5 DPF (2) + Phase 3 session_manager (4) 與 geometry_list_named_selections (1) = 143
+        # + 方案 D per-session 可見性 ans_session_set_workspace (1) + geometry_execute_batch 批次執行入口 (1) = 145
+        assert total_funcs == 145, f"AST 解析工具總數應為 145，實測: {total_funcs} (各模組: {tool_counts})"
 
     def test_tool_count_102_mechanical_profile(self):
         """3.2 驗證 mechanical profile 動態路由下 FastMCP 暴露之工具總數。
 
         R4 工具面剪枝後，deprecated alias 預設不暴露：
-        - ANSYS_MCP_EXPOSE_ALIASES=0（預設）：61 個 canonical 工具
+        - ANSYS_MCP_EXPOSE_ALIASES=0（預設）：62 個 canonical 工具
           （57 基線 + 4 個跨產品統一 session 管理工具 ans_session_connect/
-          launch/status/disconnect，無條件載入於所有 profile）。
-        - ANSYS_MCP_EXPOSE_ALIASES=1（相容模式）：108 個（61 canonical + 47 alias）。
+          launch/status/disconnect + 1 個 ans_session_set_workspace per-session
+          可見性工具，皆無條件載入於所有 profile）。
+        - ANSYS_MCP_EXPOSE_ALIASES=1（相容模式）：109 個（62 canonical + 47 alias）。
         """
         script = """
 import os, asyncio
@@ -193,14 +195,15 @@ asyncio.run(main())
             return int(match.group(1))
 
         pruned_count = _count("0")
-        assert pruned_count == 61, (
-            f"R4 剪枝預設下 mechanical profile 工具總數應為 61 個 canonical"
-            f"（57 基線 + 4 個 ans_session_* session 管理工具），實測: {pruned_count}"
+        assert pruned_count == 62, (
+            f"R4 剪枝預設下 mechanical profile 工具總數應為 62 個 canonical"
+            f"（57 基線 + 4 個 ans_session_* session 管理工具 + 1 個 ans_session_set_workspace"
+            f" per-session 可見性工具），實測: {pruned_count}"
         )
 
         exposed_count = _count("1")
-        assert exposed_count == 108, (
-            f"相容模式下 mechanical profile 工具總數應為 108（含 alias），實測: {exposed_count}"
+        assert exposed_count == 109, (
+            f"相容模式下 mechanical profile 工具總數應為 109（含 alias），實測: {exposed_count}"
         )
 
     def test_alias_coverage_distribution(self):

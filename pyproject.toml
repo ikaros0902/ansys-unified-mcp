@@ -9,7 +9,9 @@ description = "Unified ANSYS MCP Server (Workbench, Mechanical, Fluent, SpaceCla
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
-    "fastmcp",
+    # 釘選 fastmcp: per-session 工具可見性與 mount 行為僅對 3.4.x 系列驗證保證，
+    # 跨 minor 版本 (3.5+) 可能變更 API 契約，故鎖 minor。
+    "fastmcp>=3.4.5,<3.5",
     "ansys-mechanical-core",
     "ansys-fluent-core",
     "ansys-geometry-core",

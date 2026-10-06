@@ -272,3 +272,22 @@ async def geometry_close() -> dict:
     args = {}
     res = await sim_impl.call_tool('geometry_close', args)
     return "\n".join([c.text for c in res])
+
+
+@tool_geometry(name='geometry_execute_batch')
+async def geometry_execute_batch(operations: List[Dict[str, Any]], stop_on_error: bool = False) -> dict:
+    """對同一已連線的 Geometry (SpaceClaim/Discovery) session 依序批次執行多個幾何操作。
+
+    單次呼叫批次執行多個 geometry_* 操作，省去逐一工具呼叫的往返開銷。單步失敗
+    預設不中斷整批 (stop_on_error=False)，最終信封回報各步成敗。實作委派
+    products/geometry/batch_executor.execute_batch，不重寫 gRPC 連線邏輯。
+
+    :param operations: 操作清單，每筆格式為 {"operation": <geometry_* 工具名>, "args": {...}}，
+        工具名須為 drivers/sim_impl.call_tool 已支援的 geometry_* 名稱
+        (如 geometry_create_block、geometry_create_enclosure、geometry_export)。
+    :param stop_on_error: True 時遇第一個失敗步驟即中止後續；預設 False (寬容蒐集所有結果)。
+    :return: 聚合信封 {"ok", "batch_id", "total_operations", "succeeded", "failed",
+        "results", "execution_time_ms"}。
+    """
+    from ansys_unified_mcp.products.geometry.batch_executor import execute_batch
+    return await execute_batch(operations=operations, stop_on_error=stop_on_error)
