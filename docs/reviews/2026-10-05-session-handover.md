@@ -1,5 +1,25 @@
 # 2026-10-05 工作交接記錄（供次日新 session 接續）
 
+> **2026-10-06 收斂更新（接續執行）**：以下 7 項任務已於次日 session 完成並通過客觀驗證。
+> 全量 pytest 由基線 544 passed 增至 **554 passed（0 failed）**，新增 10+ 測試全綠、既有基線零惡化。
+>
+> | # | 任務 | 客觀驗證結果 |
+> | --- | --- | --- |
+> | T1 | 切斷 intent_tools transitive import（改函式內延遲 import） | geometry profile 工具 72→30、mechanical_driver 不再載入；16 passed |
+> | T2 | fastmcp 版本釘選 `>=3.4.5,<3.5` | pip check 無衝突、import 冒煙 OK |
+> | T3 | SessionRegistry 加 workspace 維度（內部複合鍵、向後相容） | 新增 5 workspace 隔離測試；29 passed |
+> | T4 | 方案 D per-session 工具可見性（Middleware + ans_session_set_workspace） | in-memory Client 實測設 geometry 偏好後 mech 隱藏/geom 保留/session 隔離；6 passed |
+> | T5 | batch_executor 補掛 `geometry_execute_batch` @mcp.tool | AST 計數 143→145、mechanical profile 61→62/108→109 斷言同步更新；chapter2 8 passed |
+> | T6 | PyWorkbench 驗證排程佔位（純文件） | 建 `docs/reviews/pyworkbench-verification-pending.md`，待使用者實機、未觸發連線 |
+> | T7 | 收尾整合與狀態固化 | 全量 554 passed、本文件更新 |
+>
+> **原待決點收斂**：第 3.1（batch_executor 工具入口）已掛工具關閉；第 3.2（AST 計數硬編碼紅燈）
+> 已由先前 commit `4e8c03d` 更新至 143、本次再隨新增工具更新至 145。
+> **任務 7（多工作區隔離）進度**：審查段建議路徑之「前置 PoC（T1）+ 方案 D（T4）+ 方案 A（T3）」
+> 已全部落地；OS 級隔離（方案 C）仍為產品方向待決，未實作。
+>
+> ---
+
 **基線起點**：commit `b6dedd1`
 **本日最終**：commit `cf0489a`（三邊同步：本機 / GitHub `ansys-unified-mcp` / GitLab `ansys-mcp`）
 **驗收標準**：基線非全綠（pytest 既有 1 failed、ruff 78 errors），全程以「不惡化既有紅燈」為準，非「全綠」。
