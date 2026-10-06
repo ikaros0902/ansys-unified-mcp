@@ -1,0 +1,243 @@
+
+# -*- coding: utf-8 -*-
+# SpaceClaim server-side IronPython: batch suppress-for-physics / hide bodies (ASCII only).
+# script_args: patterns_hex, exclude_hex (newline separated glob patterns, UTF-8 hex),
+#              do_suppress(1/0), do_hide(1/0)
+import sys
+import fnmatch
+result = {}
+
+def _utf8_hex(h):
+    import System
+    h = str(h or "")
+    n = len(h) // 2
+    if n == 0:
+        return u""
+    arr = System.Array.CreateInstance(System.Byte, n)
+    for i in range(n):
+        arr[i] = System.Byte(int(h[2 * i:2 * i + 2], 16))
+    return System.Text.Encoding.UTF8.GetString(arr)
+
+def _arg(d, k, default):
+    try:
+        if d.ContainsKey(k):
+            return d[k]
+    except Exception:
+        try:
+            return d[k]
+        except Exception:
+            pass
+    return default
+
+def _lines(hexstr):
+    txt = _utf8_hex(hexstr)
+    return [s.strip() for s in txt.replace("\r", "").split("\n") if s.strip()]
+
+def _all_bodies(part):
+    # Recursively collect DesignBody objects with their component path
+    out = []
+    def walk(comp, path):
+        try:
+            for b in comp.GetBodies():
+                out.append((b, path))
+        except Exception:
+            try:
+                for b in comp.Bodies:
+                    out.append((b, path))
+            except Exception:
+                pass
+        try:
+            subs = comp.Components
+        except Exception:
+            subs = []
+        for c in subs:
+            try:
+                content = c.Content
+                nm = content.GetName()
+            except Exception:
+                content, nm = c, "?"
+            walk(content, path + "/" + str(nm))
+    try:
+        rootname = part.GetName()
+    except Exception:
+        rootname = "Design"
+    walk(part, str(rootname))
+    return out
+
+# Candidate property names for "suppress for physics" across SpaceClaim versions
+_SUPPRESS_ATTRS = ["IsSuppressed", "IsSuppressedForPhysics", "SuppressForPhysics",
+                   "Suppressed", "IsPhysicsSuppressed"]
+
+def _try_suppress(body):
+    """Return name of the attribute that worked, or None."""
+    for attr in _SUPPRESS_ATTRS:
+        try:
+            if hasattr(body, attr):
+                setattr(body, attr, True)
+                return attr
+        except Exception:
+            continue
+    # Fallback: some versions expose it on the Master/Shape
+    for holder_name in ("Master", "Shape"):
+        try:
+            holder = getattr(body, holder_name, None)
+            if holder is None:
+                continue
+            for attr in _SUPPRESS_ATTRS:
+                if hasattr(holder, attr):
+                    setattr(holder, attr, True)
+                    return holder_name + "." + attr
+        except Exception:
+            continue
+    return None
+
+def _ensure_view_api():
+    """Make Selection / ViewHelper / VisibilityType available as globals.
+
+    They are normally pre-injected in the SpaceClaim script context, but when
+    absent we resolve them from the newest loaded SpaceClaim.Api.Vxxx assembly.
+    """
+    g = globals()
+    if all(k in g for k in ("Selection", "ViewHelper", "VisibilityType")):
+        return True
+    try:
+        import System
+        loaded = []
+        for asm in System.AppDomain.CurrentDomain.GetAssemblies():
+            try:
+                nm = asm.GetName().Name
+            except Exception:
+                continue
+            if nm and nm.startswith("SpaceClaim.Api.V") and nm.count(".") == 2:
+                loaded.append(nm.split(".")[-1])
+
+        def _ver(v):
+            try:
+                return int(v[1:])
+            except Exception:
+                return 0
+
+        names = sorted(set(loaded), key=_ver, reverse=True)
+        names += ["V262", "V261", "V252", "V251", "V242", "V241"]
+        for v in names:
+            try:
+                mod = __import__("SpaceClaim.Api." + v,
+                                 fromlist=["Selection", "ViewHelper", "VisibilityType"])
+                g["Selection"] = mod.Selection
+                g["ViewHelper"] = mod.ViewHelper
+                g["VisibilityType"] = mod.VisibilityType
+                return True
+            except Exception:
+                continue
+    except Exception:
+        pass
+    return False
+
+
+def _try_hide(body):
+    """Hide a body. Returns the API used, or None.
+
+    Prefer the documented ViewHelper.SetObjectVisibility(Selection, VisibilityType.Hide);
+    fall back to SetVisibility overloads and plain attributes across versions.
+    """
+    # 1) Documented SpaceClaim way
+    try:
+        sel = Selection.Create(body)
+        ViewHelper.SetObjectVisibility(sel, VisibilityType.Hide)
+        return "ViewHelper.SetObjectVisibility"
+    except Exception:
+        pass
+    # 2) SetVisibility overloads (signature differs by version)
+    for args in ((False, None), (False,)):
+        try:
+            body.SetVisibility(*args)
+            return "SetVisibility%s" % (str(args),)
+        except Exception:
+            continue
+    # 3) Plain attributes
+    for attr in ("Visible", "IsVisible"):
+        try:
+            if hasattr(body, attr):
+                setattr(body, attr, False)
+                return attr
+        except Exception:
+            continue
+    return None
+
+try:
+    args = argsDict
+    patterns = _lines(_arg(args, "patterns_hex", ""))
+    excludes = _lines(_arg(args, "exclude_hex", ""))
+    do_suppress = str(_arg(args, "do_suppress", "1")) == "1"
+    do_hide = str(_arg(args, "do_hide", "1")) == "1"
+
+    if not patterns:
+        result["ok"] = "no"
+        result["error"] = "no patterns supplied"
+    else:
+        if do_hide:
+            result["view_api"] = "yes" if _ensure_view_api() else "no"
+        part = GetRootPart()
+        bodies = _all_bodies(part)
+
+        matched = []
+        for (b, path) in bodies:
+            try:
+                nm = b.GetName()
+            except Exception:
+                continue
+            hit = False
+            for p in patterns:
+                if fnmatch.fnmatch(nm, p):
+                    hit = True
+                    break
+            if not hit:
+                continue
+            skip = False
+            for e in excludes:
+                if fnmatch.fnmatch(nm, e):
+                    skip = True
+                    break
+            if skip:
+                continue
+            matched.append((b, nm, path))
+
+        n_sup = 0
+        n_hid = 0
+        sup_attr_used = ""
+        hide_attr_used = ""
+        failed = []
+        names = []
+        for (b, nm, path) in matched:
+            names.append(nm + " @ " + path)
+            # NOTE: hide BEFORE suppress — a suppressed body may reject
+            # visibility changes in some SpaceClaim versions.
+            if do_hide:
+                a = _try_hide(b)
+                if a:
+                    n_hid += 1
+                    hide_attr_used = a
+                else:
+                    failed.append("hide:" + nm)
+            if do_suppress:
+                a = _try_suppress(b)
+                if a:
+                    n_sup += 1
+                    sup_attr_used = a
+                else:
+                    failed.append("suppress:" + nm)
+
+        result["ok"] = "yes"
+        result["total_bodies"] = str(len(bodies))
+        result["matched"] = str(len(matched))
+        result["suppressed"] = str(n_sup)
+        result["hidden"] = str(n_hid)
+        result["suppress_attr"] = sup_attr_used
+        result["hide_attr"] = hide_attr_used
+        if failed:
+            result["failed"] = "; ".join(failed[:40])
+        # cap name list to keep payload small
+        result["names"] = "\n".join(names[:200])
+except Exception:
+    result["ok"] = "no"
+    result["error"] = str(sys.exc_info()[1])

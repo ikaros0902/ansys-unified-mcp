@@ -1,0 +1,486 @@
+
+# -*- coding: utf-8 -*-
+# SpaceClaim server-side IronPython hole-pairing / RM group script (ASCII only).
+import sys
+import math
+result = {}
+
+def get_spaceclaim_api():
+    import System
+    loaded = []
+    for asm in System.AppDomain.CurrentDomain.GetAssemblies():
+        try:
+            nm = asm.GetName().Name
+        except Exception:
+            continue
+        if nm and nm.startswith("SpaceClaim.Api.V") and nm.count(".") == 2:
+            loaded.append(nm.split(".")[-1])
+    def _ver(v):
+        try:
+            return int(v[1:])
+        except Exception:
+            return 0
+    names = sorted(set(loaded), key=_ver, reverse=True)
+    names += ["V262", "V261", "V252", "V251", "V242", "V241", "V232", "V231"]
+    import clr
+    for ver in names:
+        try:
+            clr.AddReference("SpaceClaim.Api." + ver)
+            clr.AddReference("SpaceClaim.Api." + ver + ".Scripting")
+            import SpaceClaim.Api
+            sc_api = getattr(SpaceClaim.Api, ver)
+            clr.ImportExtensions(sc_api.Scripting.Extensions.DesignFaceExtensions)
+            clr.ImportExtensions(sc_api.Scripting.Extensions.DesignEdgeExtensions)
+            clr.ImportExtensions(sc_api.Scripting.Extensions.DesignBodyExtensions)
+            clr.ImportExtensions(sc_api.Scripting.Extensions.ComponentExtensions)
+            clr.ImportExtensions(sc_api.Scripting.Extensions.DocObjectExtensions)
+            return sc_api, ver
+        except Exception:
+            continue
+    raise RuntimeError("SpaceClaim API Reference Error: compatible version not found")
+
+def _arg(d, k, default):
+    try:
+        if d.ContainsKey(k):
+            return d[k]
+    except Exception:
+        try:
+            return d[k]
+        except Exception:
+            pass
+    return default
+
+def _f(d, k, default):
+    try:
+        return float(_arg(d, k, default))
+    except Exception:
+        return float(default)
+
+def _i(d, k, default):
+    try:
+        return int(float(_arg(d, k, default)))
+    except Exception:
+        return int(default)
+
+def _b(d, k, default):
+    return str(_arg(d, k, "1" if default else "0")) in ("1", "true", "True", "Yes", "yes")
+
+def _s(d, k, default):
+    v = _arg(d, k, default)
+    return default if v is None else str(v)
+
+try:
+    sc, api_ver = get_spaceclaim_api()
+    result["api"] = api_ver
+    Selection = sc.Scripting.Selection.Selection
+    MeasureHelper = sc.Scripting.Helpers.MeasureHelper
+    NamedSelection = sc.Scripting.Commands.NamedSelection
+
+    # mm inputs -> meters
+    Diameter_min = _f(argsDict, "diameter_min_mm", 2.0) / 1000.0
+    Diameter_max = _f(argsDict, "diameter_max_mm", 20.0) / 1000.0
+    mode = _i(argsDict, "mode", 0)
+    Pairing_Strategy = _s(argsDict, "pairing_strategy", "Ignore Component")
+    Distance_min_check_circle = _f(argsDict, "distance_min_mm", 0.0) / 1000.0
+    Distance_max_check_circle = _f(argsDict, "distance_max_mm", 10.0) / 1000.0
+    Holes_axis_dist_max = _f(argsDict, "holes_axis_dist_max_mm", 1.0) / 1000.0
+    Deg_max_circles = _f(argsDict, "deg_max_circles", 10.0)
+    grp_name_create = _s(argsDict, "grp_name_create", "Scr_AllHoles")
+    Index_grp_start = _i(argsDict, "index_grp_start", 1)
+    RM_grp_create_exe = _b(argsDict, "rm_grp_create", True)
+    RM_grp_name_create = _s(argsDict, "rm_grp_name_create", "Scr_RMgrp")
+    Index_RM_start = _i(argsDict, "index_rm_start", 1)
+    grp_name_NOTGoConnections = _s(argsDict, "grp_name_not_go", "NOTGoConnections")
+    Enable_Distance_Grouping = _b(argsDict, "enable_distance_grouping", False)
+    Distance_Level1 = _f(argsDict, "distance_level1_mm", 5.0) / 1000.0
+    Distance_Level2 = _f(argsDict, "distance_level2_mm", 20.0) / 1000.0
+
+    Groupname_index = 'Scr_AllHoles_0821'
+    grp_name_FullCircle_edges = grp_name_create + "_FullCircles"
+    grp_name_HalfCircle_edges = grp_name_create + "_HalfCircles"
+    Distance_min_check_Line = Distance_min_check_circle
+    Distance_max_check_Line = Distance_max_check_circle
+
+    def CheckHierarchicalPairing(e1, e2, strategy):
+        try:
+            c1 = e1.Parent.Parent
+            c2 = e2.Parent.Parent
+            if "Ignore Component" in strategy:
+                return True
+            elif "Within Component" in strategy:
+                return c1 == c2
+            return True
+        except Exception:
+            return True
+
+    def GetHierarchyTypeForStats(e1, e2):
+        try:
+            b1 = e1.Parent
+            b2 = e2.Parent
+            if b1 == b2:
+                return "SameBody"
+            if b1.Parent == b2.Parent:
+                return "Internal"
+            return "External"
+        except Exception:
+            return ""
+
+    def GetDistanceSuffix(distance, enable):
+        if not enable:
+            return ""
+        if distance <= Distance_Level1:
+            return "_Near"
+        elif distance <= Distance_Level2:
+            return "_Medium"
+        return "_Far"
+
+    def ConvertEdgesByShape(selection, ShapeType):
+        item_list = []
+        t = selection.GetType()
+        if (t != Selection and t != sc.Scripting.Selection.EdgeSelection
+                and t != sc.Scripting.Selection.FaceSelection):
+            return Selection.Empty()
+        selection = selection.ConvertToEdges()
+        for item in selection.Items:
+            if item.Shape.Geometry.GetType() == ShapeType:
+                item_list.append(item)
+        if len(item_list) == 0:
+            return Selection.Empty()
+        return Selection.Create(item_list)
+
+    def FindCircles(selection, D_min, D_max, Cmode, Fmode):
+        holes_list = []
+        edges_sel = selection.ConvertToEdges()
+        circles_sel = edges_sel.ConvertByShape(sc.Scripting.Selection.GeometryType.Circle)
+        if circles_sel.Count != 0:
+            fc = circles_sel.FilterByRadius(D_min / 2, D_max / 2)
+            for edge in fc.Items:
+                circ = 2 * 3.14 * edge.Shape.Geometry.Radius
+                if Cmode == 0:
+                    if edge.Shape.Length > circ:
+                        holes_list.append(edge)
+                elif Cmode == 1:
+                    if edge.Shape.Length < circ * 0.51 and edge.Shape.Length > circ * 0.49:
+                        holes_list.append(edge)
+                elif Cmode == 2:
+                    if edge.Shape.Length < circ * 0.5:
+                        holes_list.append(edge)
+        nurbs = ConvertEdgesByShape(edges_sel, sc.Geometry.NurbsCurve)
+        proc = ConvertEdgesByShape(edges_sel, sc.Geometry.ProceduralCurve)
+        sel = nurbs + proc
+        filter_curve = []
+        if sel.Count != 0:
+            for i in sel.Items:
+                length = i.Shape.Length
+                pt1 = i.Shape.StartPoint
+                pt2 = i.Shape.EndPoint
+                dist_pt12 = sc.Scripting.Helpers.Gap.Create(pt1, pt2).Distance
+                if not dist_pt12 == 0:
+                    d = dist_pt12
+                else:
+                    d = length / 3.1415926
+                if d <= D_max and d >= D_min:
+                    if Cmode == 0:
+                        if dist_pt12 == 0:
+                            filter_curve.append(i)
+                    elif Cmode == 1:
+                        if abs(length - 2 * 3.14 * d / 2 * 0.5) / length < 0.01:
+                            filter_curve.append(i)
+                    elif Cmode == 2:
+                        if length < 2 * 3.14 * d / 2 * 0.5:
+                            filter_curve.append(i)
+        holes_list = holes_list + filter_curve
+        for hole in list(holes_list):
+            if hole.Parent.Shape.Volume == 0:
+                if not hole.Faces.Count == 1 and Fmode == 1:
+                    holes_list.remove(hole)
+        return holes_list
+
+    def GetGroupNameANDIndex(name_create, idx_start):
+        try:
+            groups = NamedSelection.GetGroups(sc.Scripting.Helpers.DocumentHelper.GetRootPart())
+        except Exception:
+            groups = NamedSelection.GetGroups()
+        existing = []
+        for grp in groups:
+            if grp.IsDeleted:
+                continue
+            if grp.Name == 'Scr_RMgrp_ALL':
+                continue
+            if grp.Name.IndexOf(name_create) != -1:
+                existing.append(grp.Name)
+        same = 0
+        gn = ''
+        while same == 0:
+            gn = name_create + "_" + str(idx_start)
+            same = 1
+            if gn in existing:
+                idx_start = idx_start + 1
+                same = 0
+        return gn, idx_start
+
+    Count_grp_new = 0
+    Count_grp_replace = 0
+    Count_Hierarchy = {"SameBody": 0, "Internal": 0, "External": 0}
+    Count_Distance = {"Near": 0, "Medium": 0, "Far": 0}
+
+    body_sel = Selection.GetActive()
+    result["selected_count"] = str(len(body_sel.Items))
+
+    grp_name = ''
+    holes = []
+    holes_0 = []
+    holes_1 = []
+    if not body_sel.Count == 0:
+        if mode == 0:
+            holes_0 = FindCircles(body_sel, Diameter_min, Diameter_max, 0, 1)
+            holes_1 = FindCircles(body_sel, Diameter_min, Diameter_max, 1, 1)
+            holes = holes_0 + holes_1
+        else:
+            holes = list(body_sel.Items)
+
+        if len(holes) != 0:
+            grp_name, Index_grp_start = GetGroupNameANDIndex(grp_name_create, Index_grp_start)
+            hs = Selection.Create(holes)
+            hs.CreateAGroup(grp_name)
+            hs.SetActive()
+
+        if mode == 0:
+            if len(holes_0) != 0:
+                g0, _tmp = GetGroupNameANDIndex(grp_name_FullCircle_edges, Index_grp_start)
+                Selection.Create(holes_0).CreateAGroup(g0)
+            if len(holes_1) != 0:
+                g1, _tmp = GetGroupNameANDIndex(grp_name_HalfCircle_edges, Index_grp_start)
+                Selection.Create(holes_1).CreateAGroup(g1)
+
+    if RM_grp_create_exe:
+        groups = NamedSelection.GetGroups(sc.Scripting.Helpers.DocumentHelper.GetRootPart())
+        Edges_NOTGo = []
+        for ig in groups:
+            if ig.Name.IndexOf(grp_name_NOTGoConnections) != -1:
+                Edges_NOTGo = ig.Members
+                break
+        NS0_RM_names = []
+        for i in groups:
+            if i.IsDeleted:
+                continue
+            if i.Name == 'Scr_RMgrp_ALL':
+                continue
+            if i.Name.find(RM_grp_name_create) != -1:
+                NS0_RM_names.append(i.Name)
+
+        edge_types = [sc.Geometry.NurbsCurve, sc.Geometry.ProceduralCurve, sc.Geometry.Circle]
+        RM_Edges_all = []
+
+        for grp in groups:
+            if grp.IsDeleted:
+                continue
+            gn2 = grp.Name
+            if gn2 == grp_name:
+                pass
+            elif body_sel.Count == 0 and Groupname_index != '' and gn2.find(Groupname_index) != -1:
+                pass
+            else:
+                continue
+
+            RM_Edges = grp.Members
+            if mode == 0:
+                rs = Selection.Create(RM_Edges)
+                re0 = FindCircles(rs, Diameter_min, Diameter_max, 0, 1)
+                re1 = FindCircles(rs, Diameter_min, Diameter_max, 1, 1)
+                RM_Edges = re0 + re1
+
+            RM_Edges = list(RM_Edges)
+            for ei in list(RM_Edges):
+                if ei in Edges_NOTGo:
+                    RM_Edges.remove(ei)
+
+            Edge_OnCheck_List = []
+            Edge_ToBeMount_List = []
+            for ei in range(len(RM_Edges) - 1):
+                Edge_OnCheck = RM_Edges[ei]
+                Edge_OnCheck_List.append(Edge_OnCheck)
+                my_edges = [Edge_OnCheck]
+                pt1 = Edge_OnCheck.Shape.StartPoint
+                pt2 = Edge_OnCheck.Shape.EndPoint
+                if sc.Scripting.Helpers.Gap.Create(pt1, pt2).Distance == 0:
+                    pt2 = Edge_OnCheck.EvalMid().Point
+                pt3 = sc.Geometry.Point.Create((pt1.X + pt2.X) / 2, (pt1.Y + pt2.Y) / 2, (pt1.Z + pt2.Z) / 2)
+                R_on = sc.Scripting.Helpers.Gap.Create(pt1, pt3).Distance
+                R_sphere = ((R_on * 3) ** 2 + Distance_max_check_circle ** 2) ** 0.5
+                near = Selection.Create(RM_Edges).FilterByBoundingSphere(pt3, R_sphere).Items
+                Edge_ToBeMount_List.append(near)
+                for i in Edge_OnCheck_List:
+                    if i in Edge_ToBeMount_List[ei]:
+                        Edge_ToBeMount_List[ei].Remove(i)
+                vector1 = Edge_OnCheck.Faces[0].GetFaceNormal(0, 0)
+
+                for Edge_ToBeMount in Edge_ToBeMount_List[ei]:
+                    if not CheckHierarchicalPairing(Edge_OnCheck, Edge_ToBeMount, Pairing_Strategy):
+                        continue
+                    s1 = Selection.Create(Edge_OnCheck, Edge_ToBeMount)
+                    l1 = set(Edge_OnCheck.Faces)
+                    l2 = set(Edge_ToBeMount.Faces)
+                    pt4 = Edge_ToBeMount.Shape.StartPoint
+                    pt5 = Edge_ToBeMount.Shape.EndPoint
+                    if sc.Scripting.Helpers.Gap.Create(pt4, pt5).Distance == 0:
+                        pt5 = Edge_ToBeMount.EvalMid().Point
+                    pt6 = sc.Geometry.Point.Create((pt4.X + pt5.X) / 2, (pt4.Y + pt5.Y) / 2, (pt4.Z + pt5.Z) / 2)
+                    vector2 = Edge_ToBeMount.Faces[0].GetFaceNormal(0, 0)
+                    dot12 = abs(sc.Geometry.Vector.Dot(vector1.UnitVector, vector2.UnitVector)
+                                / vector1.UnitVector.Magnitude / vector2.UnitVector.Magnitude)
+                    if dot12 > 1:
+                        dot12 = 1.0
+                    deg12 = 180 / math.pi * math.acos(dot12)
+                    vector_pt36 = sc.Scripting.Helpers.Gap.Create(pt3, pt6).GapVector
+                    axesdist = sc.Geometry.Vector.Cross(vector_pt36, vector1.UnitVector).Magnitude / vector1.UnitVector.Magnitude
+
+                    if mode == 0:
+                        is_circ = (Edge_OnCheck.Shape.Geometry.GetType() == sc.Geometry.Circle
+                                   and Edge_ToBeMount.Shape.Geometry.GetType() == sc.Geometry.Circle)
+                        mindist = MeasureHelper.MinDistanceBetweenObjects(s1).Distance
+                        if is_circ:
+                            if mindist < Distance_max_check_circle and mindist > Distance_min_check_circle:
+                                if l1.intersection(l2).Count == 0:
+                                    if MeasureHelper.MinDistanceBetweenAxes(s1).Distance < Holes_axis_dist_max:
+                                        if Edge_OnCheck.Shape.Geometry.Axis.Direction.IsParallel(Edge_ToBeMount.Shape.Geometry.Axis.Direction):
+                                            if Edge_OnCheck.Parent.Shape.Volume != 0 and Edge_ToBeMount.Parent.Shape.Volume != 0:
+                                                if Edge_OnCheck.Parent == Edge_ToBeMount.Parent:
+                                                    continue
+                                            my_edges.append(Edge_ToBeMount)
+                        elif (edge_types.IndexOf(Edge_OnCheck.Shape.Geometry.GetType()) != -1
+                              and edge_types.IndexOf(Edge_ToBeMount.Shape.Geometry.GetType()) != -1):
+                            if mindist < Distance_max_check_circle and mindist > Distance_min_check_circle:
+                                if l1.intersection(l2).Count == 0:
+                                    if axesdist < Holes_axis_dist_max:
+                                        if deg12 < Deg_max_circles:
+                                            if Edge_OnCheck.Parent.Shape.Volume != 0 and Edge_ToBeMount.Parent.Shape.Volume != 0:
+                                                if Edge_OnCheck.Parent == Edge_ToBeMount.Parent:
+                                                    continue
+                                            my_edges.append(Edge_ToBeMount)
+                    else:
+                        mindist = MeasureHelper.MinDistanceBetweenObjects(s1).Distance
+                        if mindist < Distance_max_check_Line and mindist > Distance_min_check_Line:
+                            if l1.intersection(l2).Count == 0:
+                                my_edges.append(Edge_ToBeMount)
+
+                if len(my_edges) > 1:
+                    for me in my_edges:
+                        if me not in RM_Edges_all:
+                            RM_Edges_all.append(me)
+                    groups2 = NamedSelection.GetGroups(sc.Scripting.Helpers.DocumentHelper.GetRootPart())
+                    checked_in_group = 0
+                    gn_existing = ''
+                    for grp2 in groups2:
+                        if checked_in_group == 1:
+                            break
+                        if grp2.IsDeleted:
+                            continue
+                        if grp2.Name == 'Scr_RMgrp_ALL':
+                            continue
+                        if grp2.Name.find(RM_grp_name_create) != -1:
+                            members2 = grp2.Members
+                            for me in my_edges:
+                                if me in members2:
+                                    checked_in_group = 1
+                                    gn_existing = grp2.Name
+                                    RM_Edges2 = members2
+                                    break
+                    if checked_in_group == 0:
+                        base = RM_grp_name_create
+                        htype = GetHierarchyTypeForStats(my_edges[0], my_edges[1])
+                        if htype in Count_Hierarchy:
+                            Count_Hierarchy[htype] += 1
+                        if Enable_Distance_Grouping:
+                            pd = MeasureHelper.MinDistanceBetweenObjects(Selection.Create(my_edges[0], my_edges[1])).Distance
+                            suffix = GetDistanceSuffix(pd, True)
+                            base += suffix
+                            if "Near" in suffix:
+                                Count_Distance["Near"] += 1
+                            elif "Medium" in suffix:
+                                Count_Distance["Medium"] += 1
+                            elif "Far" in suffix:
+                                Count_Distance["Far"] += 1
+                        gn_new, Index_RM_start = GetGroupNameANDIndex(base, Index_RM_start)
+                        sel = Selection.Create(my_edges)
+                        sel.CreateAGroup(gn_new)
+                        Index_RM_start = Index_RM_start + 1
+                        Count_grp_new += 1
+                        sel.SetActive()
+                    else:
+                        Selection.Clear()
+                        merged = list(RM_Edges2)
+                        for item in my_edges:
+                            if item not in merged:
+                                merged.append(item)
+                        sel = Selection.Create(merged)
+                        sel.SetActive()
+                        NamedSelection.Delete(gn_existing)
+                        sel.CreateAGroup(gn_existing)
+                        if gn_existing in NS0_RM_names:
+                            NS0_RM_names.remove(gn_existing)
+                            Count_grp_replace += 1
+
+        Selection.Create(RM_Edges_all).SetActive()
+
+    # consolidate hole groups
+    groups = NamedSelection.GetGroups(sc.Scripting.Helpers.DocumentHelper.GetRootPart())
+    Circle_all = []
+    FullCircle_all = []
+    HalfCircle_all = []
+    for ig in groups:
+        if (ig.Name.IndexOf(grp_name_create) != -1
+                and ig.Name.IndexOf(grp_name_FullCircle_edges) == -1
+                and ig.Name.IndexOf(grp_name_HalfCircle_edges) == -1):
+            for ie in ig.Members:
+                Circle_all.append(ie)
+            NamedSelection.Delete(ig.Name)
+        elif ig.Name.IndexOf(grp_name_FullCircle_edges) != -1:
+            for ie in ig.Members:
+                FullCircle_all.append(ie)
+            NamedSelection.Delete(ig.Name)
+        elif ig.Name.IndexOf(grp_name_HalfCircle_edges) != -1:
+            for ie in ig.Members:
+                HalfCircle_all.append(ie)
+            NamedSelection.Delete(ig.Name)
+
+    def _recreate(name, items):
+        s = Selection.Create(items)
+        if not s.Count == 0:
+            NamedSelection.Delete(name)
+            s.CreateAGroup(name)
+    _recreate(grp_name_create, Circle_all)
+    _recreate(grp_name_FullCircle_edges, FullCircle_all)
+    _recreate(grp_name_HalfCircle_edges, HalfCircle_all)
+
+    groups = NamedSelection.GetGroups(sc.Scripting.Helpers.DocumentHelper.GetRootPart())
+    RM_grp_list = []
+    for ig in groups:
+        if ig.IsDeleted:
+            continue
+        if ig.Name == 'Scr_RMgrp_ALL':
+            continue
+        if ig.Name.IndexOf(RM_grp_name_create) != -1:
+            for ie in ig.Members:
+                if ie not in RM_grp_list:
+                    RM_grp_list.append(ie)
+    s_all = Selection.Create(RM_grp_list)
+    if not s_all.Count == 0:
+        NamedSelection.Delete('Scr_RMgrp_ALL')
+        s_all.CreateAGroup('Scr_RMgrp_ALL')
+
+    result["ok"] = "yes"
+    result["holes_found"] = str(len(holes))
+    result["rm_group_new"] = str(Count_grp_new)
+    result["rm_group_replace"] = str(Count_grp_replace)
+    result["hier_same_body"] = str(Count_Hierarchy["SameBody"])
+    result["hier_internal"] = str(Count_Hierarchy["Internal"])
+    result["hier_external"] = str(Count_Hierarchy["External"])
+    result["dist_near"] = str(Count_Distance["Near"])
+    result["dist_medium"] = str(Count_Distance["Medium"])
+    result["dist_far"] = str(Count_Distance["Far"])
+    result["holes_group_name"] = grp_name
+except Exception:
+    e = sys.exc_info()[1]
+    result["ok"] = "no"
+    result["error"] = str(e)
