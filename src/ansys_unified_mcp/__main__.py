@@ -51,6 +51,9 @@ if profile in ("all", "full", "fluent", "cfd"):
 if profile in ("all", "full", "geometry", "spaceclaim"):
     import ansys_unified_mcp.products.geometry.tools
 
+if profile in ("all", "full", "dyna", "lsdyna"):
+    import ansys_unified_mcp.products.dyna.tools
+
 # Import the auto connection manager (it runs its initialization upon import if needed)
 from ansys_unified_mcp.bridges.connection_manager import connection_manager
 
