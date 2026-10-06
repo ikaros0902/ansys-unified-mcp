@@ -13,13 +13,11 @@ from __future__ import annotations
 import logging
 from typing import Any, Dict, List, Optional, Tuple
 
-from ansys_unified_mcp.workflows import (
-    run_drop_test as _run_drop_test,
-    run_random_vibration as _run_random_vibration,
-    run_shock_analysis as _run_shock_analysis,
-    run_thermal_warpage as _run_thermal_warpage,
-    train_surrogate_model as _train_surrogate_model,
-)
+# 註: workflows 的實作 (_run_*) 一律改為各工具函式內部延遲 import。
+# 頂層 import workflows 會透過 workflows/__init__.py 連鎖拉入 drivers.mechanical_driver，
+# 導致即使在 geometry/fluent 等非 Mechanical profile 下，intent_tools 無條件載入時
+# 也會把 Mechanical 相關模組一併拖進來 (transitive import 污染)，墊高 context 工具可見集。
+# 延遲 import 讓 mechanical_driver 僅在實際呼叫對應工況時才載入。
 
 logger = logging.getLogger("ansys-unified-mcp.tools.intent")
 
@@ -83,6 +81,8 @@ def run_drop_test(
         包含 ok, job_id, status, sandbox_dir 或前置閘門攔截處方箋報告的字典。
     """
     logger.info(f"收到 run_drop_test 呼叫: cad_path={cad_path}, height={drop_height_mm}mm")
+    # 延遲 import: 僅在實際呼叫時才載入 workflow 實作 (避免 transitive 拖入 mechanical_driver)
+    from ansys_unified_mcp.workflows import run_drop_test as _run_drop_test
     return _run_drop_test(
         cad_path=cad_path,
         drop_height_mm=drop_height_mm,
@@ -134,6 +134,8 @@ def run_shock_analysis(
         包含 ok, job_id, status, sandbox_dir 或前置閘門攔截處方箋報告的字典。
     """
     logger.info(f"收到 run_shock_analysis 呼叫: cad_path={cad_path}, peak_g={peak_acceleration_g}")
+    # 延遲 import: 僅在實際呼叫時才載入 workflow 實作
+    from ansys_unified_mcp.workflows import run_shock_analysis as _run_shock_analysis
     return _run_shock_analysis(
         cad_path=cad_path,
         pulse_shape=pulse_shape,
@@ -187,6 +189,8 @@ def run_random_vibration(
         包含 ok, job_id, status, sandbox_dir 或前置閘門攔截處方箋報告的字典。
     """
     logger.info(f"收到 run_random_vibration 呼叫: cad_path={cad_path}, direction={direction}")
+    # 延遲 import: 僅在實際呼叫時才載入 workflow 實作
+    from ansys_unified_mcp.workflows import run_random_vibration as _run_random_vibration
     return _run_random_vibration(
         cad_path=cad_path,
         psd_table=psd_table,
@@ -236,6 +240,8 @@ def run_thermal_warpage(
         包含 ok, job_id, status, sandbox_dir 或前置閘門攔截處方箋報告的字典。
     """
     logger.info(f"收到 run_thermal_warpage 呼叫: file={cad_or_stackup_file}, T_op={temperature_operating_c}C")
+    # 延遲 import: 僅在實際呼叫時才載入 workflow 實作
+    from ansys_unified_mcp.workflows import run_thermal_warpage as _run_thermal_warpage
     return _run_thermal_warpage(
         cad_or_stackup_file=cad_or_stackup_file,
         temperature_ref_c=temperature_ref_c,
@@ -277,6 +283,8 @@ def train_surrogate_model(
         包含 ok, job_id, status, sandbox_dir 或參數校驗錯誤的字典。
     """
     logger.info(f"收到 train_surrogate_model 呼叫: samples={num_samples}, method={sampling_method}")
+    # 延遲 import: 僅在實際呼叫時才載入 workflow 實作
+    from ansys_unified_mcp.workflows import train_surrogate_model as _train_surrogate_model
     return _train_surrogate_model(
         workflow_config=workflow_config,
         design_parameters=design_parameters,

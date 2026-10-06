@@ -96,6 +96,10 @@ EXPOSE_ALIASES: bool = os.environ.get("ANSYS_MCP_EXPOSE_ALIASES", "0").strip() =
 # ALIAS_REGISTRY: maps legacy alias name -> canonical name
 ALIAS_REGISTRY: dict[str, str] = {}
 
+# per-session 工具可見性 (方案 D)：session 透過此 state key 宣告其可見 product 集合。
+# 未設定時 list_tools 回全集 (向後相容)。
+_VISIBILITY_STATE_KEY = "ansys_visible_products"
+
 # CANONICAL_TO_ALIASES: maps canonical name -> list of alias names
 CANONICAL_TO_ALIASES: dict[str, list[str]] = {}
 
@@ -254,3 +258,13 @@ async def _wrapped_get_tool(name: str, *args: Any, **kwargs: Any) -> Any:
 mcp.list_tools = _wrapped_list_tools
 mcp.call_tool = _wrapped_call_tool
 mcp.get_tool = _wrapped_get_tool
+
+# 方案 D：掛載 per-session 工具可見性 middleware (協議層 on_list_tools)。
+# 依各 session 透過 ans_session_set_workspace 宣告的 product 偏好收斂其工具可見集，
+# session 間互不干擾；未宣告者維持全集 (向後相容)。
+try:
+    from ansys_unified_mcp.core.visibility import WorkspaceVisibilityMiddleware
+    mcp.add_middleware(WorkspaceVisibilityMiddleware(mcp, _VISIBILITY_STATE_KEY))
+except Exception:
+    # 防禦性：可見性為加值功能，掛載失敗不應阻斷 server 啟動
+    pass

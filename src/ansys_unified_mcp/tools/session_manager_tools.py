@@ -23,7 +23,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from ansys_unified_mcp.shared import mcp, as_envelope as _envelope
+from ansys_unified_mcp.shared import mcp, as_envelope as _envelope, _VISIBILITY_STATE_KEY
 from ansys_unified_mcp.connection.session_manager import session_manager
 
 
@@ -87,3 +87,51 @@ def ans_session_disconnect(product: str, options: dict[str, Any] | None = None) 
     result = session_manager.disconnect(product, **(options or {}))
     return _envelope(result)
 
+
+
+
+# 方案 D：per-session 工具可見性合法 product 域。
+# common 工具恆可見 (不列入可選集)，workflow 為跨產品高階工況域。
+_VALID_VISIBILITY_PRODUCTS = frozenset(
+    {"mechanical", "fluent", "geometry", "workbench", "optislang", "dpf", "workflow"}
+)
+
+
+@mcp.tool()
+async def ans_session_set_workspace(products: list[str] | None = None) -> dict:
+    """設定當前 session 的可見工具子集 (per-session 工具可見性，方案 D)。
+
+    單一 all-profile server 下，呼叫端可宣告本 session 只關注的 product 域，
+    後續 ``list_tools`` 僅回傳該些 product 的工具加上跨域通用工具 (文件/監看/
+    session 管理恆可見)，藉此壓低單一 session 的工具可見集與 context 占用。
+    不影響其他 session，也不改動全域工具註冊。
+
+    Args:
+        products: 欲保留可見的 product 清單，合法值為 "mechanical" / "fluent" /
+            "geometry" / "workbench" / "optislang" / "dpf" / "workflow"。傳入
+            None 或空清單則清除本 session 的可見性限制 (回到可見全集)。
+
+    Returns:
+        信封 dict：成功回 {"ok": True, "visible_products": [...]}；
+        含非法 product 名稱時回 {"ok": False, "error": ...}。
+    """
+    from fastmcp.server.dependencies import get_context
+
+    requested = [p.strip().lower() for p in (products or []) if p and p.strip()]
+    invalid = [p for p in requested if p not in _VALID_VISIBILITY_PRODUCTS]
+    if invalid:
+        return _envelope(
+            {
+                "ok": False,
+                "error": f"非法 product 名稱: {invalid}；合法值: {sorted(_VALID_VISIBILITY_PRODUCTS)}",
+            }
+        )
+    try:
+        ctx = get_context()
+    except Exception:
+        return _envelope({"ok": False, "error": "無法取得 session context (非 MCP request 期間呼叫)"})
+
+    # 空清單 -> 清除限制 (set_state None 即解除過濾)；Context.set_state 為 async，
+    # 且值必須 JSON-serializable，故存 list (非 set)
+    await ctx.set_state(_VISIBILITY_STATE_KEY, requested if requested else None)
+    return _envelope({"ok": True, "visible_products": sorted(requested)})
