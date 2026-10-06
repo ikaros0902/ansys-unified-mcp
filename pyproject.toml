@@ -25,7 +25,10 @@ dependencies = [
 
 [project.optional-dependencies]
 workbench = ["ansys-workbench-core"]
-dyna = ["lasso-python"]
+# dyna extra: PyDYNA 供 products/dyna 離線生成 LS-DYNA keyword deck;
+# lasso-python 供 d3plot 後處理解析。products/dyna/facade 採延遲載入 + try/except
+# ImportError, 未裝時優雅回錯不拖垮 server, 故列為 optional 而非核心依賴。
+dyna = ["ansys-dyna-core>=0.12.1", "lasso-python"]
 dev = ["pytest", "ruff"]
 
 [project.scripts]
