@@ -7,6 +7,10 @@
 
 from __future__ import annotations
 
+import pytest
+
+pytest.importorskip("ansys.dyna", reason="選用依賴 ansys-dyna-core 未安裝")
+
 from ansys_unified_mcp.products.dyna.facade import controller
 
 
