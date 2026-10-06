@@ -58,48 +58,35 @@ dt >= 50 ns}
 ```
 
 ### Step 1: 幾何分類與控制指派 (AutoMesh)
-依零件拓撲特徵自動指派合適的 Method 與 Sizing，避免全域一刀切：
-- **中面薄板 (Sheet Bodies)**：指派 `Prime` / `Quad-Dominant` Method，基礎尺寸預設 $3.0\text{ mm}$。
-- **規則板件 / PCBA (Sweepable Solids)**：名稱含 `PCBA`, `PCB`, `BACKPLANE`, `MIDPLANE` 等掃掠板件，指派 `MultiZone` Method，尺寸 $1.5\text{ mm}$。
-- **複雜實體塊 (Complex Solids)**：螺絲柱、扣件、散熱座等複雜塊體，指派 `AllTriAllTet` (或 Tetrahedrons)，尺寸 $2.0\text{ mm}$。
-- **螺栓孔邊界 (Bolt Holes)**：遍歷 `Scr_RM_grp_*` 等孔邊 Named Selections，配置聚合式 Edge Sizing（尺寸 $1.5\text{ mm}$, `Behavior=Hard`）。
+依拓撲特徵指派 Method 與 Sizing，不全域一刀切：
+- **中面薄板 (Sheet)**：`Prime`/`Quad-Dominant`，基礎尺寸 $3.0\text{ mm}$。
+- **PCBA (Sweepable Solids)**：名稱含 `PCBA`、`PCB`、`BACKPLANE`、`MIDPLANE`，指派 `MultiZone`，尺寸 $1.5\text{ mm}$。
+- **複雜實體 (Complex Solids)**：螺絲柱、扣件、散熱座，指派 `AllTriAllTet`，尺寸 $2.0\text{ mm}$。
+- **螺栓孔邊 (Bolt Holes)**：遍歷 `Scr_RM_grp_*` 等 Named Selections，配置聚合式 Edge Sizing（$1.5\text{ mm}$，`Behavior=Hard`）。
 
 ### Step 2: 分區整理網格控制項 (Go to Mesh Controls)
-建立模型樹資料夾（`TreeGroupingFolder`），依組件或分區將 Sizing、Method 等控制項歸類收納：
-- 依照子裝配體（如 `BASEPAN`, `Rear_wall`, `1F_FRONT_END`, `CX7`, `PDB` 等）建立專屬資料夾。
-- 將對應幾何的 Sizing 與 Method 移動或建立至該目錄下，避免模型樹雜亂無章。
+依子裝配體（`BASEPAN`、`Rear_wall`、`1F_FRONT_END`、`CX7`、`PDB` 等）建立 `TreeGroupingFolder`，將對應 Sizing/Method 歸類收納，避免模型樹雜亂。
 
-### Step 3: 分區選取劃分與個別排障 (Partitioned Generate Mesh)
-- **選取分區劃分**：使用選取管理器將各組件之幾何 IDs 封裝為 `SelectionInfo`，分批次呼叫劃分，隔離幾何拓撲風險。
-- **個別故障排除**：若特定幾何出現劃分失敗（如 `The mesh generation failed on body...`）：
-  1. 單獨選取該幾何，分析幾何缺陷（微小邊、短倒角、厚度過小面）。
-  2. 個別微調該幾何之 Sizing 或改換 Method（如 MultiZone 失敗回退為 Tet）。
-  3. 單獨劃分成功後，再接續下一分區，確保 100% 幾何成功劃分。
+### Step 3: 分區選取劃分與個別排障
+- 以 `SelectionInfo` 封裝各組件幾何 IDs，分批劃分，隔離風險。
+- 劃分失敗時：單獨選取該幾何 → 分析缺陷（微小邊、短倒角、薄面）→ 微調 Sizing 或改 Method（如 MultiZone 回退 Tet）→ 單獨劃分成功後接續下一分區，確保 100% 幾何成功劃分。
 
 ### Step 4: 網格干涉檢查 (Interface Check)
-在進行求解前，呼叫 ACT `Interface Check`（或接觸前檢工具）：
-- 檢查裝配體零件接觸界面有無未預期的幾何貫穿、單元重疊或自交。
-- 確認薄殼法向一致性，防止動力學求解時接觸剛度劇烈震盪或邊界穿透。
+求解前呼叫 ACT `Interface Check`，確認零件接觸界面無幾何貫穿、單元重疊或自交，薄殼法向一致，避免接觸剛度震盪或邊界穿透。
 
-### Step 5: 全域 CFL 時間步長評估 (Global CFL Assessment)
-- 確保所有幾何皆已完成劃分（未劃分零件數 $= 0$）。
-- 於模型中維護**單一** `TimeStepCalc` 物件（`ExtAPI.DataModel.CreateObject("TimeStepCalc", "LSDYNA")`）。
-- 綁定全模型所有 Bodies，設定安全係數 $0.90$、線性黏性係數 $0.06$。
-- 執行 `tsc.Import()` 計算全域最小 CFL 時間步長，並擷取各零件之最小步長排序。
+### Step 5: 全域 CFL 時間步長評估
+- 確保所有幾何已劃分（未劃分零件數 $= 0$）。
+- 模型中維護**單一** `TimeStepCalc` 物件（`ExtAPI.DataModel.CreateObject("TimeStepCalc", "LSDYNA")`），綁定全模型 Bodies，安全係數 $0.90$、線性黏性係數 $0.06$。
+- 執行 `tsc.Import()` 計算全域最小 CFL 步長，擷取各零件最小步長排序。
 
 ### Step 6: 瓶頸幾何局部微調 (MeshTuner & Local Refinement)
-針對壓低全域 CFL 步長的前 1~3 個瓶頸幾何進行個別處理：
-- **微小狹縫與極短邊界**：
-  - 優先使用 **`Node Merge`**：將距離小於閾值（如 $0.3\text{ mm}$）的節點縫合，直接消除超細微三角單元。
-  - 或配置**局部 Scoped `Pinch`**：僅作用於瓶頸面/邊界，縫合微小特徵。
-- **形狀突變與尖角過渡**：
-  - 針對瓶頸零件個別增減局部 Sizing、調整局部單元增長率（Growth Rate $= 1.10$）。
-- **嚴禁全域重置**：所有調整僅限於局部控制項，絕不重置全域設定。
+針對壓低全域 CFL 步長的前 1~3 個瓶頸幾何：
+- **微小狹縫/極短邊**：優先 **`Node Merge`**（縫合距離小於閾值如 $0.3\text{ mm}$ 的節點）；或局部 Scoped `Pinch`。
+- **形狀突變/尖角過渡**：局部增減 Sizing、調整單元增長率（Growth Rate $= 1.10$）。
+- **嚴禁全域重置**：調整僅限局部控制項。
 
-### Step 7: 迭代閉環直至達標 (Loop until Target)
-- 對微調後的瓶頸幾何執行單獨劃分或局部更新。
-- 重新刷新單一 `TimeStepCalc`，比對全域最小步長變化。
-- 重複步驟 5 $\rightarrow$ 6，直至全域最小時間步長滿足目標門檻（如 $dt_{\min} \ge 50\text{ ns}$）。
+### Step 7: 迭代閉環直至達標
+對微調後的瓶頸幾何單獨劃分或局部更新，重新刷新 `TimeStepCalc` 比對步長變化，重複步驟 5→6 直至全域最小時間步長達標（如 $dt_{\min} \ge 50\text{ ns}$）。
 
 ---
 
@@ -145,3 +132,14 @@ dt >= 50 ns}
 >    終端強制中斷網格進程會破壞 Mechanical COM 通訊管線，導致主程序拋出 `MeshProgress.htm` 釋放例外並崩潰。網格處理必須透過非同步超時機制自然排查。
 > 5. **嚴禁全裝配體盲目重劃分**：
 >    已達標零件無需重新劃分。調優階段只選取目標瓶頸幾何進行微調與局部更新，維持其餘已達標零件的網格拓撲不變。
+
+---
+
+## 五、專精參考手冊導引 (References Router)
+
+| 工程領域 / 任務情境 | 專精手冊 | 核心重點與關鍵規範 |
+|---|---|---|
+| **CFL 步長調優與分群隔離** | [`references/cfl_tuning_and_group_batching.md`](references/cfl_tuning_and_group_batching.md) | Group Batching 演算法、CFL 瓶頸定位、Node Merge 縫合微小特徵。 |
+| **局部控制與墊圈結構** | [`references/local_controls_and_washers.md`](references/local_controls_and_washers.md) | 孔邊 Edge Sizing、圓孔 Washer 墊圈幾何拓撲、局部 Pinch 控制項。 |
+| **網格劃分方法與幾何修復** | [`references/mesh_methods_and_geometry_healing.md`](references/mesh_methods_and_geometry_healing.md) | MultiZone、Sweep、Tet 方法選擇依據，CAD 拓撲微小特徵修復。 |
+| **網格品質指標體系** | [`references/metrics_and_quality_standards.md`](references/metrics_and_quality_standards.md) | 雅可比比率 (Jacobian Ratio)、翹曲度、長寬比門檻標準與 Interface Check。 |

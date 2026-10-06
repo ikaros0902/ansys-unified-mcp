@@ -7,10 +7,10 @@
 ## 一、 程式碼與檔案修改清單 (Modifications)
 
 ### 1. 核心驅動庫修改 (`ansys-unified-mcp`)
-* **[`src/ansys_unified_mcp/drivers/sim_impl.py`](file:///F:/Ming_python/ansys-unified-mcp/src/ansys_unified_mcp/drivers/sim_impl.py)**
+* **[`src/ansys_unified_mcp/drivers/sim_impl.py`](../src/ansys_unified_mcp/drivers/sim_impl.py)**
   * **修改內容**：將 `connect_to_spaceclaim` 的預設 `transport_mode` 由原本 Windows 平台判斷的 `"wnua"` 改為強制預設 `"insecure"`。
   * **目的**：避免 SpaceClaim 本機 gRPC 伺服器在 Windows 下因認證失敗而連線超時中斷。
-* **[`src/ansys_unified_mcp/tools/workbench_filebridge.py`](file:///F:/Ming_python/ansys-unified-mcp/src/ansys_unified_mcp/tools/workbench_filebridge.py)**
+* **[`src/ansys_unified_mcp/tools/workbench_filebridge.py`](../src/ansys_unified_mcp/tools/workbench_filebridge.py)**
   * **修改內容**：新增 `_ensure_dirs()` 函式，在發送指令前自動遞迴檢查並建立 `commands/`、`results/`、`scripts/`、`runs/` 資料夾。
   * **目的**：杜絕檔案隊列初次啟動時因目錄未建立導致的 `FileNotFoundError`。
 
@@ -110,7 +110,7 @@
 
 ### 3. ANSYS Workbench Bridge 與 MCP 佇列紀錄 (Queue & Communication Logs)
 * **路徑**：
-  `F:\Ming_python\ansys-unified-mcp\workbench_queue\`
+  `<專案根目錄>\workbench_queue\`（現況為 `D:\Ikaros\ANSYS-unified-MCP\workbench_queue\`）
 * **重要檔案**：
   * `act_main_debug.log`：Mechanical 內部 ACT Python 腳本執行的即時偵錯輸出。
   * `mechanical_queue_processor.log`：佇列處理器之指令解析與生命週期狀態。

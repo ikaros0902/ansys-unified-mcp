@@ -1,56 +1,27 @@
 ---
 name: ansys-ls-prepost
-description: Condensed Ansys LS-PrePost scripting reference (SCL command language, command files, and the Python data-center API), organized by function (session/cfile, model query, states & results, model build, output/export). Use whenever the user automates LS-PrePost, writes cfile / SCL / LS-PrePost Python scripts, queries model or d3plot data (nodes, elements, stress, displacement), fringes computed results, or builds/edits an LS-DYNA model in LS-PrePost. For the LS-DYNA solver keyword deck itself, use the ansys-lsdyna skill.
-keywords: ls-prepost, lspp, SCL, cfile, command file, runscript, runpython, LsPrePost, execute_command, cmd_result_get_value, DataCenter, get_data, data center, SCLGetDataCenterFloat, SCLGetDataCenterVector, SCLSwitchStateTo, d3plot, fringe, genselect, partsort, print png, movie gif, selection buffer, binout, post-processing
+description: ANSYS LS-PrePost 腳本前處理與後處理精簡主控手冊。涵蓋 SCL 命令語言、命令行檔案 (.cfile) 與 Python DataCenter API，支援 d3plot 結果提取、雲圖繪製與模型建立。
+keywords: ls-prepost, lspp, SCL, cfile, command file, runscript, runpython, LsPrePost, execute_command, cmd_result_get_value, DataCenter, get_data, data center, d3plot, fringe, post-processing
 phase_gate:
   requires: []
   produces: []
 ---
 
-# Ansys LS-PrePost Scripting (condensed, by function)
+# ANSYS LS-PrePost 腳本與前後處理主控手冊
 
-LS-PrePost has three scripting layers. Know which one you need:
+LS-PrePost 具備三層腳本體系，依需求選用：
 
-1. **SCL (Scripting Command Language)** — a C-like language run inside
-   LS-PrePost. It can run LS-PrePost commands, retrieve LS-DYNA results, use the
-   data-center extraction functions, and read d3plot / keyword data.
-2. **Command file (`.cfile`)** — recorded LS-PrePost commands. A cfile can call
-   an SCL/Python script via `runscript` / `runpython`, passing parameters.
-3. **Python** — LS-PrePost Python modules: `LsPrePost` (`execute_command`,
-   `cmd_result_get_value`) and `DataCenter` (`get_data`), plus the lower-level
-   `SCL*` data-center functions. This is what real post-processing scripts use.
+1. **SCL (Scripting Command Language)** — 運行於 LS-PrePost 內部的類 C 語言，可執行操作指令、提取 LS-DYNA 分析結果與讀取 d3plot / 關鍵字卡。
+2. **命令檔 (`.cfile`)** — 記錄 LS-PrePost 命令序列，可透過 `runscript` / `runpython` 傳參調用 SCL 或 Python 腳本。
+3. **Python 模組** — LS-PrePost Python API：`LsPrePost` (`execute_command`) 與 `DataCenter` (`get_data`)，用於專業後處理自動化。
 
-There is **no ANSYS MCP dispatch tool** for LS-PrePost, so this skill is a
-documentation reference over `lsppscripting` and `Ansys_LS-PrePost_Users_Guide`.
+## 模組路由表 (Module Router)
 
-## Core idea
-
-```
-example.cfile  ── runpython script.py arg1 arg2 ──►  Python/SCL script
-                                                       │ query model/results
-                                                       │ compute
-                                                       ▼
-              message file / user file  ◄──  or send back to LSPP for fringing
-```
-
-## Which reference file to open
-
-| Function | File | Covers |
+| 功能分類 | 參考手冊 | 核心內容要點 |
 |---|---|---|
-| Session & cfile | `reference/session_and_cfile.md` | SCL vs cfile vs Python, `runscript`/`runpython`, passing args |
-| Model query | `reference/model_query.md` | Data-center getters, typecodes, parameter names, selection buffer |
-| States & results | `reference/states_and_results.md` | `SCLSwitchStateTo`, stress/strain tensors, displacement vectors, fringe, binout |
-| Model build | `reference/model_build.md` | Create nodes/elements, drag to solid, curves, delete/write parts |
-| Output & export | `reference/output_export.md` | Write to message/user files, fringe back into LSPP, export parts |
-| Python module interface | `reference/python_module_interface.md` | `LsPrePost.execute_command`, `DataCenter.get_data`, `cmd_result_get_value`, real SCL command tokens (genselect/fringe/print png/movie/state) |
-
-## Fallback: search the full docs
-
-- `search_ansys_docs(query, scope="api")` — hits `lsppscripting` (api_scripting)
-  first; GUI workflows are in `Ansys_LS-PrePost_Users_Guide`.
-- `get_ansys_doc_chunk(doc, chunk_id, context=1)` — pull the full chunk.
-- Use single, exact tokens (e.g. `SCLGetDataCenterFloat`, `SCLSwitchStateTo`).
-
-## MCP tools
-
-None for LS-PrePost. Build the deck it produces per the `ansys-lsdyna` skill.
+| 會話與命令行檔案 | `references/session_and_cfile.md` | SCL vs cfile vs Python 比較、傳參調用規範 |
+| 模型資料查詢 | `references/model_query.md` | DataCenter 提取器、型別代碼、選取緩衝區 |
+| 狀態與結果場 | `references/states_and_results.md` | `SCLSwitchStateTo`、應力/應變張量、位移向量、雲圖、binout |
+| 模型建立與編輯 | `references/model_build.md` | 建立節點與單元、拉伸實體、曲線建構、部件管理 |
+| 輸出與導出 | `references/output_export.md` | 輸出訊息檔案、反向傳回 LSPP 繪製雲圖、部件導出 |
+| Python 模組介面 | `references/python_module_interface.md` | `LsPrePost.execute_command`、`DataCenter.get_data` 實作語法 |

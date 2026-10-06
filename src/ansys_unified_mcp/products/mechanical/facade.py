@@ -20,6 +20,7 @@ from __future__ import annotations
 import os
 import tempfile
 import time
+import uuid
 from pathlib import Path
 from typing import Any, Optional
 
@@ -52,9 +53,27 @@ class MechanicalController:
         mech = [i for i in instances if i.get("app_name") == "AnsysWBU" and "grpc_port" in i]
         if pid is not None:
             match = [i for i in mech if i.get("pid") == pid]
-            if not match:
-                return None, f"No registered Mechanical instance with PID {pid}."
-            return int(match[0]["grpc_port"]), None
+            if match:
+                return int(match[0]["grpc_port"]), None
+            # Fallback 1: 檢查指定 PID 是否監聽於 Mechanical 常見埠 (10000..10050)
+            try:
+                import psutil
+                if psutil.pid_exists(pid):
+                    p = psutil.Process(pid)
+                    try:
+                        conns = p.net_connections(kind="tcp") if hasattr(p, "net_connections") else p.connections(kind="tcp")
+                        for conn in conns:
+                            if conn.status == psutil.CONN_LISTEN and 10000 <= conn.laddr.port <= 10050:
+                                return int(conn.laddr.port), None
+                    except Exception:
+                        pass
+            except Exception:
+                pass
+            # Fallback 2: 檢查系統中目前是否有正在監聽的 Mechanical gRPC 埠
+            scanned = connection_manager.scan_for_mechanical_grpc()
+            if scanned is not None:
+                return scanned, None
+            return None, f"No registered or active Mechanical instance found with PID {pid}."
         if mech:
             return int(mech[0]["grpc_port"]), None
         scanned = connection_manager.scan_for_mechanical_grpc()
@@ -74,9 +93,14 @@ class MechanicalController:
             return {"ok": False, "error": err}
 
         key = str(target_port)
-        if registry.get(PRODUCT, key) is not None:
-            registry.set_current(PRODUCT, key)
-            return {"ok": True, "port": target_port, "note": "Reused existing session.", "key": key}
+        existing = registry.get(PRODUCT, key)
+        if existing is not None:
+            if self._probe_session(existing):
+                registry.set_current(PRODUCT, key)
+                return {"ok": True, "port": target_port, "pid": self._find_pid(target_port), "note": "Reused existing session.", "key": key}
+            # 探針檢測失敗：死 Session 主動自快取與註冊表驅逐，隨後重新建立連線
+            self._PROBE_CACHE.pop(str(id(existing)), None)
+            registry.drop(PRODUCT, key)
 
         try:
             session = mech.connect_to_mechanical(port=target_port)
@@ -91,7 +115,7 @@ class MechanicalController:
             '    print("  [" + str(i) + "] " + str(a.Name) + " (" + str(a.AnalysisType) + ")")\n',
             key=key,
         )
-        return {"ok": True, "port": target_port, "key": key, "info": info}
+        return {"ok": True, "port": target_port, "pid": self._find_pid(target_port), "key": key, "info": info}
 
     def launch(self, batch: bool = True) -> dict:
         """Launch a new headless Mechanical instance via PyMechanical."""
@@ -106,9 +130,23 @@ class MechanicalController:
         except Exception as exc:  # noqa: BLE001
             return {"ok": False, "error": str(exc)}
 
-        key = str(getattr(session, "_port", None) or "launched")
+        launched_port = getattr(session, "_port", None)
+        key = str(launched_port or "launched")
         registry.put(PRODUCT, key, session)
-        return {"ok": True, "key": key, "version": getattr(session, "version", "unknown")}
+        return {
+            "ok": True,
+            "key": key,
+            "port": launched_port,
+            "pid": self._find_pid(launched_port) if launched_port else None,
+            "version": getattr(session, "version", "unknown"),
+        }
+
+    def _find_pid(self, port: Optional[int]) -> Optional[int]:
+        """以埠號反查監聽進程 PID，供回傳信封顯示（Port 可視化，杜絕黑盒子）。"""
+        if port is None:
+            return None
+        from ansys_unified_mcp.bridges.connection_manager import connection_manager
+        return connection_manager.find_pid_by_port(int(port))
 
     _PROBE_CACHE: dict[str, float] = {}
     _PROBE_TTL = 10.0
@@ -127,7 +165,7 @@ class MechanicalController:
             self._PROBE_CACHE.pop(key, None)
             return False
 
-    def run_script(self, script: str, key: Optional[str] = None, timeout: float = DEFAULT_SCRIPT_TIMEOUT) -> str:
+    def run_script(self, script: str, key: Optional[str] = None, timeout: Optional[float] = DEFAULT_SCRIPT_TIMEOUT) -> str:
         """Execute a Python script string in the connected Mechanical session."""
         from ansys_unified_mcp.core.script_guard import check_script
         is_safe, warnings = check_script(script, context="mechanical.run_script")
@@ -139,8 +177,9 @@ class MechanicalController:
             return "Error: Not connected to Mechanical (session lost or closed)."
 
         tmp_dir = Path(tempfile.gettempdir())
-        out_file = (tmp_dir / f"mech_out_{os.getpid()}.txt").as_posix()
-        script_file = (tmp_dir / f"mech_script_{os.getpid()}.py").as_posix()
+        req_id = uuid.uuid4().hex
+        out_file = (tmp_dir / f"mech_out_{req_id}.txt").as_posix()
+        script_file = (tmp_dir / f"mech_script_{req_id}.py").as_posix()
         try:
             with open(script_file, "w", encoding="utf-8") as fh:
                 fh.write(script)
@@ -166,7 +205,10 @@ class MechanicalController:
                 "        _f.write(''.join(_cap.d))\n"
             )
             try:
-                run_with_timeout(session.run_python_script, wrapper, timeout=timeout)
+                if timeout is not None and timeout > 0:
+                    run_with_timeout(session.run_python_script, wrapper, timeout=timeout)
+                else:
+                    session.run_python_script(wrapper)
             except BlockingCallTimeout as exc:
                 return "Error: " + str(exc)
 
@@ -177,6 +219,15 @@ class MechanicalController:
                 result = ""
             return result if result else "(done)"
         except Exception as exc:  # noqa: BLE001
+            # 通訊層或致命異常：立即清理探針快取並從註冊表驅逐故障 Session
+            self._PROBE_CACHE.pop(str(id(session)), None)
+            target_key = key or registry.current_key(PRODUCT)
+            if target_key and registry.get(PRODUCT, target_key) is session:
+                registry.drop(PRODUCT, target_key)
+            else:
+                for k in registry.keys(PRODUCT):
+                    if registry.get(PRODUCT, k) is session:
+                        registry.drop(PRODUCT, k)
             return "Error: " + str(exc)
         finally:
             for path in (out_file, script_file):

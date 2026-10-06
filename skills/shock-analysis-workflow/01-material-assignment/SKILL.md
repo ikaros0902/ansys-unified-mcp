@@ -1,5 +1,5 @@
 ---
-name: shock-session-material-assignment
+name: 01-material-assignment
 description: 自動化材料指派會話（Material Assignment Session），整合 ACT 關鍵字比對引擎、BOM 查表、SMT 元件正則匹配與小批次驗證機制。
 phase_gate:
   requires: []
@@ -42,7 +42,7 @@ flowchart TD
 - **LS-DYNA `*MAT_024` 關鍵字卡片**：注入應變率相依 Cowper-Symonds 參數（C=40.0, P=5.0）。
 
 > 完整演算法程式碼與 LS-DYNA 卡片定義，詳見專門手冊：
-> - [`reference/material_mapping.md`](reference/material_mapping.md)
+> - [`references/material_mapping.md`](references/material_mapping.md)
 
 ---
 
@@ -60,7 +60,7 @@ flowchart TD
 ### 4.2 獨立測試腳本執行方式
 執行以下獨立測試腳本：
 ```powershell
-python SKILLs/shock-analysis-workflow/scripts/test_session_01.py
+python skills/shock-analysis-workflow/scripts/test_session_01.py
 ```
 
 ### 4.3 驗證評估指標 (Verification Metrics)
@@ -75,4 +75,4 @@ python SKILLs/shock-analysis-workflow/scripts/test_session_01.py
 
 | 手冊名稱 | 內容摘要 |
 | :--- | :--- |
-| [`reference/material_mapping.md`](reference/material_mapping.md) | 清理正規化、關鍵字比對表、孤兒 NS 建立與 *MAT_024 卡片 |
+| [`references/material_mapping.md`](references/material_mapping.md) | 清理正規化、關鍵字比對表、孤兒 NS 建立與 *MAT_024 卡片 |

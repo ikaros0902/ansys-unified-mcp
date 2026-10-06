@@ -79,12 +79,12 @@ results = solver.results
 
 | 分析階段 / 核心問題 | 推薦專精子手冊 | 核心技術要點 |
 |---|---|---|
-| 水密幾何、Sizing 與 Poly-Hexcore 體網格 | [`reference/watertight_meshing.md`](reference/watertight_meshing.md) | WGW Task 鏈、Mosaic 核心六面體技術、稜柱邊界層、正交品質門檻 |
-| 湍流模型、能量方程與共軛熱傳 | [`reference/physics_models.md`](reference/physics_models.md) | SST $k-\omega$、能量守恆、物性參數（溫變非線性）、流固交界面設置 |
-| 邊界條件設定與回流防範 | [`reference/boundary_conditions.md`](reference/boundary_conditions.md) | 速度入口、壓力出口、對稱邊界、壁面粗糙度與對流條件、回流總溫防禦 |
-| 求解器離散、Coupled 與偽瞬態控制 | [`reference/solver_settings.md`](reference/solver_settings.md) | SIMPLE vs Coupled、Pseudo Transient 時間尺度、二階上風格式、混合初始化 |
-| y+ 評估、殘差判讀與質量守恆校核 | [`reference/fluent_judgment.md`](reference/fluent_judgment.md) | 黏性底層 vs 壁面函數、緩衝層禁區、出口逆向回流診斷、質量守恆 $< 0.1\%$ |
-| 求解發散、數值震盪與報錯自愈 | [`reference/fluent_diagnostics.md`](reference/fluent_diagnostics.md) | URF 降階調節、CFL 階梯重置、極值截斷排查、負體積自檢修復 SOP |
+| 水密幾何、Sizing 與 Poly-Hexcore 體網格 | [`references/watertight_meshing.md`](references/watertight_meshing.md) | WGW Task 鏈、Mosaic 核心六面體技術、稜柱邊界層、正交品質門檻 |
+| 湍流模型、能量方程與共軛熱傳 | [`references/physics_models.md`](references/physics_models.md) | SST $k-\omega$、能量守恆、物性參數（溫變非線性）、流固交界面設置 |
+| 邊界條件設定與回流防範 | [`references/boundary_conditions.md`](references/boundary_conditions.md) | 速度入口、壓力出口、對稱邊界、壁面粗糙度與對流條件、回流總溫防禦 |
+| 求解器離散、Coupled 與偽瞬態控制 | [`references/solver_settings.md`](references/solver_settings.md) | SIMPLE vs Coupled、Pseudo Transient 時間尺度、二階上風格式、混合初始化 |
+| y+ 評估、殘差判讀與質量守恆校核 | [`references/fluent_judgment.md`](references/fluent_judgment.md) | 黏性底層 vs 壁面函數、緩衝層禁區、出口逆向回流診斷、質量守恆 $< 0.1\%$ |
+| 求解發散、數值震盪與報錯自愈 | [`references/fluent_diagnostics.md`](references/fluent_diagnostics.md) | URF 降階調節、CFL 階梯重置、極值截斷排查、負體積自檢修復 SOP |
 
 ---
 

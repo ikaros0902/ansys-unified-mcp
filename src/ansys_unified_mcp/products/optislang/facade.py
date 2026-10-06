@@ -16,6 +16,7 @@ and are deliberately avoided. The ``Optislang`` import is lazy (inside
 from __future__ import annotations
 
 import os
+from typing import Optional
 
 from ansys_unified_mcp.core.sessions import registry
 from ansys_unified_mcp.core.timeout import BlockingCallTimeout, run_with_timeout
@@ -71,7 +72,24 @@ class OptislangController:
             return {"ok": False, "error": f"連線失敗：{exc}"}
 
         registry.put(PRODUCT, KEY, osl)
-        return {"ok": True, "version": self.version_string(), "project": project_path or "(new)"}
+        return {
+            "ok": True,
+            "version": self.version_string(),
+            "project": project_path or "(new)",
+            "pid": self._find_pid(),
+        }
+
+    def _find_pid(self) -> Optional[int]:
+        """以進程名稱（optislang.exe）查詢 PID，供回傳信封顯示（Port 可視化，杜絕黑盒子）。
+
+        optiSLang 無獨立 gRPC Port 概念（原生進程 API），故改以進程名稱查詢，
+        與 Mechanical/Geometry/Fluent 的埠號反查邏輯不同。
+        """
+        from ansys_unified_mcp.bridges.connection_manager import connection_manager
+        procs = connection_manager.find_running_ansys_processes().get("optislang", [])
+        if not procs:
+            return None
+        return getattr(procs[0], "pid", None)
 
     def run_script(self, script: str, timeout: float = DEFAULT_SCRIPT_TIMEOUT) -> dict:
         """Run an optiSLang native Python script string in the connected server.

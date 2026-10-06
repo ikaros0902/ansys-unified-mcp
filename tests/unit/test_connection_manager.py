@@ -644,3 +644,52 @@ def test_get_registered_instances_non_dict_ignored(tmp_path):
         assert len(instances) == 1
         assert instances[0] == {"pid": 104, "valid": True}
 
+
+
+# --- find_pid_by_port (Port 可視化回顯機制, 任務 2.4) ---
+
+
+def test_find_pid_by_port_returns_matching_pid():
+    """驗證找到監聽指定埠的 LISTEN 連線時，回傳其 PID。"""
+    cm = ConnectionManager()
+    mock_conn = MagicMock()
+    mock_conn.status = psutil.CONN_LISTEN
+    mock_conn.laddr = MagicMock(port=10000)
+    mock_conn.pid = 12345
+
+    with patch("psutil.net_connections", return_value=[mock_conn]):
+        assert cm.find_pid_by_port(10000) == 12345
+
+
+def test_find_pid_by_port_ignores_non_listen_connections():
+    """驗證非 LISTEN 狀態的連線（如 ESTABLISHED）不會被誤判為監聽者。"""
+    cm = ConnectionManager()
+    mock_conn = MagicMock()
+    mock_conn.status = psutil.CONN_ESTABLISHED
+    mock_conn.laddr = MagicMock(port=10000)
+    mock_conn.pid = 12345
+
+    with patch("psutil.net_connections", return_value=[mock_conn]):
+        assert cm.find_pid_by_port(10000) is None
+
+
+def test_find_pid_by_port_no_match_returns_none():
+    """驗證指定埠無任何監聽連線時回傳 None。"""
+    cm = ConnectionManager()
+    with patch("psutil.net_connections", return_value=[]):
+        assert cm.find_pid_by_port(10000) is None
+
+
+def test_find_pid_by_port_handles_psutil_error():
+    """驗證 psutil 查詢失敗（如權限不足）時安全回傳 None，不拋出例外。"""
+    cm = ConnectionManager()
+    with patch("psutil.net_connections", side_effect=psutil.AccessDenied(pid=1)):
+        assert cm.find_pid_by_port(10000) is None
+
+
+def test_find_pid_by_port_invalid_port_returns_none():
+    """驗證非法埠值（超出範圍、布林值）直接回傳 None，不觸發 psutil 查詢。"""
+    cm = ConnectionManager()
+    assert cm.find_pid_by_port(-1) is None
+    assert cm.find_pid_by_port(70000) is None
+    assert cm.find_pid_by_port(True) is None  # bool 是 int 子類別，須明確排除

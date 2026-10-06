@@ -20,7 +20,7 @@ sys.path.insert(0, str(PROJECT_ROOT / "src"))
 sys.path.insert(0, str(PROJECT_ROOT))
 
 from ansys_unified_mcp.shared import mcp
-import ansys_unified_mcp.products.mechanical as mechanical_mod
+import ansys_unified_mcp.products.mechanical.facade as mechanical_mod
 from ansys_unified_mcp.products.mechanical_api import (
     _safe_json_response,
     _normalize_dict_envelope,
@@ -333,19 +333,20 @@ def main():
     print("  Milestone 1 Envelope Stress Final Challenge Suite Starting     ")
     print("=================================================================")
 
-    success1 = test_section_1_fourteen_tools_stress()
-    success2 = test_section_2_safe_json_sandwich_logs()
-    success3 = test_section_3_missing_ok_dict()
-    success4 = test_section_4_strict_boolean_type()
-    success5 = test_section_5_all_78_tools_complete_audit()
+    try:
+        test_section_1_fourteen_tools_stress()
+        test_section_2_safe_json_sandwich_logs()
+        test_section_3_missing_ok_dict()
+        test_section_4_strict_boolean_type()
+        test_section_5_all_78_tools_complete_audit()
 
-    if success1 and success2 and success3 and success4 and success5:
         print("\n=================================================================")
         print("  【挑戰結論】實證測試全部通過！零假陽性，強型別信封保證確認！      ")
         print("  判定結果: CONFIRMED                                            ")
         print("=================================================================")
         return 0
-    else:
+    except AssertionError as e:
+        print(f"\n[FAIL] 斷言失敗: {e}")
         print("\n=================================================================")
         print("  【挑戰結論】實證測試發現破口！存在假陽性或型別錯誤！              ")
         print("  判定結果: DISPROVED                                            ")

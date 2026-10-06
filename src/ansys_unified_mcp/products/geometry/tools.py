@@ -503,6 +503,35 @@ async def geometry_list_bodies() -> dict:
     res = await sim_impl.call_tool('geometry_list_bodies', args)
     return "\n".join([c.text for c in res])
 
+@tool_geometry(name='geometry_list_named_selections')
+async def geometry_list_named_selections() -> dict:
+    """列出當前設計中的所有具名選擇 (Named Selection)
+    """
+    args = {}
+    res = await sim_impl.call_tool('geometry_list_named_selections', args)
+    return "\n".join([c.text for c in res])
+
+
+@mcp.resource("ansys://geometry/model-tree")
+async def geometry_model_tree_resource() -> str:
+    """唯讀讀取 SpaceClaim/Geometry 目前設計中的組裝件與實體清單，不觸發任何 Tool 呼叫額度。
+
+    對應 Phase 3 任務 3.3（docs/reviews/2026-10-02-phase2-3-feasibility-assessment.md）。
+    內部委派既有 geometry_list_bodies 工具邏輯，不重複實作。
+    """
+    res = await sim_impl.call_tool('geometry_list_bodies', {})
+    return "\n".join([c.text for c in res])
+
+@mcp.resource("ansys://geometry/named-selections")
+async def geometry_named_selections_resource() -> str:
+    """唯讀讀取 SpaceClaim/Geometry 目前設計中的具名選擇 (Named Selection) 清單，不觸發任何 Tool 呼叫額度。
+
+    對應 Phase 3 任務 3.3（docs/reviews/2026-10-02-phase2-3-feasibility-assessment.md）。
+    內部委派既有 geometry_list_named_selections 工具邏輯，不重複實作。
+    """
+    res = await sim_impl.call_tool('geometry_list_named_selections', {})
+    return "\n".join([c.text for c in res])
+
 @tool_geometry(name='geometry_import_file')
 async def geometry_import_file(file_path: str) -> dict:
     """匯入 CAD 檔案

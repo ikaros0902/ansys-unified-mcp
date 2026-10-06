@@ -38,7 +38,7 @@ class GeometryController:
         key = str(port) if port else DEFAULT_KEY
         if self._modeler(key) is not None:
             registry.set_current(PRODUCT, key)
-            return {"ok": True, "key": key, "note": "Reused existing Geometry session."}
+            return {"ok": True, "key": key, "port": port, "pid": self._find_pid(port), "note": "Reused existing Geometry session."}
 
         try:
             from ansys.geometry.core import Modeler
@@ -51,9 +51,16 @@ class GeometryController:
             else:
                 modeler = Modeler(transport_mode=transport_mode, timeout=connect_timeout)
             registry.put(PRODUCT, key, modeler)
-            return {"ok": True, "key": key, "message": "Connected to Geometry Modeler."}
+            return {"ok": True, "key": key, "port": port, "pid": self._find_pid(port), "message": "Connected to Geometry Modeler."}
         except Exception as exc:
             return {"ok": False, "error": str(exc)}
+
+    def _find_pid(self, port: Optional[int]) -> Optional[int]:
+        """以埠號反查監聽進程 PID，供回傳信封顯示（Port 可視化，杜絕黑盒子）。"""
+        if port is None:
+            return None
+        from ansys_unified_mcp.bridges.connection_manager import connection_manager
+        return connection_manager.find_pid_by_port(int(port))
 
     def status(self, key: Optional[str] = None) -> dict:
         modeler = self._modeler(key)

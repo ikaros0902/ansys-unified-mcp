@@ -76,7 +76,8 @@ runs/
 jobs/*
 !jobs/.gitkeep
 scratch/
-.agents/
+.agents/*
+!.agents/teamwork/
 src/**/tools/commands/
 src/**/tools/results/
 src/**/tools/runs/
@@ -84,3 +85,11 @@ src/**/tools/scripts/
 src/**/tools/mcp.log
 src/**/tools/status.json
 
+
+# IDE & Local Tools
+.cline/
+.kiro/
+.clinerules
+
+# Package Lock
+uv.lock

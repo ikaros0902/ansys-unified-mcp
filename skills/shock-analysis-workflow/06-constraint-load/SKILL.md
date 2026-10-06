@@ -1,5 +1,5 @@
 ---
-name: shock-session-constraint-load
+name: 06-constraint-load
 description: Shock dynamic boundary conditions and exact company standard LS-DYNA Analysis Settings.
 phase_gate:
   requires: []
@@ -33,7 +33,7 @@ Configure dynamic drop/shock boundary conditions and apply the standard LS-DYNA 
 | | Default Hourglass Coeff. | **0.1** | `QH = 0.1` |
 | **Joint Controls** | Formulation | **Program Controlled** | Penalty / Lagrange Multiplier |
 | **Output Controls** | Calculate Results At | **Equally Spaced Points** | `*DATABASE_BINARY_D3PLOT` |
-| | Number of Output Points | **1000 Points** | $\Delta t_{	ext{plot}} = 	ext{End Time} / 1000$ |
+| | Number of Output Points | **1000 Points** | $\Delta t_{\text{plot}} = \text{End Time} / 1000$ |
 
 ## 2. Dynamic Boundary Conditions (載荷與約束施加)
 - **Velocity / Impact**:
@@ -74,3 +74,11 @@ settings.NumberOfPoints = 1000
 ## Human Intervention & Verification Gates
 1. **Drop Direction & Velocity Vector**: Confirm active impact direction ($\pm X, \pm Y, \pm Z$) before initiating solve.
 2. **Analysis End Time**: Confirm whether rebound capture is required (default: 15 ms).
+
+---
+
+## 4. 相關參考手冊 (Related References)
+
+| 手冊名稱 | 內容摘要 |
+| :--- | :--- |
+| [`references/shock_pulse_and_boundary_conditions.md`](references/shock_pulse_and_boundary_conditions.md) | 半正弦波脈衝公式、*BOUNDARY_PRESCRIBED_MOTION_RIGID 卡片與多方向速度向量配置 |

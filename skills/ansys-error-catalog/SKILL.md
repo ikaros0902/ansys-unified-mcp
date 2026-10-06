@@ -14,7 +14,7 @@ phase_gate:
 本目錄來自實際開發 session 中遭遇的錯誤，按模組與 function 分類。
 每筆紀錄包含：觸發場景、錯誤訊息、根因、解決方案。
 
-載入對應的 `reference/<module>.md` 來查閱詳細錯誤清單。
+載入對應的 `references/<module>.md` 來查閱詳細錯誤清單。
 
 ---
 
@@ -22,10 +22,10 @@ phase_gate:
 
 | 模組 | 檔案 | 涵蓋錯誤類型 |
 |---|---|---|
-| Workbench ACT Plugin | `reference/workbench_act.md` | `_PROJECT_ROOT` NameError, `exec` closure SyntaxError, FileSystemWatcher 事件重複觸發 |
-| Mechanical Scripting | `reference/mechanical_scripting.md` | Scoping 未指定 (❓ 圖示), `Quantity` 未定義, gRPC 連線失敗, `run_python_script` 環境差異 |
-| SpaceClaim / PyGeometry | `reference/spaceclaim_pygeometry.md` | gRPC TLS 警告, `rename_object` 限制, `read_existing_design` 空回傳 |
-| IronPython 2.7 通用 | `reference/ironpython_general.md` | `exec` 閉包限制, `__name__` 差異, `clr.AddReference` 重複, `reload()` 必要性 |
+| Workbench ACT Plugin | `references/workbench_act.md` | `_PROJECT_ROOT` NameError, `exec` closure SyntaxError, FileSystemWatcher 事件重複觸發 |
+| Mechanical Scripting | `references/mechanical_scripting.md` | Scoping 未指定 (❓ 圖示), `Quantity` 未定義, gRPC 連線失敗, `run_python_script` 環境差異 |
+| SpaceClaim / PyGeometry | `references/spaceclaim_pygeometry.md` | gRPC TLS 警告, `rename_object` 限制, `read_existing_design` 空回傳 |
+| IronPython 2.7 通用 | `references/ironpython_general.md` | `exec` 閉包限制, `__name__` 差異, `clr.AddReference` 重複, `reload()` 必要性 |
 
 ---
 

@@ -3,7 +3,7 @@ from pathlib import Path
 repo_src = str(Path(__file__).resolve().parents[2] / "src")
 if repo_src not in sys.path:
     sys.path.insert(0, repo_src)
-from ansys_unified_mcp.products.mechanical import MechanicalController
+from ansys_unified_mcp.products.mechanical.facade import MechanicalController
 
 mc = MechanicalController()
 mc.connect(port=10000)

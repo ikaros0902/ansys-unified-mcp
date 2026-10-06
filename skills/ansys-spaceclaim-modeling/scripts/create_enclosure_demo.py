@@ -2,7 +2,7 @@
 """
 腳本名稱：create_enclosure_demo.py
 功能說明：外流域抽取 (Enclosure) 與布林相減端到端完整示範腳本
-技術標準：林明志標準 CAD 前處理自動化規範 (基於 PyAnsys Geometry ansys.geometry.core)
+技術標準：CAD 前處理自動化規範 (基於 PyAnsys Geometry ansys.geometry.core)
 """
 
 import os
@@ -163,7 +163,7 @@ def run_enclosure_pipeline(
     design.export_to_scdocx(scdocx_file)
     
     print("================================================================================")
-    print("[成功完成] 無損幾何檔案已輸出:")
+    print(f"[成功完成] 無損幾何檔案已輸出:")
     print(f"  - PMDB 資料庫 : {pmdb_file}")
     print(f"  - SpaceClaim  : {scdocx_file}")
     print("================================================================================")

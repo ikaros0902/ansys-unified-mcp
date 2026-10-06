@@ -127,7 +127,7 @@ class TestRemediationM5(unittest.TestCase):
 
     def test_action_item_5_shock_prevention_sop(self):
         """Action Item 5: 手冊增補升階數值激波防禦 SOP"""
-        diag_file = REPO_ROOT / "SKILLs" / "ansys-fluent" / "reference" / "fluent_diagnostics.md"
+        diag_file = _skills_dir / "ansys-fluent" / "references" / "fluent_diagnostics.md"
         self.assertTrue(diag_file.exists())
         with open(diag_file, "r", encoding="utf-8") as f:
             content = f.read()

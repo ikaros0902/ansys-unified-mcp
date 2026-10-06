@@ -16,8 +16,8 @@ from pathlib import Path
 import pytest
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-AUDIT_SCRIPT = PROJECT_ROOT / "scripts" / "audit_architecture_compliance.py"
-SYNC_SCRIPT = PROJECT_ROOT / "scripts" / "sync_skills_bidirectional.py"
+AUDIT_SCRIPT = PROJECT_ROOT / "scripts" / "maintenance" / "audit_architecture_compliance.py"
+SYNC_SCRIPT = PROJECT_ROOT / "scripts" / "maintenance" / "sync_skills_bidirectional.py"
 SKILLS_ROOT = (PROJECT_ROOT / "skills") if (PROJECT_ROOT / "skills").is_dir() else (PROJECT_ROOT / "SKILLs")
 
 
@@ -36,13 +36,18 @@ def _run(script: Path, *args: str) -> subprocess.CompletedProcess:
 
 @pytest.mark.skipif(not AUDIT_SCRIPT.is_file(), reason="稽核腳本不存在")
 def test_skills_architecture_audit_passes():
-    """稽核腳本必須以 exit code 0 結束（客觀驗收條件，非主觀判定）"""
+    """稽核腳本必須以 exit code 0 結束，且實質檢驗非零數量之檔案與連結（防空跑門禁）"""
     result = _run(AUDIT_SCRIPT)
     assert result.returncode == 0, (
         "技能架構稽核未通過 (exit code "
         f"{result.returncode})。\n--- STDOUT ---\n{result.stdout}\n"
         f"--- STDERR ---\n{result.stderr}"
     )
+    # 防空跑實質檢驗斷言：確保真實掃描受控技能，非空迴圈通過
+    assert "掃描 0 處連結" not in result.stdout, "稽核腳本發生空跑假陽性：掃描 0 處連結！"
+    assert "掃描 0 份檔案" not in result.stdout, "稽核腳本發生空跑假陽性：掃描 0 份檔案！"
+    assert "掃描 0 份腳本" not in result.stdout, "稽核腳本發生空跑假陽性：掃描 0 份腳本！"
+    assert "全數 PASS" in result.stdout, "稽核腳本未輸出全數 PASS 結論！"
 
 
 def test_skill_routing_tables_have_no_dead_links():

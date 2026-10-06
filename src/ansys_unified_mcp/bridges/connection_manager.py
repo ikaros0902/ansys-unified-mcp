@@ -39,6 +39,28 @@ class ConnectionManager:
         except (OSError, OverflowError, TypeError, ValueError):
             return False
 
+    def find_pid_by_port(self, port: int) -> Optional[int]:
+        """查詢本機哪個進程正在監聽指定 TCP port，回傳其 PID。
+
+        供 Port/PID 回顯使用：各產品 facade 的 connect/launch 成功後，可用連線到的
+        埠號反查 PID 放進回傳信封，不需仰賴僅 Mechanical/Workbench 有寫入的
+        workbench_queue/registry/。任何權限不足或查詢失敗的情況皆回傳 None，不拋出例外。
+        """
+        if not isinstance(port, int) or isinstance(port, bool) or not (0 <= port <= 65535):
+            return None
+        try:
+            for conn in psutil.net_connections(kind="tcp"):
+                if (
+                    conn.status == psutil.CONN_LISTEN
+                    and conn.laddr
+                    and conn.laddr.port == port
+                    and conn.pid is not None
+                ):
+                    return conn.pid
+        except (psutil.Error, PermissionError, OSError):
+            return None
+        return None
+
     def scan_for_mechanical_grpc(self, start_port: int = 10000, end_port: int = 10050) -> Optional[int]:
         """
         掃描本地是否存在開放的 Mechanical gRPC port (通常 10000+)。

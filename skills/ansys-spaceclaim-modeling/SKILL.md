@@ -7,14 +7,11 @@ Use when:
   - 需排查 CAD 幾何缺陷（微小面、極短邊、自相交）或匯出 .pmdb 原生模型。
   - 限制: 尺寸參數以公尺 (m) 為基準；不重複建立新設計。
   - 觸發關鍵字 (繁中/En): SpaceClaim建模, SCDM幾何, Discovery前處理, 外流域抽取, PMDB導出.
-phase_gate:
-  requires: []
-  produces: []
 ---
 
 # ANSYS SpaceClaim 幾何前處理與無損流轉主控手冊
 
-本技能依據林明志標準構建，提供 SpaceClaim (SCDM) 與 Discovery 幾何前處理從 2D 草圖、3D 成形、外流域抽取、CAD 診斷到無損 PMDB 導出的完整自動化管線指導。
+本技能提供 SpaceClaim (SCDM) 與 Discovery 幾何前處理從 2D 草圖、3D 成形、外流域抽取、CAD 診斷到無損 PMDB 導出的完整自動化管線指導。
 
 ---
 
@@ -72,3 +69,9 @@ flowchart TD
 2. **CAD 缺陷零檢出判定**：執行 `check_cad_defects.py` 稽核，狹長微小面 (Sliver Faces, 長寬比 $> 50$) 與極短邊 ($L < 10^{-4}\text{ m}$) 檢出數必須為 0，整體狀態回傳 `PASS_READY_FOR_EXPORT`。
 3. **具名選擇覆蓋率**：外邊界 6 大宏觀面完全指派至標準 Named Selection，且流體/固體零件皆已設定 Body Named Selection。
 4. **檔案輸出真實存在**：目標目錄成功生成 `.pmdb` 檔案且檔案大小 $> 0\text{ bytes}$。
+
+---
+
+## 五、與 `ansys-spaceclaim` 技能的分工
+
+本技能專注於**幾何前處理與無損流轉**（草圖、成形、外流域、CAD 診斷、PMDB 導出）；若任務涉及 SpaceClaim 原生 ACT IronPython API 的連線/Session 管理、具名選擇以外的拓撲編輯細節、或與 PyAnsys Geometry 雙軌 API 選型決策，請同時參閱 [`ansys-spaceclaim`](../ansys-spaceclaim/SKILL.md) 技能手冊。

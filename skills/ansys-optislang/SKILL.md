@@ -47,11 +47,11 @@ Pareto 前沿非支配解集搜尋與實體驗證]
 
 | 領域分類 | 專精子手冊路徑 | 核心內容與工程焦點 |
 | :--- | :--- | :--- |
-| **實驗設計** | `reference/doe_sampling.md` | 拉丁超立方抽樣 (LHS) 原理、空間填充準則、樣本容量估算 ($N \ge 10k$)、機率分佈配置。 |
-| **敏感度矩陣** | `reference/sensitivity_matrix.md` | 總靈敏度指數 (TSI) Sobol 方差分解、Pearson/Spearman 相關矩陣、變數篩選與降維準則 ($\text{TSI} < 0.05$)。 |
-| **MOP 元模型** | `reference/mop_metamodel.md` | MOP 最佳模型競賽架構（多項式/MLS/Kriging/MLP）、最佳子空間搜索、ProxySolver 導出與毫秒級推論。 |
-| **最佳化演算法** | `reference/optimization_algorithms.md` | 局部梯度法 (`NLPQLPActor`) vs 全域啟發式 (`NOAActor` / `EAActor`)、多目標 Pareto 前沿解集提取。 |
-| **判斷力庫** | `reference/optislang_judgment.md` | **【判斷力庫】** 預測係數 CoP 四級門檻 ($\ge 0.8$)、共線性排查 ($\text{VIF} > 5$)、過擬合 ($R^2$ 虛高但 CoP 低落) 診斷。 |
+| **實驗設計** | `references/doe_sampling.md` | 拉丁超立方抽樣 (LHS) 原理、空間填充準則、樣本容量估算 ($N \ge 10k$)、機率分佈配置。 |
+| **敏感度矩陣** | `references/sensitivity_matrix.md` | 總靈敏度指數 (TSI) Sobol 方差分解、Pearson/Spearman 相關矩陣、變數篩選與降維準則 ($\text{TSI} < 0.05$)。 |
+| **MOP 元模型** | `references/mop_metamodel.md` | MOP 最佳模型競賽架構（多項式/MLS/Kriging/MLP）、最佳子空間搜索、ProxySolver 導出與毫秒級推論。 |
+| **最佳化演算法** | `references/optimization_algorithms.md` | 局部梯度法 (`NLPQLPActor`) vs 全域啟發式 (`NOAActor` / `EAActor`)、多目標 Pareto 前沿解集提取。 |
+| **判斷力庫** | `references/optislang_judgment.md` | **【判斷力庫】** 預測係數 CoP 四級門檻 ($\ge 0.8$)、共線性排查 ($\text{VIF} > 5$)、過擬合 ($R^2$ 虛高但 CoP 低落) 診斷。 |
 | **自動化腳本** | `scripts/setup_mop_workflow_demo.py` | 完整 optiSLang 原生 Python 流程建立腳本，內建 CoP 評估、TSI 降維過濾與過擬合警示模組。 |
 
 ---

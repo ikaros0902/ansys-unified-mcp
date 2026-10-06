@@ -1,5 +1,5 @@
 ---
-name: shock-session-section-assignment
+name: 05-section-assignment
 description: 中面薄板厚度指派、LS-DYNA 截面性質與單元公式 (ELFORM=16 Shells, ELFORM=10/1 Solids) 配置與小批次驗證會話。
 phase_gate:
   requires: []
@@ -84,7 +84,7 @@ $#   secid    elform       aet
 ### 3.2 獨立測試腳本執行方式
 執行以下獨立測試腳本：
 ```powershell
-python SKILLs/shock-analysis-workflow/scripts/test_session_05.py
+python skills/shock-analysis-workflow/scripts/test_session_05.py
 ```
 
 ### 3.3 驗證評估指標 (Verification Metrics)
@@ -93,3 +93,11 @@ python SKILLs/shock-analysis-workflow/scripts/test_session_05.py
 - **殼單元公式合規性 (Shell ELFORM)**: PASS (ELFORM=16, NIP=5)
 - **實體單元公式合規性 (Solid ELFORM)**: PASS (ELFORM=10 / ELFORM=1)
 - **模型無污染狀態 (Pristine State)**: 100% 乾淨（0 殘留測試物件）
+
+---
+
+## 4. 相關參考手冊 (Related References)
+
+| 手冊名稱 | 內容摘要 |
+| :--- | :--- |
+| [`references/section_controls_and_shell_thickness.md`](references/section_controls_and_shell_thickness.md) | 薄板 ELFORM=16 與厚度積分點 NIP=5、實體 ELFORM 設定與沙漏能防護 |

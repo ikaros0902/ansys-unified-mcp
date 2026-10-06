@@ -35,13 +35,13 @@ flowchart LR
 
 ## 二、模組路由表 (Module Router)
 
-深入知識規劃外置於 `reference/`；下列手冊**尚未建立**，故以純文字列示，待實際撰寫後再恢復為連結。
+深入知識規劃外置於 `references/`；下列手冊**尚未建立**，故以純文字列示，待實際撰寫後再恢復為連結。
 
 | 主題分類 | 參考文件 | 狀態 | 核心內容 |
 | :--- | :--- | :--- | :--- |
-| **IronPython 2.7 陷阱** | `reference/ironpython_quirks.md` | 待建立 | `exec` 閉包限制、`__name__` 差異、`clr` 重複載入防護 |
-| **非同步檔案監聽** | `reference/filesystemwatcher_pattern.md` | 待建立 | `FileSystemWatcher`、WPF Dispatcher 與去重鎖 |
-| **Wizard 程式化呼叫** | `reference/wizard_api.md` | 待建立 | `ExtensionManager` 操作加密 `.wbex` 與 Component 刷新 |
+| **IronPython 2.7 陷阱** | `references/ironpython_quirks.md` | 待建立 | `exec` 閉包限制、`__name__` 差異、`clr` 重複載入防護 |
+| **非同步檔案監聽** | `references/filesystemwatcher_pattern.md` | 待建立 | `FileSystemWatcher`、WPF Dispatcher 與去重鎖 |
+| **Wizard 程式化呼叫** | `references/wizard_api.md` | 待建立 | `ExtensionManager` 操作加密 `.wbex` 與 Component 刷新 |
 
 > 實作參考可暫先查閱 `scripts/` 下的可執行範例。
 

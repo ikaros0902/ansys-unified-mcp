@@ -1,8 +1,14 @@
 """Backward-compatibility shim for ansys_unified_mcp.drivers.mechanical_driver."""
-import sys
-from ansys_unified_mcp.products.mechanical import driver as _driver
+from __future__ import annotations
 
-_this_module = sys.modules[__name__]
-for _k, _v in _driver.__dict__.items():
-    if not _k.startswith("__"):
-        setattr(_this_module, _k, _v)
+from typing import Any
+from ansys_unified_mcp.products.mechanical.driver import MechanicalDriver
+
+__all__ = ["MechanicalDriver"]
+
+
+def __getattr__(name: str) -> Any:
+    from ansys_unified_mcp.products.mechanical import driver as _driver
+    val = getattr(_driver, name)
+    globals()[name] = val
+    return val

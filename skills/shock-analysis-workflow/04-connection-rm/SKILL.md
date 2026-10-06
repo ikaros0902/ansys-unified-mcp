@@ -1,5 +1,5 @@
 ---
-name: shock-session-connection-rm
+name: 04-connection-rm
 description: 遠端點 (Remote Point)、遠端質量 (Remote Mass) 配置會話，包含過度約束防呆 (Error 20110)、空 NS 過濾、Deformable 設定與飛出零件拓撲預檢。
 phase_gate:
   requires: []
@@ -43,7 +43,7 @@ flowchart TD
 - **飛出零件拓撲檢查 (`verify_body_topology`)**：求解前驗證所有作用中 Body 具備幾何實體與有效約束。
 
 > 完整遠端點建立腳本、Error 20110 防呆機制與拓撲檢查代碼，詳見專門手冊：
-> - [`reference/remote_point_algorithms.md`](reference/remote_point_algorithms.md)
+> - [`references/remote_point_algorithms.md`](references/remote_point_algorithms.md)
 
 ---
 
@@ -62,7 +62,7 @@ flowchart TD
 ### 4.2 獨立測試腳本執行方式
 執行以下獨立測試腳本：
 ```powershell
-python SKILLs/shock-analysis-workflow/scripts/test_session_04.py
+python skills/shock-analysis-workflow/scripts/test_session_04.py
 ```
 
 ### 4.3 驗證評估指標 (Verification Metrics)
@@ -79,4 +79,4 @@ python SKILLs/shock-analysis-workflow/scripts/test_session_04.py
 
 | 手冊名稱 | 內容摘要 |
 | :--- | :--- |
-| [`reference/remote_point_algorithms.md`](reference/remote_point_algorithms.md) | 螺絲 Deformable 遠端點建立、MPC 與 Point Mass 區分及飛出零件拓撲檢查 |
+| [`references/remote_point_algorithms.md`](references/remote_point_algorithms.md) | 螺絲 Deformable 遠端點建立、MPC 與 Point Mass 區分及飛出零件拓撲檢查 |

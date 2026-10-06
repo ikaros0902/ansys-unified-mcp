@@ -1,5 +1,5 @@
 ---
-name: shock-session-mesh-tuning
+name: 03-mesh-tuning
 description: 網格劃分優先級、幾何與初始穿透干涉預檢、LS-DYNA 顯式時間步長 (dt >= 2e-8 s) 調校與小批次驗證會話。
 phase_gate:
   requires: []
@@ -55,7 +55,7 @@ flowchart TD
 - **網格初始穿透檢查與防護**：設定 `*CONTROL_CONTACT IGNORE=1` 於 t=0 投射穿透節點。
 
 > 完整干涉診斷腳本、控制卡與各材料 CFL 臨界尺寸速查表，詳見專門手冊：
-> - [`reference/mesh_quality_criteria.md`](reference/mesh_quality_criteria.md)
+> - [`references/mesh_quality_criteria.md`](references/mesh_quality_criteria.md)
 
 ---
 
@@ -74,7 +74,7 @@ flowchart TD
 ### 5.2 獨立測試腳本執行方式
 執行以下獨立測試腳本：
 ```powershell
-python SKILLs/shock-analysis-workflow/scripts/test_session_03.py
+python skills/shock-analysis-workflow/scripts/test_session_03.py
 ```
 
 ### 5.3 驗證評估指標 (Verification Metrics)
@@ -90,4 +90,4 @@ python SKILLs/shock-analysis-workflow/scripts/test_session_03.py
 
 | 手冊名稱 | 內容摘要 |
 | :--- | :--- |
-| [`reference/mesh_quality_criteria.md`](reference/mesh_quality_criteria.md) | CAD 干涉診斷腳本、*CONTROL_CONTACT IGNORE 卡片與 CFL 聲速時間步長表 |
+| [`references/mesh_quality_criteria.md`](references/mesh_quality_criteria.md) | CAD 干涉診斷腳本、*CONTROL_CONTACT IGNORE 卡片與 CFL 聲速時間步長表 |

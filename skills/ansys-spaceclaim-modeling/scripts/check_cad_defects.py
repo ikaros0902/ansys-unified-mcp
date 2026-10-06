@@ -2,7 +2,7 @@
 """
 腳本名稱：check_cad_defects.py
 功能說明：CAD 幾何缺陷自動化診斷腳本 (微小面、短邊、自交邊、流體滲漏與水密性檢驗)
-技術標準：林明志標準 CAD 判斷力庫 (基於 PyAnsys Geometry ansys.geometry.core)
+技術標準：CAD 判斷力庫 (基於 PyAnsys Geometry ansys.geometry.core)
 """
 
 import os

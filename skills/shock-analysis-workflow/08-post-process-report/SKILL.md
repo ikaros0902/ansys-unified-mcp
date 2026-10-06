@@ -1,5 +1,5 @@
 ---
-name: shock-session-post-process-report
+name: 08-post-process-report
 description: LS-DYNA 模擬結果後處理、塑性應變場 (EPS) 提取、基於公司標準失效矩陣之客觀 PASS/FAIL 判定與自動化報告生成會話。
 phase_gate:
   requires: []
@@ -87,7 +87,7 @@ def evaluate_structural_integrity(components_data):
 
 ### 5.1 獨立測試腳本執行方式
 ```powershell
-python SKILLs/shock-analysis-workflow/scripts/test_session_08.py
+python skills/shock-analysis-workflow/scripts/test_session_08.py
 ```
 
 ### 5.2 驗證指標清單 (Verification Metrics)
@@ -95,3 +95,11 @@ python SKILLs/shock-analysis-workflow/scripts/test_session_08.py
 - **BGA 焊點錫裂判定 (Solder Crack Limit)**：EPS 0.0022 邊界精確捕捉
 - **臨界警告分類 (Marginal Range)**：$85\% \sim 100\%$ 閾值精準分流
 - **報表匯出狀態 (Report Generation)**：PASS
+
+---
+
+## 6. 相關參考手冊 (Related References)
+
+| 手冊名稱 | 內容摘要 |
+| :--- | :--- |
+| [`references/failure_criteria_and_strain_limits.md`](references/failure_criteria_and_strain_limits.md) | 金屬薄板 EPS 0.01 貫穿單元、BGA 焊點 EPS 0.0022 門禁與圖表匯出實作 |

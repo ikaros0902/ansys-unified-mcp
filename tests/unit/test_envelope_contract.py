@@ -24,6 +24,7 @@ import pytest
 from ansys_unified_mcp.shared import as_envelope, error_envelope, looks_like_error
 
 TOOLS_DIR = Path(__file__).resolve().parents[2] / "src" / "ansys_unified_mcp" / "tools"
+PRODUCTS_DIR = Path(__file__).resolve().parents[2] / "src" / "ansys_unified_mcp" / "products"
 
 # 工具註冊裝飾器辨識：不採白名單，改以名稱是否含 "tool" 判斷。
 # 理由：除裸 @mcp.tool 與 @aliased_tool 之外，sim_tools.py 另有自製裝飾器
@@ -49,15 +50,24 @@ def _is_tool_function(node: ast.FunctionDef) -> bool:
 
 
 def _iter_tool_functions():
-    """走訪所有工具模組，產出 (檔名, 函式名, 行號, 回傳標註節點)"""
-    for py_file in sorted(TOOLS_DIR.glob("*.py")):
+    """走訪所有工具模組，產出 (檔名, 函式名, 行號, 回傳標註節點)
+
+    涵蓋範圍：
+    1. ``tools/*.py``（舊版薄包裝層，部分工具已遷移至 products/*/tools.py 正本）。
+    2. ``products/*/tools.py``（各產品正本，實際由 __main__.py 動態載入並暴露於
+       FastMCP），避免守門邏輯只掃舊路徑而讓正本工具的信封違規逃過檢查。
+    """
+    search_paths = sorted(TOOLS_DIR.glob("*.py")) + sorted(PRODUCTS_DIR.glob("*/tools.py"))
+    for py_file in search_paths:
         tree = ast.parse(py_file.read_text(encoding="utf-8"), filename=str(py_file))
         for node in ast.walk(tree):
             if not isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
                 continue
             if not _is_tool_function(node):
                 continue
-            yield py_file.name, node.name, node.lineno, node.returns
+            # products/<product>/tools.py 彼此檔名相同，標記上層目錄避免混淆
+            display_name = f"{py_file.parent.name}/{py_file.name}" if py_file.parent != TOOLS_DIR else py_file.name
+            yield display_name, node.name, node.lineno, node.returns
 
 
 def test_tool_modules_are_discoverable():

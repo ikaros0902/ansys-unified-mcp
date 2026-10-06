@@ -47,12 +47,12 @@ flowchart TD
 
 | 領域分類 | 專精子手冊路徑 | 核心內容與工程焦點 |
 | :--- | :--- | :--- |
-| **單元截面** | `reference/parts_and_sections.md` | `*PART`、`*SECTION_SOLID` (ELFORM=1/2)、`*SECTION_SHELL` (NIP=5)、沙漏阻尼 `*HOURGLASS` (IHQ=4)。 |
-| **材料模型** | `reference/material_cards.md` | `*MAT_024` 彈塑性卡片詳細欄位、LCSS 應變硬化曲線、應變率效應、`*MAT_020` 剛體定義。 |
-| **接觸演算法** | `reference/contacts.md` | `*CONTACT_AUTOMATIC_SURFACE_TO_SURFACE`、`SOFT=0/1/2` 剛度算法選型、摩擦係數與穿透處理。 |
-| **初始與邊界** | `reference/initial_boundary.md` | 撞擊初速度計算公式、`*INITIAL_VELOCITY_GENERATION`、`*RIGIDWALL_PLANAR` 剛性地坪與約束設定。 |
-| **能量診斷** | `reference/energy_diagnostics.md` | **【判斷力庫】** 沙漏能佔比門檻、動能轉內能平滑度、接觸滑移能負值排查。 |
-| **質量縮放** | `reference/mass_scaling_rules.md` | **【判斷力庫】** CFL 時間步長、`DT2MS` 負值規則、質量增加率三級控制 (<2% / <5%) 與質心檢驗。 |
+| **單元截面** | `references/parts_and_sections.md` | `*PART`、`*SECTION_SOLID` (ELFORM=1/2)、`*SECTION_SHELL` (NIP=5)、沙漏阻尼 `*HOURGLASS` (IHQ=4)。 |
+| **材料模型** | `references/material_cards.md` | `*MAT_024` 彈塑性卡片詳細欄位、LCSS 應變硬化曲線、應變率效應、`*MAT_020` 剛體定義。 |
+| **接觸演算法** | `references/contacts.md` | `*CONTACT_AUTOMATIC_SURFACE_TO_SURFACE`、`SOFT=0/1/2` 剛度算法選型、摩擦係數與穿透處理。 |
+| **初始與邊界** | `references/initial_boundary.md` | 撞擊初速度計算公式、`*INITIAL_VELOCITY_GENERATION`、`*RIGIDWALL_PLANAR` 剛性地坪與約束設定。 |
+| **能量診斷** | `references/energy_diagnostics.md` | **【判斷力庫】** 沙漏能佔比門檻、動能轉內能平滑度、接觸滑移能負值排查。 |
+| **質量縮放** | `references/mass_scaling_rules.md` | **【判斷力庫】** CFL 時間步長、`DT2MS` 負值規則、質量增加率三級控制 (<2% / <5%) 與質心檢驗。 |
 | **自動化腳本** | `scripts/run_drop_test_demo.py` | 完整落摔關鍵字卡生成腳本，內建 glstat 能量平衡與質量縮放自動評估函數。 |
 
 ---
