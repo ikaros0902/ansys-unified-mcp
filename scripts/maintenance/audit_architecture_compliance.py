@@ -28,8 +28,13 @@ if hasattr(sys.stderr, "reconfigure"):
 
 # 專案根目錄解析（scripts/maintenance/ -> scripts/ -> repo root: parents[2]）
 _project_root = Path(__file__).resolve().parents[2]
-_skills_candidate = _project_root / "skills"
-PROJECT_BASE = str(_skills_candidate if _skills_candidate.is_dir() else _project_root / "SKILLs")
+if (_project_root / "agents" / "skills").is_dir():
+    _skills_candidate = _project_root / "agents" / "skills"
+elif (_project_root / "skills").is_dir():
+    _skills_candidate = _project_root / "skills"
+else:
+    _skills_candidate = _project_root / "SKILLs"
+PROJECT_BASE = str(_skills_candidate)
 GLOBAL_BASE = str(Path.home() / ".gemini" / "config" / "skills")
 
 

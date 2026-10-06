@@ -50,6 +50,7 @@ line-length = 100
 target-version = "py310"  # 對齊 requires-python = ">=3.10"
 # 文件語料、執行輸出與佇列目錄不含需檢查的原始碼
 extend-exclude = [
+    ".runtime",
     "Documentation",
     "Documentation_md",
     "Documentation_clean",
@@ -98,9 +99,11 @@ ignore = [
 # 的 py_compile 檢查獨立把關。
 "skills/**/*.py" = ["F821"]
 "SKILLs/**/*.py" = ["F821"]
+"agents/skills/**/*.py" = ["F821"]
 "deploy/**/*.py" = ["F821"]
 "scripts/deploy/**/*.py" = ["F821"]
 "examples/**/*.py" = ["F821"]
+"docs/examples/**/*.py" = ["F821"]
 "scripts/pcb_warpage_analysis/*.py" = ["F821"]
 "workbench_plugin/**/*.py" = ["F821"]
 "samples/*.py" = ["F821"]

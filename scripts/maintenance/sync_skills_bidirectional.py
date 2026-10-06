@@ -43,10 +43,15 @@ def discover_controlled_skills(skills_root: str) -> List[str]:
     return discovered
 
 
-# 預設受控技能目錄清單：動態掃描 skills/ 根目錄取得
+# 預設受控技能目錄清單：動態掃描 agents/skills (或相容 skills/) 取得
 _project_root = Path(__file__).resolve().parents[2]
-_skills_candidate = _project_root / "skills"
-_project_base = str(_skills_candidate if _skills_candidate.is_dir() else _project_root / "SKILLs")
+if (_project_root / "agents" / "skills").is_dir():
+    _skills_candidate = _project_root / "agents" / "skills"
+elif (_project_root / "skills").is_dir():
+    _skills_candidate = _project_root / "skills"
+else:
+    _skills_candidate = _project_root / "SKILLs"
+_project_base = str(_skills_candidate)
 CONTROLLED_SKILLS = discover_controlled_skills(_project_base)
 
 

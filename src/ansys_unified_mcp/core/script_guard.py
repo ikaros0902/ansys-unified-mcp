@@ -31,7 +31,7 @@ _DANGEROUS_PATTERNS = [
 
 _AUDIT_LOG_DIR = Path(os.environ.get(
     "ANSYS_MCP_AUDIT_DIR",
-    Path(__file__).resolve().parents[3] / "logs" / "script_audit"
+    Path(__file__).resolve().parents[3] / ".runtime" / "logs" / "script_audit"
 ))
 
 _MODE = os.environ.get("ANSYS_MCP_SCRIPT_GUARD", "warn")  # warn | strict | off

@@ -17,7 +17,12 @@ import sys
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-SOURCE_DIR = (REPO_ROOT / "skills") if (REPO_ROOT / "skills").is_dir() else (REPO_ROOT / "SKILLs")
+if (REPO_ROOT / "agents" / "skills").is_dir():
+    SOURCE_DIR = REPO_ROOT / "agents" / "skills"
+elif (REPO_ROOT / "skills").is_dir():
+    SOURCE_DIR = REPO_ROOT / "skills"
+else:
+    SOURCE_DIR = REPO_ROOT / "SKILLs"
 TARGET_DIRS = [
     REPO_ROOT / ".kiro" / "skills",
     REPO_ROOT / ".cline" / "skills",

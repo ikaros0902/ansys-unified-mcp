@@ -10,7 +10,12 @@ from ansys_unified_mcp.config import config
 
 logger = logging.getLogger(__name__)
 
-_DEFAULT_REGISTRY_DIR = Path(__file__).parent.parent.parent / "workbench_queue" / "registry"
+_REPO_ROOT = Path(__file__).resolve().parents[3]
+_RUNTIME_REGISTRY_DIR = _REPO_ROOT / ".runtime" / "queue" / "registry"
+_LEGACY_REGISTRY_DIR = _REPO_ROOT / "workbench_queue" / "registry"
+_DEFAULT_REGISTRY_DIR = (
+    _RUNTIME_REGISTRY_DIR if _RUNTIME_REGISTRY_DIR.exists() else _LEGACY_REGISTRY_DIR
+)
 
 
 class ConnectionManager:

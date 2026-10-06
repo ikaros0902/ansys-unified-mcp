@@ -30,6 +30,7 @@ __pycache__/
 **/.obsidian/
 
 # 執行日誌與暫存
+.runtime/
 *.log
 *.txt
 !requirements.txt

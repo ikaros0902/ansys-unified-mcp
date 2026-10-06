@@ -368,7 +368,10 @@ def test_unit_test_default_directory_touches_real_disk_and_psutil():
     on any real json files found there!
     """
     cm = ConnectionManager()
-    default_dir = Path(__file__).parent.parent.parent / "workbench_queue" / "registry"
+    repo_root = Path(__file__).resolve().parents[2]
+    runtime_dir = repo_root / ".runtime" / "queue" / "registry"
+    legacy_dir = repo_root / "workbench_queue" / "registry"
+    default_dir = runtime_dir if runtime_dir.exists() else legacy_dir
 
     with patch("psutil.pid_exists") as mock_pid_exists:
         with patch.object(Path, "unlink") as mock_unlink:

@@ -18,7 +18,7 @@ import pytest
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 AUDIT_SCRIPT = PROJECT_ROOT / "scripts" / "maintenance" / "audit_architecture_compliance.py"
 SYNC_SCRIPT = PROJECT_ROOT / "scripts" / "maintenance" / "sync_skills_bidirectional.py"
-SKILLS_ROOT = (PROJECT_ROOT / "skills") if (PROJECT_ROOT / "skills").is_dir() else (PROJECT_ROOT / "SKILLs")
+SKILLS_ROOT = (PROJECT_ROOT / "agents" / "skills") if (PROJECT_ROOT / "agents" / "skills").is_dir() else ((PROJECT_ROOT / "skills") if (PROJECT_ROOT / "skills").is_dir() else (PROJECT_ROOT / "SKILLs"))
 
 
 def _run(script: Path, *args: str) -> subprocess.CompletedProcess:
