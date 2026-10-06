@@ -1,0 +1,238 @@
+
+# -*- coding: utf-8 -*-
+# SpaceClaim server-side IronPython midsurface script (ASCII only).
+import sys
+result = {}
+
+def _load_api():
+    import System
+    loaded = []
+    for asm in System.AppDomain.CurrentDomain.GetAssemblies():
+        try:
+            nm = asm.GetName().Name
+        except Exception:
+            continue
+        if nm and nm.startswith("SpaceClaim.Api.V") and nm.count(".") == 2:
+            loaded.append(nm.split(".")[-1])
+    def _ver(v):
+        try:
+            return int(v[1:])
+        except Exception:
+            return 0
+    names = sorted(set(loaded), key=_ver, reverse=True)
+    names += ["V262", "V261", "V252", "V251", "V242", "V241", "V232", "V231"]
+    for v in names:
+        try:
+            mod = __import__("SpaceClaim.Api." + v, fromlist=["IDesignBody"])
+            mod.IDesignBody
+            return mod, v
+        except Exception:
+            continue
+    raise RuntimeError("No usable SpaceClaim.Api.Vxxx namespace found")
+
+def _arg(d, k, default):
+    try:
+        if d.ContainsKey(k):
+            return d[k]
+    except Exception:
+        try:
+            return d[k]
+        except Exception:
+            pass
+    return default
+
+def _f(d, k, default):
+    try:
+        return float(_arg(d, k, default))
+    except Exception:
+        return float(default)
+
+def _b(d, k, default):
+    return str(_arg(d, k, "1" if default else "0")) in ("1", "true", "True")
+
+try:
+    api, api_ver = _load_api()
+    result["api"] = api_ver
+
+    IDesignBody = api.IDesignBody
+    MidSurfaceOffsetType = api.MidSurfaceOffsetType
+    Midsurface = api.Scripting.Commands.Midsurface
+    VisibilityType = api.Scripting.Commands.VisibilityType
+    MidsurfaceOptions = api.Scripting.Commands.CommandOptions.MidsurfaceOptions
+    CreationLocation = api.Scripting.Commands.CommandOptions.CreationLocation
+    DesignFaceExtensions = api.Scripting.Extensions.DesignFaceExtensions
+    MeasureHelper = api.Scripting.Helpers.MeasureHelper
+    ViewHelper = api.Scripting.Helpers.ViewHelper
+    BodySelection = api.Scripting.Selection.BodySelection
+    FaceSelection = api.Scripting.Selection.FaceSelection
+    Selection = api.Scripting.Selection.Selection
+
+    # mm -> m (SpaceClaim API works in meters)
+    max_thickness = _f(argsDict, "max_thickness_mm", 6.0) / 1000.0
+    main_surface_ratio = _f(argsDict, "main_surface_ratio", 0.7)
+    area_difference_ratio = _f(argsDict, "area_difference_ratio", 0.1)
+    complex_area_diff = _f(argsDict, "complex_area_diff", 0.05)
+    enable_sheet_metal_check = _b(argsDict, "enable_sheet_metal_check", True)
+    hide_source_bodies = _b(argsDict, "hide_source_bodies", True)
+
+    if max_thickness <= 0.0:
+        result["ok"] = "no"
+        result["error"] = "max_thickness_mm must be greater than 0"
+        raise SystemExit
+
+    def get_face_area(face):
+        try:
+            return face.Shape.Area
+        except Exception:
+            return face.Area
+
+    def get_body_faces(body):
+        return [face for face in body.Faces]
+
+    def get_tangent_chain(face):
+        return [tf for tf in DesignFaceExtensions.GetTangentChain(face)]
+
+    def get_unique_faces(faces):
+        uniq = []
+        for face in faces:
+            dup = False
+            for known in uniq:
+                if face == known:
+                    dup = True
+                    break
+            if not dup:
+                uniq.append(face)
+        return uniq
+
+    def get_total_area(faces):
+        return sum(get_face_area(f) for f in faces)
+
+    def get_gap_distance(f1, f2):
+        s1 = FaceSelection.Create(f1)
+        s2 = FaceSelection.Create(f2)
+        return MeasureHelper.DistanceBetweenObjects(s1, s2).Distance
+
+    def are_normals_opposed(f1, f2):
+        try:
+            n1 = DesignFaceExtensions.GetFaceNormal(f1, 0.5, 0.5)
+            n2 = DesignFaceExtensions.GetFaceNormal(f2, 0.5, 0.5)
+            return abs(n1.Dot(n2)) > 0.99
+        except Exception:
+            return True
+
+    def find_primary_face_pair(body):
+        faces = get_body_faces(body)
+        if len(faces) < 2:
+            return None
+        faces.sort(key=get_face_area, reverse=True)
+        first = faces[0]
+        first_area = get_face_area(first)
+        for second in faces[1:]:
+            if not are_normals_opposed(first, second):
+                continue
+            second_area = get_face_area(second)
+            rad = abs(first_area - second_area) / max(first_area, second_area)
+            if rad > area_difference_ratio:
+                continue
+            try:
+                dist = get_gap_distance(first, second)
+            except Exception:
+                continue
+            if 0.0 < dist <= max_thickness:
+                return (first, second, dist)
+        return None
+
+    def is_sheet_metal_body(body, f1, f2, thickness):
+        c1 = get_unique_faces(get_tangent_chain(f1))
+        c2 = get_unique_faces(get_tangent_chain(f2))
+        primary = get_unique_faces(c1 + c2)
+        a1 = get_total_area(c1)
+        a2 = get_total_area(c2)
+        all_area = get_total_area(get_body_faces(body))
+        if all_area <= 0.0:
+            return False
+        rad = abs(a1 - a2) / max(a1, a2)
+        psr = get_total_area(primary) / all_area
+        return (thickness <= max_thickness and rad <= area_difference_ratio
+                and psr >= main_surface_ratio)
+
+    def create_midsurface(f1, f2, force_tangent):
+        opts = MidsurfaceOptions()
+        opts.AllowNonManifold = False
+        opts.ExtendSurfaces = True
+        opts.CreationLocation = CreationLocation.ActiveComponent
+        opts.Group = True
+        opts.OffsetType = MidSurfaceOffsetType.Middle
+        cmd = Midsurface(opts)
+        if force_tangent:
+            cmd.AddMatchingFacePairs(f1, f2, 1.0e-5, False)
+            for fs in get_tangent_chain(f1):
+                cmd.AddMatchingFacePairs(None, fs)
+            for fs in get_tangent_chain(f2):
+                cmd.AddMatchingFacePairs(None, fs)
+        else:
+            cmd.AddMatchingFacePairs(f1, f2, 1.0e-5, True)
+        r = cmd.Execute()
+        if not r.Success:
+            raise RuntimeError("Midsurface command did not complete successfully")
+
+    def get_body_name(body):
+        try:
+            return body.Name
+        except Exception:
+            return "<unnamed body>"
+
+    def hide_body(body):
+        ViewHelper.SetObjectVisibility(BodySelection.Create(body),
+                                       VisibilityType.Hide, False, False)
+
+    selected = [b for b in Selection.GetActive().GetItems[IDesignBody]()]
+    result["selected_count"] = str(len(selected))
+    if not selected:
+        result["ok"] = "no"
+        result["error"] = "no body selected (Selection.GetActive is empty)"
+        raise SystemExit
+
+    success = 0
+    skipped = 0
+    failed = 0
+    details = []
+    for body in selected:
+        bn = get_body_name(body)
+        try:
+            pair = find_primary_face_pair(body)
+            if pair is None:
+                failed += 1
+                details.append("[" + bn + "] FAIL: no valid primary opposing face pair")
+                continue
+            f1, f2, thickness = pair
+            if enable_sheet_metal_check and not is_sheet_metal_body(body, f1, f2, thickness):
+                skipped += 1
+                details.append("[" + bn + "] SKIP: sheet-metal check not passed")
+                continue
+            a1 = get_face_area(f1)
+            a2 = get_face_area(f2)
+            adiff = abs(a1 - a2) / max(a1, a2)
+            is_complex = (adiff > complex_area_diff)
+            create_midsurface(f1, f2, is_complex)
+            if hide_source_bodies:
+                hide_body(body)
+            success += 1
+            mode = "complex" if is_complex else "simple"
+            details.append("[" + bn + "] OK: midsurface created (" + mode
+                           + ", area_diff=" + ("%.1f" % (adiff * 100.0)) + "%)")
+        except Exception:
+            failed += 1
+            details.append("[" + bn + "] FAIL: " + str(sys.exc_info()[1]))
+
+    result["ok"] = "yes"
+    result["success"] = str(success)
+    result["skipped"] = str(skipped)
+    result["failed"] = str(failed)
+    result["details"] = "\n".join(details)
+except SystemExit:
+    pass
+except Exception:
+    e = sys.exc_info()[1]
+    result["ok"] = "no"
+    result["error"] = str(e)

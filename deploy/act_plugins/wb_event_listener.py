@@ -51,6 +51,11 @@ _watcher = None
 _processed_lock = threading.Lock()
 _processed_ids = set()
 
+# 背景輪詢備援（修復 FileSystemWatcher 事件偶爾不觸發的問題）
+_POLL_INTERVAL = 0.5  # 秒
+_poller_thread = None
+_poller_stop = threading.Event()
+
 
 def _log(msg):
     """寫入日誌檔與 ExtAPI/Console"""
@@ -262,19 +267,26 @@ def _write_result(cmd_id, result):
             _log("Failed to write result file %s: %s" % (path, str(exc)))
 
 
-def _on_file_changed(sender, event_args):
-    """FileSystemWatcher 事件處理函式 (觸發於 .NET ThreadPool 背景執行緒)"""
+def _process_command_file(filepath, filename=None):
+    """處理單一 command 檔：讀取 -> 執行 -> 寫結果 -> 刪除。
+
+    供 FileSystemWatcher 事件處理器與背景輪詢 fallback 共用；以 _processed_ids
+    去重，確保事件與輪詢不會重複執行同一指令。
+    """
     try:
-        filepath = event_args.FullPath
-        filename = event_args.Name
+        if filename is None:
+            filename = os.path.basename(filepath)
 
         if not filename or not filename.endswith(".json"):
+            return
+        # 略過尚未改名完成的暫存檔
+        if filename.endswith(".tmp"):
             return
 
         base_name = os.path.splitext(filename)[0]
         cmd_id = base_name[4:] if base_name.startswith("cmd_") else base_name
 
-        # 防重複觸發去重鎖
+        # 防重複觸發去重鎖（事件與輪詢共用）
         with _processed_lock:
             if cmd_id in _processed_ids:
                 return
@@ -282,6 +294,7 @@ def _on_file_changed(sender, event_args):
 
         payload = _read_json_retry(filepath)
         if payload is None:
+            # 讀不到（可能檔案已被移走或仍在寫入）：釋放去重標記以便稍後重試
             with _processed_lock:
                 _processed_ids.discard(cmd_id)
             return
@@ -297,7 +310,39 @@ def _on_file_changed(sender, event_args):
             pass
 
     except Exception as exc:
+        _log("Error processing command file %s: %s" % (str(filepath), str(exc)))
+
+
+def _on_file_changed(sender, event_args):
+    """FileSystemWatcher 事件處理函式 (觸發於 .NET ThreadPool 背景執行緒)"""
+    try:
+        _process_command_file(event_args.FullPath, event_args.Name)
+    except Exception as exc:
         _log("Error in file event handler: " + str(exc))
+
+
+def _poll_commands_once():
+    """掃描 commands 目錄，處理任何 FileSystemWatcher 可能漏接的 cmd_*.json。"""
+    try:
+        if not os.path.isdir(_COMMANDS_DIR):
+            return
+        for name in os.listdir(_COMMANDS_DIR):
+            if not name.endswith(".json") or name.endswith(".tmp"):
+                continue
+            _process_command_file(os.path.join(_COMMANDS_DIR, name), name)
+    except Exception as exc:
+        _log("Error during poll scan: " + str(exc))
+
+
+def _poller_loop():
+    """背景輪詢迴圈：作為 FileSystemWatcher 的可靠性備援。
+
+    IronPython / ACT 環境下 .NET FileSystemWatcher 事件偶有不觸發的情形，
+    此輪詢確保指令仍會被處理（延遲約 _POLL_INTERVAL 秒）。
+    """
+    while not _poller_stop.is_set():
+        _poll_commands_once()
+        _poller_stop.wait(_POLL_INTERVAL)
 
 
 def start_listener(queue_root=None):
@@ -330,12 +375,38 @@ def start_listener(queue_root=None):
 
     _watcher.EnableRaisingEvents = True
     _log("FileSystemWatcher listener started on: " + _COMMANDS_DIR)
+
+    # 啟動背景輪詢備援執行緒，確保即使 watcher 事件未觸發也能處理指令
+    _start_poller()
+
     return _watcher
 
 
+def _start_poller():
+    """啟動背景輪詢執行緒（若尚未啟動）。"""
+    global _poller_thread
+    if _poller_thread is not None and _poller_thread.is_alive():
+        return
+    _poller_stop.clear()
+    _poller_thread = threading.Thread(target=_poller_loop)
+    _poller_thread.daemon = True  # 不阻擋 WB 關閉
+    _poller_thread.start()
+    _log("Background command poller started (interval=%.1fs)." % _POLL_INTERVAL)
+
+
 def stop_listener():
-    """停止 FileSystemWatcher 監聽器"""
-    global _watcher
+    """停止 FileSystemWatcher 監聽器與背景輪詢執行緒"""
+    global _watcher, _poller_thread
+    # 先停輪詢
+    _poller_stop.set()
+    if _poller_thread is not None:
+        try:
+            _poller_thread.join(timeout=2.0)
+        except Exception:
+            pass
+        _poller_thread = None
+        _log("Background command poller stopped.")
+
     if _watcher is not None:
         try:
             _watcher.EnableRaisingEvents = False
@@ -347,5 +418,7 @@ def stop_listener():
 
 
 def is_listening():
-    """查詢監聽器是否運作中"""
-    return _watcher is not None and _watcher.EnableRaisingEvents
+    """查詢監聽器是否運作中（watcher 或背景輪詢任一在運作即為 True）"""
+    watcher_on = _watcher is not None and _watcher.EnableRaisingEvents
+    poller_on = _poller_thread is not None and _poller_thread.is_alive()
+    return bool(watcher_on or poller_on)

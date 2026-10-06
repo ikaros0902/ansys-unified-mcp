@@ -477,6 +477,24 @@ async def geometry_export(file_path: str, format: str = 'step') -> dict:
     res = await sim_impl.call_tool('geometry_export', args)
     return "\n".join([c.text for c in res])
 
+@tool_geometry(name='geometry_suppress_and_hide')
+async def geometry_suppress_and_hide(patterns: List[str], exclude: List[str] = None,
+                                     suppress: bool = True, hide: bool = True) -> dict:
+    """依 body 名稱（支援 glob 萬用字元）批次設定『Suppress for Physics』並隱藏
+
+    用於幾何簡化完成後，將原始實體自下游網格/求解排除。透過 SpaceClaim 伺服器端
+    腳本執行（50051 gRPC），不需 Workbench 橋接器或 ACT 情境。
+    :param patterns: 要抑制/隱藏的 body 名稱樣式，支援 glob（例 ['ICX_HS_1U_FIN_*', 'DIMM_DDR5_EGS']）
+    :param exclude: 排除樣式；符合者不處理（例 ['*_simplified_*'] 以保護簡化結果）
+    :param suppress: 是否設定 Suppress for Physics
+    :param hide: 是否隱藏（取消可見性）
+    """
+    args = {'patterns': list(patterns or []), 'suppress': suppress, 'hide': hide}
+    if exclude:
+        args['exclude'] = list(exclude)
+    res = await sim_impl.call_tool('geometry_suppress_and_hide', args)
+    return "\n".join([c.text for c in res])
+
 @tool_geometry(name='geometry_list_bodies')
 async def geometry_list_bodies() -> dict:
     """列出當前設計中的所有幾何體

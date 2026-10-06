@@ -35,6 +35,7 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(me
 logger = logging.getLogger("ansys-mcp")
 
 from ansys_unified_mcp.core.sessions import registry
+from ansys_unified_mcp.drivers.spaceclaim_scripts import load_script
 
 # ---------------------------------------------------------------------------
 # Global sessions (backed by SessionRegistry)
@@ -179,9 +180,9 @@ GEOMETRY_TOOLS = [
              "named_selection": {"type": "string", "default": "ram_bottom", "description": "方塊底面接合面的 named selection 名稱"},
              "move_to_component": {"type": "boolean", "default": True, "description": "是否將簡化方塊移入新 component（名稱見 component_name）"},
              "component_name": {"type": "string", "default": "RAM_simplified", "description": "move_to_component 時新建的 component 名稱"},
-             "hide_source": {"type": "boolean", "default": True, "description": "是否抑制 (suppress) 原始 RAM 與 socket body，使其在下游網格/求解被排除"}},
+             "hide_source": {"type": "boolean", "default": True, "description": "是否抑制 (suppress for physics) 並隱藏原始 RAM 與 socket body，使其在下游網格/求解被排除且不干擾框選"}},
              "required": ["motherboard", "ram", "socket"]}),
-    Tool(name="geometry_simplify_ram_batch", description="【呼叫前必須先向使用者索取主機板、RAM、socket 三個 body 名稱，不可猜測或自行從 body 清單推斷】批次簡化所有同名 RAM+socket 配對（依 X 中心位置自動就近配對）。每對成為一座落於主機板頂面的方塊，各自建立底面 named selection，依 X 順序編號 <result_prefix>_01、<ns_prefix>_01…。適用於多條相同 DIMM/socket 陣列。原始 body 保留不動。",
+    Tool(name="geometry_simplify_ram_batch", description="【呼叫前必須先向使用者索取主機板、RAM、socket 三個 body 名稱，不可猜測或自行從 body 清單推斷】批次簡化所有同名 RAM+socket 配對（依 X 中心位置自動就近配對）。每對成為一座落於主機板頂面的方塊，各自建立底面 named selection，依 X 順序編號 <result_prefix>_01、<ns_prefix>_01…。適用於多條相同 DIMM/socket 陣列。配對成功的原始 body 預設會被抑制 (suppress for physics) 並隱藏。",
          inputSchema={"type": "object", "properties": {
              "motherboard": {"type": "string", "description": "主機板 body 名稱（頂面=各方塊底面）"},
              "ram": {"type": "string", "description": "RAM 卡 body 名稱（陣列中重複出現）"},
@@ -191,15 +192,15 @@ GEOMETRY_TOOLS = [
              "tol_mm": {"type": "number", "default": 2.0, "description": "RAM 與 socket 視為一對的最大 X 中心距離（單位：毫米 mm）"},
              "move_to_component": {"type": "boolean", "default": True, "description": "是否將所有簡化方塊移入同一新 component（名稱見 component_name）"},
              "component_name": {"type": "string", "default": "RAM_simplified", "description": "move_to_component 時新建的 component 名稱"},
-             "hide_source": {"type": "boolean", "default": True, "description": "是否抑制 (suppress) 配對成功的原始 RAM 與 socket body，使其在下游網格/求解被排除"}},
+             "hide_source": {"type": "boolean", "default": True, "description": "是否抑制 (suppress for physics) 並隱藏配對成功的原始 RAM 與 socket body，使其在下游網格/求解被排除且不干擾框選"}},
              "required": ["motherboard", "ram", "socket"]}),
-    Tool(name="geometry_simplify_heatsink", description="散熱片 (heatsink) 簡化為凸字形方塊組（擠型/壓鑄/折片/針狀鰭片，單一或多 body 組件皆可）：底板（包圍盒 X-Z，鎖孔所在板底→鰭片根部）＋上凸（最大一排鰭片範圍，鰭片根部→鰭片頂）＋下凸（主接合底面範圍，接觸面→板底），無階梯、無圓角，螺絲/彈簧/推銷不保留；鎖孔（原始完整圓周的 Y 向挖孔）以 Y 向直圓柱貫穿；主接合底面建立 named selection。量測原始體積，以常見散熱片密度（預設鋁 2700 kg/m³，可逐 body 指定）估算質量，於質量守恆下反推簡化體應設定的等效密度（kg/m³），附加於新 body 名稱後綴 _rho<整數>。結果建於原始 body 所屬 component（共用 master 的各 instance 皆會出現），原始 body 預設保留。高度軸為 world Y。",
+    Tool(name="geometry_simplify_heatsink", description="散熱片 (heatsink) 簡化為凸字形方塊組（擠型/壓鑄/折片/針狀鰭片，單一或多 body 組件皆可）：底板（包圍盒 X-Z，鎖孔所在板底→鰭片根部）＋上凸（最大一排鰭片範圍，鰭片根部→鰭片頂）＋下凸（主接合底面範圍，接觸面→板底），無階梯、無圓角，螺絲/彈簧/推銷不保留；鎖孔（原始完整圓周的 Y 向挖孔）以 Y 向直圓柱貫穿；主接合底面建立 named selection。量測原始體積，以常見散熱片密度（預設鋁 2700 kg/m³，可逐 body 指定）估算質量，於質量守恆下反推簡化體應設定的等效密度（kg/m³），附加於新 body 名稱後綴 _rho<整數>。結果建於原始 body 所屬 component（共用 master 的各 instance 皆會出現），原始 body 預設保留並設定 Suppress for Physics ＋ 隱藏（下游排除、不干擾框選）。高度軸為 world Y。",
          inputSchema={"type": "object", "properties": {
              "source": {"type": "string", "description": "散熱片主 body 名稱（決定結果命名與所屬 component），例 'ENDURANCE-POWER-BRICK-HS-241018'"},
              "result_name": {"type": "string", "description": "簡化體 body 名稱（不填則為 <source>_sim，再附加 _rho<密度>；多組時再加 _01、_02…）"},
              "density": {"type": "number", "description": "散熱片材料密度 (kg/m³)，不填則依 material 預設"},
              "material": {"type": "string", "enum": ["aluminum", "aluminum_6063", "copper", "copper_c110"], "default": "aluminum", "description": "常見散熱片材料（決定預設密度，aluminum=2700, copper=8960 kg/m³）"},
-             "keep_source": {"type": "boolean", "default": True, "description": "是否保留原始散熱片 body（預設保留）"},
+             "keep_source": {"type": "boolean", "default": True, "description": "是否保留原始散熱片 body（預設保留）；保留時會自動對原始 body 設定 Suppress for Physics 並隱藏，使其在下游網格/求解被排除且不干擾框選"},
              "named_selection": {"type": "string", "default": "hs_bottom", "description": "簡化體主接合底面的 named selection 名稱（多組時加 _01、_02…）"},
              "name_density_suffix": {"type": "boolean", "default": True, "description": "是否將反推等效密度（kg/m³ 取整數）附加於新 body 名稱後綴（_rho<值>）"},
              "hole_min_dia_mm": {"type": "number", "default": 2.5, "description": "視為鎖孔的最小孔喉直徑（mm）。鎖孔 = 底板上完整圓周、開口於鰭片根部（容許倒角）的內凹 Y 向圓柱，同軸多段取最小半徑（孔喉）；小於門檻者忽略。"},
@@ -249,6 +250,16 @@ GEOMETRY_TOOLS = [
              "view": {"type": "string", "enum": ["current", "iso", "front", "back", "top", "bottom", "left", "right"], "default": "current", "description": "截圖視角（Y 朝上座標系）；current 為目前視角"},
              "bodies": {"type": "array", "items": {"type": "string"}, "description": "僅顯示這些 body（依名稱），其他暫時隱藏，截圖後還原"}},
              "required": ["file_path"]}),
+    Tool(name="geometry_suppress_and_hide",
+         description="依 body 名稱（支援 glob 萬用字元）批次設定『Suppress for Physics』並隱藏，用於簡化完成後排除原始實體。走 SpaceClaim 伺服器端腳本（50051 gRPC），不需 Workbench 橋接器。",
+         inputSchema={"type": "object", "properties": {
+             "patterns": {"type": "array", "items": {"type": "string"},
+                          "description": "要抑制/隱藏的 body 名稱樣式，支援 glob（例 ['ICX_HS_1U_FIN_*','DIMM_DDR5_EGS']）"},
+             "exclude": {"type": "array", "items": {"type": "string"},
+                         "description": "排除樣式；符合者不處理（例 ['*_simplified_*'] 以保護簡化結果）"},
+             "suppress": {"type": "boolean", "default": True, "description": "是否設定 Suppress for Physics"},
+             "hide": {"type": "boolean", "default": True, "description": "是否隱藏（取消可見性）"}},
+             "required": ["patterns"]}),
     Tool(name="geometry_list_bodies", description="列出當前設計中的所有幾何體", inputSchema={"type": "object", "properties": {}}),
     Tool(name="geometry_import_file", description="匯入 CAD 檔案",
          inputSchema={"type": "object", "properties": {"file_path": {"type": "string"}}, "required": ["file_path"]}),
@@ -596,20 +607,44 @@ def _build_ram_block(design, ram_body, socket_body, mb_top_y, result_name, ns_na
     }
 
 
-def _hide_source_body(body):
-    """抑制 (suppress) 原始實體 body，使其在下游（網格/求解）被排除。
+def _source_body_name(body):
+    """取得原始 body 名稱（供後續走伺服器端腳本精確 suppress/hide 之用）。
 
-    PyAnsys Geometry Python 端無可靠的「視覺隱藏」API；set_suppressed(True)
-    是把原始實體排除於下游的正確語意（SpaceClaim 樹中會標為抑制）。
-    回傳是否成功。
+    PyAnsys Geometry Python 端的 body.set_suppressed(True) 在實務上會靜默失效
+    （尤其 add_component 之後 body 物件失聯），且無可靠的視覺隱藏 API。因此此處
+    僅回傳名稱，真正的 suppress-for-physics + 隱藏改由 _suppress_hide_sources()
+    透過已驗證的 SpaceClaim 伺服器端腳本（_geom_suppress_hide）完成。
     """
     try:
-        if body is not None and body.is_alive:
-            body.set_suppressed(True)
-            return True
+        if body is not None and getattr(body, "is_alive", True):
+            nm = getattr(body, "name", None)
+            if nm:
+                return str(nm)
     except Exception as e:
-        logger.warning(f"抑制原始 body '{getattr(body, 'name', '?')}' 失敗: {e}")
-    return False
+        logger.warning(f"取得原始 body 名稱失敗: {e}")
+    return None
+
+
+# 簡化結果 body 的保護樣式：避免被原始 body 的 glob 誤抑制/誤隱藏
+_SIMPLIFIED_PROTECT = ["*_simplified_*", "*_rho*", "RAM_simplified*"]
+
+
+def _suppress_hide_sources(names, extra_exclude=None):
+    """簡化完成後，對原始 body 以其名稱樣式執行 suppress-for-physics + 隱藏。
+
+    走已驗證可靠的 SpaceClaim 伺服器端腳本（_geom_suppress_hide），取代先前
+    靜默失效的 PyAnsys 端 body.set_suppressed(True)。
+
+    names: 原始 body 名稱清單（可重複，會自動去重並當作 glob 樣式）。
+    回傳 (ok: bool, detail: str)；names 為空時回傳 (False, "")。
+    """
+    pats = sorted({str(n) for n in (names or []) if n})
+    if not pats:
+        return False, ""
+    exclude = list(_SIMPLIFIED_PROTECT) + list(extra_exclude or [])
+    detail = _geom_suppress_hide(pats, exclude=exclude, suppress=True, hide=True)
+    ok = detail.startswith("✓")
+    return ok, detail
 
 
 def _geom_simplify_ram(motherboard: str, ram: str, socket: str,
@@ -635,17 +670,23 @@ def _geom_simplify_ram(motherboard: str, ram: str, socket: str,
     info = _build_ram_block(design, ram_b, sock_b, mb_top_y, result_name, named_selection, target=target)
 
     hidden = 0
+    hide_detail = ""
     if hide_source:
-        hidden += 1 if _hide_source_body(ram_b) else 0
-        hidden += 1 if _hide_source_body(sock_b) else 0
+        src_names = [n for n in (_source_body_name(ram_b), _source_body_name(sock_b)) if n]
+        ok, hide_detail = _suppress_hide_sources(src_names)
+        if ok:
+            hidden = len(src_names)
 
     comp_note = f"（已移入新 component '{component_name}'）" if move_to_component else ""
-    hide_note = f"，已抑制 {hidden} 個原始實體" if hide_source else ""
+    hide_note = f"，已抑制+隱藏 {hidden} 個原始實體" if hide_source else ""
     shape_note = "凸字形（socket 寬基座 + RAM 窄凸柱）" if info.get("shape") == "convex" else "單一方塊（退化）"
     tier_line = (
         f"  下段基座 (mm): {info['base_size_mm']}  上段凸柱 (mm): {info['top_size_mm']}\n"
         if info.get("shape") == "convex" else ""
     )
+    warn_line = ""
+    if hide_source and hidden == 0 and hide_detail:
+        warn_line = f"\n  ⚠ 原始實體抑制/隱藏未生效:\n{hide_detail}"
     return (
         f"✓ RAM 簡化完成：'{result_name}' 座落於 '{motherboard}' 頂面，形狀={shape_note}{comp_note}{hide_note}。\n"
         f"  合併來源: {ram} + {socket}\n"
@@ -653,6 +694,7 @@ def _geom_simplify_ram(motherboard: str, ram: str, socket: str,
         f"{tier_line}"
         f"  主機板頂面 Y={_mm(mb_top_y)}mm，RAM 頂 Y={info['block_max_mm'][1]}mm\n"
         f"  底面 named selection: {info['named_selection']} (created={info['named_selection_created']})"
+        f"{warn_line}"
     )
 
 
@@ -717,17 +759,26 @@ def _geom_simplify_ram_batch(motherboard: str, ram: str, socket: str,
     target = design.add_component(component_name) if move_to_component else None
 
     results, errors = [], []
-    hidden = 0
+    src_names = []
     for idx, (_x, ram_b, sock_b) in enumerate(pairs, start=1):
         rn = f"{result_prefix}_{idx:02d}"
         ns = f"{ns_prefix}_{idx:02d}"
         try:
             results.append(_build_ram_block(design, ram_b, sock_b, mb_top_y, rn, ns, target=target))
             if hide_source:
-                hidden += 1 if _hide_source_body(ram_b) else 0
-                hidden += 1 if _hide_source_body(sock_b) else 0
+                for b in (ram_b, sock_b):
+                    nm = _source_body_name(b)
+                    if nm:
+                        src_names.append(nm)
         except Exception as e:
             errors.append({"index": idx, "result_body": rn, "error": str(e)})
+
+    hidden = 0
+    hide_detail = ""
+    if hide_source and src_names:
+        ok, hide_detail = _suppress_hide_sources(src_names)
+        if ok:
+            hidden = len(src_names)
 
     ns_count = sum(1 for r in results if r["named_selection_created"])
     comp_note = f"，簡化方塊置於新 component '{component_name}'" if move_to_component else ""
@@ -735,10 +786,12 @@ def _geom_simplify_ram_batch(motherboard: str, ram: str, socket: str,
         f"✓ RAM 批次簡化完成（主機板 '{motherboard}' 頂面 Y={_mm(mb_top_y)}mm{comp_note}）",
         f"  RAM 數={len(rams)}, socket 數={len(sockets)}, 配對={len(pairs)}, "
         f"建塊={len(results)}, 建立 NS={ns_count}"
-        + (f", 抑制原始實體={hidden}" if hide_source else ""),
+        + (f", 抑制+隱藏原始實體={hidden}" if hide_source else ""),
     ]
     for r in results:
         lines.append(f"  - {r['result_body']}: shape={r.get('shape', 'box')} size(mm)={r['block_size_mm']} NS={r['named_selection']}")
+    if hide_source and hide_detail and hidden == 0:
+        lines.append(f"  ⚠ 原始實體抑制/隱藏未生效:\n{hide_detail}")
     if errors:
         lines.append(f"  ⚠ {len(errors)} 個配對失敗:")
         for e in errors:
@@ -1635,6 +1688,7 @@ def _geom_simplify_heatsink(source: str, result_name: str = None,
                                            HEATSINK_DENSITY_PRESETS["aluminum"])
 
     reports, errors = [], []
+    src_names = []
     for idx, bodies in enumerate(groups, start=1):
         base = result_name or f"{source}_sim"
         if len(groups) > 1:
@@ -1642,6 +1696,8 @@ def _geom_simplify_heatsink(source: str, result_name: str = None,
         ns = named_selection
         if ns and len(groups) > 1:
             ns = f"{ns}_{idx:02d}"
+        # 在簡化（可能刪除/改名原始 body）前，先記錄來源名稱樣式
+        grp_src_names = [n for n in (_source_body_name(b) for b in bodies) if n]
         try:
             r = _simplify_heatsink_group(design, bodies, base, rho, body_densities, keep_source,
                                          ns, name_density_suffix, hole_min_dia_mm,
@@ -1650,6 +1706,7 @@ def _geom_simplify_heatsink(source: str, result_name: str = None,
                                          progress=lambda m, i=idx: _p(f"[{i}/{len(groups)}] {m}"),
                                          diagnose_only=diagnose_only)
             reports.append(_format_heatsink_result(r, material, rho, hole_min_dia_mm))
+            src_names.extend(grp_src_names)
         except TimeoutError as e:
             errors.append(f"✗ component '{bodies[0].parent_component.name}': {e}（暫存幾何已清除，其餘組未處理）")
             break
@@ -1657,7 +1714,79 @@ def _geom_simplify_heatsink(source: str, result_name: str = None,
             errors.append(f"✗ component '{bodies[0].parent_component.name}': {e}（暫存幾何已清除）")
 
     head = f"散熱片簡化完成 {len(reports)}/{len(groups)} 組（'{source}'）"
+    # 預設（keep_source=True）保留原始 body → 以已驗證的伺服器端腳本 suppress-for-physics + 隱藏，
+    # 使其在下游網格/求解被排除且不干擾框選；diagnose_only 或 keep_source=False 時不處理。
+    if keep_source and not diagnose_only and src_names:
+        ok, hide_detail = _suppress_hide_sources(src_names)
+        if ok:
+            head += f"；已抑制+隱藏 {len(set(src_names))} 種原始 body 名稱"
+        else:
+            head += "；⚠ 原始 body 抑制/隱藏未生效"
+            if hide_detail:
+                errors.append(hide_detail)
     return "\n".join([head] + reports + errors)
+
+
+# ===================================================================
+# GEOMETRY HELPERS — SpaceClaim 伺服器端 suppress / hide
+# ===================================================================
+# 以 Modeler.run_script_file 送 IronPython 到 SpaceClaim 伺服器端，依 body 名稱
+# （支援 glob）批次設定「Suppress for Physics」與可見性。走已驗證可靠的 50051
+# gRPC 通道，不依賴 Workbench journal 橋接器或 ACT 情境。
+# 不同 SpaceClaim 版本的抑制屬性命名不一致，腳本會依序嘗試多個候選名稱並回報
+# 實際生效者，避免因 API 命名差異而靜默失敗。
+
+_SUPPRESS_HIDE_SCRIPT = load_script("suppress_hide")
+
+
+def _geom_suppress_hide(patterns, exclude=None, suppress=True, hide=True):
+    """依 body 名稱（glob）批次 suppress-for-physics 與隱藏，走 SpaceClaim 伺服器端腳本。"""
+    import tempfile
+
+    pats = [p for p in (patterns or []) if str(p).strip()]
+    if not pats:
+        return "錯誤: 未提供任何 body 名稱樣式 (patterns)"
+
+    script_args = {
+        "patterns_hex": "\n".join(pats).encode("utf-8").hex(),
+        "exclude_hex": "\n".join(exclude or []).encode("utf-8").hex(),
+        "do_suppress": "1" if suppress else "0",
+        "do_hide": "1" if hide else "0",
+    }
+
+    tmp = tempfile.NamedTemporaryFile("w", suffix=".py", delete=False, encoding="utf-8")
+    try:
+        tmp.write(_SUPPRESS_HIDE_SCRIPT)
+        tmp.close()
+        values, _design = _modeler.run_script_file(tmp.name, script_args=script_args)
+    except Exception as e:
+        return f"SpaceClaim suppress/hide 腳本執行失敗: {e}"
+    finally:
+        try:
+            os.remove(tmp.name)
+        except Exception:
+            pass
+
+    values = dict(values or {})
+    if str(values.get("ok", "")).lower() != "yes":
+        return f"suppress/hide 失敗: {values.get('error', '未知錯誤')}"
+
+    lines = [
+        "✓ SpaceClaim suppress/hide 完成",
+        f"  掃描 body 總數: {values.get('total_bodies')}",
+        f"  符合樣式: {values.get('matched')}",
+        f"  已抑制 (suppress for physics): {values.get('suppressed')}"
+        + (f"（屬性: {values.get('suppress_attr')}）" if values.get("suppress_attr") else ""),
+        f"  已隱藏: {values.get('hidden')}"
+        + (f"（屬性: {values.get('hide_attr')}）" if values.get("hide_attr") else ""),
+    ]
+    if values.get("failed"):
+        lines.append(f"  ⚠ 失敗項: {values.get('failed')}")
+    if values.get("names"):
+        lines.append("  處理清單:")
+        for n in str(values["names"]).split("\n"):
+            lines.append("    - " + n)
+    return "\n".join(lines)
 
 
 # ===================================================================
@@ -1674,210 +1803,7 @@ _SCREENSHOT_VIEWS = ("current", "iso", "front", "back", "top", "bottom", "left",
 _SCREENSHOT_FORMATS = {"png": "png", "jpg": "jpg", "jpeg": "jpg", "bmp": "bmp",
                        "tif": "tiff", "tiff": "tiff", "gif": "gif"}
 
-_SCREENSHOT_SCRIPT = r'''
-# -*- coding: utf-8 -*-
-# SpaceClaim server-side IronPython screenshot script (ASCII only).
-# script_args: out_path_hex, img_format(png/jpg/bmp/tiff/gif), fit(1/0), view,
-#              bodies_hex(newline separated names)
-# *_hex = UTF-8 bytes as hex: non-ASCII (e.g. CJK body names / paths) passed directly in
-# script_args fails to decode on the server, so they travel as ASCII hex and are decoded via .NET.
-import sys
-result = {}
-
-def _utf8_hex(h):
-    import System
-    h = str(h or "")
-    n = len(h) // 2
-    if n == 0:
-        return u""
-    arr = System.Array.CreateInstance(System.Byte, n)
-    for i in range(n):
-        arr[i] = System.Byte(int(h[2 * i:2 * i + 2], 16))
-    return System.Text.Encoding.UTF8.GetString(arr)
-
-def _load_api():
-    import System
-    # Prefer the newest API assembly actually loaded, then fall back to a fixed list
-    loaded = []
-    for asm in System.AppDomain.CurrentDomain.GetAssemblies():
-        try:
-            nm = asm.GetName().Name
-        except Exception:
-            continue
-        if nm and nm.startswith("SpaceClaim.Api.V") and nm.count(".") == 2:
-            loaded.append(nm.split(".")[-1])
-    def _ver(v):
-        try:
-            return int(v[1:])
-        except Exception:
-            return 0
-    names = sorted(set(loaded), key=_ver, reverse=True)
-    names += ["V262", "V261", "V252", "V251", "V242", "V241", "V232", "V231", "V22", "V21", "V20", "V19"]
-    for v in names:
-        try:
-            mod = __import__("SpaceClaim.Api." + v, fromlist=["Window", "WindowExportFormat"])
-            mod.Window
-            return mod, v
-        except Exception:
-            continue
-    raise RuntimeError("No usable SpaceClaim.Api.Vxxx namespace found")
-
-def _arg(d, k, default):
-    # argsDict is a .NET Dictionary[str, object]; it has no Python .get()
-    try:
-        if d.ContainsKey(k):
-            return d[k]
-    except Exception:
-        try:
-            return d[k]
-        except Exception:
-            pass
-    return default
-
-def _warn(key, msg):
-    if result.get(key):
-        result[key] = result[key] + "; " + str(msg)
-    else:
-        result[key] = str(msg)
-
-# View definition: (screen right dir, screen up dir); view normal = right x up (Y-up frame)
-_VIEW_AXES = {
-    "front":  ((1, 0, 0), (0, 1, 0)),
-    "back":   ((-1, 0, 0), (0, 1, 0)),
-    "top":    ((1, 0, 0), (0, 0, -1)),
-    "bottom": ((1, 0, 0), (0, 0, 1)),
-    "right":  ((0, 0, -1), (0, 1, 0)),
-    "left":   ((0, 0, 1), (0, 1, 0)),
-    "iso":    ((1, 0, -1), (-1, 2, -1)),
-}
-
-def _set_view(api, w, view):
-    Frame, Point, Direction = api.Geometry.Frame, api.Geometry.Point, api.Geometry.Direction
-    rx, up = _VIEW_AXES[view]
-    frame = Frame.Create(Point.Origin, Direction.Create(*rx), Direction.Create(*up))
-    errs = []
-    # Window.SetProjection expects a Matrix (V251): the projection maps world -> view,
-    # i.e. the inverse of the mapping of the view frame
-    try:
-        w.SetProjection(_sc(api, "Matrix").CreateMapping(frame).Inverse, True, False)
-        return
-    except Exception:
-        errs.append("Window.SetProjection(Matrix): " + str(sys.exc_info()[1]))
-    try:
-        w.SetProjection(frame, True, False)
-        return
-    except Exception:
-        errs.append("Window.SetProjection(Frame): " + str(sys.exc_info()[1]))
-    raise RuntimeError(" | ".join(errs))
-
-def _sc(api, name):
-    # SpaceClaim injects ViewHelper/Selection/Matrix as script globals; fall back to the API namespaces
-    g = globals()
-    if name in g:
-        return g[name]
-    for ns in ("Scripting", "Geometry"):
-        try:
-            return getattr(getattr(api, ns), name)
-        except Exception:
-            pass
-    raise RuntimeError("SpaceClaim API symbol not found: " + name)
-
-def _all_bodies(api, w):
-    part = w.Document.MainPart
-    try:
-        return list(part.GetDescendants[api.IDesignBody]())
-    except Exception:
-        return list(part.Bodies)
-
-try:
-    import System
-    out_path = _utf8_hex(_arg(argsDict, "out_path_hex", ""))
-    img_format = str(_arg(argsDict, "img_format", "png") or "png").lower()
-    fit = str(_arg(argsDict, "fit", "1")) in ("1", "true", "True")
-    view = str(_arg(argsDict, "view", "current") or "current").lower()
-    body_names = [n for n in _utf8_hex(_arg(argsDict, "bodies_hex", "")).split("\n") if n]
-
-    api, api_ver = _load_api()
-    result["api"] = api_ver
-    Window = api.Window
-    WindowExportFormat = api.WindowExportFormat
-    enum_name = {"png": "Png", "jpg": "Jpeg", "bmp": "Bmp", "tiff": "Tiff", "gif": "Gif"}[img_format]
-    fmt = getattr(WindowExportFormat, enum_name, None)
-
-    w = Window.ActiveWindow
-    if fmt is None:
-        result["ok"] = "no"
-        result["error"] = "WindowExportFormat of this SpaceClaim version does not support " + enum_name
-    elif w is None:
-        result["ok"] = "no"
-        result["error"] = "no active window (Window.ActiveWindow is None); SpaceClaim may be running without GUI"
-    else:
-        # Remember the original view so it can be restored
-        orig_proj = None
-        try:
-            orig_proj = w.Projection
-        except Exception:
-            pass
-        hidden = []
-        try:
-            if body_names:
-                bodies = _all_bodies(api, w)
-                wanted = set(body_names)
-                found = set([b.Name for b in bodies if b.Name in wanted])
-                missing = [n for n in body_names if n not in found]
-                if missing:
-                    raise RuntimeError("body not found: " + ", ".join(missing))
-                # Per-body SetVisibility does not hide component occurrences reliably;
-                # ViewHelper.HideOthers isolates the selection and ShowAll restores it.
-                keep = [b for b in bodies if b.Name in wanted]
-                try:
-                    _sc(api, "ViewHelper").HideOthers(_sc(api, "Selection").Create(keep))
-                    hidden.append("__all__")
-                except Exception:
-                    _warn("isolate_warn", sys.exc_info()[1])
-                result["hidden_count"] = str(len(bodies) - len(keep))
-
-            if view != "current":
-                try:
-                    _set_view(api, w, view)
-                except Exception:
-                    _warn("view_warn", sys.exc_info()[1])
-
-            if fit:
-                try:
-                    w.ZoomExtents()
-                except Exception:
-                    _warn("fit_warn", sys.exc_info()[1])
-
-            # Delete any old file first so a failed Export is not mistaken for success
-            if System.IO.File.Exists(out_path):
-                System.IO.File.Delete(out_path)
-            w.Export(fmt, out_path)
-            result["ok"] = "yes" if System.IO.File.Exists(out_path) else "no"
-            if result["ok"] != "yes":
-                result["error"] = "Export produced no file"
-            result["out_path"] = out_path
-            try:
-                result["bytes"] = str(System.IO.FileInfo(out_path).Length)
-            except Exception:
-                pass
-        finally:
-            if hidden:
-                try:
-                    _sc(api, "ViewHelper").ShowAll()
-                except Exception:
-                    _warn("restore_warn", "ShowAll: " + str(sys.exc_info()[1]))
-            if orig_proj is not None and (fit or view != "current"):
-                try:
-                    w.SetProjection(orig_proj, True, False)
-                except Exception:
-                    _warn("restore_warn", "view restore failed: " + str(sys.exc_info()[1]))
-except Exception:
-    import sys as _s
-    e = _s.exc_info()[1]
-    result["ok"] = "no"
-    result["error"] = str(e)
-'''
+_SCREENSHOT_SCRIPT = load_script("screenshot")
 
 
 def _geom_screenshot(file_path: str, image_format: str | None = None,
@@ -1988,245 +1914,7 @@ def _geom_screenshot(file_path: str, image_format: str | None = None,
 #   area_difference_ratio, complex_area_diff, enable_sheet_metal_check(1/0),
 #   hide_source_bodies(1/0)
 
-_MIDSURFACE_SCRIPT = r'''
-# -*- coding: utf-8 -*-
-# SpaceClaim server-side IronPython midsurface script (ASCII only).
-import sys
-result = {}
-
-def _load_api():
-    import System
-    loaded = []
-    for asm in System.AppDomain.CurrentDomain.GetAssemblies():
-        try:
-            nm = asm.GetName().Name
-        except Exception:
-            continue
-        if nm and nm.startswith("SpaceClaim.Api.V") and nm.count(".") == 2:
-            loaded.append(nm.split(".")[-1])
-    def _ver(v):
-        try:
-            return int(v[1:])
-        except Exception:
-            return 0
-    names = sorted(set(loaded), key=_ver, reverse=True)
-    names += ["V262", "V261", "V252", "V251", "V242", "V241", "V232", "V231"]
-    for v in names:
-        try:
-            mod = __import__("SpaceClaim.Api." + v, fromlist=["IDesignBody"])
-            mod.IDesignBody
-            return mod, v
-        except Exception:
-            continue
-    raise RuntimeError("No usable SpaceClaim.Api.Vxxx namespace found")
-
-def _arg(d, k, default):
-    try:
-        if d.ContainsKey(k):
-            return d[k]
-    except Exception:
-        try:
-            return d[k]
-        except Exception:
-            pass
-    return default
-
-def _f(d, k, default):
-    try:
-        return float(_arg(d, k, default))
-    except Exception:
-        return float(default)
-
-def _b(d, k, default):
-    return str(_arg(d, k, "1" if default else "0")) in ("1", "true", "True")
-
-try:
-    api, api_ver = _load_api()
-    result["api"] = api_ver
-
-    IDesignBody = api.IDesignBody
-    MidSurfaceOffsetType = api.MidSurfaceOffsetType
-    Midsurface = api.Scripting.Commands.Midsurface
-    VisibilityType = api.Scripting.Commands.VisibilityType
-    MidsurfaceOptions = api.Scripting.Commands.CommandOptions.MidsurfaceOptions
-    CreationLocation = api.Scripting.Commands.CommandOptions.CreationLocation
-    DesignFaceExtensions = api.Scripting.Extensions.DesignFaceExtensions
-    MeasureHelper = api.Scripting.Helpers.MeasureHelper
-    ViewHelper = api.Scripting.Helpers.ViewHelper
-    BodySelection = api.Scripting.Selection.BodySelection
-    FaceSelection = api.Scripting.Selection.FaceSelection
-    Selection = api.Scripting.Selection.Selection
-
-    # mm -> m (SpaceClaim API works in meters)
-    max_thickness = _f(argsDict, "max_thickness_mm", 6.0) / 1000.0
-    main_surface_ratio = _f(argsDict, "main_surface_ratio", 0.7)
-    area_difference_ratio = _f(argsDict, "area_difference_ratio", 0.1)
-    complex_area_diff = _f(argsDict, "complex_area_diff", 0.05)
-    enable_sheet_metal_check = _b(argsDict, "enable_sheet_metal_check", True)
-    hide_source_bodies = _b(argsDict, "hide_source_bodies", True)
-
-    if max_thickness <= 0.0:
-        result["ok"] = "no"
-        result["error"] = "max_thickness_mm must be greater than 0"
-        raise SystemExit
-
-    def get_face_area(face):
-        try:
-            return face.Shape.Area
-        except Exception:
-            return face.Area
-
-    def get_body_faces(body):
-        return [face for face in body.Faces]
-
-    def get_tangent_chain(face):
-        return [tf for tf in DesignFaceExtensions.GetTangentChain(face)]
-
-    def get_unique_faces(faces):
-        uniq = []
-        for face in faces:
-            dup = False
-            for known in uniq:
-                if face == known:
-                    dup = True
-                    break
-            if not dup:
-                uniq.append(face)
-        return uniq
-
-    def get_total_area(faces):
-        return sum(get_face_area(f) for f in faces)
-
-    def get_gap_distance(f1, f2):
-        s1 = FaceSelection.Create(f1)
-        s2 = FaceSelection.Create(f2)
-        return MeasureHelper.DistanceBetweenObjects(s1, s2).Distance
-
-    def are_normals_opposed(f1, f2):
-        try:
-            n1 = DesignFaceExtensions.GetFaceNormal(f1, 0.5, 0.5)
-            n2 = DesignFaceExtensions.GetFaceNormal(f2, 0.5, 0.5)
-            return abs(n1.Dot(n2)) > 0.99
-        except Exception:
-            return True
-
-    def find_primary_face_pair(body):
-        faces = get_body_faces(body)
-        if len(faces) < 2:
-            return None
-        faces.sort(key=get_face_area, reverse=True)
-        first = faces[0]
-        first_area = get_face_area(first)
-        for second in faces[1:]:
-            if not are_normals_opposed(first, second):
-                continue
-            second_area = get_face_area(second)
-            rad = abs(first_area - second_area) / max(first_area, second_area)
-            if rad > area_difference_ratio:
-                continue
-            try:
-                dist = get_gap_distance(first, second)
-            except Exception:
-                continue
-            if 0.0 < dist <= max_thickness:
-                return (first, second, dist)
-        return None
-
-    def is_sheet_metal_body(body, f1, f2, thickness):
-        c1 = get_unique_faces(get_tangent_chain(f1))
-        c2 = get_unique_faces(get_tangent_chain(f2))
-        primary = get_unique_faces(c1 + c2)
-        a1 = get_total_area(c1)
-        a2 = get_total_area(c2)
-        all_area = get_total_area(get_body_faces(body))
-        if all_area <= 0.0:
-            return False
-        rad = abs(a1 - a2) / max(a1, a2)
-        psr = get_total_area(primary) / all_area
-        return (thickness <= max_thickness and rad <= area_difference_ratio
-                and psr >= main_surface_ratio)
-
-    def create_midsurface(f1, f2, force_tangent):
-        opts = MidsurfaceOptions()
-        opts.AllowNonManifold = False
-        opts.ExtendSurfaces = True
-        opts.CreationLocation = CreationLocation.ActiveComponent
-        opts.Group = True
-        opts.OffsetType = MidSurfaceOffsetType.Middle
-        cmd = Midsurface(opts)
-        if force_tangent:
-            cmd.AddMatchingFacePairs(f1, f2, 1.0e-5, False)
-            for fs in get_tangent_chain(f1):
-                cmd.AddMatchingFacePairs(None, fs)
-            for fs in get_tangent_chain(f2):
-                cmd.AddMatchingFacePairs(None, fs)
-        else:
-            cmd.AddMatchingFacePairs(f1, f2, 1.0e-5, True)
-        r = cmd.Execute()
-        if not r.Success:
-            raise RuntimeError("Midsurface command did not complete successfully")
-
-    def get_body_name(body):
-        try:
-            return body.Name
-        except Exception:
-            return "<unnamed body>"
-
-    def hide_body(body):
-        ViewHelper.SetObjectVisibility(BodySelection.Create(body),
-                                       VisibilityType.Hide, False, False)
-
-    selected = [b for b in Selection.GetActive().GetItems[IDesignBody]()]
-    result["selected_count"] = str(len(selected))
-    if not selected:
-        result["ok"] = "no"
-        result["error"] = "no body selected (Selection.GetActive is empty)"
-        raise SystemExit
-
-    success = 0
-    skipped = 0
-    failed = 0
-    details = []
-    for body in selected:
-        bn = get_body_name(body)
-        try:
-            pair = find_primary_face_pair(body)
-            if pair is None:
-                failed += 1
-                details.append("[" + bn + "] FAIL: no valid primary opposing face pair")
-                continue
-            f1, f2, thickness = pair
-            if enable_sheet_metal_check and not is_sheet_metal_body(body, f1, f2, thickness):
-                skipped += 1
-                details.append("[" + bn + "] SKIP: sheet-metal check not passed")
-                continue
-            a1 = get_face_area(f1)
-            a2 = get_face_area(f2)
-            adiff = abs(a1 - a2) / max(a1, a2)
-            is_complex = (adiff > complex_area_diff)
-            create_midsurface(f1, f2, is_complex)
-            if hide_source_bodies:
-                hide_body(body)
-            success += 1
-            mode = "complex" if is_complex else "simple"
-            details.append("[" + bn + "] OK: midsurface created (" + mode
-                           + ", area_diff=" + ("%.1f" % (adiff * 100.0)) + "%)")
-        except Exception:
-            failed += 1
-            details.append("[" + bn + "] FAIL: " + str(sys.exc_info()[1]))
-
-    result["ok"] = "yes"
-    result["success"] = str(success)
-    result["skipped"] = str(skipped)
-    result["failed"] = str(failed)
-    result["details"] = "\n".join(details)
-except SystemExit:
-    pass
-except Exception:
-    e = sys.exc_info()[1]
-    result["ok"] = "no"
-    result["error"] = str(e)
-'''
+_MIDSURFACE_SCRIPT = load_script("midsurface")
 
 
 def _geom_midsurface(max_thickness_mm: float = 6.0, main_surface_ratio: float = 0.7,
@@ -2307,493 +1995,7 @@ def _geom_midsurface(max_thickness_mm: float = 6.0, main_surface_ratio: float = 
 #   rm_grp_name_create, index_rm_start, grp_name_not_go,
 #   enable_distance_grouping(1/0), distance_level1_mm, distance_level2_mm
 
-_RM_GROUP_SCRIPT = r'''
-# -*- coding: utf-8 -*-
-# SpaceClaim server-side IronPython hole-pairing / RM group script (ASCII only).
-import sys
-import math
-result = {}
-
-def get_spaceclaim_api():
-    import System
-    loaded = []
-    for asm in System.AppDomain.CurrentDomain.GetAssemblies():
-        try:
-            nm = asm.GetName().Name
-        except Exception:
-            continue
-        if nm and nm.startswith("SpaceClaim.Api.V") and nm.count(".") == 2:
-            loaded.append(nm.split(".")[-1])
-    def _ver(v):
-        try:
-            return int(v[1:])
-        except Exception:
-            return 0
-    names = sorted(set(loaded), key=_ver, reverse=True)
-    names += ["V262", "V261", "V252", "V251", "V242", "V241", "V232", "V231"]
-    import clr
-    for ver in names:
-        try:
-            clr.AddReference("SpaceClaim.Api." + ver)
-            clr.AddReference("SpaceClaim.Api." + ver + ".Scripting")
-            import SpaceClaim.Api
-            sc_api = getattr(SpaceClaim.Api, ver)
-            clr.ImportExtensions(sc_api.Scripting.Extensions.DesignFaceExtensions)
-            clr.ImportExtensions(sc_api.Scripting.Extensions.DesignEdgeExtensions)
-            clr.ImportExtensions(sc_api.Scripting.Extensions.DesignBodyExtensions)
-            clr.ImportExtensions(sc_api.Scripting.Extensions.ComponentExtensions)
-            clr.ImportExtensions(sc_api.Scripting.Extensions.DocObjectExtensions)
-            return sc_api, ver
-        except Exception:
-            continue
-    raise RuntimeError("SpaceClaim API Reference Error: compatible version not found")
-
-def _arg(d, k, default):
-    try:
-        if d.ContainsKey(k):
-            return d[k]
-    except Exception:
-        try:
-            return d[k]
-        except Exception:
-            pass
-    return default
-
-def _f(d, k, default):
-    try:
-        return float(_arg(d, k, default))
-    except Exception:
-        return float(default)
-
-def _i(d, k, default):
-    try:
-        return int(float(_arg(d, k, default)))
-    except Exception:
-        return int(default)
-
-def _b(d, k, default):
-    return str(_arg(d, k, "1" if default else "0")) in ("1", "true", "True", "Yes", "yes")
-
-def _s(d, k, default):
-    v = _arg(d, k, default)
-    return default if v is None else str(v)
-
-try:
-    sc, api_ver = get_spaceclaim_api()
-    result["api"] = api_ver
-    Selection = sc.Scripting.Selection.Selection
-    MeasureHelper = sc.Scripting.Helpers.MeasureHelper
-    NamedSelection = sc.Scripting.Commands.NamedSelection
-
-    # mm inputs -> meters
-    Diameter_min = _f(argsDict, "diameter_min_mm", 2.0) / 1000.0
-    Diameter_max = _f(argsDict, "diameter_max_mm", 20.0) / 1000.0
-    mode = _i(argsDict, "mode", 0)
-    Pairing_Strategy = _s(argsDict, "pairing_strategy", "Ignore Component")
-    Distance_min_check_circle = _f(argsDict, "distance_min_mm", 0.0) / 1000.0
-    Distance_max_check_circle = _f(argsDict, "distance_max_mm", 10.0) / 1000.0
-    Holes_axis_dist_max = _f(argsDict, "holes_axis_dist_max_mm", 1.0) / 1000.0
-    Deg_max_circles = _f(argsDict, "deg_max_circles", 10.0)
-    grp_name_create = _s(argsDict, "grp_name_create", "Scr_AllHoles")
-    Index_grp_start = _i(argsDict, "index_grp_start", 1)
-    RM_grp_create_exe = _b(argsDict, "rm_grp_create", True)
-    RM_grp_name_create = _s(argsDict, "rm_grp_name_create", "Scr_RMgrp")
-    Index_RM_start = _i(argsDict, "index_rm_start", 1)
-    grp_name_NOTGoConnections = _s(argsDict, "grp_name_not_go", "NOTGoConnections")
-    Enable_Distance_Grouping = _b(argsDict, "enable_distance_grouping", False)
-    Distance_Level1 = _f(argsDict, "distance_level1_mm", 5.0) / 1000.0
-    Distance_Level2 = _f(argsDict, "distance_level2_mm", 20.0) / 1000.0
-
-    Groupname_index = 'Scr_AllHoles_0821'
-    grp_name_FullCircle_edges = grp_name_create + "_FullCircles"
-    grp_name_HalfCircle_edges = grp_name_create + "_HalfCircles"
-    Distance_min_check_Line = Distance_min_check_circle
-    Distance_max_check_Line = Distance_max_check_circle
-
-    def CheckHierarchicalPairing(e1, e2, strategy):
-        try:
-            c1 = e1.Parent.Parent
-            c2 = e2.Parent.Parent
-            if "Ignore Component" in strategy:
-                return True
-            elif "Within Component" in strategy:
-                return c1 == c2
-            return True
-        except Exception:
-            return True
-
-    def GetHierarchyTypeForStats(e1, e2):
-        try:
-            b1 = e1.Parent
-            b2 = e2.Parent
-            if b1 == b2:
-                return "SameBody"
-            if b1.Parent == b2.Parent:
-                return "Internal"
-            return "External"
-        except Exception:
-            return ""
-
-    def GetDistanceSuffix(distance, enable):
-        if not enable:
-            return ""
-        if distance <= Distance_Level1:
-            return "_Near"
-        elif distance <= Distance_Level2:
-            return "_Medium"
-        return "_Far"
-
-    def ConvertEdgesByShape(selection, ShapeType):
-        item_list = []
-        t = selection.GetType()
-        if (t != Selection and t != sc.Scripting.Selection.EdgeSelection
-                and t != sc.Scripting.Selection.FaceSelection):
-            return Selection.Empty()
-        selection = selection.ConvertToEdges()
-        for item in selection.Items:
-            if item.Shape.Geometry.GetType() == ShapeType:
-                item_list.append(item)
-        if len(item_list) == 0:
-            return Selection.Empty()
-        return Selection.Create(item_list)
-
-    def FindCircles(selection, D_min, D_max, Cmode, Fmode):
-        holes_list = []
-        edges_sel = selection.ConvertToEdges()
-        circles_sel = edges_sel.ConvertByShape(sc.Scripting.Selection.GeometryType.Circle)
-        if circles_sel.Count != 0:
-            fc = circles_sel.FilterByRadius(D_min / 2, D_max / 2)
-            for edge in fc.Items:
-                circ = 2 * 3.14 * edge.Shape.Geometry.Radius
-                if Cmode == 0:
-                    if edge.Shape.Length > circ:
-                        holes_list.append(edge)
-                elif Cmode == 1:
-                    if edge.Shape.Length < circ * 0.51 and edge.Shape.Length > circ * 0.49:
-                        holes_list.append(edge)
-                elif Cmode == 2:
-                    if edge.Shape.Length < circ * 0.5:
-                        holes_list.append(edge)
-        nurbs = ConvertEdgesByShape(edges_sel, sc.Geometry.NurbsCurve)
-        proc = ConvertEdgesByShape(edges_sel, sc.Geometry.ProceduralCurve)
-        sel = nurbs + proc
-        filter_curve = []
-        if sel.Count != 0:
-            for i in sel.Items:
-                length = i.Shape.Length
-                pt1 = i.Shape.StartPoint
-                pt2 = i.Shape.EndPoint
-                dist_pt12 = sc.Scripting.Helpers.Gap.Create(pt1, pt2).Distance
-                if not dist_pt12 == 0:
-                    d = dist_pt12
-                else:
-                    d = length / 3.1415926
-                if d <= D_max and d >= D_min:
-                    if Cmode == 0:
-                        if dist_pt12 == 0:
-                            filter_curve.append(i)
-                    elif Cmode == 1:
-                        if abs(length - 2 * 3.14 * d / 2 * 0.5) / length < 0.01:
-                            filter_curve.append(i)
-                    elif Cmode == 2:
-                        if length < 2 * 3.14 * d / 2 * 0.5:
-                            filter_curve.append(i)
-        holes_list = holes_list + filter_curve
-        for hole in list(holes_list):
-            if hole.Parent.Shape.Volume == 0:
-                if not hole.Faces.Count == 1 and Fmode == 1:
-                    holes_list.remove(hole)
-        return holes_list
-
-    def GetGroupNameANDIndex(name_create, idx_start):
-        try:
-            groups = NamedSelection.GetGroups(sc.Scripting.Helpers.DocumentHelper.GetRootPart())
-        except Exception:
-            groups = NamedSelection.GetGroups()
-        existing = []
-        for grp in groups:
-            if grp.IsDeleted:
-                continue
-            if grp.Name == 'Scr_RMgrp_ALL':
-                continue
-            if grp.Name.IndexOf(name_create) != -1:
-                existing.append(grp.Name)
-        same = 0
-        gn = ''
-        while same == 0:
-            gn = name_create + "_" + str(idx_start)
-            same = 1
-            if gn in existing:
-                idx_start = idx_start + 1
-                same = 0
-        return gn, idx_start
-
-    Count_grp_new = 0
-    Count_grp_replace = 0
-    Count_Hierarchy = {"SameBody": 0, "Internal": 0, "External": 0}
-    Count_Distance = {"Near": 0, "Medium": 0, "Far": 0}
-
-    body_sel = Selection.GetActive()
-    result["selected_count"] = str(len(body_sel.Items))
-
-    grp_name = ''
-    holes = []
-    holes_0 = []
-    holes_1 = []
-    if not body_sel.Count == 0:
-        if mode == 0:
-            holes_0 = FindCircles(body_sel, Diameter_min, Diameter_max, 0, 1)
-            holes_1 = FindCircles(body_sel, Diameter_min, Diameter_max, 1, 1)
-            holes = holes_0 + holes_1
-        else:
-            holes = list(body_sel.Items)
-
-        if len(holes) != 0:
-            grp_name, Index_grp_start = GetGroupNameANDIndex(grp_name_create, Index_grp_start)
-            hs = Selection.Create(holes)
-            hs.CreateAGroup(grp_name)
-            hs.SetActive()
-
-        if mode == 0:
-            if len(holes_0) != 0:
-                g0, _tmp = GetGroupNameANDIndex(grp_name_FullCircle_edges, Index_grp_start)
-                Selection.Create(holes_0).CreateAGroup(g0)
-            if len(holes_1) != 0:
-                g1, _tmp = GetGroupNameANDIndex(grp_name_HalfCircle_edges, Index_grp_start)
-                Selection.Create(holes_1).CreateAGroup(g1)
-
-    if RM_grp_create_exe:
-        groups = NamedSelection.GetGroups(sc.Scripting.Helpers.DocumentHelper.GetRootPart())
-        Edges_NOTGo = []
-        for ig in groups:
-            if ig.Name.IndexOf(grp_name_NOTGoConnections) != -1:
-                Edges_NOTGo = ig.Members
-                break
-        NS0_RM_names = []
-        for i in groups:
-            if i.IsDeleted:
-                continue
-            if i.Name == 'Scr_RMgrp_ALL':
-                continue
-            if i.Name.find(RM_grp_name_create) != -1:
-                NS0_RM_names.append(i.Name)
-
-        edge_types = [sc.Geometry.NurbsCurve, sc.Geometry.ProceduralCurve, sc.Geometry.Circle]
-        RM_Edges_all = []
-
-        for grp in groups:
-            if grp.IsDeleted:
-                continue
-            gn2 = grp.Name
-            if gn2 == grp_name:
-                pass
-            elif body_sel.Count == 0 and Groupname_index != '' and gn2.find(Groupname_index) != -1:
-                pass
-            else:
-                continue
-
-            RM_Edges = grp.Members
-            if mode == 0:
-                rs = Selection.Create(RM_Edges)
-                re0 = FindCircles(rs, Diameter_min, Diameter_max, 0, 1)
-                re1 = FindCircles(rs, Diameter_min, Diameter_max, 1, 1)
-                RM_Edges = re0 + re1
-
-            RM_Edges = list(RM_Edges)
-            for ei in list(RM_Edges):
-                if ei in Edges_NOTGo:
-                    RM_Edges.remove(ei)
-
-            Edge_OnCheck_List = []
-            Edge_ToBeMount_List = []
-            for ei in range(len(RM_Edges) - 1):
-                Edge_OnCheck = RM_Edges[ei]
-                Edge_OnCheck_List.append(Edge_OnCheck)
-                my_edges = [Edge_OnCheck]
-                pt1 = Edge_OnCheck.Shape.StartPoint
-                pt2 = Edge_OnCheck.Shape.EndPoint
-                if sc.Scripting.Helpers.Gap.Create(pt1, pt2).Distance == 0:
-                    pt2 = Edge_OnCheck.EvalMid().Point
-                pt3 = sc.Geometry.Point.Create((pt1.X + pt2.X) / 2, (pt1.Y + pt2.Y) / 2, (pt1.Z + pt2.Z) / 2)
-                R_on = sc.Scripting.Helpers.Gap.Create(pt1, pt3).Distance
-                R_sphere = ((R_on * 3) ** 2 + Distance_max_check_circle ** 2) ** 0.5
-                near = Selection.Create(RM_Edges).FilterByBoundingSphere(pt3, R_sphere).Items
-                Edge_ToBeMount_List.append(near)
-                for i in Edge_OnCheck_List:
-                    if i in Edge_ToBeMount_List[ei]:
-                        Edge_ToBeMount_List[ei].Remove(i)
-                vector1 = Edge_OnCheck.Faces[0].GetFaceNormal(0, 0)
-
-                for Edge_ToBeMount in Edge_ToBeMount_List[ei]:
-                    if not CheckHierarchicalPairing(Edge_OnCheck, Edge_ToBeMount, Pairing_Strategy):
-                        continue
-                    s1 = Selection.Create(Edge_OnCheck, Edge_ToBeMount)
-                    l1 = set(Edge_OnCheck.Faces)
-                    l2 = set(Edge_ToBeMount.Faces)
-                    pt4 = Edge_ToBeMount.Shape.StartPoint
-                    pt5 = Edge_ToBeMount.Shape.EndPoint
-                    if sc.Scripting.Helpers.Gap.Create(pt4, pt5).Distance == 0:
-                        pt5 = Edge_ToBeMount.EvalMid().Point
-                    pt6 = sc.Geometry.Point.Create((pt4.X + pt5.X) / 2, (pt4.Y + pt5.Y) / 2, (pt4.Z + pt5.Z) / 2)
-                    vector2 = Edge_ToBeMount.Faces[0].GetFaceNormal(0, 0)
-                    dot12 = abs(sc.Geometry.Vector.Dot(vector1.UnitVector, vector2.UnitVector)
-                                / vector1.UnitVector.Magnitude / vector2.UnitVector.Magnitude)
-                    if dot12 > 1:
-                        dot12 = 1.0
-                    deg12 = 180 / math.pi * math.acos(dot12)
-                    vector_pt36 = sc.Scripting.Helpers.Gap.Create(pt3, pt6).GapVector
-                    axesdist = sc.Geometry.Vector.Cross(vector_pt36, vector1.UnitVector).Magnitude / vector1.UnitVector.Magnitude
-
-                    if mode == 0:
-                        is_circ = (Edge_OnCheck.Shape.Geometry.GetType() == sc.Geometry.Circle
-                                   and Edge_ToBeMount.Shape.Geometry.GetType() == sc.Geometry.Circle)
-                        mindist = MeasureHelper.MinDistanceBetweenObjects(s1).Distance
-                        if is_circ:
-                            if mindist < Distance_max_check_circle and mindist > Distance_min_check_circle:
-                                if l1.intersection(l2).Count == 0:
-                                    if MeasureHelper.MinDistanceBetweenAxes(s1).Distance < Holes_axis_dist_max:
-                                        if Edge_OnCheck.Shape.Geometry.Axis.Direction.IsParallel(Edge_ToBeMount.Shape.Geometry.Axis.Direction):
-                                            if Edge_OnCheck.Parent.Shape.Volume != 0 and Edge_ToBeMount.Parent.Shape.Volume != 0:
-                                                if Edge_OnCheck.Parent == Edge_ToBeMount.Parent:
-                                                    continue
-                                            my_edges.append(Edge_ToBeMount)
-                        elif (edge_types.IndexOf(Edge_OnCheck.Shape.Geometry.GetType()) != -1
-                              and edge_types.IndexOf(Edge_ToBeMount.Shape.Geometry.GetType()) != -1):
-                            if mindist < Distance_max_check_circle and mindist > Distance_min_check_circle:
-                                if l1.intersection(l2).Count == 0:
-                                    if axesdist < Holes_axis_dist_max:
-                                        if deg12 < Deg_max_circles:
-                                            if Edge_OnCheck.Parent.Shape.Volume != 0 and Edge_ToBeMount.Parent.Shape.Volume != 0:
-                                                if Edge_OnCheck.Parent == Edge_ToBeMount.Parent:
-                                                    continue
-                                            my_edges.append(Edge_ToBeMount)
-                    else:
-                        mindist = MeasureHelper.MinDistanceBetweenObjects(s1).Distance
-                        if mindist < Distance_max_check_Line and mindist > Distance_min_check_Line:
-                            if l1.intersection(l2).Count == 0:
-                                my_edges.append(Edge_ToBeMount)
-
-                if len(my_edges) > 1:
-                    for me in my_edges:
-                        if me not in RM_Edges_all:
-                            RM_Edges_all.append(me)
-                    groups2 = NamedSelection.GetGroups(sc.Scripting.Helpers.DocumentHelper.GetRootPart())
-                    checked_in_group = 0
-                    gn_existing = ''
-                    for grp2 in groups2:
-                        if checked_in_group == 1:
-                            break
-                        if grp2.IsDeleted:
-                            continue
-                        if grp2.Name == 'Scr_RMgrp_ALL':
-                            continue
-                        if grp2.Name.find(RM_grp_name_create) != -1:
-                            members2 = grp2.Members
-                            for me in my_edges:
-                                if me in members2:
-                                    checked_in_group = 1
-                                    gn_existing = grp2.Name
-                                    RM_Edges2 = members2
-                                    break
-                    if checked_in_group == 0:
-                        base = RM_grp_name_create
-                        htype = GetHierarchyTypeForStats(my_edges[0], my_edges[1])
-                        if htype in Count_Hierarchy:
-                            Count_Hierarchy[htype] += 1
-                        if Enable_Distance_Grouping:
-                            pd = MeasureHelper.MinDistanceBetweenObjects(Selection.Create(my_edges[0], my_edges[1])).Distance
-                            suffix = GetDistanceSuffix(pd, True)
-                            base += suffix
-                            if "Near" in suffix:
-                                Count_Distance["Near"] += 1
-                            elif "Medium" in suffix:
-                                Count_Distance["Medium"] += 1
-                            elif "Far" in suffix:
-                                Count_Distance["Far"] += 1
-                        gn_new, Index_RM_start = GetGroupNameANDIndex(base, Index_RM_start)
-                        sel = Selection.Create(my_edges)
-                        sel.CreateAGroup(gn_new)
-                        Index_RM_start = Index_RM_start + 1
-                        Count_grp_new += 1
-                        sel.SetActive()
-                    else:
-                        Selection.Clear()
-                        merged = list(RM_Edges2)
-                        for item in my_edges:
-                            if item not in merged:
-                                merged.append(item)
-                        sel = Selection.Create(merged)
-                        sel.SetActive()
-                        NamedSelection.Delete(gn_existing)
-                        sel.CreateAGroup(gn_existing)
-                        if gn_existing in NS0_RM_names:
-                            NS0_RM_names.remove(gn_existing)
-                            Count_grp_replace += 1
-
-        Selection.Create(RM_Edges_all).SetActive()
-
-    # consolidate hole groups
-    groups = NamedSelection.GetGroups(sc.Scripting.Helpers.DocumentHelper.GetRootPart())
-    Circle_all = []
-    FullCircle_all = []
-    HalfCircle_all = []
-    for ig in groups:
-        if (ig.Name.IndexOf(grp_name_create) != -1
-                and ig.Name.IndexOf(grp_name_FullCircle_edges) == -1
-                and ig.Name.IndexOf(grp_name_HalfCircle_edges) == -1):
-            for ie in ig.Members:
-                Circle_all.append(ie)
-            NamedSelection.Delete(ig.Name)
-        elif ig.Name.IndexOf(grp_name_FullCircle_edges) != -1:
-            for ie in ig.Members:
-                FullCircle_all.append(ie)
-            NamedSelection.Delete(ig.Name)
-        elif ig.Name.IndexOf(grp_name_HalfCircle_edges) != -1:
-            for ie in ig.Members:
-                HalfCircle_all.append(ie)
-            NamedSelection.Delete(ig.Name)
-
-    def _recreate(name, items):
-        s = Selection.Create(items)
-        if not s.Count == 0:
-            NamedSelection.Delete(name)
-            s.CreateAGroup(name)
-    _recreate(grp_name_create, Circle_all)
-    _recreate(grp_name_FullCircle_edges, FullCircle_all)
-    _recreate(grp_name_HalfCircle_edges, HalfCircle_all)
-
-    groups = NamedSelection.GetGroups(sc.Scripting.Helpers.DocumentHelper.GetRootPart())
-    RM_grp_list = []
-    for ig in groups:
-        if ig.IsDeleted:
-            continue
-        if ig.Name == 'Scr_RMgrp_ALL':
-            continue
-        if ig.Name.IndexOf(RM_grp_name_create) != -1:
-            for ie in ig.Members:
-                if ie not in RM_grp_list:
-                    RM_grp_list.append(ie)
-    s_all = Selection.Create(RM_grp_list)
-    if not s_all.Count == 0:
-        NamedSelection.Delete('Scr_RMgrp_ALL')
-        s_all.CreateAGroup('Scr_RMgrp_ALL')
-
-    result["ok"] = "yes"
-    result["holes_found"] = str(len(holes))
-    result["rm_group_new"] = str(Count_grp_new)
-    result["rm_group_replace"] = str(Count_grp_replace)
-    result["hier_same_body"] = str(Count_Hierarchy["SameBody"])
-    result["hier_internal"] = str(Count_Hierarchy["Internal"])
-    result["hier_external"] = str(Count_Hierarchy["External"])
-    result["dist_near"] = str(Count_Distance["Near"])
-    result["dist_medium"] = str(Count_Distance["Medium"])
-    result["dist_far"] = str(Count_Distance["Far"])
-    result["holes_group_name"] = grp_name
-except Exception:
-    e = sys.exc_info()[1]
-    result["ok"] = "no"
-    result["error"] = str(e)
-'''
+_RM_GROUP_SCRIPT = load_script("rm_group")
 
 
 def _geom_create_hole_groups(diameter_min_mm: float = 2.0, diameter_max_mm: float = 20.0,
@@ -3366,6 +2568,12 @@ async def call_tool(name: str, arguments: dict[str, Any],
                         enable_distance_grouping=arguments.get("enable_distance_grouping", False),
                         distance_level1_mm=arguments.get("distance_level1_mm", 5.0),
                         distance_level2_mm=arguments.get("distance_level2_mm", 20.0))
+                elif name == "geometry_suppress_and_hide":
+                    result = _geom_suppress_hide(
+                        patterns=arguments.get("patterns") or [],
+                        exclude=arguments.get("exclude"),
+                        suppress=arguments.get("suppress", True),
+                        hide=arguments.get("hide", True))
                 elif name == "geometry_screenshot":
                     result = _geom_screenshot(
                         file_path=arguments["file_path"],
