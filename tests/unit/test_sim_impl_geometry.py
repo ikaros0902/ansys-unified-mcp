@@ -13,7 +13,7 @@ import asyncio
 from types import SimpleNamespace
 from unittest.mock import patch
 
-from ansys_unified_mcp.drivers import sim_impl
+from ansys_unified_mcp.products.geometry import call_dispatch as sim_impl
 
 
 def run_async(coro):

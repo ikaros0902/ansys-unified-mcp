@@ -10,7 +10,7 @@ import argparse
 import asyncio
 import sys
 
-from ansys_unified_mcp.drivers import sim_impl
+from ansys_unified_mcp.products.geometry import call_dispatch as sim_impl
 
 
 def _text(res):

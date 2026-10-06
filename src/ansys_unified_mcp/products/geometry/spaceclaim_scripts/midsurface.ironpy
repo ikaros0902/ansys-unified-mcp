@@ -1,4 +1,3 @@
-
 # -*- coding: utf-8 -*-
 # SpaceClaim server-side IronPython midsurface script (ASCII only).
 import sys

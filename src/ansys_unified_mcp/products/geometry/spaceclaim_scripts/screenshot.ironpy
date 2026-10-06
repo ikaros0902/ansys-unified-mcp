@@ -1,4 +1,3 @@
-
 # -*- coding: utf-8 -*-
 # SpaceClaim server-side IronPython screenshot script (ASCII only).
 # script_args: out_path_hex, img_format(png/jpg/bmp/tiff/gif), fit(1/0), view,

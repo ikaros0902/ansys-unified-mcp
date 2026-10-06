@@ -25,7 +25,7 @@ from unittest.mock import AsyncMock, patch
 import pytest
 
 from ansys_unified_mcp.core.sessions import registry
-from ansys_unified_mcp.drivers import sim_impl
+from ansys_unified_mcp.products.geometry import call_dispatch as sim_impl
 from ansys_unified_mcp.products.geometry.batch_executor import execute_batch
 from ansys_unified_mcp.shared import looks_like_error
 

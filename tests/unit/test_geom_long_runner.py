@@ -5,7 +5,7 @@ import time
 
 import pytest
 
-from ansys_unified_mcp.drivers import sim_impl as S
+from ansys_unified_mcp.products.geometry import call_dispatch as S
 
 
 def test_progress_is_forwarded_and_result_returned():

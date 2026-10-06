@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 from ansys_unified_mcp.shared import mcp, as_envelope as _envelope
-from ansys_unified_mcp.drivers import sim_impl
+from ansys_unified_mcp.products.fluent import call_dispatch as sim_impl
 from typing import Any, List, Dict
 import functools
 

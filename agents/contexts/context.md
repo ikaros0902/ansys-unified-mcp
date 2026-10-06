@@ -33,7 +33,7 @@ tools/*.py        薄工具層（114 個 @mcp.tool）
       │
       ▼
 products/         產品控制器（真正的 connect / launch / run_script / disconnect）
-drivers/          某些產品的實作放這（如 Fluent 在 drivers/sim_impl.py）
+drivers/          某些產品的實作放這；Fluent/Geometry 的 call_tool 分派已搬至 products/<product>/call_dispatch.py
 bridges/          Workbench 的檔案 IPC bridge 實作
       │
       ▼
@@ -60,7 +60,8 @@ config.py               偵測 ANSYS 安裝（registry / 環境變數），找�
 | `tools/connection_doctor.py` | 連線診斷 |
 | `products/mechanical.py` | `MechanicalController`：Mechanical session 邏輯 |
 | `products/optislang.py` | `OptislangController`：optiSLang session 邏輯（走 `SessionRegistry`） |
-| `drivers/sim_impl.py` | Fluent（PyFluent）實作 |
+| `products/geometry/call_dispatch.py` | Geometry（PyAnsys Geometry / SpaceClaim）call_tool 分派與幾何輔助函式（原 drivers/sim_impl.py 拆出） |
+| `products/fluent/call_dispatch.py` | Fluent（PyFluent）call_tool 分派（原 drivers/sim_impl.py 拆出） |
 | `bridges/workbench_bridge.py` | Workbench 檔案 IPC bridge 實作 |
 | `core/sessions.py` | `SessionRegistry` 單例 |
 | `core/paths.py` | 統一 ANSYS exe 路徑解析 |
@@ -92,13 +93,13 @@ config.py               偵測 ANSYS 安裝（registry / 環境變數），找�
 維護前先知道這些「架構偏亂」的具體來源，避免踩雷或以為是自己搞錯：
 
 1. **`workbench_bridge.py` 有兩份**：`bridges/`（實作）與 `tools/`（31 個工具，且自行從 `config` 推 `RUNWB2` 等路徑常數）。後者與 `core/paths.py` 想統一路徑解析的目標**重複**。
-2. **產品分層尚未完全對稱**：`products/` 目前有 `mechanical.py` 與 `optislang.py`；**Fluent 實作仍在 `drivers/sim_impl.py`**（尚未收斂為 `products/fluent.py` 控制器）。這是剩餘的收斂目標。
-3. **session 模式已大致統一（optiSLang 已修）**：Mechanical 與 optiSLang 皆已用 `SessionRegistry`（見 `products/`）。優先修正的模組全域 `_osl` 技術債已移除。**剩餘**：Fluent（`drivers/sim_impl.py`）尚未確認是否全走 `SessionRegistry`，為後續收斂項。
+2. **產品分層已大致對稱**：`products/` 下各產品皆已採 `facade.py`（控制器）+ `tools.py`（工具）成組出現，含 `geometry`、`mechanical`、`fluent`、`optislang`、`workbench`、`dpf`、`dyna`。Fluent/Geometry 的 `call_tool` 分派實作已拆分至 `products/<product>/call_dispatch.py`（原 `drivers/sim_impl.py`）。
+3. **session 模式已大致統一**：Mechanical 與 optiSLang 皆已用 `SessionRegistry`（見 `products/`）。Fluent/Geometry 的 `call_dispatch.py` 內部沿用原模組級全域 session（`_fluent_session` / `_modeler`），尚未改走 `SessionRegistry`，為後續收斂項。
 4. **文件涵蓋未齊**：`API_DOCS` 目前僅 5 檔、涵蓋 3 產品（mechanical / ls-prepost / optislang）。目標是涵蓋全部五產品（待補 fluent / spaceclaim / lsdyna），並以 `category` 把 api/scripting 與 guide/tutorial 分流。
 5. **`SKILLs/` 與 `.kiro/skills/` 持續同步問題**：已建立 `sync_skills.ps1` 解決。
 6. **Documentation Pipeline 中 2 個漏網檔未進入索引**：`LS-DYNA_Keyword_and_Theory_Manuals.md`, `Structural_Optimization_Analysis_Guide.md`。
 7. **Workbench 三通道競爭問題**：Batch subprocess / File-IPC / PyWorkbench gRPC 需決定主通道。
-8. **Fluent/Geometry 未收斂至 products/ 層**：仍使用全域變數。
+8. **Fluent/Geometry 的 call_dispatch.py 未收斂至 SessionRegistry**：仍使用模組級全域變數（`_fluent_session` / `_modeler` / `_current_design`）。
 9. **測試覆蓋率僅 4/15 模組**。
 
 ## 7. 維護與擴充指引

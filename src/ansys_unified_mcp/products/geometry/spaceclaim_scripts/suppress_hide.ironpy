@@ -1,4 +1,3 @@
-
 # -*- coding: utf-8 -*-
 # SpaceClaim server-side IronPython: batch suppress-for-physics / hide bodies (ASCII only).
 # script_args: patterns_hex, exclude_hex (newline separated glob patterns, UTF-8 hex),

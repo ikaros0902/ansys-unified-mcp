@@ -5,7 +5,7 @@
 為單一回傳信封，省去呼叫端逐一處理每個工具呼叫的往返開銷。
 
 設計原則（不重寫 gRPC）：
-- 不建立新的連線邏輯，直接委派既有 drivers/sim_impl.py 的 call_tool() 分派器。
+- 不建立新的連線邏輯，直接委派既有 products/geometry/call_dispatch.py 的 call_tool() 分派器。
 - call_tool() 內部已統一捕捉例外並回傳純字串（成功或 "錯誤 [...]: ..." 開頭），
   本模組透過 shared.looks_like_error() 沿用既有的失敗標記判定慣例，
   不另行定義判斷規則，避免與既有 as_envelope() 行為產生分歧。
@@ -16,7 +16,7 @@
 - geometry_* 分支在 session 未連線或無作用中設計時，會回傳不含任何
   shared._ERROR_MARKERS 標記的純提示字串（例如「Geometry 未連線，請先執行
   geometry_launch」、「無法取得 SpaceClaim 當前作用中設計」），導致
-  looks_like_error() 誤判為成功。這類前置條件缺失訊息為 sim_impl.py 既有、
+  looks_like_error() 誤判為成功。這類前置條件缺失訊息為 call_dispatch.py 既有、
   穩定的字面文案，本模組在此額外攔截，避免整批對未連線 session 的操作
   被全數回報為「成功」的假性成功信封。
 """
@@ -28,12 +28,12 @@ import time
 import uuid
 from typing import Any, Dict, List, Optional
 
-from ansys_unified_mcp.drivers import sim_impl
+from ansys_unified_mcp.products.geometry import call_dispatch as sim_impl
 from ansys_unified_mcp.shared import looks_like_error
 
 logger = logging.getLogger("ansys-unified-mcp.geometry.batch_executor")
 
-# sim_impl.py 既有的「前置條件缺失」短路提示文案，不含任何 _ERROR_MARKERS 標記，
+# call_dispatch.py 既有的「前置條件缺失」短路提示文案，不含任何 _ERROR_MARKERS 標記，
 # 但實質代表該步驟並未真正執行（漏報失敗風險），批次執行須額外攔截為失敗。
 _PRECONDITION_FAILURE_MARKERS: tuple[str, ...] = (
     "geometry 未連線，請先執行 geometry_launch",
@@ -56,7 +56,7 @@ async def execute_batch(
     """依序批次執行多個 geometry 操作於同一 Geometry session。
 
     :param operations: 操作清單，每筆格式為 ``{"operation": <工具名稱>, "args": {...}}``。
-        工具名稱須為 drivers/sim_impl.call_tool 已支援的 geometry_* 名稱
+        工具名稱須為 products/geometry/call_dispatch.call_tool 已支援的 geometry_* 名稱
         （例如 geometry_create_block、geometry_create_enclosure、geometry_export）。
     :param stop_on_error: 若為 True，遇到第一個失敗步驟即中止後續操作；
         預設 False（寬容執行，蒐集所有步驟結果後一次回報）。

@@ -14,7 +14,7 @@ pytest.importorskip("ansys.geometry.core")
 
 from ansys.geometry.core.designer.face import SurfaceType  # noqa: E402
 
-from ansys_unified_mcp.drivers import sim_impl as S  # noqa: E402
+from ansys_unified_mcp.products.geometry import call_dispatch as S  # noqa: E402
 
 MM = 1e-3
 
