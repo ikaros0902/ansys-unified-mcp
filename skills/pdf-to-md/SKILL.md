@@ -1,64 +1,33 @@
 ---
 name: pdf-to-md
-description: Convert PDF documents to token-lean Markdown for downstream RAG/search. Extracts clean text, tables, and per-page markers using pymupdf4llm. Skips images (no OCR). Use when the user wants to turn PDFs (manuals, docs, guides) into Markdown, prepare documentation for an MCP/search index, or asks to "convert PDF to md".
+description: ANSYS 技術手冊與說明文檔 PDF 轉 Markdown 精簡轉換技能。基於 pymupdf / pymupdf4llm 高速抽取純文字與表格，生成帶有逐頁標記、適合 RAG 與檢索索引的輕量 Markdown。
 keywords: pdf, markdown, md, convert, documentation, docs, pymupdf, pymupdf4llm, extract text, rag, ANSYS documentation
 phase_gate:
   requires: []
   produces: []
 ---
 
-# PDF to Markdown Skill
+# PDF 轉 Markdown 文檔處理技能
 
-Convert text-based PDFs into clean, token-lean Markdown suitable for search
-indexing and RAG. Built on plain `pymupdf` text extraction — fast (~1s per
-350-page manual), no ML, no heavy deps.
+將文字型 PDF 高速轉換為乾淨、輕量且低 Token 消耗的 Markdown 格式，專門供 RAG 知識庫與 MCP 搜尋索引使用（基於 `pymupdf`，350 頁手冊約 1 秒完成）。
 
-## When to use
+## 適用情境
+- 需將 ANSYS 官方 PDF 技術手冊轉換為 Markdown。
+- 為搜尋型 MCP 伺服器或檢索索引準備文檔語料。
+- 批次轉換整批手冊資料夾。
 
-- User wants PDFs converted to Markdown.
-- Preparing documentation for a search MCP / index.
-- Any "pdf -> md" batch job over a folder of manuals.
+## 產出規範
+- 每個 PDF 產生單一 `.md` 檔案，檔名與來源對稱（`Guide.pdf` -> `Guide.md`）。
+- 每一頁由 `<!-- page N -->` 註記分隔，便於後續分頁 Chunk 切分並保留頁碼引用。
+- 圖片與純掃描頁面自動跳過，保持輕量低 Token。
 
-## What it produces
-
-- One `.md` per PDF, filename mirrors the source (`Guide.pdf` -> `Guide.md`).
-- Each page separated by a `<!-- page N -->` marker, so the output stays
-  human-readable AND can be chunked by page later (keeps citations/page numbers).
-- Table content kept as plain text (no pipe-table formatting).
-- Images/scanned pages skipped (token-lean, no OCR).
-
-## How to run
-
-The converter script is located at: `scripts/convert.py`. Run it with the project's
-venv Python so `pymupdf4llm` is available.
-
-Convert a whole folder (default output = sibling `<folder>_md`):
+## 執行方式
+轉換腳本位於 `scripts/convert.py`：
 
 ```powershell
+# 轉換整個資料夾
 & ".venv\Scripts\python.exe" "skills\pdf-to-md\scripts\convert.py" "Documentation"
-```
 
-Convert a single file, custom output dir, overwrite existing:
-
-```powershell
+# 轉換單一檔案並指定輸出目錄
 & ".venv\Scripts\python.exe" "skills\pdf-to-md\scripts\convert.py" "Documentation\Ansys_Mechanical_Users_Guide.pdf" -o "Documentation_md" --force
 ```
-
-Options:
-- `-o, --out <dir>`  output directory (default: `<input_folder>_md`)
-- `--force`          overwrite existing `.md` (default: skip already-converted)
-
-## Requirements
-
-- `pymupdf` installed in the active environment (`pip install pymupdf`).
-
-## Notes / limits
-
-- Text-based PDFs only. Image-only or scanned pages produce no text and are
-  skipped. To handle those, add an OCR pass (e.g. `pytesseract`) — not included
-  to keep the skill lightweight.
-- Tables come through as plain text, not Markdown pipe tables. If you need
-  proper table markup, `pymupdf4llm` does it but is ~400x slower (ML layout);
-  not worth it for keyword search.
-- Runs in seconds even for large manuals; the script prints progress and keeps
-  going if one file fails.
