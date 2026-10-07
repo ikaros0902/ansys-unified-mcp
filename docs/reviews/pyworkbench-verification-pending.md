@@ -14,10 +14,11 @@ journal `GetTemplate(TemplateName='Static Structural', Solver='ANSYS')` 回傳
 
 ## 一、為何需要這一步
 
-`products/workbench.py` 的 `WorkbenchController` 與 `tools/workbench_pyworkbench.py` 的 8 個
-PyWorkbench 工具已寫好，但從未實機連線驗證。Phase 1 的後續清理（移除舊 file-IPC bridge、
-改寫既有 bridge 工具、`workbench_bridge.py` → `job_launcher.py` 改名）全部卡在此驗證通過之前，
-不得先行，以免在未驗證的通道上拆除可用的 fallback。
+`products/workbench/facade.py` 的 `WorkbenchController` 與 `products/workbench/tools.py` 的
+PyWorkbench 工具已寫好。本卡原記錄「從未實機連線驗證、Phase 1 收尾卡在此」的狀態；該驗證已於
+2026-10-07 完成（見頂部證據）。Phase 1 的後續清理（移除舊 file-IPC bridge、改寫既有 bridge 工具、
+`workbench_batch.py` 改名）之決策：PyWorkbench 僅通過單次 smoke test，為避免在尚未穩定的通道上
+拆除可用 fallback，暫不移除（2026-10-07 決策 1=a），待累積穩定實機使用後再評估。
 
 ---
 
@@ -72,12 +73,14 @@ wb.exit()                                     # 關閉 server（PyWorkbench 慣�
 
 ---
 
-## 六、驗證通過後的動作（解鎖 Phase 1 收尾）
+## 六、驗證通過後的動作（Phase 1 收尾，部分已完成）
 
-1. 移除 `products/workbench.py`、`tools/workbench_pyworkbench.py` 的 `STATUS: UNVERIFIED` 註記
-   （改為「已驗證 @日期」）。
-2. 進 Phase 1 收尾：移除舊 file-IPC bridge、改寫既有 bridge 工具、`workbench_bridge.py`
-   → `job_launcher.py` 改名、清 `tools/` 殘留執行期資料、佔位檔歸位。
+1. ✅ 已完成（2026-10-07）：清除 `products/workbench/facade.py`、`products/workbench/tools.py`
+   共 3 處 `STATUS: UNVERIFIED` 註記，改標 `VERIFIED @2026-10-07`。
+2. ⏸ 暫緩（2026-10-07 決策 1=a）：移除舊 file-IPC bridge、改寫既有 bridge 工具、
+   `bridges/workbench_batch.py` 相關改名、清殘留執行期資料。`workbench_batch`/`workbench_filequeue`/
+   `workbench_socket` 仍被 `bridges/transport.py`、`tools/connection_tools.py` 活引用，屬破壞性重構，
+   待 PyWorkbench 累積穩定實機使用後再評估。
 
 ---
 

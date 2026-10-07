@@ -1,5 +1,7 @@
 # ANSYS Unified MCP — 專案核心上下文
 
+> ❗ **歷史說明**：本文內容為目錄收斂（2026-10-06）**前**的舊架構快照。`tools/workbench_bridge.py`（31 工具）已移除；`bridges/workbench_bridge.py` 已改名為 `bridges/workbench_batch.py`。現況請以 `README.md` 與 `docs/` 為準，本文僅供歷史脈絡參考。
+
 > 本檔是維護者與 AI 接手本專案的**入口文件**。新對話請先讀本檔，再視需要讀 `README.md`、`specs/*.md` 與 `ARCHITECTURE.md`。
 > 目的：用最短篇幅建立正確的心智模型，讓不熟悉本專案的人也能安全地維護與擴充。
 

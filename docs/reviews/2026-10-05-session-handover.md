@@ -102,6 +102,8 @@ __main__.py → shared.mcp（單一 FastMCP 實例）
 
 **最終決策權在使用者**：是否需要「作業系統層級隔離」是產品方向判斷。若只是要降低 context 占用，D+A 組合成本遠低於 B/C。
 
+✅ 2026-10-07 決策：任務 7 以 D+A 組合（per-session 工具可見性 + SessionRegistry workspace 鍵）結案；OS 級隔離（方案 C）列 backlog，僅在有多專案強隔離需求時才排。
+
 ---
 
 ## 五、明日接續的建議起點

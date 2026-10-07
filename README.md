@@ -63,7 +63,7 @@ MCP Agent 在啟動時會自動偵測正在執行的這些視窗並接管控制�
   - `products/`: 每個產品一個 façade，持有 session 與傳輸（如 `mechanical.py`）。
   - `tools/`: 薄薄的 `@mcp.tool` 包裝，委派給 `products/`。
   - `drivers/sim_impl.py`: Fluent / Geometry 的呼叫實作。
-  - `bridges/workbench_bridge.py`: Workbench journal 橋接與批次啟動。
+  - `bridges/workbench_batch.py`: Workbench journal 橋接與批次啟動。
   - `__main__.py`: MCP 伺服器進入點。
 - `examples/`: 工程實例與標竿管線。
   - [`examples/shock_analysis/`](examples/shock_analysis/README.md): 35G 衝擊管線、材料自動指派與 LS-DYNA .k 檔生成。

@@ -22,6 +22,7 @@
 4. **~~遠端 pytest 既有紅燈~~（2026-10-07 已消解）**：原 `tests/unit/test_dyna_keywords.py`（缺選用依賴 `ansys-dyna-core`）已於 `309d12b` 改為缺依賴時 `importorskip` 跳過；`tests/unit/test_workspace_visibility.py` 於全量重跑中亦無失敗。
 5. **~~全量 pytest 未於重構後完整重跑~~（2026-10-07 已消解）**：已完整重跑 `pytest -q`，結果 **636 passed / 0 failed / 5 xfailed / 1 xpassed / 2 deselected**（耗時 498.83s），exit code 0。
 6. **既有待決事項**：見 `2026-10-05-session-handover.md`（PyWorkbench 實機驗證等）。
+   - ✅ 任務 7（多工作區 session 隔離）已於 2026-10-07 結案：採 D+A 組合（per-session 工具可見性 + SessionRegistry workspace 鍵）；OS 級隔離（方案 C）列 backlog。
 
 ## 三、建議下一步
 
