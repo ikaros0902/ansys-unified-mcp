@@ -21,11 +21,10 @@ PYTHON_EXE = sys.executable
 class TestM1ImportPermutationStress:
     """在全新獨立進程與多執行緒競爭下，對匯入順序進行極限壓力測試。"""
 
-    # 6 個關鍵的匯入陳述式
+    # 5 個關鍵的匯入陳述式（已移除退役子模組 shim，改用 drivers 套件層 PEP 562 re-export）
     CORE_IMPORT_STATEMENTS = [
         "from ansys_unified_mcp.products.mechanical import *",
         "from ansys_unified_mcp.drivers import *",
-        "from ansys_unified_mcp.drivers.mechanical_driver import MechanicalDriver as D1",
         "from ansys_unified_mcp.products.mechanical.driver import MechanicalDriver as D2",
         "from ansys_unified_mcp.products.mechanical import MechanicalDriver as D3",
         "from ansys_unified_mcp.drivers import MechanicalDriver as D4",
@@ -49,14 +48,12 @@ sys.path.insert(0, r"{PROJECT_ROOT}")
         return res
 
     def test_single_driver_exports_identity_oracle(self):
-        """神諭驗證：四個途徑匯入之 MechanicalDriver 必須在記憶體中具備完全一致的 Class 身份。"""
+        """神諭驗證：三個途徑匯入之 MechanicalDriver 必須在記憶體中具備完全一致的 Class 身份。"""
         script = """
 from ansys_unified_mcp.products.mechanical.driver import MechanicalDriver as D_raw
-from ansys_unified_mcp.drivers.mechanical_driver import MechanicalDriver as D_shim
 from ansys_unified_mcp.drivers import MechanicalDriver as D_drivers
 from ansys_unified_mcp.products.mechanical import MechanicalDriver as D_prod
 
-assert D_raw is D_shim, f"D_raw != D_shim: {D_raw} vs {D_shim}"
 assert D_raw is D_drivers, f"D_raw != D_drivers: {D_raw} vs {D_drivers}"
 assert D_raw is D_prod, f"D_raw != D_prod: {D_raw} vs {D_prod}"
 
@@ -74,7 +71,6 @@ print("IDENTITY_VERIFIED")
         [
             "from ansys_unified_mcp.products.mechanical import *",
             "from ansys_unified_mcp.drivers import *",
-            "from ansys_unified_mcp.drivers.mechanical_driver import MechanicalDriver",
             "from ansys_unified_mcp.products.mechanical.driver import MechanicalDriver",
             "from ansys_unified_mcp.products.mechanical import MechanicalDriver",
             "from ansys_unified_mcp.drivers import MechanicalDriver",
@@ -88,12 +84,11 @@ print("IDENTITY_VERIFIED")
 {first_import}
 from ansys_unified_mcp.products.mechanical import *
 from ansys_unified_mcp.drivers import *
-from ansys_unified_mcp.drivers.mechanical_driver import MechanicalDriver as M1
 from ansys_unified_mcp.products.mechanical.driver import MechanicalDriver as M2
 from ansys_unified_mcp.products.mechanical import MechanicalDriver as M3
 from ansys_unified_mcp.drivers import MechanicalDriver as M4
 
-assert M1 is M2 is M3 is M4
+assert M2 is M3 is M4
 print("ENTRYPOINT_OK")
 """
         res = self._run_in_fresh_process(script)
@@ -101,10 +96,10 @@ print("ENTRYPOINT_OK")
         assert "ENTRYPOINT_OK" in res.stdout
 
     def test_pairwise_reverse_order_permutations(self):
-        """實證驗證：將 6 個主要匯入語句進行兩兩反轉全排列（共 30 種組合），全部必須 100% 成功。"""
+        """實證驗證：將 5 個主要匯入語句進行兩兩反轉全排列（共 20 種組合），全部必須 100% 成功。"""
         stmts = self.CORE_IMPORT_STATEMENTS
         pairs = list(itertools.permutations(stmts, 2))
-        assert len(pairs) == 30
+        assert len(pairs) == 20
 
         for idx, (s1, s2) in enumerate(pairs):
             script = f"""
@@ -153,7 +148,7 @@ def worker(idx):
             import ansys_unified_mcp.drivers as d
             results[idx] = d.MechanicalDriver
         elif idx % 4 == 2:
-            from ansys_unified_mcp.drivers.mechanical_driver import MechanicalDriver
+            from ansys_unified_mcp.drivers import MechanicalDriver
             results[idx] = MechanicalDriver
         else:
             from ansys_unified_mcp.products.mechanical.driver import MechanicalDriver
@@ -223,17 +218,14 @@ import importlib
 import ansys_unified_mcp.drivers as drv
 import ansys_unified_mcp.products.mechanical as mech
 import ansys_unified_mcp.products.mechanical.driver as mech_drv
-import ansys_unified_mcp.drivers.mechanical_driver as mech_shim
 
 for i in range(5):
     importlib.reload(mech_drv)
-    importlib.reload(mech_shim)
     importlib.reload(drv)
     importlib.reload(mech)
     
     assert hasattr(drv, "MechanicalDriver")
     assert hasattr(mech, "MechanicalDriver")
-    assert hasattr(mech_shim, "MechanicalDriver")
 
 print("RELOAD_CYCLE_PASSED")
 """
