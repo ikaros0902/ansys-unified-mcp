@@ -1,8 +1,7 @@
 """Unified ANSYS path resolution.
 
 Single source of truth for locating ANSYS executables and the PyMechanical CLI,
-merging what was previously duplicated across config.py, bridges/workbench_bridge.py
-and tools/connection_tools.py.
+merging what was previously duplicated across config.py and tools/connection_tools.py.
 
 Resolution order for each executable:
 1. Explicit environment variable override (e.g. ANSYS_RUNWB2).

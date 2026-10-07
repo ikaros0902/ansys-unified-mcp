@@ -41,7 +41,9 @@ _PROBE_TTL = 10.0
 
 # Default budget for a single run_script()/run_script_file() call (see
 # core/timeout.py caveat: this bounds the caller's wait, not the server call).
-DEFAULT_SCRIPT_TIMEOUT = 60.0
+# Workbench journal 可能長時間執行（實機驗證：冷啟動耗時約 192 秒），60 秒的舊預設
+# 容易在尚未真正失敗時就被誤殺，因此拉高到 300 秒以涵蓋常見的冷啟動與長批次腳本情境。
+DEFAULT_SCRIPT_TIMEOUT = 300.0
 
 
 class WorkbenchController:
