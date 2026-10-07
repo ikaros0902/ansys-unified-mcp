@@ -31,23 +31,23 @@ from pathlib import Path
 from typing import Any, Dict, List
 import pytest
 
-from ansys_unified_mcp.jobs.manager import JobManager
-from ansys_unified_mcp.jobs.models import (
+from ansys_unified_mcp.core.jobs.manager import JobManager
+from ansys_unified_mcp.core.jobs.models import (
     ExecutionMetadata,
     JobStatusEnum,
     PhysicalMetrics,
     SimulationSummary,
     VerdictEnum,
 )
-from ansys_unified_mcp.jobs.sandbox import JobSandbox
-from ansys_unified_mcp.reporting.charts import (
+from ansys_unified_mcp.core.jobs.sandbox import JobSandbox
+from ansys_unified_mcp.analytics.reporting.charts import (
     render_convergence_curve_svg,
     render_drop_acceleration_svg,
     render_energy_balance_svg,
     render_mop_surface_svg,
     render_psd_response_svg,
 )
-from ansys_unified_mcp.reporting.generator import ReportGenerator
+from ansys_unified_mcp.analytics.reporting.generator import ReportGenerator
 
 
 # ==============================================================================

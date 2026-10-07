@@ -25,7 +25,7 @@ import pytest
 
 from ansys_unified_mcp.drivers.base import SolverDriverError
 from ansys_unified_mcp.drivers.icepak_driver import IcepakDriver
-from ansys_unified_mcp.jobs.models import (
+from ansys_unified_mcp.core.jobs.models import (
     ExecutionMetadata,
     PhysicalMetrics,
     SimulationSummary,

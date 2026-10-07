@@ -21,10 +21,10 @@ from typing import Any, Dict, List, Optional
 
 from ansys_unified_mcp.core.sentinel.daemon import get_sentinel_queue
 from ansys_unified_mcp.drivers.lsdyna_driver import LSDynaDriver
-from ansys_unified_mcp.gatekeeper import Gatekeeper
-from ansys_unified_mcp.jobs.sandbox import JobSandbox
-from ansys_unified_mcp.reporting.generator import ReportGenerator
-from ansys_unified_mcp.gatekeeper.evidence import create_manifest
+from ansys_unified_mcp.core.gatekeeper import Gatekeeper
+from ansys_unified_mcp.core.jobs.sandbox import JobSandbox
+from ansys_unified_mcp.analytics.reporting.generator import ReportGenerator
+from ansys_unified_mcp.core.gatekeeper.evidence import create_manifest
 
 logger = logging.getLogger("ansys-unified-mcp.workflows.drop_test")
 

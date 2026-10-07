@@ -21,17 +21,17 @@ from typing import Any, Dict, List, Optional, Tuple
 
 from ansys_unified_mcp.core.sentinel.daemon import get_sentinel_queue
 from ansys_unified_mcp.drivers.contour_helper import generate_white_contour_png
-from ansys_unified_mcp.drivers.mechanical_driver import MechanicalDriver
-from ansys_unified_mcp.gatekeeper import Gatekeeper
-from ansys_unified_mcp.jobs.models import (
+from ansys_unified_mcp.products.mechanical.driver import MechanicalDriver
+from ansys_unified_mcp.core.gatekeeper import Gatekeeper
+from ansys_unified_mcp.core.jobs.models import (
     ExecutionMetadata,
     JobStatusEnum,
     PhysicalMetrics,
     SimulationSummary,
     VerdictEnum,
 )
-from ansys_unified_mcp.jobs.sandbox import JobSandbox
-from ansys_unified_mcp.reporting.generator import ReportGenerator
+from ansys_unified_mcp.core.jobs.sandbox import JobSandbox
+from ansys_unified_mcp.analytics.reporting.generator import ReportGenerator
 from ansys_unified_mcp.workflows.workbench_links import WorkbenchCellLinkEngine
 
 logger = logging.getLogger("ansys-unified-mcp.workflows.random_vibration")

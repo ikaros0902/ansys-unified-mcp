@@ -12,14 +12,14 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-from ansys_unified_mcp.jobs.models import (
+from ansys_unified_mcp.core.jobs.models import (
     JobStatusEnum,
     PhysicalMetrics,
     SimulationSummary,
     VerdictEnum,
 )
-from ansys_unified_mcp.jobs.sandbox import JobSandbox
-from ansys_unified_mcp.reporting.charts import (
+from ansys_unified_mcp.core.jobs.sandbox import JobSandbox
+from ansys_unified_mcp.analytics.reporting.charts import (
     render_convergence_curve_svg,
     render_drop_acceleration_svg,
     render_energy_balance_svg,

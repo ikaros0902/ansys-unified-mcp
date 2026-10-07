@@ -21,7 +21,7 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 from ansys_unified_mcp.shared import mcp
 import ansys_unified_mcp.products.mechanical.facade as mechanical_mod
-from ansys_unified_mcp.products.mechanical_api import (
+from ansys_unified_mcp.products.mechanical.api import (
     _safe_json_response,
     _normalize_dict_envelope,
     _to_bool_ok,

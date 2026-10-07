@@ -35,22 +35,22 @@ import ansys_unified_mcp.core.sentinel.parsers.lsdyna as lsdyna_parser_mod
 if not hasattr(lsdyna_parser_mod, "LSDynaParser"):
     lsdyna_parser_mod.LSDynaParser = lsdyna_parser_mod.LSDynaGlstatParser  # type: ignore[attr-defined]
 
-from ansys_unified_mcp.jobs.sandbox import JobSandbox
+from ansys_unified_mcp.core.jobs.sandbox import JobSandbox
 if not hasattr(JobSandbox, "sandbox_dir"):
     JobSandbox.sandbox_dir = property(lambda self: getattr(self, "root_dir", getattr(self, "job_dir", None)))  # type: ignore[attr-defined]
 
-from ansys_unified_mcp.reporting.generator import ReportGenerator
+from ansys_unified_mcp.analytics.reporting.generator import ReportGenerator
 if not hasattr(ReportGenerator, "build_markdown_summary"):
     ReportGenerator.build_markdown_summary = lambda self, sandbox, summary=None: self.generate_dialog_summary(  # type: ignore[attr-defined]
         summary=summary or sandbox.get_summary(), sandbox=sandbox
     )
 
 from ansys_unified_mcp.core.sentinel.daemon import get_sentinel_queue, shutdown_sentinel
-from ansys_unified_mcp.gatekeeper import Gatekeeper, RuleStatusEnum
-from ansys_unified_mcp.jobs.manager import JobManager
-from ansys_unified_mcp.jobs.models import JobStatusEnum, VerdictEnum
-from ansys_unified_mcp.jobs.sandbox import JobSandbox
-from ansys_unified_mcp.reporting.generator import ReportGenerator
+from ansys_unified_mcp.core.gatekeeper import Gatekeeper, RuleStatusEnum
+from ansys_unified_mcp.core.jobs.manager import JobManager
+from ansys_unified_mcp.core.jobs.models import JobStatusEnum, VerdictEnum
+from ansys_unified_mcp.core.jobs.sandbox import JobSandbox
+from ansys_unified_mcp.analytics.reporting.generator import ReportGenerator
 from ansys_unified_mcp.workflows.thermal_warpage import run_thermal_warpage
 from ansys_unified_mcp.workflows.workbench_links import WorkbenchCellLinkEngine
 

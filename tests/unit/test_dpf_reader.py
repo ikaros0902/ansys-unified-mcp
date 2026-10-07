@@ -18,7 +18,7 @@ from unittest.mock import MagicMock, patch
 import numpy as np
 import pytest
 
-from ansys_unified_mcp.postprocessing import (
+from ansys_unified_mcp.analytics.postprocessing import (
     BaseResultReader,
     DPFSandboxReader,
     JobNotReadyError,

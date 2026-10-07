@@ -21,7 +21,7 @@ from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 import pytest
 
-from ansys_unified_mcp.gatekeeper import (
+from ansys_unified_mcp.core.gatekeeper import (
     Gatekeeper,
     PreFlightGatekeeperError,
     PreFlightPrescriptionReport,

@@ -50,8 +50,8 @@ from ansys_unified_mcp.core.sentinel.parsers import (
     MechanicalMAPDLParser,
 )
 from ansys_unified_mcp.core.sentinel.watchdog import WatchdogDaemon
-from ansys_unified_mcp.jobs.manager import JobManager
-from ansys_unified_mcp.jobs.models import JobStatusEnum, VerdictEnum
+from ansys_unified_mcp.core.jobs.manager import JobManager
+from ansys_unified_mcp.core.jobs.models import JobStatusEnum, VerdictEnum
 
 
 # ==============================================================================

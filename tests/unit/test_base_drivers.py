@@ -40,15 +40,15 @@ from ansys_unified_mcp.drivers.base import (
     SolverExecutionError,
     SolverNotFoundError,
 )
-from ansys_unified_mcp.drivers.fluent_driver import FluentDriver
+from ansys_unified_mcp.products.fluent.driver import FluentDriver
 from ansys_unified_mcp.drivers.icepak_driver import IcepakDriver
 from ansys_unified_mcp.drivers.lsdyna_driver import LSDynaDriver
-from ansys_unified_mcp.drivers.mechanical_driver import MechanicalDriver
-from ansys_unified_mcp.drivers.optislang_driver import OptislangDriver
-from ansys_unified_mcp.drivers.spaceclaim_driver import SpaceClaimDriver
-from ansys_unified_mcp.jobs.manager import JobManager
-from ansys_unified_mcp.jobs.models import SimulationSummary, VerdictEnum
-from ansys_unified_mcp.jobs.sandbox import JobSandbox
+from ansys_unified_mcp.products.mechanical.driver import MechanicalDriver
+from ansys_unified_mcp.products.optislang.driver import OptislangDriver
+from ansys_unified_mcp.products.geometry.driver import SpaceClaimDriver
+from ansys_unified_mcp.core.jobs.manager import JobManager
+from ansys_unified_mcp.core.jobs.models import SimulationSummary, VerdictEnum
+from ansys_unified_mcp.core.jobs.sandbox import JobSandbox
 from tests.mocks.mock_driver import (
     BaseSolverDriverContract,
     FakeProcess,

@@ -25,7 +25,7 @@ except ImportError:
         FluentLogParser = None
 from ansys_unified_mcp.drivers.base import BaseSolverDriver, SolverDriverError
 from ansys_unified_mcp.drivers.contour_helper import generate_white_contour_png
-from ansys_unified_mcp.jobs.models import (
+from ansys_unified_mcp.core.jobs.models import (
     ExecutionMetadata,
     JobStatusEnum,
     PhysicalMetrics,

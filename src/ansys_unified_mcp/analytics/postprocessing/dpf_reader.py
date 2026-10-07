@@ -17,7 +17,7 @@ from typing import Any, Dict, List, Optional, Union
 
 import numpy as np
 
-from ansys_unified_mcp.postprocessing.base import (
+from ansys_unified_mcp.analytics.postprocessing.base import (
     BaseResultReader,
     JobNotReadyError,
     PostprocessingError,

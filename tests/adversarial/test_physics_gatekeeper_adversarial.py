@@ -33,23 +33,23 @@ from __future__ import annotations
 import pytest
 from typing import Any, Dict
 
-from ansys_unified_mcp.gatekeeper import (
+from ansys_unified_mcp.core.gatekeeper import (
     Gatekeeper,
     PreFlightGatekeeperError,
     RuleStatusEnum,
     SeverityEnum,
     ActionCodeEnum,
 )
-from ansys_unified_mcp.gatekeeper.rules.vibration_rules import (
+from ansys_unified_mcp.core.gatekeeper.rules.vibration_rules import (
     ModalEffectiveMassRatioRule,
     ModalCutoffFrequencyRule,
 )
-from ansys_unified_mcp.gatekeeper.rules.drop_impact_rules import (
+from ansys_unified_mcp.core.gatekeeper.rules.drop_impact_rules import (
     DropVelocityVectorRule,
     CriticalTimeStepRule,
     ContactIntegrityRule,
 )
-from ansys_unified_mcp.gatekeeper.rules.unit_consistency import UnitConsistencyRule
+from ansys_unified_mcp.core.gatekeeper.rules.unit_consistency import UnitConsistencyRule
 
 
 # ==============================================================================

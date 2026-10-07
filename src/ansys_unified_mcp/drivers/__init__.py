@@ -24,20 +24,20 @@ from ansys_unified_mcp.drivers.base import (
 
 # 支援靜態類型檢查 (IDE 自動補齊與 mypy/pyright)
 if TYPE_CHECKING:
-    from ansys_unified_mcp.drivers.fluent_driver import FluentDriver
+    from ansys_unified_mcp.products.fluent.driver import FluentDriver
     from ansys_unified_mcp.drivers.icepak_driver import IcepakDriver
     from ansys_unified_mcp.drivers.lsdyna_driver import LSDynaDriver
-    from ansys_unified_mcp.drivers.mechanical_driver import MechanicalDriver
-    from ansys_unified_mcp.drivers.optislang_driver import OptislangDriver
-    from ansys_unified_mcp.drivers.spaceclaim_driver import SpaceClaimDriver
+    from ansys_unified_mcp.products.mechanical.driver import MechanicalDriver
+    from ansys_unified_mcp.products.optislang.driver import OptislangDriver
+    from ansys_unified_mcp.products.geometry.driver import SpaceClaimDriver
 
 _LAZY_DRIVERS: dict[str, tuple[str, str]] = {
-    "MechanicalDriver": ("ansys_unified_mcp.drivers.mechanical_driver", "MechanicalDriver"),
-    "FluentDriver": ("ansys_unified_mcp.drivers.fluent_driver", "FluentDriver"),
+    "MechanicalDriver": ("ansys_unified_mcp.products.mechanical.driver", "MechanicalDriver"),
+    "FluentDriver": ("ansys_unified_mcp.products.fluent.driver", "FluentDriver"),
     "IcepakDriver": ("ansys_unified_mcp.drivers.icepak_driver", "IcepakDriver"),
     "LSDynaDriver": ("ansys_unified_mcp.drivers.lsdyna_driver", "LSDynaDriver"),
-    "OptislangDriver": ("ansys_unified_mcp.drivers.optislang_driver", "OptislangDriver"),
-    "SpaceClaimDriver": ("ansys_unified_mcp.drivers.spaceclaim_driver", "SpaceClaimDriver"),
+    "OptislangDriver": ("ansys_unified_mcp.products.optislang.driver", "OptislangDriver"),
+    "SpaceClaimDriver": ("ansys_unified_mcp.products.geometry.driver", "SpaceClaimDriver"),
 }
 
 __all__ = [

@@ -27,12 +27,12 @@ from ansys_unified_mcp.core.sentinel.parsers import (
     MechanicalMAPDLParser,
     create_solver_parser,
 )
-from ansys_unified_mcp.jobs.models import (
+from ansys_unified_mcp.core.jobs.models import (
     JobStatusEnum,
     SimulationSummary,
     VerdictEnum,
 )
-from ansys_unified_mcp.jobs.sandbox import JobSandbox
+from ansys_unified_mcp.core.jobs.sandbox import JobSandbox
 
 logger = logging.getLogger("ansys-unified-mcp.sentinel.watchdog")
 

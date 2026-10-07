@@ -15,7 +15,7 @@ from pathlib import Path
 import re
 from typing import Any, Dict, List, Optional, Union
 
-from ansys_unified_mcp.postprocessing.base import (
+from ansys_unified_mcp.analytics.postprocessing.base import (
     BaseResultReader,
     JobNotReadyError,
     PostprocessingError,

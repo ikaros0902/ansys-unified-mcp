@@ -33,7 +33,7 @@ import ansys_unified_mcp.core.sentinel.parsers.lsdyna as lsdyna_parser_mod
 if not hasattr(lsdyna_parser_mod, "LSDynaParser"):
     lsdyna_parser_mod.LSDynaParser = lsdyna_parser_mod.LSDynaGlstatParser  # type: ignore[attr-defined]
 
-from ansys_unified_mcp.gatekeeper import (
+from ansys_unified_mcp.core.gatekeeper import (
     ActionCodeEnum,
     Gatekeeper,
     PreFlightGatekeeperError,
