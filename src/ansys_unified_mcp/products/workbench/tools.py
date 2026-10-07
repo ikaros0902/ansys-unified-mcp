@@ -1156,7 +1156,8 @@ def workbench_launch_server(
     """Launch a new Ansys Workbench server and connect a PyWorkbench client.
 
     Official client/server transport (replaces the hand-rolled batch/bridge for
-    orchestration). UNVERIFIED: not yet validated against a live server.
+    orchestration). VERIFIED @2026-10-07 against a live server (v261). Note: cold
+    launch can take ~3 minutes.
     """
     return controller.launch(
         show_gui=show_gui,
@@ -1185,7 +1186,7 @@ def workbench_run_script_live(script: str, key: Optional[str] = None, log_level:
     """Run a Workbench journal (Python) command string via PyWorkbench.
 
     The script may set ``wb_script_result`` (a string) to return data. Returns
-    the journal result. UNVERIFIED path.
+    the journal result. VERIFIED @2026-10-07 (template probe round-trip).
     """
     out = controller.run_script(script, key=key, log_level=log_level)
     if isinstance(out, str) and out.startswith("Error:"):

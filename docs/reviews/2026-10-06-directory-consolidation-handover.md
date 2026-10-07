@@ -19,8 +19,8 @@
 1. **Teamwork M2 門禁會審尚未結案**：5 位獨立審查（reviewer_m2_1/2、challenger_m2_1/2、auditor_m2_1）於 22:15 仍在進行，裁決未出。代碼已推送，但「獨立審查通過」尚無正式結論。
 2. **Succession Protocol 未執行**：orchestrator 生成次數已達 16，結算後須派接替者。
 3. **Teamwork 工作檔未入版控**：`.agents/` 被 `.git/info/exclude` 本機排除，審查紀錄僅存本機 `.agents/teamwork/`。
-4. **遠端 pytest 既有紅燈**：`tests/unit/test_dyna_keywords.py`（缺選用依賴 `ansys-dyna-core`）與 `tests/unit/test_workspace_visibility.py`（in-memory Client 每次請求 session_id 不同，per-session 狀態未延續）共 6 項失敗，非本次重構引入，尚未修復。
-5. **全量 pytest 未於重構後完整重跑**：僅跑 E2E、adversarial 與拓撲/工具驗證。
+4. **~~遠端 pytest 既有紅燈~~（2026-10-07 已消解）**：原 `tests/unit/test_dyna_keywords.py`（缺選用依賴 `ansys-dyna-core`）已於 `309d12b` 改為缺依賴時 `importorskip` 跳過；`tests/unit/test_workspace_visibility.py` 於全量重跑中亦無失敗。
+5. **~~全量 pytest 未於重構後完整重跑~~（2026-10-07 已消解）**：已完整重跑 `pytest -q`，結果 **636 passed / 0 failed / 5 xfailed / 1 xpassed / 2 deselected**（耗時 498.83s），exit code 0。
 6. **既有待決事項**：見 `2026-10-05-session-handover.md`（PyWorkbench 實機驗證等）。
 
 ## 三、建議下一步

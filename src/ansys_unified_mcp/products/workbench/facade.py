@@ -1,10 +1,11 @@
 """Workbench product facade (PyWorkbench / ansys-workbench-core).
 
 Official client/server transport for Ansys Workbench. Intended to supersede the
-hand-rolled file-IPC bridge (``tools/workbench_bridge.py``) and the batch-journal
-job launcher (``tools/workbench.py``) for real Workbench project orchestration:
-create/link systems, drive Engineering Data / Geometry / Model cells, and hand a
-cell off to a solver-specific PyAnsys server (Mechanical / Fluent / Sherlock).
+hand-rolled file-IPC bridge (``bridges/workbench_filequeue.py``) and the
+batch-journal job launcher (``bridges/workbench_batch.py``) for real Workbench
+project orchestration: create/link systems, drive Engineering Data / Geometry /
+Model cells, and hand a cell off to a solver-specific PyAnsys server
+(Mechanical / Fluent / Sherlock).
 
 Core primitive (aligns with the project's thin script-runner design):
 ``run_script(script)`` sends a Workbench journal (Python) command string to the
@@ -15,11 +16,12 @@ Sessions live in the shared ``SessionRegistry``, keyed by port (or ``"launched"`
 consistent with ``MechanicalController``.
 
 STATUS: UNVERIFIED (Phase 1, option B). Written per the migration plan but NOT
-yet validated against a live Workbench server (no connection/launch was run, per
-user instruction). The legacy file-IPC bridge and batch job launcher remain in
-place as fallback. Verify with a connection smoke test (launch/connect + a
-side-effect-free journal such as a template probe) before deprecating the legacy
-path.
+STATUS: VERIFIED @2026-10-07 (Phase 1, option B). Validated against a live
+Workbench server (v261): launch -> run_script (template probe) -> exit round-trip
+succeeded (``wb_script_result`` returned '/Schematic/Template:Static Structural
+(ANSYS)'). Note: cold launch took ~192s, which exceeds the default per-call
+script timeout; keep that in mind for long-running journals. The legacy file-IPC
+bridge and batch job launcher remain in place as fallback until Phase 1 cleanup.
 """
 
 from __future__ import annotations
