@@ -15,7 +15,6 @@ server via ``WorkbenchClient.run_script_string`` and returns the journal's
 Sessions live in the shared ``SessionRegistry``, keyed by port (or ``"launched"``),
 consistent with ``MechanicalController``.
 
-STATUS: UNVERIFIED (Phase 1, option B). Written per the migration plan but NOT
 STATUS: VERIFIED @2026-10-07 (Phase 1, option B). Validated against a live
 Workbench server (v261): launch -> run_script (template probe) -> exit round-trip
 succeeded (``wb_script_result`` returned '/Schematic/Template:Static Structural
