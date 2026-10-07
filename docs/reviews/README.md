@@ -44,3 +44,4 @@ YYYY-MM-DD-<kebab-case-主題>.md
 - `2026-10-02-docs-structure-audit.md`：文檔結構稽核
 - `2026-09-24-153530-chore-restructure.md`：早期重構紀錄
 - `2026-10-07-pyworkbench-verification-done.md`：PyWorkbench 實機驗證任務卡（✅ 已驗證）
+- `2026-10-07-backlog-decisions.md`：Backlog 技術決策記錄（fallback bridge 移除、OS 級隔離方案 C）
