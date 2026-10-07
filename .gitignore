@@ -79,6 +79,10 @@ jobs/*
 scratch/
 .agents/*
 !.agents/teamwork/
+# Agent 行為設定規範（本機私有，不入公開版控）
+agents/steering/
+AGENTS.md
+.codex/
 src/**/tools/commands/
 src/**/tools/results/
 src/**/tools/runs/
