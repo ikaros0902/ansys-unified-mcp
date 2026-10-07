@@ -43,4 +43,4 @@ YYYY-MM-DD-<kebab-case-主題>.md
 - `2026-10-02-phase2-3-feasibility-assessment.md`：Phase 2/3 可行性評估
 - `2026-10-02-docs-structure-audit.md`：文檔結構稽核
 - `2026-09-24-153530-chore-restructure.md`：早期重構紀錄
-- `pyworkbench-verification-pending.md`：PyWorkbench 實機驗證任務卡
+- `2026-10-07-pyworkbench-verification-done.md`：PyWorkbench 實機驗證任務卡（✅ 已驗證）

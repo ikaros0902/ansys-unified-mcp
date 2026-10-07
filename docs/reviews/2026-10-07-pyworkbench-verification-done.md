@@ -1,4 +1,4 @@
-# PyWorkbench 通道實機驗證任務卡（待排程 / UNVERIFIED）
+# PyWorkbench 通道實機驗證任務卡（✅ 已驗證 @2026-10-07）
 
 **狀態**：✅ 已驗證 @2026-10-07。launch → run_script（template probe）→ exit 雙向通道通過。
 **驗證證據**：底層 `launch_workbench(show_gui=True)` 成功（server_version=261），冷啟動耗時 192.1s；
@@ -6,7 +6,7 @@ journal `GetTemplate(TemplateName='Static Structural', Solver='ANSYS')` 回傳
 `wb_script_result = {"template": "/Schematic/Template:Static Structural (ANSYS)"}`，確認雙向通道正常；`wb.exit()` 關閉 server 無殘留進程。
 **路徑修正**：原任務卡所述 `products/workbench.py` / `tools/workbench_pyworkbench.py` 於目錄重構後已收斂為
 `src/ansys_unified_mcp/products/workbench/{facade,tools}.py`；3 處 `STATUS: UNVERIFIED` 註記已清除改標 VERIFIED。
-**已知事項**：WB 冷啟動約 3 分鐘，超過 controller `DEFAULT_SCRIPT_TIMEOUT=60s`（該 timeout 僅套用於 run_script，不套 launch）；長時 journal 需注意。
+**已知事項**：WB 冷啟動約 3 分鐘；`DEFAULT_SCRIPT_TIMEOUT` 已於 2026-10-07 由 60s 調高為 300s（該 timeout 僅套用於 run_script，不套 launch）；長時 journal 仍需注意。
 **執行時機**：此驗證會啟動 Workbench server（屬連線動作），需本機已安裝並可授權 Ansys Workbench，故不納入自動化 CI。
 **對應決策**：本任務卡對應使用者決策「3=b」（PyWorkbench 驗證排程待實機），由主線任務收斂時建立。
 
