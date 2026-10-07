@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""一次性腳本：連線已開啟的 SpaceClaim，整排簡化 RAM+socket。
+r"""一次性腳本：連線已開啟的 SpaceClaim，整排簡化 RAM+socket。
 
 直接呼叫底層 sim_impl.call_tool，不經由 MCP 客戶端。
 用法:

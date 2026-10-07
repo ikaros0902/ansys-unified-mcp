@@ -59,6 +59,9 @@ extend-exclude = [
     "jobs",
     "workbench_queue",
     "scratch",
+    # IronPython 2 內嵌腳本（Mechanical 進程內執行，含 `exec ... in` 等 Python 2 語法），
+    # CPython 端 ruff 無法解析（parse error），由 py_compile 以 IronPython 語境獨立把關。
+    "src/ansys_unified_mcp/products/mechanical/plugins/mechanical_socket_listener.py",
 ]
 
 [tool.ruff.lint]
@@ -76,6 +79,9 @@ ignore = [
     # E702（6 筆，集中於 drivers/sim_impl.py）：以分號並列的緊湊寫法，
     # 為既有風格選擇，無正確性影響。
     "E702",
+    # E731（3 筆，集中於 tests 的 heatsink 幾何斷言）：測試內以 lambda 做局部
+    # 座標換算的便利寫法，改 def 無實質收益，屬風格範疇。
+    "E731",
     # W291 / W292 / W293（309 筆）：行尾空白、檔尾換行、空行含空白。
     "W291",
     "W292",
@@ -87,6 +93,10 @@ ignore = [
     # 清理時可用 `ruff check --select F401,F841 --fix` 單獨處理。
     "F401",
     "F841",
+    # F403（23 筆：docs/gatekeeper/postprocessing/reporting 子套件以 `from .x import *`
+    # 做 re-export 的既有慣例）。與 F401/F841 同屬存量慣例債，全面改顯式 import 工作量大
+    # 且超出 lint 噪音治理範圍，故先排除；日後專責清理可用 `--select F403` 單獨處理。
+    "F403",
 ]
 # 「I」(isort) 經評估後暫不納入：I001 現有 129 筆全為 import 排序差異，
 # 需要一次專責的 `ruff check --select I --fix` 格式化提交才能收斂。
@@ -101,6 +111,12 @@ ignore = [
 "SKILLs/**/*.py" = ["F821"]
 "agents/skills/**/*.py" = ["F821"]
 "deploy/**/*.py" = ["F821"]
+# tests 下的 ANSYS demo / 工作流腳本同屬 ACT / IronPython 情境（ExtAPI、Model、
+# DataModel 等為求解器注入全域），比照 skills 免除 F821。
+"tests/**/scripts/*.py" = ["F821"]
+# IronPython 內嵌腳本（Mechanical 進程內以 IronPython 2 執行），含 `exec ... in`
+# 等 Python 2 語法，CPython 端 ruff 會判為 syntax error / undefined-name，屬預期誤報。
+"src/**/plugins/*_listener.py" = ["F821"]
 "scripts/deploy/**/*.py" = ["F821"]
 "examples/**/*.py" = ["F821"]
 "docs/examples/**/*.py" = ["F821"]

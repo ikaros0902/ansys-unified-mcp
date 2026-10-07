@@ -1574,7 +1574,7 @@ def _format_heatsink_result(r, material, default_rho, hole_min_dia_mm):
         + ", ".join(f"Ø{_mm(h['radius']*2)}@({_mm(h['cx'])},{_mm(h['cz'])})"
                     f"[screw_r={_mm(h.get('screw_r',0)*2)},clr={_mm(h.get('clearance',0)*2)}]"
                     for h in r.get("all_holes", [])),
-        f"  [診斷] 四角同軸Y圓柱群(僅內凹,凹角大/外側優先): "
+        "  [診斷] 四角同軸Y圓柱群(僅內凹,凹角大/外側優先): "
         + "; ".join([f"@({_mm(g['cx'])},{_mm(g['cz'])})r={_mm(g['rmin']*2)}~{_mm(g['rmax']*2)}"
                      f"径距{_mm(g['radial'])}凹角{g['ang_cc']/3.14159:.2f}π"
                      f"{'[完整孔]' if g['full'] else '[未達完整]'}"

@@ -1431,13 +1431,3 @@ def convert_part_to_point_mass(part_name: str, proximity_multiplier: float = 3.0
     raw = _run(_build_pm_script(match, ns_label, proximity_multiplier))
     return (_parse_mechanical_output(raw))
 
-
-def main():
-    import sys
-    print("ANSYS Mechanical MCP Server v" + __version__, file=sys.stderr)
-    print("Starting...", file=sys.stderr)
-    mcp.run(transport='stdio')
-
-
-if __name__ == "__main__":
-    main()
