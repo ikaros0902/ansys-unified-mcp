@@ -126,6 +126,167 @@ class DynaController:
         except Exception as exc:  # noqa: BLE001 - 檔案系統例外一律優雅回傳
             return {"ok": False, "error": str(exc)}
 
+    @staticmethod
+    def find_dyna_solver() -> Optional[Path]:
+        """自動偵測本機 LS-DYNA 求解器 (優先尋找 lsdyna_dp.exe 或 lsdyna.exe)。"""
+        import os
+        for env_var in sorted([k for k in os.environ if k.startswith("AWP_ROOT")], reverse=True):
+            root = Path(os.environ[env_var])
+            bin_dir = root / "ansys" / "bin" / "winx64"
+            for candidate in ("lsdyna_dp.exe", "lsdyna_sp.exe", "lsdyna.exe"):
+                p = bin_dir / candidate
+                if p.is_file():
+                    return p
+        for ver in ("v251", "v242", "v232"):
+            base = Path(f"C:/Program Files/ANSYS Inc/{ver}/ansys/bin/winx64")
+            for candidate in ("lsdyna_dp.exe", "lsdyna_sp.exe", "lsdyna.exe"):
+                p = base / candidate
+                if p.is_file():
+                    return p
+        return None
+
+    @staticmethod
+    def find_prepost() -> Optional[Path]:
+        """自動偵測本機 LS-PrePost 執行檔。"""
+        import os
+        for env_var in sorted([k for k in os.environ if k.startswith("AWP_ROOT")], reverse=True):
+            root = Path(os.environ[env_var])
+            bin_dir = root / "ansys" / "bin" / "winx64"
+            if bin_dir.is_dir():
+                for match in bin_dir.glob("**/lsprepost*.exe"):
+                    if match.is_file():
+                        return match
+        for ver in ("v251", "v242", "v232"):
+            bin_dir = Path(f"C:/Program Files/ANSYS Inc/{ver}/ansys/bin/winx64")
+            if bin_dir.is_dir():
+                for match in bin_dir.glob("**/lsprepost*.exe"):
+                    if match.is_file():
+                        return match
+        return None
+
+    def solve_keyword(
+        self,
+        k_file_path: str,
+        ncpu: int = 4,
+        memory: str = "100m",
+        working_dir: str = "",
+        dry_run: bool = False,
+        timeout: float = 300.0,
+    ) -> dict:
+        """調度本機 LS-DYNA 求解器執行計算。"""
+        k_path = Path(k_file_path)
+        if not dry_run and not k_path.is_file():
+            return {"ok": False, "error": f"Keyword 檔案不存在: {k_file_path}"}
+
+        solver_exe = self.find_dyna_solver()
+        if not dry_run and solver_exe is None:
+            return {"ok": False, "error": "未偵測到本機 LS-DYNA 求解器 (lsdyna_dp.exe)。"}
+
+        work_dir = Path(working_dir) if working_dir else k_path.parent
+        cmd = [
+            str(solver_exe) if solver_exe else "lsdyna_dp.exe",
+            f"i={k_path.name if working_dir else str(k_path.resolve())}",
+            f"ncpu={ncpu}",
+            f"memory={memory}",
+        ]
+
+        if dry_run:
+            return {
+                "ok": True,
+                "dry_run": True,
+                "command": cmd,
+                "solver_executable": str(solver_exe) if solver_exe else "lsdyna_dp.exe",
+                "working_dir": str(work_dir),
+                "k_file": str(k_path),
+            }
+
+        try:
+            import subprocess
+            proc = subprocess.run(
+                cmd,
+                cwd=str(work_dir),
+                capture_output=True,
+                text=True,
+                timeout=timeout,
+            )
+            return {
+                "ok": proc.returncode == 0,
+                "return_code": proc.returncode,
+                "stdout": proc.stdout[-2000:] if proc.stdout else "",
+                "stderr": proc.stderr[-2000:] if proc.stderr else "",
+                "working_dir": str(work_dir),
+                "command": cmd,
+            }
+        except subprocess.TimeoutExpired:
+            return {"ok": False, "error": f"LS-DYNA 求解超時 ({timeout} 秒)"}
+        except Exception as exc:
+            return {"ok": False, "error": f"執行求解器失敗: {exc}"}
+
+    def run_prepost(
+        self,
+        cfile_path: str = "",
+        script_content: str = "",
+        working_dir: str = "",
+        dry_run: bool = False,
+        timeout: float = 120.0,
+    ) -> dict:
+        """以無頭批次模式執行 LS-PrePost SCL/cfile 命令腳本。"""
+        prepost_exe = self.find_prepost()
+        if not dry_run and prepost_exe is None:
+            return {"ok": False, "error": "未偵測到本機 LS-PrePost 執行檔 (lsprepost.exe)。"}
+
+        work_dir = Path(working_dir) if working_dir else Path.cwd()
+        actual_cfile = None
+        if script_content:
+            import tempfile
+            tf = tempfile.NamedTemporaryFile("w", suffix=".cfile", delete=False, encoding="utf-8")
+            tf.write(script_content)
+            tf.close()
+            actual_cfile = tf.name
+        elif cfile_path:
+            actual_cfile = cfile_path
+
+        if not actual_cfile and not dry_run:
+            return {"ok": False, "error": "必須指定 cfile_path 或 script_content。"}
+
+        cmd = [
+            str(prepost_exe) if prepost_exe else "lsprepost.exe",
+            "-n",
+            "-c",
+            str(actual_cfile or "mock.cfile"),
+        ]
+
+        if dry_run:
+            return {
+                "ok": True,
+                "dry_run": True,
+                "command": cmd,
+                "prepost_executable": str(prepost_exe) if prepost_exe else "lsprepost.exe",
+                "cfile": actual_cfile,
+            }
+
+        try:
+            import subprocess
+            proc = subprocess.run(
+                cmd,
+                cwd=str(work_dir),
+                capture_output=True,
+                text=True,
+                timeout=timeout,
+            )
+            return {
+                "ok": proc.returncode == 0,
+                "return_code": proc.returncode,
+                "stdout": proc.stdout[-2000:] if proc.stdout else "",
+                "stderr": proc.stderr[-2000:] if proc.stderr else "",
+                "cfile": actual_cfile,
+            }
+        except subprocess.TimeoutExpired:
+            return {"ok": False, "error": f"LS-PrePost 執行超時 ({timeout} 秒)"}
+        except Exception as exc:
+            return {"ok": False, "error": f"執行 LS-PrePost 失敗: {exc}"}
+
+
     def list_keyword_types(self) -> dict:
         """回傳常用 LS-DYNA keyword 類別名稱清單（白名單篩選，非 kw 模組全集）。
 
@@ -136,3 +297,5 @@ class DynaController:
 
 
 controller = DynaController()
+
+

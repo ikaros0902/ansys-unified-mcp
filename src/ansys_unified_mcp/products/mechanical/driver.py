@@ -1,4 +1,4 @@
-﻿"""ANSYS Unified MCP 2.0 - Mechanical / MAPDL 求解器驅動程式 (MechanicalDriver).
+"""ANSYS Unified MCP 2.0 - Mechanical / MAPDL 求解器驅動程式 (MechanicalDriver).
 
 封裝 Mechanical / MAPDL 批次求解流程：
 - APDL 巨集與 Mechanical Python ACT 腳本生成
@@ -34,6 +34,8 @@ class MechanicalDriver(BaseSolverDriver):
     """ANSYS Mechanical / MAPDL 結構與熱分析驅動程式。"""
 
     DEFAULT_EXECUTABLE_NAMES = [
+        "ansys252.exe",
+        "ansys251.exe",
         "ansys242.exe",
         "ansys241.exe",
         "ansys232.exe",
@@ -58,17 +60,15 @@ class MechanicalDriver(BaseSolverDriver):
         if self.solver_bin and Path(self.solver_bin).exists():
             return True, f"找到指定求解器二進位檔: {self.solver_bin}"
 
-        # 2. 搜尋環境變數 AWP_ROOT
-        for ver in ["242", "241", "232", "222"]:
-            awp_env = f"AWP_ROOT{ver}"
-            if awp_env in os.environ:
-                base_dir = Path(os.environ[awp_env])
-                bin_dir = base_dir / "ansys" / "bin" / "winx64"
-                for exe in self.DEFAULT_EXECUTABLE_NAMES:
-                    p = bin_dir / exe
-                    if p.exists():
-                        self.solver_bin = str(p)
-                        return True, f"依據環境變數 {awp_env} 找到 MAPDL 求解器: {p}"
+        # 2. 搜尋環境變數 AWP_ROOT (動態排序，優先高版本如 AWP_ROOT251)
+        for awp_env in sorted([k for k in os.environ if k.startswith("AWP_ROOT")], reverse=True):
+            base_dir = Path(os.environ[awp_env])
+            bin_dir = base_dir / "ansys" / "bin" / "winx64"
+            for exe in self.DEFAULT_EXECUTABLE_NAMES:
+                p = bin_dir / exe
+                if p.exists():
+                    self.solver_bin = str(p)
+                    return True, f"依據環境變數 {awp_env} 找到 MAPDL 求解器: {p}"
 
         # 3. 搜尋 PATH
         for exe in self.DEFAULT_EXECUTABLE_NAMES:
@@ -78,11 +78,12 @@ class MechanicalDriver(BaseSolverDriver):
                 return True, f"於系統 PATH 找到求解器: {found}"
 
         # 4. 常見安裝目錄搜尋 (C:\Program Files\ANSYS Inc\...)
-        for ver in ["v242", "v241", "v232"]:
-            candidate = Path(f"C:/Program Files/ANSYS Inc/{ver}/ansys/bin/winx64/ansys.exe")
-            if candidate.exists():
-                self.solver_bin = str(candidate)
-                return True, f"於預設目錄找到 ANSYS: {candidate}"
+        for ver in ["v252", "v251", "v242", "v241", "v232"]:
+            for exe in self.DEFAULT_EXECUTABLE_NAMES:
+                candidate = Path(f"C:/Program Files/ANSYS Inc/{ver}/ansys/bin/winx64/{exe}")
+                if candidate.exists():
+                    self.solver_bin = str(candidate)
+                    return True, f"於預設目錄找到 ANSYS: {candidate}"
 
         return False, "未偵測到 ANSYS Mechanical / MAPDL 本機安裝環境 (支援沙盒模擬與腳本驗證模式)。"
 

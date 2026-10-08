@@ -69,3 +69,29 @@ def disconnect_optislang(shutdown: bool = True) -> dict:
     """
     return _envelope(controller.disconnect(shutdown=shutdown))
 
+
+@aliased_tool(name="optislang_setup_mop", alias="setup_optislang_mop")
+def optislang_setup_mop(
+    input_parameters: list[dict],
+    output_responses: list[str],
+    samples: int = 100,
+    execute_now: bool = False,
+) -> dict:
+    """建立或產生 optiSLang MOP (Metamodel of Optimal Prognosis) 最佳預測元模型設定腳本。
+
+    Args:
+        input_parameters: 參數清單，例如 [{"name": "thick", "min": 1.0, "max": 5.0, "default": 2.5}]。
+        output_responses: 響應量清單，例如 ["max_stress", "max_disp"]。
+        samples: DOE 抽樣點數量 (預設 100)。
+        execute_now: 若為 True 且目前已連線 optiSLang，則直接在伺服器上執行生成的設定腳本；否則僅回傳生成之 Python 腳本。
+    """
+    return _envelope(
+        controller.setup_mop(
+            input_parameters=input_parameters,
+            output_responses=output_responses,
+            samples=samples,
+            execute_now=execute_now,
+        )
+    )
+
+

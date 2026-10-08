@@ -53,7 +53,14 @@ class SpaceClaimDriver(BaseSolverDriver):
                 self.solver_bin = found
                 return True, f"於 PATH 找到 SpaceClaim: {found}"
 
-        for ver in ["v242", "v241", "v232"]:
+        # 優先檢查 AWP_ROOT* 環境變數 (如 AWP_ROOT251, AWP_ROOT242)
+        for env_var in sorted([k for k in os.environ if k.startswith("AWP_ROOT")], reverse=True):
+            cand = Path(os.environ[env_var]) / "scdm" / "SpaceClaim.exe"
+            if cand.exists():
+                self.solver_bin = str(cand)
+                return True, f"於環境變數 {env_var} 找到 SpaceClaim: {cand}"
+
+        for ver in ["v252", "v251", "v242", "v241", "v232"]:
             candidate = Path(f"C:/Program Files/ANSYS Inc/{ver}/scdm/SpaceClaim.exe")
             if candidate.exists():
                 self.solver_bin = str(candidate)

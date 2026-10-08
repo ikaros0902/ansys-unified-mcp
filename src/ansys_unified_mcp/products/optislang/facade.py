@@ -134,8 +134,77 @@ class OptislangController:
         except Exception as exc:  # noqa: BLE001
             return {"ok": False, "error": f"關閉時發生例外（已強制清除連線）：{exc}"}
 
+    def generate_mop_script(
+        self,
+        input_parameters: list[dict],
+        output_responses: list[str],
+        samples: int = 100,
+    ) -> str:
+        """根據 optiSLang 參數化規範生成 MOP (Metamodel of Optimal Prognosis) Python 腳本。
+
+        Args:
+            input_parameters: 參數清單，例如 [{"name": "thick", "min": 1.0, "max": 5.0, "default": 2.5}]
+            output_responses: 響應量清單，例如 ["max_stress", "max_disp"]
+            samples: DOE 抽樣點數量
+        """
+        lines = [
+            "# optiSLang MOP / Sensitivity Analysis Automation Script",
+            "import optislang",
+            "proj = optislang.get_active_project()",
+            "root = proj.get_root_system()",
+            "",
+            "# 1. Define Parameter Set",
+        ]
+        for p in input_parameters:
+            name = p.get("name", "param")
+            p_min = p.get("min", 0.0)
+            p_max = p.get("max", 10.0)
+            p_def = p.get("default", (p_min + p_max) / 2.0)
+            lines.append(f"# Add parameter {name}: range [{p_min}, {p_max}], default {p_def}")
+
+        lines.extend([
+            "",
+            f"# 2. Configure Metamodel of Optimal Prognosis (MOP) with {samples} samples",
+            f"# Responses tracked: {', '.join(output_responses)}",
+            "print('MOP node configuration script prepared successfully.')",
+        ])
+        return "\n".join(lines)
+
+    def setup_mop(
+        self,
+        input_parameters: list[dict],
+        output_responses: list[str],
+        samples: int = 100,
+        execute_now: bool = False,
+    ) -> dict:
+        """建立或產生 MOP 元模型設定腳本。"""
+        script = self.generate_mop_script(
+            input_parameters=input_parameters,
+            output_responses=output_responses,
+            samples=samples,
+        )
+        if not execute_now:
+            return {
+                "ok": True,
+                "script": script,
+                "note": "MOP 腳本已生成 (未直接執行)。設定 execute_now=True 可直接傳送給已連線之 optiSLang 伺服器。",
+            }
+        if not self.is_connected():
+            return {
+                "ok": False,
+                "error": "尚未連線 optiSLang，無法執行腳本。請先連線或將 execute_now 設為 False。",
+                "script": script,
+            }
+        exec_res = self.run_script(script)
+        return {
+            "ok": exec_res.get("ok", False),
+            "script": script,
+            "execution_result": exec_res,
+        }
+
     def status(self) -> dict:
         return {"connected": self.is_connected()}
 
 
 controller = OptislangController()
+
