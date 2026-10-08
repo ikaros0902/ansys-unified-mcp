@@ -242,7 +242,7 @@ def test_extract_structural_results_missing_stress_field_is_tolerated(tmp_path):
 # ---------------------------------------------------------------------------
 
 def test_mcp_tool_dpf_extract_structural_results_returns_json_envelope(tmp_path):
-    from ansys_unified_mcp.tools import dpf_tools
+    from ansys_unified_mcp.products.dpf import tools as dpf_tools
 
     missing = tmp_path / "missing.rst"
     raw = dpf_tools.dpf_extract_structural_results(str(missing))
@@ -252,7 +252,7 @@ def test_mcp_tool_dpf_extract_structural_results_returns_json_envelope(tmp_path)
 
 
 def test_mcp_tool_dpf_get_model_summary_returns_json_envelope(tmp_path):
-    from ansys_unified_mcp.tools import dpf_tools
+    from ansys_unified_mcp.products.dpf import tools as dpf_tools
 
     missing = tmp_path / "missing.rst"
     raw = dpf_tools.dpf_get_model_summary(str(missing))
@@ -262,7 +262,7 @@ def test_mcp_tool_dpf_get_model_summary_returns_json_envelope(tmp_path):
 
 
 def test_mcp_tool_dpf_extract_structural_results_success(tmp_path):
-    from ansys_unified_mcp.tools import dpf_tools
+    from ansys_unified_mcp.products.dpf import tools as dpf_tools
 
     rst = tmp_path / "model.rst"
     rst.write_bytes(b"fake rst content")

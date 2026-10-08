@@ -98,11 +98,20 @@ class WorkspaceVisibilityMiddleware(Middleware):
         try:
             # Context.get_state 為 async，須 await；非 request 期間或未設定回 None
             products = await fctx.get_state(self._state_key)
+            if products:
+                return set(products)
         except Exception:
-            return None
-        if not products:
-            return None
-        return set(products)
+            pass
+
+        # 連線層 Fallback (支援 in-memory Client 與無 session header 之 STDIO)
+        req_ctx = getattr(fctx, "request_context", None)
+        if req_ctx is not None:
+            lifespan_ctx = getattr(req_ctx, "lifespan_context", None)
+            if isinstance(lifespan_ctx, dict) and self._state_key in lifespan_ctx:
+                val = lifespan_ctx[self._state_key]
+                return set(val) if val else None
+
+        return None
 
     async def on_list_tools(self, context: Any, call_next: Any) -> Sequence[Any]:
         tools = await call_next(context)

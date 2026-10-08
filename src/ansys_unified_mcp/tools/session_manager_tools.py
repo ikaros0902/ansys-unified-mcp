@@ -133,5 +133,14 @@ async def ans_session_set_workspace(products: list[str] | None = None) -> dict:
 
     # 空清單 -> 清除限制 (set_state None 即解除過濾)；Context.set_state 為 async，
     # 且值必須 JSON-serializable，故存 list (非 set)
-    await ctx.set_state(_VISIBILITY_STATE_KEY, requested if requested else None)
+    target_val = requested if requested else None
+    await ctx.set_state(_VISIBILITY_STATE_KEY, target_val)
+
+    # 雙軌持久化：針對 in-memory Client / STDIO 等無持久 session_id 之 transport，同步寫入連線層 lifespan_context
+    req_ctx = getattr(ctx, "request_context", None)
+    if req_ctx is not None:
+        lifespan_ctx = getattr(req_ctx, "lifespan_context", None)
+        if isinstance(lifespan_ctx, dict):
+            lifespan_ctx[_VISIBILITY_STATE_KEY] = target_val
+
     return _envelope({"ok": True, "visible_products": sorted(requested)})
