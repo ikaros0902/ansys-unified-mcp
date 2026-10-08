@@ -45,3 +45,4 @@ YYYY-MM-DD-<kebab-case-主題>.md
 - `2026-09-24-153530-chore-restructure.md`：早期重構紀錄
 - `2026-10-07-pyworkbench-verification-done.md`：PyWorkbench 實機驗證任務卡（✅ 已驗證）
 - `2026-10-07-backlog-decisions.md`：Backlog 技術決策記錄（fallback bridge 移除、OS 級隔離方案 C）
+- `2026-10-07-mcp-tool-scoping-decision.md`：MCP 工具收斂評估與決策（不合併工具，選 profile=all + workspace）
