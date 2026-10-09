@@ -72,7 +72,7 @@
   faces = Selection.Create(GetRootPart().Bodies[0].Faces[0])
   options = ExtrudeFaceOptions()
   options.ExtrudeType = ExtrudeType.Add
-  FixErrors.FixAll()
+  FixSimplify.FindAndFix()
   ```
 
 ---
@@ -96,9 +96,9 @@
       sens_node = root_sys.create_node("Sensitivity")
       mop = sens_node.get_actor()
       
-      # Register Parameters and Criteria
-      root_sys.parameter_manager.create_parameter("thickness", 1.2, 0.8, 2.0)
-      root_sys.criterion_manager.create_criterion("max_stress", "< 250")
+      # Register Parameters and Criteria (Verified APIs)
+      root_sys.parameter_manager.add_parameter("thickness", 1.2, 0.8, 2.0)
+      root_sys.criterion_manager.add_criterion("max_stress", "< 250")
       
       # Execute run
       project.start()
@@ -131,10 +131,23 @@
 
 ---
 
-## 三、更新與維護機制
+## 三、API 知識庫與 FastMCP 工具使用指南
 
-本專案於 `scripts/` 目錄內建了一鍵式批次萃取流水線：
+本專案將萃取之 API 知識整合至高效的 SQLite 知識層（`api_kb.sqlite`），並封裝了 4 個即時 MCP 查詢與防護工具：
+
+| MCP 工具名稱 | 功能說明 | 典型呼叫範例 |
+| :--- | :--- | :--- |
+| **`api_search`** | 快速檢索類別、方法、屬性或關鍵字 (FTS5 + Trigram) | `api_search(query="fixed support", product="mechanical")` |
+| **`api_get`** | 獲取特定 API 符號之所有成員、型別出入邊與文檔 | `api_get(fqname="Analysis", include="members,edges")` |
+| **`api_path`** | 在知識星譜圖中尋找物件存取導航鏈 (BFS 拓撲) | `api_path(from_type="Analysis", to_type="EquivalentStress")` |
+| **`api_validate_script`** | 腳本靜態防幻覺校驗器，比對未定義屬性並給予建議 | `api_validate_script(code="...", product="mechanical")` |
+
+---
+
+## 四、更新與維護機制
+
+本專案於 `scripts/` 目錄內建了一鍵式批次萃取與知識庫自動建置流水線：
 ```powershell
 python scripts/extract_all_apis.py
 ```
-當 ANSYS 版本升級（如 `v252`、`v261`）或安裝了新的 PyAnsys 擴充模組時，僅需執行上述腳本即可無損重新生成最新版的 API 字典目錄。
+執行後將自動完成四大模組 API 抽取，並同步重新編譯 `Documentation_clean/api_kb.sqlite` 索引庫與型別關係圖。

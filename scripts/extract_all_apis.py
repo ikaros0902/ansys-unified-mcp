@@ -46,8 +46,18 @@ def main():
     dyna_res = extract_lsdyna()
     print(f"LS-DYNA 萃取耗時: {time.time() - t0:.2f} 秒")
 
+    # 5. 重建 API 知識庫 SQLite
+    print("\n[5/5] 建置 API 知識層 SQLite 索引庫 (api_kb.sqlite)...")
+    t0 = time.time()
+    try:
+        from ansys_unified_mcp.analytics.apikb.build import build_database
+        kb_res = build_database(force=True)
+        print(f"API 知識庫建置完成，耗時: {time.time() - t0:.2f} 秒，統計: {kb_res.get('statistics')}")
+    except Exception as exc:
+        print(f"API 知識庫建置警告: {exc}")
+
     print("\n" + "=" * 60)
-    print(f"[SUCCESS] 全部四大模組 API 抽取完畢！總耗時: {time.time() - start_total:.2f} 秒")
+    print(f"[SUCCESS] 全部四大模組 API 抽取與知識庫建置完畢！總耗時: {time.time() - start_total:.2f} 秒")
     print(f"目錄位置: {Path(r'F:/Ming_python/ansys-unified-mcp/docs/api_inventory').resolve()}")
     print("=" * 60)
 

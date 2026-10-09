@@ -29,6 +29,7 @@ logger.info(f"Dynamic Tool Routing active. Profile: '{profile}'")
 # 核心通用診斷、文件、非同步守護與高階意圖工況工具（一律載入）
 import ansys_unified_mcp.tools.connection_tools
 import ansys_unified_mcp.tools.docs_tools
+import ansys_unified_mcp.tools.apikb_tools
 import ansys_unified_mcp.tools.sentinel_tools
 import ansys_unified_mcp.tools.intent_tools
 import ansys_unified_mcp.tools.session_manager_tools
