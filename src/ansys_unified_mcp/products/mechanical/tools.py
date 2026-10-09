@@ -622,3 +622,15 @@ print(json.dumps(report))
             "ok": True,
             "raw_output": raw_output
         })
+
+
+@aliased_tool(name="mechanical_get_tree_hierarchy", alias="get_model_tree_hierarchy")
+def mechanical_get_tree_hierarchy(max_depth: int = 5) -> dict:
+    """遞迴遍歷 Mechanical DataModel 樹狀階層結構，提取各節點名稱、類別、抑制狀態與健全度。
+
+    Args:
+        max_depth: 遍歷最大深度 (預設 5 層)。
+    """
+    from ansys_unified_mcp.products.mechanical.api import get_model_tree_hierarchy
+    return _envelope(get_model_tree_hierarchy(max_depth=max_depth))
+

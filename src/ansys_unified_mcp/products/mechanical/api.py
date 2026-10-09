@@ -1431,3 +1431,58 @@ def convert_part_to_point_mass(part_name: str, proximity_multiplier: float = 3.0
     raw = _run(_build_pm_script(match, ns_label, proximity_multiplier))
     return (_parse_mechanical_output(raw))
 
+
+def get_model_tree_hierarchy(max_depth: int = 5) -> dict:
+    """遞迴遍歷 Mechanical DataModel 樹狀階層結構，提取各節點名稱、類別、抑制狀態與健全度。"""
+    err = _check_connection()
+    if err:
+        return err
+
+    script = f"""
+import json
+
+def get_node_category(node):
+    try:
+        return str(node.DataModelObjectCategory)
+    except:
+        return str(node.GetType())
+
+def get_node_state(node):
+    try:
+        return str(node.ObjectState)
+    except:
+        return "Unknown"
+
+def get_node_suppression(node):
+    try:
+        return bool(node.Suppressed)
+    except:
+        return False
+
+def traverse_tree(node, current_depth, max_d):
+    node_data = {{
+        "name": str(node.Name),
+        "category": get_node_category(node),
+        "state": get_node_state(node),
+        "suppressed": get_node_suppression(node),
+        "children": []
+    }}
+    if current_depth < max_d:
+        try:
+            for child in node.Children:
+                node_data["children"].append(traverse_tree(child, current_depth + 1, max_d))
+        except:
+            pass
+    return node_data
+
+model = ExtAPI.DataModel.Project.Model
+if model is None:
+    print(json.dumps({{"ok": False, "error": "No active Model found"}}))
+else:
+    tree = traverse_tree(model, 1, {max_depth})
+    print(json.dumps({{"ok": True, "tree": tree}}))
+"""
+    raw = _run(script)
+    return _parse_mechanical_output(raw)
+
+

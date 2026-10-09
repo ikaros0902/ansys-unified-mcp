@@ -577,3 +577,32 @@ async def geometry_execute_batch(operations: List[Dict[str, Any]], stop_on_error
     """
     from ansys_unified_mcp.products.geometry.batch_executor import execute_batch
     return await execute_batch(operations=operations, stop_on_error=stop_on_error)
+
+
+@tool_geometry(name='spaceclaim_run_script')
+async def spaceclaim_run_script(
+    script_content: str = "",
+    script_path: str = "",
+    working_dir: str = "",
+    dry_run: bool = False,
+    timeout: float = 120.0,
+) -> dict:
+    """以無頭批次模式 (Headless) 啟動 SpaceClaim.exe 執行自動化 IronPython 腳本。
+
+    支援透過命令列 /RunScript、/Headless=True 執行幾何抽取、特徵清理或模型匯出。
+
+    :param script_content: 直接傳入的 IronPython 腳本字串 (會自動寫入暫存檔執行)。
+    :param script_path: 既有的 .py / .scscript 腳本檔案絕對路徑。
+    :param working_dir: 工作目錄路徑。
+    :param dry_run: 若為 True 則僅驗證並回傳預計執行的命令，不啟動實體進程。
+    :param timeout: 超時秒數 (預設 120 秒)。
+    """
+    from ansys_unified_mcp.products.geometry import controller
+    return controller.run_spaceclaim_headless(
+        script_content=script_content,
+        script_path=script_path,
+        working_dir=working_dir,
+        dry_run=dry_run,
+        timeout=timeout,
+    )
+
