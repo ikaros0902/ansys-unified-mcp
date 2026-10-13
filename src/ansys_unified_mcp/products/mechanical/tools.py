@@ -66,13 +66,21 @@ def mechanical_materials_resource() -> str:
         return json.dumps({"ok": False, "error": "無法解析材料清單輸出", "raw": result}, ensure_ascii=False)
 
 
-@aliased_tool(name="mechanical_list_instances", alias="list_instances")
+@aliased_tool(
+    name="mechanical_list_instances",
+    alias="list_instances",
+    annotations={"readOnlyHint": True, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False}
+)
 def list_instances() -> dict:
     """List all running and registered ANSYS instances (Mechanical, Workbench, etc.) and their ports."""
     return as_envelope(mechanical_api.list_instances())
 
 
-@aliased_tool(name="mechanical_connect", alias="connect_to_mechanical")
+@aliased_tool(
+    name="mechanical_connect",
+    alias="connect_to_mechanical",
+    annotations={"readOnlyHint": False, "destructiveHint": False, "idempotentHint": True, "openWorldHint": True}
+)
 def connect_to_mechanical(port: int = None, pid: int = None) -> dict:
     """Connect to ANSYS Mechanical via gRPC.
     Args:
@@ -82,7 +90,11 @@ def connect_to_mechanical(port: int = None, pid: int = None) -> dict:
     return as_envelope(mechanical_api.connect_to_mechanical(port=port, pid=pid))
 
 
-@aliased_tool(name="mechanical_launch", alias="launch_mechanical")
+@aliased_tool(
+    name="mechanical_launch",
+    alias="launch_mechanical",
+    annotations={"readOnlyHint": False, "destructiveHint": False, "idempotentHint": False, "openWorldHint": True}
+)
 def launch_mechanical(batch: bool = True) -> dict:
     """Launch a new headless Mechanical instance via PyMechanical (no pre-running instance needed).
     Args:
@@ -91,49 +103,81 @@ def launch_mechanical(batch: bool = True) -> dict:
     return as_envelope(mechanical_api.launch_mechanical(batch=batch))
 
 
-@aliased_tool(name="mechanical_disconnect", alias="disconnect_from_mechanical")
+@aliased_tool(
+    name="mechanical_disconnect",
+    alias="disconnect_from_mechanical",
+    annotations={"readOnlyHint": False, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False}
+)
 def disconnect_from_mechanical() -> dict:
     """Disconnect the current Mechanical session."""
     return as_envelope(mechanical_api.disconnect_from_mechanical())
 
 
-@aliased_tool(name="mechanical_check_connection", alias="check_mechanical_connection")
+@aliased_tool(
+    name="mechanical_check_connection",
+    alias="check_mechanical_connection",
+    annotations={"readOnlyHint": True, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False}
+)
 def check_mechanical_connection() -> dict:
     """Check connection status (lists all bound Mechanical sessions)."""
     return as_envelope(mechanical_api.check_mechanical_connection())
 
 
-@aliased_tool(name="mechanical_get_model_info", alias="get_model_info")
+@aliased_tool(
+    name="mechanical_get_model_info",
+    alias="get_model_info",
+    annotations={"readOnlyHint": True, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False}
+)
 def get_model_info() -> dict:
     """Get model info: bodies, named selections, analyses."""
     return as_envelope(mechanical_api.get_model_info())
 
 
-@aliased_tool(name="mechanical_list_materials", alias="list_materials")
+@aliased_tool(
+    name="mechanical_list_materials",
+    alias="list_materials",
+    annotations={"readOnlyHint": True, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False}
+)
 def list_materials() -> dict:
     """List all materials in Engineering Data."""
     return as_envelope(mechanical_api.list_materials())
 
 
-@aliased_tool(name="mechanical_assign_material", alias="assign_material")
+@aliased_tool(
+    name="mechanical_assign_material",
+    alias="assign_material",
+    annotations={"readOnlyHint": False, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False}
+)
 def assign_material(body_name: str, material_name: str) -> dict:
     """Assign material to a body. Args: body_name, material_name"""
     return as_envelope(mechanical_api.assign_material(body_name=body_name, material_name=material_name))
 
 
-@aliased_tool(name="mechanical_set_mesh_element_size", alias="set_mesh_element_size")
+@aliased_tool(
+    name="mechanical_set_mesh_element_size",
+    alias="set_mesh_element_size",
+    annotations={"readOnlyHint": False, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False}
+)
 def set_mesh_element_size(element_size_mm: float) -> dict:
     """Set global mesh element size in mm. Args: element_size_mm"""
     return as_envelope(mechanical_api.set_mesh_element_size(element_size_mm=element_size_mm))
 
 
-@aliased_tool(name="mechanical_generate_mesh", alias="generate_mesh")
+@aliased_tool(
+    name="mechanical_generate_mesh",
+    alias="generate_mesh",
+    annotations={"readOnlyHint": False, "destructiveHint": False, "idempotentHint": False, "openWorldHint": False}
+)
 def generate_mesh() -> dict:
     """Generate mesh. Visible live in Mechanical GUI."""
     return as_envelope(mechanical_api.generate_mesh())
 
 
-@aliased_tool(name="mechanical_get_mesh_statistics", alias="get_mesh_statistics")
+@aliased_tool(
+    name="mechanical_get_mesh_statistics",
+    alias="get_mesh_statistics",
+    annotations={"readOnlyHint": True, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False}
+)
 def get_mesh_statistics() -> dict:
     """Get mesh node and element counts."""
     return as_envelope(mechanical_api.get_mesh_statistics())

@@ -84,9 +84,15 @@ def as_envelope(data: Any = None) -> dict:
     return {"ok": True, "result": data}
 
 
-def error_envelope(message: str, **extra: Any) -> dict:
-    """建立失敗信封：``{"ok": False, "error": message, ...extra}``"""
-    return {"ok": False, "error": message, **extra}
+def error_envelope(message: str, suggested_actions: Sequence[str] | None = None, **extra: Any) -> dict:
+    """建立失敗信封：``{"ok": False, "error": message, ...extra}``
+    
+    遵循 mcp-builder 規範：若提供 suggested_actions，將包含可操作的下一步建議。
+    """
+    env: dict[str, Any] = {"ok": False, "error": message, **extra}
+    if suggested_actions:
+        env["suggested_actions"] = list(suggested_actions)
+    return env
 
 # Environment flag: When "1", FastMCP will register deprecated alias tools.
 # By default ("0"), only canonical tools are registered for a clean, lean tool surface.

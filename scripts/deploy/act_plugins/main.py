@@ -174,6 +174,38 @@ def _register_instance(grpc_port=None):
         _log("Failed to register app: " + str(exc))
 
 
+def _display_port_in_ui(grpc_port, pid):
+    """Display active gRPC port across Mechanical UI surfaces (Messages panel & Window Title)."""
+    # 1. Native Mechanical Messages panel
+    try:
+        import Ansys.ACT.Interfaces.Common
+        severity = Ansys.ACT.Interfaces.Common.MessageSeverityType.Info
+        msg = "[WorkbenchMCP] gRPC Server running on port: %d (PID: %d)" % (grpc_port, pid)
+        if hasattr(ExtAPI, "Application") and hasattr(ExtAPI.Application, "Messages"):
+            ExtAPI.Application.Messages.Add(severity, msg)
+            _debug_log("Added port info to Mechanical Messages panel")
+    except Exception as exc:
+        _debug_log("Failed to add message to Messages panel: " + str(exc))
+
+    # 2. Dynamic Window Title update
+    try:
+        import ctypes
+        import System
+        proc = System.Diagnostics.Process.GetCurrentProcess()
+        hwnd = proc.MainWindowHandle.ToInt32()
+        if hwnd != 0:
+            buf = ctypes.create_unicode_buffer(512)
+            ctypes.windll.user32.GetWindowTextW(hwnd, buf, 512)
+            cur_title = buf.value
+            tag = "[MCP Port: %d]" % grpc_port
+            if tag not in cur_title:
+                new_title = cur_title + " " + tag
+                ctypes.windll.user32.SetWindowTextW(hwnd, new_title)
+                _debug_log("Updated main window title to: " + new_title)
+    except Exception as exc:
+        _debug_log("Failed to update main window title: " + str(exc))
+
+
 def _auto_start_grpc_server():
     """Auto-start the Mechanical gRPC server for external PyMechanical (MCP) clients."""
     sentinel = "_WORKBENCH_MCP_GRPC_STARTED"
@@ -188,24 +220,57 @@ def _auto_start_grpc_server():
 
     try:
         grpc_port = find_free_port(10000)
+        started = False
         if hasattr(ExtAPI, "Application") and hasattr(ExtAPI.Application, "StartGrpcServer"):
             ExtAPI.Application.StartGrpcServer(grpc_port)
             _log("Auto-started Mechanical gRPC Server on port %d via ExtAPI.Application" % grpc_port)
-            _register_instance(grpc_port=grpc_port)
-            return
+            started = True
+        else:
+            import Ansys.ACT.Mechanical
+            Ansys.ACT.Mechanical.MechanicalAPI.Instance.ApplicationAPI.StartGrpcServer(grpc_port)
+            _log("Auto-started Mechanical gRPC Server on port %d via MechanicalAPI" % grpc_port)
+            started = True
 
-        import Ansys.ACT.Mechanical
-        Ansys.ACT.Mechanical.MechanicalAPI.Instance.ApplicationAPI.StartGrpcServer(grpc_port)
-        _log("Auto-started Mechanical gRPC Server on port %d via MechanicalAPI" % grpc_port)
-        _register_instance(grpc_port=grpc_port)
+        if started:
+            setattr(_builtins, "_WORKBENCH_MCP_CURRENT_PORT", grpc_port)
+            _register_instance(grpc_port=grpc_port)
+            _display_port_in_ui(grpc_port, os.getpid())
+            return
     except Exception as exc:
         _log("Failed to auto-start gRPC Server: " + str(exc))
 
 
 def show_mcp_info(analysis=None):
+    """Callback for Toolbar 'MCP Info' button - pop up status dialog matching SpaceClaim UX."""
     _log("MCP project root: " + _PROJECT_ROOT)
     _log("MCP registry root: " + _QUEUE_ROOT)
-    _log("The MCP server connects to this Mechanical via the auto-started gRPC port (see registry).")
+    current_port = getattr(_builtins, "_WORKBENCH_MCP_CURRENT_PORT", None)
+    port_text = str(current_port) if current_port is not None else "Not started / Unknown"
+
+    try:
+        import System
+        import System.Windows.Forms as WinForms
+        pid = System.Diagnostics.Process.GetCurrentProcess().Id
+        info_lines = [
+            "==================================",
+            " ANSYS Unified MCP Server Status ",
+            "==================================",
+            "",
+            "gRPC Port   : " + port_text,
+            "Process PID : " + str(pid),
+            "Queue Root  : " + _QUEUE_ROOT,
+            "Project Root: " + _PROJECT_ROOT,
+            "",
+            "Status: Active and listening for AI / PyMechanical connections.",
+        ]
+        WinForms.MessageBox.Show(
+            "\n".join(info_lines),
+            "Workbench MCP - Mechanical Server Info",
+            WinForms.MessageBoxButtons.OK,
+            WinForms.MessageBoxIcon.Information
+        )
+    except Exception as exc:
+        _log("Failed to display WinForms info dialog: " + str(exc))
 
 
 def init_listener():
