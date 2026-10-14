@@ -6,7 +6,8 @@ import json
 from pathlib import Path
 import pytest
 
-INVENTORY_DIR = Path(r"F:\Ming_python\ansys-unified-mcp\docs\api_inventory")
+REPO_ROOT = Path(__file__).resolve().parents[2]
+INVENTORY_DIR = REPO_ROOT / "docs" / "api_inventory"
 
 def test_api_catalog_markdown_exists():
     catalog_path = INVENTORY_DIR / "API_CATALOG.md"
