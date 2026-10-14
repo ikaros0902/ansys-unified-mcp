@@ -16,7 +16,10 @@ def test_spaceclaim_driver_awp_root_detection(tmp_path):
     mock_exe = mock_scdm_dir / "SpaceClaim.exe"
     mock_exe.write_text("mock executable")
 
-    with patch.dict(os.environ, {"AWP_ROOT251": str(tmp_path)}):
+    clean_env = {k: v for k, v in os.environ.items() if not k.startswith("AWP_ROOT")}
+    clean_env["AWP_ROOT251"] = str(tmp_path)
+
+    with patch.dict(os.environ, clean_env, clear=True):
         driver = SpaceClaimDriver()
         ok, msg = driver.validate_prerequisites()
         assert ok is True
@@ -31,9 +34,13 @@ def test_mechanical_driver_awp_root_detection(tmp_path):
     mock_exe = mock_bin_dir / "ansys251.exe"
     mock_exe.write_text("mock executable")
 
-    with patch.dict(os.environ, {"AWP_ROOT251": str(tmp_path)}):
+    clean_env = {k: v for k, v in os.environ.items() if not k.startswith("AWP_ROOT")}
+    clean_env["AWP_ROOT251"] = str(tmp_path)
+
+    with patch.dict(os.environ, clean_env, clear=True):
         driver = MechanicalDriver()
         ok, msg = driver.validate_prerequisites()
         assert ok is True
         assert "AWP_ROOT251" in msg
         assert driver.solver_bin == str(mock_exe)
+

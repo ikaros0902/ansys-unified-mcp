@@ -1,0 +1,145 @@
+# -*- coding: utf-8 -*-
+# SpaceClaim server-side IronPython BGA and array generator script (ASCII only).
+import sys
+import math
+import time
+import datetime
+
+result = {}
+
+def _load_api():
+    import System
+    loaded = []
+    for asm in System.AppDomain.CurrentDomain.GetAssemblies():
+        try:
+            nm = asm.GetName().Name
+        except Exception:
+            continue
+        if nm and nm.startswith("SpaceClaim.Api.V") and nm.count(".") == 2:
+            loaded.append(nm.split(".")[-1])
+    def _ver(v):
+        try:
+            return int(v[1:])
+        except Exception:
+            return 0
+    names = sorted(set(loaded), key=_ver, reverse=True)
+    names += ["V262", "V261", "V252", "V251", "V242", "V241", "V232", "V231", "V23", "V19"]
+    import clr
+    for ver in names:
+        try:
+            clr.AddReference("SpaceClaim.Api." + ver)
+            clr.AddReference("SpaceClaim.Api." + ver + ".Scripting")
+            import SpaceClaim.Api
+            sc_api = getattr(SpaceClaim.Api, ver)
+            clr.ImportExtensions(sc_api.Scripting.Extensions.DesignFaceExtensions)
+            clr.ImportExtensions(sc_api.Scripting.Extensions.DesignEdgeExtensions)
+            clr.ImportExtensions(sc_api.Scripting.Extensions.DesignBodyExtensions)
+            clr.ImportExtensions(sc_api.Scripting.Extensions.ComponentExtensions)
+            clr.ImportExtensions(sc_api.Scripting.Extensions.DocObjectExtensions)
+            return sc_api, ver
+        except Exception:
+            continue
+    raise RuntimeError("SpaceClaim API Reference Error: compatible version not found")
+
+def _arg(d, k, default):
+    try:
+        if d.ContainsKey(k):
+            return d[k]
+    except Exception:
+        try:
+            return d[k]
+        except Exception:
+            pass
+    return default
+
+def _f(d, k, default):
+    try:
+        return float(_arg(d, k, default))
+    except Exception:
+        return float(default)
+
+def _i(d, k, default):
+    try:
+        return int(float(_arg(d, k, default)))
+    except Exception:
+        return int(default)
+
+def _b(d, k, default):
+    return str(_arg(d, k, "1" if default else "0")).lower() in ("1", "true", "yes")
+
+StartTime = time.time()
+
+try:
+    args = script_args
+except NameError:
+    try:
+        args = Parameters
+    except NameError:
+        args = {}
+
+try:
+    api, api_ver = _load_api()
+    result["api"] = api_ver
+
+    # Parameters
+    bga_diameter = _f(args, "bga_diameter_mm", 0.65)
+    bga_height = _f(args, "bga_height_mm", 0.51)
+    low_pad_d = _f(args, "low_pad_d_mm", 0.50)
+    low_pad_h = _f(args, "low_pad_h_mm", 0.02)
+    high_pad_d = _f(args, "high_pad_d_mm", 0.50)
+    high_pad_h = _f(args, "high_pad_h_mm", 0.02)
+    n_dir1 = _i(args, "n_dir1", 10)
+    n_dir2 = _i(args, "n_dir2", 10)
+    pitch1 = _f(args, "pitch_dir1_mm", 1.0)
+    pitch2 = _f(args, "pitch_dir2_mm", 1.0)
+    array_type = _i(args, "array_type", 0)  # 0: rect, 2: staggered
+    mating_face = str(_arg(args, "mating_face", "bottom")).lower()
+
+    # Geometry creation helpers
+    # Build a sphere/spheroid solder ball at origin
+    center_pt = Point.Create(MM(0), MM(0), MM(bga_height / 2.0))
+    ball_body = Body.CreateSphere(center_pt, MM(bga_diameter / 2.0))
+    ball_body.Name = "BGA_Ball_Base"
+
+    # Add pads if height > 0
+    created_bodies = [ball_body]
+    if low_pad_h > 0:
+        low_cyl = Body.CreateCylinder(Point.Create(MM(0), MM(0), MM(-low_pad_h)),
+                                      Point.Create(MM(0), MM(0), MM(0)),
+                                      MM(low_pad_d / 2.0))
+        low_cyl.Name = "BGA_Pad_Low"
+        created_bodies.append(low_cyl)
+
+    if high_pad_h > 0:
+        high_cyl = Body.CreateCylinder(Point.Create(MM(0), MM(0), MM(bga_height)),
+                                       Point.Create(MM(0), MM(0), MM(bga_height + high_pad_h)),
+                                       MM(high_pad_d / 2.0))
+        high_cyl.Name = "BGA_Pad_High"
+        created_bodies.append(high_cyl)
+
+    # Replicate into array if requested
+    total_balls = 1
+    if n_dir1 > 1 or n_dir2 > 1:
+        # Replicate in 2D grid
+        for i in range(n_dir1):
+            for j in range(n_dir2):
+                if i == 0 and j == 0:
+                    continue
+                dx = i * pitch1
+                if array_type == 2 and (j % 2 == 1):
+                    dx += pitch1 * 0.5
+                dy = j * pitch2
+                trans = Matrix.CreateTranslation(Vector.Create(MM(dx), MM(dy), MM(0)))
+                for b in created_bodies:
+                    new_b = b.Copy()
+                    new_b.Transform(trans)
+                total_balls += 1
+
+    result["ok"] = "yes"
+    result["total_balls"] = str(total_balls)
+    result["elapsed_sec"] = "%.2f" % (time.time() - StartTime)
+    result["message"] = "Successfully generated BGA array of %d balls" % total_balls
+
+except Exception as exc:
+    result["ok"] = "no"
+    result["error"] = str(exc)

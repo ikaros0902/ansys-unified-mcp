@@ -104,3 +104,55 @@ def dyna_run_prepost(
     )
     return _envelope(result)
 
+
+@mcp.tool()
+def lsdyna_setup_shock_analysis(
+    pulse_type: str = "half_sine",
+    peak_g: float = 50.0,
+    duration_ms: float = 11.0,
+    direction: str = "Z",
+    output_k_path: str = "",
+) -> dict:
+    """建立標準 LS-DYNA 衝擊分析 (Shock Analysis) 關鍵字卡與脈衝載荷曲線。
+
+    Args:
+        pulse_type: 脈衝波形 ('half_sine', 'trapezoidal')。
+        peak_g: 衝擊峰值加速度 (G)。
+        duration_ms: 脈衝持續時間 (毫秒)。
+        direction: 衝擊方向 ('X', 'Y', 'Z')。
+        output_k_path: 選填輸出 .k 檔案路徑。
+    """
+    result = controller.setup_shock_analysis(
+        pulse_type=pulse_type,
+        peak_g=peak_g,
+        duration_ms=duration_ms,
+        direction=direction,
+        output_k_path=output_k_path,
+    )
+    return _envelope(result)
+
+
+@mcp.tool()
+def lsdyna_setup_drop_test(
+    drop_height_mm: float = 1000.0,
+    impact_surface: str = "rigid_floor",
+    gravity_g: float = 9.80665,
+    output_k_path: str = "",
+) -> dict:
+    """建立標準 LS-DYNA 落摔試驗 (Drop Test) 關鍵字卡，自動計算衝擊初速度並配置剛性地面與接觸。
+
+    Args:
+        drop_height_mm: 落摔等效高度 (毫米)。
+        impact_surface: 地面類型 ('rigid_floor', 'elastic_floor')。
+        gravity_g: 重力加速度 (m/s^2, 預設 9.80665)。
+        output_k_path: 選填輸出 .k 檔案路徑。
+    """
+    result = controller.setup_drop_test(
+        drop_height_mm=drop_height_mm,
+        impact_surface=impact_surface,
+        gravity_g=gravity_g,
+        output_k_path=output_k_path,
+    )
+    return _envelope(result)
+
+

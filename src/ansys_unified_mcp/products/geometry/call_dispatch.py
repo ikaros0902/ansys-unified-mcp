@@ -1932,6 +1932,9 @@ def _geom_midsurface(max_thickness_mm: float = 6.0, main_surface_ratio: float = 
 #   enable_distance_grouping(1/0), distance_level1_mm, distance_level2_mm
 
 _RM_GROUP_SCRIPT = load_script("rm_group")
+_DEFEATURE_SCRIPT = load_script("defeature")
+_BGA_ARRAY_SCRIPT = load_script("bga_array")
+_IMPRINT_CONTACTS_SCRIPT = load_script("imprint_contacts")
 
 
 def _geom_create_hole_groups(diameter_min_mm: float = 2.0, diameter_max_mm: float = 20.0,
@@ -2025,6 +2028,163 @@ def _geom_create_hole_groups(diameter_min_mm: float = 2.0, diameter_max_mm: floa
     return json.dumps(out, ensure_ascii=False)
 
 
+
+
+def _geom_defeature_features(defeature_face_exe: bool = True, defeature_edge_exe: bool = True,
+                             max_edges_at_once: int = 3000, r_max_cylinder: float = 3.5,
+                             r_min_circle: float = 0.0, r_max_circle: float = 3.5,
+                             fs_grp_sizefilter: float = 1.5,
+                             grp_dont_defeature: str = "Scr_UserInput_DONT_DEFEATURE_GRP",
+                             target_body_name: str = "") -> str:
+    """送 IronPython 腳本至 SpaceClaim 伺服器端：自動消除圓柱孔、小圓弧邊與倒角特徵。"""
+    import json
+    import tempfile
+
+    def _err(msg: str) -> str:
+        return json.dumps({"ok": False, "error": msg}, ensure_ascii=False)
+
+    if _modeler is None:
+        return _err("Geometry 未連線，請先執行 geometry_launch")
+
+    script_args = {
+        "defeature_face_exe": "1" if defeature_face_exe else "0",
+        "defeature_edge_exe": "1" if defeature_edge_exe else "0",
+        "max_edges_at_once": str(max_edges_at_once),
+        "r_max_cylinder": str(r_max_cylinder),
+        "r_min_circle": str(r_min_circle),
+        "r_max_circle": str(r_max_circle),
+        "fs_grp_sizefilter": str(fs_grp_sizefilter),
+        "grp_dont_defeature": grp_dont_defeature,
+        "target_body_name": target_body_name,
+    }
+
+    tmp = tempfile.NamedTemporaryFile("w", suffix=".py", delete=False, encoding="utf-8")
+    try:
+        tmp.write(_DEFEATURE_SCRIPT)
+        tmp.close()
+        values, _design = _modeler.run_script_file(tmp.name, script_args=script_args)
+    except Exception as e:
+        return _err(f"SpaceClaim 去特徵腳本執行失敗: {e}")
+    finally:
+        try:
+            os.remove(tmp.name)
+        except Exception:
+            pass
+
+    values = dict(values or {})
+    if str(values.get("ok", "")).lower() != "yes":
+        return _err(f"去特徵失敗: {values.get('error', '未知錯誤')}")
+
+    return json.dumps({
+        "ok": True,
+        "message": values.get("message", "Defeature completed"),
+        "elapsed_sec": values.get("elapsed_sec"),
+        "api": values.get("api")
+    }, ensure_ascii=False)
+
+
+def _geom_create_bga_array(bga_diameter_mm: float = 0.65, bga_height_mm: float = 0.51,
+                           low_pad_d_mm: float = 0.50, low_pad_h_mm: float = 0.02,
+                           high_pad_d_mm: float = 0.50, high_pad_h_mm: float = 0.02,
+                           n_dir1: int = 10, n_dir2: int = 10,
+                           pitch_dir1_mm: float = 1.0, pitch_dir2_mm: float = 1.0,
+                           array_type: int = 0, mating_face: str = "bottom") -> str:
+    """送 IronPython 腳本至 SpaceClaim 伺服器端：自動建立 BGA 錫球與陣列幾何。"""
+    import json
+    import tempfile
+
+    def _err(msg: str) -> str:
+        return json.dumps({"ok": False, "error": msg}, ensure_ascii=False)
+
+    if _modeler is None:
+        return _err("Geometry 未連線，請先執行 geometry_launch")
+
+    script_args = {
+        "bga_diameter_mm": str(bga_diameter_mm),
+        "bga_height_mm": str(bga_height_mm),
+        "low_pad_d_mm": str(low_pad_d_mm),
+        "low_pad_h_mm": str(low_pad_h_mm),
+        "high_pad_d_mm": str(high_pad_d_mm),
+        "high_pad_h_mm": str(high_pad_h_mm),
+        "n_dir1": str(n_dir1),
+        "n_dir2": str(n_dir2),
+        "pitch_dir1_mm": str(pitch_dir1_mm),
+        "pitch_dir2_mm": str(pitch_dir2_mm),
+        "array_type": str(array_type),
+        "mating_face": mating_face,
+    }
+
+    tmp = tempfile.NamedTemporaryFile("w", suffix=".py", delete=False, encoding="utf-8")
+    try:
+        tmp.write(_BGA_ARRAY_SCRIPT)
+        tmp.close()
+        values, _design = _modeler.run_script_file(tmp.name, script_args=script_args)
+    except Exception as e:
+        return _err(f"SpaceClaim BGA 陣列腳本執行失敗: {e}")
+    finally:
+        try:
+            os.remove(tmp.name)
+        except Exception:
+            pass
+
+    values = dict(values or {})
+    if str(values.get("ok", "")).lower() != "yes":
+        return _err(f"BGA 陣列建立失敗: {values.get('error', '未知錯誤')}")
+
+    def _int(k):
+        v = str(values.get(k, "0"))
+        return int(v) if v.lstrip("-").isdigit() else 0
+
+    return json.dumps({
+        "ok": True,
+        "total_balls": _int("total_balls"),
+        "message": values.get("message"),
+        "elapsed_sec": values.get("elapsed_sec"),
+        "api": values.get("api")
+    }, ensure_ascii=False)
+
+
+def _geom_imprint_contacts(distance_range_mm: float = 0.51, imprint_curves: bool = True,
+                           imprint_distance_range_mm: float = 0.01) -> str:
+    """送 IronPython 腳本至 SpaceClaim 伺服器端：自動執行面壓印與距離共拓撲 Named Selection。"""
+    import json
+    import tempfile
+
+    def _err(msg: str) -> str:
+        return json.dumps({"ok": False, "error": msg}, ensure_ascii=False)
+
+    if _modeler is None:
+        return _err("Geometry 未連線，請先執行 geometry_launch")
+
+    script_args = {
+        "distance_range_mm": str(distance_range_mm),
+        "imprint_curves": "1" if imprint_curves else "0",
+        "imprint_distance_range_mm": str(imprint_distance_range_mm),
+    }
+
+    tmp = tempfile.NamedTemporaryFile("w", suffix=".py", delete=False, encoding="utf-8")
+    try:
+        tmp.write(_IMPRINT_CONTACTS_SCRIPT)
+        tmp.close()
+        values, _design = _modeler.run_script_file(tmp.name, script_args=script_args)
+    except Exception as e:
+        return _err(f"SpaceClaim 壓印與接觸腳本執行失敗: {e}")
+    finally:
+        try:
+            os.remove(tmp.name)
+        except Exception:
+            pass
+
+    values = dict(values or {})
+    if str(values.get("ok", "")).lower() != "yes":
+        return _err(f"接觸壓印失敗: {values.get('error', '未知錯誤')}")
+
+    return json.dumps({
+        "ok": True,
+        "message": values.get("message"),
+        "elapsed_sec": values.get("elapsed_sec"),
+        "api": values.get("api")
+    }, ensure_ascii=False)
 
 
 # ===================================================================
@@ -2277,6 +2437,36 @@ async def call_tool(name: str, arguments: dict[str, Any],
                         complex_area_diff=arguments.get("complex_area_diff", 0.05),
                         enable_sheet_metal_check=arguments.get("enable_sheet_metal_check", True),
                         hide_source_bodies=arguments.get("hide_source_bodies", True))
+                elif name == "geometry_defeature_features":
+                    result = _geom_defeature_features(
+                        defeature_face_exe=arguments.get("defeature_face_exe", True),
+                        defeature_edge_exe=arguments.get("defeature_edge_exe", True),
+                        max_edges_at_once=arguments.get("max_edges_at_once", 3000),
+                        r_max_cylinder=arguments.get("r_max_cylinder", 3.5),
+                        r_min_circle=arguments.get("r_min_circle", 0.0),
+                        r_max_circle=arguments.get("r_max_circle", 3.5),
+                        fs_grp_sizefilter=arguments.get("fs_grp_sizefilter", 1.5),
+                        grp_dont_defeature=arguments.get("grp_dont_defeature", "Scr_UserInput_DONT_DEFEATURE_GRP"),
+                        target_body_name=arguments.get("target_body_name", ""))
+                elif name == "geometry_create_bga_array":
+                    result = _geom_create_bga_array(
+                        bga_diameter_mm=arguments.get("bga_diameter_mm", 0.65),
+                        bga_height_mm=arguments.get("bga_height_mm", 0.51),
+                        low_pad_d_mm=arguments.get("low_pad_d_mm", 0.50),
+                        low_pad_h_mm=arguments.get("low_pad_h_mm", 0.02),
+                        high_pad_d_mm=arguments.get("high_pad_d_mm", 0.50),
+                        high_pad_h_mm=arguments.get("high_pad_h_mm", 0.02),
+                        n_dir1=arguments.get("n_dir1", 10),
+                        n_dir2=arguments.get("n_dir2", 10),
+                        pitch_dir1_mm=arguments.get("pitch_dir1_mm", 1.0),
+                        pitch_dir2_mm=arguments.get("pitch_dir2_mm", 1.0),
+                        array_type=arguments.get("array_type", 0),
+                        mating_face=arguments.get("mating_face", "bottom"))
+                elif name == "geometry_imprint_contacts":
+                    result = _geom_imprint_contacts(
+                        distance_range_mm=arguments.get("distance_range_mm", 0.51),
+                        imprint_curves=arguments.get("imprint_curves", True),
+                        imprint_distance_range_mm=arguments.get("imprint_distance_range_mm", 0.01))
                 elif name == "geometry_create_hole_groups":
                     result = _geom_create_hole_groups(
                         diameter_min_mm=arguments.get("diameter_min_mm", 2.0),

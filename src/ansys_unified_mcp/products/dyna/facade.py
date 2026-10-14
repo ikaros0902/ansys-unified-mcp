@@ -295,6 +295,132 @@ class DynaController:
         """
         return {"ok": True, "keyword_types": list(_COMMON_KEYWORD_TYPES)}
 
+    def setup_shock_analysis(
+        self,
+        pulse_type: str = "half_sine",
+        peak_g: float = 50.0,
+        duration_ms: float = 11.0,
+        direction: str = "Z",
+        output_k_path: str = "",
+    ) -> dict:
+        """建立標準 LS-DYNA 衝擊分析 (Shock Analysis) 關鍵字卡。
+
+        Args:
+            pulse_type: 脈衝波形 ('half_sine', 'trapezoidal')。
+            peak_g: 衝擊峰值加速度 (單位: G)。
+            duration_ms: 脈衝持續時間 (毫秒)。
+            direction: 衝擊施加方向 ('X', 'Y', 'Z')。
+            output_k_path: 選填輸出 .k 檔案路徑。
+        """
+        import math
+
+        g_accel = 9806.65
+        peak_accel = peak_g * g_accel
+        t_duration = duration_ms / 1000.0
+        end_time = t_duration * 1.5
+
+        points = []
+        n_samples = 20
+        for i in range(n_samples + 1):
+            t_curr = (t_duration / n_samples) * i
+            if pulse_type == "half_sine":
+                val = peak_accel * math.sin(math.pi * t_curr / t_duration)
+            else:
+                val = peak_accel
+            points.append((t_curr, val))
+
+        curve_lines = ["*DEFINE_CURVE_TITLE\nShock_Pulse_Curve\n$   LCID      SIDR       SFA       SFO      OFFA      OFFO    DATTYP     LCINT\n     101         0       1.0       1.0       0.0       0.0         0         0"]
+        for t_val, a_val in points:
+            curve_lines.append(f"{t_val:10.6f}{a_val:10.2f}")
+
+        deck_lines = [
+            "*KEYWORD",
+            "*TITLE",
+            f"Shock Analysis - {peak_g}G {duration_ms}ms {pulse_type}",
+            "\n".join(curve_lines),
+            "*CONTROL_TERMINATION",
+            f"$  ENDTIM    ENDCYC     DTMIN    ENDENG    ENDMAS     NOSOL\n{end_time:10.6f}         0       0.0       0.0       0.0         0",
+            "*DATABASE_BINARY_D3PLOT",
+            f"$     DT      LCDT      BEAM     NPLTC    PSETID\n{t_duration / 50.0:10.6f}         0         0         0         0",
+            "*END\n"
+        ]
+        deck_text = "\n".join(deck_lines)
+
+        file_written = ""
+        if output_k_path:
+            dest = Path(output_k_path)
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            dest.write_text(deck_text, encoding="utf-8")
+            file_written = str(dest)
+
+        return {
+            "ok": True,
+            "pulse_type": pulse_type,
+            "peak_g": peak_g,
+            "duration_ms": duration_ms,
+            "end_time_s": end_time,
+            "file_path": file_written,
+            "deck_text": deck_text,
+        }
+
+    def setup_drop_test(
+        self,
+        drop_height_mm: float = 1000.0,
+        impact_surface: str = "rigid_floor",
+        gravity_g: float = 9.80665,
+        output_k_path: str = "",
+    ) -> dict:
+        """建立標準 LS-DYNA 落摔試驗 (Drop Test) 關鍵字卡。
+
+        Args:
+            drop_height_mm: 落摔等效高度 (毫米)。
+            impact_surface: 地面類型 ('rigid_floor', 'elastic_floor')。
+            gravity_g: 重力加速度 (單位: m/s^2, 預設 9.80665)。
+            output_k_path: 選填輸出 .k 檔案路徑。
+        """
+        import math
+
+        g_mms2 = gravity_g * 1000.0
+        v_impact = math.sqrt(2.0 * g_mms2 * drop_height_mm)
+
+        deck_lines = [
+            "*KEYWORD",
+            "*TITLE",
+            f"Drop Test - Height {drop_height_mm}mm Initial Velocity {v_impact:.2f}mm/s",
+            "*CONTROL_TERMINATION",
+            "$  ENDTIM    ENDCYC     DTMIN    ENDENG    ENDMAS     NOSOL\n  0.020000         0       0.0       0.0       0.0         0",
+            "*CONTROL_TIMESTEP",
+            "$  DTINIT    TSSFAC      ISDO    TSLIMT     DTMS      LCTM     ERODE     MS1ST\n     0.0       0.9         0       0.0  -1.0E-07         0         0         0",
+            "*CONTROL_ENERGY",
+            "$   HGEN      RWEN    SLNTEN     RYLEN\n       2         2         2         1",
+            "*INITIAL_VELOCITY_GENERATION",
+            "$   ID        STYP        OMEGA        VX        VY        VZ\n       0         0          0.0       0.0       0.0"
+            f" {-v_impact:10.2f}",
+            "*RIGIDWALL_PLANAR",
+            "$   NSID       NSIDEX      BOXID    OFFSET\n       0            0          0       0.0",
+            "$     XT        YT        ZT        XH        YH        ZH     FRIC\n     0.0       0.0       0.0       0.0       0.0       1.0      0.2",
+            "*DATABASE_BINARY_D3PLOT",
+            "$     DT      LCDT      BEAM     NPLTC    PSETID\n  0.000200         0         0         0         0",
+            "*END\n"
+        ]
+        deck_text = "\n".join(deck_lines)
+
+        file_written = ""
+        if output_k_path:
+            dest = Path(output_k_path)
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            dest.write_text(deck_text, encoding="utf-8")
+            file_written = str(dest)
+
+        return {
+            "ok": True,
+            "drop_height_mm": drop_height_mm,
+            "impact_velocity_mm_s": round(v_impact, 2),
+            "end_time_s": 0.02,
+            "file_path": file_written,
+            "deck_text": deck_text,
+        }
+
 
 controller = DynaController()
 

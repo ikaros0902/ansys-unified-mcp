@@ -678,3 +678,49 @@ def mechanical_get_tree_hierarchy(max_depth: int = 5) -> dict:
     from ansys_unified_mcp.products.mechanical.api import get_model_tree_hierarchy
     return _envelope(get_model_tree_hierarchy(max_depth=max_depth))
 
+
+@aliased_tool(name="mechanical_assign_materials_from_bom", alias="assign_materials_from_bom")
+def mechanical_assign_materials_from_bom(
+    bom_items: Optional[List[Dict[str, Any]]] = None,
+    csv_path: str = "",
+) -> dict:
+    """依據 BOM 表格或 CSV 檔案，批次將材料與等效密度指派給 Mechanical 中的各幾何體 (Bodies)。
+
+    Args:
+        bom_items: BOM 對應字典清單 (包含 body_name, material_name, 選填 density)。
+        csv_path: 包含 BodyName 與 Material 欄位之 CSV 檔案絕對路徑。
+    """
+    from ansys_unified_mcp.products.mechanical.api import assign_materials_from_bom
+    return _envelope(assign_materials_from_bom(bom_items=bom_items, csv_path=csv_path))
+
+
+@aliased_tool(name="mechanical_create_joints_from_groups", alias="create_joints_from_groups")
+def mechanical_create_joints_from_groups(
+    connection_type: str = "Fixed",
+    group_prefix: str = "Joint_",
+) -> dict:
+    """根據 Named Selection 命名選擇群組前綴，批次在 Mechanical 中建立 Joint 接頭連接元件。
+
+    Args:
+        connection_type: 接頭類型 ('Fixed', 'Revolute', 'Bush')。
+        group_prefix: 命名選擇前綴字串 (預設 'Joint_')。
+    """
+    from ansys_unified_mcp.products.mechanical.api import create_joints_from_groups
+    return _envelope(create_joints_from_groups(connection_type=connection_type, group_prefix=group_prefix))
+
+
+@aliased_tool(name="mechanical_tune_cfl_mesh", alias="tune_cfl_mesh")
+def mechanical_tune_cfl_mesh(
+    target_timestep: float = 1e-7,
+    max_iterations: int = 3,
+) -> dict:
+    """診斷並調優 Mechanical / LS-DYNA 顯式動力學網格之臨界 CFL 時間步長。
+
+    Args:
+        target_timestep: 目標臨界最小時間步長 (秒，預設 1e-7)。
+        max_iterations: 最大調優迭代次數 (預設 3)。
+    """
+    from ansys_unified_mcp.products.mechanical.api import tune_cfl_mesh
+    return _envelope(tune_cfl_mesh(target_timestep=target_timestep, max_iterations=max_iterations))
+
+

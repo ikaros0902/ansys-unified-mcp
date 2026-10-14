@@ -1,0 +1,426 @@
+# -*- coding: utf-8 -*-
+import time
+import time as _act_time
+_ACT_START_TIME = _act_time.time()
+# Python Script, API Version = V23
+
+def log_usage(act_name, act_version, elapsed_sec, manual_sec):
+    try:
+        import clr
+        import datetime
+        clr.AddReference("System")
+        from System import Environment
+        from System.IO import FileStream, StreamWriter, FileMode, FileAccess, FileShare, Directory
+
+        user_name = Environment.UserName
+        machine_name = Environment.MachineName
+        timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        month = datetime.datetime.now().strftime("%Y_%m")
+
+        log_dir = r"\\Twtrkei017\e\Structure_shared_folder\03. Team member\Ikaros\Test_ACT_usage_rate"
+
+        if not Directory.Exists(log_dir):
+            Directory.CreateDirectory(log_dir)
+
+        log_path = log_dir + "\\usage_" + month + ".csv"
+        saved_sec = manual_sec - elapsed_sec
+        log_line = "{},{},{},{},{},{},{},{}\n".format(
+            timestamp, user_name, machine_name,
+            act_name, act_version,
+            "%.1f" % elapsed_sec,
+            manual_sec,
+            "%.1f" % saved_sec
+        )
+
+        fs = FileStream(log_path, FileMode.Append, FileAccess.Write, FileShare.ReadWrite)
+        writer = StreamWriter(fs)
+        writer.Write(log_line)
+        writer.Flush()
+        writer.Close()
+        fs.Close()
+    except Exception as e:
+        pass
+
+# Python Script, API Version = V23
+# To-do list
+# - BGA normal direction option x,y. Now is directionZ only
+#
+#
+# Author: Louis Liu based on Ansys Chucky's initial version
+# louis_liu2@jabil.com
+#
+#########################User Manual################################
+#   1.selection a point where BGA will locate. if no selection, the default point is (0,0,0)
+#   BGA_top/bottom: positive/nagative axis direction
+#   BGA mating face=top/bottom meaning top/bottom face mating with selected point to locate
+#
+#############################Sub Function###################################                                          #20260410
+
+def _find_extreme_face_by_Z(body, mode="max"):
+    """
+    mode = "max" -> ??Z ? ? face
+    mode = "min" -> ??Z ? ? face
+    """
+    faces = list(body.Faces)
+    if len(faces) == 0:
+        raise Exception("No faces found on body.")
+
+    if mode == "max":
+        return max(faces, key=lambda f: _centerZ(f))
+    elif mode == "min":
+        return min(faces, key=lambda f: _centerZ(f))
+    else:
+        raise Exception("mode must be 'max' or 'min'")                                          #20260410
+
+def _get_bbox(obj):
+    try:
+        return obj.Shape.GetBoundingBox(Matrix.Identity)
+    except:
+        try:
+            return obj.GetBoundingBox(Matrix.Identity)
+        except:
+            try:
+                return obj.GetBoundingBox()
+            except:
+                return None                                           #20260410
+
+def _centerZ(obj):
+    box = _get_bbox(obj)
+    if box is None:
+        return 0.0
+    return (box.MinCorner.Z + box.MaxCorner.Z) / 2.0                                  #20260410
+#########################Variable###################################
+# BGA top: positive direction
+# BGA bottom: nagative direction
+#
+BGA_dir = Direction.DirZ    #Direction.DirX / Direction.DirY
+BGA_Diameter=0.650 #[MM]
+BGA_h=0.510 #[MM]
+low_pad_D=0.50 #[MM]
+low_pad_h=0.02 #[MM]
+high_pad_D=0.50 #[MM]
+high_pad_h=0.02 #[MM]
+share_tolerance=0.01 #[MM]
+top_solder_split=0.15 #[%]
+bot_solder_split=0.15 #[%]
+BGA_mating_face='bottom' #'bottom'/'top'
+BGA_offsetX=0 #[MM]
+BGA_offsetY=0 #[MM]
+BGA_offsetZ=0 #[MM]
+
+BGA_UpToSelection = Selection.GetActive()
+
+Initial_BGA_dir=Direction.DirZ
+Total_h=BGA_h+low_pad_h+high_pad_h
+Modifier_pad_h=0.1 # to resolve spaceclaim small size issue due to resolution in sketch model
+Total_h_mod=Total_h+Modifier_pad_h*2
+low_pad_h_mod=low_pad_h+Modifier_pad_h
+high_pad_h_mod=high_pad_h+Modifier_pad_h
+
+
+
+import time
+import clr
+clr.AddReference("SpaceClaim.Api.V23")
+clr.ImportExtensions(SpaceClaim.Api.V23.Scripting.Extensions.DesignFaceExtensions)
+clr.ImportExtensions(SpaceClaim.Api.V23.Scripting.Extensions.DesignEdgeExtensions)
+clr.ImportExtensions(SpaceClaim.Api.V23.Scripting.Extensions.DesignBodyExtensions)
+clr.ImportExtensions(SpaceClaim.Api.V23.Scripting.Extensions.ComponentExtensions)
+clr.ImportExtensions(SpaceClaim.Api.V23.Scripting.Extensions.DocObjectExtensions)
+from SpaceClaim.Api.V23 import *
+doc = Window.ActiveWindow.Document
+doc.Units.ActiveUnitsSystem = UnitsSystemType.Metric
+doc.Units.MetricUnits = MetricUnits(MetricLengthUnit.Millimeters, MetricMassUnit.Grams, AngleUnit.Degrees);
+
+# initial_active_comp=ComponentSelection.GetActive()
+initial_active_comp=ComponentHelper.GetActive()
+if initial_active_comp!=None:
+    ComponentHelper.SetRootActive(None)
+selection_initial_bodies=Selection.SelectAll()
+
+# Change Object Visibility
+visibility = VisibilityType.Hide
+inSelectedView = False
+faceLevel = False
+ViewHelper.SetObjectVisibility(Selection.SelectAll(), visibility, inSelectedView, faceLevel)
+
+if initial_active_comp!=None:
+    ComponentHelper.SetActive(initial_active_comp, None)
+    
+ball_pad_list=[]
+##########################create top pad###########################
+if high_pad_h>0:
+    # Set Sketch Plane
+    sectionPlane = Plane.PlaneZX
+    result = ViewHelper.SetSketchPlane(sectionPlane)
+    # EndBlock
+
+    # Sketch Rectangle
+    point1 = Point2D.Create(MM(Total_h_mod),MM(0))
+    point2 = Point2D.Create(MM(Total_h_mod),MM(high_pad_D/2))
+    point3 = Point2D.Create(MM(Total_h_mod-high_pad_h_mod),MM(high_pad_D/2),)
+    result = SketchRectangle.Create(point1, point2, point3)
+    # EndBlock
+
+    # Solidify Sketch
+    mode = InteractionMode.Solid
+    result = ViewHelper.SetViewMode(mode)
+    # EndBlock
+
+    # Revolve 1 Face
+    # selection = Selection.Create(GetRootPart().Bodies[0].Faces[0])
+    selection = Selection.CreateByObjects(result.CreatedBodies[0].Faces[0])
+    axis = Line.Create(Point.Create(MM(0), MM(0), MM(0)), 
+        Initial_BGA_dir)
+    options = RevolveFaceOptions()
+    options.ExtrudeType = ExtrudeType.ForceIndependent
+
+    result = RevolveFaces.Execute(selection, axis, DEG(360), options)
+    top_pad_body = result.CreatedBodies[0]                                  #20260410
+    ball_pad_list.append(top_pad_body)                                  #20260410
+
+    # Item[2] needs to be modified with logic
+    face_modifier=_find_extreme_face_by_Z(top_pad_body, mode="max")
+    selection=Selection.Create(face_modifier)
+    options = ExtrudeFaceOptions()
+    options.ExtrudeType = ExtrudeType.ForceIndependent
+    ExtrudeFaces.Execute(selection, MM(Modifier_pad_h*(-1)), options)
+    # EndBlock
+
+    # Rename 'Solid' to 'top pad'
+    # selection = Selection.CreateByNames('Solid')
+    selection = Selection.CreateByObjects(result.CreatedBodies[0])
+    result = RenameObject.Execute(selection,"Package pad")
+    # EndBlock
+    ###################################################################
+
+##########################create bottom pad###########################
+if low_pad_h>0:
+    # Set Sketch Plane
+    sectionPlane = Plane.PlaneZX
+    result = ViewHelper.SetSketchPlane(sectionPlane)
+    # EndBlock
+
+
+    # Sketch Rectangle
+    point1 = Point2D.Create(MM(0),MM(0))
+    point2 = Point2D.Create(MM(0),MM(low_pad_D/2))
+    point3 = Point2D.Create(MM(low_pad_h_mod),MM(low_pad_D/2),)
+    result = SketchRectangle.Create(point1, point2, point3)
+    # EndBlock
+
+    # Solidify Sketch
+    mode = InteractionMode.Solid
+    result = ViewHelper.SetViewMode(mode)
+    # EndBlock
+
+    # Revolve 1 Face
+    # selection = Selection.Create(GetRootPart().Bodies[1].Faces[0])
+    selection = Selection.CreateByObjects(result.CreatedBodies[0].Faces[0])
+    axis = Line.Create(Point.Create(MM(0), MM(0), MM(0)), 
+        Initial_BGA_dir)
+    options = RevolveFaceOptions()
+    options.ExtrudeType = ExtrudeType.ForceIndependent
+    result = RevolveFaces.Execute(selection, axis, DEG(360), options)
+    bottom_pad_body = result.CreatedBodies[0]                                  #20260410
+    ball_pad_list.append(bottom_pad_body)                                  #20260410
+
+    # Item[0] needs to be modified with logic
+    #face_modifier=Selection.Create(result.CreatedBodies).ConvertToFaces().Items[0]
+    face_modifier=_find_extreme_face_by_Z(bottom_pad_body, mode="min")                                  #20260410
+    selection=Selection.Create(face_modifier)
+    options = ExtrudeFaceOptions()
+    options.ExtrudeType = ExtrudeType.ForceIndependent
+    ExtrudeFaces.Execute(selection, MM(Modifier_pad_h*(-1)), options)
+    # EndBlock
+
+    # Rename 'Solid' to 'bottom pad'
+    # selection = Selection.CreateByNames('Solid')
+    selection = Selection.CreateByObjects(result.CreatedBodies[0])
+    result = RenameObject.Execute(selection,"Board pad")
+    # EndBlock
+    ###################################################################
+
+
+
+
+##########################create ball##############################
+# Set Sketch Plane
+sectionPlane = Plane.PlaneZX
+result = ViewHelper.SetSketchPlane(sectionPlane)
+# EndBlock
+
+arc_point1 = Point2D.Create(MM(low_pad_h_mod),MM(low_pad_D/2))
+arc_point2 = Point2D.Create(MM(Total_h_mod-high_pad_h_mod),MM(high_pad_D/2))
+arc_point3 = Point2D.Create(MM((Total_h_mod-high_pad_h_mod-low_pad_h_mod)/2+low_pad_h_mod),MM(BGA_Diameter/2))
+
+top_line_point1 = Point2D.Create(MM(Total_h_mod-high_pad_h_mod),MM(0))
+top_line_point2 = Point2D.Create(MM(Total_h_mod-high_pad_h_mod),MM(high_pad_D/2))
+
+bot_line_point1 = Point2D.Create(MM(low_pad_h_mod),MM(0))
+bot_line_point2 = Point2D.Create(MM(low_pad_h_mod),MM(low_pad_D/2))
+
+# Create Three Point Arc
+result = SketchArc.Create3PointArc(arc_point1, arc_point2, arc_point3)
+# Create lines
+result = SketchLine.Create(top_line_point1, top_line_point2)
+result = SketchLine.Create(bot_line_point1, bot_line_point2)
+result = SketchLine.Create(top_line_point1, bot_line_point1)
+# Solidify Sketch
+mode = InteractionMode.Solid
+result = ViewHelper.SetViewMode(mode)
+# EndBlock
+
+# Revolve 1 Face
+# selection = Selection.Create(GetRootPart().Bodies[2].Faces[0])
+selection = Selection.CreateByObjects(result.CreatedBodies[0].Faces[0])
+axis = Line.Create(Point.Create(MM(0), MM(0), MM(0)), 
+    Initial_BGA_dir)
+options = RevolveFaceOptions()
+options.ExtrudeType =  ExtrudeType.ForceIndependent
+result = RevolveFaces.Execute(selection, axis, DEG(360), options)
+# Create Ball parameter                                            !20260410
+ball_body = result.CreatedBodies[0]
+ball_pad_list.append(ball_body)
+# Create Ball parameter                                            !20260410
+# EndBlock
+
+# Rename 'Solid' to 'Ball'
+# selection = Selection.CreateByNames('Solid')
+selection = Selection.CreateByObjects(result.CreatedBodies[0])
+result = RenameObject.Execute(selection,"Ball")
+# EndBlock
+#################################################################
+
+
+
+
+##################Split ball######################################
+
+
+
+
+
+
+# Create Datum Plane
+result = DatumPlaneCreator.Create(Point.Create(MM(0), MM(0), MM(0)),  Initial_BGA_dir)
+# EndBlock
+
+# Translate Along Z Handle
+selection = Selection.CreateByNames('Plane').FilterByVisible()
+# Initial_BGA_dir = Direction.DirZ
+options = MoveOptions()
+result = Move.Translate(selection, Initial_BGA_dir, MM(low_pad_h_mod+bot_solder_split*(Total_h_mod-low_pad_h_mod-high_pad_h_mod)), options, )
+# EndBlock
+
+selection = Selection.CreateByNames('Ball').FilterByVisible()
+datum = Selection.CreateByNames('Plane').FilterByVisible()
+result = SplitBody.ByCutter(selection, datum,)
+first_new_body = result.CreatedBodies[0]                          #20260410
+ball_pad_list.append(first_new_body)                          #20260410
+# EndBlock
+first_split_bodies = [ball_body, first_new_body]                          #20260410
+
+# Sort by Z to identify bottom and upper piece                        #20260410
+first_split_bodies = sorted(first_split_bodies, key=lambda b: _centerZ(b))
+bottom_ball_body = first_split_bodies[0]
+upper_ball_body = first_split_bodies[1]
+
+# Translate Along Z Handle
+selection = Selection.CreateByNames('Plane').FilterByVisible()
+# Initial_BGA_dir = Direction.DirZ
+options = MoveOptions()
+result = Move.Translate(selection, Initial_BGA_dir, MM(-(low_pad_h_mod+bot_solder_split*(Total_h_mod-low_pad_h_mod-high_pad_h_mod))), options, )
+result = Move.Translate(selection, Initial_BGA_dir, MM(Total_h_mod-high_pad_h_mod-top_solder_split*(Total_h_mod-low_pad_h_mod-high_pad_h_mod)), options, )
+# EndBlock
+
+# Ball1..need to have logic
+selection = Selection.CreateByObjects(upper_ball_body)                         #20260410
+datum = Selection.CreateByNames('Plane').FilterByVisible()
+result = SplitBody.ByCutter(selection, datum,)
+second_new_body = result.CreatedBodies[0]                         #20260410
+ball_pad_list.append(second_new_body)                         #20260410
+
+# EndBlock
+Selection.CreateByNames('Plane').FilterByVisible().Items[0].Delete()
+split_ball_bodies = [bottom_ball_body, upper_ball_body, second_new_body]                         #20260410
+split_ball_bodies = [b for b in split_ball_bodies if b != None]                         #20260410
+
+split_ball_bodies = sorted(split_ball_bodies, key=lambda b: _centerZ(b))                         #20260410
+
+bottom_ball_body = split_ball_bodies[0]                         #20260410
+middle_ball_body = split_ball_bodies[1]                         #20260410
+top_ball_body = split_ball_bodies[2]                         #20260410
+
+
+
+# Renames
+# Need modify the code logic
+
+RenameObject.Execute(Selection.Create(bottom_ball_body), "Board Side  Ball")                         #20260410
+RenameObject.Execute(Selection.Create(middle_ball_body), "Ball")                         #20260410
+RenameObject.Execute(Selection.Create(top_ball_body), "Package Side  Ball")                         #20260410
+
+# EndBlock
+
+# selection = Selection.CreateByNames('Ball','Board Side  Ball','Package Side  Ball','Board pad','Package pad').FilterByVisible()
+selection = Selection.CreateByObjects(ball_pad_list)
+result = Move.Translate(selection, Initial_BGA_dir, MM(-Modifier_pad_h), options, )
+if BGA_mating_face=="bottom":
+    anchorPoint = Point.Create(0, 0, 0)
+    #anchorPoint = Move.GetAnchorPoint(selection)
+elif BGA_mating_face=="top":
+    anchorPoint = Point.Create(0, 0, 0+MM(Total_h))
+options = MoveOptions()
+if BGA_dir==Direction.DirX:
+    axis = Line.Create(anchorPoint, Direction.DirY)
+    result = Move.Rotate(selection, axis, DEG(90), options)
+elif BGA_dir==Direction.DirY:
+    axis = Line.Create(anchorPoint, Direction.DirX)
+    result = Move.Rotate(selection, axis, DEG(270), options)
+# upToSelection = Selection.Create(GetRootPart().Bodies[0].Edges[7].GetChildren[ICurvePoint]()[1])
+upToSelection = BGA_UpToSelection
+if BGA_mating_face=="bottom":
+    anchorPoint = Point.Create(-MM(BGA_offsetX), -MM(BGA_offsetY), -MM(BGA_offsetZ))
+    #anchorPoint = Move.GetAnchorPoint(selection)
+elif BGA_mating_face=="top":
+    anchorPoint = Point.Create(-MM(BGA_offsetX), -MM(BGA_offsetY), -MM(BGA_offsetZ)+MM(Total_h))
+result = Move.UpTo(selection, upToSelection, anchorPoint, options)
+
+
+# Advanced Force Share
+fs_ball_pad_list=[]
+for i in ball_pad_list:
+    fs_ball_pad_list.append(Selection.Create(i.Faces))
+selection = Selection.CreateByObjects(fs_ball_pad_list)
+# Force Share
+options = ForceShareOptions()
+options.Tolerance = MM(share_tolerance)
+result = ForceShare.FixSpecific(selection.ConvertToFaces(), options)
+# EndBlock
+
+#a=GetRootPart()
+#a.ShareTopology=ShareTopology.Merge
+# ViewHelper.SetProjection(ViewProjection.Isometric)
+
+visibility = VisibilityType.Show
+ViewHelper.SetObjectVisibility(selection_initial_bodies, visibility, inSelectedView, faceLevel)
+
+
+## Rotate About Y Handle
+#selection = BodySelection.Create([GetRootPart().Components[0].Content.Bodies[4],
+#    GetRootPart().Components[0].Content.Bodies[0],
+#    GetRootPart().Components[0].Content.Bodies[1],
+#    GetRootPart().Components[0].Content.Bodies[2],
+#    GetRootPart().Components[0].Content.Bodies[3]])
+#anchorPoint = Move.GetAnchorPoint(selection)
+#axis = Line.Create(anchorPoint, Direction.DirY)
+#options = MoveOptions()
+#result = Move.Rotate(selection, axis, DEG(90.0000000000002), options)
+## EndBlock
+
+try:
+    act_elapsed_sec = _act_time.time() - _ACT_START_TIME
+    log_usage("SC_BGA", "V2", act_elapsed_sec, 3600)
+except:
+    pass

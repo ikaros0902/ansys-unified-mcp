@@ -1,0 +1,224 @@
+# -*- coding: utf-8 -*-
+import time
+import time as _act_time
+_ACT_START_TIME = _act_time.time()
+# Python Script, API Version = V23
+
+def log_usage(act_name, act_version, elapsed_sec, manual_sec):
+    try:
+        import clr
+        import datetime
+        clr.AddReference("System")
+        from System import Environment
+        from System.IO import FileStream, StreamWriter, FileMode, FileAccess, FileShare, Directory
+
+        user_name = Environment.UserName
+        machine_name = Environment.MachineName
+        timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        month = datetime.datetime.now().strftime("%Y_%m")
+
+        log_dir = r"\\Twtrkei017\e\Structure_shared_folder\03. Team member\Ikaros\Test_ACT_usage_rate"
+
+        if not Directory.Exists(log_dir):
+            Directory.CreateDirectory(log_dir)
+
+        log_path = log_dir + "\\usage_" + month + ".csv"
+        saved_sec = manual_sec - elapsed_sec
+        log_line = "{},{},{},{},{},{},{},{}\n".format(
+            timestamp, user_name, machine_name,
+            act_name, act_version,
+            "%.1f" % elapsed_sec,
+            manual_sec,
+            "%.1f" % saved_sec
+        )
+
+        fs = FileStream(log_path, FileMode.Append, FileAccess.Write, FileShare.ReadWrite)
+        writer = StreamWriter(fs)
+        writer.Write(log_line)
+        writer.Flush()
+        writer.Close()
+        fs.Close()
+    except Exception as e:
+        pass
+
+# Python Script, API Version = V23
+# To-do list
+# - faster array copy with 1,2,4,8,12......method
+# - Force shared true or false option
+#
+
+# Author: Louis Liu
+# louis_liu2@jabil.com
+#
+import csv
+import math
+direction1=Direction.DirX
+direction2=Direction.DirY
+share_tolerance=0.01 #[MM]
+
+#Solder ball array method
+Iarray = 2
+IIOL = 0
+IIOR = 0
+#Rectangle Rule : Iarray = 0
+# n_dir1=4   n_dir2=3
+# * * * * 
+# * * * *
+# * * * *
+n_dir1=30
+n_dir2=11
+pitch_dir1=MM(1.0)
+pitch_dir2=MM(1.0)
+#irregular : Iarray = 1
+file_path = r'D:\BGA test\BGA test2.csv'
+import time
+import clr
+#Rectangle Rule :
+# Iarray = 2            # Iarray = 3
+# n_dir1=4   n_dir2=3   # n_dir1=4   n_dir2=3
+# * * * *               # * * * *
+#* * * * *              #  * * * 
+# * * * *               # * * * *
+pitch=MM(1.0)
+pitch_dir1 = pitch
+Pi = math.pi
+pitch_dir2 = pitch*math.sin(Pi/3)
+clr.AddReference("SpaceClaim.Api.V23")
+clr.ImportExtensions(SpaceClaim.Api.V23.Scripting.Extensions.DesignFaceExtensions)
+clr.ImportExtensions(SpaceClaim.Api.V23.Scripting.Extensions.DesignEdgeExtensions)
+clr.ImportExtensions(SpaceClaim.Api.V23.Scripting.Extensions.DesignBodyExtensions)
+clr.ImportExtensions(SpaceClaim.Api.V23.Scripting.Extensions.ComponentExtensions)
+clr.ImportExtensions(SpaceClaim.Api.V23.Scripting.Extensions.DocObjectExtensions)
+
+selection_target_model=Selection.GetActive()
+initial_active_comp=ComponentHelper.GetActive()
+if initial_active_comp!=None:
+    ComponentHelper.SetRootActive(None)
+selection_initial_bodies=Selection.SelectAll()
+ViewHelper.HideOthers(selection_target_model)
+
+if initial_active_comp!=None:
+    ComponentHelper.SetActive(initial_active_comp, None)
+# part_BGA=PartSelection.CreateByNames("Scr_BGAs")
+# ComponentHelper.SetActive(part_BGA.ConvertToComponents().Items[0], None)
+Array_list=[]
+Array_list.extend(selection_target_model.Items)
+###############Iarray == 0###############################################################
+if Iarray == 0:
+
+    for i in range(n_dir1-1):
+        result = Copy.Execute(selection_target_model)
+        Array_list.extend(result.CreatedObjects)
+        selection = Selection.Create(result.CreatedObjects)
+        direction = direction1
+        options = MoveOptions()
+        result = Move.Translate(selection, direction, pitch_dir1*(i+1), options)
+    selection_target_model=Selection.Create(Array_list)
+    for i in range(n_dir2-1):
+        result = Copy.Execute(selection_target_model)
+        Array_list.extend(result.CreatedObjects)
+        selection = Selection.Create(result.CreatedObjects)
+        direction = direction2
+        options = MoveOptions()
+        result = Move.Translate(selection, direction, pitch_dir2*(i+1), options)
+###################Iarray == 1###############################################################
+elif Iarray == 1:
+
+    with open(file_path, 'r') as csvfile:
+# ?? CSV  ?
+        rows = csv.reader(csvfile)
+        for row in rows:
+    #print(row[0],row[1],row[2])
+# Copy items
+            result = Copy.Execute(selection_target_model)
+# Translate Along X Handle
+#            selection = BodySelection.Create(result.CreatedObjects)
+            Array_list.extend(result.CreatedObjects)
+            selection = Selection.Create(result.CreatedObjects)
+            if direction1==Direction.DirX:
+                dx=MM(float(row[0]))
+                if direction2==Direction.DirY:
+                    dy=MM(float(row[1]))
+                    dz=MM(float(row[2]))
+                elif direction2==Direction.DirZ:
+                    dz=MM(float(row[1]))
+                    dy=MM(float(row[2]))
+            elif direction1==Direction.DirY:
+                dy=MM(float(row[0]))
+                if direction2==Direction.DirX:
+                    dx=MM(float(row[1]))
+                    dz=MM(float(row[2]))
+                elif direction2==Direction.DirZ:
+                    dz=MM(float(row[1]))
+                    dx=MM(float(row[2]))
+            elif direction1==Direction.DirZ:
+                dz=MM(float(row[0]))
+                if direction2==Direction.DirX:
+                    dx=MM(float(row[1]))
+                    dy=MM(float(row[2]))
+                elif direction2==Direction.DirY:
+                    dy=MM(float(row[1]))
+                    dx=MM(float(row[2]))                  
+            direction = Vector.Create(dx, dy,dz )
+            options = MoveOptions()
+            result = Move.Translate(selection, direction, options)
+###################Iarray == 2###############################################################
+elif Iarray == 2 or Iarray == 3:
+    for j in range(n_dir2):
+        if j % 2 == 0: 
+            for i in range(n_dir1-1):
+                result = Copy.Execute(selection_target_model)
+                Array_list.extend(result.CreatedObjects)
+                selection = Selection.Create(result.CreatedObjects)
+                direction = direction1*pitch_dir1*(i+1)+direction2*pitch_dir2*(j)
+                #direction = direction1
+                options = MoveOptions()
+                result = Move.Translate(selection, direction, options)
+                if j > 0 and i==0:
+                    result = Copy.Execute(selection_target_model)
+                    Array_list.extend(result.CreatedObjects)
+                    selection = Selection.Create(result.CreatedObjects)
+                    direction = direction2*pitch_dir2*(j)
+                    #direction = direction1
+                    options = MoveOptions()
+                    result = Move.Translate(selection, direction, options)
+        elif j % 2 == 1:
+            if Iarray == 2:
+                for i in range(n_dir1+1-IIOR-IIOL):
+                    result = Copy.Execute(selection_target_model)
+                    Array_list.extend(result.CreatedObjects)
+                    selection = Selection.Create(result.CreatedObjects)
+                    direction = direction1*pitch_dir1*(i)+direction2*pitch_dir2*(j)+direction1*pitch_dir1*(float(IIOL)-0.5)
+                    options = MoveOptions()
+                    result = Move.Translate(selection, direction, options)
+            elif Iarray == 3:
+                for i in range(n_dir1-1):
+                    result = Copy.Execute(selection_target_model)
+                    Array_list.extend(result.CreatedObjects)
+                    selection = Selection.Create(result.CreatedObjects)
+                    direction = direction1*pitch_dir1*(i)+direction2*pitch_dir2*(j)+direction1*0.5*pitch_dir1
+                    options = MoveOptions()
+                    result = Move.Translate(selection, direction, options)                
+
+        
+ #############################################################################################       
+        
+options = ForceShareOptions()
+options.Tolerance = MM(share_tolerance)
+try:
+    result = ForceShare.FindAndFix(options)
+except:
+    None
+# Change Object Visibility
+inSelectedView = False
+faceLevel = False
+visibility = VisibilityType.Show
+ViewHelper.SetObjectVisibility(selection_initial_bodies, visibility, inSelectedView, faceLevel)
+# ViewHelper.SetObjectVisibility(Selection.Create(Array_list), visibility, inSelectedView, faceLevel)
+
+Selection.Create(Array_list).SetActive()
+try:
+    act_elapsed_sec = _act_time.time() - _ACT_START_TIME
+    log_usage("SC_BGA", "V3", act_elapsed_sec, 3600)
+except:
+    pass

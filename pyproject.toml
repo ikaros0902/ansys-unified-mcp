@@ -61,7 +61,7 @@ extend-exclude = [
     "scratch",
     # IronPython 2 內嵌腳本（Mechanical 進程內執行，含 `exec ... in` 等 Python 2 語法），
     # CPython 端 ruff 無法解析（parse error），由 py_compile 以 IronPython 語境獨立把關。
-    "src/ansys_unified_mcp/products/mechanical/plugins/mechanical_socket_listener.py",
+    "src/ansys_unified_mcp/products/mechanical/plugins",
 ]
 
 [tool.ruff.lint]

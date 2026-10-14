@@ -23,6 +23,9 @@
 | **[`shock-analysis-workflow`](shock-analysis-workflow/SKILL.md)** | **Shock / Drop 端到端管線編排** | 8 個模組化 session 技能串接（材料指派 → 接觸 → 網格 dt ≥ 2e-8 s → 遠端質量 → 截面 → 載荷 → 求解監控 → 報告）；`shock分析流程`, `落摔工作流`, `能量平衡監控` |
 | **[`ansys-ls-prepost`](ansys-ls-prepost/SKILL.md)** | **LS-PrePost 前後處理** | SCL / cfile / Python data-center API, d3plot 結果查詢與雲圖輸出；`LS-PrePost`, `cfile`, `SCL`, `d3plot`, `fringe` |
 | **[`ansys-fluent`](ansys-fluent/SKILL.md)** | **Fluent CFD 與共軛熱傳** | PyFluent 水密幾何 Poly-Hexcore 網格, SST k-omega, Coupled 求解, y+ 與質量守恆評估；`Fluent分析`, `PyFluent`, `CFD模擬`, `共軛熱傳`, `CHT` |
+| **[`ansys-spaceclaim-defeature`](ansys-spaceclaim-defeature/SKILL.md)** | **SpaceClaim 特徵簡化與缺陷修復** | 孔洞/倒角/圓角批次辨識與移除、微小邊縫縫合、CAD 幾何破面修復；`簡化孔洞`, `移除倒角`, `CAD破面修復`, `defeature` |
+| **[`ansys-bga-modeling`](ansys-bga-modeling/SKILL.md)** | **BGA 錫球陣列自動化幾何建模** | 矩形/周邊陣列錫球自動生成、PCB/晶片接觸印記、等效材料指派；`BGA建模`, `錫球陣列`, `BGA array`, `solder ball` |
+| **[`ansys-material-assignment`](ansys-material-assignment/SKILL.md)** | **Mechanical / LS-DYNA 材料與等效密度自動指派** | BOM 表格對應、關鍵字比對、自訂密度反推計算、未指派幾何體檢核；`材料指派`, `BOM對應`, `材料賦予`, `assign material` |
 | **[`act-extension-development`](act-extension-development/SKILL.md)** | **ACT 外掛開發實戰** | IronPython 2.7 避坑, `FileSystemWatcher` 檔案 IPC 監聽, ACT Wizard (`.wbex`) 程式化調用；`ACT外掛`, `ACT開發`, `IronPython限制` |
 | **[`pymechanical-operations`](pymechanical-operations/SKILL.md)** | **PyMechanical 遠端操作** | gRPC (port 10000+) 直連, `run_python_script` 遠端驅動, Body Sizing / MultiZone 網格自動化；`PyMechanical連線`, `Mechanical遠端控制`, `自動網格劃分` |
 | **[`ansys-error-catalog`](ansys-error-catalog/SKILL.md)** | **CAE 錯誤分類與排查** | Workbench, Mechanical, SpaceClaim, ACT 報錯根因與修復對策；`ANSYS報錯`, `IronPython錯誤`, `Mechanical排障`, `ACT除錯` |

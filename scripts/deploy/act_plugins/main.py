@@ -263,8 +263,8 @@ def show_mcp_info(analysis=None):
             "",
             "Status: Active and listening for AI / PyMechanical connections.",
         ]
-        WinForms.MessageBox.Show(
-            "\n".join(info_lines),
+        WinForms.print("[UI_OUTPUT] " + str(
+            "\n".join(info_lines)),
             "Workbench MCP - Mechanical Server Info",
             WinForms.MessageBoxButtons.OK,
             WinForms.MessageBoxIcon.Information

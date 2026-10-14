@@ -333,6 +333,98 @@ async def geometry_midsurface(max_thickness_mm: float = 6.0, main_surface_ratio:
     res = await sim_impl.call_tool('geometry_midsurface', args)
     return "\n".join([c.text for c in res])
 
+@tool_geometry(name='geometry_defeature_features')
+async def geometry_defeature_features(defeature_face_exe: bool = True, defeature_edge_exe: bool = True,
+                                      max_edges_at_once: int = 3000, r_max_cylinder: float = 3.5,
+                                      r_min_circle: float = 0.0, r_max_circle: float = 3.5,
+                                      fs_grp_sizefilter: float = 1.5,
+                                      grp_dont_defeature: str = "Scr_UserInput_DONT_DEFEATURE_GRP",
+                                      target_body_name: str = "") -> dict:
+    """自動消除 SpaceClaim 幾何模型中非關鍵微小特徵（圓柱孔、小圓弧邊、倒角、小面）
+    
+    :param defeature_face_exe: 是否消除小圓柱曲面
+    :param defeature_edge_exe: 是否消除小圓弧與倒角邊線
+    :param max_edges_at_once: 單批次消除邊線數量上限
+    :param r_max_cylinder: 欲消除圓柱孔之最大半徑 (mm)
+    :param r_min_circle: 欲消除圓弧邊之最小半徑 (mm)
+    :param r_max_circle: 欲消除圓弧邊之最大半徑 (mm)
+    :param fs_grp_sizefilter: 消除碎面之面積過濾門檻 (mm^2)
+    :param grp_dont_defeature: 排除保護群組名稱 (群組內特徵不被消除)
+    :param target_body_name: 指定去特徵之零件名稱 (空字串代表作用中選取或全模型)
+    """
+    args = {}
+    for key, val in (('defeature_face_exe', defeature_face_exe),
+                     ('defeature_edge_exe', defeature_edge_exe),
+                     ('max_edges_at_once', max_edges_at_once),
+                     ('r_max_cylinder', r_max_cylinder),
+                     ('r_min_circle', r_min_circle),
+                     ('r_max_circle', r_max_circle),
+                     ('fs_grp_sizefilter', fs_grp_sizefilter),
+                     ('grp_dont_defeature', grp_dont_defeature),
+                     ('target_body_name', target_body_name)):
+        if val is not None:
+            args[key] = val
+    res = await sim_impl.call_tool('geometry_defeature_features', args)
+    return "\n".join([c.text for c in res])
+
+@tool_geometry(name='geometry_create_bga_array')
+async def geometry_create_bga_array(bga_diameter_mm: float = 0.65, bga_height_mm: float = 0.51,
+                                    low_pad_d_mm: float = 0.50, low_pad_h_mm: float = 0.02,
+                                    high_pad_d_mm: float = 0.50, high_pad_h_mm: float = 0.02,
+                                    n_dir1: int = 10, n_dir2: int = 10,
+                                    pitch_dir1_mm: float = 1.0, pitch_dir2_mm: float = 1.0,
+                                    array_type: int = 0, mating_face: str = "bottom") -> dict:
+    """自動建立 SpaceClaim BGA 錫球與焊盤幾何陣列
+    
+    :param bga_diameter_mm: 錫球自由直徑 (mm)
+    :param bga_height_mm: 錫球壓縮高度 (mm)
+    :param low_pad_d_mm: 下銅箔焊盤直徑 (mm)
+    :param low_pad_h_mm: 下銅箔焊盤厚度 (mm)
+    :param high_pad_d_mm: 上銅箔焊盤直徑 (mm)
+    :param high_pad_h_mm: 上銅箔焊盤厚度 (mm)
+    :param n_dir1: X 軸方向球數
+    :param n_dir2: Y 軸方向球數
+    :param pitch_dir1_mm: X 軸方向間距 (mm)
+    :param pitch_dir2_mm: Y 軸方向間距 (mm)
+    :param array_type: 陣列型態 (0: 矩形陣列, 2: 交錯蜂巢陣列)
+    :param mating_face: 貼合面基準 ('bottom' 或 'top')
+    """
+    args = {}
+    for key, val in (('bga_diameter_mm', bga_diameter_mm),
+                     ('bga_height_mm', bga_height_mm),
+                     ('low_pad_d_mm', low_pad_d_mm),
+                     ('low_pad_h_mm', low_pad_h_mm),
+                     ('high_pad_d_mm', high_pad_d_mm),
+                     ('high_pad_h_mm', high_pad_h_mm),
+                     ('n_dir1', n_dir1),
+                     ('n_dir2', n_dir2),
+                     ('pitch_dir1_mm', pitch_dir1_mm),
+                     ('pitch_dir2_mm', pitch_dir2_mm),
+                     ('array_type', array_type),
+                     ('mating_face', mating_face)):
+        if val is not None:
+            args[key] = val
+    res = await sim_impl.call_tool('geometry_create_bga_array', args)
+    return "\n".join([c.text for c in res])
+
+@tool_geometry(name='geometry_imprint_contacts')
+async def geometry_imprint_contacts(distance_range_mm: float = 0.51, imprint_curves: bool = True,
+                                    imprint_distance_range_mm: float = 0.01) -> dict:
+    """自動執行 SpaceClaim 接觸面壓印 (Imprint) 與共拓撲 Named Selection 偵測
+    
+    :param distance_range_mm: 接觸面判定距離公差 (mm)
+    :param imprint_curves: 是否執行曲線特徵壓印
+    :param imprint_distance_range_mm: 壓印特徵搜尋距離公差 (mm)
+    """
+    args = {}
+    for key, val in (('distance_range_mm', distance_range_mm),
+                     ('imprint_curves', imprint_curves),
+                     ('imprint_distance_range_mm', imprint_distance_range_mm)):
+        if val is not None:
+            args[key] = val
+    res = await sim_impl.call_tool('geometry_imprint_contacts', args)
+    return "\n".join([c.text for c in res])
+
 @tool_geometry(name='geometry_create_hole_groups')
 async def geometry_create_hole_groups(diameter_min_mm: float = 2.0, diameter_max_mm: float = 20.0,
                                       mode: int = 0, pairing_strategy: str = "Ignore Component",
