@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ACT Wizard / Extension manifest skeleton (raw XML descriptor prior to .wbex packaging).
+  NOTE: Per project dual-track commenting rule, all content inside this file
+  (including comments) must stay plain ASCII English, because the IronPython
+  2.7 XML parser used by Workbench ACT is fragile against non-ASCII bytes.
+
+  Field usage is derived from scripts/invoke_act_wizard.py and
+  scripts/act_wizard_automation.py, which call:
+    - ExtAPI.ExtensionManager.GetWizardByName(wizard_name)
+    - wizard.Open() / wizard.Steps[index] / step.Properties[group][key].Value
+    - step.Update()
+  so <Extension Name>, <Wizard Name>, <Step> and <Group>/<Property> below
+  must match the identifiers those scripts look up at runtime.
+-->
+<extension version="3">
+
+  <!-- Name must match the first argument used by GetWizardByName lookups -->
+  <name>EXT_NAME_PLACEHOLDER</name>
+  <guid shortid="EXT_SHORTID_PLACEHOLDER">00000000-0000-0000-0000-000000000000</guid>
+  <version>1.0</version>
+  <description>EXT_DESCRIPTION_PLACEHOLDER</description>
+
+  <!-- Interfaces: declares which ANSYS application this extension attaches to -->
+  <interfaces>
+    <interface context="Mechanical">
+      <!-- Set context="Workbench" instead for Project Schematic level extensions -->
+      <script src="EXT_MAIN_SCRIPT_PLACEHOLDER.py" />
+    </interface>
+  </interfaces>
+
+  <!-- Wizard entry point: Name is what invoke_act_wizard.py passes to
+       GetWizardByName(wizard_name). Keep it identical in both places. -->
+  <wizard name="WIZARD_NAME_PLACEHOLDER" caption="WIZARD_CAPTION_PLACEHOLDER">
+    <script src="WIZARD_SCRIPT_PLACEHOLDER.py" />
+
+    <!-- Step index 0 corresponds to wizard.Steps[0] in automation scripts -->
+    <step name="STEP_NAME_PLACEHOLDER" caption="STEP_CAPTION_PLACEHOLDER">
+
+      <!-- Group name maps to step.Properties[group_name] in Python -->
+      <group name="GROUP_NAME_PLACEHOLDER" caption="GROUP_CAPTION_PLACEHOLDER">
+
+        <!-- Property key maps to step.Properties[group][prop_key].Value -->
+        <property
+          name="PROPERTY_NAME_PLACEHOLDER"
+          caption="PROPERTY_CAPTION_PLACEHOLDER"
+          control="Text"
+          default="PROPERTY_DEFAULT_PLACEHOLDER" />
+
+        <!-- Example of a dropdown-type property for selection scoping -->
+        <property
+          name="SCOPE_PROPERTY_PLACEHOLDER"
+          caption="Scoping"
+          control="Scoping"
+          default="" />
+
+      </group>
+
+    </step>
+
+    <!-- step.Update() in automation scripts triggers the callback below,
+         equivalent to pressing the "Update" / "Submit" button in the GUI -->
+    <callback name="OnUpdate" src="WIZARD_SCRIPT_PLACEHOLDER.py" function="on_update" />
+
+  </wizard>
+
+</extension>

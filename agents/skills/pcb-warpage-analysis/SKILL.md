@@ -37,3 +37,6 @@ flowchart TD
 2. `02_calculate_rom_materials.py`：ROM 等效材料計算與 APDL Macro 輸出
 3. `03_setup_mechanical_bc_and_solution.py`：Mechanical 邊界條件設定與求解
 4. `run_full_warpage_workflow.py`：全自動化閉環批次執行腳本
+
+## 輸出模板
+- [`assets/apdl_rom_materials_template.mac`](assets/apdl_rom_materials_template.mac)：ROM 複合材料等效常數 APDL 巨集骨架，含彈性模數 (EX)、CTE (ALPX)、泊松比 (PRXY) 溫度相關佔位符，對應 `02_calculate_rom_materials.py` 的 MP/MPTEMP/MPDATA 命令順序規則。

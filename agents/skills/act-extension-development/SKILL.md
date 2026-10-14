@@ -42,6 +42,7 @@ flowchart LR
 | **IronPython 2.7 陷阱** | `references/ironpython_quirks.md` | 待建立 | `exec` 閉包限制、`__name__` 差異、`clr` 重複載入防護 |
 | **非同步檔案監聽** | `references/filesystemwatcher_pattern.md` | 待建立 | `FileSystemWatcher`、WPF Dispatcher 與去重鎖 |
 | **Wizard 程式化呼叫** | `references/wizard_api.md` | 待建立 | `ExtensionManager` 操作加密 `.wbex` 與 Component 刷新 |
+| **Wizard Manifest 骨架** | [`assets/wbex_manifest_template.xml`](assets/wbex_manifest_template.xml) | 已建立 | `.wbex` 外掛描述檔 XML 骨架，含 Extension name/version、Interfaces、Wizard entry point 與 Step/Group/Property 佔位符，欄位對應 `scripts/invoke_act_wizard.py` 與 `scripts/act_wizard_automation.py` 之 `GetWizardByName` / `Steps[].Properties[][]` 呼叫 |
 
 > 實作參考可暫先查閱 `scripts/` 下的可執行範例。
 

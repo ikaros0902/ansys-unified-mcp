@@ -32,6 +32,26 @@
 
 ---
 
+## 目錄結構規範（漸進式揭露）
+
+每個 skill 統一遵循四層資源結構：
+
+```
+<skill-name>/
+├── SKILL.md       # 總指揮官：用途、觸發情境、Router 表、Don'ts（≤150 行）
+├── references/    # 按需讀取的深度知識庫（API 字典、物理邊界、報錯對照）
+├── scripts/        # 可直接執行的示範/驗證腳本
+└── assets/         # 輸出產物會直接引用的靜態模板骨架（非文檔、非程式碼）
+```
+
+**2026-10-14 補齊紀錄**：
+- 修復 `ansys-spaceclaim-modeling` 殘缺（原僅剩空 `scripts/__pycache__`，已從來源補齊 `SKILL.md` + 2 支腳本 + 6 份 `references/`）。
+- 全部 24 個頂層 skill（含 `shock-analysis-workflow` 8 個子模組）新增 `assets/` 目錄：
+  - 4 個具實質模板骨架：`ansys-mechanical/assets/report_section_template.md`、`shock-analysis-workflow/08-post-process-report/assets/failure_report_template.md`、`pcb-warpage-analysis/assets/apdl_rom_materials_template.mac`、`act-extension-development/assets/wbex_manifest_template.xml`。
+  - 其餘 20 個 skill（純建模/查詢/排障類，無固定輸出產物需求）新增 `assets/README.md` 說明性占位文件，為各自職責客製化說明文字，非逐字複製。
+
+---
+
 ## 統一規範
 - 全案通用/非 ANSYS 技能（如去 AI 味、Git 審查、Obsidian 筆記等）保留於全域技能庫，不污染本 CAE 倉庫。
 - 本倉庫保持 100% 純淨的 ANSYS 模擬、自動化與 MCP 驅動專用架構。

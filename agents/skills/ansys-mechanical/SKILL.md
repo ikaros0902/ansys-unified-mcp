@@ -91,6 +91,9 @@ flowchart LR
 - [`scripts/run_taylor_bar_demo.py`](scripts/run_taylor_bar_demo.py)：泰勒桿高速衝擊大變形、OFHC 銅動態降伏推算與沙漏能診斷。
 - [`scripts/check_mesh_quality.py`](scripts/check_mesh_quality.py)：網格歪斜度與正交品質自動化預檢。
 
+輸出模板：
+- [`assets/report_section_template.md`](assets/report_section_template.md)：靜態結構/模態/熱應力分析報告段落骨架，含網格摘要、邊界條件、結果摘要（最大應力/位移、安全係數）與收斂狀態佔位符，供 generate_report 類工具套用。
+
 ---
 
 ## 四、絕不能做清單 (Don'ts)

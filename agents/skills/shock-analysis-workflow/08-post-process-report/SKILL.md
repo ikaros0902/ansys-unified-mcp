@@ -103,3 +103,4 @@ python skills/shock-analysis-workflow/scripts/test_session_08.py
 | 手冊名稱 | 內容摘要 |
 | :--- | :--- |
 | [`references/failure_criteria_and_strain_limits.md`](references/failure_criteria_and_strain_limits.md) | 金屬薄板 EPS 0.01 貫穿單元、BGA 焊點 EPS 0.0022 門禁與圖表匯出實作 |
+| [`assets/failure_report_template.md`](assets/failure_report_template.md) | PASS/MARGINAL/FAIL 三級判定報告骨架，欄位對齊第 2 節失效指標評估矩陣（零件類別、材料、EPS 門檻、安全裕度、判定狀態），供自動化報表產出套用 |
