@@ -178,12 +178,75 @@ def _display_port_in_ui(grpc_port, pid):
     """Display active gRPC port across Mechanical UI surfaces (Messages panel & Window Title)."""
     # 1. Native Mechanical Messages panel
     try:
-        import Ansys.ACT.Interfaces.Common
-        severity = Ansys.ACT.Interfaces.Common.MessageSeverityType.Info
         msg = "[WorkbenchMCP] gRPC Server running on port: %d (PID: %d)" % (grpc_port, pid)
+        posted = False
+
         if hasattr(ExtAPI, "Application") and hasattr(ExtAPI.Application, "Messages"):
-            ExtAPI.Application.Messages.Add(severity, msg)
+            messages = ExtAPI.Application.Messages
+
+            # Avoid duplicate messages in the list
+            already_present = False
+            try:
+                for m in messages:
+                    t = getattr(m, "Text", None) or getattr(m, "Message", None) or str(m)
+                    if "[WorkbenchMCP]" in t:
+                        already_present = True
+                        break
+            except Exception:
+                pass
+
+            if already_present:
+                posted = True
+            else:
+                # Attempt A: Instantiate Ansys.Mechanical.Application.Message object
+                try:
+                    import clr
+                    try:
+                        clr.AddReference("Ansys.Mechanical.DataModel")
+                    except Exception:
+                        pass
+                    try:
+                        clr.AddReference("Ansys.ACT.WB1")
+                    except Exception:
+                        pass
+                    import Ansys.Mechanical.DataModel.Enums.MessageSeverityType as MessageSeverityType
+                    import Ansys.Mechanical.Application
+                    msg_obj = Ansys.Mechanical.Application.Message(msg, MessageSeverityType.Info)
+                    messages.Add(msg_obj)
+                    posted = True
+                except Exception as exc_a:
+                    _debug_log("Messages panel Attempt A failed: " + str(exc_a))
+
+                # Attempt B: Fallback with Ansys.ACT.Interfaces.Common
+                if not posted:
+                    try:
+                        import Ansys.ACT.Interfaces.Common
+                        import Ansys.Mechanical.Application
+                        msg_obj = Ansys.Mechanical.Application.Message(msg, Ansys.ACT.Interfaces.Common.MessageSeverityType.Info)
+                        messages.Add(msg_obj)
+                        posted = True
+                    except Exception as exc_b:
+                        _debug_log("Messages panel Attempt B failed: " + str(exc_b))
+
+                # Attempt C: Direct AddMessage
+                if not posted:
+                    try:
+                        if hasattr(messages, "AddMessage"):
+                            messages.AddMessage(msg)
+                            posted = True
+                    except Exception as exc_c:
+                        _debug_log("Messages panel Attempt C failed: " + str(exc_c))
+
+        # Attempt D: ACT Log
+        try:
+            ExtAPI.Log.WriteMessage(msg)
+        except Exception:
+            pass
+
+        if posted:
             _debug_log("Added port info to Mechanical Messages panel")
+        else:
+            _debug_log("Could not add message to Messages panel through Attempt A/B/C")
     except Exception as exc:
         _debug_log("Failed to add message to Messages panel: " + str(exc))
 
@@ -204,6 +267,21 @@ def _display_port_in_ui(grpc_port, pid):
                 _debug_log("Updated main window title to: " + new_title)
     except Exception as exc:
         _debug_log("Failed to update main window title: " + str(exc))
+
+
+def _delayed_display_port(grpc_port, pid):
+    """Run delayed UI updates to ensure the message survives project load."""
+    import threading
+    def _worker():
+        for delay in (1.5, 4.0, 8.0):
+            time.sleep(delay)
+            try:
+                _display_port_in_ui(grpc_port, pid)
+            except Exception:
+                pass
+    t = threading.Thread(target=_worker)
+    t.daemon = True
+    t.start()
 
 
 def _auto_start_grpc_server():
@@ -235,6 +313,7 @@ def _auto_start_grpc_server():
             setattr(_builtins, "_WORKBENCH_MCP_CURRENT_PORT", grpc_port)
             _register_instance(grpc_port=grpc_port)
             _display_port_in_ui(grpc_port, os.getpid())
+            _delayed_display_port(grpc_port, os.getpid())
             return
     except Exception as exc:
         _log("Failed to auto-start gRPC Server: " + str(exc))
@@ -251,6 +330,8 @@ def show_mcp_info(analysis=None):
         import System
         import System.Windows.Forms as WinForms
         pid = System.Diagnostics.Process.GetCurrentProcess().Id
+        if current_port is not None:
+            _display_port_in_ui(current_port, pid)
         info_lines = [
             "==================================",
             " ANSYS Unified MCP Server Status ",
@@ -263,8 +344,8 @@ def show_mcp_info(analysis=None):
             "",
             "Status: Active and listening for AI / PyMechanical connections.",
         ]
-        WinForms.print("[UI_OUTPUT] " + str(
-            "\n".join(info_lines)),
+        WinForms.MessageBox.Show(
+            "\n".join(info_lines),
             "Workbench MCP - Mechanical Server Info",
             WinForms.MessageBoxButtons.OK,
             WinForms.MessageBoxIcon.Information
