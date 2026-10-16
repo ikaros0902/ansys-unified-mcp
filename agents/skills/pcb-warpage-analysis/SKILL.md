@@ -40,3 +40,5 @@ flowchart TD
 
 ## 輸出模板
 - [`assets/apdl_rom_materials_template.mac`](assets/apdl_rom_materials_template.mac)：ROM 複合材料等效常數 APDL 巨集骨架，含彈性模數 (EX)、CTE (ALPX)、泊松比 (PRXY) 溫度相關佔位符，對應 `02_calculate_rom_materials.py` 的 MP/MPTEMP/MPDATA 命令順序規則。
+
+> 若疊構中 underfill、mold compound 等膠材需考慮應力鬆弛或溫度相關的黏彈性行為（而非本流程預設的純熱-結構線彈性），材料模型選型見 [`ansys-mechanical/references/hyperelastic_viscoelastic_materials.md`](../ansys-mechanical/references/hyperelastic_viscoelastic_materials.md)（Prony series、WLF/TN 時溫等效移位函數）。

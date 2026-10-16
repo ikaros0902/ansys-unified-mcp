@@ -1,0 +1,23 @@
+{
+  "skill": "ansys-mesh",
+  "evals": [
+    {
+      "eval_id": 1,
+      "prompt": "Edge sizing 設 Hard 加 bias 之後旁邊網格尺寸跳很大，為何？",
+      "assertions": [
+        "有提到 Hard/Bias 的邊會覆蓋鄰近 Max Face Size 或全域設定，造成交界處尺寸跳躍",
+        "有建議設定前先確認鄰接面是否需要對應調整，避免交界處畸變單元",
+        "沒有出現未經驗證、憑印象編造的 ACT API 或參數名稱"
+      ]
+    },
+    {
+      "eval_id": 2,
+      "prompt": "LS-DYNA 顯式模型全域 CFL 最小時間步長一直卡在瓶頸零件，想用 Node Merge 處理，具體怎麼做？",
+      "assertions": [
+        "有提到 Node Merge 用於縫合微小狹縫/極短邊，並給出類似 0.3mm 的縫合距離門檻參考",
+        "有提到嚴禁修改 Mesh 全域 DefeatureTolerance/PinchTolerance，應使用局部控制項",
+        "有提到調整後要重新呼叫 TimeStepCalc 刷新驗證，而非盲目全域重新劃分"
+      ]
+    }
+  ]
+}

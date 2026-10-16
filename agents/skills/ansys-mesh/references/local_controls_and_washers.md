@@ -86,8 +86,8 @@ def create_edge_washer(edge_ids, layer_num=1):
 
 針對 2D 殼體或實體表面，透過 `Model.Mesh.AddFaceMeshing()` 強制生成結構化映射網格：
 1. **拓撲角點原則**：四邊形面網格需要 4 個角點（Corners）。若曲面為不規則多邊形，需透過 `Specified Corners` 指定頂點。
-2. **內部節點平衡 ($N+4$ 法則)**：
-   - 邊線節點數（$N$）與角點數（$C$）需滿足映射拓撲平衡。
-   - `Specified Ends`：發散 2 條網格線。
-   - `Specified Sides`：發散 3 條網格線。
-   - `Specified Corners`：發散 4 條網格線。
+2. **三種頂點類型與發散網格線數**：
+   - `Specified Ends`：該點發散 2 條網格線。
+   - `Specified Sides`：該點發散 3 條網格線。
+   - `Specified Corners`：該點發散 4 條網格線。
+3. **$N+4$ 法則**：來源：ANSYS Meshing Full Free Course Session 4.3（Face Meshing）原文：「when you select for example one point as a specified corner you have to select Five Points as specified ends... therefore the law here would be n plus 4, n being the number of points you select as a specified corners」。即 $N$ 是指定的 `Specified Corners` 數量；配對所需的 `Specified Ends` 數量為 $N+4$（例如 $N=0$ 時至少需要 4 個 Ends；$N=1$ 時需要 5 個 Ends；$N=2$ 時需要 6 個 Ends）。未按此比例配對會導致軟體解不出映射拓樸，Mapped Mesh 生成失敗。操作細節見 `advanced_controls_gui_operations.md` 第四節。

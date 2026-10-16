@@ -35,15 +35,18 @@ flowchart LR
 
 ## 二、模組路由表 (Module Router)
 
-深入知識規劃外置於 `references/`；下列手冊**尚未建立**，故以純文字列示，待實際撰寫後再恢復為連結。
+深入知識規劃外置於 `references/`：
 
-| 主題分類 | 參考文件 | 狀態 | 核心內容 |
-| :--- | :--- | :--- | :--- |
-| **ACT API 查證** | `api_search(query, product="mechanical")` | 可用 | ACT Wizard/Extension 相關類別存在性查證；深度語法用 `search_ansys_docs` 查 ACT Developer's Guide |
-| **IronPython 2.7 陷阱** | `references/ironpython_quirks.md` | 待建立 | `exec` 閉包限制、`__name__` 差異、`clr` 重複載入防護 |
-| **非同步檔案監聽** | `references/filesystemwatcher_pattern.md` | 待建立 | `FileSystemWatcher`、WPF Dispatcher 與去重鎖 |
-| **Wizard 程式化呼叫** | `references/wizard_api.md` | 待建立 | `ExtensionManager` 操作加密 `.wbex` 與 Component 刷新 |
-| **Wizard Manifest 骨架** | [`assets/wbex_manifest_template.xml`](assets/wbex_manifest_template.xml) | 已建立 | `.wbex` 外掛描述檔 XML 骨架，含 Extension name/version、Interfaces、Wizard entry point 與 Step/Group/Property 佔位符，欄位對應 `scripts/invoke_act_wizard.py` 與 `scripts/act_wizard_automation.py` 之 `GetWizardByName` / `Steps[].Properties[][]` 呼叫 |
+| 主題分類 | 參考文件 | 核心內容 |
+| :--- | :--- | :--- |
+| **ACT API 查證** | `api_search(query, product="mechanical")` | ACT Wizard/Extension 相關類別存在性查證；深度語法用 `search_ansys_docs` 查 ACT Developer's Guide |
+| **IronPython 2.7 陷阱** | [`references/ironpython_quirks.md`](references/ironpython_quirks.md) | `exec` 閉包限制、`__name__` 差異、`clr` 重複載入防護 |
+| **IronPython → CPython 遷移** | [`references/ironpython_to_cpython_migration.md`](references/ironpython_to_cpython_migration.md) | 2026 R1 雙引擎差異：`str()`/`len()`/`out`參數/Enum解析/`import`順序、`Ansys.UI.Toolkit` 相容限制 |
+| **Extension XML 完整結構** | [`references/extension_xml_schema.md`](references/extension_xml_schema.md) | `<extension>` 根節點所有子標籤與屬性、`<interface>`/`<simdata>`/`<workflow>`/`<wizard>` schema |
+| **Workbench vs Mechanical API** | [`references/workbench_vs_mechanical_api.md`](references/workbench_vs_mechanical_api.md) | DataModel 入口點對照、API 命名空間對照、Task/Parameter/Property 存取範例 |
+| **非同步檔案監聽** | [`references/filesystemwatcher_pattern.md`](references/filesystemwatcher_pattern.md) | `FileSystemWatcher`、WPF Dispatcher 與去重鎖 |
+| **Wizard 程式化呼叫** | [`references/wizard_api.md`](references/wizard_api.md) | `ExtensionManager` 操作加密 `.wbex` 與 Component 刷新 |
+| **Wizard Manifest 骨架** | [`assets/wbex_manifest_template.xml`](assets/wbex_manifest_template.xml) | `.wbex` 外掛描述檔 XML 骨架，含 Extension name/version、Interfaces、Wizard entry point 與 Step/Group/Property 佔位符，欄位對應 `scripts/invoke_act_wizard.py` 與 `scripts/act_wizard_automation.py` 之 `GetWizardByName` / `Steps[].Properties[][]` 呼叫 |
 
 > 實作參考可暫先查閱 `scripts/` 下的可執行範例。
 

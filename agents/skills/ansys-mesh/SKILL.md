@@ -140,6 +140,7 @@ dt >= 50 ns}
 | 工程領域 / 任務情境 | 專精手冊 | 核心重點與關鍵規範 |
 |---|---|---|
 | **第一版 Sizing 策略與品質工作流** | [`references/sizing_strategy_and_quality_workflow.md`](references/sizing_strategy_and_quality_workflow.md) | Adaptive Sizing Resolution/Transition 取捨、Curvature/Proximity、Quality Worksheet 失敗元素追蹤、Feature Detection+Suppress。 |
+| **12 項進階控制 GUI 操作要點** | [`references/advanced_controls_gui_operations.md`](references/advanced_controls_gui_operations.md) | Contact Sizing CAD 前提、Face Meshing N+4 法則、Pinch 雙重容差限制、Match Control 旋轉軸陷阱、Structured Tetrahedral CAD 前置切割流程。 |
 | **CFL 步長調優與分群隔離** | [`references/cfl_tuning_and_group_batching.md`](references/cfl_tuning_and_group_batching.md) | Group Batching 演算法、CFL 瓶頸定位、Node Merge 縫合微小特徵。 |
 | **局部控制與墊圈結構** | [`references/local_controls_and_washers.md`](references/local_controls_and_washers.md) | 孔邊 Edge Sizing、圓孔 Washer 墊圈幾何拓撲、局部 Pinch 控制項。 |
 | **網格劃分方法與幾何修復** | [`references/mesh_methods_and_geometry_healing.md`](references/mesh_methods_and_geometry_healing.md) | MultiZone、Sweep、Tet 方法選擇依據，CAD 拓撲微小特徵修復。 |

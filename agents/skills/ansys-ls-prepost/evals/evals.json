@@ -1,0 +1,23 @@
+{
+  "skill": "ansys-ls-prepost",
+  "evals": [
+    {
+      "eval_id": 1,
+      "prompt": "d3plot 打開後要量兩個零件在撞擊瞬間的最小間隙，步驟？",
+      "assertions": [
+        "有提到使用 Measure 工具下的 Separation 量測功能（part 對 part 的分離距離）",
+        "有提醒量測或擷取報告用圖前，Displacement Scale Factor 需設回 1.0，否則量到的是視覺放大後幾何而非真實變形量",
+        "沒有出現未經驗證、憑印象編造的 cfile 指令"
+      ]
+    },
+    {
+      "eval_id": 2,
+      "prompt": "我想知道某個節點在整個撞擊過程中位移隨時間的詳細變化，但 d3plot 存的時間點太稀疏，有沒有辦法拿到更細的時間解析度？",
+      "assertions": [
+        "有提到 d3plot 的時間解析度受限於 *DATABASE_BINARY_D3PLOT 輸出間隔",
+        "有提到應改用 d3thdt（Time History File）或 binout 取得更細時間解析度，而非逐步切換 d3plot states",
+        "沒有出現未經驗證、憑印象編造的 cfile 指令"
+      ]
+    }
+  ]
+}

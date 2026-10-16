@@ -1,0 +1,23 @@
+{
+  "skill": "ansys-lsdyna",
+  "evals": [
+    {
+      "eval_id": 1,
+      "prompt": "LS-DYNA 跑到一半想停下來存 restart，之後再接著算，怎麼做？",
+      "assertions": [
+        "有提到 d3kil 與 sw1（在輸入檔案目錄建立 d3kil 檔案觸發 sense switch）",
+        "有提到用 sw1 停止會產生 d3dump 重啟檔，可用 simple restart 接續運算",
+        "沒有出現未經驗證的 cfile 指令或憑印象編造的 sense switch 代碼（如宣稱 sw2/sw3 的具體效果）"
+      ]
+    },
+    {
+      "eval_id": 2,
+      "prompt": "落摔分析跑完想看沙漏能與質量縮放是否超標，要看哪個檔案、怎麼判斷合格？",
+      "assertions": [
+        "有提到監控 glstat 歷程曲線",
+        "有提到沙漏能佔比門檻（建議 <2%、嚴禁 >5%）與質量縮放門檻（>2% 警示、>5% 判定無效）",
+        "沒有出現未經驗證的具體數值或憑空捏造的檔案格式說明"
+      ]
+    }
+  ]
+}

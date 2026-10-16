@@ -54,6 +54,7 @@ flowchart TD
 | **接觸演算法** | `references/contacts.md` | `*CONTACT_AUTOMATIC_SURFACE_TO_SURFACE`、`SOFT=0/1/2` 剛度算法選型、摩擦係數與穿透處理。 |
 | **初始與邊界** | `references/initial_boundary.md` | 撞擊初速度計算公式、`*INITIAL_VELOCITY_GENERATION`、`*RIGIDWALL_PLANAR` 剛性地坪與約束設定。 |
 | **能量診斷** | `references/energy_diagnostics.md` | **【判斷力庫】** 沙漏能佔比門檻、動能轉內能平滑度、接觸滑移能負值排查。 |
+| **Drop Test Wizard 實戰與排障** | [`references/drop_test_wizard_workflow.md`](references/drop_test_wizard_workflow.md) | GUI Wizard 自動化流程、Contact Property Interference/Soft Constraint 排障、負接觸能診斷步驟。 |
 | **質量縮放** | `references/mass_scaling_rules.md` | **【判斷力庫】** CFL 時間步長、`DT2MS` 負值規則、質量增加率三級控制 (<2% / <5%) 與質心檢驗。 |
 | **自動化腳本** | `scripts/run_drop_test_demo.py` | 完整落摔關鍵字卡生成腳本，內建 glstat 能量平衡與質量縮放自動評估函數。 |
 
