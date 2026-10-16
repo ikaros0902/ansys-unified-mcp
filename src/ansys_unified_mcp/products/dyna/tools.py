@@ -12,7 +12,9 @@ from ansys_unified_mcp.shared import mcp, as_envelope as _envelope
 from ansys_unified_mcp.products.dyna import controller
 
 
-@mcp.tool()
+@mcp.tool(
+    annotations={"readOnlyHint": True, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False}
+)
 def dyna_create_keyword_deck(endtim: float, hourglass_control: bool = False) -> dict:
     """離線生成基礎 LS-DYNA keyword deck 文字（*CONTROL_TERMINATION，
     可選附加 *CONTROL_ENERGY 沙漏能控制）。
@@ -26,7 +28,9 @@ def dyna_create_keyword_deck(endtim: float, hourglass_control: bool = False) -> 
     return _envelope(result)
 
 
-@mcp.tool()
+@mcp.tool(
+    annotations={"readOnlyHint": False, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False}
+)
 def dyna_export_keyword_file(output_path: str, endtim: float, hourglass_control: bool = False) -> dict:
     """離線生成基礎 keyword deck 並寫出為 .k 檔。
 
@@ -41,14 +45,18 @@ def dyna_export_keyword_file(output_path: str, endtim: float, hourglass_control:
     return _envelope(result)
 
 
-@mcp.tool()
+@mcp.tool(
+    annotations={"readOnlyHint": True, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False}
+)
 def dyna_list_keyword_types() -> dict:
     """回傳常用 LS-DYNA keyword 類別名稱清單（白名單篩選，非 PyDYNA 全集）。"""
     result = controller.list_keyword_types()
     return _envelope(result)
 
 
-@mcp.tool()
+@mcp.tool(
+    annotations={"readOnlyHint": False, "destructiveHint": False, "idempotentHint": False, "openWorldHint": False}
+)
 def dyna_solve(
     k_file_path: str,
     ncpu: int = 4,
@@ -56,21 +64,29 @@ def dyna_solve(
     working_dir: str = "",
     dry_run: bool = False,
     timeout: float = 300.0,
+    precision: str = "dp",
 ) -> dict:
-    """調度本機 LS-DYNA 求解器 (lsdyna_dp.exe / lsdyna.exe) 執行計算。
+    """調度本機 LS-DYNA 求解器 (lsdyna_dp.exe / lsdyna_sp.exe) 執行計算。
 
     Args:
         k_file_path: 輸入 keyword 檔案 (.k / .key) 路徑。
-        ncpu: 使用的 CPU 核心數 (預設 4)。
+        ncpu: 使用的 CPU 核心數 (預設 4)。SMP 求解器下傳負值會讓求解器以
+            可重現 (reproducible) 的方式運算，但耗時較長；具體增幅手冊
+            未載明，不同模型而異 (來源: LS-Run_Users_Guide)。
         memory: 記憶體配置字串 (例如 "100m", "500m")。
         working_dir: 工作目錄路徑 (留空則使用 k 檔案所在目錄)。
         dry_run: 若為 True 則僅驗證並回傳預計執行的求解命令與參數，不實際啟動求解器進程。
         timeout: 求解超時秒數 (預設 300 秒)。
+        precision: 求解精度，"dp" (雙精度，預設) 或 "sp" (單精度)，決定
+            優先搜尋的求解器執行檔；放在參數列表最後以維持既有呼叫方
+            (依位置傳參者) 向後相容。詳細選用建議見
+            `ansys-lsdyna/references/solver_execution_lsrun.md`。
     """
     result = controller.solve_keyword(
         k_file_path=k_file_path,
         ncpu=ncpu,
         memory=memory,
+        precision=precision,
         working_dir=working_dir,
         dry_run=dry_run,
         timeout=timeout,
@@ -78,7 +94,9 @@ def dyna_solve(
     return _envelope(result)
 
 
-@mcp.tool()
+@mcp.tool(
+    annotations={"readOnlyHint": False, "destructiveHint": False, "idempotentHint": False, "openWorldHint": False}
+)
 def dyna_run_prepost(
     cfile_path: str = "",
     script_content: str = "",
@@ -105,7 +123,9 @@ def dyna_run_prepost(
     return _envelope(result)
 
 
-@mcp.tool()
+@mcp.tool(
+    annotations={"readOnlyHint": False, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False}
+)
 def lsdyna_setup_shock_analysis(
     pulse_type: str = "half_sine",
     peak_g: float = 50.0,
@@ -132,7 +152,9 @@ def lsdyna_setup_shock_analysis(
     return _envelope(result)
 
 
-@mcp.tool()
+@mcp.tool(
+    annotations={"readOnlyHint": False, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False}
+)
 def lsdyna_setup_drop_test(
     drop_height_mm: float = 1000.0,
     impact_surface: str = "rigid_floor",

@@ -127,19 +127,27 @@ class DynaController:
             return {"ok": False, "error": str(exc)}
 
     @staticmethod
-    def find_dyna_solver() -> Optional[Path]:
-        """自動偵測本機 LS-DYNA 求解器 (優先尋找 lsdyna_dp.exe 或 lsdyna.exe)。"""
+    def find_dyna_solver(precision: str = "dp") -> Optional[Path]:
+        """自動偵測本機 LS-DYNA 求解器。
+
+        Args:
+            precision: "dp"（雙精度，預設）或 "sp"（單精度）。優先尋找對應
+                精度的執行檔；找不到時回退掃描其他候選名稱（維持舊行為）。
+        """
         import os
+        candidates = ("lsdyna_dp.exe", "lsdyna_sp.exe", "lsdyna.exe")
+        if precision == "sp":
+            candidates = ("lsdyna_sp.exe", "lsdyna_dp.exe", "lsdyna.exe")
         for env_var in sorted([k for k in os.environ if k.startswith("AWP_ROOT")], reverse=True):
             root = Path(os.environ[env_var])
             bin_dir = root / "ansys" / "bin" / "winx64"
-            for candidate in ("lsdyna_dp.exe", "lsdyna_sp.exe", "lsdyna.exe"):
+            for candidate in candidates:
                 p = bin_dir / candidate
                 if p.is_file():
                     return p
         for ver in ("v251", "v242", "v232"):
             base = Path(f"C:/Program Files/ANSYS Inc/{ver}/ansys/bin/winx64")
-            for candidate in ("lsdyna_dp.exe", "lsdyna_sp.exe", "lsdyna.exe"):
+            for candidate in candidates:
                 p = base / candidate
                 if p.is_file():
                     return p
@@ -172,15 +180,29 @@ class DynaController:
         working_dir: str = "",
         dry_run: bool = False,
         timeout: float = 300.0,
+        precision: str = "dp",
     ) -> dict:
-        """調度本機 LS-DYNA 求解器執行計算。"""
+        """調度本機 LS-DYNA 求解器執行計算。
+
+        Args:
+            precision: "dp"（雙精度，預設）或 "sp"（單精度），決定優先搜尋
+                的求解器執行檔；找不到對應精度時會回退搜尋其他候選檔名。
+                放在參數列表最後以維持既有依位置傳參呼叫方的向後相容。
+        """
         k_path = Path(k_file_path)
         if not dry_run and not k_path.is_file():
             return {"ok": False, "error": f"Keyword 檔案不存在: {k_file_path}"}
 
-        solver_exe = self.find_dyna_solver()
+        solver_exe = self.find_dyna_solver(precision=precision)
         if not dry_run and solver_exe is None:
-            return {"ok": False, "error": "未偵測到本機 LS-DYNA 求解器 (lsdyna_dp.exe)。"}
+            return {
+                "ok": False,
+                "error": (
+                    f"未偵測到本機 LS-DYNA 求解器 (precision={precision})。"
+                    "已搜尋 AWP_ROOT* 環境變數與 C:/Program Files/ANSYS Inc/{v251,v242,v232}"
+                    "/ansys/bin/winx64 下的 lsdyna_dp.exe / lsdyna_sp.exe / lsdyna.exe。"
+                ),
+            }
 
         work_dir = Path(working_dir) if working_dir else k_path.parent
         cmd = [

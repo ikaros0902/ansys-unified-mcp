@@ -560,7 +560,7 @@ Ruff 目標py310、E／F／W，排除官方語料、runtime與IronPython plugins
 | `dyna_create_keyword_deck(endtim: float, hourglass_control: bool=False)` | — | 離線生成含 *CONTROL_TERMINATION 的基礎 deck；可加能量追蹤卡。 |
 | `dyna_export_keyword_file(output_path: str, endtim: float, hourglass_control: bool=False)` | — | 離線生成基礎 keyword deck 並寫出為 .k 檔。 |
 | `dyna_list_keyword_types()` | — | 回傳常用 LS-DYNA keyword 類別名稱清單（白名單篩選，非 PyDYNA 全集）。 |
-| `dyna_solve(k_file_path: str, ncpu: int=4, memory: str='100m', working_dir: str='', dry_run: bool=False, timeout: float=300.0)` | — | 調度本機 LS-DYNA 求解器 (lsdyna_dp.exe / lsdyna.exe) 執行計算。 |
+| `dyna_solve(k_file_path: str, ncpu: int=4, memory: str='100m', working_dir: str='', dry_run: bool=False, timeout: float=300.0, precision: str='dp')` | — | 調度本機 LS-DYNA 求解器 (lsdyna_dp.exe / lsdyna_sp.exe) 執行計算；precision 放在參數列表最後以維持既有依位置傳參呼叫方相容。 |
 | `dyna_run_prepost(cfile_path: str='', script_content: str='', working_dir: str='', dry_run: bool=False, timeout: float=120.0)` | — | 調度本機 LS-PrePost (lsprepost.exe) 以無頭批次模式執行 SCL/cfile 命令腳本。 |
 | `lsdyna_setup_shock_analysis(pulse_type: str='half_sine', peak_g: float=50.0, duration_ms: float=11.0, direction: str='Z', output_k_path: str='')` | — | 建立衝擊曲線與 keyword 骨架；載荷方向及完整模型仍需補齊。 |
 | `lsdyna_setup_drop_test(drop_height_mm: float=1000.0, impact_surface: str='rigid_floor', gravity_g: float=9.80665, output_k_path: str='')` | — | 建立 -Z 初速與剛性平面 keyword 骨架，非完整落摔模型。 |
