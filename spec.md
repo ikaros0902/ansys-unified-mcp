@@ -442,7 +442,6 @@ APIKB 資料庫固定在 repository 的 `Documentation_clean/api_kb.sqlite`，�
 | `ansys-spaceclaim-defeature` | 特徵掃描、保護群組、批量移除 |
 | `ansys-spaceclaim-modeling` | 幾何前處理、中面、孔分組、壓印與PMDB |
 | `ansys-submodeling-dpf` | DPF插值、局部子模型、MAPDL pool、切面驗證腳本 |
-| `antigravity-notebooklm` | NotebookLM／nlm外部配置指引；不是server內建連線能力 |
 | `pcb-warpage-analysis` | 疊構幾何、ROM材料、3-2-1支承、熱翹曲腳本 |
 | `pdf-to-md` | PDF轉Markdown語料工具；不是MCP工具 |
 | `pymechanical-operations` | gRPC、ACT scoping、網格操作 |
@@ -1043,7 +1042,6 @@ Ruff 目標py310、E／F／W，排除官方語料、runtime與IronPython plugins
 - `agents/skills/ansys-spaceclaim-defeature/SKILL.md`
 - `agents/skills/ansys-spaceclaim-modeling/SKILL.md`
 - `agents/skills/ansys-submodeling-dpf/SKILL.md`
-- `agents/skills/antigravity-notebooklm/SKILL.md`
 - `agents/skills/pcb-warpage-analysis/SKILL.md`
 - `agents/skills/pdf-to-md/SKILL.md`
 - `agents/skills/pr-review-zh/SKILL.md`
