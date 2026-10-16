@@ -47,6 +47,8 @@ flowchart TD
 
 | 領域分類 | 專精子手冊路徑 | 核心內容與工程焦點 |
 | :--- | :--- | :--- |
+| **求解執行與 LS-Run 參數對應** | `references/solver_execution_lsrun.md` | NCPU/precision/MPP 選擇、sense switch 中止（`d3kil`/`sw1`）與 simple restart、Re-run 會刪結果的風險提示。 |
+| **官方手冊語法查證** | `search_ansys_docs(query, doc="LS-DYNA_Users_Guide")` 或 `doc="LS-DYNA_Implicit_Analysis_Guide"` | 關鍵字卡片欄位、執行語法最終真實來源；寫新卡片前先查證 |
 | **單元截面** | `references/parts_and_sections.md` | `*PART`、`*SECTION_SOLID` (ELFORM=1/2)、`*SECTION_SHELL` (NIP=5)、沙漏阻尼 `*HOURGLASS` (IHQ=4)。 |
 | **材料模型** | `references/material_cards.md` | `*MAT_024` 彈塑性卡片詳細欄位、LCSS 應變硬化曲線、應變率效應、`*MAT_020` 剛體定義。 |
 | **接觸演算法** | `references/contacts.md` | `*CONTACT_AUTOMATIC_SURFACE_TO_SURFACE`、`SOFT=0/1/2` 剛度算法選型、摩擦係數與穿透處理。 |

@@ -47,6 +47,7 @@ Pareto 前沿非支配解集搜尋與實體驗證]
 
 | 領域分類 | 專精子手冊路徑 | 核心內容與工程焦點 |
 | :--- | :--- | :--- |
+| **API 查證** | `api_search(query, product="optislang")` | `ansys.optislang.core.*` 類別/成員存在性查證，避免幻覺 API |
 | **實驗設計** | `references/doe_sampling.md` | 拉丁超立方抽樣 (LHS) 原理、空間填充準則、樣本容量估算 ($N \ge 10k$)、機率分佈配置。 |
 | **敏感度矩陣** | `references/sensitivity_matrix.md` | 總靈敏度指數 (TSI) Sobol 方差分解、Pearson/Spearman 相關矩陣、變數篩選與降維準則 ($\text{TSI} < 0.05$)。 |
 | **MOP 元模型** | `references/mop_metamodel.md` | MOP 最佳模型競賽架構（多項式/MLS/Kriging/MLP）、最佳子空間搜索、ProxySolver 導出與毫秒級推論。 |

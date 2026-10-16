@@ -39,6 +39,7 @@ flowchart LR
 
 | 主題分類 | 參考文件 | 狀態 | 核心內容 |
 | :--- | :--- | :--- | :--- |
+| **ACT API 查證** | `api_search(query, product="mechanical")` | 可用 | ACT Wizard/Extension 相關類別存在性查證；深度語法用 `search_ansys_docs` 查 ACT Developer's Guide |
 | **IronPython 2.7 陷阱** | `references/ironpython_quirks.md` | 待建立 | `exec` 閉包限制、`__name__` 差異、`clr` 重複載入防護 |
 | **非同步檔案監聽** | `references/filesystemwatcher_pattern.md` | 待建立 | `FileSystemWatcher`、WPF Dispatcher 與去重鎖 |
 | **Wizard 程式化呼叫** | `references/wizard_api.md` | 待建立 | `ExtensionManager` 操作加密 `.wbex` 與 Component 刷新 |

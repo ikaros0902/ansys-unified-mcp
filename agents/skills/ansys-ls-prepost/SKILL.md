@@ -19,6 +19,8 @@ LS-PrePost 具備三層腳本體系，依需求選用：
 
 | 功能分類 | 參考手冊 | 核心內容要點 |
 |---|---|---|
+| GUI 結果檢視（開檔/Fringe/量測/截面） | `references/gui_result_review_sop.md` | d3plot 載入、Fringe Range、Measure/Separation、Section Plane（部分未驗證，見檔內標註） |
+| 官方手冊語法查證 | `search_ansys_docs(query, doc="Ansys_LS-PrePost_Users_Guide")` 或 `doc="lsppscripting"` | cfile/SCL 語法、選單路徑的最終真實來源；寫新指令前先查證，不確定就查，不要憑印象編 |
 | 會話與命令行檔案 | `references/session_and_cfile.md` | SCL vs cfile vs Python 比較、傳參調用規範 |
 | 模型資料查詢 | `references/model_query.md` | DataCenter 提取器、型別代碼、選取緩衝區 |
 | 狀態與結果場 | `references/states_and_results.md` | `SCLSwitchStateTo`、應力/應變張量、位移向量、雲圖、binout |

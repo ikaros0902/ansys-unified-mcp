@@ -47,6 +47,7 @@ phase_gate:
 ### 2. 原生 SpaceClaim IronPython 路線
 | 功能分類 | 參考文件 | 內容說明 |
 | :--- | :--- | :--- |
+| **API 查證** | `api_search(query, product="spaceclaim")` | 原生 `SpaceClaim.Api.V<ver>.Scripting` 類別/成員存在性查證，避免幻覺 API |
 | **版本與 Session** | [`references/native_session_and_versions.md`](references/native_session_and_versions.md) | `SpaceClaim.Api` 載入、單位與更新步進 |
 | **實體選擇器** | [`references/native_selection.md`](references/native_selection.md) | `Selection` 拓撲過濾與 `PowerSelection` |
 | **特徵與拓撲命令** | [`references/native_commands.md`](references/native_commands.md) | `Midsurface` 中面、`ForceShare` 拓撲共享、`Fill` 填補 |

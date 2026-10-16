@@ -101,3 +101,4 @@ python skills/shock-analysis-workflow/scripts/test_session_07.py
 | 手冊名稱 | 內容摘要 |
 | :--- | :--- |
 | [`references/energy_balance_tracking.md`](references/energy_balance_tracking.md) | glstat 能量平衡監控、沙漏能與接觸能門禁判讀及阻斷演算法 |
+| [`ansys-lsdyna/references/solver_execution_lsrun.md`](../../ansys-lsdyna/references/solver_execution_lsrun.md) | NCPU/precision/memory 參數對應、sense switch 中止（寫 `d3kil`）與 simple restart 續算做法 |

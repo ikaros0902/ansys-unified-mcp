@@ -1,5 +1,7 @@
 # ANSYS Mechanical 網格劃分與品質控制指南
 
+> 第一版 Sizing 策略選擇（Adaptive Resolution/Transition 取捨、Quality Worksheet 工作流）見 `ansys-mesh/references/sizing_strategy_and_quality_workflow.md`。
+
 本手冊提供 ANSYS Mechanical 網格控制之標準 ACT 程式碼規範，涵蓋全域網格設定、局部尺寸控制（Sizing）、特徵劃分方法（Method）、薄壁結構多層單元要求，以及網格品質量化評估標準。
 
 ---

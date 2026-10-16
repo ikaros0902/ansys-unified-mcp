@@ -76,6 +76,7 @@ flowchart LR
 
 | 分析階段 / 核心問題 | 推薦專精子手冊 | 核心內容要點 |
 |---|---|---|
+| ACT API 存在性與簽名查證 | `api_search(query, product="mechanical")` / `api_validate_script(code, product="mechanical")` | 撰寫 ACT 腳本前先查證類別/成員是否存在，避免幻覺 API；查手冊細節改用 `search_ansys_docs` |
 | 材料導入與批次映射 | [`references/materials.md`](references/materials.md) | XML 材料庫匯入、EngineeringData、溫變非線性屬性指派 |
 | 網格尺寸、方法與品質檢驗 | [`references/mesh.md`](references/mesh.md) | Sizing、Method、網格品質量化評估標準 (Skewness/Orthogonal) |
 | 接觸對建立、穿透與震盪 | [`references/connections_and_contacts.md`](references/connections_and_contacts.md) | 接觸對公式、法向剛度、Pinball 範圍、穩定化阻尼 |

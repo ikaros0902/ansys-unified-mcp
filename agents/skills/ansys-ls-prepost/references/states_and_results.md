@@ -44,3 +44,8 @@ LS-PrePost scripting includes a binout reader for ASCII-family results
 - Always check `SCLSwitchStateTo` returned 1 before reading state-dependent data.
 - Tensor is 6 components (xyz[6]); resolve von Mises / principals in-script if
   needed.
+- **Time resolution**: d3plot only has as many time points as saved states
+  (`*DATABASE_BINARY_D3PLOT` output interval). For finer time resolution on a
+  specific node/element, use `d3thdt` (Time History File) or `binout`
+  (ASCII-family results, see the binout reader note above) instead of
+  stepping through d3plot states.
