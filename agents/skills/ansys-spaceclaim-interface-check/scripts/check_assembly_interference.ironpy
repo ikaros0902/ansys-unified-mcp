@@ -1,0 +1,233 @@
+# -*- coding: utf-8 -*-
+# SpaceClaim server-side IronPython assembly interference checker (ASCII only).
+# Two-stage detection: bounding-box broad phase + boolean-intersect narrow phase.
+# Designed to run inside SpaceClaim before Mechanical mesh generation, so that
+# geometric interferences are caught early (cheaper to fix than after meshing).
+#
+# API verification note (see references/body_interference_detection.md section III):
+#   - Combine.Intersect(target, tool, options, info) -> CombineResult   [confirmed in spaceclaim_api.json]
+#   - Copy.Execute(selection, copyToSelection) -> CopyResult            [confirmed in spaceclaim_api.json]
+#   - CopyResult.CreatedObjects (IList)                                 [confirmed in spaceclaim_api.json]
+#   - Body.GetBoundingBox(Matrix.Identity)                              [confirmed in spaceclaim_api.json]
+#   - CombineResult exposes NO documented properties in the extracted inventory
+#     (properties: [] in spaceclaim_api.json). Reading the resulting intersection
+#     body back out of a CombineResult is therefore UNVERIFIED. This script uses
+#     a defensive fallback: try the common attribute names used in other ACT
+#     snippets (CreatedBodies / Bodies), and if none resolve, mark the pair as
+#     "needs_manual_review" instead of silently assuming zero/no interference.
+#   - Suppressed / IsSuppressed property name is NOT found in spaceclaim_api.json
+#     -> treat as "pending api_search verification"; this script defaults every
+#     body to included (does not attempt to filter by suppression state).
+import sys
+result = {}
+
+def get_spaceclaim_api():
+    # Dynamically resolve the installed SpaceClaim.Api.V2xx assembly version.
+    import System
+    loaded = []
+    for asm in System.AppDomain.CurrentDomain.GetAssemblies():
+        try:
+            nm = asm.GetName().Name
+        except Exception:
+            continue
+        if nm and nm.startswith("SpaceClaim.Api.V") and nm.count(".") == 2:
+            loaded.append(nm.split(".")[-1])
+
+    def _ver(v):
+        try:
+            return int(v[1:])
+        except Exception:
+            return 0
+
+    names = sorted(set(loaded), key=_ver, reverse=True)
+    names += ["V262", "V261", "V252", "V251", "V242", "V241", "V232", "V231"]
+    import clr
+    for ver in names:
+        try:
+            clr.AddReference("SpaceClaim.Api." + ver)
+            clr.AddReference("SpaceClaim.Api." + ver + ".Scripting")
+            import SpaceClaim.Api
+            sc_api = getattr(SpaceClaim.Api, ver)
+            clr.ImportExtensions(sc_api.Scripting.Extensions.DesignFaceExtensions)
+            clr.ImportExtensions(sc_api.Scripting.Extensions.DesignEdgeExtensions)
+            clr.ImportExtensions(sc_api.Scripting.Extensions.DesignBodyExtensions)
+            clr.ImportExtensions(sc_api.Scripting.Extensions.ComponentExtensions)
+            clr.ImportExtensions(sc_api.Scripting.Extensions.DocObjectExtensions)
+            return sc_api, ver
+        except Exception:
+            continue
+    raise RuntimeError("SpaceClaim API Reference Error: compatible version not found")
+
+def _arg(d, k, default):
+    # Read an argument from the argsDict-like object (ACT Properties bag or plain dict).
+    try:
+        if d.ContainsKey(k):
+            return d[k]
+    except Exception:
+        try:
+            return d[k]
+        except Exception:
+            pass
+    return default
+
+def _f(d, k, default):
+    try:
+        return float(_arg(d, k, default))
+    except Exception:
+        return float(default)
+
+try:
+    sc, api_ver = get_spaceclaim_api()
+    result["api"] = api_ver
+
+    Selection = sc.Scripting.Selection.Selection
+    DocumentHelper = sc.Scripting.Helpers.DocumentHelper
+    Combine = sc.Scripting.Commands.Combine
+    Copy = sc.Scripting.Commands.Copy
+    MakeSolidsOptions = sc.Scripting.Commands.MakeSolidsOptions
+
+    # volume_tolerance_mm3: minimum intersection volume (mm^3) to count as real interference.
+    # Default 1e-3 mm^3 (= 1e-9 m^3) absorbs micron-level assembly tolerances (thread fit, press fit).
+    volume_tolerance_mm3 = _f(argsDict, "volume_tolerance_mm3", 1e-3)
+
+    root_part = DocumentHelper.GetRootPart()
+
+    # Step 1: collect all bodies in the active document, walking Components recursively.
+    all_bodies = []
+
+    def collect_bodies(part):
+        for comp in part.Components:
+            collect_bodies(comp.Content)
+        for body in part.Bodies:
+            all_bodies.append(body)
+
+    collect_bodies(root_part)
+
+    body_records = []
+    for b in all_bodies:
+        try:
+            bbox = b.GetBoundingBox(sc.Geometry.Matrix.Identity)
+            box_min = bbox.MinCorner
+            box_max = bbox.MaxCorner
+        except Exception:
+            # Body with no valid shape/bounding box is skipped but reported.
+            body_records.append({
+                "name": b.Master.Name if hasattr(b, "Master") else str(b),
+                "error": "no_bounding_box"
+            })
+            continue
+        body_records.append({
+            "ref": b,
+            "name": b.Master.Name if hasattr(b, "Master") else str(b),
+            "min": (box_min.X, box_min.Y, box_min.Z),
+            "max": (box_max.X, box_max.Y, box_max.Z)
+        })
+
+    valid_records = [r for r in body_records if "ref" in r]
+    total_bodies = len(valid_records)
+    total_pairs = total_bodies * (total_bodies - 1) // 2 if total_bodies > 1 else 0
+
+    # Step 2: broad phase - AABB overlap test, O(n^2) but numeric-only (cheap).
+    def boxes_overlap(r1, r2):
+        for axis in range(3):
+            if r1["max"][axis] < r2["min"][axis] or r2["max"][axis] < r1["min"][axis]:
+                return False
+        return True
+
+    candidate_pairs = []
+    for i in range(total_bodies):
+        for j in range(i + 1, total_bodies):
+            if boxes_overlap(valid_records[i], valid_records[j]):
+                candidate_pairs.append((i, j))
+
+    # Step 3: narrow phase - boolean Intersect on temporary copies, read back volume.
+    # IMPORTANT: operate on copies only; never run boolean ops on the live assembly.
+    # Copy.Execute() duplicates the selected body into the same part; the copy is
+    # deleted again after the volume is measured, regardless of outcome.
+    interferences = []
+    needs_manual_review = []
+    volume_tolerance_m3 = volume_tolerance_mm3 * 1e-9
+
+    for (i, j) in candidate_pairs:
+        rec_a = valid_records[i]
+        rec_b = valid_records[j]
+        copy_a_body = None
+        copy_b_body = None
+        try:
+            copy_a_result = Copy.Execute(Selection.Create(rec_a["ref"]))
+            copy_b_result = Copy.Execute(Selection.Create(rec_b["ref"]))
+            copy_a_body = list(copy_a_result.CreatedObjects)[0]
+            copy_b_body = list(copy_b_result.CreatedObjects)[0]
+
+            solids_options = MakeSolidsOptions()
+            combine_result = Combine.Intersect(
+                Selection.Create(copy_a_body), Selection.Create(copy_b_body), solids_options, None
+            )
+
+            # CombineResult has no documented properties in the API inventory.
+            # Try common attribute names defensively; if none resolve, flag for
+            # manual review instead of assuming the pair is interference-free.
+            inter_bodies = None
+            for attr_name in ("CreatedBodies", "Bodies", "CreatedObjects"):
+                if hasattr(combine_result, attr_name):
+                    inter_bodies = list(getattr(combine_result, attr_name))
+                    break
+
+            if inter_bodies is None:
+                needs_manual_review.append({
+                    "body_a": rec_a["name"],
+                    "body_b": rec_b["name"],
+                    "reason": "CombineResult result-body attribute not found; verify via api_search before trusting this pair."
+                })
+            else:
+                inter_volume = 0.0
+                for created in inter_bodies:
+                    inter_volume += created.Volume
+                    created.Delete()
+                if inter_volume > volume_tolerance_m3:
+                    interferences.append({
+                        "body_a": rec_a["name"],
+                        "body_b": rec_b["name"],
+                        "intersection_volume_m3": inter_volume,
+                        "severity": "FAIL"
+                    })
+        except Exception as pair_err:
+            needs_manual_review.append({
+                "body_a": rec_a["name"],
+                "body_b": rec_b["name"],
+                "reason": str(pair_err)
+            })
+        finally:
+            # Always clean up the temporary copies so the live assembly is untouched.
+            try:
+                if copy_a_body is not None:
+                    copy_a_body.Delete()
+            except Exception:
+                pass
+            try:
+                if copy_b_body is not None:
+                    copy_b_body.Delete()
+            except Exception:
+                pass
+
+    result["ok"] = "yes"
+    result["total_bodies"] = str(total_bodies)
+    result["total_pairs"] = str(total_pairs)
+    result["broad_phase_candidates"] = str(len(candidate_pairs))
+    result["narrow_phase_confirmed"] = str(len(interferences))
+    result["needs_manual_review_count"] = str(len(needs_manual_review))
+    result["volume_tolerance_m3"] = str(volume_tolerance_m3)
+    result["interferences"] = interferences
+    result["needs_manual_review"] = needs_manual_review
+
+    if len(interferences) > 0:
+        result["overall_status"] = "FAIL_INTERFERENCE_DETECTED"
+    elif len(needs_manual_review) > 0:
+        result["overall_status"] = "WARNING_UNVERIFIED_API_PATH"
+    else:
+        result["overall_status"] = "PASS_READY_FOR_MECHANICAL"
+
+except Exception:
+    e = sys.exc_info()[1]
+    result["ok"] = "no"
+    result["error"] = str(e)

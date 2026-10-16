@@ -1,0 +1,154 @@
+# -*- coding: utf-8 -*-
+# Mechanical ACT IronPython script: validate Named Selection naming convention.
+# ASCII-only comments required (IronPython 2.7 is sensitive to non-ASCII bytes).
+#
+# Scans every Named Selection under ExtAPI.DataModel.Project.Model.NamedSelections
+# and checks compliance against the rules documented in:
+#   references/naming_convention_reference.md
+#   references/cross_product_consumption_matrix.md
+#
+# This script performs READ-ONLY inspection. It does not create, modify, or
+# delete any Named Selection, Contact, Joint, or Remote Point.
+#
+# Usage (ACT batch style): host engine injects "argsDict" (optional) and
+# the standard Mechanical globals (ExtAPI, Model, DataModel, ...).
+# Call run(argsDict) and read the returned dict.
+
+import sys
+
+result = {}
+
+GLOBAL_ALL_MARKER = "Scr_RMgrp_ALL"
+CONNECT_TOPOLOGY_PREFIX = "Connect Topology"
+MOBILE_SUFFIX = "_Mobile"
+REFERENCE_SUFFIX = "_Reference"
+FULLCIRCLE_SUFFIX = "_FullCircles"
+HALFCIRCLE_SUFFIX = "_HalfCircles"
+DISTANCE_SUFFIXES = ("_Near", "_Medium", "_Far")
+
+
+def _arg(d, k, default):
+    try:
+        if d is None:
+            return default
+        if d.ContainsKey(k):
+            return d[k]
+    except Exception:
+        try:
+            return d[k]
+        except Exception:
+            pass
+    return default
+
+
+def _classify(name, rm_prefix):
+    # Return a tuple (category, note) describing which naming rule a NS matches.
+    if name == GLOBAL_ALL_MARKER:
+        return ("global_summary_marker", "Scr_RMgrp_ALL aggregate marker, excluded from pairing logic")
+
+    if name.startswith(CONNECT_TOPOLOGY_PREFIX):
+        return ("connect_topology", "")
+
+    if name.endswith(MOBILE_SUFFIX):
+        return ("mobile_half", "base_name=" + name[:-len(MOBILE_SUFFIX)])
+
+    if name.endswith(REFERENCE_SUFFIX):
+        return ("reference_half", "base_name=" + name[:-len(REFERENCE_SUFFIX)])
+
+    if name.endswith(FULLCIRCLE_SUFFIX) or name.endswith(HALFCIRCLE_SUFFIX):
+        return ("hole_classification_group", "non-pairing auxiliary group")
+
+    for suf in DISTANCE_SUFFIXES:
+        if name.endswith(suf):
+            return ("rm_grp_with_distance_suffix", "distance_suffix=" + suf)
+
+    if rm_prefix and name.startswith(rm_prefix):
+        return ("rm_grp_or_single_remote_point", "")
+
+    return ("unclassified", "does not match any known naming rule")
+
+
+def run(argsDict):
+    try:
+        rm_prefix = str(_arg(argsDict, "rm_name_prefix", "Scr_RM_grp"))
+
+        all_ns = ExtAPI.DataModel.Project.Model.NamedSelections.GetChildren(
+            DataModelObjectCategory.NamedSelection, True)
+
+        total = 0
+        empty_count = 0
+        category_counts = {}
+        violations = []
+
+        mobile_bases = {}
+        reference_bases = {}
+
+        for ns in all_ns:
+            total += 1
+            name = ns.Name
+
+            try:
+                entity_count = ns.Entities.Count
+            except Exception:
+                entity_count = -1
+
+            if entity_count == 0:
+                empty_count += 1
+                violations.append("[" + name + "] EMPTY: Entities.Count == 0, should be filtered before any connection creation")
+                continue
+
+            category, note = _classify(name, rm_prefix)
+            category_counts[category] = category_counts.get(category, 0) + 1
+
+            if category == "connect_topology":
+                try:
+                    ids = ns.Location.Ids
+                    pair_len = len(ids)
+                except Exception:
+                    pair_len = -1
+                if pair_len != 2:
+                    violations.append("[" + name + "] CONNECT_TOPOLOGY_BAD_COUNT: expected exactly 2 entities, found "
+                                       + str(pair_len))
+
+            elif category == "mobile_half":
+                base = note.split("=", 1)[1]
+                mobile_bases[base] = name
+
+            elif category == "reference_half":
+                base = note.split("=", 1)[1]
+                reference_bases[base] = name
+
+            elif category == "unclassified":
+                violations.append("[" + name + "] UNCLASSIFIED: " + note)
+
+        # Cross-check Mobile/Reference pairing completeness.
+        for base, mobile_name in mobile_bases.items():
+            if base not in reference_bases:
+                violations.append("[" + mobile_name + "] ORPHAN_MOBILE: no matching '"
+                                   + base + REFERENCE_SUFFIX + "' found")
+        for base, ref_name in reference_bases.items():
+            if base not in mobile_bases:
+                violations.append("[" + ref_name + "] ORPHAN_REFERENCE: no matching '"
+                                   + base + MOBILE_SUFFIX + "' found")
+
+        result["ok"] = "yes"
+        result["total_named_selections"] = str(total)
+        result["empty_named_selections"] = str(empty_count)
+        result["category_counts"] = str(category_counts)
+        result["violation_count"] = str(len(violations))
+        result["violations"] = "\n".join(violations)
+        return result
+    except Exception:
+        e = sys.exc_info()[1]
+        result["ok"] = "no"
+        result["error"] = str(e)
+        return result
+
+
+# ACT batch entry point: host engine injects "argsDict" into globals before exec.
+try:
+    argsDict
+except NameError:
+    result = run(None)
+else:
+    result = run(argsDict)
