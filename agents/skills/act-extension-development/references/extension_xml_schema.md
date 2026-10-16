@@ -3,7 +3,9 @@
 本手冊彙整 ACT Extension XML 定義檔的根節點結構與完整子標籤清單，來源：`Ansys_ACT_Developers_Guide` 與 `Ansys_ACT_XML_Reference_Guide`（Release 2026 R1）。與 `wizard_api.md`（Wizard 程式化呼叫）互補，本檔專注於 XML schema 本身。
 
 > [!WARNING]
-> 本檔的子標籤表格直接轉錄自兩份官方手冊，兩者對同一標籤的大小寫寫法不完全一致（例如 `Ansys_ACT_Developers_Guide` 範例寫小寫 `<extension>`，`Ansys_ACT_XML_Reference_Guide` 的正式 Tag 索引寫大寫 `<Extension>`）。沒有找到官方文件明確說明 ACT 的 XML 解析器對大小寫的實際容忍度，實際撰寫 XML 時建議先用小規模範例在真實 Mechanical/Workbench 環境驗證大小寫寫法是否生效，不要只依賴本檔的轉錄猜測。
+> 經查證（來源：NotebookLM「Ansys ACT Developer's Guide Release 2026 R1」），官方文件**沒有任何陳述說明 ACT Extension XML 的大小寫為不敏感或可互換**。`Ansys ACT Developer's Guide` 本文與範例一律使用小寫 `<extension>`，明確稱其為「root 節點」；而 `Ansys ACT XML Reference Guide` 的索引表中則以大寫 `<Extension>` 標示對應的底層 C# 類別名稱（`Class defining an ACT extension`），這是文件慣例上「XML 標籤 vs. 內部類別名」的對照寫法差異，並非官方宣告 XML 解析器大小寫不敏感。
+>
+> ACT Extension 檔案本質為標準 XML，依 XML 規格標籤名稱即為大小寫敏感。官方文件中所有可直接複製使用的範例與結構說明，標籤一律採小寫（如 `<extension>`、`<interface>`、`<simdata>`、`<script>`、`<guid>`）。**實務撰寫時應嚴格遵循本檔範例的小寫寫法**，不應假設大寫形式同樣可被解析器接受；若需驗證，應在真實 Mechanical/Workbench 環境以小規模範例實測，不可僅憑猜測。
 
 ---
 

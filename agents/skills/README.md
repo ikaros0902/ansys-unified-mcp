@@ -30,6 +30,13 @@
 | **[`pymechanical-operations`](pymechanical-operations/SKILL.md)** | **PyMechanical 遠端操作** | gRPC (port 10000+) 直連, `run_python_script` 遠端驅動, Body Sizing / MultiZone 網格自動化；`PyMechanical連線`, `Mechanical遠端控制`, `自動網格劃分` |
 | **[`ansys-error-catalog`](ansys-error-catalog/SKILL.md)** | **CAE 錯誤分類與排查** | Workbench, Mechanical, SpaceClaim, ACT 報錯根因與修復對策；`ANSYS報錯`, `IronPython錯誤`, `Mechanical排障`, `ACT除錯` |
 | **[`pdf-to-md`](pdf-to-md/SKILL.md)** | **ANSYS 說明文檔轉換** | `pymupdf4llm` 抽取純文字與表格, 逐頁標記, 產出 RAG / 檢索用 Markdown；`PDF轉Markdown`, `文檔轉換`, `說明書建索引` |
+| **[`ansys-spaceclaim-interface-check`](ansys-spaceclaim-interface-check/SKILL.md)** | **SpaceClaim 裝配體求解前閘門檢查** | 水密性/非manifold邊/自由邊/重複面拓撲診斷, 體間干涉 bounding-box 粗篩+精篩兩階段偵測；`干涉檢查`, `水密性`, `拓撲診斷`, `interference check` |
+| **[`ansys-spaceclaim-classify-group`](ansys-spaceclaim-classify-group/SKILL.md)** | **body/face 自動分類與具名群組** | 孔徑篩選, 全圓/半圓邊判別, Within Component / Ignore Component 階層配對, 距離分級；`孔位配對`, `分類群組`, `classify group` |
+| **[`ansys-spaceclaim-midsurface`](ansys-spaceclaim-midsurface/SKILL.md)** | **鈑金件中面抽取與修復** | 薄板候選偵測, 對向面配對, 中面抽取, 間隙重疊修復與法向校正；`中面抽取`, `midsurface`, `鈑金殼單元` |
+| **[`ansys-named-selection-rm-contact`](ansys-named-selection-rm-contact/SKILL.md)** | **SpaceClaim→Mechanical 具名選擇命名橋接** | `Connect Topology`/`_Mobile`/`_Reference`/`Scr_RM_grp` 命名字典, static/thermal/LS-DYNA 消費差異表；`具名選擇命名`, `named selection`, `RM命名規範` |
+| **[`ansys-mechanical-section-assign`](ansys-mechanical-section-assign/SKILL.md)** | **厚度/截面/單元公式通用指派** | Mechanical `Thickness`/`CrossSection` 隱式路徑, LS-DYNA `*SECTION_SHELL`/`*SECTION_SOLID` 顯式卡片雙模式；`截面指派`, `厚度指派`, `section assign` |
+| **[`ansys-mechanical-connections`](ansys-mechanical-connections/SKILL.md)** | **接觸/運動副/遠端點建立與檢查** | 由 NS 命名自動判斷類型建立 Bonded Contact / Joint / Remote Point, Contact Tool 驗證, Error 20110 過度約束防呆；`接觸建立`, `運動副`, `connections check` |
+| **[`ansys-mechanical-boundary-conditions`](ansys-mechanical-boundary-conditions/SKILL.md)** | **約束與載荷施加雙模式** | 靜態結構/熱分析穩態邊界 (Convection/Radiation/HeatFlux) 與 LS-DYNA shock 半正弦衝擊脈衝/初始速度；`邊界條件`, `shock衝擊載荷`, `boundary conditions` |
 
 > 註：`ansys-spaceclaim-modeling` 原於重整中因「與 `ansys-geometry-modeling` 完全重複」被移除，後於 2026-10-02 重新評估：其內容聚焦幾何前處理全流程（草圖→成形→外流域抽取→布林相減→CAD 缺陷診斷→無損 PMDB 導出），與 `ansys-geometry-modeling`（PyAnsys Geometry API 操作參考）及 `ansys-spaceclaim`（雙軌 API 連線/Session 管理）分工不同，故已恢復為獨立技能，不再視為重複；原 `ansys-lsdyna-explicit`、`ansys-mechanical-multiphysics`、`ansys-optislang-optimization` 三個僅含一行路由指引的 stub 技能仍維持已於重整中移除之狀態，其路由職責分別由 **`ansys-lsdyna`**、**`ansys-mechanical`**、**`ansys-optislang`** 主技能完整涵蓋。
 
@@ -46,6 +53,14 @@
 ├── scripts/        # 可直接執行的示範/驗證腳本
 └── assets/         # 輸出產物會直接引用的靜態模板骨架（非文檔、非程式碼）
 ```
+
+**2026-10-16 新增紀錄**：
+- 新增 7 個跨 server/機構衝擊分析(shock)/wireline/payment 多產品線共用技能，填補 SpaceClaim 介面檢查、分類群組、中面抽取與 Mechanical 截面/接觸/邊界條件缺口：
+  - SpaceClaim 側：`ansys-spaceclaim-interface-check`、`ansys-spaceclaim-classify-group`、`ansys-spaceclaim-midsurface`、`ansys-named-selection-rm-contact`（命名橋接）。
+  - Mechanical 側：`ansys-mechanical-section-assign`、`ansys-mechanical-connections`、`ansys-mechanical-boundary-conditions`。
+  - 素材來源：既有生產環境 ACT 腳本（孔位配對分類引擎、Joint Creation 腳本、Mechanical 干涉檢查、SpaceClaim 中面抽取工具）改寫抽象化，去除 ACT UI Properties 綁定與機敏路徑/到期日邏輯，所有 API 引用均比對 `docs/api_inventory/*.json` 查證存在性，查無者誠實標註「待 api_search 查證」。
+  - `ansys-spaceclaim-modeling/SKILL.md` Router 表新增 4 列指向上述 SpaceClaim 新技能與既有 defeature/simplify-ram/simplify-heatsink，避免重複定義簡化 SOP。
+  - 已通過獨立 `loop_reviewer` 稽核：frontmatter 合法性、行數 ≤150、Router 表零死連結、`.ironpy` 零非 ASCII 字元、API 真實性比對全數通過；修正 1 項阻斷缺陷（3 支 PyMechanical 驅動腳本誤宣稱相容 ACT IronPython 2.7，實際使用 `from __future__ import annotations`/`dataclasses` 等 Python 3.7+ 專屬語法，已修正 docstring 明確排除 ACT Script Editor 直接貼入情境）。
 
 **2026-10-14 補齊紀錄**：
 - 修復 `ansys-spaceclaim-modeling` 殘缺（原僅剩空 `scripts/__pycache__`，已從來源補齊 `SKILL.md` + 2 支腳本 + 6 份 `references/`）。

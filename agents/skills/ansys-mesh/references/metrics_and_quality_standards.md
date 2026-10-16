@@ -17,6 +17,26 @@
 | **單元品質 (Element Quality)**| $0 \sim 1$ | $0.85 \sim 1.0$ | $0.70 \sim 0.85$ | $0.30 \sim 0.70$ | $0.15 \sim 0.30$ | $< 0.05$ (嚴重退化) |
 | **薄壁厚度方向層數** | 整數 | $\ge 3$ 層 | 2 層 (限高階) | 1 層 (限薄殼) | 1 層一階六面體 | 1 層一階四面體 (自鎖) |
 
+### 閾值出處說明與查證狀態
+
+上表門檻值整合自工程實務經驗與公開教學課程內容（來源筆記本：ANSYS Mesh），並非逐條對應官方手冊章節號。查證結果如下：
+
+- **Skewness / Orthogonal Quality / Aspect Ratio**：教學課程將三者列為「網格健康速查表」，給出的建議區間（如 Skewness < 0.4、Orthogonal Quality > 0.7、Aspect Ratio < 5:1）與警示門檻（Skewness > 0.95、Orthogonal Quality < 0.1、Aspect Ratio > 100:1）屬工程經驗法則，課程本身未標註對應 *ANSYS Meshing User's Guide* 或 *Theory Guide* 的具體章節。**待 api_search 查證**：若需官方手冊原文章節號，應另行檢索 ANSYS Help 文件中 Mesh Metric 相關說明頁。
+- **求解誤差量化關係**：來源僅提供定性描述（Skewness 過高主要影響精度、Orthogonal Quality 過低主要影響收斂性、Aspect Ratio 過高影響穩定性與精度），並引用「約 70% 模擬失敗與網格品質不良相關」的統計說法，但未見誤差百分比與指標數值的具體數學對應關係。本表中 Warning/Fail 區間的誤差風險描述屬工程經驗推估，非官方量化公式。
+- **Jacobian Ratio**：查無官方章節出處與對二次單元中節點（Midside Node）偏移量的具體數學推導，本表沿用通用有限元理論中「$\det(J) \le 0$ 代表單元翻轉、求解器判定致命錯誤」的通識性結論，**待 api_search 查證**具體 ANSYS 手冊章節。
+
+### Parallel Deviation（平行偏差）
+
+此指標衡量六面體或楔形單元中，理論上應互相平行的對邊（或對面法向量）之間的夾角偏離程度，數值越接近 $0^\circ$ 代表單元越接近理想平行六面體形狀；偏離角度越大，代表單元被剪切或扭曲，數值積分時形函數梯度估計誤差隨之上升。
+
+- **適用單元**：主要用於六面體（Hexahedral）與楔形（Wedge/Prism）單元；四面體與金字塔單元因無對邊平行性質，通常不適用此指標。
+- **安全閾值（工程經驗建議，非官方手冊逐條核實）**：
+  - 良好：$0^\circ \sim 70^\circ$
+  - 可接受：$70^\circ \sim 100^\circ$
+  - 警示：$100^\circ \sim 150^\circ$
+  - 嚴禁求解：$> 150^\circ$（接近退化為平面或自交，雅可比易同步劣化）
+- **查證狀態**：來源筆記本（ANSYS Mesh、Ansys Official）均未涵蓋 Parallel Deviation 的官方數學定義、適用單元限制與官方閾值表。**待 api_search 查證**：上述角度門檻為沿用常見網格品質速查表的工程經驗值，正式專案採用前應以 ANSYS Meshing 手冊中 Mesh Metric 說明頁核實。
+
 ---
 
 ## 二、各指標數學物理意義與求解器性能影響機制

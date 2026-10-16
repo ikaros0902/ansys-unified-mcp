@@ -53,6 +53,28 @@ $$G(t) = G_0 \left[ \alpha_\infty^G + \sum_{i=1}^{N} \alpha_i^G e^{-t/\tau_i^G} 
 
 工程實務上通常需要跨數個時間數量級（如 $10^{-3}\text{s} \sim 10^{4}\text{s}$）的多組 Prony pair 才能完整捕捉應力鬆弛/蠕變行為。數據來源：短期應力鬆弛測試（直接量 $E(t)$ 換算 $G(t)$/$K(t)$）或 DMA 動態頻率測試（量 storage/loss modulus，需在 MAPDL 做頻域 curve fitting）。
 
+### 4.1 實驗數據擁合取得 Prony 參數的工程流程
+
+> 來源：筆記本《Viscoelasticity in Ansys Mechanical for Elastomers》，以下為改寫整理，非逐字引用。
+
+**資料型態決定擁合路徑**：時域（Time Domain）與頻域（Frequency Domain）兩類實驗數據，分別對應不同的 Prony 擁合入口。
+
+1. **時域路徑：應力鬆弛測試（Stress Relaxation Test）**
+   - 對試片施加恆定應變 $\varepsilon_0$ 並持續保持，量測應力隨時間衰減 $\sigma(t)$，換算出鬆弛模量 $E(t) = \sigma(t)/\varepsilon_0$。
+   - 再以假設定值的 Poisson's ratio $\nu$，將 $E(t)$ 分解為剪切模量 $G(t) = E(t)/[2(1+\nu)]$ 與體積模量 $K(t) = E(t)/[3(1-2\nu)]$。
+   - 此路徑可**直接在 Workbench Engineering Data 完成擁合**：匯入 $G(t)$/$K(t)$ 對時間的表格資料 → 插入 Prony Shear/Volumetric Relaxation → 指定擬合項數 $N$ → 需先搭配一個基礎彈性或超彈性模型（提供 $G_0$）→ 執行 Solve Curve Fit。
+2. **頻域路徑：DMA 動態頻率掃描**
+   - DMA 對試片施加正弦振盪應力，量測應變響應的相位差 $\phi$，拆解出儲存模量（Storage Modulus）$E'=（\sigma_0/\varepsilon_0）\cos\phi$ 與損耗模量（Loss Modulus）$E''=（\sigma_0/\varepsilon_0）\sin\phi$。
+   - **Workbench Engineering Data 無法直接擁合頻域資料**，必須改用 MAPDL（`TB,PRONY` 搭配 `TBFIELD`/`TBDATA`），同時對儲存與損耗曲線做頻域擁合。
+3. **擁合演算法共通邏輯**
+   - 核心為非線性最小平方法，在實驗曲線與試擬 Prony 曲線間最小化殘差；可選「Normalized」（預設，各時間/頻率數量級權重相同，適合大多數情境）或「Absolute」（放大對高模量/早期響應區段的權重，適合聚焦大應變或早期行為時使用）兩種誤差範數。
+   - 數值上強制 $\sum \alpha_i \le 1$，確保長期模量 $G_\infty \ge 0$ 不出現非物理負值。
+   - 若實驗數據含多溫度量測，擁合前會先透過 WLF 或 TN 移位函數將各溫度曲線疊合成單一 master curve（見第五節），再對這條統一曲線做 Prony 擬合。
+4. **Prony 項數 $N$ 的選取原則**
+   - 每一組 Prony pair（$\alpha_i$, $\tau_i$）對應一個 Maxwell 單元，在 $t \approx \tau_i$ 時該項衰減至初始值的約 36.8%；因此 $\tau_i$ 之間建議在對數時間軸上大致相隔一個數量級（decade），才能讓各項覆蓋不同時間尺度而不重疊失效。
+   - 若實驗時間跨度僅 1~2 個數量級，1~3 項通常已足夠；若為涵蓋 4~6 個數量級以上的寬頻 DMA 掃描資料，可能需要 4~10 項（ANSYS 上限支援到 100 組）。
+   - 項數過少無法捕捉多數量級下的曲率變化；項數過多則容易造成過度擬合、產生非物理的振盪解或參數解不唯一，兩者皆應避免。
+
 ## 五、時溫等效原理（TRS）與移位函數
 
 高分子材料多為「熱流變簡單（Thermorheologically Simple）」：高溫短時間響應等效於低溫長時間響應，在對數時間軸上不同溫度的鬆弛曲線只做水平平移。ANSYS 用縮減時間（Reduced Time）$\xi(t) = \int_0^t dt'/A(T(t'))$ 把非等溫過程轉為等溫公式求解，$A(T)$ 即移位函數。
@@ -63,6 +85,20 @@ $$G(t) = G_0 \left[ \alpha_\infty^G + \sum_{i=1}^{N} \alpha_i^G e^{-t/\tau_i^G} 
 | **TN**（Tool-Narayanaswamy，本質是 Arrhenius 式） | $\ln A(T) = \dfrac{C}{R}\left(\dfrac{1}{T_r}-\dfrac{1}{T}\right)$ | 玻璃產業；可擴充引入虛構溫度（Fictive Temperature）描述冷卻過程的結構鬆弛 |
 
 $C_1$、$C_2$ 雖通常在玻璃轉化溫度 $T_g$ 評估，但不限於此，可在任意參考溫度 $T_r$ 評估。WLF 與 TN 是兩個獨立的函數家族（WLF 用溫度差的有理函數形式，TN 本質是 Arrhenius 溫度倒數差形式），公式結構不同是函數家族本身的差異，不是誤植；兩者皆透過 `TB,SHIFT` 指令指定 $T_r$ 與對應常數。
+
+### 5.1 移位因子在實驗數據前處理中的角色（Master Curve 構建）
+
+> 來源：筆記本《Viscoelasticity in Ansys Mechanical for Elastomers》，以下為改寫整理，非逐字引用。
+
+多溫度實驗數據要先經過移位疊合，才能進入第 4.1 節的 Prony 擁合流程：
+
+- **成立前提**：材料需符合「熱流變簡單（TRS）」假設，即同一材料在不同溫度下的鬆弛響應，繪在對數時間軸上只是水平位移，瞬時模量 $G_0$ 與長期模量 $G_\infty$ 的上下限不隨溫度改變。
+- **Master Curve 構建方式**：在不同溫度量得的鬆弛/DMA 曲線各自只覆蓋有限時間或頻率窗口；以某一基準溫度 $T_r$ 為錨點，將其餘溫度曲線沿對數時間軸水平移位 $\log_{10}A(T)$ 後互相疊合銜接，即可拼出單一條覆蓋更寬時間跨度的 master curve，再據此做 Prony 擬合——這是突破單一溫度實驗時間窗口限制的關鍵手段。
+- **移位量與參考溫度的關係**：
+  - 工程上先針對每個測試溫度，找出能讓該溫度曲線與基準曲線重合的位移量 $\log_{10}a_T$，再將這些位移量對 $(T-T_r)$ 作圖，以非線性最小平方擬合求出 $C_1$、$C_2$。
+  - $T_r$ 常以材料的玻璃轉化溫度 $T_g$ 作為基準，但非強制；若缺乏足夠的多溫度實驗數據可供擬合，文獻上對許多未填充非晶聚合物提供的經驗起始值約為 $C_1 \approx 17.44$、$C_2 \approx 51.6\,\text{K}$（以 $T_r=T_g$ 為前提），可作為初始估計，但仍應以實測數據校正。
+  - 若既有 $C_1$、$C_2$ 是在 $T_{r1}$ 下擬合得出，換算到新基準溫度 $T_{r2}$ 時可用換算公式 $C_1' = \dfrac{C_1 C_2}{C_2+T_{r2}-T_{r1}}$、$C_2' = C_2+T_{r2}-T_{r1}$ 轉換，不需重新擁合整批數據。
+- **對 Prony 參數的實質影響**：移位函數 $A(T)$ 直接縮放各 Prony 單元的鬆弛時間 $\tau_i(T) = \tau_i(T_r) \cdot A(T)$；當 $T>T_r$ 時 $A(T)<1$，鬆弛時間變短、材料鬆弛更快，反之 $T<T_r$ 時材料響應變慢，此機制讓單一組 $T_r$ 下擬合的 Prony 參數可外推到其他溫度，不需要每個溫度各建一組獨立材料卡。
 
 ## 六、分析設定注意事項
 

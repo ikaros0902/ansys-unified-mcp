@@ -84,7 +84,9 @@ flowchart LR
 | 約束條件、載荷施加與螺栓 | [`references/boundary_conditions_and_loads.md`](references/boundary_conditions_and_loads.md) | 固定約束、位移自由度、壓力、螺栓預緊三步載荷法 |
 | 載荷步、大變形與求解器控制 | [`references/analysis_setup.md`](references/analysis_setup.md) | Large Deflection、自動副步細分、Newton-Raphson 控制 |
 | 結果評估、雲圖導出與 DPF | [`references/results_and_postprocessing.md`](references/results_and_postprocessing.md) | 應力/變形提取、Graphics.ExportImage、DPF 高速場讀取 |
-| 收斂曲線診斷、無關性、奇異點 | [`references/mechanical_judgment.md`](references/mechanical_judgment.md) | 力殘差收斂判讀、GCI 無關性指標、聖維南原理判定 |
+| 收斂曲線診斷、無關性、奇異點、安全因子選取 | [`references/mechanical_judgment.md`](references/mechanical_judgment.md) | 力殘差收斂判讀、GCI 無關性指標、聖維南原理判定、安全因子範圍建議 |
+| 失效準則選用（延性/脆性/複合材料） | [`references/failure_criteria_selection.md`](references/failure_criteria_selection.md) | von Mises/Tresca/Max Principal Stress 決定表、Composite Failure Tool 四準則比較 |
+| 疲勞分析標準流程 | [`references/fatigue_analysis_standards.md`](references/fatigue_analysis_standards.md) | S-N 曲線、Goodman/Soderberg/Gerber 平均應力修正、Miner's Rule 累積損傷 |
 | 多物理場耦合、CFD 負載映射與過渡 | [`references/multiphysics_mapping.md`](references/multiphysics_mapping.md) | 熱-結構弱耦合、Fluent 壓力/HTC 映射、聖維南平滑準則 |
 | 求解報錯（主元錯誤、不收斂）自愈 | [`references/solver_diagnostics.md`](references/solver_diagnostics.md) | Pivot Error、Convergence Failure 自愈對策表 |
 
