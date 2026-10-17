@@ -33,10 +33,6 @@ mesh.ProximityNumCellsAcrossGap = 3
 mesh.GenerateMesh()
 print("全域網格生成完成！節點數: {}, 單元數: {}".format(mesh.Nodes, mesh.Elements))
 ```
-phase_gate:
-  requires: []
-  produces: []
----
 
 ## 二、局部尺寸控制 (Mesh Sizing)
 

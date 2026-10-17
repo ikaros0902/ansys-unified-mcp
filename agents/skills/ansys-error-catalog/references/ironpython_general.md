@@ -46,10 +46,6 @@ def handler():
     c = Collector()
     exec("pass")
 ```
-phase_gate:
-  requires: []
-  produces: []
----
 
 ## ERR-IP-002: `__name__` 在不同執行環境中的值
 

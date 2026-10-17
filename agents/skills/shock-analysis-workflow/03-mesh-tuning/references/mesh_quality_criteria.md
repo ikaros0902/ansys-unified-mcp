@@ -41,11 +41,6 @@ $#  usrstf    usrstr    sfric     dfric     edc       vfc       th        th_sf
 $#  ignore    bktchg    pastop    
          1         0         0
 ```
-phase_gate:
-  requires: []
-  produces: []
----
-
 
 ---
 

@@ -31,10 +31,6 @@ def import_material_library(xml_path):
         print("  - {}".format(name))
     return materials
 ```
-phase_gate:
-  requires: []
-  produces: []
----
 
 ## 二、主體 (Body) 材料指定與自動化規則映射
 

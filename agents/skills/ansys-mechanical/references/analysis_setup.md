@@ -12,10 +12,6 @@
 analysis = Model.Analyses[0]
 settings = analysis.Children[0]  # 或 ExtAPI.DataModel.GetObjectsByType(Ansys.ACT.Automation.Mechanical.AnalysisSettings)[0]
 ```
-phase_gate:
-  requires: []
-  produces: []
----
 
 ## 二、非線性靜態求解控制 (Nonlinear Controls)
 

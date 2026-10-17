@@ -17,11 +17,6 @@
 在 optiSLang 中，推薦啟用 **Maximin 距離準則**：
 $$\max \left( \min_{i \ne j} d(\vec{x}_i, \vec{x}_j) \right)$$
 最大化任意兩樣本點間的最小歐氏距離，徹底杜絕樣本點靠得太近，提升空間覆蓋均勻度。
-phase_gate:
-  requires: []
-  produces: []
----
-
 ## 二、樣本容量工程估算準則
 
 工程實務中，抽樣數量 $N$ 與輸入參數維度 $k$ 的規劃建議：

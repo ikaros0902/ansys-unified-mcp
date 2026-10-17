@@ -23,10 +23,6 @@ warnings.filterwarnings("ignore", message="Starting gRPC client without TLS")
 from ansys.geometry.core import Modeler
 m = Modeler(port=50051, transport_mode='insecure')
 ```
-phase_gate:
-  requires: []
-  produces: []
----
 
 ## ERR-SC-002: `rename_object` 不直接支援 Body 重新命名
 

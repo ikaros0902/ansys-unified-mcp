@@ -21,11 +21,6 @@ $#     pid     secid       mid     eosid      hgid      grav    adpopt      tmid
 - **`secid`**：對應之截面屬性編號，指向 `*SECTION_SOLID` 或 `*SECTION_SHELL`。
 - **`mid`**：對應之材料編號，指向 `*MAT_*` 卡片。
 - **`hgid`**：指定之沙漏控制編號（若設為 0，則承襲全域 `*CONTROL_HOURGLASS` 設定；若指定非零整數，則關聯特定 `*HOURGLASS` 卡片）。
-phase_gate:
-  requires: []
-  produces: []
----
-
 ## 二、實體單元截面 (`*SECTION_SOLID`)
 
 實體單元廣泛應用於厚壁構件、本體外殼及複雜三維結構。

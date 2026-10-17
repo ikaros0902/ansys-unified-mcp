@@ -27,10 +27,6 @@ contact.Name = "軸套配合接觸面"
 contact.SourceLocation = ExtAPI.DataModel.GetObjectsByName("NS_SHAFT_CONTACT_FACE")[0]   # Contact 面
 contact.TargetLocation = ExtAPI.DataModel.GetObjectsByName("NS_BUSHING_TARGET_FACE")[0] # Target 面
 ```
-phase_gate:
-  requires: []
-  produces: []
----
 
 ## 二、接觸類型與行為模式 (Contact Type & Behavior)
 

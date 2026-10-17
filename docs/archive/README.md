@@ -27,6 +27,7 @@
 | [`ORIGINAL_REQUEST.md`](ORIGINAL_REQUEST.md) | 原始需求書（最早紀錄標註 2026-09-05）；描述預期目標而非交付現況，且同檔內新舊工作目錄並存不一致。 |
 | [`PROJECT.md`](PROJECT.md) | Phase 1 規格書；與 `ORIGINAL_REQUEST.md` 為同批需求的不同視角，範圍僅及 Phase 1。 |
 | [`ANSYS_MCP_DELIVERY_WALKTHROUGH.md`](ANSYS_MCP_DELIVERY_WALKTHROUGH.md) | 主題為個人全域設定庫（dotfiles）跨機器同步，與本專案程式碼無直接關係；內含大量已失效的 `file:///` 本機絕對路徑。 |
+| [`spec.md`](spec.md) | 2026-10-14 產生的全專案掃描報告（610 個受版控檔案、172 個 MCP 工具的完整清單與附錄）；一次性快照性質，檔內的檔案數、測試數、工具數與技能數量隨後續開發已過期，不作為現況依據。 |
 
 ---
 

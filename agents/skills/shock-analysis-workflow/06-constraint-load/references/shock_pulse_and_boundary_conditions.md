@@ -40,11 +40,6 @@ $#     pid      dof      vad      lcid        sf       vid     death     birth
 - `dof`: 運動自由度（1=X, 2=Y, 3=Z）。
 - `vad`: 速度向量控制（vad=2 代表指定速度歷程）。
 - `lcid`: 引用之載荷曲線 ID (`*DEFINE_CURVE`)。
-phase_gate:
-  requires: []
-  produces: []
----
-
 ## 3. 全局數值阻尼最佳實踐 (`*DAMPING_GLOBAL`)
 
 在顯式動力學分析中，衝擊波傳遞會激發高頻數值震盪（Numerical Ringing），若不加抑制會導致局部應力虛高與求解步長驟降：

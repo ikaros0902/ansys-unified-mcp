@@ -31,11 +31,7 @@ Fluent Meshing 的水密幾何工作流依序包含 9 大核心任務節點：
 ### 各任務節點參數設定標準
 
 | 任務節點名稱 | 關鍵設定參數 | 工程推薦值 | 說明 |
-|
-phase_gate:
-  requires: []
-  produces: []
----|---|---|---|
+|---|---|---|---|
 | `Import Geometry` | `FileName`, `LengthUnit` | `"in"` 或 `"mm"` | 幾何匯入需校核單位，防止尺度縮放錯誤 |
 | `Add Local Sizing` | `CurvatureNormalAngle` | `18.0` deg | 圓弧面曲率解析法向夾角 |
 | `Add Local Sizing` | `ProximityNumCells` | `3` | 狹窄間隙流道至少佈置單元層數 |

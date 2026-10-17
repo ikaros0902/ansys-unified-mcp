@@ -19,10 +19,6 @@ $#     sfs       sfm       sst       mst      sfst      sfmt       fsf       vsf
 $#    soft       sofscl    lcidab    maxpar     sbopt     depth     bsort    frcfrq
          1      0.10         0      1.025         0        25         0         1
 ```
-phase_gate:
-  requires: []
-  produces: []
----
 
 ## 二、SOFT 接觸剛度演算核心選型
 

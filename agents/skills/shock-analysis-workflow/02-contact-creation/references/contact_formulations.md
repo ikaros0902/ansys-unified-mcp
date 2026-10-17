@@ -105,7 +105,3 @@ $#     sfs       sfm       sst       mst      sfst      sfmt       fsf       vsf
 $#    soft    sofscl    lcidab    maxpar     tnbrx                depth      bsort
          1     0.100         0     1.025         0                    2         10
 ```
-phase_gate:
-  requires: []
-  produces: []
----

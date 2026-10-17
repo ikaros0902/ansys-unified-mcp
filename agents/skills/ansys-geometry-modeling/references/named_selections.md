@@ -1,5 +1,8 @@
 # 具名選擇 (Named Selection) 自動標記與幾何拓撲過濾專精手冊 (Named Selections Reference)
 
+> [!NOTE]
+> 本檔為與 `ansys-spaceclaim-modeling` 共用的權威內容來源。
+
 在現代 CAE 自動化管線中，**嚴禁在網格生成後依賴臨時面 ID (Face ID) 施加邊界條件**。網格剖分過程會重構拓撲幾何，導致幾何面 ID 重新隨機洗牌。唯一穩健可靠的標準方案是在 **CAD/幾何前處理階段即完成具名選擇 (Named Selection) 的標記**。
 
 ---
@@ -9,11 +12,7 @@
 為確保下游 Fluent Meshing、PyPrimeMesh 與 Mechanical 求解器能全自動識別並對應邊界條件類型，Named Selection 應採用統一的工業規範：
 
 | 邊界類型 | 建議 Named Selection 名稱 | 下游求解器自動映射機制 |
-|
-phase_gate:
-  requires: []
-  produces: []
----|---|---|
+|---|---|---|
 | **流體入口** | `INLET` / `VELOCITY_INLET` | 自動辨識為 Velocity Inlet / Mass Flow Inlet |
 | **流體出口** | `OUTLET` / `PRESSURE_OUTLET` | 自動辨識為 Pressure Outlet |
 | **對稱面** | `SYMMETRY` / `SYM_XZ` | 自動辨識為 Symmetry 零法向梯度邊界 |

@@ -31,11 +31,6 @@
 ### 2.3 BGA / CSP 焊點 (SAC305 Solder Joints)
 - **等效塑性應變門檻**：$\text{EPS} \ge 0.0022$ ($0.22\%$)。
 - **網格建模要求**：焊點直徑通常在 $0.4\sim 0.6\text{ mm}$，高度方向必須至少劃分 3 層六面體單元，提取最外層近焊盤界面處的單元平均值。
-phase_gate:
-  requires: []
-  produces: []
----
-
 ## 3. 安全裕度與等級分類 (Safety Margin Classification)
 
 定義安全裕度（Margin of Safety, MoS）：

@@ -46,9 +46,7 @@ rem_disp.Location = ExtAPI.DataModel.GetObjectsByName("NS_SHAFT_END_FACES")[0]
 rem_disp.Behavior = Ansys.Mechanical.DataModel.Enums.LoadBehavior.Deformable
 rem_disp.RotationZ.Output.SetDiscreteValue(0, Quantity("0 [rad]"))
 ```
-phase_gate:
-  requires: []
-  produces: []
+
 ---
 
 ## 二、外力與表面載荷 (Loads)

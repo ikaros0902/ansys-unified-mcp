@@ -24,11 +24,6 @@ method.Location = sel
 ```
 
 **驗證**: 設定後檢查 `sizing.Location` 是否非 None，且 Tree 圖示變為 ✓。
-phase_gate:
-  requires: []
-  produces: []
----
-
 ## ERR-MECH-002: `Quantity` 未定義
 
 **觸發場景**: 在 PyMechanical `run_python_script()` 中使用 `Quantity("5.0 [mm]")`

@@ -9,11 +9,7 @@
 ```text
 [Fluent 求解異常報錯]
       |
-      |
-phase_gate:
-  requires: []
-  produces: []
----> [1. Floating Point Exception (浮點溢位)]
+      |---> [1. Floating Point Exception (浮點溢位)]
       |        根因：網格存在負體積/極小角、邊界流速超音速、局部除零。
       |
       |---> [2. Temperature limited to maximum/minimum (溫度截斷)]

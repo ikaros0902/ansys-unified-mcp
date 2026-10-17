@@ -33,10 +33,6 @@ Model.EnvironmentTemperature = Quantity("22 [C]")
 # 4. 讀取並插值熱分析求解結果
 import_temp.ImportLoad()
 ```
-phase_gate:
-  requires: []
-  produces: []
----
 
 ## 二、Fluent CFD 表面負載映射機制 (CFD Surface Mapping)
 

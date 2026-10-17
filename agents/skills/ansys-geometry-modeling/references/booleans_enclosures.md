@@ -1,12 +1,18 @@
 # 外流域抽取 (Enclosure) 與布林運算專精手冊 (Booleans & Enclosures Reference)
 
+> [!NOTE]
+> 本檔為與 `ansys-spaceclaim-modeling` 共用的權威內容來源。
+
 在計算流體力學 (CFD) 與共軛熱傳 (CHT) 數值模擬中，流體域往往並非由 CAD 原圖直接提供，而是需透過幾何外包覆生成「外流域 (Enclosure)」並透過「布林相減 (Boolean Subtract)」挖空標的實體。
 
 ---
 
-## 一、CFD 外流域尺寸工程黃金比例準則
+## 一、CFD 外流域尺寸工程經驗法則
 
-為避免邊界效應干擾流場發展、消除出口邊界數值反射，外流域尺寸必須嚴格遵循空氣動力學與 CFD 業界經驗公式（$L$ 為物體特徵長度，$W$ 為特徵寬度，$H$ 為特徵高度）：
+> [!NOTE]
+> 經查證（來源：NotebookLM「Ansys Official」教學課程，包括 *Geometry Preparation* 系列與 *CFD Tips and Tricks for Student Teams in Ansys Fluent*），下列倍數**為工程經驗值，未找到正式標準出處**。ANSYS 官方教材明確稱其為「rules of thumb（經驗法則）」，依幾何形狀與流動狀態（次音速/超音速）調整，並非單一國際標準數值。官方給出的物理依據是：邊界條件（Velocity Inlet / Pressure Outlet）會對流場強加人工約束，若邊界距物體太近，會扭曲物體周圍的真實壓力場與速度梯度；圓柱繞流案例顯示靜壓約在上游 5 倍直徑處才恢復穩定，因此邊界須放置在擾動範圍之外。
+
+為避免邊界效應干擾流場發展、消除出口邊界數值反射，外流域尺寸可參考下列業界常見經驗公式（$L$ 為物體特徵長度，$W$ 為特徵寬度，$H$ 為特徵高度）：
 
 ```
                   ┌────────────────────────────────────────┐
@@ -27,10 +33,6 @@
 4. **底面 (Ground)**：
    - 外部無窮流場（飛機、無人機）：距底部 $2.5 \sim 3.0 \times H$。
    - 地面效應/車輛空氣動力學：貼合物體底面車輪接地切點，設定為 Moving Ground 或無滑移壁面。
-phase_gate:
-  requires: []
-  produces: []
----
 
 ## 二、布林相減操作模式：單相流 vs 共軛熱傳 (CHT)
 

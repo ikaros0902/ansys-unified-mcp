@@ -103,10 +103,6 @@ def update_unassigned_named_selection(model, ExtAPI, unassigned_bodies):
         except:
             pass
 ```
-phase_gate:
-  requires: []
-  produces: []
----
 
 ## 3. LS-DYNA Keyword 注入 (*MAT_024 非線性塑性模型)
 

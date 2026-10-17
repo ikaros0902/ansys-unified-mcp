@@ -7,11 +7,7 @@
 ## 一、雙軌選型對比矩陣 (Migration Matrix)
 
 | 評估維度 | Workbench DesignXplorer (DX) | ANSYS optiSLang (高階代理模型與最佳化) | 遷移判定條件 |
-| :
-phase_gate:
-  requires: []
-  produces: []
---- | :--- | :--- | :--- |
+| :--- | :--- | :--- | :--- |
 | **參數維度承載力** | 適合 $\le 10$ 個設計變數 | 可承載數十至上百個變數（TSI 自動篩選） | 參數數量 $> 10$ 時強制升級 |
 | **代理模型架構** | 單一固定模型（多項式、Kriging、神經網路） | **MOP 自適應混合競賽**（Polynomial / Kriging / MLS / MLP） | 響應非線性強或 CoP 要求 $\ge 0.8$ |
 | **品質驗證判準** | 傳統決定係數 $R^2$（易過擬合） | **預測係數 CoP (Cross-Validation)**（客觀無偏） | 需確保模型真實泛化能力 |

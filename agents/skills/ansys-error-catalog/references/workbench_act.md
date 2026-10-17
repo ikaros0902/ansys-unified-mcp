@@ -27,11 +27,6 @@ _PROJECT_ROOT = os.path.dirname(_QUEUE_ROOT)  # 確保在 _QUEUE_ROOT 之後立�
 
 **預防**: 模組層級變數的定義順序必須嚴格遵守依賴關係，且不能依賴 `try/except`
 之外的動態計算結果。
-phase_gate:
-  requires: []
-  produces: []
----
-
 ## ERR-WB-002: `exec` 內部閉包 SyntaxError
 
 **觸發場景**: 在 `wb_event_listener.py` 的 `_execute_script()` 中，

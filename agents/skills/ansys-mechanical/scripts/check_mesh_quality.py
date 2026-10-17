@@ -4,6 +4,11 @@
 # 檢驗指標: 歪斜度 (Skewness)、正交品質 (Orthogonal Quality)、長寬比 (Aspect Ratio)
 # 判定準則: 依據有限元求解防護標準輸出 PASS / WARN / FAIL 並給予具體工程處置建議
 # 執行環境: ANSYS Mechanical ACT 腳本環境 / PyMechanical
+#
+# 差異說明: 本檔僅檢驗 Skewness / Orthogonal Quality 兩項靜態/隱式求解指標，
+# 回傳 dict（含五級分級與中文處置建議），適用一般結構/模態分析前檢。
+# 若需 LS-DYNA 顯式 CFL 步長量測、逐 body 掃描與 CSV 報表匯出，
+# 請見 ansys-mesh/scripts/check_mesh_quality.py（回傳 bool）。
 # ==============================================================================
 
 def check_and_report_mesh_quality():

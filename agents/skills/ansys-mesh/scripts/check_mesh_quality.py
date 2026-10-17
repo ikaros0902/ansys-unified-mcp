@@ -8,6 +8,12 @@ Features:
 - Engineering Redline Threshold Evaluation (Pass / Warning / Fail).
 - Dual Reporting: Terminal summary card + Automatic CSV report export.
 - Compatible with IronPython 2.7 (Mechanical ACT) and CPython 3.x (PyMechanical).
+
+NOTE (scope difference): This version targets LS-DYNA explicit workflows —
+it additionally measures global/per-body CFL timestep (TimeStepCalc) and
+auto-exports a CSV report; returns bool. For a lighter static/implicit-only
+check with 5-tier grading and Traditional Chinese remediation text (dict
+return), see ansys-mechanical/scripts/check_mesh_quality.py.
 """
 
 import sys

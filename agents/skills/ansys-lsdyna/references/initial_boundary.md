@@ -15,11 +15,6 @@ $$v_0 = -\sqrt{2 \cdot g \cdot h}$$
 ### 2. 空間幾何擺放準則
 - 將落摔主體平移至物體最下端距離剛性地面 **$1.0 \sim 2.0\text{ mm}$** 之安全間隙處。
 - **禁忌**：嚴禁初始間距小於接觸容差（防止 $t=0$ 發生初始穿透）；亦不建議大於 $5\text{ mm}$（白白浪費計算時間步）。
-phase_gate:
-  requires: []
-  produces: []
----
-
 ## 二、初始速度卡片：*INITIAL_VELOCITY_GENERATION
 
 將初速度向量均勻賦予指定部件（Part）或節點集（Node Set）：

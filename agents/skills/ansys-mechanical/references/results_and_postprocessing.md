@@ -35,10 +35,6 @@ stress_tool.Theory = Ansys.Mechanical.DataModel.Enums.StressToolTheoryType.MaxEq
 safety_factor = stress_tool.AddSafetyFactor()
 safety_factor.Name = "降伏安全係數"
 ```
-phase_gate:
-  requires: []
-  produces: []
----
 
 ## 二、結果計算與極值數據提取
 

@@ -1,5 +1,8 @@
 # 2D 參數化草圖與曲線造型專精手冊 (Sketching Reference)
 
+> [!NOTE]
+> 本檔為與 `ansys-spaceclaim-modeling` 共用的權威內容來源。
+
 本手冊提供 ANSYS SpaceClaim (SCDM) 與 PyAnsys Geometry (`ansys.geometry.core`) 在 2D 參數化草圖繪製、幾何圖元約束、點陣列 NURBS 樣條曲線插值及閉合性驗證的技術規範。
 
 ---
@@ -25,9 +28,7 @@ custom_plane = Plane(
     direction_y=UnitVector3D([0.0, 0.707106, 0.707106])
 )
 ```
-phase_gate:
-  requires: []
-  produces: []
+
 ---
 
 ## 二、基礎幾何圖元繪製與尺寸約束

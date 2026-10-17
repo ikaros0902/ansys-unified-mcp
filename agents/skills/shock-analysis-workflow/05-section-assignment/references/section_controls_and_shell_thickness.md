@@ -39,10 +39,6 @@ $#   secid    elform      shrf       nip     propt     qr/ir     icomp      sety
 $#      t1        t2        t3        t4      nloc     marea      idof    edgset
      0.800     0.800     0.800     0.800     0.000     0.000     0.000         0
 ```
-phase_gate:
-  requires: []
-  produces: []
----
 
 ## 3. LS-DYNA 實體單元公式 (`*SECTION_SOLID`) 最佳實踐
 

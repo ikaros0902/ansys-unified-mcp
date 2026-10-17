@@ -82,7 +82,7 @@ MCP Agent 在啟動時會自動偵測正在執行的這些視窗並接管控制�
 2. **Workbench journal（SendCommand）** — 備援，向活著的 Mechanical/SpaceClaim 視窗送腳本，避開 gRPC 授權阻擋。
 3. **批次子行程** — `ansys-mechanical.exe` / `RunWB2 -R` 一次性無頭作業，不需外掛、不需先開實例。
 
-> 先前的 file-queue 與 socket-timer 兩種傳輸已於架構重構中移除（與上述重複、且需未必安裝的外掛）。
+> 上述三種是 **Mechanical** 連線傳輸；file-queue 與 socket-timer 僅於 Mechanical 重構時移除（與上述重複、且需未必安裝的外掛），**非指整個專案**。`bridges/workbench_socket.py`（socket-timer）與 `bridges/workbench_filequeue.py`（file-queue）目前仍是 **Workbench**（`products/workbench/tools.py`）呼叫 `transport.send_command()` 時的實際傳輸層：預設 `transport="auto"` 會先試 socket，連線失敗（如 `ConnectionRefusedError`）才 fallback 到 file queue。
 
 ## 疑難排解
 

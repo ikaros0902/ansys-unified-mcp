@@ -52,7 +52,3 @@ def verify_body_topology(model):
     else:
         print("[TOPOLOGY CHECK] All active bodies are properly scoped and constrained.")
 ```
-phase_gate:
-  requires: []
-  produces: []
----

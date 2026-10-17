@@ -55,10 +55,6 @@ def extract_field_results(rst_file_path, time_step_index=1):
         "max_stress_pa": float(max_stress_val)
     }
 ```
-phase_gate:
-  requires: []
-  produces: []
----
 
 ## 二、有限元形函數空間場插值器 (`dpf.operators.mapping.on_coordinates`)
 

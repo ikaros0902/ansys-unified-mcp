@@ -1,5 +1,8 @@
 # 無損 PMDB/FMD 導出與下游網格無縫接軌規範手冊 (PMDB Export Rules)
 
+> [!NOTE]
+> 本檔為與 `ansys-spaceclaim-modeling` 共用的權威內容來源。
+
 在 ANSYS 全流程自動化架構中，中介檔案格式的選擇決定了幾何資訊傳遞的忠實度。傳統 STEP/IGES 格式在跨軟體傳遞時，經常面臨公差接縫撕裂、微小面畸變、以及最重要的——**CAD 具名選擇 (Named Selection) 遺失**。本手冊定義 PMDB/FMD 無損資料庫格式的導出規範與下游網格無縫接軌準則。
 
 ---
@@ -7,11 +10,7 @@
 ## 一、幾何格式特性對比矩陣
 
 | 評估維度 | ANSYS PMDB (`.pmdb`) | Fluent Meshing DB (`.fmd`) | SpaceClaim 原生 (`.scdocx`) | 標準中介檔 (`.step`) |
-|
-phase_gate:
-  requires: []
-  produces: []
----|---|---|---|---|
+|---|---|---|---|---|
 | **幾何內核表示** | 原生 Parasolid B-Rep | 原生 Parasolid / Faceted | 原生 SpaceClaim ACIS/Parasolid | 標準邊界表示 (AP214/AP242) |
 | **拓撲接縫公差** | **零誤差 (原生直通)** | **零誤差 (原生直通)** | 零誤差 | 需下游軟體進行重構縫合 |
 | **CAD 具名選擇保留** | **100% 完整精確保留** | **100% 完整精確保留** | 完整保留 | 極易遺失或退化為無效組名 |

@@ -14,11 +14,6 @@ $$E_{\text{total}} = E_{\text{kin}} + E_{\text{int}} + E_{\text{hg}} + E_{\text{
 - $E_{\text{hg}}$：沙漏能 (Hourglass Energy，純屬數值阻尼消耗)。
 - $E_{\text{contact}}$：界面接觸滑移能 (Sliding Interface Energy)。
 - $W_{\text{ext}}$：外部載荷功 (External Work)。
-phase_gate:
-  requires: []
-  produces: []
----
-
 ## 二、三大客觀診斷指標與判別門檻
 
 ```mermaid

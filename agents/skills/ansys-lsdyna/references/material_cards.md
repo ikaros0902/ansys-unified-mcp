@@ -9,11 +9,7 @@
 LS-DYNA 不具備內建單位換算機制，所有輸入數值必須保持完全自洽。工程落摔推薦使用 **ton - mm - s - N - MPa** 單位制：
 
 | 物理量 | 推薦單位制 (mm 系統) | 標準 SI 制 (m 系統) | 換算關係 |
-| :
-phase_gate:
-  requires: []
-  produces: []
---- | :--- | :--- | :--- |
+| :--- | :--- | :--- | :--- |
 | **長度 (Length)** | $\text{mm}$ | $\text{m}$ | $1\text{ m} = 1000\text{ mm}$ |
 | **時間 (Time)** | $\text{s}$ | $\text{s}$ | $1\text{ s} = 1\text{ s}$ |
 | **質量 (Mass)** | $\text{ton} = 10^3\text{ kg}$ | $\text{kg}$ | 鋼密度 $7.85\times 10^{-9}\text{ ton/mm}^3$ |

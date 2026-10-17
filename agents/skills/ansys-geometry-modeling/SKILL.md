@@ -7,9 +7,6 @@ Use when:
   - 需標記具名選擇 (Named Selection) 並匯出 .pmdb 無損直通 Mechanical 或 Fluent。
   - 限制: 長度單位強制為公尺 (m)；Windows 環境走 wnua 通道。
   - 觸發關鍵字 (繁中/En): PyAnsys Geometry, 參數化幾何, 抽取外流域, Enclosure, 匯出PMDB.
-phase_gate:
-  requires: []
-  produces: []
 ---
 
 # ANSYS 現代化幾何建模與無損流轉主控手冊 (PyAnsys Geometry)

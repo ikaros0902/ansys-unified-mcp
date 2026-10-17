@@ -11,11 +11,6 @@ $$\Delta t_{\text{crit}} = \frac{L_{\text{char}}}{c} = \frac{L_{\text{char}}}{\s
 - 若將時間步長強制固定在 $\Delta t_{\text{target}}$，求解器必須調整密度：
 $$\rho_{\text{virtual}} = E \cdot \left( \frac{\Delta t_{\text{target}}}{L_{\text{char}}} \right)^2$$
 這意味著單元尺寸越小，被強加的虛擬質量呈二次方急劇暴增！
-phase_gate:
-  requires: []
-  produces: []
----
-
 ## 二、*CONTROL_TIMESTEP 卡片中的 DT2MS 規則
 
 ```text
