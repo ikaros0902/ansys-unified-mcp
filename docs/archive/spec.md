@@ -1,3 +1,19 @@
+> ## ⚠️ 本文件為歷史快照，不可作為現況依據
+>
+> 本文件是 2026-10-14 的一次性全專案掃描報告（掃描基準提交 `2b58e4e`）。檔內的檔案數、測試數、工具數、技能數量與磁碟路徑均已過期，僅保留當時的掃描方法論與決策脈絡供追溯。
+>
+> 需要專案現況時，請改看：
+>
+> | 需求 | 應參閱 |
+> | --- | --- |
+> | 專案概觀與快速上手 | [`README.md`](../../README.md) |
+> | 系統架構與命名慣例 | [`ARCHITECTURE.md`](../../ARCHITECTURE.md) |
+> | 完整文件索引 | [`docs/index.md`](../index.md) |
+> | 測試基礎設施與執行指令 | [`docs/testing/TEST_INFRA.md`](../testing/TEST_INFRA.md) |
+> | 安裝與部署 SOP | [`docs/deployment/DEPLOYMENT_SOP.md`](../deployment/DEPLOYMENT_SOP.md) |
+
+---
+
 # ANSYS Unified MCP 現況規格
 
 > 掃描日期：2026-10-14（Asia/Taipei）。套件版本：`2.0.0`。掃描基準提交：`2b58e4e`。
