@@ -18,6 +18,15 @@
         "有提到嚴禁修改 Mesh 全域 DefeatureTolerance/PinchTolerance，應使用局部控制項",
         "有提到調整後要重新呼叫 TimeStepCalc 刷新驗證，而非盲目全域重新劃分"
       ]
+    },
+    {
+      "eval_id": 3,
+      "prompt": "想在生成網格階段就擋掉劣質單元，不要等劃完才發現品質不夠，Mechanical 有什麼設定可以做？要怎麼找出哪些單元沒過標準並追蹤它們？",
+      "assertions": [
+        "有提到 Error Limits 設為 Aggressive Mechanical 時，單元品質低於門檻會讓網格生成直接失敗，而非生成後才警告",
+        "有提到可設定 Target Element Quality 讓 tet mesher 主動改善最差單元",
+        "有提到用 Quality Worksheet 檢查 Aspect Ratio/Jacobian Ratio/Max Corner Angle 等多項指標，並可對失敗元素 Show Contours 或建立 Named Selection 追蹤"
+      ]
     }
   ]
 }

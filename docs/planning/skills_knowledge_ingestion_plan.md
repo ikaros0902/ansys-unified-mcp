@@ -1,9 +1,18 @@
-# Skills 知識歸納實作計畫（2026-10-16，草案 v3）
+# Skills 知識歸納實作計畫（2026-10-16，草案 v3 → 2026-10-17 已完成）
 
-狀態：待使用者核准，尚未修改任何 skill 或程式碼。
+狀態：**已完成**。WP1–WP4 文件工作與 WP6 評估已執行並通過 loop_reviewer 第 2 輪 Claims-Evidence 門禁審查（PASS）。WP5（程式碼變更）依 D2 決議本輪不執行，列入待分類。
 依循：`D:\Ikaros\skill-creator`（progressive disclosure、evals 迭代）、`D:\Ikaros\mcp-builder`（命名、annotations、可行動錯誤）、專案 steering（SKILL.md ≤150 行、防過擬合、Maker-Checker）。
 v1 → v2：依 loop_reviewer 審查修正 WP6 grading 流程、WP5 annotations、既有 cfile 指令清單、鏡像同步、版權邊界，並刪減過度設計。
 v2 → v3：修正 WP6 目錄佈局（`eval-*/<config>/run-*`、`new_skill`/`old_skill` 排序）、`sync_skills.ps1` 實際無作用的描述與 D5 選項。
+
+## 執行結果摘要（2026-10-17）
+
+- **D1-D5 決議**：D1(a) 路由列、D2(a) 本輪僅文件、D3 無法提供 GUI cfile 故不建 assets 模板、D4(a) 僅留技術結論、D5(a) 不動全域副本。
+- **WP1/WP2**：已於 commit `bf25b09` 完成（6 份 SKILL.md 路由列 + `ansys-mesh/references/sizing_strategy_and_quality_workflow.md`），本輪另補齊 Bias Factor/Growth Rate 關係、MultiZone/Hex Dominant/Sweep 分區策略、課程範例「單一範例」標註 3 項缺漏，SKILL.md 根檔維持 148 行未超標。
+- **WP3/WP4**：`ansys-ls-prepost/references/gui_result_review_sop.md`、`ansys-lsdyna/references/solver_execution_lsrun.md` 已完成，出處標註至官方手冊 chunk 層級，未驗證內容明確標記。
+- **WP6**：ansys-mesh、ansys-ls-prepost、ansys-lsdyna 三個 skill 的 new_skill vs old_skill benchmark 通過率分別為 100%/44%、100%/33%、100%/55%，均達通過條件。
+- **軌道 B（SKILL.md 瘦身，本任務追加範疇）**：實測 `agents/skills/` 下全部 37 份 SKILL.md 行數為 39–148 行，均 ≤150 行，無超標項目，**取消執行**（原盤點報告「28 份超標」為誤判，已於 `docs/reviews/2026-10-17-project-wide-inventory.md` 更正）。
+- **待分類技術債**：`ansys-mesh/SKILL.md` 148/150 行逼近上限，日後新增路由列前須先搬移既有內容釋出餘裕；`aggregate_benchmark.py` 於 cp950 環境須加 `-X utf8` 旗標。
 
 ---
 
@@ -71,6 +80,8 @@ v2 → v3：修正 WP6 目錄佈局（`eval-*/<config>/run-*`、`new_skill`/`old
 ---
 
 ## 4. 各工作包規格
+
+> **完成記錄**：WP1、WP2 已於 commit `bf25b09`（docs: 補齊 6 個 skill 的 APIKB/docsearch 查證路由與 3 份新 reference）完成並提交。`6e8cef9` 為後續另一筆 commit（docs: 以 NotebookLM 查證結果補強既有技能內容缺口），與 WP1/WP2 無關，不可誤引用為 WP1/WP2 完成 commit。
 
 ### WP1 APIKB / docsearch 路由
 
@@ -170,6 +181,8 @@ cfile 驗證協定（滿足其一才可進對照表）：
 4. subagent 完成時立即寫 `timing.json`（total_tokens、duration_ms、total_duration_seconds）。
 5. 派 grader subagent 依 `D:\Ikaros\skill-creator\agents\grader.md` 評分，產生每個 run 的 `grading.json`（欄位 `text / passed / evidence`）。可程式檢查的 assertion 用腳本判定，例如：有提到 Separation、有提醒 Scale Factor 回 1.0、有提到 `d3kil` 與 sw1、cfile 指令都在驗證清單內。
 6. 在 `D:\Ikaros\skill-creator` 目錄執行 `python -m scripts.aggregate_benchmark <workspace>/iteration-1 --skill-name <skill>`。
+   > [!NOTE]
+   > 在 cp950 編碼環境（Windows 預設終端編碼）下必須改用 `python -X utf8 -m scripts.aggregate_benchmark <workspace>/iteration-1 --skill-name <skill>`，否則腳本輸出含非 cp950 可編碼字元時會以 exit code 1 崩潰。
 7. `python D:\Ikaros\skill-creator\eval-viewer\generate_review.py <workspace>/iteration-1 --skill-name <skill> --benchmark <...>/benchmark.json --static <html>`，給使用者審閱。
 8. 通過條件：new_skill 在每題通過的關鍵 assertion 數不少於 old_skill，且 0 個編造指令。單次執行有雜訊，若 new_skill 某題落後，該題補跑 `run-2` 再判定。
 9. Description 最佳化（`run_loop.py`）依賴 `claude -p`（`run_eval.py:71-72`），本機是 kiro-cli，**不執行**；由使用者在審閱頁確認描述。

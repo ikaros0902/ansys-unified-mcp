@@ -18,6 +18,15 @@
         "有提到應改用 d3thdt（Time History File）或 binout 取得更細時間解析度，而非逐步切換 d3plot states",
         "沒有出現未經驗證、憑印象編造的 cfile 指令"
       ]
+    },
+    {
+      "eval_id": 3,
+      "prompt": "我想在 LS-PrePost 用 Section Plane 切一個截面，想要截面能跟著結構一起變形追蹤同一群單元，而不是固定在空間中不動，該選哪個模式？跟 *DATABASE_CROSS_SECTION 的行為最接近的是哪一種？",
+      "assertions": [
+        "有正確區分 FixS（固定在空間中不隨模型移動）與 FixM（固定在模型上、隨定義節點移動）",
+        "有指出 Lagr（Lagrangian）模式是先切一組單元之後動畫過程追蹤同一組單元，且最接近 *DATABASE_CROSS_SECTION 的行為",
+        "沒有出現未經驗證、憑印象編造的 cfile 指令或選單路徑"
+      ]
     }
   ]
 }
