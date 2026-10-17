@@ -126,7 +126,7 @@ def extract_optislang():
                     "items": items
                 }
 
-    out_path = Path(r"F:\Ming_python\ansys-unified-mcp\docs\api_inventory\optislang_api.json")
+    out_path = Path(__file__).resolve().parent.parent / "docs" / "api_inventory" / "optislang_api.json"
     out_path.parent.mkdir(parents=True, exist_ok=True)
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(api_data, f, ensure_ascii=False, indent=2)

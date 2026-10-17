@@ -58,7 +58,7 @@ def main():
 
     print("\n" + "=" * 60)
     print(f"[SUCCESS] 全部四大模組 API 抽取與知識庫建置完畢！總耗時: {time.time() - start_total:.2f} 秒")
-    print(f"目錄位置: {Path(r'F:/Ming_python/ansys-unified-mcp/docs/api_inventory').resolve()}")
+    print(f"目錄位置: {(Path(__file__).resolve().parent.parent / 'docs' / 'api_inventory').resolve()}")
     print("=" * 60)
 
 if __name__ == "__main__":

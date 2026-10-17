@@ -3,7 +3,9 @@ ANSYS Mechanical API 萃取腳本 (Python AST 解析)
 掃描 ansys-mechanical-stubs/v251 內所有模組，完整抽取 ACT DataModel Class、Method、Property 與 Type Hints。
 """
 import ast
+import importlib.util
 import os
+import site
 import sys
 import json
 from pathlib import Path
@@ -28,15 +30,72 @@ def get_annotation_str(node):
         return f"{get_annotation_str(node.left)} | {get_annotation_str(node.right)}"
     return ast.unparse(node) if hasattr(ast, "unparse") else "Any"
 
+
+def resolve_stubs_root() -> Path:
+    """
+    動態解析 ansys-mechanical-stubs 安裝路徑，依序嘗試：
+    1. 環境變數 ANSYS_MECHANICAL_STUBS_ROOT 顯式覆寫
+    2. importlib 直接定位已安裝套件 ansys.mechanical.stubs
+    3. site-packages / user site-packages 底下搜尋 ansys/mechanical/stubs/v<version>
+    找不到則拋出清晰錯誤，不預設 fallback 到任何特定個人路徑。
+    """
+    env_override = os.environ.get("ANSYS_MECHANICAL_STUBS_ROOT")
+    if env_override:
+        override_path = Path(env_override)
+        if override_path.exists():
+            return override_path
+        raise FileNotFoundError(
+            f"環境變數 ANSYS_MECHANICAL_STUBS_ROOT 指定的路徑不存在: {override_path}"
+        )
+
+    spec = importlib.util.find_spec("ansys.mechanical.stubs")
+    if spec is not None and spec.submodule_search_locations:
+        for location in spec.submodule_search_locations:
+            candidate = Path(location)
+            if candidate.exists():
+                version_dirs = sorted(
+                    (d for d in candidate.iterdir() if d.is_dir() and d.name.startswith("v")),
+                    reverse=True,
+                )
+                if version_dirs:
+                    return version_dirs[0]
+
+    site_dirs = []
+    try:
+        site_dirs.extend(site.getsitepackages())
+    except AttributeError:
+        pass
+    try:
+        site_dirs.append(site.getusersitepackages())
+    except AttributeError:
+        pass
+
+    for site_dir in site_dirs:
+        stubs_parent = Path(site_dir) / "ansys" / "mechanical" / "stubs"
+        if stubs_parent.exists():
+            version_dirs = sorted(
+                (d for d in stubs_parent.iterdir() if d.is_dir() and d.name.startswith("v")),
+                reverse=True,
+            )
+            if version_dirs:
+                return version_dirs[0]
+
+    raise FileNotFoundError(
+        "找不到 ansys-mechanical-stubs 安裝路徑。請確認已執行 "
+        "`pip install ansys-mechanical-stubs`，或透過環境變數 "
+        "ANSYS_MECHANICAL_STUBS_ROOT 手動指定 stubs 根目錄。"
+    )
+
 def extract_mechanical():
-    stubs_root = Path(r"C:\Users\Ming\AppData\Roaming\Python\Python314\site-packages\ansys\mechanical\stubs\v251")
-    if not stubs_root.exists():
-        print(f"錯誤: 找不到 Stubs 目錄: {stubs_root}")
+    try:
+        stubs_root = resolve_stubs_root()
+    except FileNotFoundError as e:
+        print(f"錯誤: {e}")
         return None
 
     api_data = {
         "module": "Ansys.Mechanical",
-        "version": "2025 R1 (v251)",
+        "version": stubs_root.name,
         "source": "ansys-mechanical-stubs",
         "modules": {},
         "statistics": {
@@ -172,7 +231,7 @@ def extract_mechanical():
                 "functions": module_functions
             }
 
-    out_path = Path(r"F:\Ming_python\ansys-unified-mcp\docs\api_inventory\mechanical_api.json")
+    out_path = Path(__file__).resolve().parent.parent / "docs" / "api_inventory" / "mechanical_api.json"
     out_path.parent.mkdir(parents=True, exist_ok=True)
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(api_data, f, ensure_ascii=False, indent=2)
