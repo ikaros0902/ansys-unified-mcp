@@ -454,7 +454,7 @@ def setup_and_solve_static_structural(
     safe_load_ns = _esc(load_ns)
     dx, dy, dz = force_direction[0], force_direction[1], force_direction[2]
 
-    # 組裝自動化 ACT 腳本
+    # Assemble automated ACT script
     script = f"""
 import json
 
@@ -464,7 +464,7 @@ if len(model.Analyses) <= {analysis_index}:
 else:
     analysis = model.Analyses[{analysis_index}]
     
-    # 1. 材料指派
+    # 1. Material assignment
     mat_assigned = False
     for body in model.Geometry.GetChildren(DataModelObjectCategory.Body, True):
         if str(body.Name) == "{safe_body}":
@@ -472,12 +472,12 @@ else:
             mat_assigned = True
             break
 
-    # 2. 網格單元尺寸設定與劃分
+    # 2. Mesh sizing and generation
     mesh = model.Mesh
     mesh.ElementSize = Quantity({mesh_element_size_mm}, "mm")
     mesh.GenerateMesh()
     
-    # 3. 施加固定支撐
+    # 3. Apply fixed support
     fix_obj = None
     for ns in model.GetChildren(DataModelObjectCategory.NamedSelection, True):
         if str(ns.Name) == "{safe_fix_ns}":
@@ -486,7 +486,7 @@ else:
             fix_obj = fix_support
             break
             
-    # 4. 施加力載荷
+    # 4. Apply force load
     force_obj = None
     for ns in model.GetChildren(DataModelObjectCategory.NamedSelection, True):
         if str(ns.Name) == "{safe_load_ns}":
@@ -497,15 +497,15 @@ else:
             force_obj = force
             break
             
-    # 5. 插入後處理結果物件
+    # 5. Insert post-processing results
     solution = analysis.Solution
     eqv_stress = solution.AddEquivalentStress()
     tot_deform = solution.AddTotalDeformation()
     
-    # 6. 求解
+    # 6. Solve
     solution.Solve(True)
     
-    # 7. 提取極值與狀態
+    # 7. Extract extreme values and status
     report = {{
         "ok": True,
         "solve_status": str(solution.Status),
@@ -568,19 +568,19 @@ if len(model.Analyses) <= {analysis_index}:
 else:
     analysis = model.Analyses[{analysis_index}]
     
-    # 網格劃分
+    # 1. Mesh generation
     mesh = model.Mesh
     mesh.ElementSize = Quantity({mesh_element_size_mm}, "mm")
     mesh.GenerateMesh()
     
-    # 邊界約束
+    # 2. Boundary conditions
     for ns in model.GetChildren(DataModelObjectCategory.NamedSelection, True):
         if str(ns.Name) == "{safe_fix_ns}":
             fix = analysis.AddFixedSupport()
             fix.Location = ns
             break
             
-    # 設定模態求解階數
+    # 3. Modal settings
     modal_options = analysis.AnalysisSettings
     modal_options.MaxModesToFind = {num_modes}
     

@@ -57,7 +57,7 @@ SpaceClaim 的布林運算 `Combine.Intersect`（確認存在於 `spaceclaim_api
 | 偵測階段 | 工具 | 運作層級 | 優點 | 限制 |
 |---|---|---|---|---|
 | **SpaceClaim 幾何階段（本技能）** | `check_assembly_interference.ironpy` | Body 幾何層級，無需網格 | 在網格劃分前即可發現問題，修復成本低；不受網格尺寸影響判定結果 | 無法偵測網格相關的穿透（如殼單元厚度方向重疊，需網格後才能判定） |
-| **Mechanical 網格階段（既有工具）** | `ns.GenerationCriteria[].Criterion = BodyInterferenceMesh`（見 `ansys-mechanical` 技能） | 網格元素層級 | 可偵測殼單元厚度方向的真實网格穿透 | 必須先完成網格劃分才能執行，發現問題時修復成本高（需重新劃網格） |
+| **Mechanical 網格階段（既有工具）** | `ns.GenerationCriteria[].Criterion = BodyInterferenceMesh`（見 `ansys-mechanical` 技能） | 網格元素層級 | 可偵測殼單元厚度方向的真實網格穿透 | 必須先完成網格劃分才能執行，發現問題時修復成本高（需重新劃網格） |
 
 兩者為互補關係：**先用本技能在幾何階段排除明顯幾何干涉，再在 Mechanical 階段用網格層級診斷做最終確認**，不互相取代。
 

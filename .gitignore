@@ -20,6 +20,7 @@ __pycache__/
 .env.*.local
 .vscode/
 .idea/
+.codebase-memory/
 
 # 本機 IDE / Obsidian 設定
 .kiro/settings/
