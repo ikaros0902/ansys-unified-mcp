@@ -33,6 +33,7 @@ class AnsysConfig:
     cfx_pre_exe: Path
     mapdl_exe: Path
     lsdyna_exe: Path
+    spaceclaim_exe: Path
     available: bool = True
 
 
@@ -137,18 +138,24 @@ def _resolve_root() -> tuple[Optional[Path], str]:
     return None, version
 
 
+def _override_or(env_key: str, default_path: Path) -> Path:
+    val = os.environ.get(env_key)
+    return Path(val) if val else default_path
+
+
 def _derive(root_path: Path, version: str, available: bool) -> AnsysConfig:
-    """Derive per-module exe paths from a root path (relative to standard layout)."""
+    """Derive per-module exe paths from a root path (relative to standard layout), allowing env overrides."""
     return AnsysConfig(
         version=version,
         root_path=root_path,
-        workbench_exe=root_path / "Framework" / "bin" / "Win64" / "RunWB2.exe",
-        mechanical_exe=root_path / "aisol" / "bin" / "winx64" / "AnsysWBU.exe",
-        fluent_exe=root_path / "fluent" / "ntbin" / "win64" / "fluent.exe",
-        cfx_solve_exe=root_path / "CFX" / "bin" / "cfx5solve.exe",
-        cfx_pre_exe=root_path / "CFX" / "bin" / "cfx5pre.exe",
-        mapdl_exe=root_path / "ansys" / "bin" / "winx64" / "ANSYS.exe",
-        lsdyna_exe=root_path / "ansys" / "bin" / "winx64" / "lsdyna.exe",
+        workbench_exe=_override_or("ANSYS_RUNWB2", root_path / "Framework" / "bin" / "Win64" / "RunWB2.exe"),
+        mechanical_exe=_override_or("ANSYS_MECHANICAL", root_path / "aisol" / "bin" / "winx64" / "AnsysWBU.exe"),
+        fluent_exe=_override_or("ANSYS_FLUENT", root_path / "fluent" / "ntbin" / "win64" / "fluent.exe"),
+        cfx_solve_exe=_override_or("ANSYS_CFX_SOLVE", root_path / "CFX" / "bin" / "cfx5solve.exe"),
+        cfx_pre_exe=_override_or("ANSYS_CFX_PRE", root_path / "CFX" / "bin" / "cfx5pre.exe"),
+        mapdl_exe=_override_or("ANSYS_MAPDL", root_path / "ansys" / "bin" / "winx64" / "ANSYS.exe"),
+        lsdyna_exe=_override_or("ANSYS_LSDYNA", root_path / "ansys" / "bin" / "winx64" / "lsdyna.exe"),
+        spaceclaim_exe=_override_or("ANSYS_SPACECLAIM_EXE", root_path / "scdm" / "SpaceClaim.exe"),
         available=available,
     )
 

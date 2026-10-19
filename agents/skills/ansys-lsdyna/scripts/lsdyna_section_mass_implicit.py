@@ -47,6 +47,7 @@ def onupdateStep(step):
     # 20230924 Zephyr Yang
     # 20241215 Wayne Wang First Release Ver1
     # 20250107 Wayne Wang Secon Release Ver2
+    # 20261019 Update Hex Section default formulation to ELFORM 2 (Fully Integrated S/R Solid)
     import time
     import re
     startTime = time.time()
@@ -83,7 +84,7 @@ def onupdateStep(step):
                     except:
                         pass
 
-                    print("[UI_OUTPUT] " + str("Error:\nElement not found in part named: "+ str(bo.Name)))
+                    System.Windows.Forms.MessageBox.Show("Error:\nElement not found in part named: "+ str(bo.Name))
                     #break
                 else:
                     bg=bo.GetGeoBody()
@@ -105,7 +106,7 @@ def onupdateStep(step):
                                 except:
                                     pass
 
-                                print("[UI_OUTPUT] " + str("Error:\nQuadratic Shell Elements are found in part named: "+ str(bo.Name)))
+                                System.Windows.Forms.MessageBox.Show("Error:\nQuadratic Shell Elements are found in part named: "+ str(bo.Name))
                         if existLinearShellElements == True:
                             shell_ids.append(bg.Id)
                     elif bg.BodyType.ToString() =="GeoBodySolid":
@@ -128,7 +129,7 @@ def onupdateStep(step):
                                 except:
                                     pass
 
-                                print("[UI_OUTPUT] " + str("Error:\nQuadratic Solid Elements are found in part named: "+ str(bo.Name)))
+                                System.Windows.Forms.MessageBox.Show("Error:\nQuadratic Solid Elements are found in part named: "+ str(bo.Name))
                         if existLinearSolidElements == True and HexN >= tetraN:
                             Hex_ids.append(bg.Id)
                         elif existLinearSolidElements == True and HexN < tetraN:
@@ -157,8 +158,8 @@ def onupdateStep(step):
             selection = ExtAPI.SelectionManager.CreateSelectionInfo(SelectionTypeEnum.GeometryEntities)
             selection.Ids = Hex_ids
             dynaSection.Properties['Geometry/DefineBy/Geo'].Value = selection
-            dynaSection.Properties['Formulation'].Value = r'Poor Aspect Ratio, Fully Integrated S/R Solid , Accurate Formulation'
-            DataModel.GetObjectById(dynaSection.ObjectId).Name = r'scr_hex_ex10'
+            dynaSection.Properties['Formulation'].Value = r'Fully Integrated S/R Solid'
+            DataModel.GetObjectById(dynaSection.ObjectId).Name = r'scr_hex_ex2'
         '''
         Some calls seem to be asynchronous. 
         For instance, when scoping the bodies to the CFL object, 
@@ -289,7 +290,7 @@ def onupdateStep(step):
     if createSection:
         section_shell_n = len(DataModel.GetObjectsByName('scr_shell_ex16'))
         section_tetra_n = len(DataModel.GetObjectsByName('scr_tetra_ex10'))
-        section_hex_n = len(DataModel.GetObjectsByName('scr_hex_ex10'))
+        section_hex_n = len(DataModel.GetObjectsByName('scr_hex_ex2')) + len(DataModel.GetObjectsByName('scr_hex_ex10'))
         if section_shell_n != 0 or section_tetra_n != 0 or section_hex_n != 0:
             try:
                 act_elapsed_sec = _act_time.time() - _ACT_START_TIME
@@ -297,7 +298,7 @@ def onupdateStep(step):
             except:
                 pass
 
-            print("[UI_OUTPUT] " + str("Error: please delete all section first!"))
+            System.Windows.Forms.MessageBox.Show("Error: please delete all section first!")
             DoneMessageBox = False
         else:
             _createSection()
@@ -317,5 +318,5 @@ def onupdateStep(step):
         except:
             pass
 
-        print("[UI_OUTPUT] " + str("Done, took {} seconds {}".format(endTime - startTime, systemWeightMessage))) 
+        System.Windows.Forms.MessageBox.Show("Done, took {} seconds {}".format(endTime - startTime, systemWeightMessage)) 
         

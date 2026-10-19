@@ -25,7 +25,7 @@ if hasattr(sys.stdout, "reconfigure"):
     except Exception:
         pass
 
-REPO_ROOT = Path(__file__).resolve().parent.parent
+REPO_ROOT = Path(__file__).resolve().parents[2]
 LOGS_ERRORS_DIR = REPO_ROOT / "logs" / "errors"
 
 def check_python_packages() -> dict:
@@ -46,7 +46,7 @@ def check_python_packages() -> dict:
     return results
 
 def check_ansys_installations() -> dict:
-    versions = ["251", "242", "241", "232"]
+    versions = ["261", "252", "251", "242", "241", "232"]
     detected = {}
     for v in versions:
         var_name = f"AWP_ROOT{v}"
@@ -54,10 +54,13 @@ def check_ansys_installations() -> dict:
         if path and Path(path).exists():
             detected[var_name] = {"path": path, "source": "Environment Variable"}
         else:
-            for drive in ["C:", "D:", "E:"]:
-                cand = Path(f"{drive}/Program Files/ANSYS Inc/v{v}")
-                if cand.exists():
-                    detected[var_name] = {"path": str(cand), "source": f"Scanned {cand}"}
+            for drive in ["D:", "C:", "E:"]:
+                for base in [f"{drive}/ANSYS Inc/v{v}", f"{drive}/Program Files/ANSYS Inc/v{v}"]:
+                    cand = Path(base)
+                    if cand.exists():
+                        detected[var_name] = {"path": str(cand), "source": f"Scanned {cand}"}
+                        break
+                if var_name in detected:
                     break
     return detected
 

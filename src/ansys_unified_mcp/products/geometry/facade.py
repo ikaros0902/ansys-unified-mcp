@@ -95,14 +95,33 @@ class GeometryController:
         """自動偵測本機 SpaceClaim.exe 執行檔。"""
         import os
         from pathlib import Path
+
+        # 1. 明確環境變數優先
+        override = os.environ.get("ANSYS_SPACECLAIM_EXE")
+        if override and Path(override).is_file():
+            return Path(override)
+
+        # 2. 透過系統全域設定解析
+        try:
+            from ansys_unified_mcp.config import config
+            if hasattr(config, "spaceclaim_exe") and config.spaceclaim_exe.is_file():
+                return config.spaceclaim_exe
+        except Exception:
+            pass
+
+        # 3. 掃描 AWP_ROOT 環境變數
         for env_var in sorted([k for k in os.environ if k.startswith("AWP_ROOT")], reverse=True):
             cand = Path(os.environ[env_var]) / "scdm" / "SpaceClaim.exe"
             if cand.is_file():
                 return cand
-        for ver in ["v252", "v251", "v242", "v241", "v232"]:
-            cand = Path(f"C:/Program Files/ANSYS Inc/{ver}/scdm/SpaceClaim.exe")
-            if cand.is_file():
-                return cand
+
+        # 4. 常見磁碟機與安裝路徑掃描 (包含 D: 與最新 v261)
+        for drive in ["D:", "C:", "E:"]:
+            for ver in ["v261", "v252", "v251", "v242", "v241", "v232"]:
+                for base in [f"{drive}/ANSYS Inc/{ver}", f"{drive}/Program Files/ANSYS Inc/{ver}"]:
+                    cand = Path(base) / "scdm" / "SpaceClaim.exe"
+                    if cand.is_file():
+                        return cand
         return None
 
     def run_spaceclaim_headless(
