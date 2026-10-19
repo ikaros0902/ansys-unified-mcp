@@ -39,7 +39,7 @@ flowchart TD
 | **幾何分類維度定義** | [`references/classification_dimensions.md`](references/classification_dimensions.md) | 孔徑、全圓/半圓判別公式、厚度/曲率/位置分類維度與資料結構。 |
 | **階層配對策略細節** | [`references/pairing_strategy.md`](references/pairing_strategy.md) | Within/Ignore Component 判定邏輯、SameBody/Internal/External 統計、距離分級門檻。 |
 | **通用分類配對引擎** | [`scripts/classify_and_group_engine.ironpy`](scripts/classify_and_group_engine.ironpy) | 基於 `SC_RM_grp_creation.py` 改寫，去除 ACT UI Properties，改為函式參數驅動。 |
-| **既有階層式孔位配對腳本（參照不重複）** | [`../ansys-spaceclaim-modeling/scripts/rm_hole_group_hierarchical.ironpy`](../ansys-spaceclaim-modeling/scripts/rm_hole_group_hierarchical.ironpy) | 既有 argsDict 驅動版本，本技能之引擎為其通用化擴充，兩者判準一致不重複定義。 |
+| **既有階層式孔位配對腳本（參照不重複）** | [`../ansys-geometry-modeling/references/embedded_scripts.md`](../ansys-geometry-modeling/references/embedded_scripts.md) | 唯一來源為 `rm_group` (`products/geometry/spaceclaim_scripts/rm_group.ironpy`)，既有 argsDict 驅動版本，本技能之引擎為其通用化擴充，兩者判準一致不重複定義。 |
 
 ---
 

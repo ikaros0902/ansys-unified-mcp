@@ -40,9 +40,7 @@ WORKBENCH_QUEUE_DIR = MCP_HOME / ".runtime" / "queue"
 STATUS_FILE = MCP_HOME / "status.json"
 STOP_FILE = MCP_HOME / "stop.flag"
 LOG_FILE = MCP_HOME / "mcp.log"
-_NEW_BRIDGE = SERVER_ROOT.parent / "products" / "workbench" / "scripts" / "ansys_workbench_bridge.wbjn"
-_OLD_BRIDGE = SERVER_ROOT.parent / "scripts" / "ansys_workbench_bridge.wbjn"
-BRIDGE_JOURNAL = _NEW_BRIDGE if _NEW_BRIDGE.exists() else _OLD_BRIDGE
+BRIDGE_JOURNAL = SERVER_ROOT.parent / "products" / "workbench" / "scripts" / "ansys_workbench_bridge.wbjn"
 
 DEFAULT_RUNWB2 = str(config.workbench_exe)
 DEFAULT_MECHANICAL = str(config.mechanical_exe)

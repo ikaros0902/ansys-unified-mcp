@@ -19,14 +19,9 @@ from mcp.types import Tool, TextContent
 # ===================================================================
 # MCP-TUI 自動對映器（Skill 聯動）
 # ===================================================================
-_skill_scripts_dir = Path(__file__).resolve().parent / "ansys-fluent-tui-guide" / "scripts"
-if _skill_scripts_dir.exists():
-    sys.path.insert(0, str(_skill_scripts_dir))
-    from mcp_tui_auto_mapper import map_mcp_call, get_mapping_report, reset_mapper
-else:
-    map_mcp_call = None      # type: ignore[assignment]
-    get_mapping_report = None  # type: ignore[assignment]
-    reset_mapper = None       # type: ignore[assignment]
+map_mcp_call = None  # type: ignore[assignment]
+get_mapping_report = None  # type: ignore[assignment]
+reset_mapper = None  # type: ignore[assignment]
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger("ansys-mcp")
