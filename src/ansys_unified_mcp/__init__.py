@@ -1,6 +1,6 @@
 """ANSYS Unified MCP Server Package."""
 
-__version__ = "2.0.0"
+__version__ = "3.0.0"
 
 # Note: `config` is intentionally NOT imported here. Importing the instance at
 # package level would shadow the `ansys_unified_mcp.config` submodule and force

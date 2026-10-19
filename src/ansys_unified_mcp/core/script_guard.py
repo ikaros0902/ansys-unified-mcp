@@ -29,9 +29,11 @@ _DANGEROUS_PATTERNS = [
     re.compile(r"\bopen\s*\([^)]*['\"]\/etc"),  # Unix 敏感路徑
 ]
 
+from ansys_unified_mcp.core.paths import resolve_runtime_dir
+
 _AUDIT_LOG_DIR = Path(os.environ.get(
     "ANSYS_MCP_AUDIT_DIR",
-    Path(__file__).resolve().parents[3] / ".runtime" / "logs" / "script_audit"
+    resolve_runtime_dir() / "logs" / "script_audit"
 ))
 
 _MODE = os.environ.get("ANSYS_MCP_SCRIPT_GUARD", "warn")  # warn | strict | off

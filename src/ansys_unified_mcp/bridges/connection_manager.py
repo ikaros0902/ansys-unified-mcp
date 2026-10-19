@@ -7,11 +7,12 @@ from pathlib import Path
 from typing import Optional, List, Dict, Any
 
 from ansys_unified_mcp.config import config
+from ansys_unified_mcp.core.paths import resolve_runtime_dir
 
 logger = logging.getLogger(__name__)
 
 _REPO_ROOT = Path(__file__).resolve().parents[3]
-_RUNTIME_REGISTRY_DIR = _REPO_ROOT / ".runtime" / "queue" / "registry"
+_RUNTIME_REGISTRY_DIR = resolve_runtime_dir() / "queue" / "registry"
 _LEGACY_REGISTRY_DIR = _REPO_ROOT / "workbench_queue" / "registry"
 _DEFAULT_REGISTRY_DIR = (
     _RUNTIME_REGISTRY_DIR if _RUNTIME_REGISTRY_DIR.exists() else _LEGACY_REGISTRY_DIR

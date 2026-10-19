@@ -27,6 +27,8 @@ from ansys_unified_mcp.config import config
 
 __version__ = "0.2.0"
 
+from ansys_unified_mcp.core.paths import resolve_runtime_dir
+
 SERVER_ROOT = Path(__file__).resolve().parent
 DEFAULT_MCP_HOME = SERVER_ROOT
 MCP_HOME = Path(os.environ.get("ANSYS_WORKBENCH_MCP_HOME", DEFAULT_MCP_HOME)).expanduser().resolve()
@@ -35,8 +37,9 @@ COMMANDS_DIR = MCP_HOME / "commands"
 RESULTS_DIR = MCP_HOME / "results"
 SCRIPTS_DIR = MCP_HOME / "scripts"
 RUNS_DIR = MCP_HOME / "runs"
-LOGS_DIR = MCP_HOME / ".runtime" / "logs"
-WORKBENCH_QUEUE_DIR = MCP_HOME / ".runtime" / "queue"
+_DEFAULT_RUNTIME = resolve_runtime_dir()
+LOGS_DIR = Path(os.environ.get("LOGS_DIR", MCP_HOME / ".runtime" / "logs" if os.environ.get("ANSYS_WORKBENCH_MCP_HOME") else _DEFAULT_RUNTIME / "logs"))
+WORKBENCH_QUEUE_DIR = Path(os.environ.get("WORKBENCH_QUEUE_DIR", MCP_HOME / ".runtime" / "queue" if os.environ.get("ANSYS_WORKBENCH_MCP_HOME") else _DEFAULT_RUNTIME / "queue"))
 STATUS_FILE = MCP_HOME / "status.json"
 STOP_FILE = MCP_HOME / "stop.flag"
 LOG_FILE = MCP_HOME / "mcp.log"

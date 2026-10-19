@@ -10,13 +10,17 @@ from typing import Any
 
 from dotenv import load_dotenv
 
-from ansys_unified_mcp.core.paths import find_runwb2 as find_workbench_exe, find_mechanical_cli
+from ansys_unified_mcp.core.paths import (
+    find_runwb2 as find_workbench_exe,
+    find_mechanical_cli,
+    resolve_runtime_dir,
+)
 
 
 ROOT = Path(__file__).resolve().parents[3]
 load_dotenv(ROOT / ".env")
 
-JOBS_DIR = Path(os.environ.get("JOBS_DIR", ROOT / ".runtime" / "jobs"))
+JOBS_DIR = Path(os.environ.get("JOBS_DIR", resolve_runtime_dir() / "jobs"))
 WORKBENCH_JOBS_DIR = JOBS_DIR / "workbench"
 
 

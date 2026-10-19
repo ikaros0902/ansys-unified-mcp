@@ -269,7 +269,7 @@ mcp.get_tool = _wrapped_get_tool
 # 依各 session 透過 ans_session_set_workspace 宣告的 product 偏好收斂其工具可見集，
 # session 間互不干擾；未宣告者維持全集 (向後相容)。
 try:
-    from ansys_unified_mcp.core.visibility import WorkspaceVisibilityMiddleware
+    from ansys_unified_mcp.tools.visibility import WorkspaceVisibilityMiddleware
     mcp.add_middleware(WorkspaceVisibilityMiddleware(mcp, _VISIBILITY_STATE_KEY))
 except Exception:
     # 防禦性：可見性為加值功能，掛載失敗不應阻斷 server 啟動

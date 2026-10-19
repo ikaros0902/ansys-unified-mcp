@@ -4,35 +4,52 @@ build-backend = "hatchling.build"
 
 [project]
 name = "ansys-unified-mcp"
-version = "2.0.0"
+version = "3.0.0"
 description = "Unified ANSYS MCP Server (Workbench, Mechanical, Fluent, SpaceClaim, OptiSLang)"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 dependencies = [
     # 釘選 fastmcp: per-session 工具可見性與 mount 行為僅對 3.4.x 系列驗證保證，
     # 跨 minor 版本 (3.5+) 可能變更 API 契約，故鎖 minor。
     "fastmcp>=3.4.5,<3.5",
+    "python-dotenv",
+    "pydantic",
+    "rich",
+    "psutil",
+]
+
+[project.optional-dependencies]
+mechanical = ["ansys-mechanical-core"]
+fluent = ["ansys-fluent-core"]
+geometry = ["ansys-geometry-core"]
+optislang = ["ansys-optislang-core"]
+dpf = ["ansys-dpf-core>=0.10.0"]
+workbench = ["ansys-workbench-core"]
+dyna = ["ansys-dyna-core>=0.12.1", "lasso-python"]
+all = [
     "ansys-mechanical-core",
     "ansys-fluent-core",
     "ansys-geometry-core",
     "ansys-optislang-core",
     "ansys-dpf-core>=0.10.0",
-    "python-dotenv",
-    "pydantic",
-    "rich",
-    "psutil"
+    "ansys-workbench-core",
+    "ansys-dyna-core>=0.12.1",
+    "lasso-python",
 ]
-
-[project.optional-dependencies]
-workbench = ["ansys-workbench-core"]
-# dyna extra: PyDYNA 供 products/dyna 離線生成 LS-DYNA keyword deck;
-# lasso-python 供 d3plot 後處理解析。products/dyna/facade 採延遲載入 + try/except
-# ImportError, 未裝時優雅回錯不拖垮 server, 故列為 optional 而非核心依賴。
-dyna = ["ansys-dyna-core>=0.12.1", "lasso-python"]
 dev = ["pytest", "ruff"]
 
 [project.scripts]
 ansys-unified-mcp = "ansys_unified_mcp.__main__:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ansys_unified_mcp"]
+artifacts = [
+    "*.ironpy",
+    "*.wbjn",
+    "*.html",
+    "*.sql",
+    "*.json",
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -47,7 +64,7 @@ markers = [
 # ===== Ruff 靜態檢查（Tier 1 閘門，見 docs/testing/TEST_INFRA.md）=====
 [tool.ruff]
 line-length = 100
-target-version = "py310"  # 對齊 requires-python = ">=3.10"
+target-version = "py312"
 # 文件語料、執行輸出與佇列目錄不含需檢查的原始碼
 extend-exclude = [
     ".runtime",

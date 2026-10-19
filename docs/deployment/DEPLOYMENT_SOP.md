@@ -99,7 +99,7 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
 
 ### 步驟 5：將 MCP 掛載進 AI 客戶端 (Client 配置)
 
-根據使用者慣用的 AI 軟體，將以下 JSON 填入其設定檔中：
+根據使用者慣用的 AI 軟體，將以下 JSON 填入其設定檔中。推薦使用標準模組入口 `["-m", "ansys_unified_mcp"]` 或已安裝的 CLI 指令 `ansys-unified-mcp`：
 
 #### 方案 A：Claude Desktop 客戶端
 開啟設定檔：`%APPDATA%\Claude\claude_desktop_config.json`
@@ -109,7 +109,8 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
     "ansys-unified-mcp": {
       "command": "C:\\path\\to\\ansys-unified-mcp\\.venv\\Scripts\\python.exe",
       "args": [
-        "C:\\path\\to\\ansys-unified-mcp\\mcp_server.py"
+        "-m",
+        "ansys_unified_mcp"
       ],
       "cwd": "C:\\path\\to\\ansys-unified-mcp",
       "env": {
@@ -120,7 +121,7 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
   }
 }
 ```
-*(請將 `C:\\path\\to\\ansys-unified-mcp` 替換為實際目錄，反斜線需寫為雙反斜線 `\\`)*
+*(請將 `C:\\path\\to\\ansys-unified-mcp` 替換為實際目錄，反斜線需寫為雙反斜線 `\\`。若已將虛擬環境加入 PATH 或全域安裝，亦可直接使用 `"command": "ansys-unified-mcp", "args": []`)*
 
 #### 方案 B：Antigravity (Google AGY)
 在專案或全域的 `mcp_config.json` 加入配置：
@@ -132,7 +133,7 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
   "mcpServers": {
     "ansys-unified-mcp": {
       "command": "C:/path/to/ansys-unified-mcp/.venv/Scripts/python.exe",
-      "args": ["C:/path/to/ansys-unified-mcp/mcp_server.py"],
+      "args": ["-m", "ansys_unified_mcp"],
       "cwd": "C:/path/to/ansys-unified-mcp",
       "env": {
         "PYTHONUTF8": "1"
@@ -143,7 +144,9 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
 ```
 *(請將路徑替換為實際目錄，建議使用正斜線 `/` 避免跳脫問題)*
 
-> 💡 **進階特性**：`mcp_server.py` 已內建自動加入 `src` 目錄與 stderr 隔離日誌，是最穩健的啟動入口。
+> 💡 **進階特性與向後相容**：
+> - 標準入口 `python -m ansys_unified_mcp` 為 3.0.0+ 推薦做法，由套件進入點統一調度。
+> - 若既有舊設定檔仍指向 `mcp_server.py`，系統內建相容過渡層並輸出提示，確保現存客戶端無痛運作。
 
 ---
 

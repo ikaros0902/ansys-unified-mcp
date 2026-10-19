@@ -134,3 +134,48 @@ def environment_summary() -> dict:
         "fluent_exe": s(fluent),
         "fluent_exe_available": fluent is not None,
     }
+
+
+def resolve_runtime_dir() -> Path:
+    """Resolve unified writable runtime directory.
+
+    Order of precedence:
+    1. Explicit environment variable: ANSYS_UNIFIED_MCP_RUNTIME or ANSYS_MCP_RUNTIME_DIR.
+    2. Repo root .runtime directory if workspace is in repository root (has pyproject.toml) and writable.
+    3. User application directory fallback (%LOCALAPPDATA%/ansys-unified-mcp on Windows,
+       ~/.ansys_unified_mcp/runtime on other platforms).
+
+    The resolved directory is automatically created (mkdir parents=True, exist_ok=True).
+    """
+    for key in ("ANSYS_UNIFIED_MCP_RUNTIME", "ANSYS_MCP_RUNTIME_DIR"):
+        val = os.environ.get(key)
+        if val and val.strip():
+            runtime_dir = Path(val.strip()).expanduser().resolve()
+            runtime_dir.mkdir(parents=True, exist_ok=True)
+            return runtime_dir
+
+    # Check if running in a repo root containing pyproject.toml and writable
+    repo_root = Path(__file__).resolve().parents[3]
+    if (repo_root / "pyproject.toml").is_file():
+        candidate = repo_root / ".runtime"
+        try:
+            candidate.mkdir(parents=True, exist_ok=True)
+            probe = candidate / ".write_probe"
+            probe.touch(exist_ok=True)
+            probe.unlink(missing_ok=True)
+            return candidate
+        except (OSError, PermissionError):
+            pass
+
+    # Fallback to system user application directory
+    if os.name == "nt":
+        local_app_data = os.environ.get("LOCALAPPDATA")
+        if local_app_data:
+            fallback = Path(local_app_data) / "ansys-unified-mcp"
+        else:
+            fallback = Path.home() / "AppData" / "Local" / "ansys-unified-mcp"
+    else:
+        fallback = Path.home() / ".ansys_unified_mcp" / "runtime"
+
+    fallback.mkdir(parents=True, exist_ok=True)
+    return fallback

@@ -23,18 +23,20 @@ from ansys_unified_mcp.core.jobs.models import (
     VerdictEnum,
 )
 from ansys_unified_mcp.core.jobs.sandbox import JobSandbox
+from ansys_unified_mcp.core.paths import resolve_runtime_dir
 
 
 class JobManager:
     """模擬作業集中管理器。"""
 
-    DEFAULT_JOBS_ROOT = Path(__file__).resolve().parents[4] / ".runtime" / "jobs"
+    DEFAULT_JOBS_ROOT = resolve_runtime_dir() / "jobs"
 
     def __init__(self, base_jobs_dir: Optional[Path | str] = None) -> None:
         if base_jobs_dir:
             self.base_jobs_dir = Path(base_jobs_dir).resolve()
         else:
-            self.base_jobs_dir = self.DEFAULT_JOBS_ROOT.resolve()
+            default_root = getattr(self, "DEFAULT_JOBS_ROOT", None) or (resolve_runtime_dir() / "jobs")
+            self.base_jobs_dir = Path(default_root).resolve()
         self.base_jobs_dir.mkdir(parents=True, exist_ok=True)
 
     @staticmethod

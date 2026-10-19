@@ -12,7 +12,7 @@ import asyncio
 
 import pytest
 
-from ansys_unified_mcp.core.visibility import product_of_module, COMMON_PRODUCT
+from ansys_unified_mcp.tools.visibility import product_of_module, COMMON_PRODUCT
 
 
 # ---- product 分類純函式 (無需 server) ----
