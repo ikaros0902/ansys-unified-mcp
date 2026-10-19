@@ -99,7 +99,7 @@ class MechanicalDriver(BaseSolverDriver):
 
         if self.mode == "workbench":
             script_path = workspace / "solve_script.wbjn"
-            wbjn_content = f"""# ANSYS Workbench 批次腳本
+            wbjn_content = f"""# ANSYS Workbench batch script
 # Analysis Type: {analysis_type}
 SetScriptVersion(Version="24.2")
 template = GetTemplate(TemplateName="Static Structural", Solver="ANSYS")
