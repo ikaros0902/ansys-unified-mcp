@@ -15,7 +15,6 @@ from pathlib import Path
 import shutil
 from typing import Any, Dict, List, Optional, Union
 
-import numpy as np
 
 from ansys_unified_mcp.analytics.postprocessing.base import (
     BaseResultReader,
@@ -64,75 +63,12 @@ class DPFSandboxReader(BaseResultReader):
         return dest
 
     def _extract_field_results(self, model: Any) -> Dict[str, Any]:
-        """從 DPF Model 物件提取應力、位移與模態分析結果。"""
-        results: Dict[str, Any] = {}
+        """透過共用服務端縮減取得 SI 摘要。"""
+        from importlib import import_module
+        dpf = import_module("ansys.dpf.core")
+        from .dpf_summary import extract_summary
 
-        # 1. 提取 von-Mises 等效應力 (max, min, avg)
-        stress_op = None
-        if hasattr(model.results, "stress_von_mises"):
-            stress_op = model.results.stress_von_mises()
-        elif hasattr(model.results, "stress"):
-            stress_op = model.results.stress()
-
-        if stress_op is not None:
-            stress_fc = stress_op.eval()
-            if len(stress_fc) > 0:
-                s_data = np.asarray(stress_fc[0].data, dtype=float)
-                if s_data.size > 0:
-                    results["stress_von_mises"] = {
-                        "max": float(np.max(s_data)),
-                        "min": float(np.min(s_data)),
-                        "avg": float(np.mean(s_data)),
-                        "unit": "Pa",
-                    }
-
-        # 2. 提取位移場 (total max, ux, uy, uz components)
-        if hasattr(model.results, "displacement"):
-            disp_op = model.results.displacement()
-            disp_fc = disp_op.eval()
-            if len(disp_fc) > 0:
-                disp_data = np.asarray(disp_fc[0].data, dtype=float)
-                if disp_data.ndim == 2 and disp_data.shape[1] >= 3:
-                    norms = np.linalg.norm(disp_data[:, :3], axis=1)
-                    results["displacement"] = {
-                        "total_max": float(np.max(norms)),
-                        "ux_max": float(np.max(np.abs(disp_data[:, 0]))),
-                        "uy_max": float(np.max(np.abs(disp_data[:, 1]))),
-                        "uz_max": float(np.max(np.abs(disp_data[:, 2]))),
-                        "unit": "m",
-                    }
-                elif disp_data.size > 0:
-                    results["displacement"] = {
-                        "total_max": float(np.max(np.abs(disp_data))),
-                        "ux_max": float(np.max(np.abs(disp_data))),
-                        "uy_max": 0.0,
-                        "uz_max": 0.0,
-                        "unit": "m",
-                    }
-
-        # 3. 提取模態頻率與質量佔比 (若為模態分析)
-        if (
-            hasattr(model, "metadata")
-            and hasattr(model.metadata, "time_freq_support")
-            and model.metadata.time_freq_support is not None
-        ):
-            tfs = model.metadata.time_freq_support
-            frequencies: List[float] = []
-            if hasattr(tfs, "frequencies") and tfs.frequencies is not None:
-                freq_data = getattr(tfs.frequencies, "data", tfs.frequencies)
-                frequencies = [float(f) for f in freq_data]
-
-            if frequencies:
-                modal_dict: Dict[str, Any] = {"frequencies": frequencies}
-                if hasattr(tfs, "get_cumulative_mass_fractions"):
-                    try:
-                        cmf = tfs.get_cumulative_mass_fractions()
-                        modal_dict["effective_mass_ratio"] = cmf
-                    except Exception:
-                        pass
-                results["modal"] = modal_dict
-
-        return results
+        return extract_summary(model, dpf)
 
     def _synthetic_fallback(self) -> Dict[str, Any]:
         """建立符合標準結構之合成指標回傳字典。"""
@@ -199,7 +135,8 @@ class DPFSandboxReader(BaseResultReader):
 
         # 4. 嘗試動態引入 PyAnsys DPF 並載入模型
         try:
-            import ansys.dpf.core as dpf
+            from importlib import import_module
+            dpf = import_module("ansys.dpf.core")
         except ImportError as exc:
             if allow_synthetic:
                 return self._synthetic_fallback()
@@ -226,11 +163,5 @@ class DPFSandboxReader(BaseResultReader):
             ) from exc
 
         finally:
-            # 5. 確保在 finally 區塊中釋放串流與檔案句柄
-            if model is not None:
-                try:
-                    if hasattr(model, "metadata") and hasattr(model.metadata, "release_streams"):
-                        model.metadata.release_streams()
-                        logger.debug("已成功調用 model.metadata.release_streams()")
-                except Exception as rel_exc:
-                    logger.warning("release_streams() 釋放時發生例外: %s", rel_exc)
+            from .dpf_summary import release_streams
+            release_streams(model)

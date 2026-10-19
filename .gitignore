@@ -32,6 +32,7 @@ __pycache__/
 
 # 執行日誌與暫存
 .runtime/
+.audit/
 *.log
 *.txt
 !requirements.txt
@@ -99,4 +100,4 @@ src/**/tools/status.json
 .clinerules
 
 # Package Lock
-uv.lock
+# uv.lock 隨版本交付，固定同事與開發環境的依賴解析。

@@ -51,3 +51,7 @@ flowchart LR
 | Sizing 出現 ❓ 黃色問號 | `Location` 未設定或 Scoping 為空 | 確保 `sel.Ids = [body_id]` 陣列包含有效 ID |
 | `Quantity` 未定義 | 缺少命名空間匯入 | `from Ansys.Core.Units import Quantity` |
 | gRPC 連線被拒絕 | Port 錯誤或 Mechanical 未開啟 | 檢查 Mechanical 視窗啟動狀態與指定 port |
+
+## 官方範例路由
+
+需重現官方輸入與輸出驗收時，讀取 [references/official_examples.md](references/official_examples.md)；依該文件分開檢查啟動、模型修改與求解授權。

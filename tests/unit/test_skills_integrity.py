@@ -22,6 +22,12 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 SOURCE_ROOT = (REPO_ROOT / "agents" / "skills") if (REPO_ROOT / "agents" / "skills").is_dir() else ((REPO_ROOT / "skills") if (REPO_ROOT / "skills").is_dir() else (REPO_ROOT / "SKILLs"))
 KIRO_ROOT = REPO_ROOT / ".kiro" / "skills"
 
+if not KIRO_ROOT.is_dir():
+    pytest.skip(
+        f".kiro/skills 目錄不存在 ({KIRO_ROOT})，跳過與外部 Kiro 目錄的鏡像完整性驗證",
+        allow_module_level=True,
+    )
+
 
 def _controlled_skills():
     """回傳 SKILLs/ 下所有受控技能名稱（動態掃描，與同步腳本邏輯一致）"""

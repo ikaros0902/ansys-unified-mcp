@@ -102,33 +102,13 @@ def test_2_terminal_state_copies_rst_to_cache_and_extracts_fields(tmp_path: Path
     dummy_bytes = b"BINARY_SOLVE_RST_PAYLOAD_123456"
     create_dummy_rst(job_dir, "file.rst", dummy_bytes)
 
-    # 構造模擬 DPF Model 與欄位結果
-    mock_model = MagicMock()
+    from tests.unit.test_dpf_summary import build_fake
+    fake_dpf, mock_model = build_fake(
+        stress=[120.5, 245.8, 80.2],
+        displacement=[[0.10, 0.20, 0.30], [0.15, 0.25, 0.40]],
+    )
 
-    # 模擬等效應力欄位
-    mock_stress_field = MagicMock()
-    mock_stress_field.data = np.array([120.5, 245.8, 80.2], dtype=float)
-    mock_stress_op = MagicMock()
-    mock_stress_op.eval.return_value = [mock_stress_field]
-    mock_model.results.stress_von_mises.return_value = mock_stress_op
-
-    # 模擬位移場 (N, 3) 陣列
-    mock_disp_field = MagicMock()
-    mock_disp_field.data = np.array([
-        [0.10, 0.20, 0.30],
-        [0.15, 0.25, 0.40],
-    ], dtype=float)
-    mock_disp_op = MagicMock()
-    mock_disp_op.eval.return_value = [mock_disp_field]
-    mock_model.results.displacement.return_value = mock_disp_op
-
-    # 模擬模態特徵頻率
-    mock_tfs = MagicMock()
-    mock_tfs.frequencies.data = [45.2, 112.8, 230.5]
-    mock_tfs.get_cumulative_mass_fractions.return_value = {"x": 0.88, "y": 0.91, "z": 0.93}
-    mock_model.metadata.time_freq_support = mock_tfs
-
-    with patch("ansys.dpf.core.Model", return_value=mock_model):
+    with patch.dict("sys.modules", {"ansys.dpf.core": fake_dpf}):
         results = reader.read_results(job_dir, allow_synthetic=False)
 
     # 1. 斷言沙盒隔離副本確實產生且內容無損
@@ -158,8 +138,7 @@ def test_2_terminal_state_copies_rst_to_cache_and_extracts_fields(tmp_path: Path
 
     # 5. 斷言模態頻率與質量佔比提取
     modal = results["modal"]
-    assert modal["frequencies"] == [45.2, 112.8, 230.5]
-    assert modal["effective_mass_ratio"]["x"] == 0.88
+    assert modal["frequencies"] == [0.0, 0.1, 0.2]
 
 
 # ==============================================================================
@@ -173,19 +152,19 @@ def test_3_release_streams_called_in_finally_block(tmp_path: Path) -> None:
     create_mock_summary(job_dir, "SOLVED")
     create_dummy_rst(job_dir)
 
-    mock_model = MagicMock()
-    mock_model.metadata.release_streams = MagicMock()
+    from tests.unit.test_dpf_summary import build_fake
+    fake_dpf, mock_model = build_fake()
 
     # 正常執行情境
-    with patch("ansys.dpf.core.Model", return_value=mock_model):
+    with patch.dict("sys.modules", {"ansys.dpf.core": fake_dpf}):
         reader.read_results(job_dir, allow_synthetic=False)
     assert mock_model.metadata.release_streams.call_count == 1
 
     # 異常中斷情境：模擬提取過程中爆出例外
     mock_model.metadata.release_streams.reset_mock()
-    mock_model.results.stress_von_mises.side_effect = RuntimeError("二進位資料損毀")
+    mock_model.results.stress.side_effect = RuntimeError("二進位資料損毀")
 
-    with patch("ansys.dpf.core.Model", return_value=mock_model):
+    with patch.dict("sys.modules", {"ansys.dpf.core": fake_dpf}):
         with pytest.raises(PostprocessingError):
             reader.read_results(job_dir, allow_synthetic=False)
 

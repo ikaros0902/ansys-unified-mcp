@@ -46,18 +46,18 @@ def pool_status() -> dict:
         }
 
 class BlockingCallTimeout(Exception):
-    """Raised when a call wrapped by ``run_with_timeout`` exceeds its budget."""
+    """等待逾時；future 供呼叫端延後清理仍在使用的資源。"""
+
+    def __init__(self, message: str, future=None) -> None:
+        super().__init__(message)
+        self.future = future
 
 
 def run_with_timeout(fn: Callable[..., T], *args, timeout: float, **kwargs) -> T:
-    """Run ``fn(*args, **kwargs)`` in a worker thread, bounded by ``timeout`` seconds.
-
-    Returns whatever ``fn`` returns on success. Raises ``BlockingCallTimeout``
-    if the call has not completed within ``timeout`` seconds. Any exception
-    raised by ``fn`` itself propagates unchanged (it is not swallowed or
-    wrapped) so existing error-handling in callers keeps working.
-    """
+    """有界等待；已開始的宿主操作須真正完成才釋放名額。"""
     global _pending_count
+    if timeout <= 0:
+        raise ValueError("timeout must be positive")
     with _pending_lock:
         if _pending_count >= _MAX_WORKERS:
             raise BlockingCallTimeout(
@@ -65,15 +65,28 @@ def run_with_timeout(fn: Callable[..., T], *args, timeout: float, **kwargs) -> T
                 "Some ANSYS sessions may be unresponsive."
             )
         _pending_count += 1
-        
-    future = _executor.submit(fn, *args, **kwargs)
+
+    def completed(_future=None):
+        global _pending_count
+        with _pending_lock:
+            _pending_count -= 1
+
+    try:
+        future = _executor.submit(fn, *args, **kwargs)
+    except BaseException:
+        completed()
+        raise
+    future.add_done_callback(completed)
     try:
         return future.result(timeout=timeout)
     except _FutureTimeoutError as exc:
-        logger.warning("Timeout after %.1fs; worker thread still running in background.", timeout)
+        # 工作本身拋出的 TimeoutError 仍須原樣傳回。
+        if future.done():
+            return future.result()
+        cancelled = future.cancel()
+        logger.warning("Timeout after %.1fs; queued operation cancelled=%s.", timeout, cancelled)
         raise BlockingCallTimeout(
-            f"Operation exceeded {timeout}s timeout; the ANSYS application may be unresponsive."
+            f"Operation exceeded {timeout}s timeout; "
+            + ("queued operation cancelled." if cancelled else "operation is still running."),
+            future=future,
         ) from exc
-    finally:
-        with _pending_lock:
-            _pending_count = max(0, _pending_count - 1)

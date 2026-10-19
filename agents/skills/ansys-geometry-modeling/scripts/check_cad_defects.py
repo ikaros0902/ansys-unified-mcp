@@ -133,7 +133,7 @@ def run_diagnostic(
     print(f"正在連線埠號 {port} 上的幾何引擎...")
     
     try:
-        modeler = Modeler(port=port, transport_mode="wnua", timeout=10)
+        modeler = Modeler(port=port, timeout=10)
         design = modeler.read_existing_design()
         if not design:
             print("[錯誤] 未能讀取到開啟中的幾何設計專案。")

@@ -34,7 +34,7 @@ class GeometryController:
         self,
         port: Optional[int] = None,
         host: str = "localhost",
-        transport_mode: str = "wnua",
+        transport_mode: Optional[str] = None,
         connect_timeout: int = 15,
     ) -> dict:
         """Launch or connect to SpaceClaim/Discovery via PyAnsys Geometry."""
@@ -49,10 +49,14 @@ class GeometryController:
             return {"ok": False, "error": "ansys-geometry-core not installed."}
 
         try:
-            if port:
-                modeler = Modeler(host=host, port=port, transport_mode=transport_mode, timeout=connect_timeout)
-            else:
-                modeler = Modeler(transport_mode=transport_mode, timeout=connect_timeout)
+            options = {"host": host, "timeout": connect_timeout}
+            if port is not None:
+                if not 1 <= int(port) <= 65535:
+                    raise ValueError("port must be between 1 and 65535")
+                options["port"] = int(port)
+            if transport_mode is not None:
+                options["transport_mode"] = transport_mode
+            modeler = Modeler(**options)
             registry.put(PRODUCT, key, modeler)
             return {"ok": True, "key": key, "port": port, "pid": self._find_pid(port), "message": "Connected to Geometry Modeler."}
         except Exception as exc:
@@ -77,17 +81,11 @@ class GeometryController:
         }
 
     def close(self, key: Optional[str] = None) -> dict:
-        modeler = self._modeler(key)
-        if modeler is None:
-            return {"ok": True, "note": "No active session to close."}
-        try:
-            if hasattr(modeler, "close"):
-                modeler.close()
-        except Exception as exc:
-            logger.warning(f"Error while closing Geometry session: {exc}")
-        finally:
-            registry.drop(PRODUCT, key)
-        return {"ok": True, "message": "Geometry session closed."}
+        return registry.close(PRODUCT, "close", key)
+
+    def disconnect(self, key: Optional[str] = None) -> dict:
+        registry.drop(PRODUCT, key)
+        return {"ok": True, "message": "Disconnected."}
 
 
     @staticmethod

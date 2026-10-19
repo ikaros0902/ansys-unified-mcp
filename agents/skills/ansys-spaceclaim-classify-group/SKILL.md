@@ -59,3 +59,7 @@ flowchart TD
 2. **階層統計一致性**：`hier_same_body + hier_internal + hier_external` 總和必須等於實際建立的配對群組數，不可出現統計遺漏。
 3. **具名群組命名唯一性**：所有新建群組名稱必須透過 `GetGroupNameANDIndex` 類函式確認無重名衝突，嚴禁產生同名群組覆蓋既有資料。
 4. **回傳信封完整**：腳本執行完成必須回傳 `result["ok"] == "yes"`，異常時 `result["ok"] == "no"` 並附帶 `result["error"]` 訊息，不得靜默失敗。
+
+## 內嵌腳本來源
+
+執行 material_assignment_engine、rm_joint_creator、defeature、imprint_contacts、midsurface 或 rm_group 前，讀取 [宿主腳本唯一來源](../ansys-geometry-modeling/references/embedded_scripts.md)。products 為唯一來源，技能內歷史副本不作執行入口；由 CPython／MCP 讀原文送宿主。

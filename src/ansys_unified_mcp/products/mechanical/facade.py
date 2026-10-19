@@ -125,14 +125,14 @@ class MechanicalController:
             return {"ok": False, "error": "ansys-mechanical-core not installed."}
         try:
             session = mech.launch_mechanical(
-                batch=batch, transport_mode="insecure", start_timeout=120, loglevel="ERROR"
+                batch=batch, start_timeout=120, loglevel="ERROR"
             )
         except Exception as exc:  # noqa: BLE001
             return {"ok": False, "error": str(exc)}
 
         launched_port = getattr(session, "_port", None)
         key = str(launched_port or "launched")
-        registry.put(PRODUCT, key, session)
+        registry.put(PRODUCT, key, session, owned=True)
         return {
             "ok": True,
             "key": key,
@@ -176,10 +176,24 @@ class MechanicalController:
         if session is None:
             return "Error: Not connected to Mechanical (session lost or closed)."
 
+        record = registry.record(PRODUCT, key)
+        if record is None or record.instance is not session:
+            return "Error: Session changed during probe."
+        if not record.lock.acquire(blocking=False):
+            return "Error: Mechanical session is busy."
+        deferred_cleanup = False
         tmp_dir = Path(tempfile.gettempdir())
         req_id = uuid.uuid4().hex
         out_file = (tmp_dir / f"mech_out_{req_id}.txt").as_posix()
         script_file = (tmp_dir / f"mech_script_{req_id}.py").as_posix()
+        def cleanup(_future=None):
+            for path in (out_file, script_file):
+                try:
+                    os.remove(path)
+                except OSError:
+                    pass
+            record.lock.release()
+
         try:
             with open(script_file, "w", encoding="utf-8") as fh:
                 fh.write(script)
@@ -210,6 +224,9 @@ class MechanicalController:
                 else:
                     session.run_python_script(wrapper)
             except BlockingCallTimeout as exc:
+                if exc.future is not None:
+                    deferred_cleanup = True
+                    exc.future.add_done_callback(cleanup)
                 return "Error: " + str(exc)
 
             try:
@@ -230,11 +247,8 @@ class MechanicalController:
                         registry.drop(PRODUCT, k)
             return "Error: " + str(exc)
         finally:
-            for path in (out_file, script_file):
-                try:
-                    os.remove(path)
-                except OSError:
-                    pass
+            if not deferred_cleanup:
+                cleanup()
 
     def disconnect(self, key: Optional[str] = None) -> dict:
         """Drop a session from the registry (does not close a launched process)."""

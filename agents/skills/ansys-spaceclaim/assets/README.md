@@ -1,7 +1,0 @@
-# assets/ 目錄說明
-
-本 skill 目前無固定輸出模板、圖示或字型等靜態素材需求。
-
-本 skill 屬於 SpaceClaim 雙軌（PyAnsys Geometry 與原生 IronPython API）幾何建模操作類，輸出為即時幾何狀態查詢結果或腳本執行回傳，無固定格式報告產出。
-
-若未來本 skill 新增需要輸出固定格式產物（如報告模板、設定檔骨架）的功能，應在此目錄下新增對應的模板檔案，並在 SKILL.md 的 Router 表格中註明用途。

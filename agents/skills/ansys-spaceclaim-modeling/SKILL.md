@@ -28,7 +28,7 @@ flowchart TD
 ```
 
 ### 標準工程執行步驟
-1. **連線初始化**：Windows 環境強制指定 `transport_mode="wnua"` 連線既有 SpaceClaim 實例或自動啟動新進程。
+1. **連線初始化**：連線既有 SpaceClaim 時保留使用者明確指定的 transport；未指定則交由 SDK 自動選擇。新啟動另需授權。
 2. **2D 參數化草圖**：依附基準面（XY/XZ/YZ），使用直線、圓弧或點陣列 NURBS 樣條繪製閉合輪廓，坐標單位嚴格為公尺 (m)。
 3. **3D 特徵成形**：依結構類型選擇拉伸 (Extrude)、旋轉 (Revolve)、掃掠 (Sweep) 或混成 (Blend)，確保體積正定。
 4. **外流域抽取與布林運算**：依據流體特徵尺寸外擴長方體（上游 2~3L、下游 6~8L、阻塞率 < 3%），布林相減扣除固體。
@@ -53,8 +53,8 @@ flowchart TD
 | **裝配體拓撲與干涉閘門檢查** | [`../ansys-spaceclaim-interface-check/SKILL.md`](../ansys-spaceclaim-interface-check/SKILL.md) | 水密性/非manifold邊/自由邊診斷、體間干涉兩階段偵測，送入 Mechanical 前最後一道閘門。 |
 | **鈑金件中面抽取** | [`../ansys-spaceclaim-midsurface/SKILL.md`](../ansys-spaceclaim-midsurface/SKILL.md) | 薄板候選偵測、對向面配對、中面抽取與抽取後拓撲修復。 |
 | **body/face 分類與具名群組** | [`../ansys-spaceclaim-classify-group/SKILL.md`](../ansys-spaceclaim-classify-group/SKILL.md) | 孔徑/距離分級分類引擎、Within Component / Ignore Component 階層配對策略，產出供 RM/Contact 消費的具名群組。 |
-| **外流域抽取示範腳本** | [`scripts/create_enclosure_demo.py`](scripts/create_enclosure_demo.py) | 參數化翼型拉伸、外流域抽取、布林相減與自動導出。 |
-| **CAD 缺陷掃描腳本** | [`scripts/check_cad_defects.py`](scripts/check_cad_defects.py) | 幾何實體水密性稽核、微小面/短邊過濾與 JSON 診斷報告。 |
+| **外流域抽取示範腳本** | [`../ansys-geometry-modeling/scripts/create_enclosure_demo.py`](../ansys-geometry-modeling/scripts/create_enclosure_demo.py) | 參數化翼型拉伸、外流域抽取、布林相減與自動導出。 |
+| **CAD 缺陷掃描腳本** | [`../ansys-geometry-modeling/scripts/check_cad_defects.py`](../ansys-geometry-modeling/scripts/check_cad_defects.py) | 幾何實體水密性稽核、微小面/短邊過濾與 JSON 診斷報告。 |
 
 ---
 
@@ -64,7 +64,7 @@ flowchart TD
 - ❌ **流體域滲漏未查嚴禁導出 PMDB**：流體域必須滿足水密封閉性且體積嚴格正定 ($V > 0$)。若存在裝配間隙導致流體外溢或體積歸零，嚴禁送入下游網格。
 - ❌ **未簡化微小圓角嚴禁直接送入網格**：小於基準網格尺寸 1/10 的非受力加工倒角、裝配螺紋與商標刻字，必須在幾何階段去特徵簡化，嚴禁原樣送入劃分網格。
 - ❌ **嚴禁在網格生成後依賴幾何 Face ID 指派邊界**：網格剖分會導致幾何面 ID 重構隨機洗牌，所有邊界條件必須在 CAD 階段綁定 Named Selection。
-- ❌ **Windows 環境連線嚴禁使用 insecure 傳輸模式**：必須顯式指定 `transport_mode="wnua"`，避免通訊死鎖。
+- transport 依使用者明確設定或 SDK 自動能力選擇；連線失敗時保留原始錯誤，不自動降低安全設定。
 
 ---
 
@@ -74,3 +74,7 @@ flowchart TD
 2. **CAD 缺陷零檢出判定**：執行 `check_cad_defects.py` 稽核，狹長微小面 (Sliver Faces, 長寬比 $> 50$) 與極短邊 ($L < 10^{-4}\text{ m}$) 檢出數必須為 0，整體狀態回傳 `PASS_READY_FOR_EXPORT`。
 3. **具名選擇覆蓋率**：外邊界 6 大宏觀面完全指派至標準 Named Selection，且流體/固體零件皆已設定 Body Named Selection。
 4. **檔案輸出真實存在**：目標目錄成功生成 `.pmdb` 檔案且檔案大小 $> 0\text{ bytes}$。
+
+## 內嵌腳本來源
+
+執行 material_assignment_engine、rm_joint_creator、defeature、imprint_contacts、midsurface 或 rm_group 前，讀取 [宿主腳本唯一來源](../ansys-geometry-modeling/references/embedded_scripts.md)。products 為唯一來源，技能內歷史副本不作執行入口；由 CPython／MCP 讀原文送宿主。

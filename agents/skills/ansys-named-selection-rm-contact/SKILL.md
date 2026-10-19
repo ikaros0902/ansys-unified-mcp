@@ -51,3 +51,11 @@ compatibility: ANSYS SpaceClaim 2023 R1 以上 (建立端 IronPython 2.7)；ANSY
 > 3. **嚴禁對 `Connect Topology*` 命名但實體數不等於 2 的 NS 建立 Bonded Contact**：`bonded_contact_creator.py` 原始邏輯僅接受 `len(pair_check) == 2`，超過或少於 2 個實體屬命名誤用，必須攔截並回報，不可強行指派造成錯誤的 Source/Target。
 > 4. **嚴禁跨技能重複定義相同命名規則**：接觸類型列舉、Pinball 公式等已於 `ansys-mechanical-connections` / `ansys-mechanical` 定義者，本技能僅引用不重複展開；本技能專注於「命名規則本身」而非「建立邏輯細節」。
 > 5. **嚴禁憑記憶臆測未在來源腳本出現過的命名後綴**：若需要新增命名規則（如假設性的 `_Thermal` 後綴），必須先確認是否已有腳本實作，若無則在 references 中標註「待來源腳本查證，目前僅為提案」，不可當作既有規範收錄。
+
+## 官方範例路由
+
+需重現官方輸入與輸出驗收時，讀取 [references/official_examples.md](references/official_examples.md)；依該文件分開檢查啟動、模型修改與求解授權。
+
+## 內嵌腳本來源
+
+執行 material_assignment_engine、rm_joint_creator、defeature、imprint_contacts、midsurface 或 rm_group 前，讀取 [宿主腳本唯一來源](../ansys-geometry-modeling/references/embedded_scripts.md)。products 為唯一來源，技能內歷史副本不作執行入口；由 CPython／MCP 讀原文送宿主。

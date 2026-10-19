@@ -109,3 +109,11 @@ flowchart LR
 >    壁厚方向僅有 1 層一階四面體（SOLID185）會引發嚴重的「剪切自鎖（Shear Locking）」，導致結構剛度被虛假高估數倍。薄壁件必須中面抽取改用薄殼單元（SHELL181），或在厚度方向劃分至少 3 層高階實體單元（SOLID186）。
 > 3. **嚴禁在缺少約束的情況下求解靜態分析**：
 >    結構必須在空間 6 個自由度（3 平移 + 3 旋轉）上具備充分約束。缺少約束將引發求解器「Small equation solver pivot（主元為零）」剛體位移錯誤。未完全固定工況需開啟弱彈簧（Weak Springs）或慣性釋放（Inertia Relief）。
+
+## 官方範例路由
+
+需重現官方輸入與輸出驗收時，讀取 [references/official_examples.md](references/official_examples.md)；依該文件分開檢查啟動、模型修改與求解授權。
+
+## 內嵌腳本來源
+
+執行 material_assignment_engine、rm_joint_creator、defeature、imprint_contacts、midsurface 或 rm_group 前，讀取 [宿主腳本唯一來源](../ansys-geometry-modeling/references/embedded_scripts.md)。products 為唯一來源，技能內歷史副本不作執行入口；由 CPython／MCP 讀原文送宿主。

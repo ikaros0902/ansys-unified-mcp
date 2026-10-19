@@ -99,7 +99,7 @@ def test_sandbox_copy_with_custom_output_dir(tmp_path):
     ctrl = DPFController()
     read_path, sandbox_path = ctrl._resolve_read_path(rst, copy_to_sandbox=True, output_dir=output_dir)
 
-    assert read_path.parent == output_dir
+    assert read_path.parent.parent == output_dir
     assert read_path.exists()
     assert sandbox_path == read_path
 
@@ -109,59 +109,11 @@ def test_sandbox_copy_with_custom_output_dir(tmp_path):
 # ---------------------------------------------------------------------------
 
 def _build_fake_dpf_module():
-    """建立一個假的 ansys.dpf.core 模組，模擬 Model 解析成功路徑。"""
-    fake_dpf = types.ModuleType("ansys.dpf.core")
+    """重用禁止全場下載的 DPF fake。"""
+    from tests.unit.test_dpf_summary import build_fake
 
-    fake_mesh = MagicMock()
-    fake_mesh.nodes.n_nodes = 120
-    fake_mesh.elements.n_elements = 40
-
-    fake_metadata = MagicMock()
-    fake_metadata.meshed_region = fake_mesh
-
-    fake_time_freqs = MagicMock()
-    fake_time_freqs.data = [0.0, 0.1, 0.2]
-    fake_tfs = MagicMock()
-    fake_tfs.time_frequencies = fake_time_freqs
-    fake_metadata.time_freq_support = fake_tfs
-    fake_metadata.result_info = "Static Structural Result"
-
-    fake_disp_field = MagicMock()
-    fake_norm_field = MagicMock()
-    fake_norm_field.data = [0.5, 1.2, 0.8]
-
-    fake_disp_fields_container = MagicMock()
-    fake_disp_fields_container.__getitem__ = lambda self, idx: fake_disp_field
-    fake_disp_op = MagicMock()
-    fake_disp_op.outputs.fields_container.return_value = fake_disp_fields_container
-
-    fake_eqv_field = MagicMock()
-    fake_eqv_field.data = [10.0, 25.5, 15.0]
-
-    fake_stress_op = MagicMock()
-
-    fake_results = MagicMock()
-    fake_results.displacement.return_value = fake_disp_op
-    fake_results.stress.return_value = fake_stress_op
-
-    fake_model = MagicMock()
-    fake_model.metadata = fake_metadata
-    fake_model.results = fake_results
-
-    fake_dpf.Model = MagicMock(return_value=fake_model)
-    fake_dpf.locations = types.SimpleNamespace(nodal="Nodal")
-
-    fake_norm_op_result = MagicMock()
-    fake_norm_op_result.eval.return_value = fake_norm_field
-
-    fake_eqv_op_result = MagicMock()
-    fake_eqv_op_result.eval.return_value = [fake_eqv_field]
-
-    fake_math = types.SimpleNamespace(norm=MagicMock(return_value=fake_norm_op_result))
-    fake_invariant = types.SimpleNamespace(von_mises_eqv_fc=MagicMock(return_value=fake_eqv_op_result))
-    fake_dpf.operators = types.SimpleNamespace(math=fake_math, invariant=fake_invariant)
-
-    return fake_dpf, fake_model
+    fake, model = build_fake()
+    return fake, model
 
 
 def test_extract_structural_results_success_with_mock_model(tmp_path):
@@ -195,7 +147,7 @@ def test_get_model_summary_success_with_mock_model(tmp_path):
     assert result["ok"] is True
     assert result["summary"]["num_nodes"] == 120
     assert result["summary"]["num_elements"] == 40
-    assert "Static Structural" in result["summary"]["result_info"]
+    assert "available_results" in result["summary"]["result_info"]
 
 
 # ---------------------------------------------------------------------------
@@ -224,8 +176,7 @@ def test_extract_structural_results_missing_stress_field_is_tolerated(tmp_path):
     rst.write_bytes(b"fake rst content")
 
     fake_dpf, fake_model = _build_fake_dpf_module()
-    fake_model.results.stress.side_effect = RuntimeError("No stress result available")
-    fake_model.results.displacement.side_effect = RuntimeError("No displacement result available")
+    fake_model.metadata.result_info.available_results = []
 
     ctrl = DPFController()
     with patch.dict(sys.modules, {"ansys.dpf.core": fake_dpf}):
@@ -274,3 +225,50 @@ def test_mcp_tool_dpf_extract_structural_results_success(tmp_path):
     payload = raw
     assert payload["ok"] is True
     assert payload["metrics"]["num_nodes"] == 120
+
+
+@pytest.mark.parametrize("failure", [False, True])
+def test_streams_released_and_cleanup_preserves_original_error(tmp_path, failure):
+    rst = tmp_path / "source.rst"
+    rst.write_bytes(b"source")
+    output_dir = tmp_path / "shared"
+    output_dir.mkdir()
+    preserved = output_dir / "keep.txt"
+    preserved.write_text("keep")
+    fake, model = _build_fake_dpf_module()
+    if failure:
+        model.results.stress.side_effect = RuntimeError("original extraction failure")
+    model.metadata.release_streams.side_effect = RuntimeError("release failure")
+    with patch.dict(sys.modules, {"ansys.dpf.core": fake}):
+        result = DPFController().extract_structural_results(rst, output_dir=output_dir)
+    model.metadata.release_streams.assert_called_once()
+    assert result["ok"] is not failure
+    if failure:
+        assert result["error"] == "original extraction failure"
+    assert preserved.read_text() == "keep"
+    assert list(output_dir.iterdir()) == [preserved]
+    assert rst.read_bytes() == b"source"
+
+
+def test_summary_releases_streams(tmp_path):
+    rst = tmp_path / "source.rst"
+    rst.write_bytes(b"source")
+    fake, model = _build_fake_dpf_module()
+    model.metadata.release_streams.side_effect = RuntimeError("release failure")
+    with patch.dict(sys.modules, {"ansys.dpf.core": fake}):
+        result = DPFController().get_model_summary(rst)
+    assert result["ok"] is True
+    model.metadata.release_streams.assert_called_once()
+
+
+def test_cleanup_failure_does_not_mask_parse_failure(tmp_path):
+    rst = tmp_path / "source.rst"
+    rst.write_bytes(b"source")
+    fake, model = _build_fake_dpf_module()
+    model.results.stress.side_effect = RuntimeError("original extraction failure")
+    with patch.dict(sys.modules, {"ansys.dpf.core": fake}), patch(
+        "ansys_unified_mcp.products.dpf.facade.shutil.rmtree", side_effect=OSError("locked")
+    ):
+        result = DPFController().extract_structural_results(rst, output_dir=tmp_path / "sandbox")
+    assert result["error"] == "original extraction failure"
+    model.metadata.release_streams.assert_called_once()

@@ -16,8 +16,19 @@ Design goals:
 from __future__ import annotations
 
 import threading
+from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional
 
+
+@dataclass
+class SessionRecord:
+    """連線及其生命週期狀態；快取不可跨實例共用。"""
+
+    instance: Any
+    owned: bool = False
+    cache: dict = field(default_factory=dict)
+    lock: Any = field(default_factory=threading.Lock)
+    close_error: str | None = None
 
 class SessionRegistry:
     """Thread-safe registry of live product sessions.
@@ -59,31 +70,63 @@ class SessionRegistry:
         session: Any,
         make_current: bool = True,
         workspace: Optional[str] = None,
+        *,
+        owned: bool = False,
     ) -> None:
         """Register (or replace) a session and optionally mark it current."""
         scope = self._scope(product, workspace)
         with self._lock:
-            self._sessions.setdefault(scope, {})[key] = session
+            previous = self._sessions.get(scope, {}).get(key)
+            if previous is not None and previous.instance is session:
+                previous.cache.clear()
+                previous.owned = previous.owned or owned
+            else:
+                if previous is not None:
+                    raise ValueError(f"Session {product}/{key} already exists; disconnect it first.")
+                self._sessions.setdefault(scope, {})[key] = SessionRecord(session, owned)
             if make_current:
                 self._current[scope] = key
 
-    def get(
-        self,
-        product: str,
-        key: Optional[str] = None,
-        workspace: Optional[str] = None,
-    ) -> Optional[Any]:
-        """Return a session by key, or the current session when key is None."""
+    def get(self, product: str, key: Optional[str] = None, workspace: Optional[str] = None) -> Optional[Any]:
+        record = self.record(product, key, workspace)
+        return record.instance if record else None
+
+    def record(self, product: str, key: Optional[str] = None, workspace: Optional[str] = None) -> Optional[SessionRecord]:
         scope = self._scope(product, workspace)
         with self._lock:
-            product_sessions = self._sessions.get(scope)
-            if not product_sessions:
-                return None
-            if key is None:
-                key = self._current.get(scope)
-                if key is None:
-                    return None
-            return product_sessions.get(key)
+            return self._sessions.get(scope, {}).get(key if key is not None else self._current.get(scope))
+
+    def close(self, product: str, method: str, key: Optional[str] = None, workspace: Optional[str] = None) -> dict:
+        """明確關閉；失敗保留連線記錄，避免誤報成功。"""
+        with self._lock:
+            key = key if key is not None else self.current_key(product, workspace)
+            record = self.record(product, key, workspace)
+        if record is None:
+            return {"ok": True, "message": "No active session."}
+        if not record.lock.acquire(blocking=False):
+            return {"ok": False, "error": "Session is busy."}
+        try:
+            getattr(record.instance, method)()
+            self.drop(product, key, workspace)
+            return {"ok": True, "message": "Session closed."}
+        except Exception as exc:
+            record.close_error = str(exc)
+            return {"ok": False, "error": str(exc)}
+        finally:
+            record.lock.release()
+
+    def cleanup_owned(self) -> list[dict]:
+        """只終止服務自行啟動的實例；失敗記錄留待查核。"""
+        methods = {"mechanical": "exit", "fluent": "exit", "geometry": "close",
+                   "optislang": "dispose", "workbench": "exit"}
+        with self._lock:
+            targets = [(scope, key) for scope, items in self._sessions.items()
+                       for key, record in items.items() if record.owned]
+        results = []
+        for scope, key in targets:
+            workspace, _, product = scope.partition("::")
+            results.append(self.close(product, methods[product], key, workspace))
+        return results
 
     def current_key(self, product: str, workspace: Optional[str] = None) -> Optional[str]:
         scope = self._scope(product, workspace)
@@ -99,26 +142,24 @@ class SessionRegistry:
                 return True
             return False
 
-    def get_live(
-        self,
-        product: str,
-        key: Optional[str] = None,
-        probe_fn=None,
-        workspace: Optional[str] = None,
-    ) -> Optional[Any]:
-        """Return a session, optionally testing it with probe_fn and dropping it if dead."""
-        session = self.get(product, key, workspace=workspace)
-        if session is None:
+    def get_live(self, product: str, key: Optional[str] = None, probe_fn=None,
+                 workspace: Optional[str] = None) -> Optional[Any]:
+        with self._lock:
+            key = key if key is not None else self.current_key(product, workspace)
+            record = self.record(product, key, workspace)
+        if record is None:
             return None
         if probe_fn is not None:
             try:
-                if not probe_fn(session):
-                    self.drop(product, key or self.current_key(product, workspace), workspace=workspace)
-                    return None
+                live = probe_fn(record.instance)
             except Exception:
-                self.drop(product, key or self.current_key(product, workspace), workspace=workspace)
+                live = False
+            if not live:
+                with self._lock:
+                    if self.record(product, key, workspace) is record:
+                        self.drop(product, key, workspace)
                 return None
-        return session
+        return record.instance
 
     def drop(
         self,
@@ -144,7 +185,9 @@ class SessionRegistry:
                     self._current[scope] = remaining
                 else:
                     self._current.pop(scope, None)
-            return session
+            if session is not None:
+                session.cache.clear()
+            return session.instance if session else None
 
     def keys(self, product: str, workspace: Optional[str] = None) -> List[str]:
         scope = self._scope(product, workspace)
@@ -165,7 +208,8 @@ class SessionRegistry:
                 ws, _, product = scope.partition("::")
                 label = product if ws == self.DEFAULT_WORKSPACE else scope
                 result[label] = {
-                    key: {"current": self._current.get(scope) == key}
+                    key: {"current": self._current.get(scope) == key, "owned": sessions[key].owned,
+                          "busy": sessions[key].lock.locked(), "close_error": sessions[key].close_error}
                     for key in sessions
                 }
             return result

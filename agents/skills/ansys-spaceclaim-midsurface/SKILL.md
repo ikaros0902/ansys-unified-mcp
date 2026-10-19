@@ -65,3 +65,7 @@ flowchart TD
 > 3. **嚴禁對複雜鈑金件（含壓折邊/加強肋）使用簡單模式抽取**：簡單模式的自動相切搜尋在壓折邊處容易遺漏薄壁延伸面，造成中面不完整；面積差超過 `complex_area_diff` 門檻時必須強制使用複雜模式（手動相切鏈迴圈）。
 > 4. **嚴禁遺漏厚度回填**：抽取中面後原始實體厚度資訊不會自動保留，若不回填 Shell Thickness，下游 Mechanical 殼單元分析會使用預設厚度（通常為 0 或 1mm），導致剛度嚴重失真。
 > 5. **嚴禁假設不確定的 API 存在**：涉及 Stitch / Merge Faces / UnifyNormals 等修復 API 若無法在既有素材或 `api_search` 中查證存在，必須在 references 中標注「待 api_search 查證」，不可憑記憶杜撰呼叫。
+
+## 內嵌腳本來源
+
+執行 material_assignment_engine、rm_joint_creator、defeature、imprint_contacts、midsurface 或 rm_group 前，讀取 [宿主腳本唯一來源](../ansys-geometry-modeling/references/embedded_scripts.md)。products 為唯一來源，技能內歷史副本不作執行入口；由 CPython／MCP 讀原文送宿主。

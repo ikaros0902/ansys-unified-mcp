@@ -2,7 +2,7 @@
 """
 腳本名稱：check_watertight_topology.py
 功能說明：裝配體層級拓撲一致性稽核（水密性彙總、殼體/實體自由邊區分、重複面粗篩）
-技術標準：延伸 ansys-spaceclaim-modeling/scripts/check_cad_defects.py 的單體判準至裝配體層級，
+技術標準：延伸 ansys-geometry-modeling/scripts/check_cad_defects.py 的單體判準至裝配體層級，
          不重複定義微小面/短邊/滲漏判準（詳見該腳本），本腳本專注於裝配體彙總與重複面偵測。
 
 API 查證狀態：

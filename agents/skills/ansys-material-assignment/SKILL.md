@@ -76,3 +76,7 @@ flowchart TD
 
 - **嚴禁暴力覆蓋既有非線性材料**：`overwrite_existing` 預設必須為 `False`，防止覆蓋已定義塑性硬化或超彈性參數的特殊零件。
 - **嚴禁解譯已抑制零件**：已抑制幾何應跳過，避免在 Engineering Data 中引發無效材料引用。
+
+## 內嵌腳本來源
+
+執行 material_assignment_engine、rm_joint_creator、defeature、imprint_contacts、midsurface 或 rm_group 前，讀取 [宿主腳本唯一來源](../ansys-geometry-modeling/references/embedded_scripts.md)。products 為唯一來源，技能內歷史副本不作執行入口；由 CPython／MCP 讀原文送宿主。

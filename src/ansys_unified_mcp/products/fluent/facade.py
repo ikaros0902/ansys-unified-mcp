@@ -50,16 +50,16 @@ class FluentController:
         try:
             if port:
                 session = pyfluent.connect_to_fluent(
-                    ip=ip, port=port, password=password, timeout=connect_timeout
+                    ip=ip, port=port, password=password, cleanup_on_exit=False
                 )
             else:
                 session = pyfluent.launch_fluent(
                     precision="double",
                     processor_count=processors,
-                    start_rootdir=cwd,
-                    timeout=connect_timeout,
+                    cwd=cwd,
+                    start_timeout=connect_timeout,
                 )
-            registry.put(PRODUCT, key, session)
+            registry.put(PRODUCT, key, session, owned=port is None)
             return {
                 "ok": True,
                 "key": key,
@@ -89,16 +89,11 @@ class FluentController:
         }
 
     def exit(self, key: Optional[str] = None) -> dict:
-        session = self._session(key)
-        if session is None:
-            return {"ok": True, "note": "No active session to exit."}
-        try:
-            session.exit()
-        except Exception as exc:
-            logger.warning(f"Error while exiting Fluent session: {exc}")
-        finally:
-            registry.drop(PRODUCT, key)
-        return {"ok": True, "message": "Fluent session terminated."}
+        return registry.close(PRODUCT, "exit", key)
+
+    def disconnect(self, key: Optional[str] = None) -> dict:
+        registry.drop(PRODUCT, key)
+        return {"ok": True, "message": "Disconnected."}
 
 
 controller = FluentController()

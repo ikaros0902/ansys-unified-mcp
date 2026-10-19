@@ -54,7 +54,8 @@ class DPFController:
         if output_dir is not None:
             output_dir = Path(output_dir)
             output_dir.mkdir(parents=True, exist_ok=True)
-            dest = output_dir / rst_path.name
+            sandbox_dir = Path(tempfile.mkdtemp(prefix="ansys_mcp_dpf_", dir=output_dir))
+            dest = sandbox_dir / rst_path.name
             shutil.copy2(rst_path, dest)
             return dest, dest
         sandbox_path = self._make_sandbox_copy(rst_path)
@@ -91,53 +92,28 @@ class DPFController:
 
         read_path, sandbox_path = self._resolve_read_path(source, copy_to_sandbox, output_dir)
 
+        from ansys_unified_mcp.analytics.postprocessing.dpf_summary import extract_summary, release_streams
+
+        model = None
         try:
             model = dpf.Model(str(read_path))
-
             mesh = model.metadata.meshed_region
-            num_nodes = mesh.nodes.n_nodes
-            num_elements = mesh.elements.n_elements
-
-            max_deformation = None
-            try:
-                disp_op = model.results.displacement()
-                disp_field = disp_op.outputs.fields_container()[0]
-                norm_field = dpf.operators.math.norm(disp_field).eval()
-                max_deformation = float(max(norm_field.data)) if len(norm_field.data) else None
-            except Exception as exc:  # noqa: BLE001 - 位移場可能不存在於此結果檔
-                logger.debug(f"無法抽取位移場最大值: {exc}")
-
-            max_equivalent_stress = None
-            try:
-                stress_op = model.results.stress()
-                stress_op.inputs.requested_location.connect(dpf.locations.nodal)
-                eqv_field = dpf.operators.invariant.von_mises_eqv_fc(stress_op.outputs.fields_container()).eval()[0]
-                max_equivalent_stress = float(max(eqv_field.data)) if len(eqv_field.data) else None
-            except Exception as exc:  # noqa: BLE001 - 應力場可能不存在於此結果檔（如純熱分析）
-                logger.debug(f"無法抽取等效應力最大值: {exc}")
-
-            time_freq_sets = []
-            try:
-                tfs = model.metadata.time_freq_support
-                time_freqs = tfs.time_frequencies
-                if time_freqs is not None:
-                    time_freq_sets = [float(v) for v in time_freqs.data]
-            except Exception as exc:  # noqa: BLE001
-                logger.debug(f"無法抽取 time_freq_support: {exc}")
-
+            summary = extract_summary(model, dpf)
             return {
                 "ok": True,
                 "metrics": {
-                    "num_nodes": int(num_nodes),
-                    "num_elements": int(num_elements),
-                    "max_deformation": max_deformation,
-                    "max_equivalent_stress": max_equivalent_stress,
+                    "num_nodes": int(mesh.nodes.n_nodes),
+                    "num_elements": int(mesh.elements.n_elements),
+                    "max_deformation": summary["displacement"]["total_max"],
+                    "max_equivalent_stress": summary["stress_von_mises"]["max"],
                 },
-                "time_freq_sets": time_freq_sets,
+                "time_freq_sets": summary["time_freq_sets"],
+                "results": summary,
             }
         except Exception as exc:  # noqa: BLE001 - 任何 DPF 解析例外一律優雅回傳
             return {"ok": False, "error": str(exc)}
         finally:
+            release_streams(model)
             if sandbox_path is not None:
                 self._cleanup_sandbox_copy(sandbox_path)
 
@@ -153,7 +129,10 @@ class DPFController:
         except ImportError:
             return {"ok": False, "error": "ansys-dpf-core not installed."}
 
+        from ansys_unified_mcp.analytics.postprocessing.dpf_summary import release_streams
+
         read_path, sandbox_path = self._resolve_read_path(source, True, None)
+        model = None
         try:
             model = dpf.Model(str(read_path))
             mesh = model.metadata.meshed_region
@@ -168,6 +147,7 @@ class DPFController:
         except Exception as exc:  # noqa: BLE001
             return {"ok": False, "error": str(exc)}
         finally:
+            release_streams(model)
             if sandbox_path is not None:
                 self._cleanup_sandbox_copy(sandbox_path)
 

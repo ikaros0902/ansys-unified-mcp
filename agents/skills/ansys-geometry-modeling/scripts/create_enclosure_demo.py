@@ -34,11 +34,11 @@ def run_enclosure_pipeline(
     print("           ANSYS 幾何前處理：外流域抽取與布林相減自動化管線啟動                 ")
     print("================================================================================")
     
-    # 1. 建立或連線幾何後端 (Windows 必須指定 wnua 驗證)
+    # 1. 建立或連線幾何後端 (SDK 自動選擇 transport)
     print("[步驟 1/6] 探測並連線 SpaceClaim / Discovery 幾何後端引擎...")
     try:
-        modeler = Modeler(port=50051, transport_mode="wnua", timeout=5)
-        print("  -> 成功連線至既有幾何服務 (Port 50051, WNUA 模式)。")
+        modeler = Modeler(port=50051, timeout=5)
+        print("  -> 成功連線至既有幾何服務 (Port 50051, SDK transport)。")
     except Exception:
         print("  -> 未探測到活躍實例，正在啟動全新 SpaceClaim 實例...")
         modeler = launch_modeler_with_spaceclaim(hidden=False, timeout=120)
@@ -184,7 +184,7 @@ def run_mixing_elbow_volume_extract(
 
     print("[步驟 1/5] 連線 SpaceClaim / Discovery 幾何後端引擎...")
     try:
-        modeler = Modeler(port=50051, transport_mode="wnua", timeout=5)
+        modeler = Modeler(port=50051, timeout=5)
         print("  -> 成功連線既有幾何服務。")
     except Exception:
         print("  -> 啟動 SpaceClaim 實例...")
