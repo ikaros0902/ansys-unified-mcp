@@ -147,3 +147,29 @@ def _log(msg):
 其他 import 之前）。
 
 **解決方案**: 確保 `from __future__ import` 在 docstring 之後的第一行。
+
+
+---
+
+## ERR-IP-007: `re.sub(..., flags=re.IGNORECASE)` 拋出 TypeError
+
+**觸發場景**: 在 IronPython 2.7 中對 `re.sub` / `re.split` 使用 `flags=` 關鍵字參數。
+
+**錯誤訊息**:
+```
+TypeError: sub() got an unexpected keyword argument 'flags'
+```
+
+**根因**: Python 2.7 的 `re.sub` 只有 `count` 參數，`flags` 參數到 Python 2.7 才在部分函式出現，
+IronPython 2.7 的實作並未支援。
+
+**解決方案**: 改用行內旗標 `(?i)` 放在 pattern 開頭。
+```python
+# 錯誤
+n = re.sub(r'\.(prt|asm)$', '', name, flags=re.IGNORECASE)
+# 正確
+n = re.sub(r'(?i)\.(prt|asm)$', '', name)
+```
+`re.search(pattern, s, re.I)` 的位置參數寫法則可正常使用。
+
+**來源**: 標準件替換工具 `Component_Creation_Tool.py` 開發（2026-10-19）。

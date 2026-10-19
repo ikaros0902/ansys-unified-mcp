@@ -1,8 +1,19 @@
 # ARCHITECTURE — 分層職責與程式慣例
 
 > 本檔定義 `ansys-unified-mcp` 的**分層職責**與**程式慣例**（命名、回傳信封），是維護與擴充時的準則。
-> 專案全貌與心智模型見 `agents/contexts/context.md`；本檔聚焦「怎麼寫才一致」。
 > 註：部分現況尚未符合下列慣例（已於各節標出「現況偏差」），這些是漸進收斂的目標，不是要求你一次改完。
+
+## 0. 核心設計理念：thin generic script runner
+
+本專案不逐一包裝每個 ANSYS 高階 API，而是把核心原語定為「送一段原生 Python 腳本進目標 App 執行，並取回輸出」：
+
+- Mechanical → `controller.run_script(script)`
+- optiSLang → `_osl.run_python_script(script)`
+- Workbench → `execute_workbench_script(script)`
+
+多數 `@mcp.tool()` 其實是**圍繞這個原語組腳本字串**的便利包裝。理由：各版本（25R1 / 25R2 / 26R1…）ANSYS 高階 API 常變動，走原生腳本原語可跨版本通用。
+
+> 維護含意：新增功能時，優先考慮「能不能用既有 script runner 組腳本達成」，而非新增一個綁死某版本高階 API 的工具。
 
 ## 1. 分層職責
 
@@ -112,7 +123,7 @@ def some_tool(...) -> dict:
 1. 放進對應 `products/<product>/tools.py`。
 2. 依第 2 節命名（`<product>_<verb>_<object>`）。
 3. 開頭 `_check_connection()`；回傳走第 3 節信封。
-4. 底層優先用 script runner 組腳本（見 `agents/contexts/context.md` 第 2 節），避免綁死版本相關高階 API。
+4. 底層優先用 script runner 組腳本（見本文件第 0 節），避免綁死版本相關高階 API。
 5. docstring 要清楚（用途、參數、範例）——這是維護者與 AI 的介面。
 
 新增**一個產品**：
@@ -124,5 +135,5 @@ def some_tool(...) -> dict:
 
 ## 5. 相關文件
 
-- `agents/contexts/context.md`：專案定位、四層架構、兩條執行通道、thin script runner 設計理由、已知技術債。
-- `README.md`：安裝與啟動（如存在）。
+- `README.md`：安裝與啟動、專案結構總覽。
+- `docs/index.md`：文檔索引。

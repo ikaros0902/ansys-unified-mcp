@@ -1,37 +1,46 @@
-# PyMechanical gRPC 連線與遠端腳本 (grpc_connection.md)
+# PyMechanical gRPC 連線降級容錯與長求解超時處置
 
-本手冊說明如何使用 PyMechanical (`ansys.mechanical.core`) 透過 gRPC 連線 Mechanical 實例並安全執行腳本。
-
----
-
-## 1. gRPC 連線與多視窗處理
-
-```python
-import ansys.mechanical.core as pymech
-
-# 連線至作用中 Mechanical 實例（預設 port 10000）
-mc = pymech.connect_to_mechanical(port=10000)
-print(mc)
-
-# 若同時開啟多個視窗（如 Static Structural + LS-DYNA），以獨立 port 區分
-mc_static = pymech.connect_to_mechanical(port=10000)
-mc_lsdyna = pymech.connect_to_mechanical(port=10001)
-```
+本文彙整連線解析失敗與長時間求解逾時兩類常見故障的根因與通用修復法則，適用於任何透過 PyMechanical gRPC 驅動 Mechanical 的場景。
 
 ---
 
-## 2. 遠端腳本執行 (`run_python_script`)
+## 一、連線埠解析雙軌降級容錯 (Dual Fallback)
 
-```python
-result = mc.run_python_script("""
-Model = DataModel.Project.Model
-mesh = Model.Mesh
-print("Mesh nodes:", mesh.Nodes)
-""")
-print(result)
-```
+### 問題現象
+使用者透過 Workbench GUI 手動開啟 Mechanical 後，呼叫端若傳入已知 PID 嘗試連線，常見錯誤：
+`No registered Mechanical instance with PID <pid>`
+即使該 PID 進程確實存在，且正常監聽 gRPC 埠（如 `127.0.0.1:10000`）。
 
-### 執行環境特性：
-- `ExtAPI`, `DataModel`, `Model` 預設已注入全域作用域。
-- `__name__` 為 `"<string>"`，切勿使用 `if __name__ == "__main__":`。
-- `print()` 輸出將被捕獲並作為字串回傳。
+### 根因
+若僅依賴集中式註冊表（啟動時自行寫入的 JSON 名冊）解析目標埠，手動由 Workbench GUI 開啟的 Mechanical 進程不會自動寫入該名冊；呼叫端傳入 `pid` 卻查無名冊記錄時，直接報錯退出，未嘗試其他探測手段。
+
+### 標準處置法：雙層 Fallback
+1. **Fallback 1（PID 反查埠）**：名冊查無該 PID 時，用 `psutil` 探測該 PID 本身實際監聽的 gRPC 埠（如掃描 10000~10050 範圍），不假設埠號必為預設值。
+2. **Fallback 2（全埠域掃描）**：若受權限限制無法反查特定 PID 的連線資訊，退而掃描系統中目前處於開放狀態的 Mechanical 標準埠範圍，取得任一可用實例。
+
+確保「名冊啟動」「手動開啟」「直連模式」三種來源的 Mechanical 實例皆可被連上，而非僅限自家腳本啟動的進程。
+
+---
+
+## 二、求解與腳本超時機制放寬
+
+### 問題現象
+呼叫求解或長腳本執行類操作時，耗時超過預設硬超時門檻（例如 60 秒）即被強制中斷：
+`Call timed out after 60.000s (call may continue in background)`
+導致前端連線狀態判定混亂，MAPDL 後台其實仍在正常求解，但 MCP 呼叫端已因逾時拋出例外並切斷連線。
+
+### 根因
+為防止 ACT 腳本死鎖，核心逾時包裝（如 `run_with_timeout`）常對所有 `run_script` 類呼叫套用同一個短超時門檻。但結構/流體模擬的 `Solve()` 操作本質上是長耗時運算（數分鐘至數小時），與一般腳本死鎖防護的目標衝突。
+
+### 標準處置法
+1. **可選跳過超時包裝**：腳本執行入口支援 `timeout: Optional[float]` 參數，當傳入 `None` 或 `<= 0` 時，直接呼叫底層 `run_python_script`，繞過超時包裝限制，支援無限時物理求解。
+2. **求解類操作獨立超時門檻**：求解相關操作使用遠高於一般腳本的預設超時（例如 1 小時級），而非沿用腳本死鎖防護用的短超時。
+3. **呼叫端自訂彈性**：將超時秒數開放為呼叫端參數，依模型規模與求解器類型自行決定合理預算，而非寫死單一全域常數。
+
+---
+
+## 三、網格階數與結果項齊全性（長求解副效應排查）
+
+高自由度模型（例如多層疊構結構）求解耗時過長時，先檢查是否可降階：
+- 二次單元（Quadratic）自由度遠高於一次單元（Linear），對厚度方向僅需捕捉線性變形趨勢的薄層結構，改用一次單元（如 `ElementOrder.Linear`）可大幅降低自由度與求解時間，同時維持足夠精度。
+- 多層結構的翹曲/變形量測，確認結果監控項涵蓋頂層、底層與全域量（不要只設底層或單一層，否則會缺失其他層的關鍵量測）。

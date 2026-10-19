@@ -48,6 +48,7 @@ flowchart TD
 | **具名選擇自動標記**（與 `ansys-geometry-modeling` 共用） | [`references/named_selections.md`](references/named_selections.md) | 外包圍盒空間極值過濾、面法向判別、命名規範與完備性。 |
 | **CAD 缺陷診斷判斷力庫**（與 `ansys-geometry-modeling` 共用） | [`references/cad_diagnostics.md`](references/cad_diagnostics.md) | 微小面 (Sliver)、短邊、自交、流體滲漏判定標準與修復。 |
 | **無損 PMDB 導出規範**（與 `ansys-geometry-modeling` 共用） | [`references/pmdb_export_rules.md`](references/pmdb_export_rules.md) | PMDB 格式優勢、Shared Topology 設置、下游網格接軌。 |
+| **標準件自動簡化替換** | [`references/standard_part_replacement.md`](references/standard_part_replacement.md) | 三級匹配、雙密度實體、`_rho` 標籤、原件隔離、實測基準與限制。 |
 | **3D 特徵批量簡化（去特徵/RAM/散熱片）** | [`../ansys-spaceclaim-defeature/SKILL.md`](../ansys-spaceclaim-defeature/SKILL.md) ‧ [`../simplify-ram/SKILL.md`](../simplify-ram/SKILL.md) ‧ [`../simplify-heatsink/SKILL.md`](../simplify-heatsink/SKILL.md) | 圓孔/倒角批量消除、RAM 卡座等效簡化、散熱片凸字形重建與等效密度反推。 |
 | **裝配體拓撲與干涉閘門檢查** | [`../ansys-spaceclaim-interface-check/SKILL.md`](../ansys-spaceclaim-interface-check/SKILL.md) | 水密性/非manifold邊/自由邊診斷、體間干涉兩階段偵測，送入 Mechanical 前最後一道閘門。 |
 | **鈑金件中面抽取** | [`../ansys-spaceclaim-midsurface/SKILL.md`](../ansys-spaceclaim-midsurface/SKILL.md) | 薄板候選偵測、對向面配對、中面抽取與抽取後拓撲修復。 |

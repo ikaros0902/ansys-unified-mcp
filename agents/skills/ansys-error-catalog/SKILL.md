@@ -24,8 +24,8 @@ phase_gate:
 |---|---|---|
 | Workbench ACT Plugin | `references/workbench_act.md` | `_PROJECT_ROOT` NameError, `exec` closure SyntaxError, FileSystemWatcher 事件重複觸發 |
 | Mechanical Scripting | `references/mechanical_scripting.md` | Scoping 未指定 (❓ 圖示), `Quantity` 未定義, gRPC 連線失敗, `run_python_script` 環境差異 |
-| SpaceClaim / PyGeometry | `references/spaceclaim_pygeometry.md` | gRPC TLS 警告, `rename_object` 限制, `read_existing_design` 空回傳 |
-| IronPython 2.7 通用 | `references/ironpython_general.md` | `exec` 閉包限制, `__name__` 差異, `clr.AddReference` 重複, `reload()` 必要性 |
+| SpaceClaim / PyGeometry | `references/spaceclaim_pygeometry.md` | gRPC TLS 警告, `rename_object` 限制, `read_existing_design` 空回傳；原生 API：`Name` 唯讀, `SetActiveComponent` 不存在, `BlockBody` 無 `.Success`, `NamedSelection.Create` 多載歧義, `GetAllBodies` 空回傳, 視窗在隔離桌面看不到 |
+| IronPython 2.7 通用 | `references/ironpython_general.md` | `exec` 閉包限制, `__name__` 差異, `clr.AddReference` 重複, `reload()` 必要性, `re.sub` 不支援 `flags=` |
 
 ---
 

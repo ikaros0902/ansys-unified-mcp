@@ -88,3 +88,33 @@ module top level (no `onupdateStep`). The geometry API is identical either way.
   classes, helpers, and enums into scope directly.
 - Keep one version idiom per script; mixing fixed-import and `sc.*` gets
   confusing.
+
+
+## GUI 啟動與桌面隔離（AI 終端機操作必讀）
+
+**需求**: 使用者要「打開 SpaceClaim / 打開某個 .scdocx」並親眼檢視。
+
+**陷阱**: 從 AI 終端機啟動的程序屬於隔離桌面（`exebox-...`），工作管理員看得到、
+使用者螢幕看不到。此環境下 `MainWindowHandle = 0` 與 `EnumWindows` 空白不可當成
+「視窗未開」的判斷依據，也無法在這邊驗證視窗是否顯示。
+
+**有效做法**: 工作排程器互動模式（`/IT`），啟動後刪除暫時任務。
+```powershell
+$exe = 'D:\ANSYS Inc\v251\scdm\SpaceClaim.exe'
+$doc = 'D:\path\to\model.scdocx'
+schtasks /Create /TN "OpenSC_Tmp" /TR "\`"$exe\`" /UseLicenseMode=true \`"$doc\`"" /SC ONCE /ST 23:59 /IT /F
+schtasks /Run /TN "OpenSC_Tmp"
+schtasks /Delete /TN "OpenSC_Tmp" /F
+```
+
+**注意事項**:
+- `SpaceClaim.exe` 必須帶 `/UseLicenseMode=true`，否則 Discovery 授權檢查會失敗。
+- 路徑含空格時，`/TR` 內的引號必須跳脫，否則會被拆成多個參數（`Invalid argument/option`）。
+- 直接開檔案時，把檔案路徑當第二個參數即可，不需要 `/RunScript`。
+- `/RunScript` 執行期間若發生未處理例外，SpaceClaim 會直接結束；腳本結尾不要呼叫
+  `Application.Exit()`，才能保留 GUI。腳本內務必用 `try/except` 並寫 log 檔。
+- 腳本輸出請寫入檔案（`open(..., "w")`），不要依賴 stdout。
+- 無法驗證視窗時，直接告訴使用者並請其回報，不要宣稱成功。
+
+**無效做法**（已驗證）: `SetForegroundWindow` / `ShowWindow(SW_MAXIMIZE)`、`CreateProcess` 指定
+`lpDesktop=WinSta0\Default`、WMI `Win32_Process.Create`、產生 `.bat` 捷徑。

@@ -32,7 +32,7 @@ if str(SRC_DIR) not in sys.path:
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from scripts.verify_directory_topology import (
+from scripts.verification.verify_directory_topology import (
     EXPECTED_CORE_DIRS,
     FORBIDDEN_ROOT_DIRS,
     REQUIRED_RUNTIME_SUBDIRS,
@@ -40,7 +40,7 @@ from scripts.verify_directory_topology import (
     check_gitignore_contains_runtime,
     verify_directory_topology,
 )
-from scripts.verify_fastmcp_tools import (
+from scripts.verification.verify_fastmcp_tools import (
     CANONICAL_EXPECTED_COUNT,
     CANONICAL_MIN_THRESHOLD,
     EXPOSED_EXPECTED_COUNT,
@@ -252,9 +252,9 @@ def test_current_repo_directory_topology_status() -> None:
 
 
 def test_cli_verify_directory_topology_execution(tmp_path: Path) -> None:
-    """測試 scripts/verify_directory_topology.py 透過命令列執行並輸出 JSON。"""
+    """測試 scripts/verification/verify_directory_topology.py 透過命令列執行並輸出 JSON。"""
     mock_repo = _create_mock_compliant_repo(tmp_path / "cli_test_repo")
-    script_path = SCRIPTS_DIR / "verify_directory_topology.py"
+    script_path = SCRIPTS_DIR / "verification" / "verify_directory_topology.py"
 
     cmd = [
         sys.executable,
@@ -278,8 +278,8 @@ def test_cli_verify_directory_topology_execution(tmp_path: Path) -> None:
 
 
 def test_cli_verify_fastmcp_tools_execution() -> None:
-    """測試 scripts/verify_fastmcp_tools.py 透過命令列執行並輸出 JSON。"""
-    script_path = SCRIPTS_DIR / "verify_fastmcp_tools.py"
+    """測試 scripts/verification/verify_fastmcp_tools.py 透過命令列執行並輸出 JSON。"""
+    script_path = SCRIPTS_DIR / "verification" / "verify_fastmcp_tools.py"
 
     cmd = [
         sys.executable,

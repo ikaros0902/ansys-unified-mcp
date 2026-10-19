@@ -8,7 +8,6 @@
 
 - [ANSYS Unified MCP 架構與規格評估白皮書](architecture/ANSYS_UNIFIED_MCP_ARCHITECTURE_AND_SPECIFICATION_REPORT.md): 涵蓋結構、幾何、熱傳/Icepak、PyPrimeMesh 與電子封裝五大領域的架構與規格評估。
 - [目錄樹架構收斂與精簡規範](architecture/DIRECTORY_STRUCTURE_REORGANIZATION.md): 目錄混亂根因排查與重組後架構分層；⚠️ 文件內含部分未實作之 split-server 願景內容，現況以 `ARCHITECTURE.md` 為準。
-- [Mechanical 連線解析與長求解超時修復紀錄](architecture/FIX_MECHANICAL_CONNECTION_AND_SOLVE_TIMEOUT.md): PCB 79 層熱翹曲分析任務中連線埠解析與求解逾時問題的根因分析與修復記錄。
 - [歷史規格快照](architecture/historical_specs/): Phase 1 原始需求書與規格書，供追溯決策脈絡，不可作為現況依據。
 - 系統分層與工具命名信封慣例請參閱根目錄 [`ARCHITECTURE.md`](../ARCHITECTURE.md)。
 
@@ -28,6 +27,11 @@
 ## 測試 (`testing/`)
 
 - [測試基礎設施規範 (TEST_INFRA)](testing/TEST_INFRA.md): 4-Tier 漸進式測試防線架構、自動化執行命令、覆蓋門檻、Mocking 設施與合成端到端場景驗收規格。
+
+> gRPC 連線降級容錯與長求解超時放寬之通用修復法則，已萃取至
+> [`agents/skills/pymechanical-operations/references/grpc_connection.md`](../agents/skills/pymechanical-operations/references/grpc_connection.md)；
+> MCP 層輸出假性成功判定陷阱已萃取至
+> [`agents/skills/ansys-mechanical/references/solver_diagnostics.md`](../agents/skills/ansys-mechanical/references/solver_diagnostics.md) 第五節。
 
 ## 圖表 (`diagrams/`)
 
@@ -83,5 +87,4 @@
 
 - 專案概觀與快速上手：[`README.md`](../README.md)
 - AI 代理規範路由：[`AGENTS.md`](../AGENTS.md)
-- 專案心智模型：[`contexts/context.md`](../contexts/context.md)
-- 技能庫索引：[`skills/README.md`](../skills/README.md)
+- 技能庫索引：[`agents/skills/README.md`](../agents/skills/README.md)

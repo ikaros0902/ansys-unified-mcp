@@ -1,6 +1,6 @@
 # ANSYS Mechanical 求解器診斷與自愈庫 (Solver Diagnostics & Self-Healing)
 
-本手冊彙整 ANSYS Mechanical 有限元求解中最常見之四大經典崩潰報錯，深入剖析數值力學根因，並提供立即可套用的 ACT 程式碼級自愈處置對策表。
+本手冊彙整 ANSYS Mechanical 有限元求解中最常見之四大經典崩潰報錯與一類 MCP 層輸出解析陷阱，深入剖析數值力學根因，並提供立即可套用的 ACT 程式碼級自愈處置對策表。
 
 ---
 
@@ -118,7 +118,29 @@ def heal_contact_chattering(contact_region):
 
 ---
 
-## 五、報錯 4：單元過度畸變 (Highly Distorted Element / Negative Jacobian)
+## 五、MCP 層輸出解析陷阱：假性成功判定 (False-Positive Success)
+
+### 1. 問題現象
+IronPython 腳本 stdout 輸出末行恰好包含看似合法的 JSON 時，若解析邏輯僅檢查末行格式，會誤判為執行成功，實際上腳本中段已拋出例外並中止，JSON 只是例外處理前殘留的舊輸出或預設值。
+
+### 2. 根因
+腳本輸出解析若只看「最後一行是否為合法 JSON」，不會注意到輸出中段混雜了例外堆疊或錯誤訊息。
+
+### 3. 標準處置法：全域優先致命錯誤偵測
+解析前先掃描整段輸出是否包含下列任一致命錯誤標識，若命中，**無論末行 JSON 是否合法，一律判定失敗**：
+
+```
+exception:, traceback, syntaxerror:, nameerror:, attributeerror:, typeerror:,
+indexerror:, keyerror:, system.exception, ansys.mechanical.core.errors,
+script error:, system.nullreferenceexception, system.invalidoperationexception,
+502 bad gateway, 500 internal server error
+```
+
+命中任一關鍵字時，直接回傳失敗結果並將完整錯誤訊息保留在錯誤欄位，不嘗試從輸出中硬解析出成功結果。
+
+---
+
+## 六、報錯 4：單元過度畸變 (Highly Distorted Element / Negative Jacobian)
 
 ### 1. 報錯訊息實例
 `"Element 89201 has become highly distorted. Excessive distortion of elements may cause solver divergence."`
