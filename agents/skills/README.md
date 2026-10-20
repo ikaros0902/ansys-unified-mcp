@@ -8,8 +8,9 @@
 
 | 技能名稱 | 專業領域 | 核心技術 / 觸發關鍵字 |
 | :--- | :--- | :--- |
+| **[`ansys-spaceclaim-component-library`](ansys-spaceclaim-component-library/SKILL.md)** | **裝配體元件擷取與查表建庫** | BOM／GUI 分類、元件樹盤點、既有 gRPC 查證、獨立元件另存與重新匯入驗證；`Common Part`, `元件擷取`, `元件樹盤點`, `開啟元件另存` |
 | **[`ansys-geometry-modeling`](ansys-geometry-modeling/SKILL.md)** | **PyAnsys Geometry 現代化幾何** | `ansys.geometry.core` 參數化草圖 / 拉伸旋轉, Named Selection, 無損 PMDB 直通；`PyAnsys Geometry`, `參數化幾何`, `Enclosure`, `匯出PMDB` |
-| **[`ansys-spaceclaim`](ansys-spaceclaim/SKILL.md)** | **SpaceClaim 建模與腳本雙軌控制** | PyAnsys Geometry 與原生 ACT IronPython 雙軌 API；`SpaceClaim建模`, `SCDM腳本`, `SpaceClaim幾何`, `幾何前處理` |
+| **[`ansys-spaceclaim`](ansys-spaceclaim/SKILL.md)** | **SpaceClaim 建模與腳本雙軌控制** | PyAnsys Geometry 與原生 ACT IronPython 雙軌 API、作用中設計 STEP 匯出；`SpaceClaim建模`, `SCDM腳本`, `SpaceClaim幾何`, `幾何前處理` |
 | **[`ansys-spaceclaim-modeling`](ansys-spaceclaim-modeling/SKILL.md)** | **SpaceClaim/Discovery 幾何前處理與無損流轉** | 2D 草圖拉伸, 外流域抽取 (Enclosure), 布林相減, CAD 缺陷診斷, 無損 PMDB 導出；`外流域抽取`, `PMDB導出`, `CAD缺陷診斷`, `Discovery前處理` |
 | **[`ansys-mesh`](ansys-mesh/SKILL.md)** | **Mechanical / LS-DYNA 網格工程與 CFL 調優** | 自動網格劃分 (AutoMesh), 網格干涉檢查, CFL 最小時間步長量測, Node Merge / 局部 Pinch 調優；`ansys-mesh`, `網格劃分`, `網格品質`, `CFL步長`, `網格調優` |
 | **[`simplify-ram`](simplify-ram/SKILL.md)** | **RAM 幾何簡化流程** | 先索取主機板 / RAM / socket 三個 body 名稱，再以 `geometry_simplify_ram(_batch)` 合併成板面方塊並建底面 NS；`簡化RAM`, `簡化記憶體`, `simplify RAM` |

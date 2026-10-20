@@ -43,6 +43,7 @@ phase_gate:
 | **3D 幾何成形** | [`references/modeling.md`](references/modeling.md) | `extrude_sketch`、`revolve_sketch` 拉伸與旋轉 |
 | **組件與具名選擇** | [`references/design_and_bodies.md`](references/design_and_bodies.md) | 拓撲樹、元件層級與 Named Selection |
 | **模型匯入匯出** | [`references/import_export.md`](references/import_export.md) | STEP / IGES 匯入與導出 |
+| **裝配體元件擷取／查表建庫** | [`ansys-spaceclaim-component-library`](../ansys-spaceclaim-component-library/SKILL.md) | 真實工作階段查證、BOM／GUI 分類、開啟元件另存、重新匯入驗證 |
 
 ### 2. 原生 SpaceClaim IronPython 路線
 | 功能分類 | 參考文件 | 內容說明 |

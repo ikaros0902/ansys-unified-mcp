@@ -14,8 +14,10 @@ the project's geometry driver (`ansys.geometry.core`).
 
 ```python
 # 嚴禁調用 modeler.create_design() 創建新設計分頁！
-# 直接取得當前使用中的 Design:
-design = modeler.active_design or modeler.get_active_design()
+# 新建立的 Modeler 尚未載入遠端 Design；讀取服務目前的設計，不要建立新設計:
+design = modeler.read_existing_design()
+if design is None or not design.is_active:
+    raise RuntimeError("No active design on the connected service")
 ```
 
 - 一律在現有/當前的 `Design` 上直接繪製草圖與建立實體。
