@@ -21,6 +21,16 @@ from ansys_unified_mcp.core.sessions import registry
 from ansys_unified_mcp.products.mechanical.facade import MechanicalController, PRODUCT
 
 
+@pytest.fixture(autouse=True)
+def _clean_registry():
+    """隔離全域 registry 單例：每個測試前後清空本模組用到的 key，避免跨測試污染。"""
+    for k in ("59998",):
+        registry.drop(PRODUCT, k)
+    yield
+    for k in ("59998",):
+        registry.drop(PRODUCT, k)
+
+
 def test_massive_concurrent_uuid_isolation():
     """Empirically prove that 50 threads executing 200 tasks have 0 file collisions and 0 cross-talk."""
     controller = MechanicalController()
@@ -65,6 +75,11 @@ def test_massive_concurrent_uuid_isolation():
     # Check baseline temporary files
     initial_mech_files = set(glob.glob(os.path.join(tmp_dir, "mech_*.*")))
 
+    # run_script 內部會用 registry.record() 二次核對 probe 前後的 session 身分
+    # 一致性，因此除了 patch get_live，也要讓同一個 mock_session 真實寫入
+    # registry，否則會誤判為「Session changed during probe」。
+    registry.put(PRODUCT, "59998", mock_session)
+
     # Test Part A: Pure Lock-Free UUID Isolation under Massive 50-thread Concurrency (timeout=None)
     with patch.object(registry, "get_live", return_value=mock_session):
         num_threads = 50
@@ -85,13 +100,27 @@ def test_massive_concurrent_uuid_isolation():
         elapsed = time.time() - start_time
         print(f"\n[Part A: Direct 50-thread] Completed {len(results)} tasks in {elapsed:.2f}s")
 
-    # Verification 1: Zero file collisions across 200 tasks
-    assert len(file_collisions) == 0, f"Detected {len(file_collisions)} file collisions: {file_collisions}"
-    assert len(seen_in_files) == num_tasks, f"Expected {num_tasks} unique input files, got {len(seen_in_files)}"
-    assert len(seen_out_files) == num_tasks, f"Expected {num_tasks} unique output files, got {len(seen_out_files)}"
+    # record.lock.acquire(blocking=False) 將同一 session 序列化為單一執行緒存取
+    # （真實 gRPC channel 本身非執行緒安全），搶不到鎖的任務在建立暫存檔前就被
+    # 優雅拒絕為 "Error: Mechanical session is busy."，不會進入 mock_run_python，
+    # 因此唯一檔名數必然小於 num_tasks。只驗證「真正執行成功」的任務彼此零碰撞。
+    busy_results = {tid: (exp, act) for tid, (exp, act) in results.items()
+                     if act == "Error: Mechanical session is busy."}
+    executed_results = {tid: (exp, act) for tid, (exp, act) in results.items()
+                         if tid not in busy_results}
 
-    # Verification 2: Zero cross-talk
-    mismatches = [(tid, exp, act) for tid, (exp, act) in results.items() if exp != act]
+    # Verification 1: Zero file collisions across all executed tasks
+    assert len(file_collisions) == 0, f"Detected {len(file_collisions)} file collisions: {file_collisions}"
+    assert len(seen_in_files) == len(executed_results), (
+        f"Expected {len(executed_results)} unique input files (excluding busy-rejected), "
+        f"got {len(seen_in_files)}")
+    assert len(seen_out_files) == len(executed_results), (
+        f"Expected {len(executed_results)} unique output files (excluding busy-rejected), "
+        f"got {len(seen_out_files)}")
+    assert len(executed_results) > 0, "All concurrent tasks were rejected as busy; the lock never released."
+
+    # Verification 2: Zero cross-talk among executed tasks
+    mismatches = [(tid, exp, act) for tid, (exp, act) in executed_results.items() if exp != act]
     assert len(mismatches) == 0, f"Detected cross-talk in {len(mismatches)} tasks: {mismatches}"
 
     # Verification 3: Zero file leakage
@@ -115,11 +144,13 @@ def test_massive_concurrent_uuid_isolation():
                 t_id, payload, res = fut.result()
                 results_b[t_id] = (payload, res)
 
-    # Some will succeed, some will trigger thread pool exhaustion:
+    # Some will succeed, some will trigger thread pool exhaustion, some will be
+    # rejected by the per-session lock as busy (record.lock.acquire(blocking=False)):
     exhausted_count = sum(1 for _, res in results_b.values() if "Thread pool exhausted" in res)
+    busy_count_b = sum(1 for _, res in results_b.values() if res == "Error: Mechanical session is busy.")
     success_count = sum(1 for exp, res in results_b.values() if exp == res)
-    print(f"\n[Part B: Bounded Pool] Success: {success_count}, Throttled: {exhausted_count}")
-    assert success_count + exhausted_count == 100
+    print(f"\n[Part B: Bounded Pool] Success: {success_count}, Throttled: {exhausted_count}, Busy: {busy_count_b}")
+    assert success_count + exhausted_count + busy_count_b == 100
 
     # Ensure even throttled/errored calls clean up temporary files completely
     current_mech_files = set(glob.glob(os.path.join(tmp_dir, "mech_*.*")))
@@ -128,10 +159,19 @@ def test_massive_concurrent_uuid_isolation():
 
 
 def test_concurrent_session_failure_eviction():
-    """Empirically test that when a session crashes during concurrent access, it is cleanly evicted without deadlock."""
+    """Empirically test that when a session crashes during concurrent access, it is cleanly evicted without deadlock.
+
+    record.lock.acquire(blocking=False) 將同一 session 序列化為單一執行緒存取，
+    高並發下絕大多數任務會在搶不到鎖時被優雅拒絕為 busy，而不會真的呼叫底層
+    session；這與本測試「驗證死 session 會在失敗後被 registry 驅逐」的目標
+    無關，因此改用序列呼叫（num_threads=1）確保每個任務都真正執行到
+    flaky_run，可靠觸發第 10 次呼叫的致命錯誤並驗證驅逐行為。並發下的鎖
+    保護語義已由 test_concurrent_run_script_file_collision /
+    test_massive_concurrent_uuid_isolation 另行驗證。
+    """
     controller = MechanicalController()
     key = "59998"
-    
+
     mock_session = MagicMock()
     call_count = 0
 
@@ -140,7 +180,7 @@ def test_concurrent_session_failure_eviction():
         call_count += 1
         if call_count >= 10:
             raise RuntimeError("Fatal gRPC connection drop during high-load concurrency")
-        
+
         m_in = re.search(r'with _io\.open\(r"([^"]+)"', wrapper)
         m_out = re.search(r'with open\(r"([^"]+)", \'w\'\)', wrapper)
         if m_in and m_out:
@@ -152,7 +192,7 @@ def test_concurrent_session_failure_eviction():
     mock_session.run_python_script.side_effect = flaky_run
     registry.put(PRODUCT, key, mock_session)
 
-    num_threads = 10
+    num_threads = 1
     num_tasks = 30
     results = []
 
@@ -167,7 +207,7 @@ def test_concurrent_session_failure_eviction():
     # Some calls succeeded, later calls returned Error:
     successes = [r for r in results if r.startswith("CMD_")]
     errors = [r for r in results if "Error:" in r]
-    
+
     assert len(errors) > 0, "Expected errors after session failure"
     # Session must be evicted from registry
     assert registry.get(PRODUCT, key) is None, "Dead session was not evicted from registry"

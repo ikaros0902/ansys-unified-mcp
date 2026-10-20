@@ -161,17 +161,20 @@ class TestChapter2CodebaseFacts:
         # + LS-DYNA PyDYNA 離線 keyword deck 垂直切片 (dyna_create_keyword_deck,
         #   dyna_export_keyword_file, dyna_list_keyword_types 共 3 個) = 148
         # + geometry 散熱片/RAM 簡化合併 (geometry_screenshot 等 7 個 geometry 工具, PR #2) = 155
-        assert total_funcs == 155, f"AST 解析工具總數應為 155，實測: {total_funcs} (各模組: {tool_counts})"
+        # + 2026-10-20 GitHub 合併 (核心架構解耦/Runtime 目錄解析/分發包裝現代化
+        #   3.0.0 升級，commits 1a52f76/6b16df2/7a0a6f6): 新增 dyna/tools.py 完整
+        #   LS-DYNA keyword 工具組 (7) 與 mechanical/workbench 工具擴充，總數 155 -> 172。
+        assert total_funcs == 172, f"AST 解析工具總數應為 172，實測: {total_funcs} (各模組: {tool_counts})"
 
     def test_tool_count_102_mechanical_profile(self):
         """3.2 驗證 mechanical profile 動態路由下 FastMCP 暴露之工具總數。
 
         R4 工具面剪枝後，deprecated alias 預設不暴露：
-        - ANSYS_MCP_EXPOSE_ALIASES=0（預設）：62 個 canonical 工具
-          （57 基線 + 4 個跨產品統一 session 管理工具 ans_session_connect/
-          launch/status/disconnect + 1 個 ans_session_set_workspace per-session
-          可見性工具，皆無條件載入於所有 profile）。
-        - ANSYS_MCP_EXPOSE_ALIASES=1（相容模式）：109 個（62 canonical + 47 alias）。
+        - ANSYS_MCP_EXPOSE_ALIASES=0（預設）：70 個 canonical 工具。
+        - ANSYS_MCP_EXPOSE_ALIASES=1（相容模式）：121 個（70 canonical + 51 alias）。
+        2026-10-20 GitHub 合併 (commits 1a52f76/6b16df2/7a0a6f6) 後基線更新：62->70、
+        109->121（mechanical profile 工具面擴充，詳見 test_tool_count_136_ast_verification
+        註解）。
         """
         script = """
 import os, asyncio
@@ -198,15 +201,13 @@ asyncio.run(main())
             return int(match.group(1))
 
         pruned_count = _count("0")
-        assert pruned_count == 62, (
-            f"R4 剪枝預設下 mechanical profile 工具總數應為 62 個 canonical"
-            f"（57 基線 + 4 個 ans_session_* session 管理工具 + 1 個 ans_session_set_workspace"
-            f" per-session 可見性工具），實測: {pruned_count}"
+        assert pruned_count == 70, (
+            f"R4 剪枝預設下 mechanical profile 工具總數應為 70 個 canonical，實測: {pruned_count}"
         )
 
         exposed_count = _count("1")
-        assert exposed_count == 109, (
-            f"相容模式下 mechanical profile 工具總數應為 109（含 alias），實測: {exposed_count}"
+        assert exposed_count == 121, (
+            f"相容模式下 mechanical profile 工具總數應為 121（含 alias），實測: {exposed_count}"
         )
 
     def test_alias_coverage_distribution(self):
@@ -231,4 +232,5 @@ asyncio.run(main())
 
         assert "@aliased_tool" not in sim_text
         assert wb_text.count("@aliased_tool") == 6
-        assert mech_text.count("@aliased_tool") == 42
+        # 2026-10-20 GitHub 合併後 mechanical 工具面擴充，42 -> 46。
+        assert mech_text.count("@aliased_tool") == 46

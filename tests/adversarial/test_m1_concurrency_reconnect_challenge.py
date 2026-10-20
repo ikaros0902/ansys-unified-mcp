@@ -14,6 +14,16 @@ from ansys_unified_mcp.core.sessions import registry
 from ansys_unified_mcp.products.mechanical.facade import MechanicalController, PRODUCT
 
 
+@pytest.fixture(autouse=True)
+def _clean_registry():
+    """隔離全域 registry 單例：每個測試前後清空本模組用到的 key，避免跨測試污染。"""
+    for k in ("59999",):
+        registry.drop(PRODUCT, k)
+    yield
+    for k in ("59999",):
+        registry.drop(PRODUCT, k)
+
+
 def test_concurrent_run_script_file_collision():
     """Empirically test whether concurrent run_script calls collide on the same temporary files."""
     controller = MechanicalController()
@@ -40,6 +50,10 @@ def test_concurrent_run_script_file_collision():
 
     mock_session.run_python_script.side_effect = fake_run_python_script
 
+    # run_script 內部會用 registry.record() 二次核對 probe 前後的 session 身分
+    # 一致性，因此除了 patch get_live，也要讓同一個 mock_session 真實寫入
+    # registry，否則會誤判為「Session changed during probe」。
+    registry.put(PRODUCT, "59999", mock_session)
     with patch.object(registry, "get_live", return_value=mock_session):
         num_workers = 5
         results = {}
@@ -57,13 +71,22 @@ def test_concurrent_run_script_file_collision():
                 results[t_id] = (expected, res)
 
         print("\nConcurrent run_script results:")
+        # record.lock.acquire(blocking=False) 將同一 session 序列化為單一執行緒
+        # 存取（真實 gRPC channel 本身非執行緒安全），搶不到鎖的任務會在建立
+        # 暫存檔前就被優雅拒絕為 "Error: Mechanical session is busy."，因此
+        # 不構成資料碰撞；只需驗證「真正執行成功」的任務彼此輸出零串接錯誤。
         mismatches = []
+        busy_count = 0
         for t_id, (expected, res) in results.items():
             print(f"Task {t_id}: expected={expected!r}, actual={res!r}")
+            if res == "Error: Mechanical session is busy.":
+                busy_count += 1
+                continue
             if expected != res:
                 mismatches.append((t_id, expected, res))
 
         assert len(mismatches) == 0, f"Concurrent run_script suffered from cross-talk/file collision! Mismatches: {mismatches}"
+        assert busy_count < num_workers, "All concurrent tasks were rejected as busy; the lock never released."
 
 
 def test_reconnect_when_session_dead():
