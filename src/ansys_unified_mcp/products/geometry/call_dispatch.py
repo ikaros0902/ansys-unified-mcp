@@ -24,6 +24,15 @@ logger = logging.getLogger("ansys-mcp")
 from ansys_unified_mcp.core.sessions import registry
 from ansys_unified_mcp.products.geometry.spaceclaim_scripts import load_script
 
+# 共用 helper 與 RAM / Heatsink 簡化函式已搬移至獨立檔案，此處顯式匯入內部使用函式，
+# 並透過 star import 保持命名空間相容性供既有測試存取。
+from ._geom_shared import *  # noqa: F401,F403
+from ._geom_shared import _make_box_from_bbox
+from .simplify_ram import *  # noqa: F401,F403
+from .simplify_ram import _geom_simplify_ram, _geom_simplify_ram_batch
+from .simplify_heatsink import *  # noqa: F401,F403
+from .simplify_heatsink import _geom_simplify_heatsink
+
 # ---------------------------------------------------------------------------
 # Global sessions (backed by SessionRegistry)
 # ---------------------------------------------------------------------------
@@ -367,9 +376,9 @@ def _geom_create_enclosure(target_body_name: str, enclosure_name: str = "FluidDo
 # 確保 call_tool 與既有測試（以 call_dispatch 命名空間存取 helper）行為不變。
 # 三個新檔對本模組的 _geom_get_design / _geom_suppress_hide 依賴皆於函式內
 # 以 `from . import call_dispatch as _cd` 延遲存取，避免模組載入期循環 import。
-from ._geom_shared import *  # noqa: E402,F401,F403
-from .simplify_ram import *  # noqa: E402,F401,F403
-from .simplify_heatsink import *  # noqa: E402,F401,F403
+# （相關函式已在檔案開頭統一匯入與 re-export）
+
+
 
 
 # ===================================================================
