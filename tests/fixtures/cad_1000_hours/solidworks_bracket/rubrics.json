@@ -1,0 +1,45 @@
+{
+  "schema_version": "1.0",
+  "rubrics": [
+    {
+      "id": "R1",
+      "requirement": "The model shall include a cylindrical boss with a 68 millimeter outer diameter and a 50 millimeter through bore."
+    },
+    {
+      "id": "R2",
+      "requirement": "The model shall include an angled branch inclined at 45 degrees to the boss axis with a 32 millimeter outer diameter and an 18 millimeter bore."
+    },
+    {
+      "id": "R3",
+      "requirement": "The model shall include a triangular mounting flange carrying three mounting holes and a central bore of 20 millimeter with a 32 millimeter counterbore face."
+    },
+    {
+      "id": "R4",
+      "requirement": "The drawing shall be laid out on an A3 sheet with a border and a title block."
+    },
+    {
+      "id": "R5",
+      "requirement": "The drawing shall contain a front view at scale 1:1, a full section view A-A at scale 1:1 and an isometric view at scale 1:2."
+    },
+    {
+      "id": "R6",
+      "requirement": "The section view shall show cut material with hatching and shall be labelled with its view name and scale."
+    },
+    {
+      "id": "R7",
+      "requirement": "The drawing shall dimension the boss diameters, the branch diameters, the flange bore and counterbore, the 45 degree branch angle, the 86 millimeter overall boss length, and the 63 and 72 millimeter flange hole positions."
+    },
+    {
+      "id": "R8",
+      "requirement": "The drawing shall label each view with its name and scale beneath the view."
+    },
+    {
+      "id": "R9",
+      "requirement": "The title block shall state the part title, sheet size, drawing number, scale and sheet number."
+    },
+    {
+      "id": "R10",
+      "requirement": "The front view shall include a cutting-plane line labelled A-A and visible center marks or centerlines for the boss and flange holes."
+    }
+  ]
+}

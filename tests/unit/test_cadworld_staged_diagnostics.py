@@ -495,3 +495,68 @@ class TestRealCADWorldArtifacts:
         assert rep.first_broken_stage == "structure"
         assert rep.failure_class == FailureClassEnum.F5_WRONG_DOCUMENT_STRUCTURE
 
+
+# ===================================================================
+# 7. Markov AI cad-1000-hours 真實任務與 Rubric 驗證
+# ===================================================================
+
+class TestCAD1000HoursRealArtifacts:
+    """以 HuggingFace markov-ai/cad-1000-hours 真實下載之任務與產物進行驗證。"""
+
+    @pytest.fixture
+    def task_dir(self) -> Path:
+        return Path(__file__).resolve().parent.parent / "fixtures" / "cad_1000_hours" / "solidworks_bracket"
+
+    def test_cad_1000_hours_task_metadata_and_rubrics(self, task_dir: Path):
+        desc_path = task_dir / "task_desc.json"
+        rubrics_path = task_dir / "rubrics.json"
+        sldprt_path = task_dir / "output.sldprt"
+
+        assert desc_path.exists(), f"task_desc.json 不存在: {desc_path}"
+        assert rubrics_path.exists(), f"rubrics.json 不存在: {rubrics_path}"
+        assert sldprt_path.exists(), f"output.sldprt 不存在: {sldprt_path}"
+
+        # 1. 驗證 task_desc 內容
+        with open(desc_path, "r", encoding="utf-8") as f:
+            desc = json.load(f)
+        assert desc["application"] == "SOLIDWORKS"
+        assert desc["domain"] == "Mechanical CAD"
+        assert len(desc["deliverables"]) == 2
+
+        # 2. 驗證 rubrics 規範 (10 條嚴格規範)
+        with open(rubrics_path, "r", encoding="utf-8") as f:
+            rubrics = json.load(f)
+        assert rubrics["schema_version"] == "1.0"
+        assert len(rubrics["rubrics"]) == 10
+        r_ids = [r["id"] for r in rubrics["rubrics"]]
+        assert r_ids == [f"R{i}" for i in range(1, 11)]
+
+        # 3. 驗證真實 CAD 產物檔案非空且具備真實體積
+        assert sldprt_path.stat().st_size == 156654
+
+    def test_cad_1000_hours_in_staged_diagnostics_funnel(self, task_dir: Path):
+        """驗證真實商業 CAD 產物在 Gatekeeper 階梯漏斗之檔案與前置保護行為。"""
+        sldprt_path = task_dir / "output.sldprt"
+        with open(task_dir / "rubrics.json", "r", encoding="utf-8") as f:
+            rubrics = json.load(f)
+
+        state = {
+            "task_id": "solidworks-bracket-001",
+            "claimed_done": True,
+            "file_path": str(sldprt_path),
+        }
+
+        # 傳入需要包含孔位特徵與圓柱直徑的結構規則
+        rubric_spec = {
+            "rubrics": rubrics["rubrics"],
+            "structure": {
+                "required_label_contains": ["Cylindrical Boss", "Mounting Flange"],
+            },
+        }
+
+        rep = evaluate_staged_rubric(state, rubric_spec)
+        # 真實 sldprt 存在且非空，Stage 1 (file_saved) 與 Stage 2 (file_valid) 通過
+        assert rep.stages["file_saved"]["ok"] is True
+        assert rep.stages["file_valid"]["ok"] is True
+
+

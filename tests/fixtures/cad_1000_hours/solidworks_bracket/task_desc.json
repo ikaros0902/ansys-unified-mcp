@@ -1,0 +1,23 @@
+{
+  "task": "Model a flanged mounting bracket with a cylindrical boss and produce its detail drawing in SOLIDWORKS.",
+  "domain": "Mechanical CAD",
+  "application": "SOLIDWORKS",
+  "description": "Build a solid part of a mounting bracket consisting of a large cylindrical boss, an angled tubular branch at 45 degrees and a triangular mounting flange with three fastener holes, working from the reference sheet input.pdf. All dimensions are in millimeters. Then lay out an A3 drawing containing a front view at 1:1, a full section A-A at 1:1 and an isometric view at 1:2, dimensioned with the principal diameters, wall thicknesses and hole positions. Deliver the part and the drawing as native SOLIDWORKS files.",
+  "input_files": [
+    "input_files/input.pdf"
+  ],
+  "deliverables": [
+    {
+      "path": "output_files/output.slddrw",
+      "type": "slddrw",
+      "format": ".slddrw",
+      "description": "Detail drawing sheet with front, section and isometric views"
+    },
+    {
+      "path": "output_files/output.sldprt",
+      "type": "sldprt",
+      "format": ".sldprt",
+      "description": "Solid part model of the flanged mounting bracket"
+    }
+  ]
+}
