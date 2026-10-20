@@ -1,4 +1,4 @@
-﻿"""ANSYS Unified MCP 2.0 - 前置安全閘門核心引擎 (Pre-Flight Gatekeeper Engine).
+"""ANSYS Unified MCP 2.0 - 前置安全閘門核心引擎 (Pre-Flight Gatekeeper Engine).
 
 在模擬作業正式進入求解器前執行硬性物理檢核，
 彙整 8 大物理安全規則，未達標強制阻斷並產出結構化自愈處方箋。
@@ -198,3 +198,13 @@ class Gatekeeper:
             "youngs_modulus_value": youngs_modulus_value,
         }
         return rule.check(ctx)
+
+
+    def evaluate_staged_rubric(
+        self,
+        artifact_state: Dict[str, Any],
+        rubric: Dict[str, Any],
+    ):
+        """以 8 階段短路漏斗與 Rubric JSON 評估工程產物。"""
+        from ansys_unified_mcp.core.gatekeeper.staged_diagnostics import evaluate_staged_rubric
+        return evaluate_staged_rubric(artifact_state=artifact_state, rubric=rubric)

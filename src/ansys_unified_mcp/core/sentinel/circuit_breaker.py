@@ -9,9 +9,22 @@
 
 from __future__ import annotations
 
+import hashlib
+import json
 import math
 from dataclasses import dataclass, field
-from typing import Any, Dict, Optional
+from typing import Any, Dict, List, Optional
+
+
+def _safe_hash_args(args: Any) -> str:
+    """對任意輸入結構（包含巢狀 dict/list）進行確定性 SHA-256 雜湊，避免 unhashable type 崩潰。"""
+    if isinstance(args, str):
+        return hashlib.sha256(args.encode("utf-8")).hexdigest()[:16]
+    try:
+        serialized = json.dumps(args, sort_keys=True, default=str)
+    except Exception:
+        serialized = repr(args)
+    return hashlib.sha256(serialized.encode("utf-8")).hexdigest()[:16]
 
 
 @dataclass
@@ -277,3 +290,78 @@ class CircuitBreaker:
                 )
 
         return BreakerVerdict(triggered=False, metrics_snapshot=snapshot)
+
+
+    def evaluate_agent_trajectory(
+        self,
+        recent_calls: List[Dict[str, Any]],
+        max_identical_repeats: int = 3,
+        max_oscillation_cycles: int = 2,
+    ) -> BreakerVerdict:
+        """評估 Agent 工具調用軌跡是否陷入 Death-Loop（連續重複無效呼叫或 ABAB 震盪）。
+
+        CADWorld 論文第 4.2 節指認 Agent 最常在相同錯誤參數上反覆重試導致步數耗盡。
+        觸發時回傳 rule_id="CB-AGT-001"、action_code="BREAK_AGENT_DEATH_LOOP"。
+        """
+        if not recent_calls:
+            return BreakerVerdict(triggered=False)
+
+        signatures = [
+            (str(call.get("tool", "")), _safe_hash_args(call.get("args")))
+            for call in recent_calls
+        ]
+        statuses = [call.get("status", "error") for call in recent_calls]
+        state_changes = [bool(call.get("state_changed", False)) for call in recent_calls]
+
+        # 1. 檢查連續相同呼叫且無狀態推進 (Identical Repeats Death-Loop)
+        if len(signatures) >= max_identical_repeats:
+            tail_sigs = signatures[-max_identical_repeats:]
+            tail_changes = state_changes[-max_identical_repeats:]
+            tail_statuses = statuses[-max_identical_repeats:]
+
+            if all(s == tail_sigs[0] for s in tail_sigs):
+                if (not any(tail_changes)) or all(st == "error" for st in tail_statuses):
+                    tool_name = tail_sigs[0][0]
+                    return BreakerVerdict(
+                        triggered=True,
+                        rule_id="CB-AGT-001",
+                        reason=f"Agent 連續 {max_identical_repeats} 次以相同參數調用 [{tool_name}] 且無任何狀態推進，陷入 Death-Loop 死迴圈",
+                        diagnosis=f"智能體在調用工具 [{tool_name}] 時未根據先前回傳的錯誤或狀態調整輸入參數，導致步數與 Token 資源無效耗盡。",
+                        action_code="BREAK_AGENT_DEATH_LOOP",
+                        suggested_fix=f"停止重複調用 [{tool_name}]；請檢視先前錯誤訊息，改換其他分析工具、檢查前置狀態或調閱 ansys-error-catalog 排障手冊。",
+                        metrics_snapshot={
+                            "repeated_tool": tool_name,
+                            "repeats_count": max_identical_repeats,
+                            "trajectory_length": len(recent_calls),
+                        },
+                    )
+
+        # 2. 檢查 ABAB 震盪呼叫且無狀態推進 (Oscillation Death-Loop)
+        required_len = max_oscillation_cycles * 2
+        if len(signatures) >= required_len:
+            tail_sigs = signatures[-required_len:]
+            tail_changes = state_changes[-required_len:]
+            a, b = tail_sigs[0], tail_sigs[1]
+            if a != b:
+                is_oscillating = True
+                for i in range(required_len):
+                    expected = a if (i % 2 == 0) else b
+                    if tail_sigs[i] != expected:
+                        is_oscillating = False
+                        break
+                if is_oscillating and not any(tail_changes):
+                    return BreakerVerdict(
+                        triggered=True,
+                        rule_id="CB-AGT-001",
+                        reason=f"Agent 在工具 [{a[0]}] 與 [{b[0]}] 之間發生 {max_oscillation_cycles} 次週期無效震盪，陷入 Death-Loop",
+                        diagnosis="智能體在兩個工具間往返切換但未能改變幾何或物理狀態，通常表示先決條件缺失或邊界設定死結。",
+                        action_code="BREAK_AGENT_DEATH_LOOP",
+                        suggested_fix="打破震盪模式；請停止在兩工具間重試，改為檢查幾何拓撲水密性或重新初始化工作區。",
+                        metrics_snapshot={
+                            "oscillating_tools": [a[0], b[0]],
+                            "cycles": max_oscillation_cycles,
+                            "trajectory_length": len(recent_calls),
+                        },
+                    )
+
+        return BreakerVerdict(triggered=False)

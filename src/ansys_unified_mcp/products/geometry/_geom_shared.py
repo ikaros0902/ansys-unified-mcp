@@ -6,6 +6,8 @@ call_dispatch as _cd` 延遲取得，避免模組載入期的循環 import。
 """
 
 import logging
+import math
+from typing import Any, Mapping
 
 logger = logging.getLogger("ansys-mcp")
 
@@ -19,6 +21,10 @@ __all__ = [
     "_SIMPLIFIED_PROTECT",
     "_suppress_hide_sources",
     "_safe_delete",
+    "_normalize_bbox_bounds",
+    "compute_bbox_iou",
+    "compute_com_distance",
+    "compute_continuous_geometry_metrics",
 ]
 
 
@@ -112,6 +118,7 @@ def _mm(v):
     """公尺轉毫米並四捨五入到 4 位，供人類可讀報告使用。"""
     return round(v * 1000.0, 4)
 
+
 def _source_body_name(body):
     """取得原始 body 名稱（供後續走伺服器端腳本精確 suppress/hide 之用）。
 
@@ -128,7 +135,6 @@ def _source_body_name(body):
     except Exception as e:
         logger.warning(f"取得原始 body 名稱失敗: {e}")
     return None
-
 
 
 _SIMPLIFIED_PROTECT = ["*_simplified_*", "*_rho*", "RAM_simplified*"]
@@ -152,6 +158,7 @@ def _suppress_hide_sources(names, extra_exclude=None):
     ok = detail.startswith("✓")
     return ok, detail
 
+
 def _safe_delete(body):
     """刪除 body（已不存在則略過），回傳是否成功。"""
     try:
@@ -163,3 +170,189 @@ def _safe_delete(body):
     return False
 
 
+# ===================================================================
+# CONTINUOUS GEOMETRY METRICS (CADWorld Staged Diagnostics)
+# ===================================================================
+
+def _normalize_bbox_bounds(
+    bbox: Any,
+) -> tuple[tuple[float, float, float], tuple[float, float, float]]:
+    """將各類包圍盒結構正規化為 (lo, hi)，且保證逐軸 lo <= hi。
+
+    支援輸入：
+      - ((x0, y0, z0), (x1, y1, z1))
+      - [ [x0, y0, z0], [x1, y1, z1] ]
+      - {'xmin': ..., 'ymin': ..., 'zmin': ..., 'xmax': ..., 'ymax': ..., 'zmax': ...}
+      - {'min': [..], 'max': [..]}
+      - {'x': dx, 'y': dy, 'z': dz}
+    """
+    if bbox is None:
+        return ((0.0, 0.0, 0.0), (0.0, 0.0, 0.0))
+
+    if isinstance(bbox, (list, tuple)) and len(bbox) >= 2:
+        p0, p1 = bbox[0], bbox[1]
+        if isinstance(p0, (list, tuple)) and isinstance(p1, (list, tuple)):
+            lo = (float(p0[0]), float(p0[1]), float(p0[2]))
+            hi = (float(p1[0]), float(p1[1]), float(p1[2]))
+            lo_norm = tuple(min(a, b) for a, b in zip(lo, hi))
+            hi_norm = tuple(max(a, b) for a, b in zip(lo, hi))
+            return lo_norm, hi_norm
+
+    if isinstance(bbox, Mapping):
+        if all(k in bbox for k in ("xmin", "ymin", "zmin", "xmax", "ymax", "zmax")):
+            lo = (float(bbox["xmin"]), float(bbox["ymin"]), float(bbox["zmin"]))
+            hi = (float(bbox["xmax"]), float(bbox["ymax"]), float(bbox["zmax"]))
+            lo_norm = tuple(min(a, b) for a, b in zip(lo, hi))
+            hi_norm = tuple(max(a, b) for a, b in zip(lo, hi))
+            return lo_norm, hi_norm
+        if "min" in bbox and "max" in bbox:
+            p0, p1 = bbox["min"], bbox["max"]
+            lo = (float(p0[0]), float(p0[1]), float(p0[2]))
+            hi = (float(p1[0]), float(p1[1]), float(p1[2]))
+            lo_norm = tuple(min(a, b) for a, b in zip(lo, hi))
+            hi_norm = tuple(max(a, b) for a, b in zip(lo, hi))
+            return lo_norm, hi_norm
+        if all(k in bbox for k in ("x", "y", "z")):
+            dx = max(0.0, float(bbox["x"]))
+            dy = max(0.0, float(bbox["y"]))
+            dz = max(0.0, float(bbox["z"]))
+            return ((0.0, 0.0, 0.0), (dx, dy, dz))
+
+    return ((0.0, 0.0, 0.0), (0.0, 0.0, 0.0))
+
+
+def compute_bbox_iou(
+    bbox_a: Any,
+    bbox_b: Any,
+) -> float:
+    """計算兩個 3D 軸對齊包圍盒之體積交並比 (3D Volumetric IoU, 0.0 ~ 1.0)。
+
+    包含四層數學防禦：
+      1. 座標自動正規化 (lo <= hi)；
+      2. 逐軸交集非負截斷 max(0.0, ...) 防止雙負軸相乘產生偽交集；
+      3. 退化盒除零防護 (兩退化盒完全重合回傳 1.0，否則 vol_union <= 1e-12 回傳 0.0)；
+      4. 數值裁切至閉區間 [0.0, 1.0]。
+    """
+    (ax0, ay0, az0), (ax1, ay1, az1) = _normalize_bbox_bounds(bbox_a)
+    (bx0, by0, bz0), (bx1, by1, bz1) = _normalize_bbox_bounds(bbox_b)
+
+    vol_a = max(0.0, ax1 - ax0) * max(0.0, ay1 - ay0) * max(0.0, az1 - az0)
+    vol_b = max(0.0, bx1 - bx0) * max(0.0, by1 - by0) * max(0.0, bz1 - bz0)
+
+    # 逐軸交集跨度（嚴格非負截斷）
+    dx = max(0.0, min(ax1, bx1) - max(ax0, bx0))
+    dy = max(0.0, min(ay1, by1) - max(ay0, by0))
+    dz = max(0.0, min(az1, bz1) - max(az0, bz0))
+    vol_inter = dx * dy * dz
+
+    vol_union = vol_a + vol_b - vol_inter
+    if vol_union <= 1e-12:
+        # 退化盒防護：若兩盒完全重疊（點或平面位置相同）則視為 1.0，否則 0.0
+        if (
+            math.isclose(ax0, bx0, abs_tol=1e-7)
+            and math.isclose(ay0, by0, abs_tol=1e-7)
+            and math.isclose(az0, bz0, abs_tol=1e-7)
+            and math.isclose(ax1, bx1, abs_tol=1e-7)
+            and math.isclose(ay1, by1, abs_tol=1e-7)
+            and math.isclose(az1, bz1, abs_tol=1e-7)
+        ):
+            return 1.0
+        return 0.0
+
+    iou = vol_inter / vol_union
+    return float(max(0.0, min(1.0, iou)))
+
+
+def compute_com_distance(
+    com_a: Any,
+    com_b: Any,
+) -> float:
+    """計算兩個 3D 質心座標之歐氏距離。"""
+    def _extract_pt(p: Any) -> tuple[float, float, float]:
+        if isinstance(p, Mapping):
+            return (float(p.get("x", 0.0)), float(p.get("y", 0.0)), float(p.get("z", 0.0)))
+        if isinstance(p, (list, tuple)) and len(p) >= 3:
+            return (float(p[0]), float(p[1]), float(p[2]))
+        return (0.0, 0.0, 0.0)
+
+    p1 = _extract_pt(com_a)
+    p2 = _extract_pt(com_b)
+    return float(math.sqrt(sum((a - b) ** 2 for a, b in zip(p1, p2))))
+
+
+def compute_continuous_geometry_metrics(
+    actual: Mapping[str, Any],
+    expected: Mapping[str, Any],
+    similar_volume_rel_tol: float = 0.10,
+    similar_area_rel_tol: float = 0.10,
+    similar_bbox_iou_min: float = 0.70,
+) -> dict[str, Any]:
+    """對齊 CADWorld diagnostics.py 之連續幾何指標計算。
+
+    比對實際幾何與預期幾何的：體積、表面積、BBox 軸向跨度誤差、BBox IoU、質心距離，
+    並綜合給出 loose 的 similar 判定（用於區分 F6 DISSIMILAR 與 F7 SIMILAR_OUT_OF_TOLERANCE）。
+    """
+    out: dict[str, Any] = {}
+
+    # 1. 體積相對誤差
+    act_vol = actual.get("total_volume", actual.get("volume"))
+    exp_vol = expected.get("total_volume", expected.get("volume"))
+    if act_vol is not None and exp_vol is not None:
+        try:
+            av, ev = float(act_vol), float(exp_vol)
+            rel_err = abs(av - ev) / abs(ev) if abs(ev) > 1e-12 else 0.0
+            out["volume"] = {
+                "actual": av,
+                "expected": ev,
+                "ratio": round(av / ev, 6) if abs(ev) > 1e-12 else None,
+                "relative_error": round(rel_err, 6),
+            }
+        except (ValueError, TypeError):
+            pass
+
+    # 2. 表面積相對誤差
+    act_area = actual.get("total_area", actual.get("surface_area"))
+    exp_area = expected.get("total_area", expected.get("surface_area"))
+    if act_area is not None and exp_area is not None:
+        try:
+            aa, ea = float(act_area), float(exp_area)
+            rel_err = abs(aa - ea) / abs(ea) if abs(ea) > 1e-12 else 0.0
+            out["surface_area"] = {
+                "actual": aa,
+                "expected": ea,
+                "ratio": round(aa / ea, 6) if abs(ea) > 1e-12 else None,
+                "relative_error": round(rel_err, 6),
+            }
+        except (ValueError, TypeError):
+            pass
+
+    # 3. BBox 跨度與 IoU
+    act_bbox = actual.get("bbox")
+    exp_bbox = expected.get("bbox")
+    if act_bbox is not None and exp_bbox is not None:
+        out["bbox_iou"] = round(compute_bbox_iou(act_bbox, exp_bbox), 6)
+        (ax0, ay0, az0), (ax1, ay1, az1) = _normalize_bbox_bounds(act_bbox)
+        (ex0, ey0, ez0), (ex1, ey1, ez1) = _normalize_bbox_bounds(exp_bbox)
+        out["bbox_extent_error"] = {
+            "x": round((ax1 - ax0) - (ex1 - ex0), 6),
+            "y": round((ay1 - ay0) - (ey1 - ey0), 6),
+            "z": round((az1 - az0) - (ez1 - ez0), 6),
+        }
+
+    # 4. 質心偏移
+    act_com = actual.get("center_of_mass", actual.get("com"))
+    exp_com = expected.get("center_of_mass", expected.get("com"))
+    if act_com is not None and exp_com is not None:
+        out["center_of_mass_distance"] = round(compute_com_distance(act_com, exp_com), 6)
+
+    # 5. similar 判定
+    signals = []
+    if "volume" in out:
+        signals.append(out["volume"]["relative_error"] <= similar_volume_rel_tol)
+    if "surface_area" in out:
+        signals.append(out["surface_area"]["relative_error"] <= similar_area_rel_tol)
+    if "bbox_iou" in out:
+        signals.append(out["bbox_iou"] >= similar_bbox_iou_min)
+
+    out["similar"] = all(signals) if signals else None
+    return out

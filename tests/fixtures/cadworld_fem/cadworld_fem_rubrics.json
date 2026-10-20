@@ -1,0 +1,201 @@
+{
+  "tasks": [
+    {
+      "id": "freecad-fem-001",
+      "description": "FEM benchmark task: 200 N Y-axis force analysis with AlMg3F24",
+      "material": "AlMg3F24",
+      "force_n": 200.0,
+      "axis": "Y",
+      "mesh": {
+        "engine": "Gmsh",
+        "dimension": "3D",
+        "max_size_mm": 2.0,
+        "min_size_mm": 0.5
+      },
+      "solver": "CalculiX",
+      "relative_tolerance": 0.05,
+      "structure": {
+        "required_type_contains": [
+          "Fem::FemAnalysis",
+          "MaterialObject",
+          "ConstraintFixed",
+          "ConstraintForce",
+          "FemMeshShapeBaseObject",
+          "FemSolverObject",
+          "FemResultObject",
+          "FemPostPipeline",
+          "TextDocument"
+        ],
+        "required_label_contains": [
+          "Analysis",
+          "MaterialSolid",
+          "ConstraintFixed",
+          "ConstraintForce",
+          "FEMMeshGmsh",
+          "SolverCcxTools",
+          "CCX_Results",
+          "Pipeline_CCX_Results",
+          "ccx_dat_file"
+        ]
+      },
+      "strict": {
+        "Displacement Magnitude": {
+          "max": {
+            "expected": 0.031145
+          }
+        },
+        "von Mises Stress": {
+          "min": {
+            "expected": 147390.0
+          },
+          "max": {
+            "expected": 705453000.0
+          }
+        },
+        "Tresca Stress": {
+          "max": {
+            "expected": 397017000.0
+          }
+        },
+        "Major Principal Stress": {
+          "max": {
+            "expected": 863519000.0
+          }
+        }
+      }
+    },
+    {
+      "id": "freecad-fem-002",
+      "description": "FEM benchmark task: 20 kN chain tension analysis with Iron-Generic",
+      "material": "Iron-Generic",
+      "force_n": 20000.0,
+      "axis": "major axis",
+      "mesh": {
+        "engine": "Gmsh",
+        "dimension": "3D",
+        "max_size_mm": 1.0,
+        "min_size_mm": 0.5
+      },
+      "solver": "CalculiX",
+      "required_filter": "WarpVector",
+      "relative_tolerance": 0.05,
+      "structure": {
+        "required_type_contains": [
+          "Fem::FemAnalysis",
+          "MaterialObject",
+          "ConstraintFixed",
+          "ConstraintForce",
+          "FemMeshShapeBaseObject",
+          "FemSolverObject",
+          "FemResultObject",
+          "FemPostPipeline",
+          "FemPostWarpVectorFilter",
+          "TextDocument"
+        ],
+        "required_label_contains": [
+          "Analysis",
+          "MaterialSolid",
+          "ConstraintFixed",
+          "ConstraintForce",
+          "FEMMeshGmsh",
+          "SolverCcxTools",
+          "CCX_Results",
+          "Pipeline_CCX_Results",
+          "WarpVector",
+          "ccx_dat_file"
+        ]
+      },
+      "strict": {
+        "Displacement Magnitude": {
+          "max": {
+            "expected": 0.00696107
+          }
+        },
+        "von Mises Stress": {
+          "min": {
+            "expected": 1695760000.0
+          },
+          "max": {
+            "expected": 76610300000.0
+          }
+        },
+        "Tresca Stress": {
+          "max": {
+            "expected": 39470500000.0
+          }
+        },
+        "Major Principal Stress": {
+          "max": {
+            "expected": 69716500000.0
+          }
+        }
+      }
+    },
+    {
+      "id": "freecad-fem-003",
+      "description": "FEM benchmark task: 20 MN stress test with AlZn4-5Mg1F35",
+      "material": "AlZn4-5Mg1F35",
+      "force_n": 20000000.0,
+      "mesh": {
+        "engine": "Gmsh",
+        "dimension": "3D",
+        "max_size_mm": 5.0,
+        "min_size_mm": 0.5
+      },
+      "solver": "CalculiX",
+      "required_filter": "WarpVector",
+      "relative_tolerance": 0.05,
+      "structure": {
+        "required_type_contains": [
+          "Fem::FemAnalysis",
+          "MaterialObject",
+          "ConstraintFixed",
+          "ConstraintForce",
+          "FemMeshShapeBaseObject",
+          "FemSolverObject",
+          "FemResultObject",
+          "FemPostPipeline",
+          "FemPostWarpVectorFilter",
+          "TextDocument"
+        ],
+        "required_label_contains": [
+          "Analysis",
+          "MaterialSolid",
+          "ConstraintFixed",
+          "ConstraintForce",
+          "FEMMeshGmsh",
+          "SolverCcxTools",
+          "CCX_Results",
+          "Pipeline_CCX_Results",
+          "WarpVector",
+          "ccx_dat_file"
+        ]
+      },
+      "strict": {
+        "Displacement Magnitude": {
+          "max": {
+            "expected": 0.811423
+          }
+        },
+        "von Mises Stress": {
+          "min": {
+            "expected": 41028100000.0
+          },
+          "max": {
+            "expected": 2717920000000.0
+          }
+        },
+        "Tresca Stress": {
+          "max": {
+            "expected": 1371350000000.0
+          }
+        },
+        "Major Principal Stress": {
+          "max": {
+            "expected": 2870740000000.0
+          }
+        }
+      }
+    }
+  ]
+}
