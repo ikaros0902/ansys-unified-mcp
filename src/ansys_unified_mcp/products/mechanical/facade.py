@@ -171,16 +171,18 @@ class MechanicalController:
         is_safe, warnings = check_script(script, context="mechanical.run_script")
         if not is_safe:
             return "Error: Script blocked by security guard: " + "; ".join(warnings)
-            
-        session = registry.get_live(PRODUCT, key, probe_fn=self._probe_session)
-        if session is None:
-            return "Error: Not connected to Mechanical (session lost or closed)."
 
-        record = registry.record(PRODUCT, key)
-        if record is None or record.instance is not session:
-            return "Error: Session changed during probe."
-        if not record.lock.acquire(blocking=False):
-            return "Error: Mechanical session is busy."
+        # acquire_live() 把「探活 + 二次核對身分 + 搶鎖」收斂為單一原子操作：
+        # 鎖優先於探活，查表與搶鎖在同一個 self._lock 區塊內完成，探活失敗時
+        # 在仍持有 record.lock 的狀態下安全 drop()，不留下 TOCTOU 窗口。
+        # reason="dead"/"not_connected" 統一映射回既有鎖定文字，reason="busy"
+        # 映射為既有鎖定文字，裸 reason 絕不直接回傳給呼叫端。
+        record, reason = registry.acquire_live(PRODUCT, key, probe_fn=self._probe_session)
+        if record is None:
+            if reason == "busy":
+                return "Error: Mechanical session is busy."
+            return "Error: Not connected to Mechanical (session lost or closed)."
+        session = record.instance
         deferred_cleanup = False
         tmp_dir = Path(tempfile.gettempdir())
         req_id = uuid.uuid4().hex

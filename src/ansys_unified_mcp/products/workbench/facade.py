@@ -155,23 +155,42 @@ class WorkbenchController:
         if not is_safe:
             return "Error: Script blocked by security guard: " + "; ".join(warnings)
 
-        client = self._client(key)
-        if client is None:
+        # acquire_live() 把「探活 + 搶鎖」收斂為單一原子操作，補齊本方法先前
+        # 缺失的序列化保護（_client()/get_live() 只探活不加鎖）。reason=
+        # "dead"/"not_connected" 統一映射回既有測試鎖定的文字；reason="busy"
+        # 為新文字，由新增的並發搶鎖測試明確斷言。
+        record, reason = registry.acquire_live(PRODUCT, key, probe_fn=self._probe_session)
+        if record is None:
+            if reason == "busy":
+                return "Error: Workbench session is busy."
             return "Error: Not connected to Workbench."
+        client = record.instance
         try:
-            result = run_with_timeout(
-                client.run_script_string, script, log_level=log_level, timeout=timeout
-            )
-        except BlockingCallTimeout as exc:
-            target_key = key or registry.current_key(PRODUCT)
-            registry.drop(PRODUCT, target_key)
-            self._PROBE_CACHE.pop(str(id(client)), None)
-            if target_key:
-                self._PROBE_CACHE.pop(str(target_key), None)
-            return "Error: " + str(exc) + " (Workbench session timed out and was evicted from registry)"
-        except Exception as exc:  # noqa: BLE001
-            return "Error: " + str(exc)
-        return str(result) if result is not None else "(done)"
+            try:
+                result = run_with_timeout(
+                    client.run_script_string, script, log_level=log_level, timeout=timeout
+                )
+            except BlockingCallTimeout as exc:
+                # 逾時路徑的鎖釋放時機：維持現狀「逾時即 drop()」（方案 b），而非
+                # 比照 mechanical 延後到 exc.future 完成才釋放。理由：Workbench
+                # 沒有暫存檔需要延後清理，逾時代表呼叫端已放棄等待，此時立即
+                # drop() 該 session 並釋放鎖，讓後續呼叫能重新連線，而非讓一個
+                # 可能已經卡死的連線繼續佔用鎖。已知限制：背景執行中的
+                # run_with_timeout worker 執行緒本身不受鎖保護，若它事後才真正
+                # 完成並回頭觸碰同一個 client 物件，仍可能與下一個搶到新 session
+                # 的呼叫並發存取同一底層 channel（這是繼承自既有逾時行為的殘留
+                # 風險，非本次重構新增）。
+                target_key = key or registry.current_key(PRODUCT)
+                registry.drop(PRODUCT, target_key)
+                self._PROBE_CACHE.pop(str(id(client)), None)
+                if target_key:
+                    self._PROBE_CACHE.pop(str(target_key), None)
+                return "Error: " + str(exc) + " (Workbench session timed out and was evicted from registry)"
+            except Exception as exc:  # noqa: BLE001
+                return "Error: " + str(exc)
+            return str(result) if result is not None else "(done)"
+        finally:
+            record.lock.release()
 
     def run_script_file(
         self,
@@ -197,23 +216,31 @@ class WorkbenchController:
         if not is_safe:
             return "Error: Script blocked by security guard: " + "; ".join(warnings)
 
-        client = self._client(key)
-        if client is None:
+        # 見 run_script() 註解：acquire_live() 補齊序列化保護，reason 映射規則相同。
+        record, reason = registry.acquire_live(PRODUCT, key, probe_fn=self._probe_session)
+        if record is None:
+            if reason == "busy":
+                return "Error: Workbench session is busy."
             return "Error: Not connected to Workbench."
+        client = record.instance
         try:
-            result = run_with_timeout(
-                client.run_script_file, script_file_name, log_level=log_level, timeout=timeout
-            )
-        except BlockingCallTimeout as exc:
-            target_key = key or registry.current_key(PRODUCT)
-            registry.drop(PRODUCT, target_key)
-            self._PROBE_CACHE.pop(str(id(client)), None)
-            if target_key:
-                self._PROBE_CACHE.pop(str(target_key), None)
-            return "Error: " + str(exc) + " (Workbench session timed out and was evicted from registry)"
-        except Exception as exc:  # noqa: BLE001
-            return "Error: " + str(exc)
-        return str(result) if result is not None else "(done)"
+            try:
+                result = run_with_timeout(
+                    client.run_script_file, script_file_name, log_level=log_level, timeout=timeout
+                )
+            except BlockingCallTimeout as exc:
+                # 逾時路徑鎖釋放時機：同 run_script()，維持「逾時即 drop()」方案 b。
+                target_key = key or registry.current_key(PRODUCT)
+                registry.drop(PRODUCT, target_key)
+                self._PROBE_CACHE.pop(str(id(client)), None)
+                if target_key:
+                    self._PROBE_CACHE.pop(str(target_key), None)
+                return "Error: " + str(exc) + " (Workbench session timed out and was evicted from registry)"
+            except Exception as exc:  # noqa: BLE001
+                return "Error: " + str(exc)
+            return str(result) if result is not None else "(done)"
+        finally:
+            record.lock.release()
 
     def start_mechanical_server(self, system_name: str, port: int = 0, key: Optional[str] = None) -> dict:
         """Ask Workbench to start a Mechanical gRPC server for a system's Model cell.

@@ -16,19 +16,8 @@ import time
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
-import pytest
 from ansys_unified_mcp.core.sessions import registry
 from ansys_unified_mcp.products.mechanical.facade import MechanicalController, PRODUCT
-
-
-@pytest.fixture(autouse=True)
-def _clean_registry():
-    """隔離全域 registry 單例：每個測試前後清空本模組用到的 key，避免跨測試污染。"""
-    for k in ("59998",):
-        registry.drop(PRODUCT, k)
-    yield
-    for k in ("59998",):
-        registry.drop(PRODUCT, k)
 
 
 def test_massive_concurrent_uuid_isolation():
@@ -75,13 +64,19 @@ def test_massive_concurrent_uuid_isolation():
     # Check baseline temporary files
     initial_mech_files = set(glob.glob(os.path.join(tmp_dir, "mech_*.*")))
 
-    # run_script 內部會用 registry.record() 二次核對 probe 前後的 session 身分
-    # 一致性，因此除了 patch get_live，也要讓同一個 mock_session 真實寫入
-    # registry，否則會誤判為「Session changed during probe」。
+    # acquire_live 需要一個真實寫入 registry 的 record 才能搶鎖，因此
+    # registry.put() 是讓並發搶鎖邏輯真正生效的必要步驟。
     registry.put(PRODUCT, "59998", mock_session)
 
     # Test Part A: Pure Lock-Free UUID Isolation under Massive 50-thread Concurrency (timeout=None)
-    with patch.object(registry, "get_live", return_value=mock_session):
+    # run_script() 內部已改用 registry.acquire_live()（原子化查表+搶鎖+持鎖探活），
+    # 不再呼叫 registry.get_live()，因此 patch get_live 對本測試已無效（保留是
+    # 為了避免真的連線到任何意外殘留的 session）；改為直接短路 _probe_session
+    # 讓探活必定成功（因為 mock_run_python 對不符格式的探活呼叫 "pass" 會
+    # assert 失敗），保留測試驗證「真正執行成功的任務之間零碰撞」這個核心
+    # 價值，不碰 acquire_live 本身的查表/搶鎖/探活邏輯。
+    with patch.object(registry, "get_live", return_value=mock_session), \
+         patch.object(MechanicalController, "_probe_session", return_value=True):
         num_threads = 50
         num_tasks = 200
         results = {}
@@ -130,7 +125,9 @@ def test_massive_concurrent_uuid_isolation():
 
     # Test Part B: Bounded ThreadPool (timeout=DEFAULT_SCRIPT_TIMEOUT) under high concurrency
     # Verifies graceful circuit-breaking and zero temporary file leakage under pool exhaustion
-    with patch.object(registry, "get_live", return_value=mock_session):
+    # 同 Part A：acquire_live() 取代 get_live()，需同步短路 _probe_session。
+    with patch.object(registry, "get_live", return_value=mock_session), \
+         patch.object(MechanicalController, "_probe_session", return_value=True):
         results_b = {}
 
         def worker_bounded(task_id):

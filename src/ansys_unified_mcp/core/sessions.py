@@ -27,6 +27,11 @@ class SessionRecord:
     instance: Any
     owned: bool = False
     cache: dict = field(default_factory=dict)
+    # 必須維持 threading.Lock（而非 RLock）：MechanicalController 的逾時路徑
+    # 經 exc.future.add_done_callback(cleanup) 在背景執行緒釋放這個鎖，與搶鎖
+    # 的呼叫執行緒不同——這在 Lock 下合法，但若誤改為 RLock 會因釋放執行緒與
+    # 持有執行緒不同而拋 RuntimeError。與 SessionRegistry._lock（RLock，見
+    # acquire_live 的 docstring）是對稱但不同的另一個不變量，不可混淆。
     lock: Any = field(default_factory=threading.Lock)
     close_error: str | None = None
 
@@ -161,6 +166,64 @@ class SessionRegistry:
                 return None
         return record.instance
 
+
+    def acquire_live(
+        self,
+        product: str,
+        key: Optional[str] = None,
+        probe_fn=None,
+        workspace: Optional[str] = None,
+    ) -> tuple[Optional["SessionRecord"], Optional[str]]:
+        """原子化查表+搶鎖 -> 持鎖探活，三步驟合一，探活在鎖保護下執行。
+
+        成功時回傳 (record, None)，record.lock 已被本次呼叫持有，呼叫端必須
+        在 try/finally 中呼叫 record.lock.release()。
+        失敗時回傳 (None, reason)，reason ∈ {"not_connected", "busy", "dead"}，
+        不持有任何鎖，呼叫端不需要 release。
+
+        注意：探活移到鎖之後執行（而非 get_live() 原先鎖外探活的順序），避免
+        另一執行緒持鎖執行長時間腳本期間，探活呼叫並發送進同一底層 channel。
+
+        [V4 訂正] drop() 與「查表+搶鎖」同在 self._lock 保護範圍內，因此另一
+        個執行緒（T2）只會觀測到兩種狀態：drop() 執行前（T2 搶鎖失敗回
+        "busy"，因為 T1 仍持有 record.lock）或 drop() 執行後（T2 查表直接
+        得到 None 回 "not_connected"），不存在「record 已移除但鎖狀態未知」
+        的中間觀測窗口。真正要避免的是反過來的順序（先 release 再 drop）：
+        若先釋放鎖，T2 可能在 record 被移除之前搶到這個鎖，對一個探活剛失敗、
+        即將被判定為死亡的 session 送出腳本。
+
+        必須同時成立的兩個不變量（缺一都會引入死鎖或競態，不得在後續修改中
+        單獨調整其中一個）：
+        1. record.lock.acquire() 的 blocking 參數必須永遠是 False——若改成
+           True 或加 timeout，會在持有 self._lock 期間等待，一旦其他執行緒
+           也需要 self._lock 就立刻死鎖。
+        2. self._lock 必須維持 RLock（而非 Lock）——因為下方 dead 分支是在
+           已持有 self._lock 的情況下重入呼叫 self.drop()，drop() 內部也會
+           `with self._lock:`；RLock 允許同一執行緒重入不卡死，若誤改為
+           Lock，同一執行緒對自己已持有的鎖二次 acquire() 會永久阻塞。
+        """
+        scope = self._scope(product, workspace)
+        with self._lock:
+            key = key if key is not None else self._current.get(scope)
+            record = self._sessions.get(scope, {}).get(key)
+            if record is None:
+                return None, "not_connected"
+            if not record.lock.acquire(blocking=False):
+                return None, "busy"
+        if probe_fn is not None:
+            try:
+                alive = probe_fn(record.instance)
+            except Exception:
+                alive = False
+            if not alive:
+                # 必須先 drop 再 release：見上方 docstring 說明。
+                with self._lock:
+                    if self._sessions.get(scope, {}).get(key) is record:
+                        self.drop(product, key, workspace)
+                record.lock.release()
+                return None, "dead"
+        return record, None
+
     def drop(
         self,
         product: str,
@@ -213,6 +276,17 @@ class SessionRegistry:
                     for key in sessions
                 }
             return result
+
+
+    def clear_all(self) -> None:
+        """清空所有 session 記錄與 current 指標，僅供測試隔離使用。
+
+        生產程式碼不應呼叫此方法；它會丟棄所有連線記錄但不會呼叫任何
+        session 的斷線方法（不負責優雅關閉底層連線，純粹清空記憶體狀態）。
+        """
+        with self._lock:
+            self._sessions.clear()
+            self._current.clear()
 
 
 # Process-wide singleton shared by all product facades.

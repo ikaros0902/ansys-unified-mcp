@@ -14,16 +14,6 @@ from ansys_unified_mcp.core.sessions import registry
 from ansys_unified_mcp.products.mechanical.facade import MechanicalController, PRODUCT
 
 
-@pytest.fixture(autouse=True)
-def _clean_registry():
-    """隔離全域 registry 單例：每個測試前後清空本模組用到的 key，避免跨測試污染。"""
-    for k in ("59999",):
-        registry.drop(PRODUCT, k)
-    yield
-    for k in ("59999",):
-        registry.drop(PRODUCT, k)
-
-
 def test_concurrent_run_script_file_collision():
     """Empirically test whether concurrent run_script calls collide on the same temporary files."""
     controller = MechanicalController()
@@ -50,9 +40,14 @@ def test_concurrent_run_script_file_collision():
 
     mock_session.run_python_script.side_effect = fake_run_python_script
 
-    # run_script 內部會用 registry.record() 二次核對 probe 前後的 session 身分
-    # 一致性，因此除了 patch get_live，也要讓同一個 mock_session 真實寫入
-    # registry，否則會誤判為「Session changed during probe」。
+    # run_script 內部已改用 registry.acquire_live()，不再呼叫 get_live()，
+    # 因此下方 patch.object(registry, "get_live", ...) 本身已不影響執行路徑
+    # （保留是為了避免真的連線到任何意外殘留的 session）；acquire_live 需要
+    # 一個真實寫入 registry 的 record 才能搶鎖，因此 registry.put() 才是
+    # 讓並發搶鎖邏輯真正生效的必要步驟。acquire_live 會在鎖保護下真正呼叫
+    # _probe_session 探活（送 "pass"），但 fake_run_python_script 對任何不符
+    # 期望格式的輸入都會安靜地直接返回（不拋例外），探活天然會成功，不需要
+    # 額外 patch _probe_session。
     registry.put(PRODUCT, "59999", mock_session)
     with patch.object(registry, "get_live", return_value=mock_session):
         num_workers = 5

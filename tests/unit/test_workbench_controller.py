@@ -277,3 +277,43 @@ def test_launch_without_package_reports_clean_error(controller, monkeypatch):
 
     result = controller.launch()
     assert result == {"ok": False, "error": "ansys-workbench-core not installed."}
+
+
+def test_run_script_reports_busy_when_session_locked(controller):
+    """run_script() 必須在 record.lock 已被另一方持有時回報 busy，不等待不卡死。
+
+    驗證 acquire_live() 補齊的序列化保護確實生效：模擬另一執行緒持鎖中
+    （直接對 registry 的 record 搶鎖，模擬真實並發場景），本次呼叫必須
+    立即回報 "Error: Workbench session is busy."，而不是阻塞等待或誤判
+    為「探活失敗 (not connected)」。
+    """
+    fake = FakeWorkbenchClient()
+    registry.put(PRODUCT, "launched", fake)
+
+    held_record = registry.record(PRODUCT, "launched")
+    assert held_record.lock.acquire(blocking=False) is True  # 模擬另一執行緒持鎖中
+    try:
+        out = controller.run_script("print(1)", key="launched")
+        assert out == "Error: Workbench session is busy."
+        # busy 不代表 session 被驅逐：session 本身仍應留在 registry。
+        assert registry.get(PRODUCT, "launched") is fake
+    finally:
+        held_record.lock.release()
+
+    # 鎖釋放後，後續呼叫必須恢復正常執行（證明 busy 路徑沒有洩漏任何狀態）。
+    out2 = controller.run_script("wb_script_result = 1", key="launched")
+    assert out2 == "result:wb_script_result = 1"
+
+
+def test_run_script_file_reports_busy_when_session_locked(controller):
+    """run_script_file() 同樣受 acquire_live() 保護，busy 時立即回報不卡死。"""
+    fake = FakeWorkbenchClient()
+    registry.put(PRODUCT, "launched", fake)
+
+    held_record = registry.record(PRODUCT, "launched")
+    assert held_record.lock.acquire(blocking=False) is True
+    try:
+        out = controller.run_script_file("probe.wbjn", key="launched")
+        assert out == "Error: Workbench session is busy."
+    finally:
+        held_record.lock.release()
