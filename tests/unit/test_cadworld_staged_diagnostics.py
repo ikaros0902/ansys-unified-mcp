@@ -423,3 +423,75 @@ class TestScriptGuardAndDeathLoopBreaker:
         verdict_osc = cb.evaluate_agent_trajectory(traj_oscillate, max_oscillation_cycles=2)
         assert verdict_osc.triggered is True
         assert "無效震盪" in verdict_osc.reason
+
+
+# ===================================================================
+# 6. CADWorld 官方真實 .FCStd 產物端到端解析與檢驗
+# ===================================================================
+
+class TestRealCADWorldArtifacts:
+    """以 CADWorld 官方倉庫之真實 .FCStd 檔案進行端到端免安裝解析驗證。"""
+
+    @pytest.fixture
+    def fixture_dir(self) -> Path:
+        return Path(__file__).resolve().parent.parent / "fixtures" / "cadworld_fem"
+
+    def test_real_cadworld_precondition_fcstd_parsing(self, fixture_dir: Path):
+        files = {
+            "freecad-fem-001": fixture_dir / "freecad-fem-001-precondition.FCStd",
+            "freecad-fem-002": fixture_dir / "freecad-fem-002-precondition.FCStd",
+            "freecad-fem-003": fixture_dir / "freecad-fem-003-precondition.FCStd",
+        }
+
+        for task_id, fpath in files.items():
+            assert fpath.exists(), f"真實 fixture 不存在: {fpath}"
+
+            # 1. 真實封包校驗
+            val = validate_fcstd_archive(fpath)
+            assert val["ok"] is True
+            assert val["document_xml_present"] is True
+            assert val["document_xml_parses"] is True
+            assert "Document.xml" in val["members"]
+
+            # 2. 真實元數據解析
+            meta = parse_fcstd_metadata(fpath)
+            assert meta["ok"] is True
+            assert len(meta["objects"]) > 0
+            assert "PartDesign::Body" in meta["types"]
+
+        # 驗證個別特徵物件
+        meta_001 = parse_fcstd_metadata(files["freecad-fem-001"])
+        assert "PartDesign::Pad" in meta_001["types"]
+        assert "PartDesign::Pocket" in meta_001["types"]
+
+        meta_002 = parse_fcstd_metadata(files["freecad-fem-002"])
+        assert "PartDesign::Thickness" in meta_002["types"]
+
+    def test_real_cadworld_fcstd_in_staged_diagnostics_funnel(self, fixture_dir: Path):
+        """驗證真實 .FCStd 輸入時，8 階段短路漏斗能免安裝自動解析並推進階段。"""
+        real_001 = fixture_dir / "freecad-fem-001-precondition.FCStd"
+
+        # 模擬 Agent 產出真實 FCStd，未提供結構樹（由 gatekeeper 自行解析）
+        state = {
+            "task_id": "freecad-fem-001",
+            "claimed_done": True,
+            "file_path": str(real_001),
+        }
+
+        # 傳入需要包含 FEM Analysis 結構樹的 rubric
+        rubric = {
+            "structure": {
+                "required_type_contains": ["Fem::FemAnalysis", "ConstraintFixed"],
+                "required_label_contains": ["Fixed Support"],
+            }
+        }
+
+        rep = evaluate_staged_rubric(state, rubric)
+        # 前置模型檔案存在且合法，因此 Stage 1 (file_saved) 與 Stage 2 (file_valid) 必 PASS
+        assert rep.stages["file_saved"]["ok"] is True
+        assert rep.stages["file_valid"]["ok"] is True
+
+        # 因為這是前置 CAD 幾何檔（尚未加入 FEM 分析設定），漏斗應精確阻斷於 Stage 4 (structure)
+        assert rep.first_broken_stage == "structure"
+        assert rep.failure_class == FailureClassEnum.F5_WRONG_DOCUMENT_STRUCTURE
+
