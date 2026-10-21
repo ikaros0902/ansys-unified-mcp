@@ -349,7 +349,9 @@ class TestCADWorldFEMBenchmarkRubrics:
     """驗證三道 FEM 題目的 Rubric 定義與 ANSYS Mechanical 結構樹映射。"""
 
     def test_cadworld_fem_rubric_fixture_load(self):
-        fixture_path = Path("F:/Ming_python/ansys-unified-mcp/tests/fixtures/cadworld_fem/cadworld_fem_rubrics.json")
+        fixture_path = (
+            Path(__file__).resolve().parents[1] / "fixtures" / "cadworld_fem" / "cadworld_fem_rubrics.json"
+        )
         assert fixture_path.exists()
         with open(fixture_path, "r", encoding="utf-8") as f:
             data = json.load(f)
