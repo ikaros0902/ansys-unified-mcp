@@ -216,13 +216,13 @@ async def geometry_create_enclosure(target_body_name: str, enclosure_name: str =
     return "\n".join([c.text for c in res])
 
 @tool_geometry(name='geometry_simplify_ram')
-async def geometry_simplify_ram(motherboard: str, ram: str, socket: str, result_name: str = 'RAM_simplified', named_selection: str = 'ram_bottom', move_to_component: bool = True, component_name: str = 'RAM_simplified', hide_source: bool = True) -> dict:
-    """將單一 RAM 卡 + 其 socket 簡化為一座落於主機板頂面的「凸字形」兩段體，並於底面（板接合面）建立 named selection【呼叫前必須先向使用者索取主機板、RAM、socket 三個 body 名稱，不可猜測或自行從 body 清單推斷】
+async def geometry_simplify_ram(ram: str, socket: str, motherboard: str = "", result_name: str = 'RAM_simplified', named_selection: str = 'ram_bottom', move_to_component: bool = True, component_name: str = 'RAM_simplified', hide_source: bool = True) -> dict:
+    """將單一 RAM 卡 + 其 socket 簡化為一座落於主機板頂面（或 socket 底面）的「凸字形」兩段體，並於底面（板接合面）建立 named selection。
 
-    規則（高度軸為 Y，凸字形＝下寬上窄）：下段寬基座＝socket 的 X-Z footprint，Y 從主機板頂面（板 max Y）→ socket 頂；上段窄凸柱＝RAM 的 X-Z footprint，Y 從 socket 頂 → RAM 頂（RAM max Y）；兩段聯集為單一 body。socket 頂落在無效區間時退回單一合併包圍盒方塊。預設將結果移入新 component，並抑制原始 RAM/socket 實體（下游網格/求解排除）。單位內算為公尺、回報為毫米。
-    :param motherboard: 主機板 body 名稱（其頂面即方塊底面），例如 'JVPCB1074973E'
+    規則（高度軸為 Y，凸字形＝下寬上窄）：下段寬基座＝socket 的 X-Z footprint，Y 從基準面（主機板頂面或 socket 自身底面）→ socket 頂；上段窄凸柱＝RAM 的 X-Z footprint，Y 從 socket 頂 → RAM 頂（RAM max Y）；兩段聯集為單一 body。socket 頂落在無效區間時退回單一合併包圍盒方塊。預設將結果移入新 component，並抑制原始 RAM/socket 實體（下游網格/求解排除）。單位內算為公尺、回報為毫米。
     :param ram: RAM 卡 body 名稱，例如 'DIMM_DDR5_EGS'
     :param socket: RAM socket body 名稱，例如 'J33'
+    :param motherboard: 主機板 body 名稱（其頂面即方塊底面），例如 'JVPCB1074973E'；若無主機板可留空，自動以 socket 自身底面為基準
     :param result_name: 生成的簡化方塊 body 名稱
     :param named_selection: 方塊底面接合面的 named selection 名稱
     :param move_to_component: 是否將簡化方塊移入新 component（預設 True）
@@ -240,13 +240,13 @@ async def geometry_simplify_ram(motherboard: str, ram: str, socket: str, result_
     return "\n".join([c.text for c in res])
 
 @tool_geometry(name='geometry_simplify_ram_batch')
-async def geometry_simplify_ram_batch(motherboard: str, ram: str, socket: str, result_prefix: str = 'RAM_simplified', ns_prefix: str = 'ram_bottom', tol_mm: float = 2.0, move_to_component: bool = True, component_name: str = 'RAM_simplified', hide_source: bool = True) -> dict:
-    """批次簡化所有同名 RAM+socket 配對（依 X 中心位置自動就近配對）【呼叫前必須先向使用者索取主機板、RAM、socket 三個 body 名稱，不可猜測或自行從 body 清單推斷】
+async def geometry_simplify_ram_batch(ram: str, socket: str, motherboard: str = "", result_prefix: str = 'RAM_simplified', ns_prefix: str = 'ram_bottom', tol_mm: float = 2.0, move_to_component: bool = True, component_name: str = 'RAM_simplified', hide_source: bool = True) -> dict:
+    """批次簡化所有同名 RAM+socket 配對（依 X 中心位置自動就近配對）。
 
-    每一對成為一座落於主機板頂面的「凸字形」兩段體（下段寬基座＝socket footprint；上段窄凸柱＝RAM footprint），各自建立底面 named selection，依 X 順序編號（<result_prefix>_01、<ns_prefix>_01…）。適用於同一板上多條相同的 DIMM/socket 陣列（例如 32× DIMM + 32× socket）。預設將所有結果移入同一新 component，並抑制配對成功的原始 RAM/socket 實體（下游網格/求解排除）。
-    :param motherboard: 主機板 body 名稱（頂面=各方塊底面）
+    每一對成為一座落於主機板頂面（或各 socket 底面）的「凸字形」兩段體（下段寬基座＝socket footprint；上段窄凸柱＝RAM footprint），各自建立底面 named selection，依 X 順序編號（<result_prefix>_01、<ns_prefix>_01…）。適用於同一板上多條相同的 DIMM/socket 陣列（例如 32× DIMM + 32× socket）。預設將所有結果移入同一新 component，並抑制配對成功的原始 RAM/socket 實體（下游網格/求解排除）。
     :param ram: RAM 卡 body 名稱（陣列中重複出現）
     :param socket: socket body 名稱（陣列中重複出現）
+    :param motherboard: 主機板 body 名稱（頂面=各方塊底面）；若無主機板可留空，自動以各 socket 自身底面為基準
     :param result_prefix: 方塊 body 名稱前綴（自動編號）
     :param ns_prefix: 底面 named selection 名稱前綴（自動編號）
     :param tol_mm: 將 RAM 與 socket 視為一對的最大 X 中心距離（單位：毫米 mm）
@@ -593,6 +593,36 @@ async def geometry_list_bodies() -> dict:
     """
     args = {}
     res = await sim_impl.call_tool('geometry_list_bodies', args)
+    return "\n".join([c.text for c in res])
+
+@tool_geometry(name='geometry_get_bounding_box')
+async def geometry_get_bounding_box(body_name: str = "") -> dict:
+    """查詢指定 Body 或設計中所有 Body 的軸對齊包圍盒 (Bounding Box)、尺寸與中心座標。
+
+    回傳最小/最大座標 (min/max X, Y, Z)、尺寸與中心點，支援毫米 (mm) 與公尺 (m)。可用於量測實體尺寸、定位基準或手動建構簡化方塊。
+    :param body_name: 實體名稱（例如 'DIMM_DDR5_EGS' 或 'J33'）。若留空則列出當前設計中所有實體的包圍盒。
+    """
+    res = await sim_impl.call_tool('geometry_get_bounding_box', {'body_name': body_name})
+    return "\n".join([c.text for c in res])
+
+@tool_geometry(name='geometry_run_script')
+async def geometry_run_script(
+    script_content: str = "",
+    script_path: str = "",
+    import_design: bool = True,
+) -> dict:
+    """透過當前已連線的 gRPC (Port 50051) 通道，在作用中的 SpaceClaim / Discovery 視窗中直接執行 Python 腳本。
+
+    直接對接當前連線的視窗，不啟動新的無頭進程。
+    :param script_content: 欲執行的 Python 腳本字串。
+    :param script_path: 既有的腳本檔案路徑 (.py / .scscript)。
+    :param import_design: 腳本執行完成後是否同步更新 MCP 的當前幾何設計快取（預設 True）。
+    """
+    res = await sim_impl.call_tool('geometry_run_script', {
+        'script_content': script_content,
+        'script_path': script_path,
+        'import_design': import_design,
+    })
     return "\n".join([c.text for c in res])
 
 @tool_geometry(name='geometry_list_named_selections')

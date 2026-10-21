@@ -36,12 +36,12 @@ def _build_ram_block(design, ram_body, socket_body, mb_top_y, result_name, ns_na
     ram_lo, ram_hi = _bbox_m(ram_body)
     sock_lo, sock_hi = _bbox_m(socket_body)
 
-    y_bottom = mb_top_y        # 主機板頂面（基座底）
+    y_bottom = mb_top_y        # 主機板頂面或 socket 底面（基座底）
     y_mid = sock_hi[1]         # socket 頂（基座/凸柱交界）
     y_top = ram_hi[1]          # RAM 頂（凸柱頂）
     if y_top <= y_bottom:
         raise ValueError(
-            f"RAM 頂 (Y={y_top*1000:.3f}mm) 未高於主機板頂面 (Y={y_bottom*1000:.3f}mm)；"
+            f"RAM 頂 (Y={y_top*1000:.3f}mm) 未高於基準面 (Y={y_bottom*1000:.3f}mm)；"
             "請確認零件名稱 / 方向（高度軸應為 Y）。"
         )
 
@@ -102,13 +102,13 @@ def _build_ram_block(design, ram_body, socket_body, mb_top_y, result_name, ns_na
         "named_selection_created": ns_created,
     }
 
-def _geom_simplify_ram(motherboard: str, ram: str, socket: str,
+def _geom_simplify_ram(ram: str, socket: str, motherboard: str = "",
                        result_name: str = "RAM_simplified",
                        named_selection: str = "ram_bottom",
                        move_to_component: bool = True,
                        component_name: str = "RAM_simplified",
                        hide_source: bool = True) -> str:
-    """將單一 RAM 卡 + 其 socket 簡化為一座落於主機板上的方塊。"""
+    """將單一 RAM 卡 + 其 socket 簡化為一座落於主機板（或 socket 底面）上的方塊。"""
     from . import call_dispatch as _cd
     design = _cd._geom_get_design()
 
@@ -120,7 +120,14 @@ def _geom_simplify_ram(motherboard: str, ram: str, socket: str,
 
     ram_b = _first(ram)
     sock_b = _first(socket)
-    mb_top_y = _bbox_m(_first(motherboard))[1][1]  # 主機板 max Y
+    sock_lo, sock_hi = _bbox_m(sock_b)
+
+    if motherboard:
+        mb_top_y = _bbox_m(_first(motherboard))[1][1]  # 主機板 max Y
+        mb_desc = f"座落於 '{motherboard}' 頂面"
+    else:
+        mb_top_y = sock_lo[1]  # 以 socket 自身底面 (min Y) 為基準
+        mb_desc = f"座落於 '{socket}' 底面（無主機板模式）"
 
     target = design.add_component(component_name) if move_to_component else None
     info = _build_ram_block(design, ram_b, sock_b, mb_top_y, result_name, named_selection, target=target)
@@ -143,12 +150,18 @@ def _geom_simplify_ram(motherboard: str, ram: str, socket: str,
     warn_line = ""
     if hide_source and hidden == 0 and hide_detail:
         warn_line = f"\n  ⚠ 原始實體抑制/隱藏未生效:\n{hide_detail}"
+
+    if motherboard:
+        mb_info_line = f"  主機板頂面 Y={_mm(mb_top_y)}mm，RAM 頂 Y={info['block_max_mm'][1]}mm\n"
+    else:
+        mb_info_line = f"  Socket 底面 Y={_mm(mb_top_y)}mm，RAM 頂 Y={info['block_max_mm'][1]}mm\n"
+
     return (
-        f"✓ RAM 簡化完成：'{result_name}' 座落於 '{motherboard}' 頂面，形狀={shape_note}{comp_note}{hide_note}。\n"
+        f"✓ RAM 簡化完成：'{result_name}' {mb_desc}，形狀={shape_note}{comp_note}{hide_note}。\n"
         f"  合併來源: {ram} + {socket}\n"
         f"  整體尺寸 (mm): {info['block_size_mm']}  min={info['block_min_mm']} max={info['block_max_mm']}\n"
         f"{tier_line}"
-        f"  主機板頂面 Y={_mm(mb_top_y)}mm，RAM 頂 Y={info['block_max_mm'][1]}mm\n"
+        f"{mb_info_line}"
         f"  底面 named selection: {info['named_selection']} (created={info['named_selection_created']})"
         f"{warn_line}"
     )
@@ -182,7 +195,7 @@ def _pair_by_x(rams, sockets, tol_m=0.002):
     pairs.sort(key=lambda t: t[0])
     return pairs
 
-def _geom_simplify_ram_batch(motherboard: str, ram: str, socket: str,
+def _geom_simplify_ram_batch(ram: str, socket: str, motherboard: str = "",
                              result_prefix: str = "RAM_simplified",
                              ns_prefix: str = "ram_bottom",
                              tol_mm: float = 2.0,
@@ -197,10 +210,12 @@ def _geom_simplify_ram_batch(motherboard: str, ram: str, socket: str,
     from . import call_dispatch as _cd
     design = _cd._geom_get_design()
 
-    mb_matches = _find_bodies_by_name(motherboard)
-    if not mb_matches:
-        raise ValueError(f"找不到名為 '{motherboard}' 的主機板 body。")
-    mb_top_y = _bbox_m(mb_matches[0])[1][1]
+    mb_top_y = None
+    if motherboard:
+        mb_matches = _find_bodies_by_name(motherboard)
+        if not mb_matches:
+            raise ValueError(f"找不到名為 '{motherboard}' 的主機板 body。")
+        mb_top_y = _bbox_m(mb_matches[0])[1][1]
 
     rams = _find_bodies_by_name(ram)
     sockets = _find_bodies_by_name(socket)
@@ -219,7 +234,9 @@ def _geom_simplify_ram_batch(motherboard: str, ram: str, socket: str,
         rn = f"{result_prefix}_{idx:02d}"
         ns = f"{ns_prefix}_{idx:02d}"
         try:
-            results.append(_build_ram_block(design, ram_b, sock_b, mb_top_y, rn, ns, target=target))
+            sock_lo, _ = _bbox_m(sock_b)
+            base_y = mb_top_y if mb_top_y is not None else sock_lo[1]
+            results.append(_build_ram_block(design, ram_b, sock_b, base_y, rn, ns, target=target))
             if hide_source:
                 for b in (ram_b, sock_b):
                     nm = _source_body_name(b)
@@ -237,8 +254,9 @@ def _geom_simplify_ram_batch(motherboard: str, ram: str, socket: str,
 
     ns_count = sum(1 for r in results if r["named_selection_created"])
     comp_note = f"，簡化方塊置於新 component '{component_name}'" if move_to_component else ""
+    mb_desc = f"主機板 '{motherboard}' 頂面 Y={_mm(mb_top_y)}mm" if motherboard else "無主機板模式（以各 socket 底面為基準）"
     lines = [
-        f"✓ RAM 批次簡化完成（主機板 '{motherboard}' 頂面 Y={_mm(mb_top_y)}mm{comp_note}）",
+        f"✓ RAM 批次簡化完成（{mb_desc}{comp_note}）",
         f"  RAM 數={len(rams)}, socket 數={len(sockets)}, 配對={len(pairs)}, "
         f"建塊={len(results)}, 建立 NS={ns_count}"
         + (f", 抑制+隱藏原始實體={hidden}" if hide_source else ""),

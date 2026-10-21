@@ -153,3 +153,102 @@ for getter in (lambda: comp.GetAllBodies(),
 **解決方案**: 用工作排程器互動模式啟動，詳見
 [`ansys-spaceclaim/references/native_session_and_versions.md`](../../ansys-spaceclaim/references/native_session_and_versions.md)
 的「GUI 啟動與桌面隔離」。
+
+---
+
+## ERR-SC-012: `UnicodeEncodeError: ('unknown', '\x00', 0, 1, '')`（中文環境物件名稱轉型崩潰）
+
+**觸發場景**: 在中文 Windows / 中文版 SpaceClaim 下，執行腳本時對預設生成的物件名稱（如「設計1」、「實體」、「連接拓撲」）調用 `str(obj.Name)`、`print(obj.Name)` 或未以 UTF-8 寫檔。
+
+**錯誤訊息**:
+```
+UnicodeEncodeError: ('unknown', '\x00', 0, 1, '')
+```
+
+**根因**: IronPython 2.7 內部以 .NET String (UTF-16) 表示字串，當對非 ASCII 物件名稱調用 Python 2 的 `str()` 時，系統會以預設 ASCII 編碼器轉型，遇到中文字元立即丟出 `UnicodeEncodeError`。
+
+**解決方案**:
+1. 嚴禁使用 `str(obj.Name)`，改用 `unicode(obj.Name.ToString())` 或封裝安全的字串轉換函式：
+   ```python
+   def safe_str(val):
+       if val is None:
+           return u""
+       try:
+           return unicode(val.ToString())
+       except:
+           return unicode(str(val))
+   ```
+2. 寫入日誌檔時必須強制使用 `codecs.open(..., "w", encoding="utf-8")`：
+   ```python
+   import codecs
+   with codecs.open(log_path, "w", encoding="utf-8") as f:
+       f.write(safe_str(obj.Name) + u"\r\n")
+   ```
+3. 物件命名底線：ACT / SpaceClaim 內部所有變數、註解、實體名稱一律強制使用 ASCII/英文。
+
+---
+
+## ERR-SC-013: `BlockBody.Create` 在 Component 環境下的建立與捕捉陷阱
+
+**觸發場景**: 在特定 Component 為 Active 的環境下呼叫 `BlockBody.Create(p0, p1)`，回傳的 `BlockBodyResult.CreatedBody` 為 None，且 `GetRootPart().GetAllBodies()` 只會讀取 Root 層級實體，導致差集捕捉落空。
+
+**根因**:
+1. SpaceClaim 在特定上下文下以非同步或事件方式提交實體，`CreatedBody` 屬性不一定即時填充。
+2. 若新建立的方塊與既有實體相交或接合，SpaceClaim 預設可能觸發自動布林合併。
+3. `GetRootPart().GetAllBodies()` 只取根部 Bodies，子組件內的實體無法藉此比對。
+
+**解決方案**: 採用「確定性建構模式 (Deterministic Construction Pattern)」：
+```python
+# 1. 先清理根目錄臨時體
+for b in list(root.Bodies):
+    Delete.Execute(Selection.Create(b))
+
+# 2. 在根部直接建立方塊
+BlockBody.Create(p0, p1)
+
+# 3. 立即從 root.Bodies 取出剛建立的唯一實體（此時 root.Bodies 恰好只有 1 個）
+new_body = list(root.Bodies)[0]
+
+# 4. 立即將實體移入目標 Component
+ComponentHelper.MoveBodiesToComponent(Selection.Create(new_body), target_comp)
+```
+此模式 100% 確定可重複，不依賴不穩定的 active context。
+
+---
+
+## ERR-SC-014: `Combine.Merge` 合併後賦值 `b.Name = "..."` 報唯讀錯誤
+
+**觸發場景**: 對布林合併 (Combine) 後產生的實體直接修改名稱 `body.Name = "NewName"`。
+
+**錯誤訊息**:
+```
+AttributeError: can't assign to read-only property Name of type 'DesignBodyGeneral'
+```
+
+**根因**: 布林合併後回傳的 `DesignBodyGeneral` 物件，其 .NET 屬性 `Name` 在 IronPython 2.7 映射為唯讀。
+
+**解決方案**: 嚴格使用 SpaceClaim 命令物件重新命名：
+```python
+RenameObject.Execute(Selection.Create(body), "NewName")
+```
+
+---
+
+## ERR-SC-015: SpaceClaim 中文語系「連接拓撲」自動化命名與 Mechanical ACT 契約橋接
+
+**觸發場景**: 使用 `ShareTopologyNamedSelection.FindAndFix(options)` 自動搜尋接觸面時，中文版 SpaceClaim 生成的 Named Selection 命名為「連接拓撲1/2/3」。
+
+**根因**: 下游 Mechanical ACT（如 `Mech_bonded.py`、`bonded_contact_creator.py`）只比對全英文 ASCII 字串 `"Connect Topology"`，且嚴格要求 `len(Location.Ids) == 2`（2-face 契約）。中文「連接拓撲」會被下游直接忽略。
+
+**解決方案**: 幾何建立後自動遍歷 `Window.ActiveWindow.Groups`，將中文名稱重命名為標準 ASCII `Connect Topology <N>`：
+```python
+ct_index = 1
+for g in Window.ActiveWindow.Groups:
+    gname = unicode(g.Name.ToString())
+    if u"Connect Topology" in gname or u"連接拓撲" in gname or u"拓撲" in gname:
+        if len(list(g.Members)) == 2:
+            new_name = "Connect Topology " + str(ct_index)
+            RenameObject.Execute(Selection.Create(g), new_name)
+            ct_index += 1
+```
+

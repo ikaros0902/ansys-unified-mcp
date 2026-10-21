@@ -2,9 +2,9 @@
 name: ansys-spaceclaim
 description: ANSYS SpaceClaim (SCDM) 幾何建模與 Python 腳本自動化技能。涵蓋 PyAnsys Geometry 與原生 SpaceClaim ACT IronPython API 雙軌控制。
 Use when:
-  - 需透過 SpaceClaim 執行 3D CAD 建模、草圖繪製、拉伸、旋轉或中面抽取。
-  - 需生成或執行 SpaceClaim 原生 ACT 腳本（`execute_spaceclaim_script_live`）。
-  - 需調用 MCP 工具：`geometry_create_block`、`geometry_create_cylinder` 等。
+  - 需透過 SpaceClaim 執行 3D CAD 建模、草圖繪製、拉伸、旋轉、組件管理或中面抽取。
+  - 需在獨立開啟的 SpaceClaim / Discovery 視窗透過 gRPC 執行自訂腳本（`geometry_run_script`）。
+  - 需調用 MCP 工具：`geometry_create_block`、`geometry_get_bounding_box`、`geometry_simplify_ram` 等。
   - 限制: 長度尺寸強制為公尺 (m)；嚴禁重複調用 create_design 創建新設計。
   - 觸發關鍵字 (繁中/En): SpaceClaim建模, SCDM腳本, SpaceClaim幾何, 幾何前處理.
 phase_gate:
@@ -14,20 +14,25 @@ phase_gate:
 
 # ANSYS SpaceClaim 幾何建模與腳本自動化主控手冊
 
-本技能支援透過兩種不同的 API 家族驅動 SpaceClaim 幾何：
+本技能支援透過三種不同的通道驅動 SpaceClaim 幾何：
 
-1. **PyAnsys Geometry (`ansys.geometry.core`)**：透過 MCP `geometry_*` 工具調用，適用於現代化 Python 直驅。
-2. **原生 SpaceClaim 腳本 (`SpaceClaim.Api.V<ver>`)**：透過 `execute_spaceclaim_script_live` 調用原生 IronPython API（如 `Selection`, `Midsurface`, `FixImprint`）。
+1. **PyAnsys Geometry (`ansys.geometry.core`) gRPC 原生工具**：透過 MCP `geometry_*` 工具調用（如 `geometry_create_block`、`geometry_get_bounding_box`），適用於現代化 Python 直驅、無主機板 RAM 簡化與尺寸量測。
+2. **即時 gRPC 腳本直驅 (`geometry_run_script` / `modeler.run_script_file`)**：透過 Port 50051 的 gRPC 通道直接將 IronPython 2.7 腳本送入獨立開啟的 SpaceClaim / Discovery 視窗執行。**不依賴 Workbench bridge，是獨立 SpaceClaim 視窗執行高階 CAD 操作（如 Share Topology、Combine、裝配體操作）的首選通道**。
+3. **Workbench Bridge 路線 (`execute_spaceclaim_script_live`)**：僅適用於從 Workbench 專案啟動並掛載了 journal 輪詢的 SpaceClaim 實例。若為獨立開啟的視窗則 bridge 無法連通，不可走此路徑。
 
 ---
 
 ## 一、核心設計原則與防呆邊界
 
 > [!CAUTION]
-> 1. **嚴禁重複創建新 Design**：
+> 1. **通道路由防呆（獨立視窗 vs Workbench 橋接）**：
+>    若 SpaceClaim 是使用者直接獨立開啟（監聽於 Port 50051），嚴禁調用 `execute_spaceclaim_script_live` 或依賴 Workbench bridge 的工具；必須走 `geometry_run_script` 或 MCP 原生 `geometry_*` gRPC 工具。
+> 2. **嚴禁重複創建新 Design**：
 >    一律在當前開啟的作用中設計（Current / Active Design）直接繪製幾何，絕對不要調用 `geometry_create_design()`。
-> 2. **嚴格單位換算（公尺 SI 制）**：
+> 3. **嚴格單位換算（公尺 SI 制）**：
 >    PyAnsys Geometry 工具尺寸參數強制為公尺 (m)。若使用者給予毫米 (mm)，必須先除以 1000 換算後再傳入。
+> 4. **IronPython 編碼安全底線**：
+>    腳本內部物件命名、Named Selection 與註解一律全英文 ASCII。嚴禁在中文語系環境下對物件名稱調用 `str()`，必須使用 `unicode(obj.Name.ToString())` 防止 `UnicodeEncodeError`。
 
 ---
 
@@ -53,3 +58,4 @@ phase_gate:
 | **實體選擇器** | [`references/native_selection.md`](references/native_selection.md) | `Selection` 拓撲過濾與 `PowerSelection` |
 | **特徵與拓撲命令** | [`references/native_commands.md`](references/native_commands.md) | `Midsurface` 中面、`ForceShare` 拓撲共享、`Fill` 填補 |
 | **原生草圖** | [`references/native_sketch_and_geometry.md`](references/native_sketch_and_geometry.md) | `SketchRectangle`、`Point2D` 原生幾何建構 |
+| **常見錯誤排查** | [`ansys-error-catalog`](../ansys-error-catalog/references/spaceclaim_pygeometry.md) | 唯讀屬性、編碼陷阱與確定性建構模式 |

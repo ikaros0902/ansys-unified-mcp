@@ -27,7 +27,7 @@ from ansys_unified_mcp.products.geometry.spaceclaim_scripts import load_script
 # 共用 helper 與 RAM / Heatsink 簡化函式已搬移至獨立檔案，此處顯式匯入內部使用函式，
 # 並透過 star import 保持命名空間相容性供既有測試存取。
 from ._geom_shared import *  # noqa: F401,F403
-from ._geom_shared import _make_box_from_bbox
+from ._geom_shared import _make_box_from_bbox, _bbox_m
 from .simplify_ram import *  # noqa: F401,F403
 from .simplify_ram import _geom_simplify_ram, _geom_simplify_ram_batch
 from .simplify_heatsink import *  # noqa: F401,F403
@@ -108,9 +108,9 @@ GEOMETRY_TOOLS = [
              "cushion_z_pos": {"type": "number", "default": 0.05, "description": "+Z 方向外擴延伸距離（公尺 m）"},
              "keep_target_body": {"type": "boolean", "default": False, "description": "布林相減後是否保留標的本體"}},
              "required": ["target_body_name"]}),
-    Tool(name="geometry_simplify_ram", description="【呼叫前必須先向使用者索取主機板、RAM、socket 三個 body 名稱，不可猜測或自行從 body 清單推斷】將單一 RAM 卡 + 其 socket 簡化為一座落於主機板頂面的「凸字形」兩段體，並於底面（板接合面）建立 named selection。高度軸為 Y；下段寬基座＝socket 的 X-Z footprint（主機板頂面→socket 頂），上段窄凸柱＝RAM 的 X-Z footprint（socket 頂→RAM 頂），兩段聯集為單一 body；socket 頂落在無效區間時退回單一合併包圍盒方塊。預設將結果移入新 component，並抑制 (suppress for physics) + 隱藏原始 RAM/socket body。",
+    Tool(name="geometry_simplify_ram", description="【呼叫前必須先確認 RAM、socket body 名稱】將單一 RAM 卡 + 其 socket 簡化為一座落於主機板頂面（或 socket 底面）的「凸字形」兩段體，並於底面（板接合面）建立 named selection。高度軸為 Y；下段寬基座＝socket 的 X-Z footprint（基準面→socket 頂），上段窄凸柱＝RAM 的 X-Z footprint（socket 頂→RAM 頂），兩段聯集為單一 body；socket 頂落在無效區間時退回單一合併包圍盒方塊。預設將結果移入新 component，並抑制 (suppress for physics) + 隱藏原始 RAM/socket body。",
          inputSchema={"type": "object", "properties": {
-             "motherboard": {"type": "string", "description": "主機板 body 名稱（其頂面即方塊底面），例 'JVPCB1074973E'"},
+             "motherboard": {"type": "string", "default": "", "description": "主機板 body 名稱（其頂面即方塊底面），例 'JVPCB1074973E'；若無主機板可留空，將自動以 socket 自身底面為基準"},
              "ram": {"type": "string", "description": "RAM 卡 body 名稱，例 'DIMM_DDR5_EGS'"},
              "socket": {"type": "string", "description": "RAM socket body 名稱，例 'J33'"},
              "result_name": {"type": "string", "default": "RAM_simplified", "description": "生成簡化方塊 body 名稱"},
@@ -118,10 +118,10 @@ GEOMETRY_TOOLS = [
              "move_to_component": {"type": "boolean", "default": True, "description": "是否將簡化方塊移入新 component（名稱見 component_name）"},
              "component_name": {"type": "string", "default": "RAM_simplified", "description": "move_to_component 時新建的 component 名稱"},
              "hide_source": {"type": "boolean", "default": True, "description": "是否抑制 (suppress for physics) 並隱藏原始 RAM 與 socket body，使其在下游網格/求解被排除且不干擾框選"}},
-             "required": ["motherboard", "ram", "socket"]}),
-    Tool(name="geometry_simplify_ram_batch", description="【呼叫前必須先向使用者索取主機板、RAM、socket 三個 body 名稱，不可猜測或自行從 body 清單推斷】批次簡化所有同名 RAM+socket 配對（依 X 中心位置自動就近配對）。每對成為一座落於主機板頂面的「凸字形」兩段體（下段寬基座＝socket footprint；上段窄凸柱＝RAM footprint），各自建立底面 named selection，依 X 順序編號 <result_prefix>_01、<ns_prefix>_01…。適用於多條相同 DIMM/socket 陣列。配對成功的原始 body 預設會被抑制 (suppress for physics) 並隱藏。",
+             "required": ["ram", "socket"]}),
+    Tool(name="geometry_simplify_ram_batch", description="【呼叫前必須先確認 RAM、socket body 名稱】批次簡化所有同名 RAM+socket 配對（依 X 中心位置自動就近配對）。每對成為一座落於主機板頂面（或 socket 底面）的「凸字形」兩段體（下段寬基座＝socket footprint；上段窄凸柱＝RAM footprint），各自建立底面 named selection，依 X 順序編號 <result_prefix>_01、<ns_prefix>_01…。適用於多條相同 DIMM/socket 陣列。配對成功的原始 body 預設會被抑制 (suppress for physics) 並隱藏。",
          inputSchema={"type": "object", "properties": {
-             "motherboard": {"type": "string", "description": "主機板 body 名稱（頂面=各方塊底面）"},
+             "motherboard": {"type": "string", "default": "", "description": "主機板 body 名稱（頂面=各方塊底面）；若無主機板可留空，將自動以各 socket 自身底面為基準"},
              "ram": {"type": "string", "description": "RAM 卡 body 名稱（陣列中重複出現）"},
              "socket": {"type": "string", "description": "socket body 名稱（陣列中重複出現）"},
              "result_prefix": {"type": "string", "default": "RAM_simplified", "description": "方塊 body 名稱前綴（自動編號）"},
@@ -130,7 +130,7 @@ GEOMETRY_TOOLS = [
              "move_to_component": {"type": "boolean", "default": True, "description": "是否將所有簡化方塊移入同一新 component（名稱見 component_name）"},
              "component_name": {"type": "string", "default": "RAM_simplified", "description": "move_to_component 時新建的 component 名稱"},
              "hide_source": {"type": "boolean", "default": True, "description": "是否抑制 (suppress for physics) 並隱藏配對成功的原始 RAM 與 socket body，使其在下游網格/求解被排除且不干擾框選"}},
-             "required": ["motherboard", "ram", "socket"]}),
+             "required": ["ram", "socket"]}),
     Tool(name="geometry_simplify_heatsink", description="散熱片 (heatsink) 簡化為凸字形方塊組（擠型/壓鑄/折片/針狀鰭片，單一或多 body 組件皆可）：底板（包圍盒 X-Z，鎖孔所在板底→鰭片根部）＋上凸（最大一排鰭片範圍，鰭片根部→鰭片頂）＋下凸（主接合底面範圍，接觸面→板底），無階梯、無圓角，螺絲/彈簧/推銷不保留；鎖孔（原始完整圓周的 Y 向挖孔）以 Y 向直圓柱貫穿；主接合底面建立 named selection。量測原始體積，以常見散熱片密度（預設鋁 2700 kg/m³，可逐 body 指定）估算質量，於質量守恆下反推簡化體應設定的等效密度（kg/m³），附加於新 body 名稱後綴 _rho<整數>。結果建於原始 body 所屬 component（共用 master 的各 instance 皆會出現），原始 body 預設保留並設定 Suppress for Physics ＋ 隱藏（下游排除、不干擾框選）。高度軸為 world Y。",
          inputSchema={"type": "object", "properties": {
              "source": {"type": "string", "description": "散熱片主 body 名稱（決定結果命名與所屬 component），例 'ENDURANCE-POWER-BRICK-HS-241018'"},
@@ -198,6 +198,18 @@ GEOMETRY_TOOLS = [
              "hide": {"type": "boolean", "default": True, "description": "是否隱藏（取消可見性）"}},
              "required": ["patterns"]}),
     Tool(name="geometry_list_bodies", description="列出當前設計中的所有幾何體", inputSchema={"type": "object", "properties": {}}),
+    Tool(name="geometry_get_bounding_box",
+         description="查詢指定實體 (Body) 或設計中所有實體的軸對齊包圍盒 (Bounding Box)、尺寸與中心座標。回傳 min/max (X, Y, Z)、尺寸與中心點，支援毫米 (mm) 與公尺 (m)。可用於量測實體尺寸、定位基準或手動建構簡化方塊。",
+         inputSchema={"type": "object", "properties": {
+             "body_name": {"type": "string", "default": "", "description": "要查詢的 Body 名稱；若留空則回傳當前設計中所有實體的包圍盒清單"}},
+             "required": []}),
+    Tool(name="geometry_run_script",
+         description="透過當前已連線的 gRPC (Port 50051) 通道，直接在作用中的 SpaceClaim / Discovery 視窗中執行 Python 幾何腳本。支援直接傳入腳本內容 (script_content) 或腳本檔案路徑 (script_path)，並可回傳腳本中定義的 result 字典。",
+         inputSchema={"type": "object", "properties": {
+             "script_content": {"type": "string", "default": "", "description": "欲執行的 Python 腳本內容字串"},
+             "script_path": {"type": "string", "default": "", "description": "本機既有腳本檔案路徑 (.py / .scscript)"},
+             "import_design": {"type": "boolean", "default": True, "description": "腳本執行後是否同步更新 MCP 的作用中幾何設計快取"}},
+             "required": []}),
     Tool(name="geometry_list_named_selections", description="列出當前設計中的所有具名選擇 (Named Selection)", inputSchema={"type": "object", "properties": {}}),
     Tool(name="geometry_import_file", description="匯入 CAD 檔案",
          inputSchema={"type": "object", "properties": {"file_path": {"type": "string"}}, "required": ["file_path"]}),
@@ -229,6 +241,102 @@ def _geom_get_design():
     if _current_design is None:
         raise RuntimeError("無法取得 SpaceClaim 當前作用中設計，請確認 SpaceClaim 視窗中已開啟設計。")
     return _current_design
+
+
+def _geom_get_bounding_box(body_name: str = "") -> str:
+    """查詢指定 Body 或設計中所有 Body 的軸對齊包圍盒 (Bounding Box) 與尺寸。"""
+    d = _geom_get_design()
+    body_entries = []
+
+    def _walk(comp, path):
+        here = path + ("/" if path else "") + getattr(comp, "name", "")
+        for b in getattr(comp, "bodies", []) or []:
+            body_entries.append((b, here))
+        for sub in getattr(comp, "components", []) or []:
+            _walk(sub, here)
+
+    try:
+        _walk(d, "")
+    except Exception:
+        body_entries = [(b, "") for b in getattr(d, "bodies", []) or []]
+
+    if not body_entries:
+        return "當前設計無任何實體 (Body)。"
+
+    def _format_entry(b, path):
+        try:
+            lo, hi = _bbox_m(b)
+            dx = hi[0] - lo[0]
+            dy = hi[1] - lo[1]
+            dz = hi[2] - lo[2]
+            cx = (lo[0] + hi[0]) / 2.0
+            cy = (lo[1] + hi[1]) / 2.0
+            cz = (lo[2] + hi[2]) / 2.0
+            return {
+                "name": b.name,
+                "id": getattr(b, "id", ""),
+                "path": path,
+                "min_m": [round(v, 6) for v in lo],
+                "max_m": [round(v, 6) for v in hi],
+                "size_m": [round(dx, 6), round(dy, 6), round(dz, 6)],
+                "center_m": [round(cx, 6), round(cy, 6), round(cz, 6)],
+                "min_mm": [round(v * 1000.0, 3) for v in lo],
+                "max_mm": [round(v * 1000.0, 3) for v in hi],
+                "size_mm": [round(dx * 1000.0, 3), round(dy * 1000.0, 3), round(dz * 1000.0, 3)],
+                "center_mm": [round(cx * 1000.0, 3), round(cy * 1000.0, 3), round(cz * 1000.0, 3)],
+            }
+        except Exception as e:
+            return {"name": b.name, "id": getattr(b, "id", ""), "path": path, "error": str(e)}
+
+    if body_name:
+        matches = [(b, p) for b, p in body_entries if b.name == body_name]
+        if not matches:
+            avail = [b.name for b, _ in body_entries]
+            return f"找不到名為 '{body_name}' 的實體。當前設計中的實體有: {', '.join(avail[:25])}"
+
+        lines = [f"實體 '{body_name}' 包圍盒與尺寸資訊 (共找到 {len(matches)} 處匹配):"]
+        for b, p in matches:
+            info = _format_entry(b, p)
+            if "error" in info:
+                lines.append(f"  - 路徑: {p or '(根目錄)'} -> 讀取失敗: {info['error']}")
+            else:
+                lines.append(f"  - 所屬組件路徑: {p or '(根目錄)'}")
+                lines.append(f"  - 尺寸 (mm): X={info['size_mm'][0]}, Y={info['size_mm'][1]}, Z={info['size_mm'][2]}")
+                lines.append(f"  - 最小座標 min (mm): [{info['min_mm'][0]}, {info['min_mm'][1]}, {info['min_mm'][2]}]")
+                lines.append(f"  - 最大座標 max (mm): [{info['max_mm'][0]}, {info['max_mm'][1]}, {info['max_mm'][2]}]")
+                lines.append(f"  - 中心座標 center (mm): [{info['center_mm'][0]}, {info['center_mm'][1]}, {info['center_mm'][2]}]")
+                lines.append(f"  - 尺寸 (m): X={info['size_m'][0]}, Y={info['size_m'][1]}, Z={info['size_m'][2]}")
+                lines.append(f"  - 最小座標 min (m): [{info['min_m'][0]}, {info['min_m'][1]}, {info['min_m'][2]}]")
+                lines.append(f"  - 最大座標 max (m): [{info['max_m'][0]}, {info['max_m'][1]}, {info['max_m'][2]}]")
+        return "\n".join(lines)
+    else:
+        lines = [f"當前設計共有 {len(body_entries)} 個實體 (Body) 之包圍盒清單:"]
+        for b, p in body_entries:
+            info = _format_entry(b, p)
+            if "error" in info:
+                lines.append(f"  - {b.name} ({p or '/'}): 讀取失敗 ({info['error']})")
+            else:
+                lines.append(
+                    f"  - {b.name} [{p or '/'}]: size(mm)=[{info['size_mm'][0]}, {info['size_mm'][1]}, {info['size_mm'][2]}] "
+                    f"min(mm)=[{info['min_mm'][0]}, {info['min_mm'][1]}, {info['min_mm'][2]}] "
+                    f"max(mm)=[{info['max_mm'][0]}, {info['max_mm'][1]}, {info['max_mm'][2]}]"
+                )
+        return "\n".join(lines)
+
+
+def _geom_run_script(script_content: str = "", script_path: str = "", import_design: bool = True) -> str:
+    """透過當前連線的 gRPC 執行 SpaceClaim / Discovery Python 幾何腳本。"""
+    from ansys_unified_mcp.products.geometry import controller
+    res = controller.run_script(
+        script_content=script_content,
+        script_path=script_path,
+        import_design=import_design,
+    )
+    if not res.get("ok"):
+        return f"腳本執行失敗: {res.get('error')}"
+    values = res.get("values")
+    val_str = f"\n腳本回傳值 (result): {values}" if values else ""
+    return f"✓ 腳本已成功透過 PyAnsys Geometry gRPC 在 SpaceClaim 執行完成。{val_str}"
 
 
 def _geom_create_cylinder(name: str, radius: float, height: float,
@@ -1108,9 +1216,9 @@ async def call_tool(name: str, arguments: dict[str, Any],
                         keep_target_body=arguments.get("keep_target_body", False))
                 elif name == "geometry_simplify_ram":
                     result = _geom_simplify_ram(
-                        motherboard=arguments["motherboard"],
                         ram=arguments["ram"],
                         socket=arguments["socket"],
+                        motherboard=arguments.get("motherboard", ""),
                         result_name=arguments.get("result_name", "RAM_simplified"),
                         named_selection=arguments.get("named_selection", "ram_bottom"),
                         move_to_component=arguments.get("move_to_component", True),
@@ -1118,9 +1226,9 @@ async def call_tool(name: str, arguments: dict[str, Any],
                         hide_source=arguments.get("hide_source", True))
                 elif name == "geometry_simplify_ram_batch":
                     result = _geom_simplify_ram_batch(
-                        motherboard=arguments["motherboard"],
                         ram=arguments["ram"],
                         socket=arguments["socket"],
+                        motherboard=arguments.get("motherboard", ""),
                         result_prefix=arguments.get("result_prefix", "RAM_simplified"),
                         ns_prefix=arguments.get("ns_prefix", "ram_bottom"),
                         tol_mm=arguments.get("tol_mm", 2.0),
@@ -1263,6 +1371,14 @@ async def call_tool(name: str, arguments: dict[str, Any],
                         result = f"幾何體 ({len(rows)}):\n" + "\n".join(lines)
                     else:
                         result = "當前設計無幾何體"
+                elif name == "geometry_get_bounding_box":
+                    result = _geom_get_bounding_box(arguments.get("body_name", ""))
+                elif name == "geometry_run_script":
+                    result = _geom_run_script(
+                        script_content=arguments.get("script_content", ""),
+                        script_path=arguments.get("script_path", ""),
+                        import_design=arguments.get("import_design", True),
+                    )
                 elif name == "geometry_list_named_selections":
                     d = _geom_get_design()
                     named_selections = d.named_selections

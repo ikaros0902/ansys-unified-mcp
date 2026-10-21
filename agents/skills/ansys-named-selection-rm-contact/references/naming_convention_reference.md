@@ -10,7 +10,9 @@
 | :--- | :--- |
 | 命名模式 | `Connect Topology` 開頭（SpaceClaim Share Topology / Connect 功能的系統預設命名，非自訂字串） |
 | 判定條件 | `i.Name[0:len("Connect Topology")] == "Connect Topology"` 且 `len(i.Location.Ids) == 2` |
-| 來源腳本 | `D:\Ikaros\ACT_Test\MECH_Joint_Creation.py`（`findText = "Connect Topology"`）；整合版 `agents/skills/ansys-mechanical/scripts/bonded_contact_creator.py` |
+| 中文語系陷阱與轉譯 | 中文版 SpaceClaim 之 `ShareTopologyNamedSelection` 預設生成「連接拓撲1/2/3」，**下游 Mechanical ACT 會因全英文比對而漏讀**！產出端腳本必須於生成後自動將「連接拓撲*」重命名為全英文 ASCII `Connect Topology <N>`。 |
+| 雙軌輔助命名 (可選) | 若需支援手動 Scoping 或依零件區分接觸面，可額外產出本體層級集合：`NS_Contact_<BodyName>`（如 `NS_Contact_Slot`、`NS_Contact_DIMM`），收納該零件上所有參與接觸的面（面數 $\ge 1$）。注意：本體層級集合**不可**冠上 `Connect Topology` 前綴，以維持 2-face 契約乾淨。 |
+| 來源腳本 | `D:\Ikaros\ACT_Test\MECH_Joint_Creation.py`（`findText = "Connect Topology"`）；整合版 `agents/skills/ansys-mechanical/scripts/bonded_contact_creator.py`；`20230925_SC_Boned` |
 | 下游用途 | 批次建立 `Bonded` ContactRegion：`SourceLocation` 取 `pair_check[0]`，`TargetLocation` 取 `pair_check[1]` |
 | 群組歸納 | 所有由此規則建立的 Contact 會被收納進 `_Bonded_by_script` ConnectionGroup（若不存在則自動建立） |
 | 去重機制 | 建立前檢查 `connections_bonded_grp.Children` 現有名稱清單 `bondedList`，避免重複建立同名 Contact |

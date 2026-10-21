@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import logging
 import os
+import tempfile
 from pathlib import Path
 from typing import Any, Optional
 
@@ -54,8 +55,7 @@ class GeometryController:
                 if not 1 <= int(port) <= 65535:
                     raise ValueError("port must be between 1 and 65535")
                 options["port"] = int(port)
-            if transport_mode is not None:
-                options["transport_mode"] = transport_mode
+            options["transport_mode"] = transport_mode or "insecure"
             modeler = Modeler(**options)
             registry.put(PRODUCT, key, modeler)
             return {"ok": True, "key": key, "port": port, "pid": self._find_pid(port), "message": "Connected to Geometry Modeler."}
@@ -86,6 +86,59 @@ class GeometryController:
     def disconnect(self, key: Optional[str] = None) -> dict:
         registry.drop(PRODUCT, key)
         return {"ok": True, "message": "Disconnected."}
+
+    def run_script(
+        self,
+        script_content: str = "",
+        script_path: str = "",
+        script_args: Optional[dict[str, str]] = None,
+        import_design: bool = True,
+        api_version: Optional[int | str] = None,
+        key: Optional[str] = None,
+    ) -> dict:
+        """透過當前已連線的 Geometry (PyAnsys Geometry) gRPC Session 執行腳本。
+
+        直接在當前作用中的 SpaceClaim / Discovery 視窗執行 Python / Discovery 腳本，
+        不另開無頭進程。
+        """
+        modeler = self._modeler(key)
+        if modeler is None:
+            return {"ok": False, "error": "Geometry Modeler 未連線，請先執行 geometry_launch。"}
+
+        temp_created = False
+        actual_path = None
+        if script_content:
+            tf = tempfile.NamedTemporaryFile("w", suffix=".py", delete=False, encoding="utf-8")
+            tf.write(script_content)
+            tf.close()
+            actual_path = tf.name
+            temp_created = True
+        elif script_path:
+            actual_path = script_path
+
+        if not actual_path:
+            return {"ok": False, "error": "必須指定 script_content 或 script_path。"}
+
+        try:
+            res_values, design = modeler.run_script_file(
+                file_path=actual_path,
+                script_args=script_args,
+                import_design=import_design,
+                api_version=api_version,
+            )
+            return {
+                "ok": True,
+                "values": res_values,
+                "message": "腳本已成功透過 PyAnsys Geometry gRPC 在 SpaceClaim 執行完成。",
+            }
+        except Exception as exc:
+            return {"ok": False, "error": f"gRPC 腳本執行失敗: {exc}"}
+        finally:
+            if temp_created and actual_path:
+                try:
+                    os.remove(actual_path)
+                except OSError:
+                    pass
 
 
     @staticmethod
