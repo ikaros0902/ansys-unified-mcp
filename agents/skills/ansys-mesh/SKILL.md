@@ -1,23 +1,11 @@
 ---
 name: ansys-mesh
-description: ANSYS Mechanical 與 LS-DYNA 網格工程主控手冊。涵蓋網格品質指標體系、自適應 Sizing/Method、分區樹目錄整理、分區劃分與排障、網格干涉檢查、全域 CFL 步長量測，以及基於 Node Merge / MeshTuner 的局部步長調優流程。
-Use when:
-  - 需進行 Mechanical 隱式結構、模態或 LS-DYNA 顯式動力學網格劃分與品質控制。
-  - 需依零件幾何拓撲配置 AutoMesh（Sheet、PCBA、複雜實體、孔邊 Edge Sizing）。
-  - 需依組件分區整理 Mesh Controls 樹目錄，並進行分區幾何選取劃分與個別排障。
-  - 需執行網格干涉檢查（Interface Check）。
-  - 需診斷並優化 LS-DYNA CFL 最小時間步長（目標 dt >= 50 ns）。
-  - 需針對瓶頸幾何進行個別微調（Node Merge、局部 Pinch、局部 Sizing、MeshTuner）。
-  - 需實施幾何抑制與還原控制（遵守既有抑制幾何不動、臨時抑制必須 100% 還原原則）。
-  - 觸發關鍵字 (繁中/En): ansys-mesh, 網格劃分, 網格品質, CFL步長, 網格調優, Mesh Quality, MeshTuner, AutoMesh, Node Merge, Interface Check, Suppression Restore.
-phase_gate:
-  requires: []
-  produces: []
+description: ANSYS Mechanical 與 LS-DYNA 網格工程主控手冊。涵蓋整機模型幾何特徵定量決策（Method/Size 依據表）、極短邊主動熔斷與視覺隔離（Named Selection 標記）、Defeature 授權防護、品質指標（Skewness, Orthogonal）、自適應 Sizing/Method 與 CFL 步長 Group-Batching 極速隔離微調。
 ---
 
 # ANSYS Mesh 網格工程與效能調優主控手冊
 
-本手冊規範從無網格到劃分完成、再到 CFL 步長優化達標的完整工程 SOP。核心流程嚴格遵照標準工程手法與避坑原則：自適應分流 $\rightarrow$ 控制分區整理 $\rightarrow$ 分區劃分排障 $\rightarrow$ 網格干涉前檢 $\rightarrow$ 全域 CFL 評估 $\rightarrow$ 瓶頸幾何局部調優（Node Merge / MeshTuner）。
+本手冊為 ANSYS Mechanical（隱式結構）與 LS-DYNA（顯式動力學）雙軌網格控制與自動化調優標準規範，整合 Google NotebookLM 26 章教學精華、本機 ACT Group Batching 極速隔離微調演算法，以及整機模型（Full-Chassis）基於客觀幾何拓撲指標與極短邊熔斷之自適應劃分體系。
 
 ---
 
@@ -26,123 +14,91 @@ phase_gate:
 在 Mechanical ACT 腳本與 PyMechanical 環境中，預設全域物件 handle 如下：
 
 ```python
-Model       = ExtAPI.DataModel.Project.Model  # 幾何與模型核心節點
-Mesh        = Model.Mesh                      # 網格控制核心節點
-Geometry    = Model.Geometry                  # 幾何拓撲核心
-Selection   = ExtAPI.SelectionManager         # 選取管理器
-DataModel   = ExtAPI.DataModel                # 樹狀資料模型
+Model       = DataModel.Project.Model       # 幾何與模型核心
+Mesh        = Model.Mesh                    # 網格控制核心節點
+Geometry    = Model.Geometry                # 幾何拓撲核心
+Analyses    = Model.Analyses                # 分析系統清單
+Selection   = ExtAPI.SelectionManager       # 選取管理器
 ```
 
 ---
 
-## 二、從無到有至達標之 7 步標準手法 (Standard SOP)
+## 二、整機網格與雙軌調優 SOP 流程
 
 ```mermaid
 flowchart TD
-    S1[1. AutoMesh 幾何分類配置
-Sheet: Quad-Dom / PCBA: MultiZone / Solid: Tet / Hole: EdgeSizing] --> S2[2. Go to Mesh Controls 樹目錄分區歸類
-依組件建立 TreeGroupingFolder 集中管理]
-    S2 --> S3[3. 分區選取劃分與個別排障
-分區執行 GenerateMesh，遇失敗件個別調整參數]
-    S3 --> S4[4. Interface Check 網格干涉檢查
-驗證裝配體各零件間無網格貫穿或自交]
-    S4 --> S5[5. 全域 CFL 時間步長評估
-單一 TimeStepCalc 物件量測全域最小 dt]
-    S5 --> S6{最小 CFL 是否達標?
-dt >= 50 ns}
-    S6 -->|未達標| S7[6. MeshTuner 瓶頸幾何局部調優
-定位瓶頸件: Node Merge / 局部 Pinch / Sizing 調整]
-    S7 --> S5
-    S6 -->|達標| S8[7. 固化發布
-導出診斷報表與求解檢查]
+    A[讀取當前 Unsuppressed Bodies
+    不介入抽中面與質點轉換] --> B[幾何拓撲與極短邊預檢
+    L_min < Threshold 掃描]
+    B --> C{是否含有極短邊?}
+    C -->|是: 觸發熔斷| D[暫停 Mesh
+    僅顯示問題幾何 / 自動建立 NS
+    詢問使用者 Defeature 授權]
+    D --> E[對獲准 Body 施加局部 Defeature]
+    C -->|否: 幾何乾淨| F[幾何定量決策引擎
+    Method & Size 依據表判定]
+    E --> F
+    F --> G[分群隔離逐一劃分 Group Batching
+    Sheet -> Sweep Solid -> MultiZone/Tet]
+    G --> H{分析類型品質驗證}
+    H -->|Mechanical 隱式| I[品質前檢與自鎖防護
+    Orthogonal > 0.7 / Skew < 0.4]
+    H -->|LS-DYNA 顯式| J[CFL 步長調優
+    Group Batching & Option B 隔離]
+    I --> K[生成高品質精簡網格並導出報表]
+    J --> K
 ```
 
-### Step 1: 幾何分類與控制指派 (AutoMesh)
-依拓撲特徵指派 Method 與 Sizing，不全域一刀切：
-- **中面薄板 (Sheet)**：`Prime`/`Quad-Dominant`，基礎尺寸 $3.0\text{ mm}$。
-- **PCBA (Sweepable Solids)**：名稱含 `PCBA`、`PCB`、`BACKPLANE`、`MIDPLANE`，指派 `MultiZone`，尺寸 $1.5\text{ mm}$。
-- **複雜實體 (Complex Solids)**：螺絲柱、扣件、散熱座，指派 `AllTriAllTet`，尺寸 $2.0\text{ mm}$。
-- **螺栓孔邊 (Bolt Holes)**：遍歷 `Scr_RM_grp_*` 等 Named Selections，配置聚合式 Edge Sizing（$1.5\text{ mm}$，`Behavior=Hard`）。
+### 1. 整機幾何前檢與極短邊熔斷 (Short-Edge Gatekeeper)
+- **尊重當下激活狀態**：只要 `Suppressed == False`（含 PSU、硬碟架、插卡等），一律視為必跑幾何直接進行劃分，不擅自轉質點或抑制。
+- **極短邊預檢與視覺隔離**：若偵測到邊長 $L_{\text{edge}} < 0.25\text{ mm}$，**立即中斷 Mesh**；將問題幾何設為 `Visible = True`，其餘正常幾何設為 `Visible = False`；自動建立 `NS_ShortEdges_ALL` 與各件具名選擇，向使用者報告並徵詢 Defeature 授權。
+- **Defeature 授權制**：嚴禁擅自盲目開啟全域 Defeature，僅對使用者明確核准之 Body 施加 `DefeaturingTolerance`。
 
-### Step 2: 分區整理網格控制項 (Go to Mesh Controls)
-依子裝配體（`BASEPAN`、`Rear_wall`、`1F_FRONT_END`、`CX7`、`PDB` 等）建立 `TreeGroupingFolder`，將對應 Sizing/Method 歸類收納，避免模型樹雜亂。
+### 2. 客觀量化驅動 Method 與 Size
+- **等效特徵壁厚**：$t_{\text{eq}} = \frac{2V}{A_{\text{surf}}}$（精準估算薄壁折彎件平均肉厚）。
+- **薄殼 (`Sheet`)**：指派 `QuadDominant`，尺寸 $S = \text{clamp}(D_{\text{mid}} / 20, 2.0\text{ mm}, 8.0\text{ mm})$。
+- **規則薄壁實體 ($R_{\text{slender}} \ge 8, \rho_{\text{planar}} \ge 0.70$)**：指派 `Sweep Method`，厚度方向強制 `SweepNumberDivisions = 2 ~ 3`，面內尺寸放大至 $\min(D_{\text{mid}}/15, 4 t_{\text{eq}})$，單元數立減 70%~80% 且徹底杜絕剪切自鎖。
+- **正交塊體 ($\rho_{\text{planar}} \ge 0.75$)**：指派 `MultiZone` 自動 Hex 化。
+- **複雜異形件**：指派 `Patch Conforming Tet`，搭配 `Growth Rate = 1.25 ~ 1.30` 與曲率角 $24^\circ \sim 30^\circ$ 抑制單元暴增。
+- **螺栓孔連接**：自動識別 `Scr_RM_grp` 等 Named Selection，施加 Edge Sizing（孔周長 8~12 等份）並生成 1~2 層四邊形 Edge Washer 墊圈環狀網格。
 
-### Step 3: 分區選取劃分與個別排障
-- 以 `SelectionInfo` 封裝各組件幾何 IDs，分批劃分，隔離風險。
-- 劃分失敗時：單獨選取該幾何 → 分析缺陷（微小邊、短倒角、薄面）→ 微調 Sizing 或改 Method（如 MultiZone 回退 Tet）→ 單獨劃分成功後接續下一分區，確保 100% 幾何成功劃分。
+### 3. Mechanical 隱式品質前檢 (Implicit Quality Check)
+- 檢驗全域網格品質：歪斜度 $\text{Skewness} < 0.40$（$> 0.85$ 嚴禁求解）、正交品質 $\text{Orthogonal} > 0.70$（$< 0.15$ 嚴禁求解）、$\text{Aspect Ratio} < 5:1$（實體）/ $< 10:1$（薄殼）、$\text{Jacobian Ratio} \ge 0.70$。
+- 薄壁結構檢驗剪切自鎖（嚴禁單層一階四面體）。
 
-### Step 4: 網格干涉檢查 (Interface Check)
-求解前呼叫 ACT `Interface Check`，確認零件接觸界面無幾何貫穿、單元重疊或自交，薄殼法向一致，避免接觸剛度震盪或邊界穿透。
-
-### Step 5: 全域 CFL 時間步長評估
-- 確保所有幾何已劃分（未劃分零件數 $= 0$）。
-- 模型中維護**單一** `TimeStepCalc` 物件（`ExtAPI.DataModel.CreateObject("TimeStepCalc", "LSDYNA")`），綁定全模型 Bodies，安全係數 $0.90$、線性黏性係數 $0.06$。
-- 執行 `tsc.Import()` 計算全域最小 CFL 步長，擷取各零件最小步長排序。
-
-### Step 6: 瓶頸幾何局部微調 (MeshTuner & Local Refinement)
-針對壓低全域 CFL 步長的前 1~3 個瓶頸幾何：
-- **微小狹縫/極短邊**：優先 **`Node Merge`**（縫合距離小於閾值如 $0.3\text{ mm}$ 的節點）；或局部 Scoped `Pinch`。
-- **形狀突變/尖角過渡**：局部增減 Sizing、調整單元增長率（Growth Rate $= 1.10$）。
-- **嚴禁全域重置**：調整僅限局部控制項。
-
-### Step 7: 迭代閉環直至達標
-對微調後的瓶頸幾何單獨劃分或局部更新，重新刷新 `TimeStepCalc` 比對步長變化，重複步驟 5→6 直至全域最小時間步長達標（如 $dt_{\min} \ge 50\text{ ns}$）。
+### 4. LS-DYNA 顯式 CFL 時間步長調優 (Explicit CFL Tuning)
+- 啟動 `cfl_mesh_tuner_fast.py`，採用 `Floating Range` 浮動相對微調。
+- 以 $3 \sim 5$ 個零件為小批次（Group Batching），透過 `suppress_others_except` 隔離其餘組件。
+- 零件 CFL 達標（$\ge \text{Criteria\_MinCFL}$，如 $0.9\ \mu\text{s}$）即刻鎖定尺寸並 Suppress（Option B 動態達標隔離），實現零負擔陪跑。
 
 ---
 
-## 三、幾何抑制與還原鐵律 (Suppression Lifecycle Protocol)
+## 三、專精參考手冊路由表 (Router)
 
-若因排障或特定操作需對幾何實施 Suppress（抑制）：
-
-1. **既有抑制保護 (Pre-existing Suppressed Protection)**：
-   - 執行任何操作前，先快照所有幾何原始抑制狀態：`orig_state = {b.Id: b.Suppressed for b in bodies}`。
-   - **若幾何原先已是 Suppressed（`orig_state[b.Id] == True`），一律嚴格保持 Suppressed，絕不更動、絕不主動 Unsuppress**。
-2. **臨時抑制必須成對還原 (Guaranteed Restoration)**：
-   - 僅允許對原始為未抑制（`Suppressed == False`）的幾何進行臨時抑制操作。
-   - 臨時抑制必須包裹在 `try...finally` 結構中，操作完成或遭遇異常中斷時，**必須 100% Unsuppress 還原回原始狀態**。
-   - 範例保護模式：
-     ```python
-     # Snapshot baseline
-     initially_active = [b for b in bodies if not b.Suppressed]
-     try:
-         for b in temp_suppress_list:
-             if b in initially_active:
-                 b.Suppressed = True
-         # Execute operation...
-     finally:
-         # Guaranteed restore
-         for b in initially_active:
-             if b.Suppressed:
-                 b.Suppressed = False
-     ```
-3. **參數化屬性防護**：若幾何 `Suppressed` 被標記為 Parameterized 唯讀，禁止強制賦值，自動改採幾何選取（Selection Scoping）隔離。
+| 領域分類 | 專精手冊路徑 | 核心內容要點 |
+| :--- | :--- | :--- |
+| **整機定量決策與短邊熔斷** | [`references/chassis_mesh_decision_matrix.md`](references/chassis_mesh_decision_matrix.md) | 等效壁厚 $t_{\text{eq}}$ 計算、Method 與 Size 定量依據表、極短邊視覺隔離與 Named Selection 熔斷 SOP。 |
+| **品質指標標準** | [`references/metrics_and_quality_standards.md`](references/metrics_and_quality_standards.md) | Skewness、Orthogonal、Aspect Ratio、Jacobian、CFL 步長量化門檻與求解器速度關係。 |
+| **劃分方法與清理** | [`references/mesh_methods_and_geometry_healing.md`](references/mesh_methods_and_geometry_healing.md) | Sweep、MultiZone、Patch Conforming Tet、Pinch Control 與 Defeaturing 容差配置。 |
+| **局部控制與墊圈** | [`references/local_controls_and_washers.md`](references/local_controls_and_washers.md) | Sphere/Body of Influence、Edge Washer 演算法與薄壁厚度方向多層控制。 |
+| **CFL 調優與分群** | [`references/cfl_tuning_and_group_batching.md`](references/cfl_tuning_and_group_batching.md) | CFL 臨界步長推算、Group Batching 分群隔離加速與 Option B 動態達標跳出。 |
 
 ---
 
-## 四、工程紅線禁忌清單 (Crucial Don'ts & Lessons Learned)
+## 四、核心自動化腳本清單 (Automation Scripts)
+
+- [`scripts/chassis_mesh_gatekeeper.py`](scripts/chassis_mesh_gatekeeper.py)：**整機模型幾何預檢、極短邊熔斷視覺隔離、Method/Size 定量推薦與分群劃分主控腳本。**
+- [`scripts/auto_mesh_generator.py`](scripts/auto_mesh_generator.py)：全自動特徵自適應劃分、螺栓孔 Washer 生成與 Hex-Tet 容錯自愈腳本。
+- [`scripts/cfl_mesh_tuner_fast.py`](scripts/cfl_mesh_tuner_fast.py)：極速 CFL 時間步長優化器（整合分群隔離與動態達標鎖定）。
+- [`scripts/check_mesh_quality.py`](scripts/check_mesh_quality.py)：網格品質全面診斷、分級統計與 CSV 報告輸出工具。
+
+---
+
+## 五、工程紅線禁忌清單 (Don'ts)
 
 > [!CAUTION]
-> 1. **嚴禁破壞既有抑制與遺漏還原**：
->    既有 Suppressed 幾何一律保持抑制；因臨時隔離而 Suppressed 的幾何，在流程結束或異常退出時必須完整 Unsuppress 還原。
-> 2. **嚴禁在調優階段修改頂層 `Mesh` 全域特徵公差**：
->    修改 `Mesh.DefeatureTolerance` 或 `Mesh.PinchTolerance` 會改變全域拓撲公差基準，導致所有已完成劃分的零件狀態轉為 `Obsolete Mesh`，觸發全模型 `(15%) Converting Topology...` 逆向重算與進程假死。調優時必須使用**局部 Node Merge** 或**針對特定幾何的局部 Pinch 控制項**。
-> 3. **嚴禁重複建立與刪除 `TimeStepCalc` 物件**：
->    ACT 的 `TimeStepCalc` 物件無法透過 `DataModel.Remove()` 刪除（會拋出 `Cannot delete Object.`）。模型樹中**只能維護單一物件**，重算時直接重複呼叫其計算方法即可，切勿在迴圈中反覆新增。
-> 4. **嚴禁終端強制殺死 `AnsMeshingServer.exe`**：
->    終端強制中斷網格進程會破壞 Mechanical COM 通訊管線，導致主程序拋出 `MeshProgress.htm` 釋放例外並崩潰。網格處理必須透過非同步超時機制自然排查。
-> 5. **嚴禁全裝配體盲目重劃分**：
->    已達標零件無需重新劃分。調優階段只選取目標瓶頸幾何進行微調與局部更新，維持其餘已達標零件的網格拓撲不變。
-
----
-
-## 五、專精參考手冊導引 (References Router)
-
-| 工程領域 / 任務情境 | 專精手冊 | 核心重點與關鍵規範 |
-|---|---|---|
-| **第一版 Sizing 策略與品質工作流** | [`references/sizing_strategy_and_quality_workflow.md`](references/sizing_strategy_and_quality_workflow.md) | Adaptive Sizing Resolution/Transition 取捨、Curvature/Proximity、Quality Worksheet 失敗元素追蹤、Feature Detection+Suppress。 |
-| **12 項進階控制 GUI 操作要點** | [`references/advanced_controls_gui_operations.md`](references/advanced_controls_gui_operations.md) | Contact Sizing CAD 前提、Face Meshing N+4 法則、Pinch 雙重容差限制、Match Control 旋轉軸陷阱、Structured Tetrahedral CAD 前置切割流程。 |
-| **CFL 步長調優與分群隔離** | [`references/cfl_tuning_and_group_batching.md`](references/cfl_tuning_and_group_batching.md) | Group Batching 演算法、CFL 瓶頸定位、Node Merge 縫合微小特徵。 |
-| **局部控制與墊圈結構** | [`references/local_controls_and_washers.md`](references/local_controls_and_washers.md) | 孔邊 Edge Sizing、圓孔 Washer 墊圈幾何拓撲、局部 Pinch 控制項。 |
-| **網格劃分方法與幾何修復** | [`references/mesh_methods_and_geometry_healing.md`](references/mesh_methods_and_geometry_healing.md) | MultiZone、Sweep、Tet 方法選擇依據，CAD 拓撲微小特徵修復。 |
-| **網格品質指標體系** | [`references/metrics_and_quality_standards.md`](references/metrics_and_quality_standards.md) | 雅可比比率 (Jacobian Ratio)、翹曲度、長寬比門檻標準、Parallel Deviation 與 Interface Check。 |
-| **網格收斂性驗證** | [`references/mesh_convergence_verification.md`](references/mesh_convergence_verification.md) | GCI / Richardson Extrapolation 標準流程、加密比例與安全係數取捨、常見陷阱。 |
+> 1. **劣質單元嚴禁求解**：$\text{Skewness} > 0.85$ 或 $\text{Orthogonal Quality} < 0.15$ 嚴禁放行求解，必引發矩陣病態或發散。
+> 2. **嚴禁薄壁實體單層四面體**：厚度方向僅 1 層一階四面體會引發剪切自鎖（剛度虛高 200%~500%），必須 $\ge 2 \sim 3$ 層 Sweep Hex 或改二階單元。
+> 3. **嚴禁擅自開啟全域 Defeaturing**：未經幾何掃描與使用者核准，嚴禁盲目配置全域 DefeaturingTolerance，防止關鍵定位特徵消失。
+> 4. **嚴禁忽略極短邊強行 Mesh**：發現極短邊必須熔斷暫停，隔離問題幾何並建立 Named Selection 徵詢使用者決策。
+> 5. **嚴禁擅自簡化 Unsuppressed 組件**：未經使用者要求，嚴禁將未抑制的 PSU、插卡或結構體擅自轉為質點或予以抑制。
