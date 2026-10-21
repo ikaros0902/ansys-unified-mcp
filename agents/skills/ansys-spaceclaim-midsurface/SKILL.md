@@ -1,48 +1,42 @@
 ---
 name: ansys-spaceclaim-midsurface
-description: ANSYS SpaceClaim 鈑金件中面 (Midsurface) 自動抽取與抽取後拓撲修復主控手冊。涵蓋薄板候選偵測、對向面配對、簡單/複雜模式中面抽取、間隙重疊修復、法向翻轉校正與厚度回填。適用於 server/機構衝擊分析、wireline、payment 等多產品線鈑金件殼單元前處理。
+description: ANSYS SpaceClaim 伺服器機殼鈑金件中面 (Midsurface) 自動抽取與拓撲修復主控手冊。涵蓋機殼 16 大特徵（Standoff/Boss/Dimple/Rib/Louver/Hem/Relief/EMI/SpotWeld/Snap-fit 等）分級處置、前置干擾 Fill 淨化、原生配對與「主面複製 + 法向剛體平移 Move t/2」雙軌自愈、SharePrep 容差縫合（取代脆弱 Combine）與厚度回填。
 license: Proprietary
 compatibility: ANSYS SpaceClaim 2023 R1 以上 (SpaceClaim.Api.V231~V262)，需 IronPython 2.7 ACT 腳本環境或 PyAnsys Geometry gRPC 連線。
 ---
 
-# ANSYS SpaceClaim 中面抽取與修復主控手冊
+# ANSYS SpaceClaim 伺服器機殼中面抽取與修復主控手冊
 
-本技能將鈑金薄板件的中面 (Midsurface) 抽取邏輯，從單一巢狀腳本獨立為具備完整 SOP 的技能，供結構衝擊分析 (shock)、wireline 機構件與 payment 裝置鈑金件共用。殼單元 (SHELL181) 前處理的核心前提是中面幾何乾淨無缺陷；本手冊同時規範抽取後的拓撲健檢與修復步驟。
+本技能專為伺服器機殼（1U/2U/4U Chassis、HDD Cage、Fan Wall、Air Baffle）與機構薄板件設計，建立**「16 大機殼特徵分級處置矩陣」**與**「四階段混合抽中面自愈管線（Stage A ~ D）」**，解決原生 `Midsurface` 因拔模角、非對稱肋、反折圓角（$R < t/2$）與止裂槽導致的漏抽破洞，以及硬布林 `Combine` 近共面崩潰問題。
 
 ---
 
-## 一、標準 SOP：候選偵測 → 抽取 → 健檢 → 修復 → 厚度回填
+## 一、四階段混合抽中面標準 SOP（Stage A ~ D）
 
 ```mermaid
 flowchart TD
-    A[1. 候選薄板偵測<br/>面積最大對向面配對 + 鈑金判定] --> B[2. 中面抽取<br/>簡單模式 vs 複雜模式]
-    B --> C[3. 拓撲健檢<br/>間隙/重疊/法向/非manifold]
-    C --> D{健檢通過?}
-    D -- 否 --> E[4. 間隙重疊修復<br/>Stitch / Merge Faces]
-    E --> F[5. 法向校正<br/>統一外法向]
-    D -- 是 --> F
-    F --> G[6. 厚度回填<br/>寫入 Shell Thickness 屬性]
-    G --> H[7. 隱藏來源實體 Body]
+    A["Stage A: 殼-體分離切割 (SplitBody)<br/>切離高聳 Standoff (#1)、連體鉚釘 (#12)、卡扣勾頭 (#13) 保留為 3D Solid"] --> B["Stage B: 前置干擾特徵淨化 (Pre-Fill)<br/>抹除無孔小 Dimple (#3)、反折唇邊 (#6)、止裂槽 (#7)、沉頭錐面 (#8)、<br/>EMI 彈片 (#9)、非承載卡線橋 (#10)、抽牙短翻邊 (#15)、字號浮雕 (#16)"]
+    B --> C{"Stage C: 雙軌核心抽中面<br/>Track 1: 原生簡單/複雜相切鏈模式"}
+    C -->|成功且面積守恆 >= 0.42| D["Stage D: 容差縫合與屬性映射 (SharePrep)<br/>1. 禁用 Combine，以 StitchBodies 容差縫合<br/>2. 壓薄區 (#14) / 散熱網 (#5) Imprint 分割映射<br/>3. 雙層點焊板 (#11) 保護 (t1+t2)/2 獨立間距"]
+    C -->|失敗或漏抽| E["Track 2 強韌降級:【去圓角 + 主面剛體平移 Move t/2】<br/>複製單側主壁面鏈 (含 Boss #2 / Rib #4 / Stopper #10)<br/>沿平面法向剛體 Move t/2 (面內孔洞 100% 零變形) + 轉角 Extend"]
+    E --> D
+    D --> F["隱藏來源 3D 實體，輸出 2D 中面與厚度映射字典"]
 ```
 
-### 1. 候選薄板偵測 (Candidate Thin-Body Detection)
-對每個選取的 `IDesignBody`：依面積由大到小排序所有面，取面積最大面為基準，依序尋找下一個面積相近（面積差比例 ≤ `area_difference_ratio`）且法向近似平行或反向（`|n1·n2| > 0.99`）的候選面，並量測兩面最小距離。只有距離落在 `(0, max_thickness]` 區間才視為有效厚度配對。詳細判定公式與鈑金體 (sheet-metal) 篩選準則見 [`references/midsurface_extraction_criteria.md`](references/midsurface_extraction_criteria.md)。
+### 1. Stage A：殼-體分離切割 (`SplitBody` for Hybrid Shell-Solid)
+- 針對高度遠大於板厚（$H > 2.5t$）之壓鉚螺柱 (`Standoff` #1)、連體拉釘 (#12) 與導風罩楔形卡扣勾頭 (#13)，沿基板表面切開保留為獨立 **3D Solid**，基板傷口 `Fill` 並保留中心安裝圓孔後進入抽中面。
 
-### 2. 中面抽取 (Midsurface Extraction)
-依面積差異比例動態切換兩種模式：
-- **簡單模式**（面積差 ≤ `complex_area_diff`）：呼叫 `Midsurface.AddMatchingFacePairs(f1, f2, tol, autoExtend=True)`，交由 SpaceClaim 自動尋找相切面鏈。
-- **複雜模式**（面積差 > `complex_area_diff`，用於有壓折邊/加強肋的鈑金件）：關閉自動尋找，手動迴圈加入 `GetTangentChain()` 取得的所有相切面，避免壓折邊遺失。
+### 2. Stage B：前置干擾特徵淨化 (`Pre-Fill` Defeaturing)
+- 抽取前於 3D 實體階段直接以 `Fill.Execute` 抹除不貢獻整體剛度的微特徵：無孔小凸點 (`Dimple` #3)、180° 反折死邊唇部 (`Hem` #6)、折彎角止裂槽 (`Relief` #7)、沉頭孔 $45^\circ$ 錐面 (`Countersink` #8)、邊緣 `EMI` 彈片 (#9)、非承載卡線橋 (#10)、抽牙孔短翻邊唇 (#15) 與沖壓字號浮雕 (#16)。
 
-兩種模式皆設定 `OffsetType = Middle`、`AllowNonManifold = False`、`ExtendSurfaces = True`。
+### 3. Stage C：原生配對與「主面剛體平移 `Move` $t/2$」雙軌抽取
+- **Track 1（原生簡單/複雜相切鏈模式）**：依面積差切換簡單模式或手動 `GetTangentChain()` 迴圈模式。
+- **Track 2（強韌降級工法：`Copy + Move` $t/2$）**：當原生指令拋出例外或面積守恆率 $\eta_{\text{area}} = A_{\text{mid}} / A_{\text{solid}} < 0.42$ 時，自動複製單側主壁面鏈（含承載凸台 `Boss` #2、大型加強筋 `Rib` #4、限位插舌 #10），沿各自平面法向**剛體平移 `Move` $t/2$**（面內圓孔、滑軌葫蘆孔 100% 原尺寸零變形），再延伸相交轉角。
 
-### 3. 拓撲健檢 (Post-Extraction Topology Check)
-抽取後必須核對：中面是否存在未縫合邊 (free edge)、重疊面、法向不一致、以及是否為單一 manifold 殼體。健檢準則與偵測邏輯見 [`references/midsurface_repair_patterns.md`](references/midsurface_repair_patterns.md)。
-
-### 4~5. 間隙重疊修復與法向校正
-依健檢結果執行 Stitch（縫合容差內間隙）、Merge Faces（去除重疊面）、`FlipFacePair`（抽取執行前校正配對方向）統一外法向。`UnifyNormals`/獨立 `FlipFaces` 指令物件經查證不存在，細節與替代做法見 [`references/midsurface_repair_patterns.md`](references/midsurface_repair_patterns.md)。
-
-### 6. 厚度回填 (Thickness Back-fill)
-抽取後原始實體厚度資訊會遺失，必須將量測到的 `thickness` 寫回殼體的 `Plate.Thickness` 屬性（或留供 Mechanical 端指派 Shell Thickness），確保後續殼單元剛度正確。
+### 4. Stage D：容差縫合 (`SharePrep`)、間距保護與厚度映射
+- **以 `SharePrep` 取代 `Combine`**：啟用 `StitchBodies = True`、`RemoveShortEdges = True`、`RemoveSlivers = True` 進行容差縫合與清理。
+- **雙層點焊板 (`Spot Weld / Tox` #11) 保護**：抹平 Tox 凹凸坑並記錄圓心座標；不同零件的平行貼合中面維持 $\frac{t_1+t_2}{2}$ 物理間距，**嚴禁跨件強拉縫合**。
+- **局部壓薄區 (`Coining` #14) 與密集散熱網 (`Louver/Vent` #5)**：維持單一無斷差連續中面，透過 `Imprint` 分割子面以映射局部變薄厚度 $t_2$ 或折減彈性模數 $E_{\text{eff}}$。
 
 ---
 
@@ -50,21 +44,21 @@ flowchart TD
 
 | 任務情境 | 參考手冊 / 腳本 | 核心重點 |
 |---|---|---|
-| 候選薄板判定公式、面積比例與鈑金篩選門檻 | [`references/midsurface_extraction_criteria.md`](references/midsurface_extraction_criteria.md) | 面積差異比例、主面比例、厚度上限、簡單/複雜模式切換邏輯 |
-| 間隙、重疊、法向翻轉、非 manifold 修復手法 | [`references/midsurface_repair_patterns.md`](references/midsurface_repair_patterns.md) | Stitch 容差、Merge Faces、FlipFacePair、厚度回填寫入時機 |
-| 完整可執行抽取與修復腳本 | [`scripts/midsurface_extract_and_repair.ironpy`](scripts/midsurface_extract_and_repair.ironpy) | 整合候選偵測、雙模式抽取、健檢與修復於單一 ACT/batch 腳本 |
-| ANSYS API 存在性查證 | `api_search(query, product="spaceclaim")` | 任何不確定的 SpaceClaim API 呼叫前，先用此工具查證，禁止臆測 |
+| **伺服器機殼 16 大特徵處置與內核機制** | [`references/chassis_16_features_decision_matrix.md`](references/chassis_16_features_decision_matrix.md) | 原生 API 四大死穴、Combine 失敗根因、16 大機殼特徵量化識別與 Stage A~D 處置對策 |
+| **候選薄板判定、前置過濾與面積守恆門禁** | [`references/midsurface_extraction_criteria.md`](references/midsurface_extraction_criteria.md) | 對向面配對公式、鈑金三項判定、面積守恆率 $\eta_{\text{area}}$ 觸發降級條件 |
+| **剛體平移 $t/2$ 降級工法與拓撲修復** | [`references/midsurface_repair_patterns.md`](references/midsurface_repair_patterns.md) | `Copy + Move t/2`、SharePrep 容差縫合、雙層點焊板間距保護、壓薄區厚度映射 |
+| **完整可執行四階段抽取與修復腳本** | [`scripts/midsurface_extract_and_repair.ironpy`](scripts/midsurface_extract_and_repair.ironpy) | 整合 Pre-Fill、原生雙模式、剛體平移 $t/2$ 降級與 SharePrep 修復之 ACT 腳本 |
+| **ANSYS API 存在性查證** | `api_search(query, product="spaceclaim")` | 呼叫不確定之 SpaceClaim API 前先查證，禁止臆測 |
 
 ---
 
 ## 三、絕不能做清單 (Don'ts)
 
 > [!CAUTION]
-> 1. **嚴禁跳過鈑金判定直接對所有實體抽取中面**：非薄板實體（如實心螺絲柱、鑄件凸台）強制抽取中面會產生無意義的退化幾何，必須先通過 `is_sheet_metal_body` 三項判定（厚度上限、面積相似度、主面覆蓋率）。
-> 2. **嚴禁在未做拓撲健檢前把中面殼體直接送入網格劃分**：抽取後的中面可能存在縫合間隙或法向不一致，未經健檢修復直接劃網格會導致殼單元法向混亂（影響接觸與壓力方向）或網格破洞。
-> 3. **嚴禁對複雜鈑金件（含壓折邊/加強肋）使用簡單模式抽取**：簡單模式的自動相切搜尋在壓折邊處容易遺漏薄壁延伸面，造成中面不完整；面積差超過 `complex_area_diff` 門檻時必須強制使用複雜模式（手動相切鏈迴圈）。
-> 4. **嚴禁遺漏厚度回填**：抽取中面後原始實體厚度資訊不會自動保留，若不回填 Shell Thickness，下游 Mechanical 殼單元分析會使用預設厚度（通常為 0 或 1mm），導致剛度嚴重失真。
-> 5. **嚴禁假設不確定的 API 存在**：涉及 Stitch / Merge Faces / UnifyNormals 等修復 API 若無法在既有素材或 `api_search` 中查證存在，必須在 references 中標注「待 api_search 查證」，不可憑記憶杜撰呼叫。
+> 1. **嚴禁對中面片調用硬布林 `Combine`**：面體在近共面或 T 型加強筋交界處調用 `Combine` 極易崩潰，一律改用帶容差之 `SharePrep` (`StitchBodies = True`)。
+> 2. **嚴禁抹平承載凸台 (`Boss` #2) 與大型加強筋 (`Rib/Emboss` #4)**：抹平 Boss 會破壞與 PCB 之裝配間隙 $\Delta h$；抹平加強筋會導致機殼抗彎剛度與模態頻率暴跌 40%~70%。
+> 3. **嚴禁跨零件強行 Stitch 雙層點焊貼合板 (#11)**：兩緊貼零件抽中面後相距 $\frac{t_1+t_2}{2}$，強行縫合會導致邊緣嚴重扭曲變形。
+> 4. **嚴禁遺漏厚度回填**：必須輸出 `{body_name: thickness_mm}` 映射表供下游 Mechanical 指派 Shell Thickness。
 
 ## 內嵌腳本來源
 
