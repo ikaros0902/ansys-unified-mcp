@@ -49,3 +49,51 @@ result = SharePrep.Execute(target_selection, opts, info)
 ### 4. 法向校正與來源實體隱藏
 - 於指令執行前透過 `FlipFacePair` 確保同組配對面法向一致向外。
 - 抽取與修復通過面積守恆檢驗後，呼叫 `ViewHelper.SetObjectVisibility(BodySelection.Create(body), VisibilityType.Hide, False, False)` 隱藏原始 3D 實體。
+
+
+### 5. 單側連續集合厚化偏移抽取工法 (Single-Skin Continuous Offset Pattern)
+針對具備局部壓薄、階梯斷差（如 0.125mm 沖壓下陷）或多折邊的零件，原生 Midsurface 容易遺漏或產生 47 塊分離碎片。解法為**單側整片複製並一次性厚化**：
+```python
+# 1. 複製單側完整 skin_a (包含主相切鏈、沖壓面與階梯台階面)
+snap0 = set(PartExtensions.GetAllBodies(root))
+Copy.Execute(FaceSelection.Create(list(skin_a)))
+snap1 = set(PartExtensions.GetAllBodies(root))
+copied_surf = list(snap1 - snap0)[0]
+
+# 2. 以最大面法向向內厚化半板厚 (-half_t)
+faces = list(copied_surf.Faces)
+faces.sort(key=lambda f: f.Shape.Area, reverse=True)
+dir_seed = DesignFaceExtensions.GetFaceNormal(faces[0], 0.5, 0.5)
+
+ThickenFaces.Execute(FaceSelection.Create(faces), dir_seed, -half_t_m, ThickenFaceOptions())
+snap2 = set(PartExtensions.GetAllBodies(root))
+
+# 3. 捕捉 SpaceClaim 自動留於 Active Selection 中的偏移面
+active_sel = Selection.GetActive()
+active_faces = [it for it in active_sel.Items if isinstance(it, IDesignFace)]
+
+if active_faces and len(active_faces) >= len(skin_a) * 0.8:
+    Copy.Execute(FaceSelection.Create(active_faces))
+    snap3 = set(PartExtensions.GetAllBodies(root))
+    final_midsurface = list(snap3 - snap2)[0]
+
+# 4. 刪除中間過渡生成的厚化實體
+Delete.Execute(BodySelection.Create(list((snap2 - snap0) & snap2)))
+```
+**效益**：完全避開多面片縫合（`StitchFaces`）與布林相交（`Combine`），一步直接產出單一連續、保留完整階梯特徵的中曲面。
+
+### 6. 原生中面伴生微碎屑面積自動過濾器 (Debris Elimination Pattern)
+對於散熱網孔、微小倒角（$r < t/2$）零件調用原生 `Midsurface` 時，常附帶生成數十個面積 $< 5\text{ mm}^2$ 的微小圓環、導柱片碎屑。
+```python
+new_bodies = list(snap_after - snap_before)
+if new_bodies:
+    # 依面積排序，Body[0] 為主要完整中面
+    new_bodies.sort(key=lambda b: sum(f.Shape.Area for f in b.Faces), reverse=True)
+    main_midsurface = new_bodies[0]
+    
+    # 識別並刪除小於 20 mm² 的微碎屑
+    debris = [b for b in new_bodies[1:] if sum(f.Shape.Area * 1e6 for f in b.Faces) < 20.0]
+    if debris:
+        Delete.Execute(BodySelection.Create(debris))
+```
+此模式確保輸出幾何樹中僅保留單一乾淨的主體中面，消除下游網格劃分與接觸對設定的巨大干擾。

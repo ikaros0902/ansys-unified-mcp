@@ -16,11 +16,12 @@ compatibility: ANSYS SpaceClaim 2023 R1 以上 (SpaceClaim.Api.V231~V262)，需 
 ```mermaid
 flowchart TD
     A["Stage A: 殼-體分離切割 (SplitBody)<br/>切離高聳 Standoff (#1)、連體鉚釘 (#12)、卡扣勾頭 (#13) 保留為 3D Solid"] --> B["Stage B: 前置干擾特徵淨化 (Pre-Fill)<br/>抹除無孔小 Dimple (#3)、反折唇邊 (#6)、止裂槽 (#7)、沉頭錐面 (#8)、<br/>EMI 彈片 (#9)、非承載卡線橋 (#10)、抽牙短翻邊 (#15)、字號浮雕 (#16)"]
-    B --> C{"Stage C: 雙軌核心抽中面<br/>Track 1: 原生簡單/複雜相切鏈模式"}
-    C -->|成功且面積守恆 >= 0.42| D["Stage D: 容差縫合與屬性映射 (SharePrep)<br/>1. 禁用 Combine，以 StitchBodies 容差縫合<br/>2. 壓薄區 (#14) / 散熱網 (#5) Imprint 分割映射<br/>3. 雙層點焊板 (#11) 保護 (t1+t2)/2 獨立間距"]
-    C -->|失敗或漏抽| E["Track 2 強韌降級:【去圓角 + 主面剛體平移 Move t/2】<br/>複製單側主壁面鏈 (含 Boss #2 / Rib #4 / Stopper #10)<br/>沿平面法向剛體 Move t/2 (面內孔洞 100% 零變形) + 轉角 Extend"]
-    E --> D
-    D --> F["隱藏來源 3D 實體，輸出 2D 中面與厚度映射字典"]
+    B --> C{"Stage C: 雙軌中面提取引擎 (Dual-Track Engine)<br/>全平面法向點積投票決定板厚 t"}
+    C -->|優先軌道 Track 1| T1["Track 1: 單側連續中面偏移 (Single-Skin Offset)<br/>拓撲泛洪收集全體 skin_a ➔ ThickenFaces(-t/2) 一次性厚化<br/>提取 Active Selection 面體 ➔ 1 步取得完美貼合階梯之單一連續中面"]
+    C -->|微圓角自交降級 Track 2| T2["Track 2: 原生相切鏈 + 碎屑自愈濾除 (Native Debris-Filtered)<br/>針對 r < t/2 微孔圓角零件調用原生 Midsurface<br/>面積門檻 (< 20 mm²) 一鍵清除微小導柱/孔環碎屑"]
+    T1 --> D["Stage D: 容差自愈與屬性映射<br/>1. 禁用 Combine，改採 SharePrep 容差保護<br/>2. 寫入 MidSurfaceAspect 板厚字典<br/>3. 雙層點焊板維持 (t1+t2)/2 獨立間距"]
+    T2 --> D
+    D --> F["隱藏/抑制來源 3D 實體，輸出 2D 單一完整中面"]
 ```
 
 ### 1. Stage A：殼-體分離切割 (`SplitBody` for Hybrid Shell-Solid)

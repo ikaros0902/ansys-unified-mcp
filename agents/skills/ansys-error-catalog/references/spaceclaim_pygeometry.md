@@ -252,3 +252,133 @@ for g in Window.ActiveWindow.Groups:
             ct_index += 1
 ```
 
+---
+
+## ERR-SC-016: PyGeometry `Modeler.read_existing_design()` 大裝配體 gRPC 逾時
+
+**觸發場景**: 透過 PyAnsys Geometry (`ansys.geometry.core.Modeler`) 連線至已開啟數千個幾何面（如 4~8 個整機薄板件、共 15,000+ 面）的 SpaceClaim 實例，呼叫 `m.read_existing_design()` 或透過 MCP 工具 `geometry_launch` 時。
+
+**錯誤訊息**:
+```
+grpc._channel._InactiveRpcError: <_InactiveRpcError of RPC that terminated with:
+    status = StatusCode.DEADLINE_EXCEEDED
+    details = "Deadline Exceeded"
+>
+```
+
+**根因**:
+`read_existing_design()` 會嘗試將 SpaceClaim 記憶體中全部實體拓撲樹（Body、Face、Edge、BoxUV 等）進行完全序列化並透過 gRPC 串流拉回 Python 用戶端。在大型工業裝配體下，序列化與資料傳輸時間極易超過預設的 3 分鐘逾時門檻。
+
+**解決方案**:
+對大型模型進行前處理或中面運算時，**嚴禁呼叫 `read_existing_design()`**。改採「指令下發模式」：將 IronPython 腳本寫入暫存檔，直接呼叫 `modeler.run_script_file(script_path, import_design=False)`，在 SpaceClaim 本機記憶體內部完成計算並僅回傳精簡字典或文字摘要：
+```python
+from ansys.geometry.core import Modeler
+
+m = Modeler(host="127.0.0.1", port=50051, transport_mode="insecure", timeout=30)
+# 關鍵：import_design=False 防止同步重型拓撲樹
+vals, _ = m.run_script_file("my_processing_script.py", import_design=False)
+```
+
+---
+
+## ERR-SC-017: SpaceClaim `Direction` 結構體無 `.Dot()` 方法（法向篩選靜默穿透）
+
+**觸發場景**: 在 SpaceClaim 原生腳本中使用 `DesignFaceExtensions.GetFaceNormal(face, 0.5, 0.5)` 計算對向面夾角，並嘗試呼叫 `.Dot()` 方法。
+
+**錯誤訊息**:
+```
+AttributeError: 'Direction' object has no attribute 'Dot'
+```
+
+**根因**:
+`GetFaceNormal()` 回傳的是 .NET 結構體 `SpaceClaim.Api.V***.Direction`，該型別並未實作 `.Dot()` 方法。若開發者將其置於 `try...except` 內且 fallback 為 `return True`：
+```python
+# 典型反模式 (Anti-pattern)：
+try:
+    return abs(first_normal.Dot(second_normal)) > 0.99
+except:
+    return True # 異常被靜默吞掉，法向檢查 100% 遭到穿透！
+```
+將導致任意同向、垂直或斜向表面均被判定為「平行對向面」，引起嚴重的幾何配對誤判。
+
+**解決方案**:
+強制使用分量展開計算向量純量積（Dot Product）：
+```python
+def are_normals_opposed(n1, n2):
+    # n1, n2 為 Direction 或含有 X, Y, Z 的物件
+    dot = n1.X * n2.X + n1.Y * n2.Y + n1.Z * n2.Z
+    return dot <= -0.999  # 嚴格要求反向平行（180度）
+```
+
+---
+
+## ERR-SC-018: `face.Shape.Geometry.Frame.DirZ` 幾何參數法向與有界拓撲向外法向反向陷阱
+
+**觸發場景**: 嘗試透過底層幾何幀 `face.Shape.Geometry.Frame.DirZ` 取得平面的外法向向量，藉此計算兩平面間距與厚度。
+
+**現象**:
+計算出的對向距離出現負值或異常偏差；在同一薄板零件中，不同平面計票結果嚴重衝突。
+
+**根因**:
+`face.Shape.Geometry.Frame.DirZ` 代表的是該平面底層**未修剪無界參數曲面 (Untrimmed Parametric Surface)** 的局部坐標系 Z 軸，**並不保證指向有界幾何體的外部**。在具備複雜孔洞、折彎或倒角的實際鈑金零件上，**高達 80%~90% 的平面其 `Frame.DirZ` 與拓撲真實向外法向剛好相反（180 度翻轉）**。
+
+**解決方案**:
+嚴禁使用幾何幀的 `Frame.DirZ`。必須永遠使用帶有拓撲向外指向的 API：
+```python
+# 正確：取得拓撲有界面的向外法向向量
+outward_normal = DesignFaceExtensions.GetFaceNormal(face, 0.5, 0.5)
+```
+
+---
+
+## ERR-SC-019: `ThickenFaces` 偏移面提取機制與微圓角特徵 ($R < t/2$) 幾何自交
+
+**觸發場景**: 為了抽取中曲面，將單側連續面集 `skin_a` 一次性複製為表面片體後，呼叫 `ThickenFaces.Execute(faces, dir_n, MM(-t/2), ThickenFaceOptions())` 進行法向偏移厚化。
+
+**現象**:
+- 對一般折彎鈑金件（折彎圓角 $R \ge t/2$），執行成功並生成封閉暫存實體（`Shape.IsClosed == True`），偏移後的完美中面被放置於 `Selection.GetActive()`。
+- 對於表面包含微小圓角、沖壓導向斜錐面或小孔倒角（如散熱沖孔圓角 $R = 0.05\text{ mm} < t/2 = 0.5\text{ mm}$）的零件，`ThickenFaces` 回傳 `Success=True` 但未產生實體，`Selection.GetActive()` 亦為空。
+
+**根因**:
+當厚化偏移距離超過圓柱面或錐面的曲率半徑時（$\Delta d > R$），幾何內側會產生自相交（Self-intersection），SpaceClaim 內核會中止向內實體化以避免無效幾何。
+
+**解決方案**:
+採用**雙軌中面提取演算法 (Dual-Track Engine)**：
+1. **Track 1（優先單側厚化提取）**：先嘗試執行 `ThickenFaces(-t/2)`。若 `Selection.GetActive()` 包含大於 80% 的原面數，直接 `Copy.Execute` 提取即獲得 100% 連續無縫單一中面（完美保留所有沖壓階梯與斷差，免除脆弱的布林 Combine）。
+2. **Track 2（平滑降級與碎屑自愈）**：若因微特徵自交導致 Track 1 未產出有效面體，自動平滑降級至原生 `Midsurface` 命令。原生指令完成後，自動依表面積過濾清除 $< 20\text{ mm}^2$ 的數十個微小導柱/孔環碎屑面體，保留主要中面。
+
+---
+
+## ERR-SC-020: ACT Wizard 與 IronPython 獨立 Scope 遺失 `GetRootPart()` 與 `MM()` 全域識別碼
+
+**觸發場景**: 腳本在 SpaceClaim 互動式 Script 視窗中執行完全正常，但移植為 ACT Wizard Step Callback（`onupdateStep`）或透過 `execfile()` / 外部模組載入時，拋出 NameError。
+
+**錯誤訊息**:
+```
+NameError: global name 'GetRootPart' is not defined
+NameError: global name 'MM' is not defined
+```
+
+**根因**:
+`GetRootPart()` 與 `MM()` 是 SpaceClaim 內嵌終端機在全域 scope 中注入的便利巨集函式（Convenience Macro Functions）。在 ACT 外掛回呼或獨立模組命名空間中，這些符號並未自動宣告。
+
+**解決方案**:
+建立嚴謹的防禦性取得器（Defensive Getters）：
+```python
+def _get_root_part(api):
+    try:
+        return GetRootPart()
+    except:
+        try:
+            # 透過 .NET API 獲取活動文件的主部件
+            return api.Window.ActiveWindow.Document.MainPart
+        except:
+            return None
+
+def _to_meters(val):
+    try:
+        return MM(val)
+    except:
+        return float(val) * 0.001
+```
+

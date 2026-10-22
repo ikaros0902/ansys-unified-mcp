@@ -72,3 +72,28 @@
      $$\eta_{\text{area}} = \frac{A_{\text{mid}}}{A_{\text{solid}}}$$
    - 對於正常薄板，$A_{\text{solid}} \approx 2 A_{\text{mid}} + A_{\text{side\_edges}}$，故理論比值 $\eta_{\text{area}} \in [0.45, 0.50]$。
    - 若原生 `Midsurface.Execute()` 拋出例外，或 **$\eta_{\text{area}} < 0.42$（代表超過 15% 的折彎牆或加強筋被漏抽開天窗）**，系統自動回退並啟動**「複製單側主壁面鏈 + 沿各自平面法向剛體 `Move` 平移 $t/2$ + `SharePrep` 容差延伸縫合」**，確保中面 100% 完整不缺片。
+
+
+---
+
+## 六、全平面法向點積投票與微特徵半徑分流準則 (Multi-Plane Voting & Branching)
+
+### 1. 全平面厚度投票法（取代單一面猜測）
+在伺服器上蓋等具備沖壓壓薄（如 0.125mm 斷差）之複雜零件中，單純依賴面積最大面會造成局部階梯誤判。
+演算法應收集所有面積 $> 1.0	ext{ mm}^2$ 之平面，針對所有反向平行對（$n_1 \cdot n_2 \le -0.999$）量測投影距離：
+$$	ext{dist} = \left| (o_2 - o_1) \cdot n_1 ight|$$
+對標準厚度集合（$t \in [0.3, 3.0]	ext{ mm}$，步長 $0.1	ext{ mm}$，容差 $\pm 0.02	ext{ mm}$）以 $\min(	ext{Area}_1, 	ext{Area}_2)$ 權重累加投票，以得票最高者作為全件唯一基準板厚 $t_{	ext{best}}$。
+
+### 2. 法向計算強制底線
+- **禁止使用 `geom.Frame.DirZ`**：在有孔鈑金中高達 89% 反向。
+- **禁止使用 `normal.Dot()`**：`SpaceClaim.Api.Direction` 無此方法。
+- **強制分量展開**：
+  $$ec{n}_1 \cdot ec{n}_2 = n_{1x} n_{2x} + n_{1y} n_{2y} + n_{1z} n_{2z} \le -0.999$$
+
+### 3. 微特徵半徑分流準則（Track 1 vs Track 2）
+若主相切鏈面集包含微小圓角或孔環圓柱面：
+$$r_{\min} = \min_{f \in 	ext{ug1, Cylinder}} \left( 	ext{Radius}(f) ight)$$
+- **Case A: $r_{\min} \ge 0.9 \cdot (t / 2)$**：
+  幾何曲率大於厚化半徑，**啟用 Track 1（單側連續厚化偏移 Single-Skin Offset）**。1 步提取活動面，完整保留沖壓斷差且絕不破片。
+- **Case B: $r_{\min} < 0.9 \cdot (t / 2)$**：
+  厚化會引發向內自相交中斷，**啟用 Track 2（原生 Midsurface + 碎屑自愈濾除 Native Debris-Filtered）**。保留主體 Body 0，自動清除面積 $< 20	ext{ mm}^2$ 之微小導柱/孔環附帶碎屑。
