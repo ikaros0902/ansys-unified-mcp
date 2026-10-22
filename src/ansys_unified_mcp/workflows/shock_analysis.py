@@ -111,6 +111,7 @@ def run_shock_analysis(
         "density_kg_m3": density_kg_m3,
         "tag": tag,
         "solver": "ANSYS Mechanical",
+        "result_source": "estimated",
     }
 
     # 3. 定義沙盒執行邏輯 (Runner Function)
@@ -169,19 +170,18 @@ def run_shock_analysis(
             safety_factor=safety_factor,
             max_total_deformation_mm=max_disp,
             peak_acceleration_g=peak_acceleration_g,
-            final_convergence_residual=1.25e-4,
+            final_convergence_residual=None,
         )
 
-        verdict = VerdictEnum.PASS if safety_factor >= 1.2 else VerdictEnum.FAIL
-        failure_reasons = []
-        if safety_factor < 1.2:
-            failure_reasons.append(f"動態衝擊安全係數不足: SF={safety_factor:.2f} < 1.2 (應力峰值={max_stress} MPa)")
+        verdict = VerdictEnum.INCONCLUSIVE
+        failure_reasons = ["輸出為估算結果；尚未執行 Mechanical 衝擊求解。"]
 
         # 儲存 summary.json
         summary = sandbox.get_summary()
         if summary:
             summary.metrics = metrics
             summary.verdict = verdict
+            summary.execution.result_source = "estimated"
             summary.failure_reasons.extend(failure_reasons)
             summary.artifacts.update({
                 "stress_contour": str(stress_png.relative_to(sandbox.sandbox_dir)),

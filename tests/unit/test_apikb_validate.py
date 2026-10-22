@@ -43,3 +43,15 @@ val = eqv.Maximum.Val
     val_err = next((e for e in res["errors"] if e["attribute"] == "Val"), None)
     if val_err:
         assert "Value" in val_err["suggestions"]
+
+
+def test_unknown_requested_release_is_coverage_unavailable():
+    result = validate_script(
+        "model = ExtAPI.DataModel.Project.Model\nmodel.Mesh.GenerateMesh()",
+        "mechanical",
+        release="release-that-is-not-indexed",
+    )
+    assert result["verification_status"] == "coverage_unavailable"
+    assert result["coverage_available"] is False
+    assert result["valid"] is None
+    assert result["errors"] == []

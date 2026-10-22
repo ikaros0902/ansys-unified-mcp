@@ -101,6 +101,7 @@ def run_thermal_warpage(
         "youngs_modulus_pa": youngs_modulus_pa,
         "tag": tag,
         "solver": "ANSYS Mechanical",
+        "result_source": "estimated",
     }
 
     # 3. 定義沙盒執行邏輯
@@ -129,15 +130,15 @@ def run_thermal_warpage(
         max_thermal_stress = round(youngs_modulus_pa * secant_cte * delta_t * 1e-6 * 0.35, 2)
         safety_factor = round(material_yield_strength_mpa / max_thermal_stress, 2) if max_thermal_stress > 0 else 999.0
 
-        # 產生日誌
-        solve_out = sandbox.workspace_dir / "solve.out"
-        with open(solve_out, "w", encoding="utf-8") as f:
-            f.write("ANSYS Mechanical Thermal-Structural Warpage Solution\n")
+        # 估算資料不得放入 solver log 或標示為已收斂。
+        estimate_file = sandbox.workspace_dir / "estimate.txt"
+        with open(estimate_file, "w", encoding="utf-8") as f:
+            f.write("RESULT SOURCE: ESTIMATED (no ANSYS solver was run)\n")
             f.write(f"Reference Temperature: {temperature_ref_c} C, Operating: {temperature_operating_c} C, Delta-T: {delta_t} C\n")
             f.write(f"Boundary Condition: {support_type} Isostatic Restraints\n")
             f.write(f"Max Z-Warpage: {max_warpage_um:.2f} um\n")
             f.write(f"Max Equivalent Thermal Stress: {max_thermal_stress:.2f} MPa\n")
-            f.write("SOLUTION IS CONVERGED\n")
+            f.write("No solver convergence data is available.\n")
 
         # 輸出 1920x1080 白底 Z-Warpage 雲圖
         images_dir = sandbox.artifacts_dir / "images"
@@ -172,26 +173,22 @@ def run_thermal_warpage(
             max_equivalent_stress_mpa=max_thermal_stress,
             material_yield_strength_mpa=material_yield_strength_mpa,
             safety_factor=safety_factor,
-            final_convergence_residual=2.4e-5,
         )
 
-        # JEITA / JEDEC 晶片翹曲標準限值通常為 150~200 um
-        verdict = VerdictEnum.PASS if max_warpage_um <= 200.0 and safety_factor >= 1.2 else VerdictEnum.FAIL
-        failure_reasons = []
-        if max_warpage_um > 200.0:
-            failure_reasons.append(f"Z 軸翹曲位移超標: {max_warpage_um:.2f} um > 200.00 um (JEITA/JEDEC 限值)")
-        if safety_factor < 1.2:
-            failure_reasons.append(f"熱應力安全係數不足: SF={safety_factor:.2f} < 1.2")
+        verdict = VerdictEnum.INCONCLUSIVE
+        failure_reasons = ["目前輸出為估算值；尚未執行 ANSYS 求解，不能作為工程驗收結果。"]
 
         summary = sandbox.get_summary()
         if summary:
             summary.metrics = metrics
             summary.verdict = verdict
+            summary.execution.result_source = "estimated"
             summary.failure_reasons.extend(failure_reasons)
             summary.artifacts.update({
                 "warpage_contour": str(warpage_png.relative_to(sandbox.sandbox_dir)),
                 "stress_contour": str(stress_png.relative_to(sandbox.sandbox_dir)),
                 "workbench_link_wbjn": str(wbjn_file.relative_to(sandbox.sandbox_dir)),
+                "estimate": str(estimate_file.relative_to(sandbox.sandbox_dir)),
             })
             sandbox.save_summary(summary)
 

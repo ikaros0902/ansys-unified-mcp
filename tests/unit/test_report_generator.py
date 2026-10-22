@@ -244,6 +244,8 @@ class TestOverviewHtmlGeneration:
                 duration_seconds=135.0,
                 solver_name="ANSYS Mechanical",
                 solver_version="2026 R1",
+                result_source="solver_result",
+                result_evidence={"verified": True, "verification_level": "product_reader"},
                 pid=54321,
                 exit_code=0 if verdict == VerdictEnum.PASS else 1,
                 circuit_breaker_triggered=is_breaker,
@@ -396,6 +398,8 @@ class TestDialogSummaryGeneration:
                 created_at="2026-09-06T09:00:00Z",
                 duration_seconds=42.5,
                 solver_name="LS-DYNA",
+                result_source="solver_result",
+                result_evidence={"verified": True, "verification_level": "product_reader"},
             ),
             artifacts={
                 "overview_html": "F:/jobs/overview.html",
@@ -428,6 +432,26 @@ class TestDialogSummaryGeneration:
         saved_md = sandbox.artifacts_dir / "report_summary.md"
         assert saved_md.exists(), "Markdown 摘要應儲存至 artifacts/report_summary.md"
         assert saved_md.read_text(encoding="utf-8") == md_text
+
+    def test_unverified_source_cannot_be_reported_as_pass(self, tmp_path: Path) -> None:
+        manager = JobManager(base_jobs_dir=tmp_path / "jobs")
+        sandbox = manager.create_job("shock_analysis", tag="estimated")
+        summary = SimulationSummary(
+            job_id=sandbox.job_id,
+            workflow_type="shock_analysis",
+            status=JobStatusEnum.COMPLETED,
+            verdict=VerdictEnum.PASS,
+            execution=ExecutionMetadata(
+                created_at="2026-09-06T09:00:00Z",
+                solver_name="LS-DYNA",
+                result_source="estimated",
+            ),
+        )
+
+        markdown = ReportGenerator().generate_dialog_summary(summary, sandbox)
+
+        assert "**INCONCLUSIVE**" in markdown
+        assert "**PASS**" not in markdown
 
     def test_generate_dialog_summary_aborted_with_prescription(self) -> None:
         """驗證早期熔斷 (ABORTED) 之對話摘要包含警告 Emoji 與自愈處方箋段落。"""

@@ -473,7 +473,7 @@ class TestSentinelQueue:
             watchdog.stop()
 
     def test_job_execution_lifecycle_with_runner_fn(self, tmp_path: Path) -> None:
-        """驗證透過 runner_fn 非同步運行作業，狀態由 QUEUED -> RUNNING -> SOLVED。"""
+        """合成 runner 的成功結束應是 COMPLETED/INCONCLUSIVE，而非 solver 成功。"""
         manager = JobManager(base_jobs_dir=tmp_path / "jobs")
         watchdog = WatchdogDaemon(poll_interval_seconds=0.05)
         queue = SentinelQueue(job_manager=manager, watchdog=watchdog)
@@ -490,7 +490,7 @@ class TestSentinelQueue:
         try:
             resp = queue.submit_simulation_job(
                 workflow_type="thermal_warpage",
-                config={"ref_temp": 25.0},
+                config={"ref_temp": 25.0, "result_source": "synthetic"},
                 tag="cycle_test",
                 runner_fn=mock_runner,
             )
@@ -500,12 +500,12 @@ class TestSentinelQueue:
             # 等待非同步任務結束
             for _ in range(40):
                 status_resp = queue.get_simulation_status(job_id)
-                if status_resp.get("status") == "SOLVED":
+                if status_resp.get("status") == "COMPLETED":
                     break
                 time.sleep(0.05)
 
             final_status = queue.get_simulation_status(job_id)
-            assert final_status["status"] == "SOLVED"
+            assert final_status["status"] == "COMPLETED"
             assert final_status["progress_pct"] == 100.0
 
             # 驗證 summary.json
@@ -513,9 +513,85 @@ class TestSentinelQueue:
             assert sandbox is not None
             summary = sandbox.get_summary()
             assert summary is not None
-            assert summary.status == JobStatusEnum.SOLVED
-            assert summary.verdict == VerdictEnum.PASS
+            assert summary.status == JobStatusEnum.COMPLETED
+            assert summary.verdict == VerdictEnum.INCONCLUSIVE
+            assert summary.execution.result_source == "synthetic"
 
+        finally:
+            watchdog.stop()
+
+    def test_estimated_runner_cannot_be_reported_as_solver_success(self, tmp_path: Path) -> None:
+        """零退出碼只代表估算流程結束，不可升格為 SOLVED/PASS。"""
+        manager = JobManager(base_jobs_dir=tmp_path / "jobs")
+        watchdog = WatchdogDaemon(poll_interval_seconds=0.05)
+        queue = SentinelQueue(job_manager=manager, watchdog=watchdog)
+
+        def estimate_runner(sandbox: JobSandbox, config: Dict[str, Any]) -> None:
+            (sandbox.workspace_dir / "estimate.txt").write_text(
+                "RESULT SOURCE: ESTIMATED\n", encoding="utf-8"
+            )
+
+        try:
+            submitted = queue.submit_simulation_job(
+                workflow_type="thermal_warpage",
+                config={"result_source": "estimated"},
+                tag="estimated_test",
+                runner_fn=estimate_runner,
+            )
+            assert submitted["ok"]
+            for _ in range(40):
+                status = queue.get_simulation_status(submitted["job_id"])
+                if status["status"] == "COMPLETED":
+                    break
+                time.sleep(0.05)
+
+            sandbox = manager.get_job(submitted["job_id"])
+            assert sandbox is not None
+            summary = sandbox.get_summary()
+            assert summary is not None
+            assert summary.status == JobStatusEnum.COMPLETED
+            assert summary.verdict == VerdictEnum.INCONCLUSIVE
+            assert summary.execution.result_source == "estimated"
+            assert (sandbox.workspace_dir / "estimate.txt").is_file()
+        finally:
+            watchdog.stop()
+
+    def test_generic_artifact_scan_stays_partial_evidence(self, tmp_path: Path) -> None:
+        """通用文字與副檔名掃描不得冒充產品專屬 solver 結果讀回。"""
+        manager = JobManager(base_jobs_dir=tmp_path / "jobs")
+        watchdog = WatchdogDaemon(poll_interval_seconds=0.05)
+        queue = SentinelQueue(job_manager=manager, watchdog=watchdog)
+
+        def solver_runner(sandbox: JobSandbox, config: Dict[str, Any]) -> None:
+            (sandbox.workspace_dir / "solve.out").write_text(
+                "Mechanical Solver Run Completed\n", encoding="utf-8"
+            )
+            (sandbox.workspace_dir / "model.rst").write_bytes(b"solver result")
+
+        try:
+            submitted = queue.submit_simulation_job(
+                workflow_type="static_structural",
+                config={"result_source": "solver_result"},
+                tag="evidence_test",
+                runner_fn=solver_runner,
+            )
+            assert submitted["ok"]
+            for _ in range(40):
+                status = queue.get_simulation_status(submitted["job_id"])
+                if status["status"] in {"SOLVED", "COMPLETED", "FAILED"}:
+                    break
+                time.sleep(0.05)
+
+            sandbox = manager.get_job(submitted["job_id"])
+            assert sandbox is not None
+            summary = sandbox.get_summary()
+            assert summary is not None
+            assert summary.status == JobStatusEnum.COMPLETED
+            assert summary.execution.result_source == "unverified"
+            assert summary.execution.result_evidence["verified"] is False
+            assert summary.execution.result_evidence["verification_level"] == "partial"
+            assert summary.execution.result_evidence["result_files"] == ["workspace/model.rst"]
+            assert summary.verdict == VerdictEnum.INCONCLUSIVE
         finally:
             watchdog.stop()
 

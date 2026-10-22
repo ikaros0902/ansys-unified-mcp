@@ -22,6 +22,7 @@ class JobStatusEnum(str, Enum):
     QUEUED = "QUEUED"
     RUNNING = "RUNNING"
     SOLVED = "SOLVED"
+    COMPLETED = "COMPLETED"
     FAILED = "FAILED"
     ABORTED = "ABORTED"
 
@@ -117,6 +118,14 @@ class ExecutionMetadata(BaseModel):
     duration_seconds: Optional[float] = Field(default=None, description="執行總耗時 (秒)")
     solver_name: str = Field(description="求解器名稱 (MAPDL, LS-DYNA, Fluent, optiSLang)")
     solver_version: str = Field(default="2026 R1", description="求解器版本")
+    result_source: Optional[str] = Field(
+        default=None,
+        description="結果來源：solver_result、synthetic、estimated 或 unverified",
+    )
+    result_evidence: dict[str, Any] = Field(
+        default_factory=dict,
+        description="已檢查的求解狀態日誌與結果檔證據；不可由來源標籤代替",
+    )
     pid: Optional[int] = Field(default=None, description="底層求解進程 PID")
     exit_code: Optional[int] = Field(default=None, description="進程結束返回碼")
     circuit_breaker_triggered: bool = Field(default=False, description="是否觸發早期發散熔斷")

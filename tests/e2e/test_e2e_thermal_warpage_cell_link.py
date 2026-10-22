@@ -11,8 +11,8 @@
    - WorkbenchCellLinkEngine 生成原生 .wbjn 腳本，包含 Solution -> Setup 的 TransferData 原生單元鏈結
    - 求解完成後提取最大等效應力與 Z 軸翹曲位移
    - 三位一體標準產出完整生成：
-     * artifacts/summary.json: verdict=PASS, status=SOLVED
-     * artifacts/overview.html: 自包含免外網連線，零 CDN 依賴，包含綠色 PASS 徽章與內嵌圖表
+     * artifacts/summary.json: estimated 輸出須為 verdict=INCONCLUSIVE, status=COMPLETED
+     * artifacts/overview.html: 自包含免外網連線，明確標記結果來源
      * artifacts/report_summary.md: 高資訊密度 Markdown 對話引用摘要
      * artifacts/images/: 包含白底高解析度等效應力雲圖與翹曲雲圖 PNG
 4. 反向防禦檢驗：CTE 為零或缺失 T_ref 時立即硬性阻斷
@@ -82,12 +82,12 @@ class TestE2EThermalWarpageCellLinkWorkflow:
         queue = get_sentinel_queue()
         for _ in range(40):
             st = queue.get_simulation_status(job_id)
-            if st.get("status") in ["SOLVED", "FAILED", "ABORTED"]:
+            if st.get("status") in ["SOLVED", "COMPLETED", "FAILED", "ABORTED"]:
                 break
             time.sleep(0.05)
 
         st_final = queue.get_simulation_status(job_id)
-        assert st_final["status"] == "SOLVED", f"作業未成功完成: {st_final}"
+        assert st_final["status"] == "COMPLETED", f"估算工作未正常結束: {st_final}"
 
         # 取得沙盒並檢驗交付物
         manager = queue.job_manager
@@ -103,15 +103,18 @@ class TestE2EThermalWarpageCellLinkWorkflow:
         assert 'GetCell(Name="Setup")' in wbjn_text
         assert "thermal_sol.TransferData(TargetCell=struct_setup)" in wbjn_text
 
-        # 2. 檢驗 summary.json 符合 Pydantic 模型與 PASS 判定
+        # 2. 驗證估算被保留為未確認，絕不偽裝成真實求解。
         summary = sandbox.get_summary()
         assert summary is not None
-        assert summary.status == JobStatusEnum.SOLVED
-        assert summary.verdict == VerdictEnum.PASS
+        assert summary.status == JobStatusEnum.COMPLETED
+        assert summary.verdict == VerdictEnum.INCONCLUSIVE
+        assert summary.execution.result_source == "estimated"
+        assert not (sandbox.workspace_dir / "solve.out").exists()
+        assert (sandbox.workspace_dir / "estimate.txt").exists()
         assert summary.metrics.max_warpage_z_um is not None
         assert summary.metrics.max_warpage_z_um > 0.0
         assert summary.metrics.max_equivalent_stress_mpa is not None
-        assert summary.metrics.safety_factor is not None and summary.metrics.safety_factor >= 1.2
+        assert summary.metrics.safety_factor is not None
 
         # 3. 檢驗 overview.html 自包含免聯網互動式儀表板
         html_file = sandbox.artifacts_dir / "overview.html"
@@ -119,14 +122,16 @@ class TestE2EThermalWarpageCellLinkWorkflow:
         html_content = html_file.read_text(encoding="utf-8")
         # 零 CDN 斷言
         assert "http://" not in html_content and "https://" not in html_content
-        assert "PASS" in html_content
-        assert "verdict-pass" in html_content or "badge-verdict" in html_content
+        assert "INCONCLUSIVE" in html_content
+        assert "estimated" in html_content
+        assert "NOT VERIFIED" in html_content
 
         # 4. 檢驗 report_summary.md 高資訊密度對話摘要
         summary_md = sandbox.artifacts_dir / "report_summary.md"
         assert summary_md.exists(), "必須產出 report_summary.md"
         md_text = summary_md.read_text(encoding="utf-8")
-        assert "熱翹曲" in md_text or "Warpage" in md_text or "PASS" in md_text
+        assert "estimated" in md_text
+        assert "INCONCLUSIVE" in md_text
 
         # 5. 檢驗白底高清雲圖 PNG (應力與 Z 翹曲)
         warpage_png = sandbox.images_dir / "warpage_z.png"

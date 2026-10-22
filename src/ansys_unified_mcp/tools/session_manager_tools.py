@@ -21,13 +21,97 @@ processors/cwd/ip/password/project_path/ini_timeout/key/shutdown），若展開
 
 from __future__ import annotations
 
+import importlib.metadata
+import importlib
+import os
+from pathlib import Path
 from typing import Any
 
 from ansys_unified_mcp.shared import mcp, as_envelope as _envelope, _VISIBILITY_STATE_KEY
 from ansys_unified_mcp.connection.session_manager import session_manager
 
 
-@mcp.tool()
+@mcp.tool(annotations={"readOnlyHint": True, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False})
+def ans_session_diagnose(product: str) -> dict:
+    """唯讀檢查產品安裝、SDK 與已登錄 session；不啟動產品或修改模型。
+
+    transport、script、model 與 license 目前僅回報為未知，因為僅憑 session
+    登錄或安裝資訊不能證明通訊、模型狀態、腳本執行或授權有效。
+    """
+    normalized = product.strip().lower()
+    products = {
+        "mechanical": ("ANSYS_MECHANICAL", Path("aisol") / "bin" / "winx64" / "AnsysWBU.exe", "ansys-mechanical-core", "ansys.mechanical.core"),
+        "geometry": ("ANSYS_SPACECLAIM_EXE", Path("scdm") / "SpaceClaim.exe", "ansys-geometry-core", "ansys.geometry.core"),
+        "fluent": ("ANSYS_FLUENT", Path("fluent") / "ntbin" / "win64" / "fluent.exe", "ansys-fluent-core", "ansys.fluent.core"),
+        "optislang": ("ANSYS_OPTISLANG_EXE", Path("optiSLang") / "optislang.exe", "ansys-optislang-core", "ansys.optislang.core"),
+    }
+    spec = products.get(normalized)
+    if spec is None:
+        return _envelope({"ok": False, "error": f"不支援的產品: {normalized}"})
+
+    exe_env, exe_suffix, sdk_name, sdk_module = spec
+    configured_exe = os.environ.get(exe_env)
+    root_value = os.environ.get("ANSYS_ROOT")
+    version = os.environ.get("ANSYS_VERSION", "").strip()
+    root = Path(root_value) if root_value else None
+    if root and version and root.name.lower() != f"v{version}".lower():
+        root = root / f"v{version}"
+    executable = Path(configured_exe) if configured_exe else (root / exe_suffix if root else None)
+    install_check = {
+        "status": "available" if executable and executable.is_file() else "missing_or_unconfigured",
+        "path": str(executable) if executable else None,
+        "selected_release": version or None,
+    }
+
+    import_error = None
+    try:
+        sdk_version = importlib.metadata.version(sdk_name)
+        distribution_status = "installed"
+        try:
+            importlib.import_module(sdk_module)
+            import_status = "imported"
+        except Exception as exc:
+            import_status = "failed"
+            import_error = f"{type(exc).__name__}: {exc}"
+    except importlib.metadata.PackageNotFoundError:
+        distribution_status = "missing"
+        sdk_version = None
+        import_status = "not_attempted"
+        import_error = None
+    sdk_check = {
+        "package": sdk_name,
+        "module": sdk_module,
+        "distribution_status": distribution_status,
+        "import_status": import_status,
+        "version": sdk_version,
+        "compatibility": "unknown",
+    }
+    if import_error:
+        sdk_check["import_error"] = import_error
+
+    try:
+        registered = session_manager.status(normalized)
+    except Exception as exc:
+        registered = {"error": f"{type(exc).__name__}: {exc}"}
+
+    return _envelope(
+        {
+            "ok": True,
+            "product": normalized,
+            "checks": {
+                "installation": install_check,
+                "sdk": sdk_check,
+                "registered_session": registered,
+                "transport": {"status": "unknown", "reason": "未執行連線探測"},
+                "script": {"status": "unknown", "reason": "診斷不執行宿主腳本"},
+                "model": {"status": "unknown", "reason": "未讀取活動文件或分析狀態"},
+                "license": {"status": "unknown", "reason": "未啟動求解器或查詢授權"},
+            },
+        }
+    )
+
+
+@mcp.tool(annotations={"readOnlyHint": False, "destructiveHint": False, "idempotentHint": True, "openWorldHint": True})
 def ans_session_connect(product: str, options: dict[str, Any] | None = None) -> dict:
     """連線至既有的 ANSYS 實例（跨產品統一入口）。
 
@@ -46,7 +130,7 @@ def ans_session_connect(product: str, options: dict[str, Any] | None = None) -> 
     return _envelope(result)
 
 
-@mcp.tool()
+@mcp.tool(annotations={"readOnlyHint": False, "destructiveHint": False, "idempotentHint": False, "openWorldHint": True})
 def ans_session_launch(product: str, options: dict[str, Any] | None = None) -> dict:
     """啟動新的 ANSYS 實例（跨產品統一入口）。
 
@@ -61,7 +145,7 @@ def ans_session_launch(product: str, options: dict[str, Any] | None = None) -> d
     return _envelope(result)
 
 
-@mcp.tool()
+@mcp.tool(annotations={"readOnlyHint": True, "destructiveHint": False, "idempotentHint": True, "openWorldHint": True})
 def ans_session_status(product: str, options: dict[str, Any] | None = None) -> dict:
     """查詢指定產品目前的連線狀態（跨產品統一入口）。
 
@@ -73,7 +157,7 @@ def ans_session_status(product: str, options: dict[str, Any] | None = None) -> d
     return _envelope(result)
 
 
-@mcp.tool()
+@mcp.tool(annotations={"readOnlyHint": False, "destructiveHint": False, "idempotentHint": True, "openWorldHint": True})
 def ans_session_disconnect(product: str, options: dict[str, Any] | None = None) -> dict:
     """中斷指定產品的連線（跨產品統一入口）。
 
@@ -97,7 +181,7 @@ _VALID_VISIBILITY_PRODUCTS = frozenset(
 )
 
 
-@mcp.tool()
+@mcp.tool(annotations={"readOnlyHint": False, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False})
 async def ans_session_set_workspace(products: list[str] | None = None) -> dict:
     """設定當前 session 的可見工具子集 (per-session 工具可見性，方案 D)。
 

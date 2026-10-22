@@ -127,6 +127,7 @@ def run_drop_test(
         "mesh_min_size_mm": mesh_min_size_mm,
         "tag": tag,
         "solver": "LS-DYNA",
+        "result_source": "estimated",
     }
 
     # 4. 定義沙盒執行邏輯 (Runner Function)

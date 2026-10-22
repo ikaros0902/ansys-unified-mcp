@@ -43,32 +43,66 @@ def extract_accessed_attributes(code: str) -> set[str]:
 
     return accessed
 
-def validate_script(code: str, product: str) -> dict:
-    """校驗腳本中引用的 API 屬性與方法是否存在於指定產品的知識庫中"""
+def validate_script(code: str, product: str, release: Optional[str] = None,
+                    interface: Optional[str] = None) -> dict:
+    """以 API 名稱清單做部分靜態校驗，不驗證型別、簽名或執行行為。"""
+    base = {"validation_level": "name_only", "verification_status": "partial",
+            "unverified": ["type", "signature", "runtime behavior"]}
     if not code or not code.strip():
-        return {"valid": True, "checked_count": 0, "errors": []}
+        return {**base, "valid": True, "checked_count": 0, "errors": []}
 
     accessed_attrs = extract_accessed_attributes(code)
     # 過濾內建通用屬性
     target_attrs = [a for a in accessed_attrs if a not in BUILTIN_ATTRIBUTES and not a.startswith("_")]
 
     if not target_attrs:
-        return {"valid": True, "checked_count": 0, "errors": []}
+        return {**base, "valid": True, "checked_count": 0, "errors": []}
 
     conn = _get_connection()
     cur = conn.cursor()
 
+    if release or interface:
+        cur.execute(
+            "SELECT 1 FROM api_sources WHERE product = ? "
+            "AND (? IS NULL OR release = ?) AND (? IS NULL OR interface = ?) LIMIT 1",
+            (product.lower(), release, release, interface, interface),
+        )
+        if cur.fetchone() is None:
+            conn.close()
+            return {
+                **base,
+                "verification_status": "coverage_unavailable",
+                "coverage_available": False,
+                "valid": None,
+                "product": product,
+                "release": release,
+                "interface": interface,
+                "checked_count": len(target_attrs),
+                "error_count": 0,
+                "errors": [],
+                "message": "API 字典沒有此產品／版本／介面的來源快照；無法判定名稱是否存在。",
+            }
+
     # 載入該產品下的所有已知有效成員名稱與符號簡稱
-    cur.execute("""
+    clauses = ["s.product = ?"]
+    params: list = [product.lower()]
+    if release:
+        clauses.append("s.release = ?")
+        params.append(release)
+    if interface:
+        clauses.append("s.interface = ?")
+        params.append(interface)
+    where = " AND ".join(clauses)
+    cur.execute(f"""
         SELECT DISTINCT m.name
         FROM members m
         JOIN symbol_members sm ON m.id = sm.member_id
         JOIN symbols s ON sm.symbol_id = s.id
-        WHERE s.product = ?
-    """, (product.lower(),))
+        WHERE {where}
+    """, params)
     valid_names = {row["name"] for row in cur.fetchall()}
 
-    cur.execute("SELECT DISTINCT name FROM symbols WHERE product = ?", (product.lower(),))
+    cur.execute(f"SELECT DISTINCT name FROM symbols s WHERE {where}", params)
     valid_symbols = {row["name"] for row in cur.fetchall()}
     all_valid_pool = valid_names | valid_symbols
 
@@ -86,8 +120,11 @@ def validate_script(code: str, product: str) -> dict:
             })
 
     return {
+        **base,
         "valid": len(errors) == 0,
         "product": product,
+        "release": release,
+        "interface": interface,
         "checked_count": len(target_attrs),
         "error_count": len(errors),
         "errors": errors

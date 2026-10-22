@@ -120,6 +120,7 @@ def run_random_vibration(
         "cutoff_frequency_hz": f_cutoff,
         "tag": tag,
         "solver": "ANSYS Mechanical",
+        "result_source": "estimated",
     }
 
     # 4. 定義沙盒執行邏輯
@@ -192,18 +193,17 @@ def run_random_vibration(
             effective_mass_ratio_x=eff_mass.get("X", 0.92),
             effective_mass_ratio_y=eff_mass.get("Y", 0.91),
             effective_mass_ratio_z=eff_mass.get("Z", 0.94),
-            final_convergence_residual=1.0e-5,
+            final_convergence_residual=None,
         )
 
-        verdict = VerdictEnum.PASS if safety_factor >= 1.2 else VerdictEnum.FAIL
-        failure_reasons = []
-        if safety_factor < 1.2:
-            failure_reasons.append(f"3-Sigma 應力超過安全限值: SF={safety_factor:.2f} < 1.2 (3σ={sigma_3_stress} MPa)")
+        verdict = VerdictEnum.INCONCLUSIVE
+        failure_reasons = ["輸出為估算結果；尚未執行 Mechanical 隨機振動求解。"]
 
         summary = sandbox.get_summary()
         if summary:
             summary.metrics = metrics
             summary.verdict = verdict
+            summary.execution.result_source = "estimated"
             summary.failure_reasons.extend(failure_reasons)
             summary.artifacts.update({
                 "stress_contour": str(stress_png.relative_to(sandbox.sandbox_dir)),

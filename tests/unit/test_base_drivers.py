@@ -366,14 +366,13 @@ class TestConcreteDriversPrepareAndExtract:
     def test_icepak_extract_artifacts_marks_is_synthetic_false_with_real_solver(
         self, sandbox: JobSandbox, monkeypatch: pytest.MonkeyPatch
     ) -> None:
-        """模擬本機已偵測到真實 Icepak 安裝時，extract_artifacts 產出之 metadata 須標記 is_synthetic=False。"""
+        """真實 Icepak 腳本尚未實作時，必須拒絕產生貌似可執行的工作。"""
         driver = IcepakDriver()
         job_dir = getattr(sandbox, "root_dir", getattr(sandbox, "job_dir", None))
 
         monkeypatch.setattr(driver, "is_available", lambda: True)
-        driver.prepare_job(job_dir, {"ambient_temperature_c": 25.0, "chip_power_w": 65.0})
-        results = driver.extract_artifacts(job_dir)
-        assert results["is_synthetic"] is False
+        with pytest.raises(SolverDriverError, match="真實分析流程尚未實作"):
+            driver.prepare_job(job_dir, {"ambient_temperature_c": 25.0, "chip_power_w": 65.0})
 
     def test_icepak_build_command_rejects_synthetic_disguised_script(self, sandbox: JobSandbox) -> None:
         """本機無真實 Icepak 安裝時，build_command 對非授權 synthetic 腳本必須拒絕執行。"""
@@ -423,6 +422,8 @@ class TestConcreteDriversPrepareAndExtract:
         empirical = round(ambient_c + power_w * 1.55, 1)
         assert results["is_synthetic"] is False
         assert results["temperature_source"] == "solver_log"
+        assert results["result_source"] == "unverified"
+        assert results["verdict"] == "INCONCLUSIVE"
         # Last Max_T= in the log wins, and it must differ from the empirical formula.
         assert results["max_temperature_c"] == pytest.approx(73.7, abs=1e-6)
         assert results["max_temperature_c"] != empirical
@@ -430,7 +431,7 @@ class TestConcreteDriversPrepareAndExtract:
     def test_icepak_real_solver_falls_back_when_log_unparseable(
         self, sandbox: JobSandbox, monkeypatch: pytest.MonkeyPatch
     ) -> None:
-        """真實求解器日誌無可解析 Max_T= 時，須優雅回退至經驗公式且不拋出例外。"""
+        """未解析到溫度時只能回報估算及未確認狀態。"""
         driver = IcepakDriver()
         job_dir = getattr(sandbox, "root_dir", getattr(sandbox, "job_dir", None))
         monkeypatch.setattr(driver, "is_available", lambda: True)
@@ -450,13 +451,15 @@ class TestConcreteDriversPrepareAndExtract:
         results = driver.extract_artifacts(job_dir)
 
         assert results["is_synthetic"] is False
-        assert results["temperature_source"] == "empirical_correlation"
+        assert results["temperature_source"] == "unverified"
+        assert results["result_source"] == "unverified"
+        assert results["verdict"] == "INCONCLUSIVE"
         assert results["max_temperature_c"] == pytest.approx(round(ambient_c + power_w * 1.55, 1))
 
     def test_icepak_real_solver_falls_back_when_log_missing(
         self, sandbox: JobSandbox, monkeypatch: pytest.MonkeyPatch
     ) -> None:
-        """真實求解器尚未產出日誌檔時，須回退至經驗公式。"""
+        """缺少真實求解器日誌時不能宣告結果已驗證。"""
         driver = IcepakDriver()
         job_dir = getattr(sandbox, "root_dir", getattr(sandbox, "job_dir", None))
         monkeypatch.setattr(driver, "is_available", lambda: True)
@@ -467,7 +470,9 @@ class TestConcreteDriversPrepareAndExtract:
 
         results = driver.extract_artifacts(job_dir)
 
-        assert results["temperature_source"] == "empirical_correlation"
+        assert results["temperature_source"] == "unverified"
+        assert results["result_source"] == "unverified"
+        assert results["verdict"] == "INCONCLUSIVE"
         assert results["max_temperature_c"] == pytest.approx(round(ambient_c + power_w * 1.55, 1))
 
     def test_icepak_synthetic_mode_ignores_log_and_uses_formula(self, sandbox: JobSandbox) -> None:
@@ -493,7 +498,9 @@ class TestConcreteDriversPrepareAndExtract:
         results = driver.extract_artifacts(job_dir)
 
         assert results["is_synthetic"] is True
-        assert results["temperature_source"] == "empirical_correlation"
+        assert results["temperature_source"] == "estimated"
+        assert results["result_source"] == "synthetic"
+        assert results["verdict"] == "PASS"
         assert results["max_temperature_c"] == pytest.approx(round(ambient_c + power_w * 1.55, 1))
 
     def test_icepak_parse_solver_max_temperature_returns_none_without_token(

@@ -28,6 +28,7 @@ from ansys_unified_mcp.tools import session_manager_tools as tools
         "ans_session_launch",
         "ans_session_status",
         "ans_session_disconnect",
+        "ans_session_diagnose",
     ],
 )
 def test_tool_registered_in_mcp(tool_name):
@@ -111,3 +112,22 @@ def test_unsupported_product_returns_error_envelope(tool_fn):
     result = tool_fn("unknown_product")
     assert result["ok"] is False
     assert "不支援" in result["error"]
+
+
+def test_ans_session_diagnose_reports_unknown_live_checks_without_launching(monkeypatch):
+    """唯讀診斷區分靜態安裝資料與未執行的連線、模型及授權檢查。"""
+    monkeypatch.setenv("ANSYS_ROOT", "C:/ansys")
+    monkeypatch.setenv("ANSYS_VERSION", "251")
+    with patch.object(tools.session_manager, "status", return_value={"connected": False}) as status:
+        result = tools.ans_session_diagnose("Mechanical")
+
+    status.assert_called_once_with("mechanical")
+    assert result["ok"] is True
+    checks = result["checks"]
+    assert checks["installation"]["path"].replace("\\", "/").endswith(
+        "v251/aisol/bin/winx64/AnsysWBU.exe"
+    )
+    assert checks["transport"]["status"] == "unknown"
+    assert checks["script"]["status"] == "unknown"
+    assert checks["model"]["status"] == "unknown"
+    assert checks["license"]["status"] == "unknown"

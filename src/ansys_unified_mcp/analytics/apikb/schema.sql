@@ -3,9 +3,26 @@ CREATE TABLE IF NOT EXISTS symbols (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     product TEXT NOT NULL,
     kind TEXT NOT NULL,
-    fqname TEXT UNIQUE NOT NULL,
+    fqname TEXT NOT NULL,
     name TEXT NOT NULL,
-    doc TEXT
+    doc TEXT,
+    release TEXT NOT NULL DEFAULT 'unknown',
+    interface TEXT NOT NULL DEFAULT 'unknown',
+    source_id INTEGER,
+    UNIQUE(product, release, interface, fqname),
+    FOREIGN KEY(source_id) REFERENCES api_sources(id)
+);
+
+CREATE TABLE IF NOT EXISTS api_sources (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    product TEXT NOT NULL,
+    release TEXT NOT NULL,
+    interface TEXT NOT NULL,
+    source_path TEXT NOT NULL,
+    sdk_version TEXT NOT NULL DEFAULT '',
+    sha256 TEXT NOT NULL,
+    ingested_at TEXT NOT NULL,
+    UNIQUE(product, release, interface, source_path)
 );
 
 CREATE TABLE IF NOT EXISTS members (
@@ -47,5 +64,8 @@ CREATE VIRTUAL TABLE IF NOT EXISTS search_fts USING fts5(
     name_split,
     signature,
     doc,
+    release UNINDEXED,
+    interface UNINDEXED,
+    source_id UNINDEXED,
     tokenize = 'trigram'
 );

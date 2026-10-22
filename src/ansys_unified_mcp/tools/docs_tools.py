@@ -11,13 +11,13 @@ from ansys_unified_mcp.shared import mcp, as_envelope as _envelope
 from ansys_unified_mcp.analytics.docsearch import index as docs_index
 
 
-@mcp.tool()
+@mcp.tool(annotations={"readOnlyHint": True, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False})
 def list_ansys_docs() -> dict:
     """List the indexed ANSYS API/scripting documents (name, title, category, chunk count)."""
     return _envelope(docs_index.list_docs())
 
 
-@mcp.tool()
+@mcp.tool(annotations={"readOnlyHint": True, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False})
 def search_ansys_docs(query: str, doc: str = "", top_k: int = 5, scope: str = "api") -> dict:
     """Keyword-search the ANSYS docs; returns ranked snippets with source and chunk_id.
 
@@ -35,7 +35,7 @@ def search_ansys_docs(query: str, doc: str = "", top_k: int = 5, scope: str = "a
     return _envelope(docs_index.search(query, doc=doc or None, top_k=top_k, scope=scope))
 
 
-@mcp.tool()
+@mcp.tool(annotations={"readOnlyHint": True, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False})
 def get_ansys_doc_chunk(doc: str, chunk_id: int, context: int = 0) -> dict:
     """Fetch the full text of a documentation chunk (from a search result).
 
@@ -47,7 +47,7 @@ def get_ansys_doc_chunk(doc: str, chunk_id: int, context: int = 0) -> dict:
     return _envelope(docs_index.get_chunk(doc, chunk_id, context=context))
 
 
-@mcp.tool()
+@mcp.tool(annotations={"readOnlyHint": False, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False})
 def rebuild_ansys_docs_index() -> dict:
     """Rebuild the cleaned copies and the FTS5 search index from Documentation_md."""
     return _envelope(docs_index.build_index())

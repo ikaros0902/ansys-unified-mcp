@@ -9,7 +9,7 @@ from ansys_unified_mcp.shared import mcp, as_envelope as _envelope
 from ansys_unified_mcp.analytics.apikb import query as kb_query
 from ansys_unified_mcp.analytics.apikb import validate as kb_validate
 
-@mcp.tool()
+@mcp.tool(annotations={"readOnlyHint": True, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False})
 def api_search(query: str, product: str = "", kind: str = "", top_k: int = 8) -> dict:
     """Search ANSYS API symbols (class, method, property, enum, keyword) across Mechanical, SpaceClaim, optiSLang, and LS-DYNA.
 
@@ -27,7 +27,7 @@ def api_search(query: str, product: str = "", kind: str = "", top_k: int = 8) ->
         "results": results
     })
 
-@mcp.tool()
+@mcp.tool(annotations={"readOnlyHint": True, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False})
 def api_get(fqname: str, include: str = "members,edges", limit: int = 50) -> dict:
     """Get full definition of a specific API symbol, including its methods, properties, and connected type links.
 
@@ -48,7 +48,7 @@ def api_get(fqname: str, include: str = "members,edges", limit: int = 50) -> dic
         "symbol": detail
     })
 
-@mcp.tool()
+@mcp.tool(annotations={"readOnlyHint": True, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False})
 def api_path(from_type: str, to_type: str, product: str = "", max_depth: int = 4) -> dict:
     """Find object-navigation paths between two API types in the Knowledge Graph (e.g. from Analysis to EquivalentStress).
 
@@ -66,7 +66,7 @@ def api_path(from_type: str, to_type: str, product: str = "", max_depth: int = 4
         "paths": paths
     })
 
-@mcp.tool()
+@mcp.tool(annotations={"readOnlyHint": True, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False})
 def api_validate_script(code: str, product: str) -> dict:
     """Statically validate a Python, ACT, or SpaceClaim script against the official API dictionary to catch hallucinated methods/attributes.
 

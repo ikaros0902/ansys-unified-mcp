@@ -175,6 +175,8 @@ class TestReportGenerator:
             duration_seconds=332.0,
             solver_name="LS-DYNA",
             solver_version="R14.1",
+            result_source="solver_result",
+            result_evidence={"verified": True, "verification_level": "product_reader"},
         )
         sandbox.save_summary(summary)
 
@@ -235,6 +237,11 @@ class TestReportGenerator:
             hourglass_energy_ratio_pct=0.0,
             mass_scaling_added_pct=0.0,
         )
+        summary.execution.result_source = "solver_result"
+        summary.execution.result_evidence = {
+            "verified": True,
+            "verification_level": "product_reader",
+        }
         sandbox.save_summary(summary)
 
         generator = ReportGenerator()

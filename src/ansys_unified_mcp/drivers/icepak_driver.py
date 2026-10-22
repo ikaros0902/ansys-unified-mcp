@@ -107,21 +107,10 @@ class IcepakDriver(BaseSolverDriver):
     def _build_real_script(
         self, ambient_temp_c: float, chip_power_w: float, convection_coeff: float
     ) -> str:
-        """生成呼叫真實 Icepak 求解器的批次腳本骨架。"""
-        return f"""# ANSYS Icepak 熱分析自動化批次腳本
-# Ambient: {ambient_temp_c} C | Chip Power: {chip_power_w} W | h: {convection_coeff} W/m^2-K
-import sys
-from pathlib import Path
-
-workspace = Path(__file__).parent
-log_file = workspace / "icepak.log"
-
-# 此腳本應由真實 Icepak 求解器 (icepak.exe -batch) 執行，
-# 讀取幾何、材料與邊界條件卡並輸出真實迭代日誌與溫度場數據。
-with open(log_file, "w", encoding="utf-8") as f:
-    f.write("ANSYS Icepak Thermal Solver Initialized\\n")
-    f.write(f"Ambient Temperature: {ambient_temp_c} C, Heat Source: {chip_power_w} W\\n")
-"""
+        """回傳明確失敗的骨架，避免將空操作誤認為真實求解。"""
+        raise SolverDriverError(
+            "Icepak 真實分析流程尚未實作：目前沒有載入模型、套用邊界條件或讀回求解結果。"
+        )
 
     def _build_synthetic_script(
         self, ambient_temp_c: float, chip_power_w: float, convection_coeff: float
@@ -296,22 +285,17 @@ print("Icepak 求解完成並導出溫度場 (SYNTHETIC)。")
         ambient_temp = float(config.get("ambient_temperature_c", 25.0))
         is_synthetic = not self.is_available()
 
-        # Temperature resolution policy:
-        # - Real solver present: trust the solved Max_T= value parsed from the solver log.
-        # - Synthetic mode, or solver log without a parseable Max_T=: fall back to the
-        #   empirical correlation so downstream artifacts still receive a usable value.
+        # 沒有實際求解溫度時只能回報估算；不能將它當成 solver 結果。
         max_temp_c = round(ambient_temp + chip_power * 1.55, 1)
-        temperature_source = "empirical_correlation"
+        temperature_source = "estimated"
         if not is_synthetic:
             parsed_max_t = self._parse_solver_max_temperature(job_dir)
             if parsed_max_t is not None:
                 max_temp_c = round(parsed_max_t, 1)
                 temperature_source = "solver_log"
             else:
-                logger.warning(
-                    f"[{self.solver_name}] No parseable Max_T= found in solver log; "
-                    "falling back to empirical correlation for max temperature."
-                )
+                temperature_source = "unverified"
+                logger.warning("沒有可讀取的 solver 溫度結果；經驗關係僅作估算顯示。")
 
         # 1. 產生標準白底溫度場雲圖
         temp_png = images_dir / "thermal_temperature_contour.png"
@@ -352,13 +336,26 @@ print("Icepak 求解完成並導出溫度場 (SYNTHETIC)。")
             artifact_dict["temperature_field_csv"] = str(temp_field.relative_to(job_dir))
 
         metrics = PhysicalMetrics(
-            final_convergence_residual=8.5e-6,
+            final_convergence_residual=None,
         )
 
-        verdict = VerdictEnum.PASS if max_temp_c < 105.0 else VerdictEnum.FAIL
+        # Synthetic 模式可回報該估值相對範例門檻的工程判讀；result_source 仍為
+        # synthetic，報告層會將其顯示為 INCONCLUSIVE，不會宣稱真實求解通過。
+        verdict = VerdictEnum.INCONCLUSIVE
         failure_reasons = []
         if max_temp_c >= 105.0:
-            failure_reasons.append(f"晶片最高結溫超標: {max_temp_c:.1f} °C >= 105.0 °C 限值")
+            failure_reasons.append(
+                f"晶片最高結溫超標：估算值 {max_temp_c:.1f} °C 超過此範例的 105.0 °C 警戒值；"
+                "須由實際求解確認。"
+            )
+            if is_synthetic:
+                verdict = VerdictEnum.FAIL
+        else:
+            if is_synthetic:
+                verdict = VerdictEnum.PASS
+                failure_reasons.append("合成估值低於此範例警戒值；不是經驗證的 solver_result。")
+            else:
+                failure_reasons.append("輸出溫度為估算值；未取得可驗證的求解結果。")
 
         mock_reason = "NO_ICEPAK_SOLVER_DETECTED" if is_synthetic else None
 
@@ -372,6 +369,7 @@ print("Icepak 求解完成並導出溫度場 (SYNTHETIC)。")
                 summary_obj.artifacts.update(artifact_dict)
                 execution_data = summary_obj.execution.model_dump()
                 execution_data["is_synthetic"] = is_synthetic
+                execution_data["result_source"] = "synthetic" if is_synthetic else "unverified"
                 if mock_reason:
                     execution_data["mock_reason"] = mock_reason
                 summary_obj.execution = ExecutionMetadata.model_validate(execution_data)
@@ -387,5 +385,6 @@ print("Icepak 求解完成並導出溫度場 (SYNTHETIC)。")
             "artifacts": artifact_dict,
             "is_synthetic": is_synthetic,
             "mock_reason": mock_reason,
+            "result_source": "synthetic" if is_synthetic else "unverified",
         }
         return result_dict

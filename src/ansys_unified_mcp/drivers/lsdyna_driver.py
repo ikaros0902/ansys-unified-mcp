@@ -259,17 +259,13 @@ $       FS        FD        DC        VC       VDC    PENCHK        BT        DT
             safety_factor=safety_factor,
             max_total_deformation_mm=max_disp,
             peak_acceleration_g=peak_g,
-            hourglass_energy_ratio_pct=2.4,  # < 5% 合格
-            mass_scaling_added_pct=1.1,      # < 5% 合格
-            contact_sliding_energy_joules=12.5,
+            hourglass_energy_ratio_pct=None,
+            mass_scaling_added_pct=None,
+            contact_sliding_energy_joules=None,
         )
 
-        verdict = VerdictEnum.PASS if (safety_factor >= 1.0 and metrics.hourglass_energy_ratio_pct <= 5.0) else VerdictEnum.FAIL
-        failure_reasons = []
-        if safety_factor < 1.0:
-            failure_reasons.append(f"衝擊峰值應力超過材料強度: Stress={max_stress} MPa > Yield={yield_strength} MPa")
-        if (metrics.hourglass_energy_ratio_pct or 0) > 5.0:
-            failure_reasons.append(f"沙漏能過高: {metrics.hourglass_energy_ratio_pct}% > 5.0%")
+        verdict = VerdictEnum.INCONCLUSIVE
+        failure_reasons = ["此 driver 目前以估算公式產生結果，未執行 LS-DYNA 求解。"]
 
         artifact_dict = {
             "stress_contour": str(stress_png.relative_to(job_dir)),
@@ -283,6 +279,7 @@ $       FS        FD        DC        VC       VDC    PENCHK        BT        DT
                 summary_obj = SimulationSummary.model_validate_json(summary_path.read_text(encoding="utf-8"))
                 summary_obj.metrics = metrics
                 summary_obj.verdict = verdict
+                summary_obj.execution.result_source = "estimated"
                 summary_obj.failure_reasons.extend(failure_reasons)
                 summary_obj.artifacts.update(artifact_dict)
                 summary_path.write_text(summary_obj.model_dump_json(indent=2), encoding="utf-8")
@@ -292,5 +289,6 @@ $       FS        FD        DC        VC       VDC    PENCHK        BT        DT
         return {
             "metrics": metrics.model_dump(),
             "verdict": verdict.value,
+            "result_source": "estimated",
             "artifacts": artifact_dict,
         }

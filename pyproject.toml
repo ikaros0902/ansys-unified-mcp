@@ -28,6 +28,7 @@ workbench = ["ansys-workbench-core"]
 dyna = ["ansys-dyna-core>=0.12.1", "lasso-python"]
 mapdl = ["ansys-mapdl-core", "ansys-mapdl-reader"]
 meshing = ["ansys-meshing-prime[all]"]
+sherlock = ["ansys-sherlock-core"]
 results = ["ansys-result-explorer-core"]
 materials = ["ansys-materials-manager"]
 visualization = ["ansys-tools-visualization-interface"]
@@ -42,6 +43,7 @@ all = [
     "ansys-mapdl-core",
     "ansys-mapdl-reader",
     "ansys-meshing-prime[all]",
+    "ansys-sherlock-core",
     "ansys-result-explorer-core",
     "ansys-materials-manager",
     "ansys-tools-visualization-interface",

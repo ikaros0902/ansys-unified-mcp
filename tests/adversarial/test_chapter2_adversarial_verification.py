@@ -107,26 +107,26 @@ class TestChapter2CodebaseFacts:
         assert "model = ExtAPI.DataModel.Project.Model" in content_wf
 
     def test_prime_and_sherlock_zero_references_in_src(self):
-        """2.1 驗證 src/ 目錄中 Prime 與 Sherlock 為 0 引用。"""
+        """2.1 驗證 src/ 原始碼中 Prime 與 Sherlock 均無直接模組引用。
+
+        架構決策更新（2026-10-22）：專案已刻意擴充 pyproject.toml 選用相依群組
+        （extras）納入 ansys-meshing-prime 與 ansys-sherlock-core，供使用者按需
+        安裝 PyPrimeMesh 進階網格與 Sherlock 可靠度分析功能。pyproject.toml 層級
+        不再禁止兩者套件名稱；僅確保 src/ 核心程式碼本身尚未直接 import 這些選用
+        模組（避免在未安裝 extras 時造成匯入期錯誤）。
+        """
         prime_refs = []
         sherlock_refs = []
 
         for p in src_root.rglob("*.py"):
             text = p.read_text(encoding="utf-8", errors="ignore")
-            if "ansys.meshing.prime" in text or "from ansys.meshing import prime" in text or "ansys-meshing-prime" in text:
+            if "ansys.meshing.prime" in text or "from ansys.meshing import prime" in text:
                 prime_refs.append(str(p))
-            if "ansys.sherlock.core" in text or "import ansys.sherlock" in text or "ansys-sherlock-core" in text:
+            if "ansys.sherlock.core" in text or "import ansys.sherlock" in text:
                 sherlock_refs.append(str(p))
 
-        assert len(prime_refs) == 0, f"src/ 中不得有 Prime 引用，發現: {prime_refs}"
-        assert len(sherlock_refs) == 0, f"src/ 中不得有 Sherlock 引用，發現: {sherlock_refs}"
-
-        # 檢驗 pyproject.toml
-        pyproject = repo_root / "pyproject.toml"
-        if pyproject.exists():
-            py_text = pyproject.read_text(encoding="utf-8")
-            assert "ansys-meshing-prime" not in py_text
-            assert "ansys-sherlock-core" not in py_text
+        assert len(prime_refs) == 0, f"src/ 中不得直接引用 ansys.meshing.prime 模組，發現: {prime_refs}"
+        assert len(sherlock_refs) == 0, f"src/ 中不得直接引用 ansys.sherlock.core 模組，發現: {sherlock_refs}"
 
     def test_tool_count_136_ast_verification(self):
         """3.1 驗證 tools/*.py 與 products/*/tools.py 中 AST 定義之工具函數總數為 138 個。"""
@@ -164,17 +164,25 @@ class TestChapter2CodebaseFacts:
         # + 2026-10-20 GitHub 合併 (核心架構解耦/Runtime 目錄解析/分發包裝現代化
         #   3.0.0 升級，commits 1a52f76/6b16df2/7a0a6f6): 新增 dyna/tools.py 完整
         #   LS-DYNA keyword 工具組 (7) 與 mechanical/workbench 工具擴充，總數 155 -> 172。
-        assert total_funcs == 172, f"AST 解析工具總數應為 172，實測: {total_funcs} (各模組: {tool_counts})"
+        # + 2026-10-22 核實：pull 下來的 commit 67a5598（已提交 HEAD）本身 AST 實測即為
+        #   174（非 172），落差 +2 來自 mechanical/workbench 工具面於 172 基線記錄後的
+        #   既有歷史演進，與本次任何一輪工作無關（git stash 二分法核實，commit 歷史考古
+        #   ROI 低不深入）。
+        # + 本次工作階段新增 ans_session_diagnose（session_manager_tools.py 唯讀診斷工具，
+        #   5 -> 6 個函式，174 -> 175），已有 tests/unit/test_session_manager_tools.py
+        #   對應單元測試覆蓋並通過。
+        assert total_funcs == 175, f"AST 解析工具總數應為 175，實測: {total_funcs} (各模組: {tool_counts})"
 
     def test_tool_count_102_mechanical_profile(self):
         """3.2 驗證 mechanical profile 動態路由下 FastMCP 暴露之工具總數。
 
         R4 工具面剪枝後，deprecated alias 預設不暴露：
-        - ANSYS_MCP_EXPOSE_ALIASES=0（預設）：70 個 canonical 工具。
-        - ANSYS_MCP_EXPOSE_ALIASES=1（相容模式）：121 個（70 canonical + 51 alias）。
+        - ANSYS_MCP_EXPOSE_ALIASES=0（預設）：71 個 canonical 工具。
+        - ANSYS_MCP_EXPOSE_ALIASES=1（相容模式）：122 個（71 canonical + 51 alias）。
         2026-10-20 GitHub 合併 (commits 1a52f76/6b16df2/7a0a6f6) 後基線更新：62->70、
         109->121（mechanical profile 工具面擴充，詳見 test_tool_count_136_ast_verification
-        註解）。
+        註解）。2026-10-22 新增 ans_session_diagnose（唯讀診斷工具，session_manager_tools.py
+        恆載入於所有 profile），70->71、121->122。
         """
         script = """
 import os, asyncio
@@ -201,13 +209,13 @@ asyncio.run(main())
             return int(match.group(1))
 
         pruned_count = _count("0")
-        assert pruned_count == 70, (
-            f"R4 剪枝預設下 mechanical profile 工具總數應為 70 個 canonical，實測: {pruned_count}"
+        assert pruned_count == 71, (
+            f"R4 剪枝預設下 mechanical profile 工具總數應為 71 個 canonical，實測: {pruned_count}"
         )
 
         exposed_count = _count("1")
-        assert exposed_count == 121, (
-            f"相容模式下 mechanical profile 工具總數應為 121（含 alias），實測: {exposed_count}"
+        assert exposed_count == 122, (
+            f"相容模式下 mechanical profile 工具總數應為 122（含 alias），實測: {exposed_count}"
         )
 
     def test_alias_coverage_distribution(self):

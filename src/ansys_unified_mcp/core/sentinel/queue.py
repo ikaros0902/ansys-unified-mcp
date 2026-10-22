@@ -10,6 +10,7 @@
 from __future__ import annotations
 
 import json
+import re
 import logging
 import os
 import subprocess
@@ -163,7 +164,7 @@ class SentinelQueue:
                 elapsed = time.time() - record.start_time
 
             progress = snapshot.get("progress_pct", 0.0)
-            if record.status == JobStatusEnum.SOLVED:
+            if record.status in (JobStatusEnum.SOLVED, JobStatusEnum.COMPLETED):
                 progress = 100.0
 
             return {
@@ -192,7 +193,7 @@ class SentinelQueue:
                 "ok": True,
                 "job_id": job_id,
                 "status": summary.status.value,
-                "progress_pct": 100.0 if summary.status == JobStatusEnum.SOLVED else 0.0,
+                "progress_pct": 100.0 if summary.status in (JobStatusEnum.SOLVED, JobStatusEnum.COMPLETED) else 0.0,
                 "current_step": "FINISHED",
                 "physical_health": {
                     "verdict": summary.verdict.value,
@@ -336,6 +337,58 @@ class SentinelQueue:
             "reason": reason,
         }
 
+    @staticmethod
+    def _verify_solver_artifacts(sandbox: JobSandbox) -> Dict[str, Any]:
+        """收集候選日誌與結果檔；通用檔案掃描不能取代產品專屬讀回驗證。"""
+        success_markers = (
+            "solution is converged", "solution converged", "solver run completed",
+            "normal termination", "terminated normally", "finished successfully",
+            "completed successfully",
+        )
+        matched_log = None
+        matched_marker = None
+        for path in sandbox.workspace_dir.rglob("*"):
+            if not path.is_file() or path.suffix.lower() not in {".out", ".log", ".txt"}:
+                continue
+            if path.stat().st_size > 5 * 1024 * 1024:
+                continue
+            try:
+                content = path.read_text(encoding="utf-8", errors="ignore").lower()
+            except OSError:
+                continue
+            marker = next((item for item in success_markers if item in content), None)
+            if marker:
+                matched_log = str(path.relative_to(sandbox.sandbox_dir))
+                matched_marker = marker
+                break
+
+        result_suffixes = {
+            ".rst", ".rth", ".mode", ".d3plot", ".h3d", ".res", ".odb", ".op2", ".vtu"
+        }
+        result_names = {"d3plot", "binout", "dynain", "mes0000"}
+        result_files = [
+            str(path.relative_to(sandbox.sandbox_dir))
+            for path in sandbox.workspace_dir.rglob("*")
+            if path.is_file()
+            and path.stat().st_size > 0
+            and (
+                path.suffix.lower() in result_suffixes
+                or path.name.lower() in result_names
+                or (path.name.lower().startswith("d3plot") and path.suffix.lower() not in {".txt", ".log"})
+            )
+        ]
+        return {
+            "status_log": matched_log,
+            "success_marker": matched_marker,
+            "result_files": [Path(item).as_posix() for item in result_files],
+            "verified": False,
+            "verification_level": "partial",
+            "reason": (
+                "已找到候選狀態文字或結果檔；需產品專屬 parser/reader 確認最終求解狀態、"
+                "結果集與本作業輸入相符後，才能標記 solver_result。"
+            ),
+        }
+
     def _run_job_async(
         self,
         record: ActiveJobRecord,
@@ -410,7 +463,32 @@ class SentinelQueue:
             with self._lock:
                 if record.status == JobStatusEnum.ABORTED:
                     return
-                next_status = JobStatusEnum.SOLVED if record.exit_code == 0 else JobStatusEnum.FAILED
+                final_summary = record.sandbox.get_summary()
+                declared_source = (
+                    final_summary.execution.result_source
+                    if final_summary and final_summary.execution.result_source
+                    else str(record.config.get("result_source", "unverified")).lower()
+                )
+                if declared_source == "solver_result":
+                    result_evidence = self._verify_solver_artifacts(record.sandbox)
+                    solver_verified = record.exit_code == 0 and result_evidence["verified"]
+                    result_source = "solver_result" if solver_verified else "unverified"
+                else:
+                    solver_verified = False
+                    result_source = (
+                        declared_source if declared_source in {"synthetic", "estimated", "unverified"}
+                        else "unverified"
+                    )
+                    result_evidence = {
+                        "verified": False,
+                        "reason": "尚未執行 solver 輸出與結果檔交叉驗證",
+                    }
+                successful_status = (
+                    JobStatusEnum.SOLVED
+                    if solver_verified
+                    else JobStatusEnum.COMPLETED
+                )
+                next_status = successful_status if record.exit_code == 0 else JobStatusEnum.FAILED
 
             final_summary = record.sandbox.get_summary()
             if final_summary:
@@ -423,15 +501,33 @@ class SentinelQueue:
                         record.end_time - record.start_time, 2
                     )
                     final_summary.execution.exit_code = record.exit_code
+                    final_summary.execution.result_source = result_source
+                    final_summary.execution.result_evidence = result_evidence
                     if next_status == JobStatusEnum.SOLVED:
-                        final_summary.verdict = VerdictEnum.PASS
+                        # 求解成功不等於工程合格；保留工作流已做出的物理判定。
+                        pass
+                    elif next_status == JobStatusEnum.COMPLETED:
+                        final_summary.verdict = VerdictEnum.INCONCLUSIVE
                     else:
                         final_summary.verdict = VerdictEnum.FAIL
                         final_summary.failure_reasons.append(
                             f"求解進程異常退出 (Exit code: {record.exit_code})"
                         )
-                # 確保磁碟 summary.json 原子寫入完畢後，再將隊列記憶體狀態更新為 SOLVED / FAILED
+                # 先完成 summary 原子寫入，再更新記憶體中的終態。
                 record.sandbox.save_summary(final_summary)
+                if final_summary.execution.result_source != "solver_result":
+                    try:
+                        from ansys_unified_mcp.analytics.reporting.generator import ReportGenerator
+
+                        reporter = ReportGenerator()
+                        reporter.build_overview_html(record.sandbox, summary=final_summary)
+                        reporter.generate_dialog_summary(final_summary, sandbox=record.sandbox)
+                    except Exception as report_error:
+                        logger.warning(
+                            "作業 [%s] 已完成，但最終來源標記報告更新失敗: %s",
+                            record.job_id,
+                            report_error,
+                        )
 
             with self._lock:
                 if record.status != JobStatusEnum.ABORTED:

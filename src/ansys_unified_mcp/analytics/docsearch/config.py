@@ -44,6 +44,13 @@ DOCS_ROOT = Path(_DOCS_ROOT_ENV) if _DOCS_ROOT_ENV else REPO_ROOT
 SOURCE_DIR = DOCS_ROOT / "Documentation_md"
 CLEAN_DIR = DOCS_ROOT / "Documentation_clean"
 INDEX_PATH = CLEAN_DIR / "docs_index.sqlite"
+# 其他文件語料根目錄以環境設定加入，使用作業系統路徑分隔符；只將已轉成
+# Markdown 的文件建立全文索引，原始 PDF/HTML 則由來源清冊追蹤。
+EXTRA_SOURCE_DIRS = [
+    Path(item.strip())
+    for item in os.environ.get("ANSYS_DOCS_EXTRA_ROOTS", "").split(os.pathsep)
+    if item.strip()
+]
 
 # Chunking (characters). Windows kept small enough to be digestible in a single
 # search result, with light overlap so context is not lost at boundaries.

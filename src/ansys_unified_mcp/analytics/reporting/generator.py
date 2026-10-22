@@ -7,6 +7,7 @@
 from __future__ import annotations
 
 import base64
+from html import escape
 import logging
 from datetime import datetime, timezone
 from pathlib import Path
@@ -37,6 +38,16 @@ class ReportGenerator:
 
     def __init__(self, template_path: Optional[Path | str] = None) -> None:
         self.template_path = Path(template_path) if template_path else self.TEMPLATE_PATH
+
+    @staticmethod
+    def _has_verified_solver_result(summary: SimulationSummary) -> bool:
+        evidence = summary.execution.result_evidence
+        return (
+            summary.status == JobStatusEnum.SOLVED
+            and summary.execution.result_source == "solver_result"
+            and evidence.get("verified") is True
+            and evidence.get("verification_level") == "product_reader"
+        )
 
     def build_overview_html(
         self,
@@ -70,16 +81,23 @@ class ReportGenerator:
         metrics = summary.metrics
         execution = summary.execution
 
+        # 未驗證來源不得沿用舊摘要中的 PASS 判定。
+        source_verified = self._has_verified_solver_result(summary)
+        effective_verdict = (
+            summary.verdict if source_verified or summary.status in {JobStatusEnum.FAILED, JobStatusEnum.ABORTED}
+            else VerdictEnum.INCONCLUSIVE
+        )
+
         # 判定樣式與文字
         verdict_class = "verdict-pass"
         verdict_text = "✅ PASS (合格)"
         if summary.status == JobStatusEnum.ABORTED:
             verdict_class = "verdict-aborted"
             verdict_text = "⚠️ ABORTED (中斷)"
-        elif summary.status == JobStatusEnum.FAILED or summary.verdict == VerdictEnum.FAIL:
+        elif summary.status == JobStatusEnum.FAILED or effective_verdict == VerdictEnum.FAIL:
             verdict_class = "verdict-fail"
             verdict_text = "❌ FAIL (不合格)"
-        elif summary.verdict == VerdictEnum.INCONCLUSIVE:
+        elif effective_verdict == VerdictEnum.INCONCLUSIVE:
             verdict_class = "verdict-aborted"
             verdict_text = "⏳ INCONCLUSIVE (待定)"
 
@@ -200,7 +218,14 @@ class ReportGenerator:
         sandbox: Optional[JobSandbox] = None,
     ) -> str:
         """生成高資訊密度繁體中文 Markdown 摘要，供 AI 助手對話引用。"""
-        status_emoji = "✅" if summary.verdict == VerdictEnum.PASS else "❌"
+        source_verified = self._has_verified_solver_result(summary)
+        effective_verdict = (
+            summary.verdict if source_verified or summary.status in {JobStatusEnum.FAILED, JobStatusEnum.ABORTED}
+            else VerdictEnum.INCONCLUSIVE
+        )
+        status_emoji = "✅" if effective_verdict == VerdictEnum.PASS else "❌"
+        if effective_verdict == VerdictEnum.INCONCLUSIVE:
+            status_emoji = "⏳"
         if summary.status == JobStatusEnum.ABORTED:
             status_emoji = "⚠️"
 
@@ -243,8 +268,9 @@ class ReportGenerator:
 
         md_content = f"""### 📊 ANSYS CAE 模擬分析報告：[{summary.job_id}]
 - **分析工況**：{summary.workflow_type.upper()}（標籤：`{summary.tag}`）
-- **最終判定**：{status_emoji} **{summary.verdict.value}**（狀態：`{summary.status.value}`）
+- **最終判定**：{status_emoji} **{effective_verdict.value}**（狀態：`{summary.status.value}`）
 - **計算耗時**：`{execution.duration_seconds or 0.0:.2f} 秒`（求解器：`{execution.solver_name}`）
+- **結果來源**：`{execution.result_source or 'unverified'}`
 - **核心工程指標**：
   - 最大等效應力：{stress_text}（安全係數：{sf_text}）
   - 最大翹曲/變形：{disp_text}
@@ -360,6 +386,9 @@ class ReportGenerator:
         cards: List[str] = []
         for img_p in image_files:
             title = img_p.stem.replace("_", " ").title()
+            gallery_summary = sandbox.get_summary()
+            if gallery_summary and not self._has_verified_solver_result(gallery_summary):
+                title = f"{title} (非求解器結果)"
             if embed_base64:
                 try:
                     img_data = base64.b64encode(img_p.read_bytes()).decode("ascii")
@@ -388,6 +417,20 @@ class ReportGenerator:
     def _build_diagnostics_html(self, summary: SimulationSummary) -> str:
         """建立診斷與處方箋 HTML。"""
         items: List[str] = []
+        result_source = escape(summary.execution.result_source or "unverified")
+        source_verified = self._has_verified_solver_result(summary)
+        effective_verdict = (
+            summary.verdict
+            if source_verified or summary.status in {JobStatusEnum.FAILED, JobStatusEnum.ABORTED}
+            else VerdictEnum.INCONCLUSIVE
+        )
+        evidence_reason = escape(str(summary.execution.result_evidence.get("reason", "")))
+        items.append(f"""
+          <div class="diag-item">
+            <span class="diag-badge diag-warn">RESULT SOURCE</span>
+            <strong>結果來源：{result_source}</strong>
+            <p style="color: #94A3B8; margin-top: 4px;">驗證狀態：{'product_reader verified' if source_verified else '尚未通過產品專屬結果讀回驗證'}。{evidence_reason}</p>
+          </div>""")
 
         # 熔斷狀態
         if summary.execution.circuit_breaker_triggered:
@@ -396,6 +439,13 @@ class ReportGenerator:
             <span class="diag-badge diag-fatal">CIRCUIT BREAKER TRIGGERED</span>
             <strong>早期物理發散熔斷攔截</strong>
             <p style="color: #F87171; margin-top: 4px;">{summary.execution.circuit_breaker_reason or '未知熔斷原因'}</p>
+          </div>""")
+        elif effective_verdict == VerdictEnum.INCONCLUSIVE:
+            items.append("""
+          <div class="diag-item">
+            <span class="diag-badge diag-warn">NOT VERIFIED</span>
+            <strong>未確認求解器結果</strong>
+            <p style="color: #94A3B8; margin-top: 4px;">Sentinel 狀態不代表工程求解成功；需檢查下方結果來源與診斷。</p>
           </div>""")
         else:
             items.append("""
@@ -415,7 +465,11 @@ class ReportGenerator:
           </div>""")
 
         # 若無異常
-        if not summary.failure_reasons and not summary.execution.circuit_breaker_triggered:
+        if (
+            not summary.failure_reasons
+            and not summary.execution.circuit_breaker_triggered
+            and effective_verdict != VerdictEnum.INCONCLUSIVE
+        ):
             items.append("""
           <div class="diag-item">
             <span class="diag-badge diag-pass">READY</span>

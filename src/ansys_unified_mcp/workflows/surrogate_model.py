@@ -96,6 +96,7 @@ def train_surrogate_model(
         "cop_target": cop_target,
         "tag": tag,
         "solver": "ANSYS optiSLang",
+        "result_source": "estimated",
     }
 
     # 3. 定義沙盒執行邏輯
@@ -158,17 +159,14 @@ def train_surrogate_model(
             max_total_deformation_mm=0.52,
         )
 
-        verdict = VerdictEnum.PASS if achieved_cop >= cop_target else VerdictEnum.FAIL
-        failure_reasons = []
-        if achieved_cop < cop_target:
-            failure_reasons.append(
-                f"MOP 預測係數未達標: CoP={achieved_cop:.3f} < 目標值={cop_target:.3f}，建議增加採樣數至少 20 點。"
-            )
+        verdict = VerdictEnum.INCONCLUSIVE
+        failure_reasons = ["目前輸出為代理模型估值，未執行或驗證 optiSLang DOE 設計點。"]
 
         summary = sandbox.get_summary()
         if summary:
             summary.metrics = metrics
             summary.verdict = verdict
+            summary.execution.result_source = "estimated"
             summary.failure_reasons.extend(failure_reasons)
             summary.artifacts.update({
                 "mop_surface": str(mop_png.relative_to(sandbox.sandbox_dir)),

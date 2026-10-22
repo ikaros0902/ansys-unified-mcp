@@ -18,7 +18,7 @@ from typing import Any, Dict, Optional, Set, Union
 logger = logging.getLogger(__name__)
 
 # 模擬作業終態集合
-TERMINAL_STATES: Set[str] = {"SOLVED", "FAILED", "ABORTED"}
+TERMINAL_STATES: Set[str] = {"SOLVED", "COMPLETED", "FAILED", "ABORTED"}
 
 
 class JobNotReadyError(Exception):

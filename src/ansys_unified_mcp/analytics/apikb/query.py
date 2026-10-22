@@ -9,10 +9,11 @@ from collections import deque
 
 from ansys_unified_mcp.analytics.apikb import config as cfg
 from ansys_unified_mcp.analytics.apikb.build import build_database
+from ansys_unified_mcp.analytics.apikb.build import _schema_is_current
 
 def _get_connection() -> sqlite3.Connection:
-    if not cfg.DB_PATH.exists():
-        build_database()
+    if not _schema_is_current(cfg.DB_PATH):
+        build_database(force=True)
     conn = sqlite3.connect(str(cfg.DB_PATH))
     conn.row_factory = sqlite3.Row
     return conn
@@ -21,7 +22,9 @@ def search(
     query: str,
     product: Optional[str] = None,
     kind: Optional[str] = None,
-    top_k: int = 8
+    top_k: int = 8,
+    release: Optional[str] = None,
+    interface: Optional[str] = None,
 ) -> list[dict]:
     """檢索 API 符號與成員 (FTS5 trigram 匹配)"""
     if not query or not query.strip():
@@ -43,18 +46,29 @@ def search(
 
     rows = []
     base_sql = """
-        SELECT item_type, ref_id, product, fqname, name, signature, doc, bm25(search_fts) as rank
-        FROM search_fts
+        SELECT f.item_type, f.ref_id, f.product, f.fqname, f.name, f.signature, f.doc,
+               f.release, f.interface, a.source_path, a.sha256, a.sdk_version,
+               bm25(search_fts) as rank
+        FROM search_fts AS f
+        LEFT JOIN api_sources AS a ON a.id = CAST(f.source_id AS INTEGER)
         WHERE search_fts MATCH ?
     """
     if product:
-        base_sql += " AND product = ?"
+        base_sql += " AND f.product = ?"
+    if release:
+        base_sql += " AND f.release = ?"
+    if interface:
+        base_sql += " AND f.interface = ?"
     base_sql += " ORDER BY rank LIMIT ?"
 
     for fts_expr in query_variants:
         params = [fts_expr]
         if product:
             params.append(product.lower())
+        if release:
+            params.append(release)
+        if interface:
+            params.append(interface)
         params.append(top_k * 3)
 
         try:
@@ -70,9 +84,10 @@ def search(
 
     for r in rows:
         fqname = r["fqname"]
-        if fqname in seen:
+        version_key = (r["product"], r["release"], r["interface"], fqname)
+        if version_key in seen:
             continue
-        seen.add(fqname)
+        seen.add(version_key)
 
         doc_snippet = (r["doc"] or "").strip().replace("\n", " ")
         if len(doc_snippet) > 160:
@@ -85,7 +100,13 @@ def search(
             "name": r["name"],
             "signature": r["signature"] or "",
             "doc": doc_snippet,
-            "score": round(-float(r["rank"]), 3)
+            "score": round(-float(r["rank"]), 3),
+            "release": r["release"],
+            "interface": r["interface"],
+            "source": {
+                "path": r["source_path"], "sha256": r["sha256"],
+                "sdk_version": r["sdk_version"],
+            },
         })
 
         if len(results) >= top_k:
@@ -97,23 +118,41 @@ def search(
 def get(
     fqname: str,
     include: tuple[str, ...] = ("members", "edges"),
-    limit: int = 50
+    limit: int = 50,
+    product: Optional[str] = None,
+    release: Optional[str] = None,
+    interface: Optional[str] = None,
 ) -> Optional[dict]:
     """獲取特定符號 (Symbol) 之詳細定義、所屬成員與相連型別"""
     conn = _get_connection()
     cur = conn.cursor()
 
     # 先以完全限定名稱查詢，若無則以簡稱查詢
-    cur.execute("SELECT id, product, kind, fqname, name, doc FROM symbols WHERE fqname = ? LIMIT 1", (fqname,))
-    row = cur.fetchone()
+    clauses = ["(fqname = ? OR name = ?)"]
+    params: list = [fqname, fqname]
+    for column, value in (("product", product), ("release", release), ("interface", interface)):
+        if value:
+            clauses.append(f"{column} = ?")
+            params.append(value.lower() if column == "product" else value)
+    rows = cur.execute(
+        "SELECT id, product, kind, fqname, name, doc, release, interface, source_id "
+        "FROM symbols WHERE " + " AND ".join(clauses) + " ORDER BY product, release, interface",
+        params,
+    ).fetchall()
 
-    if not row:
-        cur.execute("SELECT id, product, kind, fqname, name, doc FROM symbols WHERE name = ? LIMIT 1", (fqname,))
-        row = cur.fetchone()
-
-    if not row:
+    if not rows:
         conn.close()
         return None
+
+    versions = {(row["product"], row["release"], row["interface"]) for row in rows}
+    if len(versions) > 1:
+        candidates = [
+            {"product": p, "release": r, "interface": i}
+            for p, r, i in sorted(versions)
+        ]
+        conn.close()
+        return {"ambiguous": True, "candidates": candidates}
+    row = rows[0]
 
     sym_id = row["id"]
     symbol_info = {
@@ -123,10 +162,17 @@ def get(
         "fqname": row["fqname"],
         "name": row["name"],
         "doc": row["doc"] or "",
+        "release": row["release"],
+        "interface": row["interface"],
         "members": [],
         "edges_out": [],
         "edges_in": []
     }
+    source = cur.execute(
+        "SELECT source_path, sha256, sdk_version FROM api_sources WHERE id = ?",
+        (row["source_id"],),
+    ).fetchone()
+    symbol_info["source"] = dict(source) if source else {}
 
     if "members" in include:
         cur.execute("""
@@ -189,32 +235,43 @@ def path(
     from_type: str,
     to_type: str,
     product: Optional[str] = None,
-    max_depth: int = 4
-) -> list[dict]:
+    max_depth: int = 4,
+    release: Optional[str] = None,
+    interface: Optional[str] = None,
+    report_ambiguity: bool = False,
+) -> list[dict] | dict:
     """在型別關係圖上進行 BFS 搜尋，找出物件存取路徑"""
+    start = get(from_type, include=(), limit=0, product=product,
+                release=release, interface=interface)
+    target = get(to_type, include=(), limit=0, product=product,
+                 release=release, interface=interface)
+    if (start or {}).get("ambiguous") or (target or {}).get("ambiguous"):
+        if report_ambiguity:
+            return {
+                "ambiguous": True,
+                "from_candidates": (start or {}).get("candidates", []),
+                "to_candidates": (target or {}).get("candidates", []),
+            }
+        return []
+    if not start or not target:
+        return []
+
     conn = _get_connection()
     cur = conn.cursor()
 
-    # 解析起點符號
-    cur.execute("SELECT id, fqname, name FROM symbols WHERE name = ? OR fqname = ? LIMIT 1", (from_type, from_type))
-    start_row = cur.fetchone()
-    if not start_row:
-        conn.close()
-        return []
-
-    # 解析終點符號
-    cur.execute("SELECT id, fqname, name FROM symbols WHERE name = ? OR fqname = ? LIMIT 1", (to_type, to_type))
-    target_row = cur.fetchone()
-    if not target_row:
-        conn.close()
-        return []
-
-    start_id = start_row["id"]
-    target_id = target_row["id"]
+    start_row = cur.execute(
+        "SELECT id, fqname, name, release, interface FROM symbols WHERE id = ?",
+        (start["id"],),
+    ).fetchone()
+    target_row = cur.execute(
+        "SELECT id, fqname, name FROM symbols WHERE id = ?", (target["id"],)
+    ).fetchone()
+    start_id, target_id = start_row["id"], target_row["id"]
 
     if start_id == target_id:
         conn.close()
-        return [{"path": [start_row["name"]], "steps": []}]
+        return [{"path": [start_row["name"]], "steps": [],
+                 "release": start_row["release"], "interface": start_row["interface"]}]
 
     # BFS 隊列: (current_symbol_id, current_path_names, steps_list)
     queue = deque([(start_id, [start_row["name"]], [])])
@@ -232,8 +289,8 @@ def path(
             FROM edges e
             JOIN symbols s ON e.dst_symbol_id = s.id
             LEFT JOIN members m ON e.via_member_id = m.id
-            WHERE e.src_symbol_id = ?
-        """, (curr_id,))
+            WHERE e.src_symbol_id = ? AND s.release = ? AND s.interface = ?
+        """, (curr_id, start_row["release"], start_row["interface"]))
 
         for edge in cur.fetchall():
             nxt_id = edge["dst_symbol_id"]
@@ -252,7 +309,9 @@ def path(
                 found_paths.append({
                     "path_display": " -> ".join(path_names + [f"{via} -> {dst_name}"]),
                     "nodes": path_names + [dst_name],
-                    "steps": steps + [new_step]
+                    "steps": steps + [new_step],
+                    "release": start_row["release"],
+                    "interface": start_row["interface"],
                 })
                 break
             elif nxt_id not in visited and len(steps) + 1 < max_depth:
