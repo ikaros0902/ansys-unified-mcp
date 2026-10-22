@@ -1,14 +1,7 @@
 ---
 name: simplify-ram
-description: 引導式 RAM 幾何簡化流程。使用者要求「簡化 RAM」時，先向使用者索取主機板、RAM、socket 三個 body 名稱，取得後才呼叫 `geometry_simplify_ram` / `geometry_simplify_ram_batch`，把 RAM 卡與其 socket 合併成座落於主機板頂面的方塊，並於方塊底面建立 named selection。
-Use when:
-  - 使用者要求簡化 RAM / DIMM / 記憶體條幾何（含批次、整排、全部 RAM）。
-  - 需調用 MCP 工具：`geometry_simplify_ram`、`geometry_simplify_ram_batch`。
-  - 限制: 三個 body 名稱必須由使用者提供，嚴禁猜測或自行從 body 清單推斷；高度軸固定為 Y。
-  - 觸發關鍵字 (繁中/En): 簡化RAM, 簡化記憶體, 簡化DIMM, RAM簡化, simplify RAM, simplify DIMM.
-phase_gate:
-  requires: []
-  produces: []
+description: 引導式 RAM 幾何簡化流程。使用者要求「簡化 RAM」時，先向使用者索取主機板、RAM、socket 三個 body 名稱，取得後才呼叫 `geometry_simplify_ram` / `geometry_simplify_ram_batch`，把 RAM 卡與其 socket 合併成座落於主機板頂面的方塊，並於方塊底面建立 named selection。當使用者要求簡化 RAM / DIMM / 記憶體條幾何（含批次、整排、全部 RAM）時使用，需調用 MCP 工具 `geometry_simplify_ram`、`geometry_simplify_ram_batch`；三個 body 名稱必須由使用者提供，嚴禁猜測或自行從 body 清單推斷，高度軸固定為 Y。觸發關鍵字 (繁中/En): 簡化RAM, 簡化記憶體, 簡化DIMM, RAM簡化, simplify RAM, simplify DIMM。
+---
 ---
 
 # RAM 幾何簡化流程

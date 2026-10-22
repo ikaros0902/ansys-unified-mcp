@@ -1,15 +1,6 @@
 ---
 name: ansys-spaceclaim-defeature
-description: SpaceClaim 幾何特徵批量消除（Defeature）主控手冊。涵蓋圓柱孔、小圓弧邊、倒角、微小曲面與小孔徑邊線的自動化偵測、分組與消除。
-Use when:
-  - 幾何模型包含過多螺絲孔、倒角、微小孔洞或微小圓弧，需在劃分網格前簡化以提升網格品質與計算速度。
-  - 需透過直徑/半徑閾值自動搜尋圓柱面（Cylinder Faces）並執行 Fill 填補。
-  - 需透過半徑閾值自動搜尋全圓/半圓邊線（Circle Edges）並執行特徵簡化。
-  - 需保護特定關鍵孔洞（排除特定 Named Selection 組群不被消除）。
-  - 觸發關鍵字 (繁中/En): ansys-spaceclaim-defeature, 幾何去特徵, 消除圓孔, 消除倒角, Defeature, Remove Holes, Fill Faces.
-phase_gate:
-  requires: []
-  produces: []
+description: SpaceClaim 幾何特徵批量消除（Defeature）主控手冊。涵蓋圓柱孔、小圓弧邊、倒角、微小曲面與小孔徑邊線的自動化偵測、分組與消除。當幾何模型包含過多螺絲孔、倒角、微小孔洞或微小圓弧需在劃分網格前簡化以提升網格品質與計算速度、需透過直徑/半徑閾值自動搜尋圓柱面（Cylinder Faces）並執行 Fill 填補、需透過半徑閾值自動搜尋全圓/半圓邊線（Circle Edges）並執行特徵簡化、或需保護特定關鍵孔洞（排除特定 Named Selection 組群不被消除）時使用。觸發關鍵字 (繁中/En): ansys-spaceclaim-defeature, 幾何去特徵, 消除圓孔, 消除倒角, Defeature, Remove Holes, Fill Faces。
 ---
 
 # SpaceClaim 幾何特徵批量消除 (Defeature) 手冊

@@ -1,15 +1,6 @@
 ---
 name: ansys-material-assignment
-description: ANSYS Mechanical 自動材料指派主控手冊。支援讀取 BOM Excel 清單、零件名稱正則關鍵字匹配、材料樹目錄建立與未賦予零件自動追蹤。
-Use when:
-  - 裝配體零件數量龐大，手動指派材料耗時且易遺漏，需從 BOM Excel 清單自動批次匹配材料。
-  - 需透過零件命名規則與材料庫正則關鍵字（如 AL, STEEL, COPPER, FR4, RUBBER 等）自動指派材料。
-  - 需過濾既有自訂材料（避免覆蓋已設定之特殊非線性材料）或跳過已抑制幾何。
-  - 需在 Mechanical 自動生成 `[Mat] Unassigned_Bodies` 命名選擇群組以利人工覆核。
-  - 觸發關鍵字 (繁中/En): ansys-material-assignment, 材料指派, BOM材料匹配, 自動賦予材料, Material Assignment, Assign Material from BOM.
-phase_gate:
-  requires: []
-  produces: []
+description: ANSYS Mechanical 自動材料指派主控手冊。支援讀取 BOM Excel 清單、零件名稱正則關鍵字匹配、材料樹目錄建立與未賦予零件自動追蹤。當裝配體零件數量龐大、手動指派材料耗時易遺漏、需從 BOM Excel 清單自動批次匹配材料、需透過零件命名規則與材料庫正則關鍵字（如 AL, STEEL, COPPER, FR4, RUBBER 等）自動指派材料、需過濾既有自訂材料（避免覆蓋已設定之特殊非線性材料）或跳過已抑制幾何、或需在 Mechanical 自動生成 `[Mat] Unassigned_Bodies` 命名選擇群組以利人工覆核時使用。觸發關鍵字 (繁中/En): ansys-material-assignment, 材料指派, BOM材料匹配, 自動賦予材料, Material Assignment, Assign Material from BOM。
 ---
 
 # ANSYS Mechanical 自動材料指派 (Material Assignment) 手冊

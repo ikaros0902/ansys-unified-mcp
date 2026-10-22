@@ -1,15 +1,6 @@
 ---
 name: ansys-lsdyna
-description: LS-DYNA 顯式動力學工程主控手冊，專注於落摔試驗 (Drop test)、高速碰撞、衝擊響應與材料塑性失效分析。
-Use when:
-- 執行電子產品落摔試驗 (Drop test)、車輛碰撞、高速衝擊或破壞變形模擬。
-- 建立並調校 LS-DYNA 關鍵字卡片 (*KEYWORD, *MAT_024, *CONTACT_AUTOMATIC, *CONTROL_TIMESTEP, *RIGIDWALL)。
-- 規劃顯式動力學標準分析流程與計算時間步長 (CFL 條件)。
-- 評估顯式分析數值有效性：能量守恆、沙漏能比例 (<5%)、質量縮放百分比 (<2%) 與接觸滑移能診斷。
-- 觸發關鍵字 (繁中/En): LS-DYNA, lsdyna, 顯式動力學, 落摔試驗, Drop test, 衝擊分析, MAT_024, 沙漏能, 質量縮放, 時間步長, 剛性地坪, 能量守恆.
-phase_gate:
-  requires: []
-  produces: []
+description: LS-DYNA 顯式動力學工程主控手冊，專注於落摔試驗 (Drop test)、高速碰撞、衝擊響應與材料塑性失效分析。當需要執行電子產品落摔試驗、車輛碰撞、高速衝擊或破壞變形模擬、建立並調校 LS-DYNA 關鍵字卡片 (*KEYWORD, *MAT_024, *CONTACT_AUTOMATIC, *CONTROL_TIMESTEP, *RIGIDWALL)、規劃顯式動力學標準分析流程與計算時間步長 (CFL 條件)、或評估顯式分析數值有效性（能量守恆、沙漏能比例 <5%、質量縮放百分比 <2%、接觸滑移能診斷）時使用。觸發關鍵字 (繁中/En): LS-DYNA, lsdyna, 顯式動力學, 落摔試驗, Drop test, 衝擊分析, MAT_024, 沙漏能, 質量縮放, 時間步長, 剛性地坪, 能量守恆。
 ---
 
 # LS-DYNA 顯式動力學與落摔分析工程主控手冊

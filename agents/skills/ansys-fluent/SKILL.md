@@ -1,15 +1,6 @@
 ---
 name: ansys-fluent
-description: ANSYS Fluent CFD 與共軛熱傳分析主控手冊。涵蓋 PyFluent 水密幾何 Poly-Hexcore 網格、SST k-omega 湍流模型、Coupled 求解與 y+ 評估。
-Use when:
-  - 需執行流體流動、對流散熱或共軛熱傳 (CHT) 之數值模擬。
-  - 需使用 PyFluent (ansys-fluent-core) 自動生成 Poly-Hexcore 網格並配置邊界條件。
-  - 需診斷出口回流、質量守恆不平衡度 (< 0.1%) 或發散降階自愈。
-  - 限制: 需具備 Fluent 環境與 PyFluent 套件。
-  - 觸發關鍵字 (繁中/En): Fluent分析, PyFluent, CFD模擬, 共軛熱傳, CHT, Poly-Hexcore.
-phase_gate:
-  requires: []
-  produces: []
+description: ANSYS Fluent CFD 與共軛熱傳分析主控手冊。涵蓋 PyFluent 水密幾何 Poly-Hexcore 網格、SST k-omega 湍流模型、Coupled 求解與 y+ 評估。當需要執行流體流動、對流散熱或共軛熱傳 (CHT) 之數值模擬、使用 PyFluent (ansys-fluent-core) 自動生成 Poly-Hexcore 網格並配置邊界條件、或診斷出口回流與質量守恆不平衡度 (< 0.1%) 時使用；需具備 Fluent 環境與 PyFluent 套件。觸發關鍵字 (繁中/En): Fluent分析, PyFluent, CFD模擬, 共軛熱傳, CHT, Poly-Hexcore。
 ---
 
 # ANSYS Fluent 流體力學與熱傳分析主控手冊

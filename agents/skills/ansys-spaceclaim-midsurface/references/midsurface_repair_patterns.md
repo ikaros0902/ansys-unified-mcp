@@ -6,7 +6,7 @@
 
 ## 一、常見缺陷類型與偵測訊號
 
-| 缺陷類型 | 成因 | 偵測訊號与處置 |
+| 缺陷類型 | 成因 | 偵測訊號與處置 |
 | :--- | :--- | :--- |
 | **漏抽開天窗 (Missing Flanges)** | 單側加強筋、盲孔或拔模角導致相切鏈配對中斷 | 面積守恆率 $\eta_{\text{area}} = A_{\text{mid}} / A_{\text{solid}} < 0.42$ $\rightarrow$ 啟動 `Copy + Move t/2` 降級工法 |
 | **間隙 (Gap)** | 多片中面交界處或去圓角轉角未完全縫合 | 鄰接中面邊緣存在自由邊 (free edge) $\rightarrow$ `SharePrep` (`StitchBodies = True`) 容差縫合 |

@@ -1,4 +1,4 @@
-# 伺服器機殼 16 大特徵抽中面決策矩陣与底層機制手冊
+# 伺服器機殼 16 大特徵抽中面決策矩陣與底層機制手冊
 
 本手冊針對伺服器整機機殼（1U/2U/4U Server Chassis、HDD Cage、Fan Wall、Air Baffle）在 SpaceClaim 中進行抽中面時，解構原生 `Midsurface` 與 `Combine` 失敗之內核根因，並定義 **16 大典型製造與組裝特徵** 的量化識別訊號與 **4 階段自動化處置管線（Stage A ~ D）**。
 

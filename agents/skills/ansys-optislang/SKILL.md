@@ -1,15 +1,6 @@
 ---
 name: ansys-optislang
-description: ANSYS optiSLang 參數敏感度分析、MOP 最佳預測元模型與多目標 Pareto 尋優工程主控手冊。
-Use when:
-- 進行工程參數敏感度分析 (Sensitivity)、實驗設計 (DoE) 或拉丁超立方抽樣 (LHS)。
-- 訓練並評估最佳預測代理模型 MOP (Metamodel of Optimal Prognosis) 與預測係數 (CoP)。
-- 依據總靈敏度指數 (TSI) 過濾非關鍵變數進行工程降維。
-- 配置單目標與多目標 Pareto 最佳化尋優 (NLPQLP 梯度法 / NSGA-II 演化演算法)。
-- 觸發關鍵字 (繁中/En): optiSLang, optislang, 代理模型, MOP, 敏感度分析, Sensitivity, 最佳化, Pareto, LHS抽樣, 預測係數, CoP, 總靈敏度指數, TSI, DoE.
-phase_gate:
-  requires: []
-  produces: []
+description: ANSYS optiSLang 參數敏感度分析、MOP 最佳預測元模型與多目標 Pareto 尋優工程主控手冊。當需要進行工程參數敏感度分析 (Sensitivity)、實驗設計 (DoE) 或拉丁超立方抽樣 (LHS)、訓練並評估最佳預測代理模型 MOP (Metamodel of Optimal Prognosis) 與預測係數 (CoP)、依據總靈敏度指數 (TSI) 過濾非關鍵變數進行工程降維、或配置單目標與多目標 Pareto 最佳化尋優 (NLPQLP 梯度法 / NSGA-II 演化演算法) 時使用。觸發關鍵字 (繁中/En): optiSLang, optislang, 代理模型, MOP, 敏感度分析, Sensitivity, 最佳化, Pareto, LHS抽樣, 預測係數, CoP, 總靈敏度指數, TSI, DoE。
 ---
 
 # ANSYS optiSLang 代理模型與最佳化工程主控手冊
@@ -24,21 +15,21 @@ phase_gate:
 flowchart TD
     S1[步驟 1: 參數與響應空間定義
 定義連續/離散變數區間與機率分佈] --> S2[步驟 2: 實驗設計 DoE / LHS 抽樣
-空間填充抽樣 N >= 10k 建立樣本矩陣]
+空間填充 DoE；樣本數依維度、非線性、預算及驗證誤差決定]
     S2 --> S3[步驟 3: 敏感度分析與 TSI 篩選降維
 計算總靈敏度指數 剔除 TSI < 5% 雜訊變數]
     S3 --> S4[步驟 4: MOP 代理模型自動訓練與評估
 多項式/Kriging/MLS 競賽 檢核 CoP >= 0.8]
-    S4 -->|CoP >= 0.8 合格| S5[步驟 5: 基於 MOP 代理模型多目標尋優
+    S4 -->|驗證不足| S6[自適應補充資訊樣本 / 檢討設計區間]
 Pareto 前沿非支配解集搜尋與實體驗證]
-    S4 -->|CoP < 0.8 未達標| S6[自適應補充抽樣 / 縮小設計區間重算]
+    S4 -->|驗證不足| S6[自適應補充資訊樣本 / 檢討設計區間]
     S6 --> S2
 ```
 
 1. **步驟 1（參數與響應空間）**：梳理 CAD/CAE 輸入參數，明確定義連續或離散範圍及隨機機率分佈（Uniform / Normal）。
-2. **步驟 2（DoE 與 LHS 抽樣）**：採用拉丁超立方抽樣（LHS）確保多維空間填充性，樣本數基準為 $N \ge 10 \cdot k$（$k$ 為參數維度）。
-3. **步驟 3（敏感度與降維）**：調用 `SensitivityActor` 進行方差分解，計算總靈敏度指數（TSI）；將 $\text{TSI} < 0.05$ 之不顯著變數凍結為常數，達成主動降維。
-4. **步驟 4（MOP 競賽與評估）**：自動在多項式、移動最小二乘（MLS）與克里金（Kriging）間競賽，嚴格檢核預測係數 $\text{CoP} \ge 0.80$。
+2. **步驟 2（DoE 與 LHS 抽樣）**：抽樣方法與點數依維度、交互作用、噪聲、失敗率、計算預算及驗證方式規劃；不存在可保證充分性的通用點數公式。
+3. **步驟 3（敏感度與簡化）**：使用目標版本支援的方法，將低影響參數列為候選簡化項；凍結前需確認模型有效範圍與工程目標。
+4. **步驟 4（代理模型評估）**：檢視 CoP、交叉驗證/留出誤差、殘差與驗證資料；接受標準須事先定義，不套用通用 CoP 門檻。
 5. **步驟 5（Pareto 尋優與覆核）**：將高品質 MOP 導出為 ProxySolver，驅動演化演算法（EA）或梯度法（NLPQLP）獲取 Pareto 前沿解，並對最優折衷解進行 CAE 實體二次覆核。
 
 ---
@@ -48,22 +39,21 @@ Pareto 前沿非支配解集搜尋與實體驗證]
 | 領域分類 | 專精子手冊路徑 | 核心內容與工程焦點 |
 | :--- | :--- | :--- |
 | **API 查證** | `api_search(query, product="optislang")` | `ansys.optislang.core.*` 類別/成員存在性查證，避免幻覺 API |
-| **實驗設計** | `references/doe_sampling.md` | 拉丁超立方抽樣 (LHS) 原理、空間填充準則、樣本容量估算 ($N \ge 10k$)、機率分佈配置。 |
-| **敏感度矩陣** | `references/sensitivity_matrix.md` | 總靈敏度指數 (TSI) Sobol 方差分解、Pearson/Spearman 相關矩陣、變數篩選與降維準則 ($\text{TSI} < 0.05$)。 |
+| **實驗設計** | `references/doe_sampling.md` | LHS/DoE 選擇、空間覆蓋與案例化樣本預算。 |
+| **敏感度矩陣** | `references/sensitivity_matrix.md` | TSI、相關矩陣與依案例驗證的變數簡化。 |
 | **MOP 元模型** | `references/mop_metamodel.md` | MOP 最佳模型競賽架構（多項式/MLS/Kriging/MLP）、最佳子空間搜索、ProxySolver 導出與毫秒級推論。 |
 | **最佳化演算法** | `references/optimization_algorithms.md` | 局部梯度法 (`NLPQLPActor`) vs 全域啟發式 (`NOAActor` / `EAActor`)、多目標 Pareto 前沿解集提取。 |
-| **判斷力庫** | `references/optislang_judgment.md` | **【判斷力庫】** 預測係數 CoP 四級門檻 ($\ge 0.8$)、共線性排查 ($\text{VIF} > 5$)、過擬合 ($R^2$ 虛高但 CoP 低落) 診斷。 |
+| **判斷力庫** | `references/optislang_judgment.md` | CoP、共線性與驗證誤差的案例化解讀；失敗設計點與外推風險。 |
 | **自動化腳本** | `scripts/setup_mop_workflow_demo.py` | 完整 optiSLang 原生 Python 流程建立腳本，內建 CoP 評估、TSI 降維過濾與過擬合警示模組。 |
 
 ---
 
-## 三、工程紅線禁忌清單 (Don'ts)
+## 三、工程檢核
 
-- **CoP 未達標嚴禁直接尋優**：預測係數 $\text{CoP} < 0.80$ 時嚴禁直接拿 MOP 進行全域最佳化尋優！此時代理模型泛化能力不足，盲目尋優必掉入虛假最優陷阱。
-- **高維未降維嚴禁全局尋優**：設計變數數量 $> 10$ 個時，嚴禁在未經 TSI 篩選降維前直接啟動全域搜尋，否則將觸發維度災難導致收斂停滯。
-- **嚴禁外插超出 DoE 抽樣邊界**：代理模型僅在抽樣點凸包（Convex Hull）內插具備高精度；嚴禁外插超出初始抽樣上下限邊界，否則預測誤差發散。
-- **嚴禁只看決定係數 $R^2$ 忽視 CoP**：傳統 $R^2$ 隨模型項數增加必然單調上升（極易受過擬合欺騙）；必須以交叉驗證的 CoP 作為真實模型泛化能力的唯一判定依據。
-- **共線性未排查嚴禁擬合高階模型**：輸入參數間若存在嚴重共線性（相關係數 $> 0.85$ 或 $\text{VIF} > 5$），嚴禁強行擬合高階多項式，避免矩陣病態求逆失真。
+- DoE 樣本數、CoP、TSI、相關係數與 VIF 是依模型與驗證策略判讀的指標，不採用跨案例固定門檻。
+- 設計點失敗須保留失敗狀態；不得以零值填補後參與模型訓練或候選排序。
+- 代理模型在設計範圍之外屬外推風險；以真實求解覆核候選最優點並記錄誤差。
+- 全域最佳化是否適用，依設計維度、代理模型驗證、限制條件與計算預算決定；沒有固定變數數量禁令。
 
 ## 官方範例路由
 

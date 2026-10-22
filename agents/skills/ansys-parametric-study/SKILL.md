@@ -1,13 +1,6 @@
 ---
 name: ansys-parametric-study
-description: ANSYS Workbench DesignXplorer (DX) 參數集研究與 optiSLang 雙軌選型優化技能。
-Use when:
-  - 需透過 Python / Journal 腳本驅動 Workbench 專案層級 Parameter Set 批次更新計算。
-  - 需依據參數維度（<= 10 vs > 10）與非線性程度，在 DesignXplorer 與 optiSLang 間進行選型決策。
-  - 觸發關鍵字 (繁中/En): 參數化研究, DesignXplorer, DX, Parameter Set, 參數集更新, optiSLang選型.
-phase_gate:
-  requires: []
-  produces: []
+description: ANSYS Workbench DesignXplorer (DX) 參數集研究與 optiSLang 雙軌選型優化技能。當需要透過 Python / Journal 腳本驅動 Workbench 專案層級 Parameter Set 批次更新計算、或需依據參數維度（<= 10 vs > 10）與非線性程度在 DesignXplorer 與 optiSLang 間進行選型決策時使用。觸發關鍵字 (繁中/En): 參數化研究, DesignXplorer, DX, Parameter Set, 參數集更新, optiSLang選型。
 ---
 
 # ANSYS 參數化研究與雙軌選型優化主控手冊

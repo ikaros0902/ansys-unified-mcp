@@ -1,14 +1,7 @@
 ---
 name: pymechanical-operations
-description: PyMechanical gRPC 連線、遠端腳本執行、幾何 Scoping 與網格控制自動化技能。
-Use when:
-  - 需透過 PyMechanical gRPC (port 10000+) 連線正在運行的 Mechanical 實例。
-  - 需透過 `run_python_script` 遠端驅動 Mechanical 模型。
-  - 需透過 ACT API 動態配置 Body Sizing、MultiZone Method 或執行 `GenerateMesh`。
-  - 觸發關鍵字 (繁中/En): PyMechanical連線, Mechanical遠端控制, 自動網格劃分, SelectionInfo.
-phase_gate:
-  requires: []
-  produces: []
+description: PyMechanical gRPC 連線、遠端腳本執行、幾何 Scoping 與網格控制自動化技能。當需要透過 PyMechanical gRPC (port 10000+) 連線正在運行的 Mechanical 實例、透過 `run_python_script` 遠端驅動 Mechanical 模型、或需透過 ACT API 動態配置 Body Sizing、MultiZone Method 或執行 `GenerateMesh` 時使用。觸發關鍵字 (繁中/En): PyMechanical連線, Mechanical遠端控制, 自動網格劃分, SelectionInfo。
+---
 ---
 
 # PyMechanical 遠端操作與網格自動化主控手冊

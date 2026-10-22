@@ -74,3 +74,14 @@
 ## 統一規範
 - 全案通用/非 ANSYS 技能（如去 AI 味、Git 審查、Obsidian 筆記等）保留於全域技能庫，不污染本 CAE 倉庫。
 - 本倉庫保持 100% 純淨的 ANSYS 模擬、自動化與 MCP 驅動專用架構。
+
+## 文件來源與新增領域入口
+
+- [`ansys-mcp-foundation`](ansys-mcp-foundation/SKILL.md)：新建或修改本專案 ANSYS MCP skills、tools、workflows 時的共同入口；含按需程式碼地圖、來源查找與驗證參考。
+
+領域來源、版本與支援狀態對照見 [`DOMAIN_SOURCE_AND_SUPPORT.md`](../../docs/skills/DOMAIN_SOURCE_AND_SUPPORT.md)。新增入口：
+
+- [`ansys-random-vibration`](ansys-random-vibration/SKILL.md)：Mechanical PSD 隨機振動流程與統計結果判讀。
+- [`ansys-thermal-analysis`](ansys-thermal-analysis/SKILL.md)：穩態/暫態熱、熱應力與熱場映射路由。
+- [`ansys-sherlock`](ansys-sherlock/SKILL.md)、[`ansys-icepak`](ansys-icepak/SKILL.md)：文件/API 對照；不宣稱新 connector。
+- [`ansys-optical-engineering`](ansys-optical-engineering/SKILL.md)：光學產品路由；細分 [`Speos`](ansys-speos/SKILL.md)、[`Zemax`](ansys-zemax/SKILL.md)、[`Lumerical`](ansys-lumerical/SKILL.md)。

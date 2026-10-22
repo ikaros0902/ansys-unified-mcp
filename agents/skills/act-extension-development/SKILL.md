@@ -1,14 +1,6 @@
 ---
 name: act-extension-development
-description: ANSYS ACT 擴充外掛開發、IronPython 限制、FileSystemWatcher 事件監聽與 Wizard API 自動化技能。
-Use when:
-  - 需開發或除錯 ANSYS ACT 外掛、XML 配置或 IronPython 2.7 腳本。
-  - 需透過 FileSystemWatcher 實裝 Workbench 非同步檔案 IPC 監聽。
-  - 需程式化調用既有加密之 ACT Wizard (`.wbex`)。
-  - 觸發關鍵字 (繁中/En): ACT外掛, ACT開發, FileSystemWatcher, ACT Wizard, IronPython限制.
-phase_gate:
-  requires: []
-  produces: []
+description: ANSYS ACT 擴充外掛開發、IronPython 限制、FileSystemWatcher 事件監聽與 Wizard API 自動化技能。當需要開發或除錯 ANSYS ACT 外掛、XML 配置或 IronPython 2.7 腳本、透過 FileSystemWatcher 實裝 Workbench 非同步檔案 IPC 監聽、或程式化調用既有加密之 ACT Wizard (`.wbex`) 時使用。觸發關鍵字 (繁中/En): ACT外掛, ACT開發, FileSystemWatcher, ACT Wizard, IronPython限制。
 ---
 
 # ANSYS ACT 擴充外掛開發主控手冊

@@ -1,9 +1,6 @@
 ---
 name: 07-solve-monitor
 description: LS-DYNA 求解器調度、即時 glstat 能量平衡比 (0.9~1.1) 監控、沙漏能檢測與異常硬性阻斷會話。
-phase_gate:
-  requires: []
-  produces: []
 ---
 
 # Session 07: 求解調度與即時能量守恆監控 (Solve Dispatch & Energy Balance Monitor)

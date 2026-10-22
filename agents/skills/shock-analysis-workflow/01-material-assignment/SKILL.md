@@ -1,9 +1,6 @@
 ---
 name: 01-material-assignment
 description: 自動化材料指派會話（Material Assignment Session），整合 ACT 關鍵字比對引擎、BOM 查表、SMT 元件正則匹配與小批次驗證機制。
-phase_gate:
-  requires: []
-  produces: []
 ---
 
 # Session 01: 材料自動指派與驗證 (Material Assignment & Verification)

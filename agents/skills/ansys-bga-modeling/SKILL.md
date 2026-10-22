@@ -1,15 +1,6 @@
 ---
 name: ansys-bga-modeling
-description: SpaceClaim BGA 錫球陣列與銅箔焊盤（Pad）幾何建模主控手冊。涵蓋球徑、高度、上下焊盤、矩形/交錯陣列與共拓撲（Share Topology）設定。
-Use when:
-  - 需在 SpaceClaim 快速建立封裝 BGA（Ball Grid Array）錫球 3D 實體模型。
-  - 需參數化控制錫球直徑、壓縮高度、上/下銅箔焊盤厚度與直徑。
-  - 需依矩形矩陣（Rectangular Grid）或六角交錯（Staggered Grid）批量生成錫球陣列。
-  - 需使錫球與主機板/晶片封裝載板精確貼合（Mating Face: Top/Bottom）。
-  - 觸發關鍵字 (繁中/En): ansys-bga-modeling, BGA建模, 錫球陣列, 封裝陣列, BGA Ball, Solder Ball Array, BGA Pad.
-phase_gate:
-  requires: []
-  produces: []
+description: SpaceClaim BGA 錫球陣列與銅箔焊盤（Pad）幾何建模主控手冊。涵蓋球徑、高度、上下焊盤、矩形/交錯陣列與共拓撲（Share Topology）設定。當需要在 SpaceClaim 快速建立封裝 BGA（Ball Grid Array）錫球 3D 實體模型、參數化控制錫球直徑/壓縮高度/上下銅箔焊盤厚度與直徑、依矩形矩陣（Rectangular Grid）或六角交錯（Staggered Grid）批量生成錫球陣列、或使錫球與主機板/晶片封裝載板精確貼合（Mating Face: Top/Bottom）時使用。觸發關鍵字 (繁中/En): ansys-bga-modeling, BGA建模, 錫球陣列, 封裝陣列, BGA Ball, Solder Ball Array, BGA Pad。
 ---
 
 # SpaceClaim BGA 錫球與陣列幾何建模手冊

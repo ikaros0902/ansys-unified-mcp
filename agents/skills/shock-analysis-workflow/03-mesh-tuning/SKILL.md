@@ -1,9 +1,6 @@
 ---
 name: 03-mesh-tuning
 description: 網格劃分優先級、幾何與初始穿透干涉預檢、LS-DYNA 顯式時間步長 (dt >= 2e-8 s) 調校與小批次驗證會話。
-phase_gate:
-  requires: []
-  produces: []
 ---
 
 # Session 03: 網格優先級、干涉預檢與顯式時間步長調校 (Mesh Tuning & Time Step Quality)

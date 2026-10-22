@@ -1,14 +1,7 @@
 ---
 name: simplify-heatsink
-description: 散熱片 (heatsink) 幾何簡化流程。使用者要求「簡化 heatsink / 散熱片」時，確認散熱片 body 名稱（多 body 組件另確認要併入的鰭片/底座/上蓋），呼叫 `geometry_simplify_heatsink`：重建為凸字形方塊組（底板＋上凸＋下凸，無階梯/圓角）、鎖孔為 Y 向直圓柱、移除螺絲/彈簧，並以常見散熱片密度反推簡化體應設定的等效密度（附加於 body 名稱 `_rho<kg/m³>`）。
-Use when:
-  - 使用者要求簡化散熱片 / heatsink / 鰭片幾何，或要求「保留鎖孔與底面、反推等效密度」。
-  - 需調用 MCP 工具：`geometry_simplify_heatsink`（必要時搭配 `geometry_list_bodies`、`geometry_screenshot`）。
-  - 限制: 高度軸固定為 world Y（鰭片朝 +Y）；散熱片 body 名稱須由使用者提供或經使用者確認，不可自行猜測。
-  - 觸發關鍵字 (繁中/En): 簡化heatsink, 簡化散熱片, 散熱片簡化, 鰭片填實, 等效密度, simplify heatsink.
-phase_gate:
-  requires: []
-  produces: []
+description: 散熱片 (heatsink) 幾何簡化流程。使用者要求「簡化 heatsink / 散熱片」時，確認散熱片 body 名稱（多 body 組件另確認要併入的鰭片/底座/上蓋），呼叫 `geometry_simplify_heatsink`：重建為凸字形方塊組（底板＋上凸＋下凸，無階梯/圓角）、鎖孔為 Y 向直圓柱、移除螺絲/彈簧，並以常見散熱片密度反推簡化體應設定的等效密度（附加於 body 名稱 `_rho<kg/m³>`）。當使用者要求簡化散熱片 / heatsink / 鰭片幾何，或要求「保留鎖孔與底面、反推等效密度」時使用，需調用 MCP 工具 `geometry_simplify_heatsink`（必要時搭配 `geometry_list_bodies`、`geometry_screenshot`）；高度軸固定為 world Y（鰭片朝 +Y），散熱片 body 名稱須由使用者提供或經使用者確認，不可自行猜測。觸發關鍵字 (繁中/En): 簡化heatsink, 簡化散熱片, 散熱片簡化, 鰭片填實, 等效密度, simplify heatsink。
+---
 ---
 
 # 散熱片幾何簡化流程

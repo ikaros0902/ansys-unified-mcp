@@ -1,15 +1,6 @@
 ---
 name: ansys-spaceclaim
-description: ANSYS SpaceClaim (SCDM) 幾何建模與 Python 腳本自動化技能。涵蓋 PyAnsys Geometry 與原生 SpaceClaim ACT IronPython API 雙軌控制。
-Use when:
-  - 需透過 SpaceClaim 執行 3D CAD 建模、草圖繪製、拉伸、旋轉、組件管理或中面抽取。
-  - 需在獨立開啟的 SpaceClaim / Discovery 視窗透過 gRPC 執行自訂腳本（`geometry_run_script`）。
-  - 需調用 MCP 工具：`geometry_create_block`、`geometry_get_bounding_box`、`geometry_simplify_ram` 等。
-  - 限制: 長度尺寸強制為公尺 (m)；嚴禁重複調用 create_design 創建新設計。
-  - 觸發關鍵字 (繁中/En): SpaceClaim建模, SCDM腳本, SpaceClaim幾何, 幾何前處理.
-phase_gate:
-  requires: []
-  produces: []
+description: ANSYS SpaceClaim (SCDM) 幾何建模與 Python 腳本自動化技能。涵蓋 PyAnsys Geometry 與原生 SpaceClaim ACT IronPython API 雙軌控制。當需要透過 SpaceClaim 執行 3D CAD 建模、草圖繪製、拉伸、旋轉、組件管理或中面抽取、需在獨立開啟的 SpaceClaim / Discovery 視窗透過 gRPC 執行自訂腳本（`geometry_run_script`）、或需調用 MCP 工具如 `geometry_create_block`、`geometry_get_bounding_box`、`geometry_simplify_ram` 時使用；長度尺寸強制為公尺 (m)，嚴禁重複調用 create_design 創建新設計。觸發關鍵字 (繁中/En): SpaceClaim建模, SCDM腳本, SpaceClaim幾何, 幾何前處理。
 ---
 
 # ANSYS SpaceClaim 幾何建模與腳本自動化主控手冊

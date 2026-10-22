@@ -1,15 +1,6 @@
 ---
 name: ansys-mechanical
-description: ANSYS Mechanical 結構剛強度、模態與熱-結構耦合分析主控手冊。涵蓋 ACT 腳本、非線性接觸、網格前檢與奇異點判定。
-Use when:
-  - 需進行靜態結構強度剛度校核、固有頻率模態分析或熱應力序列耦合。
-  - 需透過 ACT / PyMechanical 腳本配置非線性接觸、網格控制與大變形求解。
-  - 需排查求解器主元錯誤 (Pivot Error)、殘差發散或聖維南應力奇異點。
-  - 限制: 需在 Mechanical ACT 環境或透過 PyMechanical 連線執行。
-  - 觸發關鍵字 (繁中/En): Mechanical分析, 靜態結構, 模態分析, 熱應力分析, PyMechanical, ACT腳本.
-phase_gate:
-  requires: []
-  produces: []
+description: ANSYS Mechanical 結構剛強度、模態與熱-結構耦合分析主控手冊。涵蓋 ACT 腳本、非線性接觸、網格前檢與奇異點判定。當需要進行靜態結構強度剛度校核、固有頻率模態分析或熱應力序列耦合、需透過 ACT / PyMechanical 腳本配置非線性接觸、網格控制與大變形求解、或需排查求解器主元錯誤 (Pivot Error)、殘差發散或聖維南應力奇異點時使用；需在 Mechanical ACT 環境或透過 PyMechanical 連線執行。觸發關鍵字 (繁中/En): Mechanical分析, 靜態結構, 模態分析, 熱應力分析, PyMechanical, ACT腳本。
 ---
 
 # ANSYS Mechanical 結構與熱分析主控手冊
@@ -47,7 +38,7 @@ flowchart LR
 
 ### 1. 靜態結構分析 SOP (Static Structural)
 1. **單位與材料**：設定系統單位制（MKS/NMM），匯入 XML 工程材料庫並指定至主體（Body）。
-2. **網格劃分與前檢**：依幾何特徵設定 Sizing 與 Method；**強制檢驗網格品質**（歪斜度 Skewness < 0.85、正交品質 > 0.15），未達標嚴禁求解。
+2. **網格劃分與前檢**：依幾何、單元與分析類型檢查網格品質；品質指標須使用該求解器與單元適用的定義，並追蹤最差單元位置及所影響的關注量。網格警示值可作調查門檻，不能脫離分析與單元定義當成通用求解阻斷值。
 3. **接觸與連接**：定義裝配體接觸對（Contact Regions），指定接觸公式（Augmented Lagrange）與穿透控制。
 4. **邊界與載荷**：施加固定約束（Fixed）、位移（Displacement）及載荷（Force/Pressure），**嚴格防範剛體位移**。
 5. **求解控制**：配置大變形開關（Large Deflection）、載荷步與自動副步（Auto Time Stepping）。
@@ -103,12 +94,11 @@ flowchart LR
 ## 四、絕不能做清單 (Don'ts)
 
 > [!CAUTION]
-> 1. **嚴禁在未檢查網格品質（歪斜度/正交品質）下直接求解**：
->    歪斜度 Skewness > 0.85 或正交品質 Orthogonal Quality < 0.15 的劣質單元會導致剛度矩陣嚴重病態，引發不收斂或虛假局部高應力。求解前必須調用檢驗腳本確認放行。
-> 2. **嚴禁對薄壁板金零件使用粗實體單元**：
->    壁厚方向僅有 1 層一階四面體（SOLID185）會引發嚴重的「剪切自鎖（Shear Locking）」，導致結構剛度被虛假高估數倍。薄壁件必須中面抽取改用薄殼單元（SHELL181），或在厚度方向劃分至少 3 層高階實體單元（SOLID186）。
-> 3. **嚴禁在缺少約束的情況下求解靜態分析**：
->    結構必須在空間 6 個自由度（3 平移 + 3 旋轉）上具備充分約束。缺少約束將引發求解器「Small equation solver pivot（主元為零）」剛體位移錯誤。未完全固定工況需開啟弱彈簧（Weak Springs）或慣性釋放（Inertia Relief）。
+> 1. **網格錯誤與不佳指標分開處理**：負體積、反轉或求解器明確拒絕的元素屬阻斷問題；品質指標達警示值時，先定位元素、確認量測定義與分析類型，再評估影響。不要把 Fluent 指標或單一專案警示值當成 Mechanical 通用失效門檻。
+> 2. **薄壁建模方法需依物理問題選擇**：考慮殼／實體單元、階次、厚度方向解析度、剪切鎖定與局部應力梯度。至少三層或指定 element type 僅是待驗證的建模建議，不是所有幾何和載荷都成立的硬規則；以厚度收斂與適用單元理論作決策。
+> 3. **約束要消除非物理剛體模態並符合實際支承**：不要求所有結構固定六個自由度；須根據真實支承、接觸與分析類型檢查剛體模態、約束反力與荷載平衡。Weak Springs 或 Inertia Relief 僅在其物理假設成立時採用。
+
+工程判斷與品質指標分類、來源及校核方式見 [`references/evidence_and_applicability.md`](references/evidence_and_applicability.md)。隨機振動另見 [`ansys-random-vibration`](../ansys-random-vibration/SKILL.md)。
 
 ## 官方範例路由
 

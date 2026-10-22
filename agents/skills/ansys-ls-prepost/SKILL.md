@@ -1,10 +1,6 @@
 ---
 name: ansys-ls-prepost
-description: ANSYS LS-PrePost 腳本前處理與後處理精簡主控手冊。涵蓋 SCL 命令語言、命令行檔案 (.cfile) 與 Python DataCenter API，支援 d3plot 結果提取、雲圖繪製與模型建立。
-keywords: ls-prepost, lspp, SCL, cfile, command file, runscript, runpython, LsPrePost, execute_command, cmd_result_get_value, DataCenter, get_data, data center, d3plot, fringe, post-processing
-phase_gate:
-  requires: []
-  produces: []
+description: ANSYS LS-PrePost 腳本前處理與後處理精簡主控手冊。涵蓋 SCL 命令語言、命令行檔案 (.cfile) 與 Python DataCenter API，支援 d3plot 結果提取、雲圖繪製與模型建立。觸發關鍵字 (繁中/En): ls-prepost, lspp, SCL, cfile, command file, runscript, runpython, LsPrePost, execute_command, cmd_result_get_value, DataCenter, get_data, data center, d3plot, fringe, post-processing。
 ---
 
 # ANSYS LS-PrePost 腳本與前後處理主控手冊

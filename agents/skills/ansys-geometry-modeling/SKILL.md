@@ -1,12 +1,6 @@
 ---
 name: ansys-geometry-modeling
-description: ANSYS 現代化幾何前處理主控手冊 (PyAnsys Geometry)。涵蓋 2D 參數化草圖、3D 拉伸/旋轉、外流域抽取 (Enclosure)、CAD 診斷與無損 PMDB 導出。
-Use when:
-  - 需使用 PyAnsys Geometry (ansys.geometry.core) 進行 Python 程式化 3D 幾何建模。
-  - 需建立流場外流域 (Enclosure) 並執行布林相減。
-  - 需標記具名選擇 (Named Selection) 並匯出 .pmdb 無損直通 Mechanical 或 Fluent。
-  - 限制: 長度單位明確指定；transport 依使用者明確設定或 SDK 自動能力選擇。
-  - 觸發關鍵字 (繁中/En): PyAnsys Geometry, 參數化幾何, 抽取外流域, Enclosure, 匯出PMDB.
+description: ANSYS 現代化幾何前處理主控手冊 (PyAnsys Geometry)。涵蓋 2D 參數化草圖、3D 拉伸/旋轉、外流域抽取 (Enclosure)、CAD 診斷與無損 PMDB 導出。當需要使用 PyAnsys Geometry (ansys.geometry.core) 進行 Python 程式化 3D 幾何建模、建立流場外流域 (Enclosure) 並執行布林相減、或標記具名選擇 (Named Selection) 並匯出 .pmdb 無損直通 Mechanical 或 Fluent 時使用；長度單位需明確指定，transport 依使用者明確設定或 SDK 自動能力選擇。觸發關鍵字 (繁中/En): PyAnsys Geometry, 參數化幾何, 抽取外流域, Enclosure, 匯出PMDB。
 ---
 
 # ANSYS 現代化幾何建模與無損流轉主控手冊 (PyAnsys Geometry)

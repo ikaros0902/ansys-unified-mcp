@@ -1,10 +1,6 @@
 ---
 name: pdf-to-md
-description: ANSYS 技術手冊與說明文檔 PDF 轉 Markdown 精簡轉換技能。基於 pymupdf / pymupdf4llm 高速抽取純文字與表格，生成帶有逐頁標記、適合 RAG 與檢索索引的輕量 Markdown。
-keywords: pdf, markdown, md, convert, documentation, docs, pymupdf, pymupdf4llm, extract text, rag, ANSYS documentation
-phase_gate:
-  requires: []
-  produces: []
+description: ANSYS 技術手冊與說明文檔 PDF 轉 Markdown 精簡轉換技能。基於 pymupdf / pymupdf4llm 高速抽取純文字與表格，生成帶有逐頁標記、適合 RAG 與檢索索引的輕量 Markdown。觸發關鍵字 (繁中/En): pdf, markdown, md, convert, documentation, docs, pymupdf, pymupdf4llm, extract text, rag, ANSYS documentation。
 ---
 
 # PDF 轉 Markdown 文檔處理技能

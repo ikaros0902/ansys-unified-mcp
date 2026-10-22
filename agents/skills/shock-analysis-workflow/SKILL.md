@@ -1,9 +1,6 @@
 ---
 name: shock-analysis-workflow
 description: ANSYS Mechanical LS-DYNA 衝擊與落摔分析端到端自動化管線編排，協調 8 個模組化 Session 技能。
-phase_gate:
-  requires: []
-  produces: []
 ---
 
 # 衝擊分析自動化工作流編排手冊 (LS-DYNA)

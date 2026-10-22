@@ -1,9 +1,6 @@
 ---
 name: 06-constraint-load
 description: Shock dynamic boundary conditions and exact company standard LS-DYNA Analysis Settings.
-phase_gate:
-  requires: []
-  produces: []
 ---
 
 # Session 06: Constraint, Shock Load & Standard Analysis Settings

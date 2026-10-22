@@ -1,9 +1,6 @@
 ---
 name: 04-connection-rm
 description: 遠端點 (Remote Point)、遠端質量 (Remote Mass) 配置會話，包含過度約束防呆 (Error 20110)、空 NS 過濾、Deformable 設定與飛出零件拓撲預檢。
-phase_gate:
-  requires: []
-  produces: []
 ---
 
 # Session 04: 連線、遠端質量配置與拓撲防呆預檢 (Connection, Remote Mass & Topology Pre-Checks)

@@ -1,9 +1,6 @@
 ---
 name: 05-section-assignment
 description: 中面薄板厚度指派、LS-DYNA 截面性質與單元公式 (ELFORM=16 Shells, ELFORM=10/1 Solids) 配置與小批次驗證會話。
-phase_gate:
-  requires: []
-  produces: []
 ---
 
 # Session 05: 截面性質與單元公式指派 (Section & Shell Thickness Assignment)

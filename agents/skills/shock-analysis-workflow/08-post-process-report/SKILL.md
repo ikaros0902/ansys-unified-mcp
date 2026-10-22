@@ -1,9 +1,6 @@
 ---
 name: 08-post-process-report
 description: LS-DYNA 模擬結果後處理、塑性應變場 (EPS) 提取、基於公司標準失效矩陣之客觀 PASS/FAIL 判定與自動化報告生成會話。
-phase_gate:
-  requires: []
-  produces: []
 ---
 
 # Session 08: 後處理評估與客觀失效判定報告 (Post-Processing & Failure Evaluation Report)

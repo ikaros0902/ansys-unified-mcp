@@ -1,16 +1,6 @@
 ---
 name: ansys-submodeling-dpf
-description: ANSYS DPF 高速結果場提取與局部子模型（Submodeling）自動化分析技能。涵蓋形函數空間座標插值、MAPDL 併發求解池與聖維南切面連續性驗證。
-Use when:
-  - 需使用 PyAnsys DPF (ansys.dpf.core) 高速讀取大型 RST/CAS 結果檔之位移場與等效應力場。
-  - 需將粗網格全域模型位移透過有限元形函數 (on_coordinates) 插值至細緻子模型切面邊界。
-  - 需透過 LocalMapdlPool 併發多進程求解多個局部細緻子模型。
-  - 需依據聖維南原理 (Saint-Venant's Principle) 評估切面應力連續性誤差 (平均 <= 5%, 局部 <= 10%)。
-  - 限制: 需安裝 ansys-dpf-core 與 ansys-mapdl-core。
-  - 觸發關鍵字 (繁中/En): 子模型分析, Submodeling, DPF結果提取, on_coordinates, 形函數插值, LocalMapdlPool, 聖維南檢驗, 切面連續性.
-phase_gate:
-  requires: []
-  produces: []
+description: ANSYS DPF 高速結果場提取與局部子模型（Submodeling）自動化分析技能。涵蓋形函數空間座標插值、MAPDL 併發求解池與聖維南切面連續性驗證。當需要使用 PyAnsys DPF (ansys.dpf.core) 高速讀取大型 RST/CAS 結果檔之位移場與等效應力場、將粗網格全域模型位移透過有限元形函數 (on_coordinates) 插值至細緻子模型切面邊界、需透過 LocalMapdlPool 併發多進程求解多個局部細緻子模型、或需依據聖維南原理 (Saint-Venant's Principle) 評估切面應力連續性誤差 (平均 <= 5%, 局部 <= 10%) 時使用；需安裝 ansys-dpf-core 與 ansys-mapdl-core。觸發關鍵字 (繁中/En): 子模型分析, Submodeling, DPF結果提取, on_coordinates, 形函數插值, LocalMapdlPool, 聖維南檢驗, 切面連續性。
 ---
 
 # ANSYS DPF 高速結果場提取與子模型自動化主控手冊

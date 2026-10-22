@@ -1,9 +1,6 @@
 ---
 name: 02-contact-creation
 description: 自動化接觸對與運動副建立會話（Contact & Joint Creation Session），整合 Mech_bonded 與 MECH_RM_Joint_Creation 邏輯，支援 Mobile/Reference 自動配對與小批次驗證。
-phase_gate:
-  requires: []
-  produces: []
 ---
 
 # Session 02: 接觸對與運動副自動建立 (Contact & Joint Creation)

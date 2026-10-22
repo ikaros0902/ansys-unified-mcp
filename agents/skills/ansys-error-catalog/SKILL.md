@@ -1,12 +1,6 @@
 ---
 name: ansys-error-catalog
-description: ANSYS 與 IronPython 開發報錯目錄與排障指南。涵蓋 Workbench、Mechanical、SpaceClaim 與 ACT 報錯根因與修復對策。
-Use when:
-  - 遇到 ANSYS 執行期錯誤（如 IronPython NameError、StandardError、Scoping 遺失）。
-  - 觸發關鍵字 (繁中/En): ANSYS報錯, IronPython錯誤, Mechanical排障, ACT除錯.
-phase_gate:
-  requires: []
-  produces: []
+description: ANSYS 與 IronPython 開發報錯目錄與排障指南。涵蓋 Workbench、Mechanical、SpaceClaim 與 ACT 報錯根因與修復對策。當遇到 ANSYS 執行期錯誤（如 IronPython NameError、StandardError、Scoping 遺失）時使用。觸發關鍵字 (繁中/En): ANSYS報錯, IronPython錯誤, Mechanical排障, ACT除錯。
 ---
 
 # ANSYS 錯誤分類目錄

@@ -34,7 +34,7 @@ flowchart TD
     C -->|是: 觸發熔斷| D[暫停 Mesh
     僅顯示問題幾何 / 自動建立 NS
     詢問使用者 Defeature 授權]
-    D --> E[對獲准 Body 施加局部 Defeature]
+    D --> E[對經同意 Body 施加局部 Defeature]
     C -->|否: 幾何乾淨| F[幾何定量決策引擎
     Method & Size 依據表判定]
     E --> F
@@ -52,7 +52,7 @@ flowchart TD
 ### 1. 整機幾何前檢與極短邊熔斷 (Short-Edge Gatekeeper)
 - **尊重當下激活狀態**：只要 `Suppressed == False`（含 PSU、硬碟架、插卡等），一律視為必跑幾何直接進行劃分，不擅自轉質點或抑制。
 - **極短邊預檢與視覺隔離**：若偵測到邊長 $L_{\text{edge}} < 0.25\text{ mm}$，**立即中斷 Mesh**；將問題幾何設為 `Visible = True`，其餘正常幾何設為 `Visible = False`；自動建立 `NS_ShortEdges_ALL` 與各件具名選擇，向使用者報告並徵詢 Defeature 授權。
-- **Defeature 授權制**：嚴禁擅自盲目開啟全域 Defeature，僅對使用者明確核准之 Body 施加 `DefeaturingTolerance`。
+- **Defeature 授權制**：嚴禁擅自盲目開啟全域 Defeature，僅對使用者明確同意之 Body 施加 `DefeaturingTolerance`。
 
 ### 2. 客觀量化驅動 Method 與 Size
 - **等效特徵壁厚**：$t_{\text{eq}} = \frac{2V}{A_{\text{surf}}}$（精準估算薄壁折彎件平均肉厚）。
@@ -63,8 +63,8 @@ flowchart TD
 - **螺栓孔連接**：自動識別 `Scr_RM_grp` 等 Named Selection，施加 Edge Sizing（孔周長 8~12 等份）並生成 1~2 層四邊形 Edge Washer 墊圈環狀網格。
 
 ### 3. Mechanical 隱式品質前檢 (Implicit Quality Check)
-- 檢驗全域網格品質：歪斜度 $\text{Skewness} < 0.40$（$> 0.85$ 嚴禁求解）、正交品質 $\text{Orthogonal} > 0.70$（$< 0.15$ 嚴禁求解）、$\text{Aspect Ratio} < 5:1$（實體）/ $< 10:1$（薄殼）、$\text{Jacobian Ratio} \ge 0.70$。
-- 薄壁結構檢驗剪切自鎖（嚴禁單層一階四面體）。
+- 依目標 solver、單元型別與版本確認網格指標定義；記錄極端值位置、元素數量與缺陷類型。品質指南中的數值屬於該指標的候選警示值，未經該分析驗證不得升級成通用求解硬阻斷。
+- 薄壁結構需評估厚度方向解析度、單元階次、殼／實體適用性與結果收斂；不得單憑「一層」或單元名稱判定結果必然失效。
 
 ### 4. LS-DYNA 顯式 CFL 時間步長調優 (Explicit CFL Tuning)
 - 啟動 `cfl_mesh_tuner_fast.py`，採用 `Floating Range` 浮動相對微調。
@@ -97,8 +97,10 @@ flowchart TD
 ## 五、工程紅線禁忌清單 (Don'ts)
 
 > [!CAUTION]
-> 1. **劣質單元嚴禁求解**：$\text{Skewness} > 0.85$ 或 $\text{Orthogonal Quality} < 0.15$ 嚴禁放行求解，必引發矩陣病態或發散。
-> 2. **嚴禁薄壁實體單層四面體**：厚度方向僅 1 層一階四面體會引發剪切自鎖（剛度虛高 200%~500%），必須 $\ge 2 \sim 3$ 層 Sweep Hex 或改二階單元。
-> 3. **嚴禁擅自開啟全域 Defeaturing**：未經幾何掃描與使用者核准，嚴禁盲目配置全域 DefeaturingTolerance，防止關鍵定位特徵消失。
+> 1. **負體積與品質警示需分開判讀**：負體積、元素翻轉或 solver 明確拒絕屬於阻斷條件。Skewness／Orthogonal 等警示值需核對目標產品的指標定義、元素型別和分析需求，再定位最差區域與評估影響；不得把 Fluent 門檻套用至 Mechanical 或 LS-DYNA。
+> 2. **薄壁解析需做模型選型與收斂檢查**：考慮薄殼、中面、二階實體或掃掠網格等選項。層數和單元階次是建模依據之一，應用厚度方向敏感度／網格收斂檢查支持，不視為普遍硬性規則。
+> 3. **嚴禁擅自開啟全域 Defeaturing**：未經幾何掃描與使用者同意，嚴禁盲目配置全域 DefeaturingTolerance，防止關鍵定位特徵消失。
 > 4. **嚴禁忽略極短邊強行 Mesh**：發現極短邊必須熔斷暫停，隔離問題幾何並建立 Named Selection 徵詢使用者決策。
 > 5. **嚴禁擅自簡化 Unsuppressed 組件**：未經使用者要求，嚴禁將未抑制的 PSU、插卡或結構體擅自轉為質點或予以抑制。
+
+網格指標的來源等級與適用條件見 [`references/metrics_and_quality_standards.md`](references/metrics_and_quality_standards.md)；以固定 QoI 做三組以上網格收斂見 [`references/mesh_convergence_verification.md`](references/mesh_convergence_verification.md)。
