@@ -84,7 +84,7 @@ artifacts/
 !.agents/teamwork/
 # Agent 行為設定規範（本機私有，不入公開版控）
 agents/steering/
-AGENTS.md
+!AGENTS.md
 .codex/
 src/**/tools/commands/
 src/**/tools/results/
@@ -101,3 +101,19 @@ src/**/tools/status.json
 
 # Package Lock
 # uv.lock 隨版本交付，固定同事與開發環境的依賴解析。
+
+# Skill-Creator 基準評測工作區與本地向量索引
+agents/skills-workspace/
+agents/skills/.zvec-grep/
+**/evals/runs/
+**/review.html
+**/benchmark.json
+
+# 跨 IDE 動態生成的技能連結目錄
+.agents/skills
+.cline/skills
+.kiro/skills
+
+# 大型未受版控文件與輸出
+ANSYS_Document/
+graphify-out/
