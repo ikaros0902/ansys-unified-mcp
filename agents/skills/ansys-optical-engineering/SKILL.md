@@ -1,24 +1,39 @@
 ---
 name: ansys-optical-engineering
-description: Route ANSYS Speos/Illumination, Zemax OpticStudio, and Lumerical optical design tasks to the product-specific API and physical result references. Use for optical simulations; this skill does not provide a live connector.
+description: Domain router for optical design, illumination, imaging systems, and photonic devices. Use for Speos light simulation, Zemax lens design, or Lumerical photonics. DO NOT use for structural FEA or general CFD.
 ---
 
-# 光學工程產品路由
+# ANSYS 光學工程、照明與光子學主控 (Domain 04)
 
-先辨識產品與物理問題，再載入該產品 references。Speos、Zemax／OpticStudio、Lumerical 對光源、材料、量測器、頻譜、結果量值及自動化介面有不同定義；不可混用 API。
+本技能為 ANSYS Tier-1 核心領域主控路由器，專責解析特定物理需求並將 Agent 零損耗導流至專項 Tier-2 專業求解器或子工作流。
 
-## 產品分流
+## 核心工作流 (Core Workflow)
 
-| 任務 | 路由 |
-|---|---|
-| 系統照明、光線追跡、照度／輝度或照明設備 | [`ansys-speos`](../ansys-speos/SKILL.md) |
-| OpticStudio 序列／非序列系統、ZOS-API、容差或最佳化 | [`ansys-zemax`](../ansys-zemax/SKILL.md) |
-| FDTD／MODE／INTERCONNECT 等光子模擬 | [`ansys-lumerical`](../ansys-lumerical/SKILL.md) |
+1. 辨別光學物理體系（幾何成像光學、非成像照明工程、波動/奈米光子學）
+2. 路由並載入對應 Tier-2 光學專業技能（Speos, Zemax, Lumerical）
+3. 設定光學光譜範圍（UV, 可見光, NIR, 遠紅外）與光源發光特性
+4. 指派光學材料屬性（折射率色散公式 Sellmeier, 表面 BSDF 散射特性）
+5. 配置感測器與評估指標（照度計 Lux, 輝度計 cd/m2, MTF, 畸變率, FDTD Monitor）
+6. 執行非連續光線追跡（Monte Carlo Ray Tracing）或波動麥克斯韋方程求解
+7. 後處理光學均勻性、人眼視覺感知圖、波前像差或光子傳輸光譜
 
-## 通用檢核
+## Tier-2 專業子技能路由表 (Sub-Skill Router Table)
 
-先記錄波長與單位、光源／monitor、材料與色散模型、邊界、網格、隨機 ray count／seed（若適用）、輸入檔 hash 及產品版本。比較結果時固定 FoV／視場、分析區域和量測定義；不以畫面顏色或不同 monitor 定義的數值做等價判定。
+| 物理任務與工程場景 | 目標學科模組 | 深入研讀之 Tier-2 指針 |
+|---|---|---|
+| 系統級照明設計、車燈、人眼視覺感知 (HUD)、照度/輝度 | Tier-2 Speos | `agents/skills-tier2/ansys-speos/SKILL.md` |
+| 光學鏡頭設計、序列/非序列光線追跡、成像品質 MTF、容差分析 | Tier-2 Zemax | `agents/skills-tier2/ansys-zemax/SKILL.md` |
+| 微納光子學器件、FDTD、光纖波導、光電整合、光子積體電路 | Tier-2 Lumerical | `agents/skills-tier2/ansys-lumerical/SKILL.md` |
 
-本 MCP 尚未註冊以上光學產品 controller；skill 僅供文件／API 對照，不宣稱可啟動 GUI、連線或求解。來源狀態見 [領域來源矩陣](../../../docs/skills/DOMAIN_SOURCE_AND_SUPPORT.md)。
+## 官方文檔與 APIKB 動態查詢強制令
 
+在生成或修改任何數值模擬腳本之前，**必須**優先透過 MCP 查詢底層確切 API 簽名與參數：
+- 使用 `search_ansys_docs(query='...')` 檢索該學科之官方手冊規範
+- 使用 `api_search(pattern='...')` 驗證 Python / ACT 符號之完整路徑
+- 嚴禁憑空猜測非公開屬性或使用已廢棄之語法
 
+## 關鍵禁止事項 (Critical Don'ts)
+
+- 嚴禁在特徵尺寸接近波長的奈米微結構中使用幾何光學射線追跡（必須使用 FDTD）。
+- 嚴禁在未指定色散模型的情況下載入寬光譜光源進行色差評估。
+- 嚴禁將未達蒙地卡羅收斂的光線數（光子噪聲過大）直接用於量化輝度驗收。

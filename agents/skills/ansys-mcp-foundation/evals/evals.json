@@ -1,0 +1,20 @@
+[
+  {
+    "eval_id": "fnd_01",
+    "prompt": "如何檢查本機 ANSYS 安裝狀態與 Workbench 伺服器健康度？",
+    "expected_keywords": [
+      "ans_session_diagnose",
+      "check_ansys_installation",
+      "start_workbench_bridge"
+    ]
+  },
+  {
+    "eval_id": "fnd_02",
+    "prompt": "遇到未知的 ACT API 函式時，如何查詢官方文檔與簽名？",
+    "expected_keywords": [
+      "search_ansys_docs",
+      "api_search",
+      "api_get"
+    ]
+  }
+]

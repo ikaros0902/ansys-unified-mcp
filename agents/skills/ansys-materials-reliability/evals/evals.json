@@ -1,0 +1,24 @@
+[
+  {
+    "eval_id": "mat_01",
+    "prompt": "在 ANSYS ACP 中如何配置碳纖維單向帶 [0/45/-45/90]s 鋪層並評估 Puck 失效準則？",
+    "expected_keywords": [
+      "ansys-acp-granta",
+      "ACP",
+      "Puck",
+      "Tsai-Wu",
+      "Layup"
+    ]
+  },
+  {
+    "eval_id": "mat_02",
+    "prompt": "如何使用 Sherlock 預測汽車電子控制單元 (ECU) 焊球在溫度循環下的熱疲勞壽命？",
+    "expected_keywords": [
+      "ansys-sherlock",
+      "Solder Fatigue",
+      "Thermal Cycling",
+      "Engelmaier",
+      "MTBF"
+    ]
+  }
+]

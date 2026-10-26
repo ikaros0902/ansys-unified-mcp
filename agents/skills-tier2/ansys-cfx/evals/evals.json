@@ -1,0 +1,21 @@
+[
+  {
+    "eval_id": "cfx_01",
+    "prompt": "如何在 CFX 中配置離心泵葉輪與渦殼之間的 Frozen Rotor 交界面？",
+    "expected_keywords": [
+      "Frozen Rotor",
+      "CCL",
+      "Domain Interface",
+      "Frame of Reference"
+    ]
+  },
+  {
+    "eval_id": "cfx_02",
+    "prompt": "CFX SST 湍流模型的壁面處理要求為何？",
+    "expected_keywords": [
+      "y+",
+      "Automatic Wall Treatment",
+      "boundary layer"
+    ]
+  }
+]

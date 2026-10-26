@@ -1,0 +1,23 @@
+[
+  {
+    "eval_id": "maxwell_01",
+    "prompt": "在 Maxwell 瞬態分析中，如何設定旋轉 Band 物件以計算永磁同步電機轉矩？",
+    "expected_keywords": [
+      "Band",
+      "Motion Setup",
+      "Torque",
+      "Rotor",
+      "Stator"
+    ]
+  },
+  {
+    "eval_id": "maxwell_02",
+    "prompt": "Maxwell 中如何配置非線性鐵心材料的 BH 曲線以評估磁飽和？",
+    "expected_keywords": [
+      "BH curve",
+      "permeability",
+      "saturation",
+      "iron loss"
+    ]
+  }
+]

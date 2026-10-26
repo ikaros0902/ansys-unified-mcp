@@ -1,0 +1,23 @@
+[
+  {
+    "eval_id": "mcad_01",
+    "prompt": "Motor-CAD 如何利用集總參數熱網路 (LPTN) 預測電動車 WLTP 工況下電機繞組熱點？",
+    "expected_keywords": [
+      "LPTN",
+      "Thermal Network",
+      "WLTP",
+      "Winding Hotspot",
+      "Cooling"
+    ]
+  },
+  {
+    "eval_id": "mcad_02",
+    "prompt": "在 Motor-CAD EMag 模組中如何快速生成 Interior PM 電機的弱磁效率圖？",
+    "expected_keywords": [
+      "EMag",
+      "Efficiency Map",
+      "Flux Weakening",
+      "IPM"
+    ]
+  }
+]

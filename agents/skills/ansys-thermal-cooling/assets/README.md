@@ -1,0 +1,1 @@
+# Assets for ansys-thermal-cooling
