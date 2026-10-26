@@ -8,6 +8,7 @@ from typing import Optional
 from ansys_unified_mcp.shared import mcp, as_envelope as _envelope
 from ansys_unified_mcp.analytics.apikb import query as kb_query
 from ansys_unified_mcp.analytics.apikb import validate as kb_validate
+from ansys_unified_mcp.analytics.apikb import federated_query as fed_query
 
 @mcp.tool(annotations={"readOnlyHint": True, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False})
 def api_search(query: str, product: str = "", kind: str = "", top_k: int = 8) -> dict:
@@ -76,3 +77,94 @@ def api_validate_script(code: str, product: str) -> dict:
     """
     report = kb_validate.validate_script(code=code, product=product)
     return _envelope(report)
+
+@mcp.tool(annotations={"readOnlyHint": True, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False})
+def api_federated_path(
+    from_uid: int,
+    to_uid: int,
+    path_semantics: str = "",
+    max_hops: int = 8,
+    limit: int = 10,
+) -> dict:
+    """Find object-navigation paths across 10 physics subgraphs using 2-Stage 8-Hop Meet-in-the-Middle Join.
+
+    Args:
+        from_uid: 64-bit deterministic symbol_uid of the source API entity.
+        to_uid: 64-bit deterministic symbol_uid of the target API entity.
+        path_semantics: Optional filter for path semantics: "FACTORY_CREATE", "READ_TRAVERSAL", or "CROSS_BRIDGE".
+        max_hops: Maximum traversal depth between 1 and 8 hops (default: 8).
+        limit: Maximum number of paths to return (default: 10).
+    """
+    paths = fed_query.query_api_path(
+        from_uid=from_uid,
+        to_uid=to_uid,
+        path_semantics=path_semantics or None,
+        max_hops=max_hops,
+        limit=limit,
+    )
+    return _envelope({
+        "from_uid": from_uid,
+        "to_uid": to_uid,
+        "max_hops": max_hops,
+        "paths_count": len(paths),
+        "paths": paths,
+    })
+
+@mcp.tool(annotations={"readOnlyHint": True, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False})
+def api_federated_search(
+    query: str,
+    domain: str = "",
+    kind: str = "",
+    level: str = "L0",
+    top_k: int = 10,
+) -> dict:
+    """Federated symbol search across 10 physics domains returning progressive L0/L1 cards.
+
+    Args:
+        query: Symbol name, FQN prefix, or method keyword.
+        domain: Optional domain filter: "foundation", "structural", "fluids", "electromagnetics", "optics", "thermal", "multibody", "particles", "materials", "framework".
+        kind: Optional symbol kind filter: "CLASS", "PROPERTY", "METHOD", "ENUM".
+        level: Progressive card level: "L0" (~50 tokens summary), "L1" (~250 tokens signature), or "ALL".
+        top_k: Maximum number of symbols to return (default: 10).
+    """
+    hits = fed_query.search_symbols_federated(
+        query=query,
+        domain=domain or None,
+        kind=kind or None,
+        level=level,
+        top_k=top_k,
+    )
+    return _envelope({
+        "query": query,
+        "domain": domain or "all",
+        "level": level,
+        "count": len(hits),
+        "results": hits,
+    })
+
+@mcp.tool(annotations={"readOnlyHint": True, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False})
+def api_cross_bridge(
+    coupling_type: str = "",
+    source_domain: str = "",
+    target_domain: str = "",
+    variable_name: str = "",
+) -> dict:
+    """Query multiphysics interface variable pairings from multiphysics_bridge.sqlite.
+
+    Args:
+        coupling_type: Optional multiphysics coupling type: "FSI", "CHT", "MBD-DEM", "STOP".
+        source_domain: Source physics domain name or ID.
+        target_domain: Target physics domain name or ID.
+        variable_name: Interface variable name filter (e.g. "Force", "HeatFlux", "Displacement").
+    """
+    bridges = fed_query.query_cross_domain_bridge(
+        coupling_type=coupling_type or None,
+        source_domain=source_domain or None,
+        target_domain=target_domain or None,
+        variable_name=variable_name or None,
+    )
+    return _envelope({
+        "coupling_type": coupling_type or "all",
+        "count": len(bridges),
+        "bridges": bridges,
+    })
