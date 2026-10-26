@@ -155,12 +155,12 @@ class InteractiveDesktopGuard:
                         data = rows[1]
                         session_idx = -1
                         for idx, col in enumerate(header):
-                            if "session" in col and ("#" in col or "num" in col or "名" in col):
+                            if "session" in col and ("#" in col or "num" in col):
                                 session_idx = idx
                                 break
-                            if "工作階段 #" in col or "工作階段" in col:
-                                session_idx = idx
-                                break
+                        if session_idx == -1 and len(data) >= 4:
+                            # Standard tasklist column 3 is Session#
+                            session_idx = 3
                         if session_idx != -1 and session_idx < len(data):
                             val = data[session_idx].strip()
                             if val.isdigit():

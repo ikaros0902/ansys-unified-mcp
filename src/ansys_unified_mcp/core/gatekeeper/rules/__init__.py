@@ -1,4 +1,4 @@
-﻿"""ANSYS Unified MCP 2.0 - 物理安全閘門檢核規則基類與介面 (Gate Rules)."""
+"""ANSYS Unified MCP 2.0 - 物理安全閘門檢核規則基類與介面 (Gate Rules)."""
 
 from __future__ import annotations
 
@@ -26,3 +26,21 @@ class BaseGateRule(ABC):
     def check(self, context: Dict[str, Any]) -> CheckResult:
         """執行物理檢核並回傳 CheckResult。"""
         pass
+
+
+from ansys_unified_mcp.core.gatekeeper.rules.energy_conservation import (
+    EnergyConservationGate,
+    EnergyLeakageError,
+)
+from ansys_unified_mcp.core.gatekeeper.rules.unit_context_gate import (
+    UnitContextGate,
+    UnitPoisoningError,
+)
+
+__all__ = [
+    "BaseGateRule",
+    "EnergyConservationGate",
+    "EnergyLeakageError",
+    "UnitContextGate",
+    "UnitPoisoningError",
+]
