@@ -29,6 +29,11 @@ from ansys_unified_mcp.schemas.domain_inputs import (
     OptislangMOPInput,
     StaticStructuralSolveInput,
     SteadyThermalSolveInput,
+    SoundPsychoacousticsInput,
+    MarineAqwaHeaveInput,
+    LumericalSlabWaveguideInput,
+    ChemkinReactionKineticsInput,
+    MotorCADEfficiencyInput,
 )
 from ansys_unified_mcp.schemas.tool_annotations import (
     ToolAnnotations,
@@ -63,4 +68,9 @@ __all__ = [
     "MaterialAssignmentInput",
     "OptislangMOPInput",
     "OpticsSimulationInput",
+    "SoundPsychoacousticsInput",
+    "MarineAqwaHeaveInput",
+    "LumericalSlabWaveguideInput",
+    "ChemkinReactionKineticsInput",
+    "MotorCADEfficiencyInput",
 ]

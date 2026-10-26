@@ -395,3 +395,159 @@ class OpticsSimulationInput(BaseModel):
         gt=0.0,
         description="Primary optical wavelength in nanometers.",
     )
+
+
+# -----------------------------------------------------------------------------
+# Sound & Acoustics Domain (Ansys Sound / NVH)
+# -----------------------------------------------------------------------------
+
+class SoundPsychoacousticsInput(BaseModel):
+    """Input parameters for Zwicker psychoacoustics and acoustic propagation."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    frequency_hz: float = Field(
+        default=1000.0,
+        gt=0.0,
+        description="Acoustic tone frequency in Hz.",
+    )
+    spl_db: float = Field(
+        default=40.0,
+        ge=0.0,
+        description="Sound pressure level at reference distance in dB.",
+    )
+    distance_m: float = Field(
+        default=1.0,
+        gt=0.0,
+        description="Radial observation distance in meters.",
+    )
+
+
+# -----------------------------------------------------------------------------
+# Marine Hydrodynamics Domain (AQWA)
+# -----------------------------------------------------------------------------
+
+class MarineAqwaHeaveInput(BaseModel):
+    """Input parameters for marine vessel heave hydrodynamics simulation."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    length: float = Field(
+        default=20.0,
+        gt=0.0,
+        description="Vessel total length in meters.",
+    )
+    beam: float = Field(
+        default=10.0,
+        gt=0.0,
+        description="Vessel beam width in meters.",
+    )
+    draft: float = Field(
+        default=2.0,
+        gt=0.0,
+        description="Vessel draft depth in meters.",
+    )
+    water_density: float = Field(
+        default=1025.0,
+        gt=0.0,
+        description="Seawater density in kg/m^3.",
+    )
+
+
+# -----------------------------------------------------------------------------
+# Wave Optics & Photonics Domain (Lumerical FDTD / MODE)
+# -----------------------------------------------------------------------------
+
+class LumericalSlabWaveguideInput(BaseModel):
+    """Input parameters for photonic slab waveguide eigenmode simulation."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    core_index: float = Field(
+        default=1.50,
+        gt=1.0,
+        description="Refractive index of waveguide core layer.",
+    )
+    cladding_index: float = Field(
+        default=1.45,
+        gt=1.0,
+        description="Refractive index of cladding layer.",
+    )
+    core_half_thickness_um: float = Field(
+        default=1.0,
+        gt=0.0,
+        description="Waveguide core half-thickness in micrometers.",
+    )
+    wavelength_um: float = Field(
+        default=1.55,
+        gt=0.0,
+        description="Vacuum operating wavelength in micrometers.",
+    )
+
+
+# -----------------------------------------------------------------------------
+# Reaction Kinetics Domain (Chemkin-Pro)
+# -----------------------------------------------------------------------------
+
+class ChemkinReactionKineticsInput(BaseModel):
+    """Input parameters for 0D chemical reaction kinetics simulation."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    a0_pre_exponential: float = Field(
+        default=1.0e6,
+        gt=0.0,
+        description="Arrhenius pre-exponential factor A0 in 1/s.",
+    )
+    ea_activation_energy_j_mol: float = Field(
+        default=50000.0,
+        ge=0.0,
+        description="Reaction activation energy in J/mol.",
+    )
+    temperature_k: float = Field(
+        default=500.0,
+        gt=0.0,
+        description="Reaction temperature in Kelvin.",
+    )
+    ca0_initial_concentration: float = Field(
+        default=1.0,
+        gt=0.0,
+        description="Initial reactant A concentration in mol/m^3.",
+    )
+
+
+# -----------------------------------------------------------------------------
+# Electric Machine Domain (Motor-CAD)
+# -----------------------------------------------------------------------------
+
+class MotorCADEfficiencyInput(BaseModel):
+    """Input parameters for PMSM motor electromechanical efficiency simulation."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    pole_pairs: int = Field(
+        default=4,
+        ge=1,
+        description="Number of magnetic pole pairs.",
+    )
+    flux_linkage_wb: float = Field(
+        default=0.05,
+        gt=0.0,
+        description="Permanent magnet flux linkage in Weber.",
+    )
+    stator_resistance_ohm: float = Field(
+        default=0.10,
+        gt=0.0,
+        description="Stator winding phase resistance in Ohms.",
+    )
+    omega_m_rad_s: float = Field(
+        default=300.0,
+        gt=0.0,
+        description="Rotor mechanical angular velocity in rad/s.",
+    )
+    target_torque_nm: float = Field(
+        default=15.0,
+        gt=0.0,
+        description="Target electromagnetic output torque in Nm.",
+    )
+

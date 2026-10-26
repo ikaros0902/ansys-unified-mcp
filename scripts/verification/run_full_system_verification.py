@@ -1,18 +1,20 @@
 # Strictly ASCII English Comments
-"""ANSYS Unified MCP - 跨 Agent 無記憶冷啟動全閉環自動化驗收腳本 (run_full_system_verification.py).
+"""ANSYS Unified MCP - Zero-Memory Cold-Start Full-System Verification CLI (run_full_system_verification.py).
 
-本腳本為 Stage 5 系統終端全閉環驗收核心 CLI 工具：
-1. 支援命令列引數：
-   - `--golden-only`: 僅執行 9 大物理學科黃金基準測試 (tests/golden/)
-   - `--canary-only`: 僅執行 3 大 Canary 破壞性注入測試 (tests/canary/)
-   - `--report-json <path>`: 輸出結構化驗收報告 JSON 檔案
-   - `--sla-warm <sec>`: 常駐求解時間 SLA 門檻 (預設 30.0s)
-   - `--sla-cold <sec>`: 冷啟動時間 SLA 門檻 (預設 45.0s)
-   - `--verbose`: 顯示詳細輸出
-2. 完整覆蓋 9 大物理學科黃金基準與 3 大 Canary 破壞性注入測試。
-3. 嚴格監控常駐求解時間 (SLA <= 30s) 與冷啟動時間 (SLA <= 45s)。
-4. 輸出漂亮 ASCII 成果表格 (含物理域、解析解、數值解、誤差%、通過狀態、耗時)。
-5. 退出碼判定：全部測試 100% 通過以退出碼 0 退出，任一失敗以退出碼 1 退出。
+This script provides end-to-end automated verification for all 14 physics domains:
+1. Command-line parameters:
+   - `--golden-only`: Run golden analytical benchmarks only (tests/golden/).
+   - `--canary-only`: Run canary fault injection suites only (tests/canary/).
+   - `--report-json <path>`: Export structured JSON report.
+   - `--sla-warm <sec>`: Warm solve time SLA threshold (default 30.0s).
+   - `--sla-cold <sec>`: Cold start total time SLA threshold (default 45.0s).
+   - `--verbose`: Show verbose logs.
+2. Complete coverage of 14 physics domains and 3 canary fault injection suites.
+3. Monitors warm solve time (SLA <= 30s) and cold start time (SLA <= 45s).
+4. Formats ASCII results table with analytical, numerical, error %, and verdicts.
+5. Exit code: 0 on 100% pass, 1 on any failure.
+
+All code comments and docstrings strictly use ASCII English.
 """
 
 from __future__ import annotations
@@ -49,7 +51,7 @@ logger = logging.getLogger("ansys-full-system-verification")
 DEFAULT_WARM_SLA_SEC = 30.0
 DEFAULT_COLD_SLA_SEC = 45.0
 
-# 9 Canonical Golden Benchmarks
+# 14 Canonical Golden Benchmarks
 GOLDEN_TEST_FILES = [
     "tests/golden/test_poc_structural_cantilever.py",
     "tests/golden/test_poc_fluids_couette.py",
@@ -60,6 +62,11 @@ GOLDEN_TEST_FILES = [
     "tests/golden/test_poc_coupling_cht.py",
     "tests/golden/test_poc_materials_acp.py",
     "tests/golden/test_poc_meshing_sphere.py",
+    "tests/golden/test_poc_acoustics_sound.py",
+    "tests/golden/test_poc_marine_aqwa.py",
+    "tests/golden/test_poc_optics_lumerical.py",
+    "tests/golden/test_poc_chemkin_reaction.py",
+    "tests/golden/test_poc_motorcad_efficiency.py",
 ]
 
 # 3 Canary Invalidation Test Files
@@ -71,7 +78,7 @@ CANARY_TEST_FILES = [
 
 
 class BenchmarkVerificationRecord:
-    """單一基準或 Canary 測試驗收記錄項目。"""
+    """Benchmark or canary verification item."""
 
     def __init__(
         self,
@@ -112,7 +119,7 @@ class BenchmarkVerificationRecord:
 
 
 def run_benchmark_evaluations() -> List[BenchmarkVerificationRecord]:
-    """直接運行 9 大物理學科數值基準並萃取客觀度量。"""
+    """Execute numerical benchmarks and collect objective metrics."""
     records: List[BenchmarkVerificationRecord] = []
 
     # 1. Structural Cantilever Beam
@@ -520,12 +527,79 @@ def run_benchmark_evaluations() -> List[BenchmarkVerificationRecord]:
                 details=str(exc),
             )
         )
+
+    # 10. Acoustics & Psychoacoustics Sound
+    try:
+        from tests.golden.test_poc_acoustics_sound import (
+            AcousticsSoundConfig,
+            AcousticsSoundEngine,
+        )
+        t0 = time.monotonic()
+        sound_cfg = AcousticsSoundConfig(frequency_hz=1000.0, target_spl_db=40.0)
+        sound_res = AcousticsSoundEngine.solve(sound_cfg)
+        elapsed = time.monotonic() - t0
+        loudness_err = sound_res.loudness_rel_error_pct
+        decay_err = sound_res.decay_rel_error_pct
+        passed = (loudness_err <= 1.0) and (decay_err <= 1.0)
+        records.append(
+            BenchmarkVerificationRecord(
+                domain="Sound",
+                name="Zwicker Loudness & Monopole SPL",
+                analytical_val=f"N={sound_res.loudness_sone_theory:.2f}sone, dSPL={sound_res.decay_6db_theory:.2f}dB",
+                numerical_val=f"N={sound_res.loudness_sone_sim:.4f}sone, dSPL={sound_res.decay_6db_sim:.2f}dB",
+                error_metric=f"Loudness err: {loudness_err:.2f}%, Decay err: {decay_err:.3f}%",
+                elapsed_sec=elapsed,
+                passed=passed,
+                sla_limit_sec=6.0,
+                details="ISO 532-1 Zwicker Loudness and Free-Field Spherical Wavefront Decay",
+            )
+        )
     except Exception as exc:
         records.append(
             BenchmarkVerificationRecord(
-                domain="Meshing",
-                name="PrimeMesh Watertight Sphere",
-                analytical_val="A=31415.9mm2",
+                domain="Sound",
+                name="Zwicker Loudness & Monopole SPL",
+                analytical_val="N=1.00sone, dSPL=6.02dB",
+                numerical_val="ERROR",
+                error_metric="N/A",
+                elapsed_sec=0.0,
+                passed=False,
+                sla_limit_sec=6.0,
+                details=str(exc),
+            )
+        )
+
+    # 11. Marine Hydrodynamics AQWA
+    try:
+        from tests.golden.test_poc_marine_aqwa import (
+            MarineAqwaConfig,
+            MarineAqwaEngine,
+        )
+        t0 = time.monotonic()
+        aqwa_cfg = MarineAqwaConfig()
+        aqwa_res = MarineAqwaEngine.solve(aqwa_cfg, prefer_ansys=True)
+        elapsed = time.monotonic() - t0
+        period_err = aqwa_res.period_rel_error_pct
+        passed = period_err <= 1.5
+        records.append(
+            BenchmarkVerificationRecord(
+                domain="Marine",
+                name="AQWA Barge Heave Natural Period",
+                analytical_val=f"Tn={aqwa_res.period_theory:.4f}s",
+                numerical_val=f"Tn={aqwa_res.period_sim:.4f}s",
+                error_metric=f"Period err: {period_err:.4f}%",
+                elapsed_sec=elapsed,
+                passed=passed,
+                sla_limit_sec=8.0,
+                details="Strip Theory Hydrodynamic Added Mass and Waterplane Stiffness",
+            )
+        )
+    except Exception as exc:
+        records.append(
+            BenchmarkVerificationRecord(
+                domain="Marine",
+                name="AQWA Barge Heave Natural Period",
+                analytical_val="Tn=3.8068s",
                 numerical_val="ERROR",
                 error_metric="N/A",
                 elapsed_sec=0.0,
@@ -535,11 +609,133 @@ def run_benchmark_evaluations() -> List[BenchmarkVerificationRecord]:
             )
         )
 
+    # 12. Wave Optics Lumerical
+    try:
+        from tests.golden.test_poc_optics_lumerical import (
+            OpticsLumericalConfig,
+            OpticsLumericalEngine,
+        )
+        t0 = time.monotonic()
+        lum_cfg = OpticsLumericalConfig()
+        lum_res = OpticsLumericalEngine.solve(lum_cfg, prefer_ansys=True)
+        elapsed = time.monotonic() - t0
+        neff_err = lum_res.n_eff_rel_error_pct
+        passed = (neff_err <= 0.5) and lum_res.is_strictly_bounded
+        records.append(
+            BenchmarkVerificationRecord(
+                domain="Wave-Optics",
+                name="Lumerical Slab Waveguide TE0",
+                analytical_val=f"neff={lum_res.n_eff_theory:.4f}",
+                numerical_val=f"neff={lum_res.n_eff_sim:.4f}",
+                error_metric=f"neff err: {neff_err:.4f}%",
+                elapsed_sec=elapsed,
+                passed=passed,
+                sla_limit_sec=8.0,
+                details="Transcendental Eigenvalue Dispersion Root with Core Confinement",
+            )
+        )
+    except Exception as exc:
+        records.append(
+            BenchmarkVerificationRecord(
+                domain="Wave-Optics",
+                name="Lumerical Slab Waveguide TE0",
+                analytical_val="neff=1.4823",
+                numerical_val="ERROR",
+                error_metric="N/A",
+                elapsed_sec=0.0,
+                passed=False,
+                sla_limit_sec=8.0,
+                details=str(exc),
+            )
+        )
+
+    # 13. Chemical Reaction Kinetics Chemkin
+    try:
+        from tests.golden.test_poc_chemkin_reaction import (
+            ChemkinReactionConfig,
+            ChemkinReactionEngine,
+        )
+        t0 = time.monotonic()
+        chem_cfg = ChemkinReactionConfig()
+        chem_res = ChemkinReactionEngine.solve(chem_cfg, prefer_ansys=True)
+        elapsed = time.monotonic() - t0
+        ca_err = chem_res.max_ca_rel_error_pct
+        halflife_err = chem_res.t_half_rel_error_pct
+        passed = (ca_err <= 0.5) and (halflife_err <= 0.1) and (chem_res.mass_conservation_max_error <= 1.0e-6)
+        records.append(
+            BenchmarkVerificationRecord(
+                domain="Chemkin",
+                name="0D Isothermal Arrhenius Reactor",
+                analytical_val=f"t_half={chem_res.t_half_theory:.4f}s",
+                numerical_val=f"t_half={chem_res.t_half_sim:.4f}s",
+                error_metric=f"CA err: {ca_err:.4f}%, t_half err: {halflife_err:.4f}%",
+                elapsed_sec=elapsed,
+                passed=passed,
+                sla_limit_sec=5.0,
+                details=f"Mass Conservation Resid={chem_res.mass_conservation_max_error:.2e}",
+            )
+        )
+    except Exception as exc:
+        records.append(
+            BenchmarkVerificationRecord(
+                domain="Chemkin",
+                name="0D Isothermal Arrhenius Reactor",
+                analytical_val="t_half=0.1159s",
+                numerical_val="ERROR",
+                error_metric="N/A",
+                elapsed_sec=0.0,
+                passed=False,
+                sla_limit_sec=5.0,
+                details=str(exc),
+            )
+        )
+
+    # 14. Electric Machine Design Motor-CAD
+    try:
+        from tests.golden.test_poc_motorcad_efficiency import (
+            MotorCADEfficiencyConfig,
+            MotorCADEfficiencyEngine,
+        )
+        t0 = time.monotonic()
+        motor_cfg = MotorCADEfficiencyConfig()
+        motor_res = MotorCADEfficiencyEngine.solve(motor_cfg, prefer_ansys=True)
+        elapsed = time.monotonic() - t0
+        eff_err = motor_res.efficiency_rel_error_pct
+        kt_err = motor_res.kt_rel_error_pct
+        passed = (eff_err <= 1.0) and (kt_err <= 0.5)
+        records.append(
+            BenchmarkVerificationRecord(
+                domain="Motor-CAD",
+                name="PMSM Efficiency & Loss Mapping",
+                analytical_val=f"eta={motor_res.efficiency_theory*100:.2f}%, Kt={motor_res.kt_constant:.3f}",
+                numerical_val=f"eta={motor_res.efficiency_sim*100:.2f}%, Kt={motor_res.kt_constant:.3f}",
+                error_metric=f"eff err: {eff_err:.4f}%, Kt err: {kt_err:.4f}%",
+                elapsed_sec=elapsed,
+                passed=passed,
+                sla_limit_sec=6.0,
+                details=f"Pmech={motor_res.p_mech_output:.1f}W, Pcu={motor_res.p_copper_sim:.1f}W",
+            )
+        )
+    except Exception as exc:
+        records.append(
+            BenchmarkVerificationRecord(
+                domain="Motor-CAD",
+                name="PMSM Efficiency & Loss Mapping",
+                analytical_val="eta=92.31%, Kt=0.300",
+                numerical_val="ERROR",
+                error_metric="N/A",
+                elapsed_sec=0.0,
+                passed=False,
+                sla_limit_sec=6.0,
+                details=str(exc),
+            )
+        )
+
     return records
 
 
 def run_canary_evaluations() -> List[BenchmarkVerificationRecord]:
-    """直接運行 3 大 Canary 破壞性容錯注入並驗證防護效果。"""
+    """Execute canary fault injection cases and verify resilience barriers."""
     records: List[BenchmarkVerificationRecord] = []
 
     # Canary 1: License Starvation & Anti-Storm Cooldown
@@ -700,7 +896,7 @@ def run_canary_evaluations() -> List[BenchmarkVerificationRecord]:
 
 
 def format_ascii_table(records: List[BenchmarkVerificationRecord]) -> str:
-    """產出漂亮、高資訊密度的 ASCII 驗收成果表格。"""
+    """Generate high-density ASCII verification results table."""
     headers = [
         "Domain",
         "Benchmark / Canary Case",
@@ -747,7 +943,7 @@ def format_ascii_table(records: List[BenchmarkVerificationRecord]) -> str:
 
 
 def run_pytest_suite(test_files: List[str], verbose: bool = False) -> Tuple[int, float]:
-    """調用 pytest 執行完整單元與破壞性注入測試套件。"""
+    """Invoke pytest to run unit and canary test suites."""
     args = ["-v"] if verbose else ["-q"]
     existing_files = [f for f in test_files if (REPO_ROOT / f).exists()]
     args.extend(existing_files)
@@ -759,53 +955,53 @@ def run_pytest_suite(test_files: List[str], verbose: bool = False) -> Tuple[int,
 
 
 def main() -> int:
-    """主命令列入口。"""
+    """Main CLI entrypoint."""
     parser = argparse.ArgumentParser(
-        description="ANSYS Unified MCP - 跨 Agent 無記憶冷啟動全閉環驗收 CLI"
+        description="ANSYS Unified MCP - Zero-Memory Cold-Start Verification CLI"
     )
     parser.add_argument(
         "--golden-only",
         action="store_true",
-        help="僅執行 9 大物理學科黃金基準測試 (tests/golden/)",
+        help="Run golden analytical benchmarks only (tests/golden/)",
     )
     parser.add_argument(
         "--canary-only",
         action="store_true",
-        help="僅執行 3 大 Canary 破壞性注入測試 (tests/canary/)",
+        help="Run canary fault injection suites only (tests/canary/)",
     )
     parser.add_argument(
         "--report-json",
         type=str,
         default=None,
-        help="導出結構化驗收結果 JSON 檔案路徑",
+        help="Export structured verification results JSON file path",
     )
     parser.add_argument(
         "--sla-warm",
         type=float,
         default=DEFAULT_WARM_SLA_SEC,
-        help=f"常駐求解時間 SLA 門檻 (秒，預設 {DEFAULT_WARM_SLA_SEC})",
+        help=f"Warm solve time SLA threshold in seconds (default {DEFAULT_WARM_SLA_SEC})",
     )
     parser.add_argument(
         "--sla-cold",
         type=float,
         default=DEFAULT_COLD_SLA_SEC,
-        help=f"冷啟動時間 SLA 門檻 (秒，預設 {DEFAULT_COLD_SLA_SEC})",
+        help=f"Cold start total time SLA threshold in seconds (default {DEFAULT_COLD_SLA_SEC})",
     )
     parser.add_argument(
         "--skip-pytest",
         action="store_true",
-        help="跳過底層 pytest 套件執行，僅執行數值基準評估",
+        help="Skip underlying pytest execution and run numerical evaluations only",
     )
     parser.add_argument(
         "-v", "--verbose",
         action="store_true",
-        help="顯示詳細日誌輸出",
+        help="Show verbose log output",
     )
 
     args = parser.parse_args()
 
     print("\n" + "=" * 90)
-    print("[RUN] ANSYS Unified MCP - Stage 5 全系統無記憶冷啟動全閉環自動化驗收")
+    print("[RUN] ANSYS Unified MCP - Zero-Memory Cold-Start Full-System Verification")
     print("=" * 90)
     start_total_time = time.monotonic()
 
@@ -827,13 +1023,13 @@ def main() -> int:
     pytest_code = 0
     pytest_elapsed = 0.0
     if not args.skip_pytest and test_files_to_run:
-        print(f"\n[PYTEST] 正在執行 Pytest 測試套件 (涵蓋 {len(test_files_to_run)} 個驗收測試模組)...")
+        print(f"\n[PYTEST] Running Pytest test suite across {len(test_files_to_run)} test modules...")
         pytest_code, pytest_elapsed = run_pytest_suite(test_files_to_run, verbose=args.verbose)
 
     total_elapsed = time.monotonic() - start_total_time
 
     # Print ASCII Table
-    print("\n[TABLE] 驗收成果指標總表 (Verification Results Table):")
+    print("\n[TABLE] Verification Results Table:")
     print(format_ascii_table(records))
 
     # Summary Statistics
@@ -842,13 +1038,13 @@ def main() -> int:
     failed_count = total_count - passed_count
     pass_rate_pct = (passed_count / total_count * 100.0) if total_count > 0 else 0.0
 
-    print("\n[SUMMARY] 統計摘要 (Summary Statistics):")
-    print(f"  - 總測試項目 (Total Evaluated)     : {total_count}")
-    print(f"  - 通過項目 (Passed & SLA OK)       : {passed_count}")
-    print(f"  - 失敗項目 (Failed or SLA Breach)  : {failed_count}")
-    print(f"  - 綜合通過率 (Pass Rate)           : {pass_rate_pct:.1f}%")
-    print(f"  - 冷啟動總耗時 (Total Time)        : {total_elapsed:.2f} s (Cold-Start SLA <= {args.sla_cold}s)")
-    print(f"  - Pytest 執行結果代碼              : {pytest_code} ({pytest_elapsed:.2f} s)")
+    print("\n[SUMMARY] Summary Statistics:")
+    print(f"  - Total Evaluated             : {total_count}")
+    print(f"  - Passed & SLA OK             : {passed_count}")
+    print(f"  - Failed or SLA Breach        : {failed_count}")
+    print(f"  - Pass Rate                   : {pass_rate_pct:.1f}%")
+    print(f"  - Cold-Start Total Elapsed    : {total_elapsed:.2f} s (Cold-Start SLA <= {args.sla_cold}s)")
+    print(f"  - Pytest Exit Code            : {pytest_code} ({pytest_elapsed:.2f} s)")
 
     # Export JSON report if requested
     report_data = {
@@ -869,15 +1065,15 @@ def main() -> int:
         report_path.parent.mkdir(parents=True, exist_ok=True)
         with open(report_path, "w", encoding="utf-8") as f:
             json.dump(report_data, f, indent=2, ensure_ascii=False)
-        print(f"  - 結構化驗收報告已寫入             : {report_path}")
+        print(f"  - Structured report written to : {report_path}")
 
     # Final verdict determination
     all_passed = (failed_count == 0) and (pytest_code == 0)
     if all_passed:
-        print("\n[VERDICT: PASS] 全部測試 100% 通過，SLA 履約完畢！退出碼: 0\n")
+        print("\n[VERDICT: PASS] All tests 100% PASS with SLA honored! Exit code: 0\n")
         return 0
     else:
-        print("\n[VERDICT: FAIL] 存在未達標或超時測試項目，驗收失敗！退出碼: 1\n")
+        print("\n[VERDICT: FAIL] Some benchmarks or canaries failed or breached SLA! Exit code: 1\n")
         return 1
 
 

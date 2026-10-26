@@ -28,6 +28,7 @@ _COMMON_MODULES = frozenset(
         "ansys_unified_mcp.tools.sentinel_tools",
         "ansys_unified_mcp.tools.session_manager_tools",
         "ansys_unified_mcp.tools.meta_router_tools",
+        "ansys_unified_mcp.tools.sound_tools",
     }
 )
 
