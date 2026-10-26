@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<evaluation name="ansys_mcp_eval" version="5.1" specification="mcp-builder-phase4">
+   <qa_pair id="1" domain="Structural">
+      <question>In the Ansys Mechanical ACT API for 2025 R1, find the shortest navigation path from 'ExtAPI.DataModel.Project.Model.Analyses[0]' to the Newton-Raphson option property 'NewtonRaphsonOption'. How many attribute/property hops are required to reach it? Answer with a single integer only.</question>
+      <answer>2</answer>
+   </qa_pair>
+   <qa_pair id="2" domain="Fluids">
+      <question>In Ansys Fluent 2025 R1 TUI/Python API, what is the exact string token used to specify the Coupled pressure-velocity coupling scheme under '/solve/set/p-v-coupling'? Answer with the exact lowercase token string only.</question>
+      <answer>coupled</answer>
+   </qa_pair>
+   <qa_pair id="3" domain="EM">
+      <question>When creating a standard rectangular WavePort via PyAEDT in HFSS without explicit mode override, what is the default integer number of excitation modes calculated? Answer with a single integer only.</question>
+      <answer>1</answer>
+   </qa_pair>
+   <qa_pair id="4" domain="Optics">
+      <question>In the Ansys Zemax OpticStudio ZOS-API, what is the exact name of the interface namespace that provides access to the Lens Data Editor (LDE)? Answer with the exact namespace identifier only.</question>
+      <answer>ZOSAPI.Editors.LDE</answer>
+   </qa_pair>
+   <qa_pair id="5" domain="Thermal">
+      <question>In Ansys Mechanical ACT Automation API, what is the exact enumeration string value for temperature units in the standard Metric (tonne, mm, s, N, C) unit system? Answer with the exact enumeration string only.</question>
+      <answer>Celsius</answer>
+   </qa_pair>
+   <qa_pair id="6" domain="Multibody">
+      <question>In Ansys Motion kinematic topology definitions, how many relative degrees of freedom (DOF) are permitted by a standard Cylindrical Joint? Answer with a single integer only.</question>
+      <answer>2</answer>
+   </qa_pair>
+   <qa_pair id="7" domain="System Coupling">
+      <question>In Ansys System Coupling (SyC), what is the standardized variable display name used to transfer thermal heat flow rate across a fluid-solid interface? Answer with the exact two-word string only.</question>
+      <answer>Heat Rate</answer>
+   </qa_pair>
+   <qa_pair id="8" domain="Materials">
+      <question>In Ansys Composite PrepPost (ACP), what is the standard 3D interactive quadratic failure criterion designation commonly used for orthotropic laminates? Answer with the exact hyphenated name only.</question>
+      <answer>Tsai-Wu</answer>
+   </qa_pair>
+   <qa_pair id="9" domain="Meshing">
+      <question>In Ansys PrimeMesh Python API, what is the exact enum member name under 'CellQualityMeasure' used to evaluate element skewness? Answer with the exact uppercase member name only.</question>
+      <answer>SKEWNESS</answer>
+   </qa_pair>
+   <qa_pair id="10" domain="Governance">
+      <question>Under the ansys-unified-mcp DAMG state-machine protocol, which exact error_code string is returned in the error envelope when a tool is called before its upstream physics prerequisites are satisfied? Answer with the exact uppercase error_code string only.</question>
+      <answer>DAMG_PRECONDITION_VIOLATION</answer>
+   </qa_pair>
+</evaluation>
