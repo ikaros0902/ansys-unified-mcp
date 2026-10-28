@@ -55,6 +55,7 @@ status.json
 # 用通配涵蓋 Documentation / Documentation_md / Documentation_clean 及任何改名或新增的變體，
 # 避免只列精確目錄名而漏網（語料位置可由 ANSYS_DOCS_ROOT 移出 repo）。
 Documentation*/
+docs/api_inventory/
 docs_index.sqlite
 # 瀏覽器未完成下載之暫存檔
 *.下載

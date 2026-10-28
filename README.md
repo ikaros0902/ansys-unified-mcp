@@ -56,7 +56,7 @@ MCP Agent 在啟動時會自動偵測正在執行的這些視窗並接管控制�
 GitHub 版本庫以五個正式目錄整理：
 
 - `agents/skills/<module>/<skill>/`: 依 ANSYS 模組分類的技能。
-- `docs/`: 架構、[API 字典](docs/api_inventory/API_CATALOG.md)、操作手冊、範例與維護紀錄。入口見[文件索引](docs/index.md)。
+- `docs/`: 架構、操作手冊、範例與維護紀錄。API 字典和 RAG 資料因公開散布權未確認而留在本機忽略目錄；入口見[文件索引](docs/index.md)。
 - `scripts/`: API 擷取、部署、文件維護與技能治理工具。
 - `src/ansys_unified_mcp/`: 可安裝的 MCP 套件，含產品介面、傳輸、工具及執行期資源。
 - `tests/`: 單元、整合、端到端測試與評測資料。

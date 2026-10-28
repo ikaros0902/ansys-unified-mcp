@@ -7,14 +7,7 @@
 - [現況分層與程式慣例](architecture/ARCHITECTURE.md)
 - [架構與規格評估白皮書](architecture/ANSYS_UNIFIED_MCP_ARCHITECTURE_AND_SPECIFICATION_REPORT.md)
 - [技能知識匯入計畫](planning/skills_knowledge_ingestion_plan.md)：計畫不代表已實作。
-- [ANSYS API 快照目錄與範圍](api_inventory/API_CATALOG.md)：列出目前索引的產品、版本與工具。
-- [gRPC/protobuf 協定字典](api_inventory/curated/protocols/index.md)：列出 11 份協定快照的人讀 RPC 與欄位字典。
-- [全產品 API 來源與缺口索引](api_inventory/PRODUCT_API_MATRIX.md)：以人讀表格呈現直接快照、REA 組件證據與待補來源。
-- [ANSYS API 產品覆蓋清冊](api_inventory/api_coverage.json)：分開列出直接 API 快照與本機文件語料版本／缺口，不表示 API 完整度。
-- [ANSYS API 與文件檢索指南](api_inventory/API_RAG_GUIDE.md)：說明 APIKB、文件搜尋和來源證據的使用方式。
-- [本機 Python SDK 安裝快照](api_inventory/sdk_environment.json)：記錄 repo `.venv` 對來源清冊 SDK 套件名稱的精確版本配對；缺少套件不代表產品沒有 SDK/API。
-- [REA v251 組件證據](api_inventory/REA_EVIDENCE.md)：Mechanical、SpaceClaim 與 AnsysEM 本機 managed 組件的靜態 metadata 摘要；AnsysEM 尚未映射到特定產品。
-- [REA managed snapshot 索引](api_inventory/curated/rea/index.md)：列出 42 份快照的來源鍵、組件身分與 metadata 計數。
+- ANSYS API 字典、REA 組件證據及本機 RAG 資料目前保存在被 Git 忽略的 `docs/api_inventory/`；公開散布權尚未確認，因此本索引不連結這些本機檔案。
 
 ## 部署與測試
 

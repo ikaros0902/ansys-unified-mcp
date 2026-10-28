@@ -18,7 +18,7 @@ GitHub 根目錄只保留以上五個正式資料目錄。ANSYS 官方文件原�
 
 | 路徑 | 保存內容 |
 |---|---|
-| `docs/api_inventory/` | API 快照、覆蓋清冊與人讀字典 |
+| `docs/api_inventory/` | 本機忽略目錄：API 快照、覆蓋清冊與人讀字典；公開散布權未確認，不納入 GitHub |
 | `docs/architecture/` | 現行系統架構說明 |
 | `docs/archive/` | 明確標示為歷史快照的舊計畫、規格與交付紀錄 |
 | `docs/deployment/` | 現行安裝與部署 SOP |
@@ -58,7 +58,7 @@ GitHub 根目錄只保留以上五個正式資料目錄。ANSYS 官方文件原�
 - `docs/examples/` 說明範例工作流；`agents/skills/` 保存可路由的工作指引。PCB warpage 範例中的 Python 檔是相容入口，實作集中在 `pcb-warpage-analysis` 技能的 `scripts/`，保留入口以免範例使用者改變呼叫方式。兩邊 402 個目前檔案的 SHA-256 對照只找到三個範例入口共用相同 wrapper 內容；入口依自身 basename 對應 canonical skill script，屬刻意保留的相容殼，不是重複實作。此摘要不代表語意近似內容已全數排除。
 - `docs/skills/DOMAIN_SOURCE_AND_SUPPORT.md` 是多個技能共用的來源／支援邊界矩陣，不是另一套技能入口；矩陣路徑須指向現行模組分類，語料位置以 `ANSYS_DOCS_ROOT` 表示。`docs/testing/TEST_INFRA.md` 記錄測試規範，實際評測與測試案例分別由 `tests/evaluations/` 和其他 `tests/` 子目錄持有。
 - `docs/archive/` 保存已標示的歷史快照；`docs/reviews/` 保存曾發現的問題與決策證據。歷史文件中的舊路徑是稽核證據，不當作現行操作入口。
-- `docs/api_inventory/` 保存來源快照、覆蓋清冊與人工整理字典；`src/ansys_unified_mcp/analytics/apikb/` 和 `analytics/docsearch/` 是套件內的檢索與索引程式。資料與程式分開維護，不把 API 快照或本機索引搬入安裝套件。
+- 本機 `docs/api_inventory/` 保存來源快照、覆蓋清冊與人工整理字典；由於公開散布權未確認，該目錄已加入 `.gitignore`。`src/ansys_unified_mcp/analytics/apikb/` 和 `analytics/docsearch/` 是套件內的檢索與索引程式。資料與程式分開維護，不把 API 快照或本機索引搬入安裝套件。
 - Dyna、Icepak 與 `products/multiphysics/` 的目錄形狀不同，分別承載產品工具／driver、產品 driver，以及跨產品橋接；目前的呼叫端不同，不以一致目錄外觀為由合併。
 
 舊 `agents/skills-tier2/` 只殘留的本機 `.zvec-grep/` 快取已移至被忽略的 `.runtime/folder-tree-reorganization/archived-caches/skills-tier2-zvec-grep/` 保留；根目錄 `.zvec-grep/` 也列為本機索引快取，不納入 GitHub。
