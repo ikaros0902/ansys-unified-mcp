@@ -1,6 +1,6 @@
 # ANSYS 產品 API 來源與缺口索引
 
-本索引依目前 coverage 清冊列出的 57 個產品 ID，彙整直接 API 快照、已映射 REA 組件證據和來源缺口。27 份 API／SDK／protocol 快照中，23 份映射至 14 個產品 ID；APIKB 另索引 55 個 REA 靜態候選來源鍵和 33 份 native export 清冊，逐來源細節見 [API Catalog](./API_CATALOG.md)及[REA source index](./curated/rea/index.md)。
+本索引依目前 coverage 清冊列出的 57 個產品 ID，彙整直接 API 快照、已映射 REA 組件證據和來源缺口。28 份 API／SDK／protocol 快照中，24 份映射至 15 個產品 ID；APIKB 另索引 55 個 REA 靜態候選來源鍵和 33 份 native export 清冊，逐來源細節見 [API Catalog](./API_CATALOG.md)及[REA source index](./curated/rea/index.md)。
 
 ## 證據狀態
 
@@ -24,7 +24,7 @@
 | `Aqwa` (`aqwa`) | REA 組件證據 | — | [Ans.AQWA.Core.dll; Ans.AQWA.RemoteItf.dll](./REA_EVIDENCE.md)（v251） | 兩份組件均為 REA 靜態 metadata 候選；產品支援狀態與官方 API 對照仍待處理。 (`product_component_evidence_only`) |
 | `AVxcelerate` (`avxcelerate`) | 待來源／映射 | — | — | 尚未完成來源、版本或 API owner 盤點。 (`not_assessed`) |
 | `CFF` (`cff`) | 待來源／映射 | — | — | 只找到 `Ans.Fluent.CffWrapper.dll` 共用 wrapper 候選，型別屬 Fluent namespace；不足以映射為 CFF API。 (`not_assessed`) |
-| `CFX` (`cfx`) | REA 組件證據 | — | [Ans.CFX.CadApi.dll; Ans.CFX.CFXCore.dll](./REA_EVIDENCE.md)（v251） | 已記錄相關組件證據；產品歸屬或官方 API 對照仍待處理。 (`product_component_evidence_only`) |
+| `CFX` (`cfx`) | PyAnsys CFX SDK snapshot 與 REA 組件證據 | [cfx_api.json](./cfx_api.json)（ansys-cfx-core 0.3.0；47 modules、93 classes、149 methods、21 properties、60 functions） | [Ans.CFX.CadApi.dll; Ans.CFX.CFXCore.dll](./REA_EVIDENCE.md)（v251） | 快照直接擷取不含底線名稱的 AST 宣告；套件 distribution METADATA 要求本機授權 CFX 安裝，並說明 PyCFX 支援 CFX 2025 R2 SP3 以上；不能作為 v251 相容證據。動態 flobject/TUI surface 未擷取，宿主行為及官方 API 對照未確認。 (`direct_product_id`) |
 | `Discovery` (`discovery`) | 直接快照與 REA 組件證據 | [discovery_protocol_api.json](./discovery_protocol_api.json)（ansys-api-discovery 1.2.12：142 modules、130 services、1,422 RPC、1,742 messages、4,119 fields） | [Ansys.Collaboration.Api.dll; Ansys.Gateway.Api.dll; Ansys.Geometry.Api.dll; Ansys.OnScale.Api.dll; Ansys.Physics.Api.dll; Ansys.Project.Api.dll; Ansys.Results.Api.dll](./REA_EVIDENCE.md)（v251） | 協定 schema 與 v251 REA 組件證據分開列示；產品版本對照、支援狀態及宿主行為未核實。 (`direct_product_id`) |
 | `DPF` (`dpf`) | 直接快照 | [dpf_api.json](./dpf_api.json)（unknown；類別 5、方法 52、屬性 26、函式 0） | [23 個 DPF PE 元件（REA/PE sweep）](./REA_EVIDENCE.md)（v251） | 清冊以產品 ID 對應來源；快照僅涵蓋所列版本與範圍。 (`direct_product_id`) |
 | `edupack` (`edupack`) | 待來源／映射 | — | — | 尚未完成來源、版本或 API owner 盤點。 (`not_assessed`) |

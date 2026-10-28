@@ -27,6 +27,19 @@ SDK_TARGETS = {
         "module_root": "ansys.rocky.core",
         "interface": "PyAnsys Rocky SDK 0.6.2",
     },
+    "cfx": {
+        "package": "ansys-cfx-core",
+        "version": "0.3.0",
+        "package_root": Path("ansys/cfx/core"),
+        "module_root": "ansys.cfx.core",
+        "interface": "PyAnsys CFX SDK 0.3.0 direct AST declarations",
+        "scope_note": (
+            "CFX flobject and TUI interfaces use dynamic attribute resolution and are not "
+            "represented by this direct AST snapshot."
+        ),
+        "include_distribution_metadata": True,
+    },
+
 }
 
 
@@ -103,6 +116,7 @@ def extract_python_sdk_api(target: str) -> dict[str, Any]:
         "total_functions": 0,
     }
     sdk_files = []
+    support_evidence = None
     for source in source_files:
         source_path = source.as_posix()
         relative = source.relative_to(package_path).as_posix()
@@ -143,6 +157,37 @@ def extract_python_sdk_api(target: str) -> dict[str, Any]:
         totals["total_modules"] += 1
         sdk_files.append({"path": source_path, "sha256": _digest(source)})
 
+    if config.get("include_distribution_metadata"):
+        metadata_file = next(
+            (
+                file
+                for file in distribution.files or []
+                if str(file).endswith(".dist-info/METADATA")
+            ),
+            None,
+        )
+        if metadata_file is None:
+            raise FileNotFoundError(f"No distribution METADATA found for {package}")
+        metadata_path = Path(distribution.locate_file(metadata_file)).resolve()
+        metadata_hash = _digest(metadata_path)
+        sdk_files.append({"path": metadata_path.as_posix(), "sha256": metadata_hash})
+        metadata_text = distribution.read_text("METADATA") or ""
+        support_statement = next(
+            (
+                line.strip()
+                for line in metadata_text.splitlines()
+                if "PyCFX supports CFX " in line.strip()
+            ),
+            None,
+        )
+        if not support_statement:
+            raise RuntimeError(f"No PyCFX product support statement found in {metadata_path}")
+        support_evidence = {
+            "statement": support_statement,
+            "source_path": metadata_path.as_posix(),
+            "sha256": metadata_hash,
+        }
+
     if not any(totals[key] for key in ("total_classes", "total_methods", "total_functions")):
         raise RuntimeError(f"The {package} SDK source contains no direct public declarations")
 
@@ -153,11 +198,16 @@ def extract_python_sdk_api(target: str) -> dict[str, Any]:
         "sdk_package": package,
         "sdk_version": version,
         "interface": config["interface"],
+        "product_support_statement": (
+            support_evidence["statement"] if support_evidence else "Not established by this snapshot."
+        ),
+        "support_evidence": support_evidence,
         "scope": (
             f"Static AST extraction of direct declarations under {module_root}. "
             "Includes classes, methods, properties, and functions whose names do not start "
             "with an underscore. Does not import the package, resolve __all__ re-exports, "
-            "connect to or run the ANSYS product, or establish official API support."
+            "connect to or run the ANSYS product, or establish official API support. "
+            + config.get("scope_note", "")
         ),
         "sources": {"sdk_files": sdk_files},
         "modules": modules,
@@ -186,6 +236,10 @@ def extract_sherlock_api() -> dict[str, Any]:
 
 def extract_rocky_api() -> dict[str, Any]:
     return extract_python_sdk_api("rocky")
+
+
+def extract_cfx_api() -> dict[str, Any]:
+    return extract_python_sdk_api("cfx")
 
 
 if __name__ == "__main__":

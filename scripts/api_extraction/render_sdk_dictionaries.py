@@ -65,6 +65,21 @@ def render(snapshot_path: Path) -> tuple[str, dict[str, Any]]:
     modules, counts = _members(snapshot)
     digest = hashlib.sha256(raw).hexdigest()
     source_key = snapshot_path.stem.removesuffix("_api")
+    support_evidence = snapshot.get("support_evidence")
+    disclaimer = (
+        "This page records a package metadata statement above. It does not independently verify host compatibility or runtime behavior."
+        if support_evidence
+        else "This page describes the captured SDK snapshot. It does not confirm ANSYS product support, server compatibility, or runtime behavior."
+    )
+    support_note = (
+        [
+            f"- Product support statement: {snapshot['product_support_statement']}",
+            f"- Support evidence: `{support_evidence['source_path']}` (SHA-256: `{support_evidence['sha256']}`)",
+            "",
+        ]
+        if support_evidence
+        else []
+    )
     lines = [
         f"# {package} {version} API dictionary",
         "",
@@ -74,7 +89,8 @@ def render(snapshot_path: Path) -> tuple[str, dict[str, Any]]:
         f"- Snapshot SHA-256: `{digest}`",
         f"- Scope: {snapshot.get('scope') or 'See the captured modules and members listed below.'}",
         "",
-        "> This page describes the captured SDK snapshot. It does not confirm ANSYS product support, server compatibility, or runtime behavior.",
+        *support_note,
+        f"> {disclaimer}",
         "",
         "## Captured modules and members",
         "",

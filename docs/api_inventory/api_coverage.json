@@ -676,8 +676,8 @@
         }
       ],
       "folder": "CFX",
-      "has_direct_snapshot": false,
-      "mapping_status": "product_component_evidence_only",
+      "has_direct_snapshot": true,
+      "mapping_status": "direct_product_id",
       "overview_url": "",
       "product": "cfx",
       "rea_evidence": {
@@ -686,8 +686,21 @@
         "version": "v251"
       },
       "sdk_package": "ansys-cfx-core",
-      "snapshot_status": "no_direct_snapshot",
-      "snapshots": []
+      "snapshot_status": "direct_snapshot",
+      "snapshots": [
+        {
+          "sha256": "46d8eebf0748ad12baf8dc8359a285498797d431e2f560045dc77ab4d270ea87",
+          "snapshot_path": "docs/api_inventory/cfx_api.json",
+          "snapshot_version": "unknown",
+          "statistics": {
+            "total_modules": 47,
+            "total_classes": 93,
+            "total_methods": 149,
+            "total_properties": 21,
+            "total_functions": 60
+          }
+        }
+      ]
     },
     {
       "documentation_coverage": [
