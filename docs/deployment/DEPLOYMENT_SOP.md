@@ -70,7 +70,7 @@ pip install -e .
 
    # 專案根目錄（填入本機 ansys-unified-mcp 所在的絕對路徑）
    WORKBENCH_MCP_ROOT=C:\path\to\ansys-unified-mcp
-   WORKBENCH_MCP_QUEUE_ROOT=C:\path\to\ansys-unified-mcp\workbench_queue
+   WORKBENCH_MCP_QUEUE_ROOT=C:\path\to\ansys-unified-mcp\.runtime\queue
    WORKBENCH_MCP_HOST=127.0.0.1
    WORKBENCH_MCP_PORT=9885
    ```
@@ -78,7 +78,7 @@ pip install -e .
 
 ---
 
-### 步驟 4：執行一鍵部署腳本 (`setup.ps1`)
+### 步驟 4：執行一鍵部署腳本 (`scripts/maintenance/setup.ps1`)
 本步驟為最核心關鍵，會自動向 Windows 註冊 **Workbench ACT 外掛** 與 **SpaceClaim 自動 gRPC 擴充**。
 
 以 **系統管理員身分 (Administrator)** 開啟 PowerShell 並執行：
@@ -87,12 +87,12 @@ pip install -e .
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
 
 # 執行自動化配置
-.\setup.ps1
+.\scripts\maintenance\setup.ps1
 ```
 
 此腳本會自動完成：
 1. **掃描本機登錄檔**：自動比對抓取電腦中所有已安裝的 ANSYS 版本。
-2. **安裝 Workbench ACT 外掛**：將 `workbench_plugin` 自動複製至 `%APPDATA%\Ansys\v<版本>\ACT\extensions\WorkbenchMCP`。
+2. **安裝 Workbench ACT 外掛**：將 repo 來源 `scripts/deploy/act_plugins/` 自動複製至 `%APPDATA%\Ansys\v<版本>\ACT\extensions\WorkbenchMCP`。
 3. **註冊 SpaceClaim 常駐 gRPC 服務**：在 `%ProgramData%\SpaceClaim\AddIns\ApiServerAddIn.Manifest.xml` 建立清單，**讓使用者日後每次開啟 SpaceClaim 時，背景自動啟動 50051 埠 gRPC 服務**，AI 可隨時連線。
 
 ---

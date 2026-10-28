@@ -21,18 +21,16 @@
 |---|---|---|---|
 | 工具層 | `tools/*.py` | 定義 `@mcp.tool()`；檢查連線、組腳本字串、委派給控制器；包裝回傳信封 | 不放連線/session 的實作細節、不直接管理程序 |
 | 產品控制器 | `products/<product>/facade.py` | 每個產品的 connect / launch / run_script / disconnect 邏輯；透過 `SessionRegistry` 管 session | 不定義 `@mcp.tool()`、不做路徑偵測 |
-| 驅動 / 橋接 | `drivers/*.py`、`bridges/*.py` | 特定執行機制的實作（如 Fluent 的 PyFluent 驅動、Workbench 的檔案 IPC bridge） | 不定義 `@mcp.tool()` |
+| 驅動 / 橋接 | `products/<product>/driver.py`、`products/*/call_dispatch.py`、`drivers/*.py`、`bridges/*.py` | 產品執行機制與分派、共用 solver driver 基底／工具、Workbench 等傳輸橋接 | 不定義 `@mcp.tool()` |
 | 核心 | `core/sessions.py`、`core/paths.py` | 全域 session 登錄、ANSYS 路徑統一解析 | 不綁定任一產品的業務邏輯 |
 | 設定 / 連線 | `config.py`、`connection_manager.py` | ANSYS 安裝偵測、掃 port/進程 | 不做業務邏輯 |
 | 文件檢索 | `docs/*.py` | 清洗、分塊、FTS5 索引與查詢 | 與 ANSYS 執行無關，保持獨立 |
 
 **目標形態**：每個產品應為 `products/<product>/` 下 `facade.py`（控制器）+ `tools.py`（工具）+ `driver.py`（執行機制，若需要）**成組出現**，控制器一律用 `SessionRegistry` 管 session。
 
-現況（已收斂）：所有產品皆已採 `products/<product>/` 分層：`geometry`、`mechanical`、`fluent`、`optislang`、`workbench`、`dpf`、`dyna`（本輪新增）。原先散落於 `drivers/sim_impl.py` 的 geometry/fluent `call_tool` 分派實作已拆分歸位至
+現況（已收斂）：所有產品皆已採 `products/<product>/` 分層：`geometry`、`mechanical`、`fluent`、`optislang`、`workbench`、`dpf`、`dyna`、`icepak`。原先散落於 `drivers/sim_impl.py` 的 geometry/fluent `call_tool` 分派實作已拆分歸位至
 `products/geometry/call_dispatch.py` 與 `products/fluent/call_dispatch.py`；
-`drivers/` 現僅保留與 session/產品無關的共用執行機制殘留
-（`lsdyna_driver.py`、`icepak_driver.py`、`base.py`、`contour_helper.py`，
-以及部分產品尚未遷移的薄殼轉接 `*_driver.py`）。
+`drivers/` 現僅保留共用執行基底／輪廓工具，以及維持舊匯入路徑的 driver 相容轉接；Icepak／LS-DYNA 的實作已歸入各自產品目錄。
 
 目前目錄樹（`src/ansys_unified_mcp/`）：
 
@@ -58,14 +56,16 @@ products/
 │   ├── facade.py / tools.py / scripts/
 ├── dpf/
 │   ├── facade.py / tools.py
-└── dyna/                       # 本輪新增產品
-    ├── facade.py / tools.py
+├── dyna/
+│   └── facade.py / tools.py / driver.py
+└── icepak/
+    └── driver.py
 
 drivers/                        # 僅剩與特定產品 session 無關的共用執行機制
 ├── base.py                     # BaseSolverDriver 抽象基底
 ├── contour_helper.py           # 白底雲圖產生共用輔助
-├── lsdyna_driver.py             # LSDynaDriver（批次 job 驅動）
-├── icepak_driver.py             # IcepakDriver（批次 job 驅動）
+├── lsdyna_driver.py             # 舊匯入路徑相容轉接
+├── icepak_driver.py             # 舊匯入路徑相容轉接
 └── mechanical_driver.py / fluent_driver.py / optislang_driver.py / spaceclaim_driver.py
     （薄殼轉接，實體已搬至對應 products/<product>/driver.py）
 ```

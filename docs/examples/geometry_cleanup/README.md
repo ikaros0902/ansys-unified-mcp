@@ -21,7 +21,7 @@ This directory contains automated CAD preprocessing scripts for defeaturing and 
 
 ### PyAnsys Geometry Automation
 ```powershell
-python examples/geometry_cleanup/execute_cleanup.py
+python docs/examples/geometry_cleanup/execute_cleanup.py
 ```
 
 ### SpaceClaim Native Script Execution

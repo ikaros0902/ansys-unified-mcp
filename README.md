@@ -16,7 +16,7 @@
 
 ## 🚀 快速安裝與標準部署 SOP (Quickstart Guide)
 
-> 📖 **完整安裝與連線 SOP**：請直接閱讀根目錄 **[`INSTALL_SOP.md`](INSTALL_SOP.md)**。
+> 📖 **完整安裝與連線 SOP**：請閱讀 [部署手冊](docs/deployment/DEPLOYMENT_SOP.md)。
 
 您不再需要手動設定 Python 環境或尋找 ANSYS 安裝路徑！我們提供了一鍵安裝腳本。
 
@@ -51,31 +51,25 @@ MCP Agent 在啟動時會自動偵測正在執行的這些視窗並接管控制�
 
 ---
 
-## 開發者資訊 (Project Structure)
+## 開發者資訊與目錄
 
-本專案採分層架構（單向依賴）：
-- `pyproject.toml`: 專案設定與相依性。
-- `src/ansys_unified_mcp/`: 核心原始碼目錄。
-  - `config.py`: ANSYS 路徑偵測（延遲、非致命；找不到 ANSYS 不會導致 server 崩潰）。
-  - `core/paths.py`: 單一 ANSYS 執行檔/CLI 路徑解析（合併原先散落三處的偵測）。
-  - `core/sessions.py`: `SessionRegistry` — 統一管理各產品的多個連線（多實例）。
-  - `connection_manager.py`: 探測背景運作中的 ANSYS 進程與 Port。
-  - `products/`: 每個產品一個 façade，持有 session 與傳輸（如 `mechanical.py`）。
-  - `tools/`: 薄薄的 `@mcp.tool` 包裝，委派給 `products/`。
-  - `drivers/sim_impl.py`: Fluent / Geometry 的呼叫實作。
-  - `bridges/workbench_batch.py`: Workbench journal 橋接與批次啟動。
-  - `__main__.py`: MCP 伺服器進入點。
-- `examples/`: 工程實例與標竿管線。
-  - [`examples/shock_analysis/`](examples/shock_analysis/README.md): 35G 衝擊管線、材料自動指派與 LS-DYNA .k 檔生成。
-  - [`examples/geometry_cleanup/`](examples/geometry_cleanup/README.md): SpaceClaim 與 PyAnsys Geometry 幾何清理與特徵消除。
-- `docs/`: 專案文檔（參見 [文檔索引](docs/index.md)）。
-  - [`docs/architecture/`](docs/architecture/): 架構與規格評估白皮書。
-  - [`docs/planning/`](docs/planning/): 優化與里程碑計畫書。
-  - [`docs/deployment/`](docs/deployment/): 安裝與部署 SOP。
-  - [`docs/testing/`](docs/testing/): 測試基礎設施規範。
-  - [`docs/diagrams/`](docs/diagrams/): 互動式架構圖（HTML）。
-  - [`docs/archive/`](docs/archive/README.md): 歷史快照，不可作為現況依據。
-- `deploy/act_plugins/`: 安裝至 ANSYS 的精簡 ACT 外掛（自動啟動 Mechanical gRPC server 並註冊實例）。
+GitHub 版本庫以五個正式目錄整理：
+
+- `agents/skills/<module>/<skill>/`: 依 ANSYS 模組分類的技能。
+- `docs/`: 架構、[API 字典](docs/api_inventory/API_CATALOG.md)、操作手冊、範例與維護紀錄。入口見[文件索引](docs/index.md)。
+- `scripts/`: API 擷取、部署、文件維護與技能治理工具。
+- `src/ansys_unified_mcp/`: 可安裝的 MCP 套件，含產品介面、傳輸、工具及執行期資源。
+- `tests/`: 單元、整合、端到端測試與評測資料。
+
+`mcp_server.py` 保留為舊 MCP 客戶端的相容啟動入口，並委派至套件入口。安裝與連線步驟見[部署手冊](docs/deployment/DEPLOYMENT_SOP.md)。
+
+專案程式依產品與共用責任分層。`products/` 管理各 ANSYS 產品介面，`core/` 提供共用執行基礎，`bridges/` 管理 Workbench 傳輸，`analytics/apikb/` 提供 API 查詢。Fluent 與 Geometry 的呼叫分派已分別位於 `products/fluent/` 和 `products/geometry/`。
+
+工程範例：
+
+- [衝擊分析管線](docs/examples/shock_analysis/README.md)
+- [幾何清理](docs/examples/geometry_cleanup/README.md)
+- [PCB 熱翹曲工作流](docs/examples/pcb_warpage/README.md)
 
 ### Mechanical 連線傳輸（重構後收斂為三種）
 1. **gRPC（PyMechanical）** — 主力。可「連線現有實例」（需 ACT 外掛自動開 gRPC）或「啟動新的無頭實例」。
@@ -95,5 +89,5 @@ MCP Agent 在啟動時會自動偵測正在執行的這些視窗並接管控制�
 
 為了支援在同一台電腦上同時開啟多個不同的 ANSYS 視窗（例如：同時開啟 Workbench、Mechanical、SpaceClaim 等多專案情境），v2.0 導入了動態埠與實例註冊表：
 1. **動態分配通訊埠**：各視窗啟動時會自動尋找可用的 gRPC 埠（Mechanical 自 10000 起；SpaceClaim 自 50051 起）綁定通訊，避免互相佔用衝突。
-2. **自動註冊**：啟動後會自動在 `workbench_queue/registry/` 目錄中以 PID 命名寫入資訊檔（包含 PID、進程名稱、視窗標題與分配到的埠號）。當視窗關閉時，MCP 伺服器會自動清理過期實例。
+2. **自動註冊**：啟動後會自動在 `.runtime/queue/registry/` 目錄中以 PID 命名寫入資訊檔（包含 PID、進程名稱、視窗標題與分配到的埠號）。當視窗關閉時，MCP 伺服器會自動清理過期實例。
 3. **主動詢問引導**：當 AI 客戶端收到「連線 ANSYS」指令且環境中有多個實例或模組時，**AI 必須先主動以多選單或問答方式詢問使用者要連接哪一個模組**，不可擅自盲目猜測連線。

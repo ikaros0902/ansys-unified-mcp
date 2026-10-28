@@ -447,7 +447,7 @@
 - **領域分類**：幾何 (Geometry)
 - **官方來源 URL**：
   - 官方範例：`https://geometry.docs.pyansys.com/` (`enclosure_extraction.py`)
-  - 本地腳本：`SKILLs/ansys-geometry-modeling/scripts/create_enclosure_demo.py`
+  - 本地腳本：`agents/skills/geometry-meshing/ansys-spaceclaim/scripts/create_enclosure_demo.py`
 - **輸入幾何與材料**：
   - 原始 CAD：複雜電子散熱板或排氣歧管裝配體（STEP / IGES 格式），存在縫隙（$<0.05\text{ mm}$）與倒角碎面。
 - **核心物理與邊界條件**：

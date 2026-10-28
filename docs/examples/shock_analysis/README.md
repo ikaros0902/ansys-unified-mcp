@@ -34,7 +34,7 @@ These scripts connect to an active Mechanical session via gRPC:
 - **Port**: Default is `10000`.
 - **Execution**:
   ```powershell
-  python examples/shock_analysis/run_shock_35g_pipeline.py
-  python examples/shock_analysis/execute_full_shock_act_pipeline.py
-  python examples/shock_analysis/audit_rm_deep.py
+  python docs/examples/shock_analysis/run_shock_35g_pipeline.py
+  python docs/examples/shock_analysis/execute_full_shock_act_pipeline.py
+  python docs/examples/shock_analysis/audit_rm_deep.py
   ```

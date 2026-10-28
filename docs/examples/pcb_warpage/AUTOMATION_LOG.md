@@ -7,27 +7,27 @@
 ## 一、 程式碼與檔案修改清單 (Modifications)
 
 ### 1. 核心驅動庫修改 (`ansys-unified-mcp`)
-* **[`src/ansys_unified_mcp/drivers/sim_impl.py`](../src/ansys_unified_mcp/drivers/sim_impl.py)**
+* **當前幾何連線實作：[`src/ansys_unified_mcp/products/geometry/tools.py`](../../../src/ansys_unified_mcp/products/geometry/tools.py)、[`call_dispatch.py`](../../../src/ansys_unified_mcp/products/geometry/call_dispatch.py)**（歷史記錄中的 `drivers/sim_impl.py` 不在目前工作區）
   * **修改內容**：將 `connect_to_spaceclaim` 的預設 `transport_mode` 由原本 Windows 平台判斷的 `"wnua"` 改為強制預設 `"insecure"`。
   * **目的**：避免 SpaceClaim 本機 gRPC 伺服器在 Windows 下因認證失敗而連線超時中斷。
-* **[`src/ansys_unified_mcp/tools/workbench_filebridge.py`](../src/ansys_unified_mcp/tools/workbench_filebridge.py)**
+* **當前 Workbench 佇列目錄管理：[`src/ansys_unified_mcp/bridges/workbench_filequeue.py`](../../../src/ansys_unified_mcp/bridges/workbench_filequeue.py)**（歷史記錄中的 `tools/workbench_filebridge.py` 不在目前工作區）
   * **修改內容**：新增 `_ensure_dirs()` 函式，在發送指令前自動遞迴檢查並建立 `commands/`、`results/`、`scripts/`、`runs/` 資料夾。
   * **目的**：杜絕檔案隊列初次啟動時因目錄未建立導致的 `FileNotFoundError`。
 
-### 2. 專案自動化腳本 (`D:\ANSYS_MCP_Connect\PCB_Stackup_material\`)
-* **[`01_build_pcb_geometry.py`](file:///D:/ANSYS_MCP_Connect/PCB_Stackup_material/01_build_pcb_geometry.py)**
+### 2. 專案自動化腳本（原始工作區：`D:\ANSYS_MCP_Connect\PCB_Stackup_material\`）
+* **[`01_build_pcb_geometry.py`](01_build_pcb_geometry.py)**
   * 讀取 Excel 疊構定義（420 mm $\times$ 380 mm，共 79 層，總厚 5.345 mm）。
   * 驅動 SpaceClaim 建立 `PCB_Stackup_79L` 子組件，啟用 `SharedTopologyType.SHARE`，依序建立 79 層實體板厚。
-* **[`02_calculate_materials.py`](file:///D:/ANSYS_MCP_Connect/PCB_Stackup_material/02_calculate_materials.py)**
+* **[`02_calculate_rom_materials.py`](02_calculate_rom_materials.py)**
   * 讀取 Copper.csv、EM-370.csv、EM-892K2.csv（23 點溫度曲線）。
   * 依各層殘銅率（Copper Residual %）計算正交異向性複合材料混合律（Rule of Mixtures）。
-  * 自動輸出 1,672 行極速 MAPDL 材料巨集 [`apdl_rom_materials.mac`](file:///D:/ANSYS_MCP_Connect/PCB_Stackup_material/apdl_rom_materials.mac)。
-* **[`03_setup_and_solve_mechanical.py`](file:///D:/ANSYS_MCP_Connect/PCB_Stackup_material/03_setup_and_solve_mechanical.py)**
+  * 自動輸出 MAPDL 材料巨集；目前工作區保留的範本為 [`apdl_rom_materials_template.mac`](../../../agents/skills/materials-reliability/pcb-warpage-analysis/assets/apdl_rom_materials_template.mac)，歷史輸出的 1,672 行巨集不在此工作區。
+* **[`03_setup_mechanical_bc_and_solution.py`](../../../agents/skills/materials-reliability/pcb-warpage-analysis/scripts/03_setup_mechanical_bc_and_solution.py)**
   * 連線 Mechanical gRPC，劃分 MultiZone 結構六面體網格（24.5 萬節點、5.7 萬單元）。
   * 自動建立 79 個 Named Selections（`NS_L01`～`NS_L79`），注入 APDL 巨集置換材料。
   * 設定無應力參考溫度 $30^\circ\text{C}$ 與均勻回焊溫度 $220^\circ\text{C}$。
   * 於底層頂點配置 3-2-1 靜定運動學約束，並調用 12 核心 MAPDL 平行求解。
-* **[`04_rescope_and_export_warpage.py`](file:///D:/ANSYS_MCP_Connect/PCB_Stackup_material/04_rescope_and_export_warpage.py)**
+* `04_rescope_and_export_warpage.py`（原始 D 槽檔案；目前工作區未找到此檔）
   * 重構 Mechanical 結果樹，聚焦 Top Surface (L01)、Bottom Surface (L79) 與 All Bodies 的 $Z$ 方向翹曲。
   * 設定繪圖視角與輸出解析度，匯出高畫質 PNG 雲圖。
 

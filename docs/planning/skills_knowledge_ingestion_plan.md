@@ -1,6 +1,7 @@
 # Skills 知識歸納實作計畫（2026-10-16，草案 v3 → 2026-10-17 已完成）
 
 狀態：**已完成**。WP1–WP4 文件工作與 WP6 評估已執行並通過 loop_reviewer 第 2 輪 Claims-Evidence 門禁審查（PASS）。WP5（程式碼變更）依 D2 決議本輪不執行，列入待分類。
+本文件記錄 2026-10-17 的工作狀態。2026-10-28 技能已改依 ANSYS 模組整理至 `agents/skills/<module>/<skill>/`；目前目錄狀態與搬移對照見[目錄重整計畫](FOLDER_TREE_REORGANIZATION_PLAN.md)及[技能搬移清單](../maintenance/SKILL_MIGRATION_MAP.json)。以下行數、路徑及同步工具觀察均為當時紀錄，不代表目前狀態。
 依循：`D:\Ikaros\skill-creator`（progressive disclosure、evals 迭代）、`D:\Ikaros\mcp-builder`（命名、annotations、可行動錯誤）、專案 steering（SKILL.md ≤150 行、防過擬合、Maker-Checker）。
 v1 → v2：依 loop_reviewer 審查修正 WP6 grading 流程、WP5 annotations、既有 cfile 指令清單、鏡像同步、版權邊界，並刪減過度設計。
 v2 → v3：修正 WP6 目錄佈局（`eval-*/<config>/run-*`、`new_skill`/`old_skill` 排序）、`sync_skills.ps1` 實際無作用的描述與 D5 選項。
@@ -67,7 +68,7 @@ v2 → v3：修正 WP6 目錄佈局（`eval-*/<config>/run-*`、`new_skill`/`old
 | WP1 | APIKB / docsearch | `ansys-mechanical`、`ansys-spaceclaim`、`ansys-optislang`、`act-extension-development`、`ansys-ls-prepost`、`ansys-lsdyna` SKILL.md | 路由表各加 1 列 |
 | WP2 | 課程心得 | `ansys-mesh/references/sizing_strategy_and_quality_workflow.md`（新）＋路由 1 列；`ansys-mechanical/references/mesh.md` 加交叉引用 1 行 | 新增 |
 | WP3 | LS-PrePost SOP | `ansys-ls-prepost/references/gui_result_review_sop.md`（新）；補強 `states_and_results.md`；路由 +2 列 | 新增＋補強 |
-| WP4 | LS-Run 教材 | `ansys-lsdyna/references/solver_execution_lsrun.md`（新）；`shock-analysis-workflow/07-solve-monitor/SKILL.md` 路由 1 列 | 新增＋路由 |
+| WP4 | LS-Run 教材 | `ansys-lsdyna/references/solver_execution_lsrun.md`（新）；`shock-analysis-workflow/references/workflows/step_07_solve.md` 路由 1 列 | 新增＋路由 |
 | WP5 | 工具缺口 | `products/dyna/tools.py`、`facade.py` | 選做（D2） |
 | WP6 | — | WP2–WP4 的 skill | skill-creator 評估 |
 
@@ -164,7 +165,7 @@ cfile 驗證協定（滿足其一才可進對照表）：
 工作區：`agents/skills-workspace/<skill>-workspace/`（skill-creator 的 sibling 慣例；整個 `agents/skills-workspace/` 加入 `.git/info/exclude`）。
 
 1. 修改前快照：`<skill>-workspace/skill-snapshot/`。
-2. `agents/skills/<skill>/evals/evals.json`：每個 skill 3 題，例如：
+2. `agents/skills/<module>/<skill>/evals/evals.json`：每個 skill 3 題，例如：
    - ansys-ls-prepost：「d3plot 打開後要量兩個零件在撞擊瞬間的最小間隙，步驟？」
    - ansys-lsdyna：「LS-DYNA 跑到一半想停下來存 restart，之後再接著算，怎麼做？」
    - ansys-mesh：「Edge sizing 設 Hard 加 bias 之後旁邊網格尺寸跳很大，為什麼？」
@@ -261,4 +262,4 @@ Q 與 WP1+WP2 修改範圍不重疊，平行執行。同一錯誤自愈上限 3 
 - `dyna_sense_switch` 工具、SMP/MPP 與 MPI 選擇、叢集提交。
 - `quality_worksheet_to_named_selection` 腳本（需先確認 Mechanical 有可讀取 Worksheet 失敗元素的 API）。
 - `scripts/maintenance/sync_skills.ps1` 來源路徑判斷不含 `agents/skills`，目前是 no-op。
-- skills 依模組／功能重組資料夾（先前討論，暫緩）。
+- skills 依 ANSYS 模組／功能重組資料夾（2026-10-28 已執行；搬移對照見 `docs/maintenance/SKILL_MIGRATION_MAP.json`）。

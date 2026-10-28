@@ -84,4 +84,4 @@
 | **Level 4** | 機構語義特徵 (候選) | 純零件名含 `T-NUT`, `PLUG`, `LATCH`, `RAIL`, `PIN 2` 等 | `AllTriAllTet` |
 | **Level 5** | 預設常規實體 | 其餘規則柱狀、壓塊、標準扣件 | `MultiZone Solid` |
 
-*當前狀態：Level 3 & 4 記錄歸檔於 `docs/mesh_classification_heuristics.md`，暫不啟用（維持全幾何預設 MultiZone，劃分失敗才動態降級）。*
+*當前狀態：Level 3 & 4 記錄歸檔於 `docs/examples/mesh_debug/mesh_classification_heuristics.md`，暫不啟用（維持全幾何預設 MultiZone，劃分失敗才動態降級）。*
