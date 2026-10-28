@@ -1,6 +1,6 @@
 # REA v251 managed candidate index
 
-This index covers 50 captured REA JSON snapshots. Together, they contain 13,091 class records and 102,411 MethodDef rows.
+This index covers 55 captured REA JSON snapshots. Together, they contain 13,164 class records and 104,252 MethodDef rows.
 
 > These are static metadata rows. They can include non-public members. They do not establish product ownership, public API status, vendor support, or runtime behavior.
 > Use [the product matrix](../../PRODUCT_API_MATRIX.md) for current product mapping and gaps. Use APIKB for member-level search.
@@ -30,6 +30,7 @@ This index covers 50 captured REA JSON snapshots. Together, they contain 13,091 
 | `discovery_physics_rea` | `Ansys.Physics.Api.dll` | 5 | 29 | 106 | [JSON](../../discovery_physics_rea_api.json) |
 | `discovery_project_rea` | `Ansys.Project.Api.dll` | 6 | 101 | 424 | [JSON](../../discovery_project_rea_api.json) |
 | `discovery_results_rea` | `Ansys.Results.Api.dll` | 5 | 47 | 179 | [JSON](../../discovery_results_rea_api.json) |
+| `engineeringdata_core_rea` | `Ans.EngineeringData.Core.dll` | 2 | 46 | 604 | [JSON](../../engineeringdata_core_rea_api.json) |
 | `engineeringdata_dataprovider_rea` | `Ans.EngineeringData.DataProvider.dll` | 5 | 132 | 656 | [JSON](../../engineeringdata_dataprovider_rea_api.json) |
 | `engineeringdata_rea` | `Ans.EngineeringData.DataModel.dll` | 2 | 39 | 400 | [JSON](../../engineeringdata_rea_api.json) |
 | `fluent_addin_rea` | `Ans.Fluent.dll` | 11 | 482 | 7652 | [JSON](../../fluent_addin_rea_api.json) |
@@ -53,8 +54,12 @@ This index covers 50 captured REA JSON snapshots. Together, they contain 13,091 
 | `simplorer_addin_rea` | `Ans.Ansoft.SimplorerAddinPlugin.dll` | 2 | 5 | 17 | [JSON](../../simplorer_addin_rea_api.json) |
 | `siwave_libironpythoncmd_rea` | `Ansys.Ansoft.SIwave.LibIronPythonCmd.dll` | 2 | 95 | 710 | [JSON](../../siwave_libironpythoncmd_rea_api.json) |
 | `spaceclaim_core_rea` | `SpaceClaim.Api.V251.dll` | 16 | 3904 | 21426 | [JSON](../../spaceclaim_core_rea_api.json) |
+| `turbosystem_afd_core_rea` | `Ans.TurboSystem.AFDCore.dll` | 1 | 5 | 255 | [JSON](../../turbosystem_afd_core_rea_api.json) |
+| `turbosystem_ccd_core_rea` | `Ans.TurboSystem.CCDCore.dll` | 1 | 3 | 428 | [JSON](../../turbosystem_ccd_core_rea_api.json) |
 | `turbosystem_ccd_rea` | `Ans.TurboSystem.CCDInterface.dll` | 1 | 1 | 243 | [JSON](../../turbosystem_ccd_rea_api.json) |
 | `turbosystem_ccm_rea` | `Ans.TurboSystem.CCMInterface.dll` | 1 | 1 | 76 | [JSON](../../turbosystem_ccm_rea_api.json) |
+| `turbosystem_cpd_core_rea` | `Ans.TurboSystem.CPDCore.dll` | 1 | 16 | 276 | [JSON](../../turbosystem_cpd_core_rea_api.json) |
+| `turbosystem_rtd_core_rea` | `Ans.TurboSystem.RTDCore.dll` | 1 | 3 | 278 | [JSON](../../turbosystem_rtd_core_rea_api.json) |
 | `units_rea` | `Ans.Units.DataModel.dll` | 3 | 13 | 63 | [JSON](../../units_rea_api.json) |
 | `vista_tf_rea` | `Ans.VistaTF.DataModel.dll` | 6 | 96 | 1124 | [JSON](../../vista_tf_rea_api.json) |
 | `zemax_zosapi_interfaces_rea` | `ZOSAPI_Interfaces.dll` | 45 | 919 | 13469 | [JSON](../../zemax_zosapi_interfaces_rea_api.json) |
@@ -83,6 +88,7 @@ This index covers 50 captured REA JSON snapshots. Together, they contain 13,091 
 - `discovery_physics_rea` — SHA-256 `78a04ae7973d17009717a6309e5bea1622150d53d1bd7d264722fd6f6b038073`; MVID `a70177e6-22c2-41ee-a624-cd75c6e8ad26`; REA Evidence ID `ev_45ae02a8e01148fa98245a65bc5aae66d940768bc92a17650f174171ff80b62f`.
 - `discovery_project_rea` — SHA-256 `4133e9316e39598cf7c6a97d16f9ae3311dafb75df340639cd85e552fc6c0f4e`; MVID `df2caded-b668-421a-891c-0460478c235b`; REA Evidence ID `ev_870242a1ba1e12f08f34fa1746952d2d0b2a1106f85f4b51cb0ec3206cde5547`.
 - `discovery_results_rea` — SHA-256 `d3cb87be1e292d34705bb1576fa88dbdf9233302c686db6934c700456f0c2130`; MVID `c2a737c4-9a82-4055-ad29-8c6630d7b77f`; REA Evidence ID `ev_92d1ae539084d2abb885782a8baa61c1435b1cc6305ae915a97810d027b6eeaa`.
+- `engineeringdata_core_rea` — SHA-256 `eda29ac7a3d7b2c720bcde50bbb23d377b4e3bcb4d1ef4c20209cb4aeac5f29d`; MVID `f05a6923-7d16-465e-8f58-c1da2f3d719f`; REA Evidence ID `ev_3a0f23b9dd486018518e12c1e283fdd074c612ec899afeb95ea0b8bd6c1b75d4`.
 - `engineeringdata_dataprovider_rea` — SHA-256 `cbae2258b6327e5dc994de9b020f70a65e85fc68a0e0cd26d2a8724ecf92ce0c`; MVID `c57653b0-0095-42d5-bc53-c2970c851960`; REA Evidence ID `ev_dad7dde37936090012a21f02522336e8c78fda0fddc79995498fa9db05c0fd8d`.
 - `engineeringdata_rea` — SHA-256 `70bb92bb6c7ea1178ae6377f9992f4685886ac23b9ca40ce0ec93bd39d426251`; MVID `d7a87bd8-cc9e-4f1c-8ace-6ee800628160`; REA Evidence ID `ev_e803ac2182f6d6bf3de1eee1a3894ac1a34bede584709260cdcc71f1e9357a85`.
 - `fluent_addin_rea` — SHA-256 `e1742d642bab37ebe26aa147ac4aa4d5a034b26c534da7e963ec18bd9e4f96b4`; MVID `30798882-87b3-442f-b9bc-a784f287950d`; REA Evidence ID `ev_02ab1aa25aa1b97e07ea9d7c4e93cb4cf3c944605d9fe985435f53ed187a85df`.
@@ -106,8 +112,12 @@ This index covers 50 captured REA JSON snapshots. Together, they contain 13,091 
 - `simplorer_addin_rea` — SHA-256 `bba079e08078996e1ffeb7491234732e673bd8365dadcde52cfd520efeab3088`; MVID `02dd607e-0fb9-4681-bfd4-39ce62e72f7f`; REA Evidence ID `ev_c652559083b9c565bd888b2be7cd86bd439eb1571e7b627c74922e3ebe2caee1`.
 - `siwave_libironpythoncmd_rea` — SHA-256 `73b7de096fabf53f18293248706082eef982f3d6a7ee3e05e9395165da5aec8d`; MVID `d4c1ce51-265b-46e1-8c51-90604ba9dbe6`; REA Evidence ID `ev_7dfa98fb8636c8d57b384efde9161101582f658ebb548d390171c0cef5b538db`.
 - `spaceclaim_core_rea` — SHA-256 `329adf81f2678da5ffaf671a10691ec6cb41963b92f652f2baaa555646a0b55d`; MVID `df791fca-9ae8-4699-98d4-a6e792f098bf`; REA Evidence ID `ev_1ff332940176d8fd198d0005264756f2ae91929b8c01d558ec4f029788de79fd`.
+- `turbosystem_afd_core_rea` — SHA-256 `814609d398b7bc6fd14711d3c20063708ff40fcc4bb20a51c9767abb361fddb2`; MVID `44bb9ee0-85d2-4344-87a4-914235442fb5`; REA Evidence ID `ev_7ae579dac5451f0a8cb123147c9aebf6cc9afe4ace25583d136b9a8c31a5938d`.
+- `turbosystem_ccd_core_rea` — SHA-256 `70b510955ee59308a9804d4b0c87a78a254f3b65b197b1d21c90b1cee9bb5ddb`; MVID `a55170ce-29c4-4f58-a4ee-22172c185d89`; REA Evidence ID `ev_9e94149df529c7798fcd6909dde8dc9236213d0a080eb082be605a90160f2a61`.
 - `turbosystem_ccd_rea` — SHA-256 `9fc49bfeff27c31fdac05278d3447cb1ac6b4953661ccad360b864ff706a0908`; MVID `2f302501-30ae-4f91-8e0d-cfca2da245df`; REA Evidence ID `ev_555e2c61a984672dcd78aeee90c8ca070e19ab380a0a8ef1881b014bb9acebec`.
 - `turbosystem_ccm_rea` — SHA-256 `f89e4afba2eebbdc202f254bddc67043657fd635435a5427d7afb53c91b57c53`; MVID `a8bb0268-da89-4bba-927a-0382bccd2d4a`; REA Evidence ID `ev_4aeb1dd7fcbd77a6e0b885610698768af5547e9d745e1f59154b7999450f1864`.
+- `turbosystem_cpd_core_rea` — SHA-256 `f29de6c8ea9f8c0065db84eb1bc999ee99ca31424808545016ca392a7d3b52fc`; MVID `981821d2-0ea5-4617-864c-d6ccad03b9f5`; REA Evidence ID `ev_8b0b8c5081f8242df9aa57a1ca313233d653efb50c5dbb0bdc32e0ab051e9008`.
+- `turbosystem_rtd_core_rea` — SHA-256 `154a523696af0e4b94ae3662d1fca0fb0fe08ed0a19809bac995bec28609637f`; MVID `b4339cf2-54ee-4200-8caa-61227565d7b0`; REA Evidence ID `ev_a03cac1f18b7c55b6d98055719bc9ce8ae0b84f374c2d3f3cee9a207d94163c3`.
 - `units_rea` — SHA-256 `679ffda588d077c61995b29e75632c9d33f9ea07c4fa7e187cd5c2cb038c4257`; MVID `76e9a67a-ad49-4fb2-88f8-f171d43f50c7`; REA Evidence ID `ev_59c603b7f0758dec5397700d165871320e493530bf166c5368f5a29130941e63`.
 - `vista_tf_rea` — SHA-256 `8c12df7c9328003226c25df297f125e687fa02e747454259f0f6dce38c65a9e5`; MVID `366d7f58-a980-474c-85e6-53d425ae0e94`; REA Evidence ID `ev_599202df788c66f1286e25b175a564dd18a283e505b529eccd40cf118284e282`.
 - `zemax_zosapi_interfaces_rea` — SHA-256 `eb18966f82c76821ee310c21c9bafa137b34e2e7fafe2dde6041a796187371a9`; MVID `15f830bc-ee7d-4c86-8059-ec0011ec59f9`; REA Evidence ID `ev_91895470bb640045126d4e5ccce806f4ab315895ad7303225a3fc74eacc094c8`.

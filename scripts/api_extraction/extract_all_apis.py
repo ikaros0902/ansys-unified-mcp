@@ -489,6 +489,12 @@ def build_rea_metadata_snapshots() -> list[Path]:
             "Remote Solve Manager JobManagement v251 REA metadata; product mapping and support status unverified",
         ),
         (
+            "Ans.EngineeringData.Core.json",
+            "engineeringdata_core_rea_api.json",
+            "engineeringdata_core_rea",
+            "Engineering Data Core v251 REA metadata; support status unverified",
+        ),
+        (
             "Ans.EngineeringData.DataProvider.json",
             "engineeringdata_dataprovider_rea_api.json",
             "engineeringdata_dataprovider_rea",
@@ -637,6 +643,30 @@ def build_rea_metadata_snapshots() -> list[Path]:
             "turbosystem_ccm_rea_api.json",
             "turbosystem_ccm_rea",
             "TurboSystem CCM interface v251 REA metadata; support status unverified",
+        ),
+        (
+            "Ans.TurboSystem.AFDCore.json",
+            "turbosystem_afd_core_rea_api.json",
+            "turbosystem_afd_core_rea",
+            "TurboSystem AFDCore v251 REA metadata; support status unverified",
+        ),
+        (
+            "Ans.TurboSystem.CCDCore.json",
+            "turbosystem_ccd_core_rea_api.json",
+            "turbosystem_ccd_core_rea",
+            "TurboSystem CCDCore v251 REA metadata; support status unverified",
+        ),
+        (
+            "Ans.TurboSystem.CPDCore.json",
+            "turbosystem_cpd_core_rea_api.json",
+            "turbosystem_cpd_core_rea",
+            "TurboSystem CPDCore v251 REA metadata; support status unverified",
+        ),
+        (
+            "Ans.TurboSystem.RTDCore.json",
+            "turbosystem_rtd_core_rea_api.json",
+            "turbosystem_rtd_core_rea",
+            "TurboSystem RTDCore v251 REA metadata; support status unverified",
         ),
         (
             "Ans.Units.DataModel.json",

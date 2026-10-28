@@ -1,6 +1,6 @@
 # ANSYS 產品 API 來源與缺口索引
 
-本索引依目前 coverage 清冊列出的 57 個產品 ID，彙整直接 API 快照、已映射 REA 組件證據和來源缺口。21 份直接 API／SDK／protocol 快照分布於 12 個產品 ID；APIKB 另索引 50 個 REA 靜態候選來源鍵和 33 份 native export 清冊，逐來源細節見 [API Catalog](./API_CATALOG.md)及[REA source index](./curated/rea/index.md)。
+本索引依目前 coverage 清冊列出的 57 個產品 ID，彙整直接 API 快照、已映射 REA 組件證據和來源缺口。21 份直接 API／SDK／protocol 快照分布於 12 個產品 ID；APIKB 另索引 55 個 REA 靜態候選來源鍵和 33 份 native export 清冊，逐來源細節見 [API Catalog](./API_CATALOG.md)及[REA source index](./curated/rea/index.md)。
 
 ## 證據狀態
 
@@ -77,9 +77,14 @@
 
 | 元件候選 | 安裝相對路徑 | APIKB source key | 證據 |
 | --- | --- | --- | --- |
+| Engineering Data Core | `Addins/EngineeringData/bin/Win64/Ans.EngineeringData.Core.dll` | `engineeringdata_core_rea` | [REA evidence](./REA_EVIDENCE.md) |
 | Engineering Data DataProvider | `Addins/EngineeringData/bin/Win64/Ans.EngineeringData.DataProvider.dll` | `engineeringdata_dataprovider_rea` | [REA evidence](./REA_EVIDENCE.md) |
 | DesignModeler Core | `Addins/DesignModeler/bin/Win64/Ans.DesignModeler.Core.dll` | `designmodeler_core_rea` | [REA evidence](./REA_EVIDENCE.md) |
 | Material Designer Core | `Addins/MaterialDesigner/bin/Win64/Ans.MaterialDesigner.Core.dll` | `materialdesigner_core_rea` | [REA evidence](./REA_EVIDENCE.md) |
+| TurboSystem AFDCore | `Addins/TurboSystem/bin/Win64/Ans.TurboSystem.AFDCore.dll` | `turbosystem_afd_core_rea` | [REA evidence](./REA_EVIDENCE.md) |
+| TurboSystem CCDCore | `Addins/TurboSystem/bin/Win64/Ans.TurboSystem.CCDCore.dll` | `turbosystem_ccd_core_rea` | [REA evidence](./REA_EVIDENCE.md) |
+| TurboSystem CPDCore | `Addins/TurboSystem/bin/Win64/Ans.TurboSystem.CPDCore.dll` | `turbosystem_cpd_core_rea` | [REA evidence](./REA_EVIDENCE.md) |
+| TurboSystem RTDCore | `Addins/TurboSystem/bin/Win64/Ans.TurboSystem.RTDCore.dll` | `turbosystem_rtd_core_rea` | [REA evidence](./REA_EVIDENCE.md) |
 
 ## 版本與缺口處理
 
