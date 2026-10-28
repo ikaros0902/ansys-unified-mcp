@@ -1,0 +1,4277 @@
+{
+  "module": "generated protobuf modules",
+  "version": "unknown",
+  "sdk_package": "ansys-api-result-explorer",
+  "sdk_version": "0.1.1",
+  "interface": "result_explorer gRPC protocol schema",
+  "scope": "限於套件內 protobuf message 欄位與 gRPC service RPC signatures。這是傳輸協定 schema，不是產品 scripting API 或支援狀態聲明。",
+  "sources": {
+    "sdk_files": [
+      {
+        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/result_explorer/v0/app_pb2.py",
+        "sha256": "46ebb972fbed3ba7de4d175efdcd67a2baecc308e33318080ef3c6a03fa486b0"
+      },
+      {
+        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/result_explorer/v0/base_pb2.py",
+        "sha256": "5c5e3d319aacb62bb081c3c107ba2b222db935636703f3c104ae1e61570076d5"
+      },
+      {
+        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/result_explorer/v0/filesystem_pb2.py",
+        "sha256": "3123a63971ffb87ec8a9dcebf8d21147abb31d44d522f5a0f712c2477852046d"
+      },
+      {
+        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/result_explorer/v0/server_models_pb2.py",
+        "sha256": "f9a7f68ecb831b5baf47c5c514d92362ec5e9569ac2deeff5e16d14470196f86"
+      },
+      {
+        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/result_explorer/v0/solution_pb2.py",
+        "sha256": "a250ee4208b4d6fdddaa849262bd6e4cf9a665e2d9b2cbc436d6e12da26937c9"
+      },
+      {
+        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/result_explorer/v0/workspace_pb2.py",
+        "sha256": "f0a50889ae89ad28e4891ee368ef80b979f55c4d19b59ab5f10434015b5f6ad9"
+      }
+    ]
+  },
+  "modules": {
+    "ansys.api.result_explorer.v0.app_pb2": {
+      "doc": "ansys.api.result_explorer.v0.app",
+      "classes": {
+        "AppInfo": {
+          "name": "AppInfo",
+          "doc": "Protocol message ansys.api.result_explorer.v0.app.AppInfo",
+          "methods": [],
+          "properties": [
+            {
+              "name": "version",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "build_date",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "branch",
+              "type": "string",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "commit_hash",
+              "type": "string",
+              "doc": "Protobuf field number 4; repeated=False"
+            }
+          ]
+        },
+        "ResultProvider": {
+          "name": "ResultProvider",
+          "doc": "Protocol message ansys.api.result_explorer.v0.app.ResultProvider",
+          "methods": [],
+          "properties": [
+            {
+              "name": "name",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "url",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "build_info",
+              "type": "ansys.api.result_explorer.v0.server_models.BuildInfo",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "hps_url",
+              "type": "string",
+              "doc": "Protobuf field number 4; repeated=False"
+            },
+            {
+              "name": "solution_ids",
+              "type": "string",
+              "doc": "Protobuf field number 10; repeated=True"
+            }
+          ]
+        },
+        "CreateResultProviderRequest": {
+          "name": "CreateResultProviderRequest",
+          "doc": "Protocol message ansys.api.result_explorer.v0.app.CreateResultProviderRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "name",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "url",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "DeleteResultProviderRequest": {
+          "name": "DeleteResultProviderRequest",
+          "doc": "Protocol message ansys.api.result_explorer.v0.app.DeleteResultProviderRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "name",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "ResultProviderList": {
+          "name": "ResultProviderList",
+          "doc": "Protocol message ansys.api.result_explorer.v0.app.ResultProviderList",
+          "methods": [],
+          "properties": [
+            {
+              "name": "result_providers",
+              "type": "ansys.api.result_explorer.v0.app.ResultProvider",
+              "doc": "Protobuf field number 1; repeated=True"
+            }
+          ]
+        },
+        "AppearanceSettings": {
+          "name": "AppearanceSettings",
+          "doc": "Protocol message ansys.api.result_explorer.v0.app.AppearanceSettings",
+          "methods": [],
+          "properties": [
+            {
+              "name": "theme",
+              "type": "ansys.api.result_explorer.v0.app.AppTheme",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "ThreeDSettings": {
+          "name": "ThreeDSettings",
+          "doc": "Protocol message ansys.api.result_explorer.v0.app.ThreeDSettings",
+          "methods": [],
+          "properties": [
+            {
+              "name": "camera_projection",
+              "type": "ansys.api.result_explorer.v0.app.ThreeDCameraProjection",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "interaction_mode",
+              "type": "ansys.api.result_explorer.v0.app.ThreeDInteractionMode",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "color_map",
+              "type": "ansys.api.result_explorer.v0.app.ThreeDColorMap",
+              "doc": "Protobuf field number 4; repeated=False"
+            },
+            {
+              "name": "show_mesh_edges_by_default",
+              "type": "bool",
+              "doc": "Protobuf field number 5; repeated=False"
+            },
+            {
+              "name": "use_global_min_max_by_default",
+              "type": "bool",
+              "doc": "Protobuf field number 6; repeated=False"
+            }
+          ]
+        },
+        "DataProcessingSettings": {
+          "name": "DataProcessingSettings",
+          "doc": "Protocol message ansys.api.result_explorer.v0.app.DataProcessingSettings",
+          "methods": [],
+          "properties": [
+            {
+              "name": "processing_mode",
+              "type": "ansys.api.result_explorer.v0.app.ProcessingMode",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "include_displacement",
+              "type": "bool",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "all_sets_scoping",
+              "type": "bool",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "chunking_strategy",
+              "type": "ansys.api.result_explorer.v0.server_models.ChunkingStrategy",
+              "doc": "Protobuf field number 4; repeated=False"
+            },
+            {
+              "name": "average_per_entity",
+              "type": "bool",
+              "doc": "Protobuf field number 5; repeated=False"
+            }
+          ]
+        },
+        "AppSettings": {
+          "name": "AppSettings",
+          "doc": "Protocol message ansys.api.result_explorer.v0.app.AppSettings",
+          "methods": [],
+          "properties": [
+            {
+              "name": "appearance",
+              "type": "ansys.api.result_explorer.v0.app.AppearanceSettings",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "three_d",
+              "type": "ansys.api.result_explorer.v0.app.ThreeDSettings",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "data_processing",
+              "type": "ansys.api.result_explorer.v0.app.DataProcessingSettings",
+              "doc": "Protobuf field number 3; repeated=False"
+            }
+          ]
+        },
+        "Session": {
+          "name": "Session",
+          "doc": "Protocol message ansys.api.result_explorer.v0.app.Session",
+          "methods": [],
+          "properties": [
+            {
+              "name": "data",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "AuthenticateResultProviderRequest": {
+          "name": "AuthenticateResultProviderRequest",
+          "doc": "Protocol message ansys.api.result_explorer.v0.app.AuthenticateResultProviderRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "result_provider_name",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "token",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "AppService": {
+          "name": "AppService",
+          "doc": "gRPC service ansys.api.result_explorer.v0.app.AppService",
+          "methods": [
+            {
+              "name": "GetAppInfo",
+              "signature": "(ansys.api.result_explorer.v0.base.Empty) -> ansys.api.result_explorer.v0.app.AppInfo [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "GetAppSettings",
+              "signature": "(ansys.api.result_explorer.v0.base.Empty) -> ansys.api.result_explorer.v0.app.AppSettings [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "UpdateAppSettings",
+              "signature": "(ansys.api.result_explorer.v0.app.AppSettings) -> ansys.api.result_explorer.v0.app.AppSettings [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "ListResultProviders",
+              "signature": "(ansys.api.result_explorer.v0.base.Empty) -> ansys.api.result_explorer.v0.app.ResultProviderList [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "CreateResultProvider",
+              "signature": "(ansys.api.result_explorer.v0.app.CreateResultProviderRequest) -> ansys.api.result_explorer.v0.app.ResultProvider [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "DeleteResultProvider",
+              "signature": "(ansys.api.result_explorer.v0.app.DeleteResultProviderRequest) -> ansys.api.result_explorer.v0.base.Empty [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "AuthenticateResultProvider",
+              "signature": "(ansys.api.result_explorer.v0.app.AuthenticateResultProviderRequest) -> ansys.api.result_explorer.v0.base.Empty [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "SaveSession",
+              "signature": "(ansys.api.result_explorer.v0.base.Empty) -> ansys.api.result_explorer.v0.app.Session [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "OpenSession",
+              "signature": "(ansys.api.result_explorer.v0.app.Session) -> ansys.api.result_explorer.v0.base.Empty [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            }
+          ],
+          "properties": []
+        }
+      },
+      "functions": []
+    },
+    "ansys.api.result_explorer.v0.base_pb2": {
+      "doc": "ansys.api.result_explorer.v0.base",
+      "classes": {
+        "Empty": {
+          "name": "Empty",
+          "doc": "Protocol message ansys.api.result_explorer.v0.base.Empty",
+          "methods": [],
+          "properties": []
+        },
+        "ResourceId": {
+          "name": "ResourceId",
+          "doc": "Protocol message ansys.api.result_explorer.v0.base.ResourceId",
+          "methods": [],
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        }
+      },
+      "functions": []
+    },
+    "ansys.api.result_explorer.v0.filesystem_pb2": {
+      "doc": "ansys.api.result_explorer.v0.filesystem",
+      "classes": {
+        "FilesystemRequest": {
+          "name": "FilesystemRequest",
+          "doc": "Protocol message ansys.api.result_explorer.v0.filesystem.FilesystemRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "result_provider_name",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "LsRequest": {
+          "name": "LsRequest",
+          "doc": "Protocol message ansys.api.result_explorer.v0.filesystem.LsRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "result_provider_name",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "path",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "max_depth",
+              "type": "int32",
+              "doc": "Protobuf field number 3; repeated=False"
+            }
+          ]
+        },
+        "FsItems": {
+          "name": "FsItems",
+          "doc": "Protocol message ansys.api.result_explorer.v0.filesystem.FsItems",
+          "methods": [],
+          "properties": [
+            {
+              "name": "items",
+              "type": "ansys.api.result_explorer.v0.server_models.FSItem",
+              "doc": "Protobuf field number 1; repeated=True"
+            }
+          ]
+        },
+        "TailRequest": {
+          "name": "TailRequest",
+          "doc": "Protocol message ansys.api.result_explorer.v0.filesystem.TailRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "result_provider_name",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "path",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "lines_offset",
+              "type": "int32",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "bytes_offset",
+              "type": "int32",
+              "doc": "Protobuf field number 4; repeated=False"
+            }
+          ]
+        },
+        "FileContent": {
+          "name": "FileContent",
+          "doc": "Protocol message ansys.api.result_explorer.v0.filesystem.FileContent",
+          "methods": [],
+          "properties": [
+            {
+              "name": "content",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "HpsFsItems": {
+          "name": "HpsFsItems",
+          "doc": "Protocol message ansys.api.result_explorer.v0.filesystem.HpsFsItems",
+          "methods": [],
+          "properties": [
+            {
+              "name": "items",
+              "type": "ansys.api.result_explorer.v0.server_models.HpsFSItem",
+              "doc": "Protobuf field number 1; repeated=True"
+            }
+          ]
+        },
+        "FilesystemService": {
+          "name": "FilesystemService",
+          "doc": "gRPC service ansys.api.result_explorer.v0.filesystem.FilesystemService",
+          "methods": [
+            {
+              "name": "Ls",
+              "signature": "(ansys.api.result_explorer.v0.filesystem.LsRequest) -> ansys.api.result_explorer.v0.filesystem.FsItems [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "Pwd",
+              "signature": "(ansys.api.result_explorer.v0.filesystem.FilesystemRequest) -> ansys.api.result_explorer.v0.server_models.FSPath [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "Home",
+              "signature": "(ansys.api.result_explorer.v0.filesystem.FilesystemRequest) -> ansys.api.result_explorer.v0.server_models.FSPath [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "Stat",
+              "signature": "(ansys.api.result_explorer.v0.filesystem.FilesystemRequest) -> ansys.api.result_explorer.v0.server_models.FSItem [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "Tail",
+              "signature": "(ansys.api.result_explorer.v0.filesystem.TailRequest) -> ansys.api.result_explorer.v0.filesystem.FileContent [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            }
+          ],
+          "properties": []
+        },
+        "HpsFilesystemService": {
+          "name": "HpsFilesystemService",
+          "doc": "gRPC service ansys.api.result_explorer.v0.filesystem.HpsFilesystemService",
+          "methods": [
+            {
+              "name": "Ls",
+              "signature": "(ansys.api.result_explorer.v0.filesystem.LsRequest) -> ansys.api.result_explorer.v0.filesystem.HpsFsItems [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            }
+          ],
+          "properties": []
+        }
+      },
+      "functions": []
+    },
+    "ansys.api.result_explorer.v0.server_models_pb2": {
+      "doc": "ansys.api.result_explorer.v0.server_models",
+      "classes": {
+        "AvailableMeshProperty": {
+          "name": "AvailableMeshProperty",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.AvailableMeshProperty",
+          "methods": [],
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "label",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "tooltip",
+              "type": "string",
+              "doc": "Protobuf field number 3; repeated=False"
+            }
+          ]
+        },
+        "AvailableResult": {
+          "name": "AvailableResult",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.AvailableResult",
+          "methods": [],
+          "properties": [
+            {
+              "name": "name",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "native_location",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "physical_name",
+              "type": "string",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "n_components",
+              "type": "int32",
+              "doc": "Protobuf field number 4; repeated=False"
+            },
+            {
+              "name": "units",
+              "type": "string",
+              "doc": "Protobuf field number 5; repeated=False"
+            }
+          ]
+        },
+        "AveragingMeshProperties": {
+          "name": "AveragingMeshProperties",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.AveragingMeshProperties",
+          "methods": [],
+          "properties": [
+            {
+              "name": "available",
+              "type": "ansys.api.result_explorer.v0.server_models.AvailableMeshProperty",
+              "doc": "Protobuf field number 1; repeated=True"
+            },
+            {
+              "name": "defaults",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=True"
+            }
+          ]
+        },
+        "Body": {
+          "name": "Body",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.Body",
+          "methods": [],
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "name",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "labels",
+              "type": "ansys.api.result_explorer.v0.server_models.Body.LabelsEntry",
+              "doc": "Protobuf field number 3; repeated=True"
+            },
+            {
+              "name": "size",
+              "type": "int32",
+              "doc": "Protobuf field number 4; repeated=False"
+            },
+            {
+              "name": "element_group",
+              "type": "ansys.api.result_explorer.v0.server_models.ElementGroup",
+              "doc": "Protobuf field number 5; repeated=False"
+            },
+            {
+              "name": "element_types",
+              "type": "string",
+              "doc": "Protobuf field number 6; repeated=True"
+            }
+          ]
+        },
+        "BuildInfo": {
+          "name": "BuildInfo",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.BuildInfo",
+          "methods": [],
+          "properties": [
+            {
+              "name": "version",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "build_date",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "branch",
+              "type": "string",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "short_revision",
+              "type": "string",
+              "doc": "Protobuf field number 4; repeated=False"
+            },
+            {
+              "name": "revision",
+              "type": "string",
+              "doc": "Protobuf field number 5; repeated=False"
+            },
+            {
+              "name": "dpf_client_version",
+              "type": "string",
+              "doc": "Protobuf field number 6; repeated=False"
+            }
+          ]
+        },
+        "ChartData": {
+          "name": "ChartData",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.ChartData",
+          "methods": [],
+          "properties": [
+            {
+              "name": "series",
+              "type": "ansys.api.result_explorer.v0.server_models.ChartSeries",
+              "doc": "Protobuf field number 1; repeated=True"
+            }
+          ]
+        },
+        "ChartDefinition": {
+          "name": "ChartDefinition",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.ChartDefinition",
+          "methods": [],
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "name",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "results",
+              "type": "ansys.api.result_explorer.v0.server_models.ChartResult",
+              "doc": "Protobuf field number 3; repeated=True"
+            },
+            {
+              "name": "all_sets",
+              "type": "bool",
+              "doc": "Protobuf field number 4; repeated=False"
+            },
+            {
+              "name": "set_ids",
+              "type": "int32",
+              "doc": "Protobuf field number 5; repeated=True"
+            },
+            {
+              "name": "user_defined",
+              "type": "bool",
+              "doc": "Protobuf field number 6; repeated=False"
+            },
+            {
+              "name": "script",
+              "type": "string",
+              "doc": "Protobuf field number 7; repeated=False"
+            },
+            {
+              "name": "plotly_figure",
+              "type": "bool",
+              "doc": "Protobuf field number 8; repeated=False"
+            },
+            {
+              "name": "mesh_scoping",
+              "type": "ansys.api.result_explorer.v0.server_models.NamedSelectionDefinition",
+              "doc": "Protobuf field number 9; repeated=False"
+            },
+            {
+              "name": "named_selection_id",
+              "type": "string",
+              "doc": "Protobuf field number 10; repeated=False"
+            },
+            {
+              "name": "custom_options",
+              "type": "ansys.api.result_explorer.v0.server_models.ChartDefinition.CustomOptionsEntry",
+              "doc": "Protobuf field number 11; repeated=True"
+            },
+            {
+              "name": "chunk_size",
+              "type": "int32",
+              "doc": "Protobuf field number 12; repeated=False"
+            },
+            {
+              "name": "creation_time",
+              "type": "string",
+              "doc": "Protobuf field number 13; repeated=False"
+            },
+            {
+              "name": "supports_monitoring",
+              "type": "bool",
+              "doc": "Protobuf field number 14; repeated=False"
+            }
+          ]
+        },
+        "ChartDefinitionCreate": {
+          "name": "ChartDefinitionCreate",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.ChartDefinitionCreate",
+          "methods": [],
+          "properties": [
+            {
+              "name": "name",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "results",
+              "type": "ansys.api.result_explorer.v0.server_models.ChartResult",
+              "doc": "Protobuf field number 2; repeated=True"
+            },
+            {
+              "name": "all_sets",
+              "type": "bool",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "set_ids",
+              "type": "int32",
+              "doc": "Protobuf field number 4; repeated=True"
+            },
+            {
+              "name": "user_defined",
+              "type": "bool",
+              "doc": "Protobuf field number 5; repeated=False"
+            },
+            {
+              "name": "script",
+              "type": "string",
+              "doc": "Protobuf field number 6; repeated=False"
+            },
+            {
+              "name": "plotly_figure",
+              "type": "bool",
+              "doc": "Protobuf field number 7; repeated=False"
+            },
+            {
+              "name": "mesh_scoping",
+              "type": "ansys.api.result_explorer.v0.server_models.NamedSelectionDefinition",
+              "doc": "Protobuf field number 8; repeated=False"
+            },
+            {
+              "name": "named_selection_id",
+              "type": "string",
+              "doc": "Protobuf field number 9; repeated=False"
+            },
+            {
+              "name": "custom_options",
+              "type": "ansys.api.result_explorer.v0.server_models.ChartDefinitionCreate.CustomOptionsEntry",
+              "doc": "Protobuf field number 10; repeated=True"
+            },
+            {
+              "name": "chunk_size",
+              "type": "int32",
+              "doc": "Protobuf field number 11; repeated=False"
+            },
+            {
+              "name": "id",
+              "type": "string",
+              "doc": "Protobuf field number 12; repeated=False"
+            }
+          ]
+        },
+        "ChartDefinitionSerialize": {
+          "name": "ChartDefinitionSerialize",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.ChartDefinitionSerialize",
+          "methods": [],
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "name",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "results",
+              "type": "ansys.api.result_explorer.v0.server_models.ChartResult",
+              "doc": "Protobuf field number 3; repeated=True"
+            },
+            {
+              "name": "all_sets",
+              "type": "bool",
+              "doc": "Protobuf field number 4; repeated=False"
+            },
+            {
+              "name": "set_ids",
+              "type": "int32",
+              "doc": "Protobuf field number 5; repeated=True"
+            },
+            {
+              "name": "user_defined",
+              "type": "bool",
+              "doc": "Protobuf field number 6; repeated=False"
+            },
+            {
+              "name": "script",
+              "type": "string",
+              "doc": "Protobuf field number 7; repeated=False"
+            },
+            {
+              "name": "plotly_figure",
+              "type": "bool",
+              "doc": "Protobuf field number 8; repeated=False"
+            },
+            {
+              "name": "mesh_scoping",
+              "type": "ansys.api.result_explorer.v0.server_models.NamedSelectionDefinition",
+              "doc": "Protobuf field number 9; repeated=False"
+            },
+            {
+              "name": "named_selection_id",
+              "type": "string",
+              "doc": "Protobuf field number 10; repeated=False"
+            },
+            {
+              "name": "custom_options",
+              "type": "ansys.api.result_explorer.v0.server_models.ChartDefinitionSerialize.CustomOptionsEntry",
+              "doc": "Protobuf field number 11; repeated=True"
+            },
+            {
+              "name": "chunk_size",
+              "type": "int32",
+              "doc": "Protobuf field number 12; repeated=False"
+            },
+            {
+              "name": "supports_monitoring",
+              "type": "bool",
+              "doc": "Protobuf field number 13; repeated=False"
+            }
+          ]
+        },
+        "ChartResult": {
+          "name": "ChartResult",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.ChartResult",
+          "methods": [],
+          "properties": [
+            {
+              "name": "name",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "result_type",
+              "type": "ansys.api.result_explorer.v0.server_models.ResultType",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "fields",
+              "type": "ansys.api.result_explorer.v0.server_models.Field",
+              "doc": "Protobuf field number 3; repeated=True"
+            },
+            {
+              "name": "location",
+              "type": "string",
+              "doc": "Protobuf field number 4; repeated=False"
+            },
+            {
+              "name": "average_by_entity",
+              "type": "bool",
+              "doc": "Protobuf field number 5; repeated=False"
+            },
+            {
+              "name": "filters",
+              "type": "ansys.api.result_explorer.v0.server_models.Filter",
+              "doc": "Protobuf field number 6; repeated=True"
+            },
+            {
+              "name": "mesh_scoping",
+              "type": "ansys.api.result_explorer.v0.server_models.NamedSelectionDefinition",
+              "doc": "Protobuf field number 7; repeated=False"
+            },
+            {
+              "name": "named_selection_id",
+              "type": "string",
+              "doc": "Protobuf field number 8; repeated=False"
+            },
+            {
+              "name": "shell_position",
+              "type": "ansys.api.result_explorer.v0.server_models.ShellPosition",
+              "doc": "Protobuf field number 9; repeated=False"
+            },
+            {
+              "name": "on_skin",
+              "type": "bool",
+              "doc": "Protobuf field number 10; repeated=False"
+            }
+          ]
+        },
+        "ChartSeries": {
+          "name": "ChartSeries",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.ChartSeries",
+          "methods": [],
+          "properties": [
+            {
+              "name": "name",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "values",
+              "type": "float",
+              "doc": "Protobuf field number 2; repeated=True"
+            },
+            {
+              "name": "unit",
+              "type": "string",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "independent",
+              "type": "bool",
+              "doc": "Protobuf field number 4; repeated=False"
+            }
+          ]
+        },
+        "ConfigurableChart": {
+          "name": "ConfigurableChart",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.ConfigurableChart",
+          "methods": [],
+          "properties": [
+            {
+              "name": "results",
+              "type": "ansys.api.result_explorer.v0.server_models.ConfigurableChartResult",
+              "doc": "Protobuf field number 1; repeated=True"
+            },
+            {
+              "name": "user_defined",
+              "type": "bool",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "plotly_figure",
+              "type": "bool",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "script",
+              "type": "string",
+              "doc": "Protobuf field number 4; repeated=False"
+            },
+            {
+              "name": "mesh_scoping_type",
+              "type": "ansys.api.result_explorer.v0.server_models.NamedSelectionType",
+              "doc": "Protobuf field number 5; repeated=True"
+            }
+          ]
+        },
+        "ConfigurableChartResult": {
+          "name": "ConfigurableChartResult",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.ConfigurableChartResult",
+          "methods": [],
+          "properties": [
+            {
+              "name": "result_type",
+              "type": "ansys.api.result_explorer.v0.server_models.ResultType",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "fields",
+              "type": "ansys.api.result_explorer.v0.server_models.Field",
+              "doc": "Protobuf field number 2; repeated=True"
+            },
+            {
+              "name": "locations",
+              "type": "string",
+              "doc": "Protobuf field number 3; repeated=True"
+            },
+            {
+              "name": "filters",
+              "type": "ansys.api.result_explorer.v0.server_models.Filter",
+              "doc": "Protobuf field number 4; repeated=True"
+            },
+            {
+              "name": "mesh_scoping_type",
+              "type": "ansys.api.result_explorer.v0.server_models.NamedSelectionType",
+              "doc": "Protobuf field number 5; repeated=True"
+            },
+            {
+              "name": "shell_positions",
+              "type": "ansys.api.result_explorer.v0.server_models.ShellPosition",
+              "doc": "Protobuf field number 6; repeated=True"
+            },
+            {
+              "name": "mesh_properties",
+              "type": "ansys.api.result_explorer.v0.server_models.AveragingMeshProperties",
+              "doc": "Protobuf field number 7; repeated=False"
+            },
+            {
+              "name": "on_skin",
+              "type": "bool",
+              "doc": "Protobuf field number 8; repeated=False"
+            },
+            {
+              "name": "average_by_entity",
+              "type": "bool",
+              "doc": "Protobuf field number 9; repeated=False"
+            },
+            {
+              "name": "supports_on_skin",
+              "type": "bool",
+              "doc": "Protobuf field number 10; repeated=False"
+            },
+            {
+              "name": "supports_averaging_by_entity",
+              "type": "bool",
+              "doc": "Protobuf field number 11; repeated=False"
+            }
+          ]
+        },
+        "ConfigurablePlot": {
+          "name": "ConfigurablePlot",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.ConfigurablePlot",
+          "methods": [],
+          "properties": [
+            {
+              "name": "result_type",
+              "type": "ansys.api.result_explorer.v0.server_models.ResultType",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "fields",
+              "type": "ansys.api.result_explorer.v0.server_models.Field",
+              "doc": "Protobuf field number 2; repeated=True"
+            },
+            {
+              "name": "locations",
+              "type": "string",
+              "doc": "Protobuf field number 3; repeated=True"
+            },
+            {
+              "name": "supported_custom_selections",
+              "type": "string",
+              "doc": "Protobuf field number 4; repeated=True"
+            },
+            {
+              "name": "script",
+              "type": "string",
+              "doc": "Protobuf field number 5; repeated=False"
+            },
+            {
+              "name": "mesh_scoping_type",
+              "type": "ansys.api.result_explorer.v0.server_models.NamedSelectionType",
+              "doc": "Protobuf field number 6; repeated=True"
+            },
+            {
+              "name": "shell_positions",
+              "type": "ansys.api.result_explorer.v0.server_models.ShellPosition",
+              "doc": "Protobuf field number 7; repeated=True"
+            },
+            {
+              "name": "supports_time_scoping",
+              "type": "bool",
+              "doc": "Protobuf field number 8; repeated=False"
+            },
+            {
+              "name": "supports_include_displacement",
+              "type": "bool",
+              "doc": "Protobuf field number 9; repeated=False"
+            },
+            {
+              "name": "supports_on_skin",
+              "type": "bool",
+              "doc": "Protobuf field number 10; repeated=False"
+            },
+            {
+              "name": "supports_averaging_by_entity",
+              "type": "bool",
+              "doc": "Protobuf field number 11; repeated=False"
+            },
+            {
+              "name": "mesh_properties",
+              "type": "ansys.api.result_explorer.v0.server_models.AveragingMeshProperties",
+              "doc": "Protobuf field number 12; repeated=False"
+            },
+            {
+              "name": "on_skin",
+              "type": "bool",
+              "doc": "Protobuf field number 13; repeated=False"
+            },
+            {
+              "name": "include_displacement",
+              "type": "bool",
+              "doc": "Protobuf field number 14; repeated=False"
+            },
+            {
+              "name": "average_by_entity",
+              "type": "bool",
+              "doc": "Protobuf field number 15; repeated=False"
+            },
+            {
+              "name": "all_sets",
+              "type": "bool",
+              "doc": "Protobuf field number 16; repeated=False"
+            },
+            {
+              "name": "last_set",
+              "type": "bool",
+              "doc": "Protobuf field number 17; repeated=False"
+            }
+          ]
+        },
+        "ContactTrackerData": {
+          "name": "ContactTrackerData",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.ContactTrackerData",
+          "methods": [],
+          "properties": [
+            {
+              "name": "contact_pair_id",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "name",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "series",
+              "type": "ansys.api.result_explorer.v0.server_models.ChartSeries",
+              "doc": "Protobuf field number 3; repeated=True"
+            }
+          ]
+        },
+        "CustomOptionDefinition": {
+          "name": "CustomOptionDefinition",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.CustomOptionDefinition",
+          "methods": [],
+          "properties": [
+            {
+              "name": "label",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "type",
+              "type": "ansys.api.result_explorer.v0.server_models.OptionType",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "required",
+              "type": "bool",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "min",
+              "type": "ansys.api.result_explorer.v0.server_models.Min",
+              "doc": "Protobuf field number 4; repeated=False"
+            },
+            {
+              "name": "max",
+              "type": "ansys.api.result_explorer.v0.server_models.Max",
+              "doc": "Protobuf field number 5; repeated=False"
+            },
+            {
+              "name": "possible_values",
+              "type": "ansys.api.result_explorer.v0.server_models.CustomOptionDefinitionPossibleValuesInner",
+              "doc": "Protobuf field number 6; repeated=True"
+            },
+            {
+              "name": "default_value",
+              "type": "ansys.api.result_explorer.v0.server_models.DefaultValue",
+              "doc": "Protobuf field number 7; repeated=False"
+            }
+          ]
+        },
+        "CustomOptionDefinitionPossibleValuesInner": {
+          "name": "CustomOptionDefinitionPossibleValuesInner",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.CustomOptionDefinitionPossibleValuesInner",
+          "methods": [],
+          "properties": [
+            {
+              "name": "string",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "float",
+              "type": "float",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "bool",
+              "type": "bool",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "int32",
+              "type": "int32",
+              "doc": "Protobuf field number 4; repeated=False"
+            }
+          ]
+        },
+        "CustomOptionsValue": {
+          "name": "CustomOptionsValue",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.CustomOptionsValue",
+          "methods": [],
+          "properties": [
+            {
+              "name": "int32",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "float",
+              "type": "float",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "string",
+              "type": "string",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "bool",
+              "type": "bool",
+              "doc": "Protobuf field number 4; repeated=False"
+            }
+          ]
+        },
+        "CustomSelection": {
+          "name": "CustomSelection",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.CustomSelection",
+          "methods": [],
+          "properties": [
+            {
+              "name": "name",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "ids",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=True"
+            }
+          ]
+        },
+        "CustomSelectionDefinition": {
+          "name": "CustomSelectionDefinition",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.CustomSelectionDefinition",
+          "methods": [],
+          "properties": [
+            {
+              "name": "name",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "multi_select",
+              "type": "bool",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "items",
+              "type": "ansys.api.result_explorer.v0.server_models.CustomSelectionItem",
+              "doc": "Protobuf field number 3; repeated=True"
+            }
+          ]
+        },
+        "CustomSelectionItem": {
+          "name": "CustomSelectionItem",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.CustomSelectionItem",
+          "methods": [],
+          "properties": [
+            {
+              "name": "name",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "metadata",
+              "type": "ansys.api.result_explorer.v0.server_models.CustomSelectionItem.MetadataEntry",
+              "doc": "Protobuf field number 2; repeated=True"
+            }
+          ]
+        },
+        "CustomSelectionItemMetadataValue": {
+          "name": "CustomSelectionItemMetadataValue",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.CustomSelectionItemMetadataValue",
+          "methods": [],
+          "properties": [
+            {
+              "name": "int32",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "float",
+              "type": "float",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "bool",
+              "type": "bool",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "string",
+              "type": "string",
+              "doc": "Protobuf field number 4; repeated=False"
+            }
+          ]
+        },
+        "DefaultValue": {
+          "name": "DefaultValue",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.DefaultValue",
+          "methods": [],
+          "properties": [
+            {
+              "name": "string",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "float",
+              "type": "float",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "bool",
+              "type": "bool",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "int32",
+              "type": "int32",
+              "doc": "Protobuf field number 4; repeated=False"
+            }
+          ]
+        },
+        "DefiningData": {
+          "name": "DefiningData",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.DefiningData",
+          "methods": [],
+          "properties": [
+            {
+              "name": "version",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "creation_time",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "solutions",
+              "type": "ansys.api.result_explorer.v0.server_models.SolutionSerialize",
+              "doc": "Protobuf field number 3; repeated=True"
+            }
+          ]
+        },
+        "DefiningDataPostResponse": {
+          "name": "DefiningDataPostResponse",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.DefiningDataPostResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "solutions",
+              "type": "ansys.api.result_explorer.v0.server_models.Solution",
+              "doc": "Protobuf field number 1; repeated=True"
+            },
+            {
+              "name": "messages",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=True"
+            }
+          ]
+        },
+        "FEMetadataOptions": {
+          "name": "FEMetadataOptions",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.FEMetadataOptions",
+          "methods": [],
+          "properties": [
+            {
+              "name": "parse_fe_model_metadata",
+              "type": "bool",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "FSItem": {
+          "name": "FSItem",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.FSItem",
+          "methods": [],
+          "properties": [
+            {
+              "name": "path",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "name",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "is_file",
+              "type": "bool",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "last_modified",
+              "type": "string",
+              "doc": "Protobuf field number 4; repeated=False"
+            },
+            {
+              "name": "size",
+              "type": "int32",
+              "doc": "Protobuf field number 5; repeated=False"
+            },
+            {
+              "name": "content",
+              "type": "ansys.api.result_explorer.v0.server_models.FSItem",
+              "doc": "Protobuf field number 6; repeated=True"
+            }
+          ]
+        },
+        "FSItemCreate": {
+          "name": "FSItemCreate",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.FSItemCreate",
+          "methods": [],
+          "properties": [
+            {
+              "name": "path",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "max_depth",
+              "type": "int32",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "FSPath": {
+          "name": "FSPath",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.FSPath",
+          "methods": [],
+          "properties": [
+            {
+              "name": "path",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "FSTailOptions": {
+          "name": "FSTailOptions",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.FSTailOptions",
+          "methods": [],
+          "properties": [
+            {
+              "name": "path",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "lines_offset",
+              "type": "int32",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "bytes_offset",
+              "type": "int32",
+              "doc": "Protobuf field number 3; repeated=False"
+            }
+          ]
+        },
+        "Field": {
+          "name": "Field",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.Field",
+          "methods": [],
+          "properties": [
+            {
+              "name": "name",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "components",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=True"
+            }
+          ]
+        },
+        "File": {
+          "name": "File",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.File",
+          "methods": [],
+          "properties": [
+            {
+              "name": "path",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "key",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "domain_id",
+              "type": "int32",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "description",
+              "type": "string",
+              "doc": "Protobuf field number 4; repeated=False"
+            }
+          ]
+        },
+        "GatewayInfo": {
+          "name": "GatewayInfo",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.GatewayInfo",
+          "methods": [],
+          "properties": [
+            {
+              "name": "http_port",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "grpc_port",
+              "type": "int32",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "ca_cert_path",
+              "type": "string",
+              "doc": "Protobuf field number 3; repeated=False"
+            }
+          ]
+        },
+        "HTTPValidationError": {
+          "name": "HTTPValidationError",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.HTTPValidationError",
+          "methods": [],
+          "properties": [
+            {
+              "name": "detail",
+              "type": "ansys.api.result_explorer.v0.server_models.ValidationError",
+              "doc": "Protobuf field number 1; repeated=True"
+            }
+          ]
+        },
+        "HpsCredentials": {
+          "name": "HpsCredentials",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.HpsCredentials",
+          "methods": [],
+          "properties": [
+            {
+              "name": "url",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "grant_type",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "username",
+              "type": "string",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "password",
+              "type": "string",
+              "doc": "Protobuf field number 4; repeated=False"
+            },
+            {
+              "name": "client_id",
+              "type": "string",
+              "doc": "Protobuf field number 5; repeated=False"
+            },
+            {
+              "name": "client_secret",
+              "type": "string",
+              "doc": "Protobuf field number 6; repeated=False"
+            },
+            {
+              "name": "refresh_token",
+              "type": "string",
+              "doc": "Protobuf field number 7; repeated=False"
+            }
+          ]
+        },
+        "HpsFSItem": {
+          "name": "HpsFSItem",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.HpsFSItem",
+          "methods": [],
+          "properties": [
+            {
+              "name": "path",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "name",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "is_file",
+              "type": "bool",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "last_modified",
+              "type": "string",
+              "doc": "Protobuf field number 4; repeated=False"
+            },
+            {
+              "name": "size",
+              "type": "int32",
+              "doc": "Protobuf field number 5; repeated=False"
+            },
+            {
+              "name": "content",
+              "type": "ansys.api.result_explorer.v0.server_models.FSItem",
+              "doc": "Protobuf field number 6; repeated=True"
+            },
+            {
+              "name": "id",
+              "type": "string",
+              "doc": "Protobuf field number 7; repeated=False"
+            },
+            {
+              "name": "display_path",
+              "type": "string",
+              "doc": "Protobuf field number 8; repeated=False"
+            },
+            {
+              "name": "status",
+              "type": "string",
+              "doc": "Protobuf field number 9; repeated=False"
+            }
+          ]
+        },
+        "HpsFile": {
+          "name": "HpsFile",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.HpsFile",
+          "methods": [],
+          "properties": [
+            {
+              "name": "task_id",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "file_id",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "HpsFiles": {
+          "name": "HpsFiles",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.HpsFiles",
+          "methods": [],
+          "properties": [
+            {
+              "name": "hps_url",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "project_id",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "job_id",
+              "type": "string",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "files",
+              "type": "ansys.api.result_explorer.v0.server_models.HpsFile",
+              "doc": "Protobuf field number 4; repeated=True"
+            }
+          ]
+        },
+        "HpsTask": {
+          "name": "HpsTask",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.HpsTask",
+          "methods": [],
+          "properties": [
+            {
+              "name": "project_id",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "task_id",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "IdsScoping": {
+          "name": "IdsScoping",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.IdsScoping",
+          "methods": [],
+          "properties": [
+            {
+              "name": "values",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=True"
+            },
+            {
+              "name": "range",
+              "type": "ansys.api.result_explorer.v0.server_models.Range",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "Info": {
+          "name": "Info",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.Info",
+          "methods": [],
+          "properties": [
+            {
+              "name": "name",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "version",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "hps_configured",
+              "type": "bool",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "memory",
+              "type": "ansys.api.result_explorer.v0.server_models.Memory",
+              "doc": "Protobuf field number 4; repeated=False"
+            },
+            {
+              "name": "auth_type",
+              "type": "ansys.api.result_explorer.v0.server_models.AuthType",
+              "doc": "Protobuf field number 5; repeated=False"
+            },
+            {
+              "name": "settings",
+              "type": "ansys.api.result_explorer.v0.server_models.Settings",
+              "doc": "Protobuf field number 6; repeated=False"
+            },
+            {
+              "name": "build_info",
+              "type": "ansys.api.result_explorer.v0.server_models.BuildInfo",
+              "doc": "Protobuf field number 7; repeated=False"
+            },
+            {
+              "name": "gateway_info",
+              "type": "ansys.api.result_explorer.v0.server_models.GatewayInfo",
+              "doc": "Protobuf field number 8; repeated=False"
+            }
+          ]
+        },
+        "LocationInner": {
+          "name": "LocationInner",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.LocationInner",
+          "methods": [],
+          "properties": [
+            {
+              "name": "string",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "int32",
+              "type": "int32",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "Max": {
+          "name": "Max",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.Max",
+          "methods": [],
+          "properties": [
+            {
+              "name": "int32",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "float",
+              "type": "float",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "Memory": {
+          "name": "Memory",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.Memory",
+          "methods": [],
+          "properties": [
+            {
+              "name": "total",
+              "type": "float",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "in_use",
+              "type": "float",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "MeshGraphicsOptions": {
+          "name": "MeshGraphicsOptions",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.MeshGraphicsOptions",
+          "methods": [],
+          "properties": [
+            {
+              "name": "on_skin",
+              "type": "bool",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "as_linear",
+              "type": "bool",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "Min": {
+          "name": "Min",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.Min",
+          "methods": [],
+          "properties": [
+            {
+              "name": "int32",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "float",
+              "type": "float",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "MonitoringWsRequest": {
+          "name": "MonitoringWsRequest",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.MonitoringWsRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "ws_subscribe_request",
+              "type": "ansys.api.result_explorer.v0.server_models.WsSubscribeRequest",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "ws_unsubscribe_request",
+              "type": "ansys.api.result_explorer.v0.server_models.WsUnsubscribeRequest",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "ws_topics_request",
+              "type": "ansys.api.result_explorer.v0.server_models.WsTopicsRequest",
+              "doc": "Protobuf field number 3; repeated=False"
+            }
+          ]
+        },
+        "MonitoringWsResponse": {
+          "name": "MonitoringWsResponse",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.MonitoringWsResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "ws_topics",
+              "type": "ansys.api.result_explorer.v0.server_models.WsTopics",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "ws_update_message",
+              "type": "ansys.api.result_explorer.v0.server_models.WsUpdateMessage",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "ws_solution_end",
+              "type": "ansys.api.result_explorer.v0.server_models.WsSolutionEnd",
+              "doc": "Protobuf field number 3; repeated=False"
+            }
+          ]
+        },
+        "NamedSelection": {
+          "name": "NamedSelection",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.NamedSelection",
+          "methods": [],
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "type",
+              "type": "ansys.api.result_explorer.v0.server_models.NamedSelectionType",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "name",
+              "type": "string",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "description",
+              "type": "string",
+              "doc": "Protobuf field number 4; repeated=False"
+            },
+            {
+              "name": "solver_named_selections",
+              "type": "string",
+              "doc": "Protobuf field number 5; repeated=True"
+            },
+            {
+              "name": "bodies",
+              "type": "ansys.api.result_explorer.v0.server_models.StringMap",
+              "doc": "Protobuf field number 6; repeated=True"
+            },
+            {
+              "name": "node_ids",
+              "type": "ansys.api.result_explorer.v0.server_models.IdsScoping",
+              "doc": "Protobuf field number 7; repeated=True"
+            },
+            {
+              "name": "element_ids",
+              "type": "ansys.api.result_explorer.v0.server_models.IdsScoping",
+              "doc": "Protobuf field number 8; repeated=True"
+            },
+            {
+              "name": "property_ids",
+              "type": "ansys.api.result_explorer.v0.server_models.PropertyScoping",
+              "doc": "Protobuf field number 9; repeated=False"
+            },
+            {
+              "name": "creation_time",
+              "type": "string",
+              "doc": "Protobuf field number 10; repeated=False"
+            },
+            {
+              "name": "location",
+              "type": "string",
+              "doc": "Protobuf field number 11; repeated=False"
+            },
+            {
+              "name": "size",
+              "type": "int32",
+              "doc": "Protobuf field number 12; repeated=False"
+            },
+            {
+              "name": "readonly",
+              "type": "bool",
+              "doc": "Protobuf field number 13; repeated=False"
+            }
+          ]
+        },
+        "NamedSelectionCreate": {
+          "name": "NamedSelectionCreate",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.NamedSelectionCreate",
+          "methods": [],
+          "properties": [
+            {
+              "name": "type",
+              "type": "ansys.api.result_explorer.v0.server_models.NamedSelectionType",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "name",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "description",
+              "type": "string",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "solver_named_selections",
+              "type": "string",
+              "doc": "Protobuf field number 4; repeated=True"
+            },
+            {
+              "name": "bodies",
+              "type": "ansys.api.result_explorer.v0.server_models.StringMap",
+              "doc": "Protobuf field number 5; repeated=True"
+            },
+            {
+              "name": "node_ids",
+              "type": "ansys.api.result_explorer.v0.server_models.IdsScoping",
+              "doc": "Protobuf field number 6; repeated=True"
+            },
+            {
+              "name": "element_ids",
+              "type": "ansys.api.result_explorer.v0.server_models.IdsScoping",
+              "doc": "Protobuf field number 7; repeated=True"
+            },
+            {
+              "name": "property_ids",
+              "type": "ansys.api.result_explorer.v0.server_models.PropertyScoping",
+              "doc": "Protobuf field number 8; repeated=False"
+            },
+            {
+              "name": "id",
+              "type": "string",
+              "doc": "Protobuf field number 9; repeated=False"
+            },
+            {
+              "name": "readonly",
+              "type": "bool",
+              "doc": "Protobuf field number 10; repeated=False"
+            }
+          ]
+        },
+        "NamedSelectionDefinition": {
+          "name": "NamedSelectionDefinition",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.NamedSelectionDefinition",
+          "methods": [],
+          "properties": [
+            {
+              "name": "type",
+              "type": "ansys.api.result_explorer.v0.server_models.NamedSelectionType",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "name",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "description",
+              "type": "string",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "solver_named_selections",
+              "type": "string",
+              "doc": "Protobuf field number 4; repeated=True"
+            },
+            {
+              "name": "bodies",
+              "type": "ansys.api.result_explorer.v0.server_models.StringMap",
+              "doc": "Protobuf field number 5; repeated=True"
+            },
+            {
+              "name": "node_ids",
+              "type": "ansys.api.result_explorer.v0.server_models.IdsScoping",
+              "doc": "Protobuf field number 6; repeated=True"
+            },
+            {
+              "name": "element_ids",
+              "type": "ansys.api.result_explorer.v0.server_models.IdsScoping",
+              "doc": "Protobuf field number 7; repeated=True"
+            },
+            {
+              "name": "property_ids",
+              "type": "ansys.api.result_explorer.v0.server_models.PropertyScoping",
+              "doc": "Protobuf field number 8; repeated=False"
+            }
+          ]
+        },
+        "NamedSelectionSerialize": {
+          "name": "NamedSelectionSerialize",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.NamedSelectionSerialize",
+          "methods": [],
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "type",
+              "type": "ansys.api.result_explorer.v0.server_models.NamedSelectionType",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "name",
+              "type": "string",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "description",
+              "type": "string",
+              "doc": "Protobuf field number 4; repeated=False"
+            },
+            {
+              "name": "solver_named_selections",
+              "type": "string",
+              "doc": "Protobuf field number 5; repeated=True"
+            },
+            {
+              "name": "bodies",
+              "type": "ansys.api.result_explorer.v0.server_models.StringMap",
+              "doc": "Protobuf field number 6; repeated=True"
+            },
+            {
+              "name": "node_ids",
+              "type": "ansys.api.result_explorer.v0.server_models.IdsScoping",
+              "doc": "Protobuf field number 7; repeated=True"
+            },
+            {
+              "name": "element_ids",
+              "type": "ansys.api.result_explorer.v0.server_models.IdsScoping",
+              "doc": "Protobuf field number 8; repeated=True"
+            },
+            {
+              "name": "property_ids",
+              "type": "ansys.api.result_explorer.v0.server_models.PropertyScoping",
+              "doc": "Protobuf field number 9; repeated=False"
+            },
+            {
+              "name": "readonly",
+              "type": "bool",
+              "doc": "Protobuf field number 10; repeated=False"
+            }
+          ]
+        },
+        "Operation": {
+          "name": "Operation",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.Operation",
+          "methods": [],
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "completed",
+              "type": "bool",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "progress",
+              "type": "float",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "succeeded",
+              "type": "bool",
+              "doc": "Protobuf field number 4; repeated=False"
+            },
+            {
+              "name": "status",
+              "type": "string",
+              "doc": "Protobuf field number 5; repeated=False"
+            },
+            {
+              "name": "messages",
+              "type": "string",
+              "doc": "Protobuf field number 6; repeated=True"
+            }
+          ]
+        },
+        "PlotDefinition": {
+          "name": "PlotDefinition",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.PlotDefinition",
+          "methods": [],
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "result_type",
+              "type": "ansys.api.result_explorer.v0.server_models.ResultType",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "name",
+              "type": "string",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "fields",
+              "type": "ansys.api.result_explorer.v0.server_models.Field",
+              "doc": "Protobuf field number 4; repeated=True"
+            },
+            {
+              "name": "location",
+              "type": "string",
+              "doc": "Protobuf field number 5; repeated=False"
+            },
+            {
+              "name": "average_by_entity",
+              "type": "bool",
+              "doc": "Protobuf field number 6; repeated=False"
+            },
+            {
+              "name": "as_linear",
+              "type": "bool",
+              "doc": "Protobuf field number 7; repeated=False"
+            },
+            {
+              "name": "on_skin",
+              "type": "bool",
+              "doc": "Protobuf field number 8; repeated=False"
+            },
+            {
+              "name": "mesh_scoping",
+              "type": "ansys.api.result_explorer.v0.server_models.NamedSelectionDefinition",
+              "doc": "Protobuf field number 9; repeated=False"
+            },
+            {
+              "name": "named_selection_id",
+              "type": "string",
+              "doc": "Protobuf field number 10; repeated=False"
+            },
+            {
+              "name": "custom_selections",
+              "type": "ansys.api.result_explorer.v0.server_models.CustomSelection",
+              "doc": "Protobuf field number 11; repeated=True"
+            },
+            {
+              "name": "set_ids",
+              "type": "int32",
+              "doc": "Protobuf field number 12; repeated=True"
+            },
+            {
+              "name": "all_sets",
+              "type": "bool",
+              "doc": "Protobuf field number 13; repeated=False"
+            },
+            {
+              "name": "last_set",
+              "type": "bool",
+              "doc": "Protobuf field number 14; repeated=False"
+            },
+            {
+              "name": "script",
+              "type": "string",
+              "doc": "Protobuf field number 15; repeated=False"
+            },
+            {
+              "name": "custom_options",
+              "type": "ansys.api.result_explorer.v0.server_models.PlotDefinition.CustomOptionsEntry",
+              "doc": "Protobuf field number 16; repeated=True"
+            },
+            {
+              "name": "include_displacement",
+              "type": "bool",
+              "doc": "Protobuf field number 17; repeated=False"
+            },
+            {
+              "name": "shell_position",
+              "type": "ansys.api.result_explorer.v0.server_models.ShellPosition",
+              "doc": "Protobuf field number 18; repeated=False"
+            },
+            {
+              "name": "creation_time",
+              "type": "string",
+              "doc": "Protobuf field number 19; repeated=False"
+            },
+            {
+              "name": "supports_monitoring",
+              "type": "bool",
+              "doc": "Protobuf field number 20; repeated=False"
+            }
+          ]
+        },
+        "PlotDefinitionCreate": {
+          "name": "PlotDefinitionCreate",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.PlotDefinitionCreate",
+          "methods": [],
+          "properties": [
+            {
+              "name": "result_type",
+              "type": "ansys.api.result_explorer.v0.server_models.ResultType",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "name",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "fields",
+              "type": "ansys.api.result_explorer.v0.server_models.Field",
+              "doc": "Protobuf field number 3; repeated=True"
+            },
+            {
+              "name": "location",
+              "type": "string",
+              "doc": "Protobuf field number 4; repeated=False"
+            },
+            {
+              "name": "average_by_entity",
+              "type": "bool",
+              "doc": "Protobuf field number 5; repeated=False"
+            },
+            {
+              "name": "as_linear",
+              "type": "bool",
+              "doc": "Protobuf field number 6; repeated=False"
+            },
+            {
+              "name": "on_skin",
+              "type": "bool",
+              "doc": "Protobuf field number 7; repeated=False"
+            },
+            {
+              "name": "mesh_scoping",
+              "type": "ansys.api.result_explorer.v0.server_models.NamedSelectionDefinition",
+              "doc": "Protobuf field number 8; repeated=False"
+            },
+            {
+              "name": "named_selection_id",
+              "type": "string",
+              "doc": "Protobuf field number 9; repeated=False"
+            },
+            {
+              "name": "custom_selections",
+              "type": "ansys.api.result_explorer.v0.server_models.CustomSelection",
+              "doc": "Protobuf field number 10; repeated=True"
+            },
+            {
+              "name": "set_ids",
+              "type": "int32",
+              "doc": "Protobuf field number 11; repeated=True"
+            },
+            {
+              "name": "all_sets",
+              "type": "bool",
+              "doc": "Protobuf field number 12; repeated=False"
+            },
+            {
+              "name": "last_set",
+              "type": "bool",
+              "doc": "Protobuf field number 13; repeated=False"
+            },
+            {
+              "name": "script",
+              "type": "string",
+              "doc": "Protobuf field number 14; repeated=False"
+            },
+            {
+              "name": "custom_options",
+              "type": "ansys.api.result_explorer.v0.server_models.PlotDefinitionCreate.CustomOptionsEntry",
+              "doc": "Protobuf field number 15; repeated=True"
+            },
+            {
+              "name": "include_displacement",
+              "type": "bool",
+              "doc": "Protobuf field number 16; repeated=False"
+            },
+            {
+              "name": "shell_position",
+              "type": "ansys.api.result_explorer.v0.server_models.ShellPosition",
+              "doc": "Protobuf field number 17; repeated=False"
+            },
+            {
+              "name": "id",
+              "type": "string",
+              "doc": "Protobuf field number 18; repeated=False"
+            }
+          ]
+        },
+        "PlotDefinitionSerialize": {
+          "name": "PlotDefinitionSerialize",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.PlotDefinitionSerialize",
+          "methods": [],
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "result_type",
+              "type": "ansys.api.result_explorer.v0.server_models.ResultType",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "name",
+              "type": "string",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "fields",
+              "type": "ansys.api.result_explorer.v0.server_models.Field",
+              "doc": "Protobuf field number 4; repeated=True"
+            },
+            {
+              "name": "location",
+              "type": "string",
+              "doc": "Protobuf field number 5; repeated=False"
+            },
+            {
+              "name": "average_by_entity",
+              "type": "bool",
+              "doc": "Protobuf field number 6; repeated=False"
+            },
+            {
+              "name": "as_linear",
+              "type": "bool",
+              "doc": "Protobuf field number 7; repeated=False"
+            },
+            {
+              "name": "on_skin",
+              "type": "bool",
+              "doc": "Protobuf field number 8; repeated=False"
+            },
+            {
+              "name": "mesh_scoping",
+              "type": "ansys.api.result_explorer.v0.server_models.NamedSelectionDefinition",
+              "doc": "Protobuf field number 9; repeated=False"
+            },
+            {
+              "name": "named_selection_id",
+              "type": "string",
+              "doc": "Protobuf field number 10; repeated=False"
+            },
+            {
+              "name": "custom_selections",
+              "type": "ansys.api.result_explorer.v0.server_models.CustomSelection",
+              "doc": "Protobuf field number 11; repeated=True"
+            },
+            {
+              "name": "set_ids",
+              "type": "int32",
+              "doc": "Protobuf field number 12; repeated=True"
+            },
+            {
+              "name": "all_sets",
+              "type": "bool",
+              "doc": "Protobuf field number 13; repeated=False"
+            },
+            {
+              "name": "last_set",
+              "type": "bool",
+              "doc": "Protobuf field number 14; repeated=False"
+            },
+            {
+              "name": "script",
+              "type": "string",
+              "doc": "Protobuf field number 15; repeated=False"
+            },
+            {
+              "name": "custom_options",
+              "type": "ansys.api.result_explorer.v0.server_models.PlotDefinitionSerialize.CustomOptionsEntry",
+              "doc": "Protobuf field number 16; repeated=True"
+            },
+            {
+              "name": "include_displacement",
+              "type": "bool",
+              "doc": "Protobuf field number 17; repeated=False"
+            },
+            {
+              "name": "shell_position",
+              "type": "ansys.api.result_explorer.v0.server_models.ShellPosition",
+              "doc": "Protobuf field number 18; repeated=False"
+            },
+            {
+              "name": "supports_monitoring",
+              "type": "bool",
+              "doc": "Protobuf field number 19; repeated=False"
+            }
+          ]
+        },
+        "PropertyScoping": {
+          "name": "PropertyScoping",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.PropertyScoping",
+          "methods": [],
+          "properties": [
+            {
+              "name": "name",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "ids",
+              "type": "ansys.api.result_explorer.v0.server_models.IdsScoping",
+              "doc": "Protobuf field number 2; repeated=True"
+            }
+          ]
+        },
+        "Range": {
+          "name": "Range",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.Range",
+          "methods": [],
+          "properties": [
+            {
+              "name": "min",
+              "type": "float",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "max",
+              "type": "float",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "Script": {
+          "name": "Script",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.Script",
+          "methods": [],
+          "properties": [
+            {
+              "name": "script",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "Settings": {
+          "name": "Settings",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.Settings",
+          "methods": [],
+          "properties": [
+            {
+              "name": "api_v1_str",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "project_name",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "data_directory",
+              "type": "string",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "host",
+              "type": "string",
+              "doc": "Protobuf field number 4; repeated=False"
+            },
+            {
+              "name": "port",
+              "type": "int32",
+              "doc": "Protobuf field number 5; repeated=False"
+            },
+            {
+              "name": "name",
+              "type": "string",
+              "doc": "Protobuf field number 6; repeated=False"
+            },
+            {
+              "name": "log_level",
+              "type": "string",
+              "doc": "Protobuf field number 7; repeated=False"
+            },
+            {
+              "name": "log_file_name",
+              "type": "string",
+              "doc": "Protobuf field number 8; repeated=False"
+            },
+            {
+              "name": "strict_checks",
+              "type": "bool",
+              "doc": "Protobuf field number 9; repeated=False"
+            },
+            {
+              "name": "debug_api_responses",
+              "type": "bool",
+              "doc": "Protobuf field number 10; repeated=False"
+            },
+            {
+              "name": "api_responses_debug_path",
+              "type": "string",
+              "doc": "Protobuf field number 11; repeated=False"
+            },
+            {
+              "name": "time_requests",
+              "type": "bool",
+              "doc": "Protobuf field number 12; repeated=False"
+            },
+            {
+              "name": "dpf_server_connection_attempts",
+              "type": "int32",
+              "doc": "Protobuf field number 13; repeated=False"
+            },
+            {
+              "name": "dpf_num_threads",
+              "type": "int32",
+              "doc": "Protobuf field number 14; repeated=False"
+            },
+            {
+              "name": "dpf_multiple_servers",
+              "type": "bool",
+              "doc": "Protobuf field number 15; repeated=False"
+            },
+            {
+              "name": "disable_user_defined_plots",
+              "type": "bool",
+              "doc": "Protobuf field number 16; repeated=False"
+            },
+            {
+              "name": "work_dir_as_home",
+              "type": "bool",
+              "doc": "Protobuf field number 17; repeated=False"
+            },
+            {
+              "name": "gzip_compression",
+              "type": "bool",
+              "doc": "Protobuf field number 18; repeated=False"
+            },
+            {
+              "name": "hps_config_path",
+              "type": "string",
+              "doc": "Protobuf field number 19; repeated=False"
+            },
+            {
+              "name": "hps_download_directory",
+              "type": "string",
+              "doc": "Protobuf field number 20; repeated=False"
+            },
+            {
+              "name": "hps_credentials",
+              "type": "ansys.api.result_explorer.v0.server_models.HpsCredentials",
+              "doc": "Protobuf field number 21; repeated=False"
+            },
+            {
+              "name": "web_app_path",
+              "type": "string",
+              "doc": "Protobuf field number 22; repeated=False"
+            },
+            {
+              "name": "max_memory_fraction",
+              "type": "float",
+              "doc": "Protobuf field number 23; repeated=False"
+            },
+            {
+              "name": "target_message_size",
+              "type": "int32",
+              "doc": "Protobuf field number 24; repeated=False"
+            },
+            {
+              "name": "monitor_memory_interval",
+              "type": "float",
+              "doc": "Protobuf field number 25; repeated=False"
+            },
+            {
+              "name": "license",
+              "type": "ansys.api.result_explorer.v0.server_models.License",
+              "doc": "Protobuf field number 26; repeated=False"
+            },
+            {
+              "name": "timeout",
+              "type": "int32",
+              "doc": "Protobuf field number 27; repeated=False"
+            },
+            {
+              "name": "idle_timeout",
+              "type": "int32",
+              "doc": "Protobuf field number 28; repeated=False"
+            },
+            {
+              "name": "access_token_lifetime",
+              "type": "int32",
+              "doc": "Protobuf field number 29; repeated=False"
+            },
+            {
+              "name": "monitoring_interval",
+              "type": "float",
+              "doc": "Protobuf field number 30; repeated=False"
+            },
+            {
+              "name": "use_std_post",
+              "type": "bool",
+              "doc": "Protobuf field number 31; repeated=False"
+            },
+            {
+              "name": "dpf_path",
+              "type": "string",
+              "doc": "Protobuf field number 32; repeated=False"
+            }
+          ]
+        },
+        "Solution": {
+          "name": "Solution",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.Solution",
+          "methods": [],
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "name",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "description",
+              "type": "string",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "cache_plot_data",
+              "type": "bool",
+              "doc": "Protobuf field number 4; repeated=False"
+            },
+            {
+              "name": "files",
+              "type": "ansys.api.result_explorer.v0.server_models.File",
+              "doc": "Protobuf field number 5; repeated=True"
+            },
+            {
+              "name": "hps_files",
+              "type": "ansys.api.result_explorer.v0.server_models.HpsFiles",
+              "doc": "Protobuf field number 6; repeated=False"
+            },
+            {
+              "name": "creation_time",
+              "type": "string",
+              "doc": "Protobuf field number 7; repeated=False"
+            },
+            {
+              "name": "ready",
+              "type": "bool",
+              "doc": "Protobuf field number 8; repeated=False"
+            },
+            {
+              "name": "errors",
+              "type": "string",
+              "doc": "Protobuf field number 9; repeated=True"
+            },
+            {
+              "name": "warnings",
+              "type": "string",
+              "doc": "Protobuf field number 10; repeated=True"
+            },
+            {
+              "name": "live",
+              "type": "bool",
+              "doc": "Protobuf field number 11; repeated=False"
+            },
+            {
+              "name": "outdated",
+              "type": "bool",
+              "doc": "Protobuf field number 12; repeated=False"
+            },
+            {
+              "name": "worker",
+              "type": "ansys.api.result_explorer.v0.server_models.Worker",
+              "doc": "Protobuf field number 13; repeated=False"
+            },
+            {
+              "name": "solver_named_selections",
+              "type": "ansys.api.result_explorer.v0.server_models.SolverNamedSelection",
+              "doc": "Protobuf field number 14; repeated=True"
+            },
+            {
+              "name": "available_custom_selections",
+              "type": "ansys.api.result_explorer.v0.server_models.CustomSelectionDefinition",
+              "doc": "Protobuf field number 15; repeated=True"
+            },
+            {
+              "name": "n_elements",
+              "type": "int32",
+              "doc": "Protobuf field number 16; repeated=False"
+            },
+            {
+              "name": "n_nodes",
+              "type": "int32",
+              "doc": "Protobuf field number 17; repeated=False"
+            },
+            {
+              "name": "distance_unit",
+              "type": "string",
+              "doc": "Protobuf field number 18; repeated=False"
+            },
+            {
+              "name": "element_groups",
+              "type": "ansys.api.result_explorer.v0.server_models.ElementGroup",
+              "doc": "Protobuf field number 19; repeated=True"
+            },
+            {
+              "name": "unsupported_element_types",
+              "type": "string",
+              "doc": "Protobuf field number 20; repeated=True"
+            },
+            {
+              "name": "physics_type",
+              "type": "string",
+              "doc": "Protobuf field number 21; repeated=False"
+            },
+            {
+              "name": "analysis_type",
+              "type": "string",
+              "doc": "Protobuf field number 22; repeated=False"
+            },
+            {
+              "name": "unit_system",
+              "type": "string",
+              "doc": "Protobuf field number 23; repeated=False"
+            },
+            {
+              "name": "n_results",
+              "type": "int32",
+              "doc": "Protobuf field number 24; repeated=False"
+            },
+            {
+              "name": "solver_version",
+              "type": "string",
+              "doc": "Protobuf field number 25; repeated=False"
+            },
+            {
+              "name": "available_results",
+              "type": "ansys.api.result_explorer.v0.server_models.AvailableResult",
+              "doc": "Protobuf field number 26; repeated=True"
+            },
+            {
+              "name": "available_trackers",
+              "type": "ansys.api.result_explorer.v0.server_models.TrackerType",
+              "doc": "Protobuf field number 27; repeated=True"
+            },
+            {
+              "name": "available_mesh_properties",
+              "type": "ansys.api.result_explorer.v0.server_models.AvailableMeshProperty",
+              "doc": "Protobuf field number 28; repeated=True"
+            },
+            {
+              "name": "n_sets",
+              "type": "int32",
+              "doc": "Protobuf field number 29; repeated=False"
+            },
+            {
+              "name": "time_frequencies",
+              "type": "ansys.api.result_explorer.v0.server_models.TimeFrequency",
+              "doc": "Protobuf field number 30; repeated=True"
+            },
+            {
+              "name": "time_frequencies_unit",
+              "type": "string",
+              "doc": "Protobuf field number 31; repeated=False"
+            },
+            {
+              "name": "named_selections",
+              "type": "ansys.api.result_explorer.v0.server_models.NamedSelection",
+              "doc": "Protobuf field number 32; repeated=True"
+            },
+            {
+              "name": "mesh_graphics_options",
+              "type": "ansys.api.result_explorer.v0.server_models.MeshGraphicsOptions",
+              "doc": "Protobuf field number 33; repeated=False"
+            },
+            {
+              "name": "configurable_plots",
+              "type": "ansys.api.result_explorer.v0.server_models.ConfigurablePlot",
+              "doc": "Protobuf field number 34; repeated=True"
+            },
+            {
+              "name": "plots",
+              "type": "ansys.api.result_explorer.v0.server_models.PlotDefinition",
+              "doc": "Protobuf field number 35; repeated=True"
+            },
+            {
+              "name": "configurable_charts",
+              "type": "ansys.api.result_explorer.v0.server_models.ConfigurableChart",
+              "doc": "Protobuf field number 36; repeated=True"
+            },
+            {
+              "name": "charts",
+              "type": "ansys.api.result_explorer.v0.server_models.ChartDefinition",
+              "doc": "Protobuf field number 37; repeated=True"
+            },
+            {
+              "name": "bodies",
+              "type": "ansys.api.result_explorer.v0.server_models.Body",
+              "doc": "Protobuf field number 38; repeated=True"
+            },
+            {
+              "name": "operation",
+              "type": "ansys.api.result_explorer.v0.server_models.Operation",
+              "doc": "Protobuf field number 39; repeated=False"
+            },
+            {
+              "name": "solver_text_outputs",
+              "type": "ansys.api.result_explorer.v0.server_models.SolverTextOutputFile",
+              "doc": "Protobuf field number 40; repeated=True"
+            },
+            {
+              "name": "views",
+              "type": "ansys.api.result_explorer.v0.server_models.View",
+              "doc": "Protobuf field number 41; repeated=True"
+            }
+          ]
+        },
+        "SolutionCreate": {
+          "name": "SolutionCreate",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.SolutionCreate",
+          "methods": [],
+          "properties": [
+            {
+              "name": "name",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "description",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "cache_plot_data",
+              "type": "bool",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "files",
+              "type": "ansys.api.result_explorer.v0.server_models.File",
+              "doc": "Protobuf field number 4; repeated=True"
+            },
+            {
+              "name": "hps_files",
+              "type": "ansys.api.result_explorer.v0.server_models.HpsFiles",
+              "doc": "Protobuf field number 5; repeated=False"
+            },
+            {
+              "name": "id",
+              "type": "string",
+              "doc": "Protobuf field number 6; repeated=False"
+            },
+            {
+              "name": "mesh_graphics_options",
+              "type": "ansys.api.result_explorer.v0.server_models.MeshGraphicsOptions",
+              "doc": "Protobuf field number 7; repeated=False"
+            },
+            {
+              "name": "plots",
+              "type": "ansys.api.result_explorer.v0.server_models.PlotDefinitionCreate",
+              "doc": "Protobuf field number 8; repeated=True"
+            },
+            {
+              "name": "charts",
+              "type": "ansys.api.result_explorer.v0.server_models.ChartDefinitionCreate",
+              "doc": "Protobuf field number 9; repeated=True"
+            },
+            {
+              "name": "named_selections",
+              "type": "ansys.api.result_explorer.v0.server_models.NamedSelectionCreate",
+              "doc": "Protobuf field number 10; repeated=True"
+            },
+            {
+              "name": "split_mesh_options",
+              "type": "ansys.api.result_explorer.v0.server_models.SplitMeshOptions",
+              "doc": "Protobuf field number 11; repeated=False"
+            },
+            {
+              "name": "fe_metadata_options",
+              "type": "ansys.api.result_explorer.v0.server_models.FEMetadataOptions",
+              "doc": "Protobuf field number 12; repeated=False"
+            }
+          ]
+        },
+        "SolutionPatch": {
+          "name": "SolutionPatch",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.SolutionPatch",
+          "methods": [],
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "live",
+              "type": "bool",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "outdated",
+              "type": "bool",
+              "doc": "Protobuf field number 3; repeated=False"
+            }
+          ]
+        },
+        "SolutionSerialize": {
+          "name": "SolutionSerialize",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.SolutionSerialize",
+          "methods": [],
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "name",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "description",
+              "type": "string",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "cache_plot_data",
+              "type": "bool",
+              "doc": "Protobuf field number 4; repeated=False"
+            },
+            {
+              "name": "files",
+              "type": "ansys.api.result_explorer.v0.server_models.File",
+              "doc": "Protobuf field number 5; repeated=True"
+            },
+            {
+              "name": "hps_files",
+              "type": "ansys.api.result_explorer.v0.server_models.HpsFiles",
+              "doc": "Protobuf field number 6; repeated=False"
+            },
+            {
+              "name": "mesh_graphics_options",
+              "type": "ansys.api.result_explorer.v0.server_models.MeshGraphicsOptions",
+              "doc": "Protobuf field number 7; repeated=False"
+            },
+            {
+              "name": "plots",
+              "type": "ansys.api.result_explorer.v0.server_models.PlotDefinitionSerialize",
+              "doc": "Protobuf field number 8; repeated=True"
+            },
+            {
+              "name": "charts",
+              "type": "ansys.api.result_explorer.v0.server_models.ChartDefinitionSerialize",
+              "doc": "Protobuf field number 9; repeated=True"
+            },
+            {
+              "name": "named_selections",
+              "type": "ansys.api.result_explorer.v0.server_models.NamedSelectionSerialize",
+              "doc": "Protobuf field number 10; repeated=True"
+            },
+            {
+              "name": "has_bodies",
+              "type": "bool",
+              "doc": "Protobuf field number 11; repeated=False"
+            },
+            {
+              "name": "split_mesh_options",
+              "type": "ansys.api.result_explorer.v0.server_models.SplitMeshOptions",
+              "doc": "Protobuf field number 12; repeated=False"
+            },
+            {
+              "name": "fe_metadata_options",
+              "type": "ansys.api.result_explorer.v0.server_models.FEMetadataOptions",
+              "doc": "Protobuf field number 13; repeated=False"
+            }
+          ]
+        },
+        "SolverNamedSelection": {
+          "name": "SolverNamedSelection",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.SolverNamedSelection",
+          "methods": [],
+          "properties": [
+            {
+              "name": "name",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "location",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "size",
+              "type": "int32",
+              "doc": "Protobuf field number 3; repeated=False"
+            }
+          ]
+        },
+        "SolverTextOutputFile": {
+          "name": "SolverTextOutputFile",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.SolverTextOutputFile",
+          "methods": [],
+          "properties": [
+            {
+              "name": "type",
+              "type": "ansys.api.result_explorer.v0.server_models.SolverTextOutputType",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "path",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "supports_tailing",
+              "type": "bool",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "name",
+              "type": "string",
+              "doc": "Protobuf field number 4; repeated=False"
+            }
+          ]
+        },
+        "SplitMeshOptions": {
+          "name": "SplitMeshOptions",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.SplitMeshOptions",
+          "methods": [],
+          "properties": [
+            {
+              "name": "auto_split_mesh",
+              "type": "bool",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "split_mesh_by",
+              "type": "ansys.api.result_explorer.v0.server_models.MeshPropertyEnum",
+              "doc": "Protobuf field number 2; repeated=True"
+            }
+          ]
+        },
+        "StringMap": {
+          "name": "StringMap",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.StringMap",
+          "methods": [],
+          "properties": [
+            {
+              "name": "string_map",
+              "type": "ansys.api.result_explorer.v0.server_models.StringMap.StringMapEntry",
+              "doc": "Protobuf field number 1; repeated=True"
+            }
+          ]
+        },
+        "TimeFrequency": {
+          "name": "TimeFrequency",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.TimeFrequency",
+          "methods": [],
+          "properties": [
+            {
+              "name": "value",
+              "type": "float",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "set_id",
+              "type": "int32",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "step",
+              "type": "int32",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "substep",
+              "type": "int32",
+              "doc": "Protobuf field number 4; repeated=False"
+            }
+          ]
+        },
+        "Topic": {
+          "name": "Topic",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.Topic",
+          "methods": [],
+          "properties": [
+            {
+              "name": "solution_id",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "plot_id",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "chart_id",
+              "type": "string",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "tracker",
+              "type": "ansys.api.result_explorer.v0.server_models.TrackerType",
+              "doc": "Protobuf field number 4; repeated=False"
+            }
+          ]
+        },
+        "ValidationError": {
+          "name": "ValidationError",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.ValidationError",
+          "methods": [],
+          "properties": [
+            {
+              "name": "loc",
+              "type": "ansys.api.result_explorer.v0.server_models.LocationInner",
+              "doc": "Protobuf field number 1; repeated=True"
+            },
+            {
+              "name": "msg",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "type",
+              "type": "string",
+              "doc": "Protobuf field number 3; repeated=False"
+            }
+          ]
+        },
+        "View": {
+          "name": "View",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.View",
+          "methods": [],
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "type",
+              "type": "ansys.api.result_explorer.v0.server_models.ViewType",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "name",
+              "type": "string",
+              "doc": "Protobuf field number 3; repeated=False"
+            }
+          ]
+        },
+        "Worker": {
+          "name": "Worker",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.Worker",
+          "methods": [],
+          "properties": [
+            {
+              "name": "protocol",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "ip",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "port",
+              "type": "int32",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "ansys_path",
+              "type": "string",
+              "doc": "Protobuf field number 4; repeated=False"
+            },
+            {
+              "name": "version",
+              "type": "string",
+              "doc": "Protobuf field number 5; repeated=False"
+            },
+            {
+              "name": "num_threads",
+              "type": "int32",
+              "doc": "Protobuf field number 6; repeated=False"
+            },
+            {
+              "name": "license",
+              "type": "string",
+              "doc": "Protobuf field number 7; repeated=False"
+            }
+          ]
+        },
+        "WsError": {
+          "name": "WsError",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.WsError",
+          "methods": [],
+          "properties": [
+            {
+              "name": "message",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "traceback",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "WsPlotDataConfig": {
+          "name": "WsPlotDataConfig",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.WsPlotDataConfig",
+          "methods": [],
+          "properties": [
+            {
+              "name": "target_message_size",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "chunking_strategy",
+              "type": "ansys.api.result_explorer.v0.server_models.ChunkingStrategy",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "n_chunks",
+              "type": "int32",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "last_time_id",
+              "type": "int32",
+              "doc": "Protobuf field number 4; repeated=False"
+            },
+            {
+              "name": "web_gx",
+              "type": "bool",
+              "doc": "Protobuf field number 5; repeated=False"
+            },
+            {
+              "name": "update",
+              "type": "bool",
+              "doc": "Protobuf field number 6; repeated=False"
+            }
+          ]
+        },
+        "WsSolutionEnd": {
+          "name": "WsSolutionEnd",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.WsSolutionEnd",
+          "methods": [],
+          "properties": [
+            {
+              "name": "message_type",
+              "type": "ansys.api.result_explorer.v0.server_models.WsSolutionEnd.Message_type",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "solution_patch",
+              "type": "ansys.api.result_explorer.v0.server_models.SolutionPatch",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "WsSubscribeRequest": {
+          "name": "WsSubscribeRequest",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.WsSubscribeRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "request_type",
+              "type": "ansys.api.result_explorer.v0.server_models.WsSubscribeRequest.Request_type",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "topics",
+              "type": "ansys.api.result_explorer.v0.server_models.Topic",
+              "doc": "Protobuf field number 2; repeated=True"
+            }
+          ]
+        },
+        "WsTopics": {
+          "name": "WsTopics",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.WsTopics",
+          "methods": [],
+          "properties": [
+            {
+              "name": "message_type",
+              "type": "ansys.api.result_explorer.v0.server_models.WsTopics.Message_type",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "topics",
+              "type": "ansys.api.result_explorer.v0.server_models.Topic",
+              "doc": "Protobuf field number 2; repeated=True"
+            }
+          ]
+        },
+        "WsTopicsRequest": {
+          "name": "WsTopicsRequest",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.WsTopicsRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "request_type",
+              "type": "ansys.api.result_explorer.v0.server_models.WsTopicsRequest.Request_type",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "WsUnsubscribeRequest": {
+          "name": "WsUnsubscribeRequest",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.WsUnsubscribeRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "request_type",
+              "type": "ansys.api.result_explorer.v0.server_models.WsUnsubscribeRequest.Request_type",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "topics",
+              "type": "ansys.api.result_explorer.v0.server_models.Topic",
+              "doc": "Protobuf field number 2; repeated=True"
+            }
+          ]
+        },
+        "WsUpdateMessage": {
+          "name": "WsUpdateMessage",
+          "doc": "Protocol message ansys.api.result_explorer.v0.server_models.WsUpdateMessage",
+          "methods": [],
+          "properties": [
+            {
+              "name": "message_type",
+              "type": "ansys.api.result_explorer.v0.server_models.WsUpdateMessage.Message_type",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "topic",
+              "type": "ansys.api.result_explorer.v0.server_models.Topic",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "update_type",
+              "type": "ansys.api.result_explorer.v0.server_models.WsUpdateMessageType",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "message",
+              "type": "string",
+              "doc": "Protobuf field number 4; repeated=False"
+            }
+          ]
+        }
+      },
+      "functions": []
+    },
+    "ansys.api.result_explorer.v0.solution_pb2": {
+      "doc": "ansys.api.result_explorer.v0.solution",
+      "classes": {
+        "SolutionCreate": {
+          "name": "SolutionCreate",
+          "doc": "Protocol message ansys.api.result_explorer.v0.solution.SolutionCreate",
+          "methods": [],
+          "properties": [
+            {
+              "name": "result_provider_name",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "name",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "files",
+              "type": "ansys.api.result_explorer.v0.server_models.File",
+              "doc": "Protobuf field number 3; repeated=True"
+            },
+            {
+              "name": "hps_files",
+              "type": "ansys.api.result_explorer.v0.server_models.HpsFiles",
+              "doc": "Protobuf field number 4; repeated=False"
+            },
+            {
+              "name": "split_mesh_options",
+              "type": "ansys.api.result_explorer.v0.server_models.SplitMeshOptions",
+              "doc": "Protobuf field number 5; repeated=False"
+            }
+          ]
+        },
+        "SolutionList": {
+          "name": "SolutionList",
+          "doc": "Protocol message ansys.api.result_explorer.v0.solution.SolutionList",
+          "methods": [],
+          "properties": [
+            {
+              "name": "solutions",
+              "type": "ansys.api.result_explorer.v0.server_models.Solution",
+              "doc": "Protobuf field number 1; repeated=True"
+            }
+          ]
+        },
+        "CreatePlotDefinitionRequest": {
+          "name": "CreatePlotDefinitionRequest",
+          "doc": "Protocol message ansys.api.result_explorer.v0.solution.CreatePlotDefinitionRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "solution_id",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "plot_definition",
+              "type": "ansys.api.result_explorer.v0.server_models.PlotDefinitionCreate",
+              "doc": "Protobuf field number 3; repeated=False"
+            }
+          ]
+        },
+        "UpdatePlotDefinitionRequest": {
+          "name": "UpdatePlotDefinitionRequest",
+          "doc": "Protocol message ansys.api.result_explorer.v0.solution.UpdatePlotDefinitionRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "solution_id",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "plot_definition_id",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "plot_definition",
+              "type": "ansys.api.result_explorer.v0.server_models.PlotDefinitionCreate",
+              "doc": "Protobuf field number 3; repeated=False"
+            }
+          ]
+        },
+        "DeletePlotDefinitionRequest": {
+          "name": "DeletePlotDefinitionRequest",
+          "doc": "Protocol message ansys.api.result_explorer.v0.solution.DeletePlotDefinitionRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "solution_id",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "plot_definition_id",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "CreateChartDefinitionRequest": {
+          "name": "CreateChartDefinitionRequest",
+          "doc": "Protocol message ansys.api.result_explorer.v0.solution.CreateChartDefinitionRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "solution_id",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "chart_definition",
+              "type": "ansys.api.result_explorer.v0.server_models.ChartDefinitionCreate",
+              "doc": "Protobuf field number 3; repeated=False"
+            }
+          ]
+        },
+        "UpdateChartDefinitionRequest": {
+          "name": "UpdateChartDefinitionRequest",
+          "doc": "Protocol message ansys.api.result_explorer.v0.solution.UpdateChartDefinitionRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "solution_id",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "chart_definition_id",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "chart_definition",
+              "type": "ansys.api.result_explorer.v0.server_models.ChartDefinitionCreate",
+              "doc": "Protobuf field number 3; repeated=False"
+            }
+          ]
+        },
+        "DeleteChartDefinitionRequest": {
+          "name": "DeleteChartDefinitionRequest",
+          "doc": "Protocol message ansys.api.result_explorer.v0.solution.DeleteChartDefinitionRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "solution_id",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "chart_definition_id",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "CreateNamedSelectionRequest": {
+          "name": "CreateNamedSelectionRequest",
+          "doc": "Protocol message ansys.api.result_explorer.v0.solution.CreateNamedSelectionRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "solution_id",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "named_selection",
+              "type": "ansys.api.result_explorer.v0.server_models.NamedSelectionCreate",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "UpdateNamedSelectionRequest": {
+          "name": "UpdateNamedSelectionRequest",
+          "doc": "Protocol message ansys.api.result_explorer.v0.solution.UpdateNamedSelectionRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "solution_id",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "named_selection_id",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "named_selection",
+              "type": "ansys.api.result_explorer.v0.server_models.NamedSelectionCreate",
+              "doc": "Protobuf field number 3; repeated=False"
+            }
+          ]
+        },
+        "DeleteNamedSelectionRequest": {
+          "name": "DeleteNamedSelectionRequest",
+          "doc": "Protocol message ansys.api.result_explorer.v0.solution.DeleteNamedSelectionRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "solution_id",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "named_selection_id",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "UpdateMeshOptionsRequest": {
+          "name": "UpdateMeshOptionsRequest",
+          "doc": "Protocol message ansys.api.result_explorer.v0.solution.UpdateMeshOptionsRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "solution_id",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "mesh_options",
+              "type": "ansys.api.result_explorer.v0.server_models.MeshGraphicsOptions",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "SolutionService": {
+          "name": "SolutionService",
+          "doc": "gRPC service ansys.api.result_explorer.v0.solution.SolutionService",
+          "methods": [
+            {
+              "name": "Create",
+              "signature": "(ansys.api.result_explorer.v0.solution.SolutionCreate) -> ansys.api.result_explorer.v0.server_models.Solution [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "Delete",
+              "signature": "(ansys.api.result_explorer.v0.base.ResourceId) -> ansys.api.result_explorer.v0.base.Empty [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "List",
+              "signature": "(ansys.api.result_explorer.v0.base.Empty) -> ansys.api.result_explorer.v0.solution.SolutionList [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "Get",
+              "signature": "(ansys.api.result_explorer.v0.base.ResourceId) -> ansys.api.result_explorer.v0.server_models.Solution [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "UpdateMeshOptions",
+              "signature": "(ansys.api.result_explorer.v0.solution.UpdateMeshOptionsRequest) -> ansys.api.result_explorer.v0.server_models.MeshGraphicsOptions [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "CreatePlotDefinition",
+              "signature": "(ansys.api.result_explorer.v0.solution.CreatePlotDefinitionRequest) -> ansys.api.result_explorer.v0.server_models.PlotDefinition [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "UpdatePlotDefinition",
+              "signature": "(ansys.api.result_explorer.v0.solution.UpdatePlotDefinitionRequest) -> ansys.api.result_explorer.v0.server_models.PlotDefinition [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "DeletePlotDefinition",
+              "signature": "(ansys.api.result_explorer.v0.solution.DeletePlotDefinitionRequest) -> ansys.api.result_explorer.v0.base.Empty [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "CreateChartDefinition",
+              "signature": "(ansys.api.result_explorer.v0.solution.CreateChartDefinitionRequest) -> ansys.api.result_explorer.v0.server_models.ChartDefinition [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "UpdateChartDefinition",
+              "signature": "(ansys.api.result_explorer.v0.solution.UpdateChartDefinitionRequest) -> ansys.api.result_explorer.v0.server_models.ChartDefinition [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "DeleteChartDefinition",
+              "signature": "(ansys.api.result_explorer.v0.solution.DeleteChartDefinitionRequest) -> ansys.api.result_explorer.v0.base.Empty [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "CreateNamedSelection",
+              "signature": "(ansys.api.result_explorer.v0.solution.CreateNamedSelectionRequest) -> ansys.api.result_explorer.v0.server_models.NamedSelection [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "DeleteNamedSelection",
+              "signature": "(ansys.api.result_explorer.v0.solution.DeleteNamedSelectionRequest) -> ansys.api.result_explorer.v0.base.Empty [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "UpdateNamedSelection",
+              "signature": "(ansys.api.result_explorer.v0.solution.UpdateNamedSelectionRequest) -> ansys.api.result_explorer.v0.server_models.NamedSelection [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            }
+          ],
+          "properties": []
+        }
+      },
+      "functions": []
+    },
+    "ansys.api.result_explorer.v0.workspace_pb2": {
+      "doc": "ansys.api.result_explorer.v0.workspace",
+      "classes": {
+        "WorkspaceCreate": {
+          "name": "WorkspaceCreate",
+          "doc": "Protocol message ansys.api.result_explorer.v0.workspace.WorkspaceCreate",
+          "methods": [],
+          "properties": [
+            {
+              "name": "name",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "SyncOptions": {
+          "name": "SyncOptions",
+          "doc": "Protocol message ansys.api.result_explorer.v0.workspace.SyncOptions",
+          "methods": [],
+          "properties": [
+            {
+              "name": "camera",
+              "type": "bool",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "time_freq",
+              "type": "bool",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "legend",
+              "type": "bool",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "probe_entity",
+              "type": "bool",
+              "doc": "Protobuf field number 4; repeated=False"
+            },
+            {
+              "name": "probe_location",
+              "type": "bool",
+              "doc": "Protobuf field number 5; repeated=False"
+            }
+          ]
+        },
+        "Workspace": {
+          "name": "Workspace",
+          "doc": "Protocol message ansys.api.result_explorer.v0.workspace.Workspace",
+          "methods": [],
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "name",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "sync_options",
+              "type": "ansys.api.result_explorer.v0.workspace.SyncOptions",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "viewport_ids",
+              "type": "string",
+              "doc": "Protobuf field number 4; repeated=True"
+            },
+            {
+              "name": "fullscreen_viewport_id",
+              "type": "string",
+              "doc": "Protobuf field number 5; repeated=False"
+            }
+          ]
+        },
+        "WorkspaceUpdateRequest": {
+          "name": "WorkspaceUpdateRequest",
+          "doc": "Protocol message ansys.api.result_explorer.v0.workspace.WorkspaceUpdateRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "workspace_id",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "name",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "sync_options",
+              "type": "ansys.api.result_explorer.v0.workspace.SyncOptions",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "fullscreen_viewport_id",
+              "type": "string",
+              "doc": "Protobuf field number 5; repeated=False"
+            }
+          ]
+        },
+        "WorkspaceList": {
+          "name": "WorkspaceList",
+          "doc": "Protocol message ansys.api.result_explorer.v0.workspace.WorkspaceList",
+          "methods": [],
+          "properties": [
+            {
+              "name": "workspaces",
+              "type": "ansys.api.result_explorer.v0.workspace.Workspace",
+              "doc": "Protobuf field number 1; repeated=True"
+            }
+          ]
+        },
+        "Viewport": {
+          "name": "Viewport",
+          "doc": "Protocol message ansys.api.result_explorer.v0.workspace.Viewport",
+          "methods": [],
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "ready",
+              "type": "bool",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "errors",
+              "type": "string",
+              "doc": "Protobuf field number 3; repeated=True"
+            },
+            {
+              "name": "solution_id",
+              "type": "string",
+              "doc": "Protobuf field number 10; repeated=False"
+            },
+            {
+              "name": "view_id",
+              "type": "string",
+              "doc": "Protobuf field number 11; repeated=False"
+            },
+            {
+              "name": "metadata",
+              "type": "google.protobuf.Struct",
+              "doc": "Protobuf field number 12; repeated=False"
+            },
+            {
+              "name": "sync_options",
+              "type": "ansys.api.result_explorer.v0.workspace.SyncOptions",
+              "doc": "Protobuf field number 13; repeated=False"
+            },
+            {
+              "name": "size",
+              "type": "float",
+              "doc": "Protobuf field number 14; repeated=False"
+            },
+            {
+              "name": "hidden",
+              "type": "bool",
+              "doc": "Protobuf field number 15; repeated=False"
+            }
+          ]
+        },
+        "ViewportList": {
+          "name": "ViewportList",
+          "doc": "Protocol message ansys.api.result_explorer.v0.workspace.ViewportList",
+          "methods": [],
+          "properties": [
+            {
+              "name": "viewports",
+              "type": "ansys.api.result_explorer.v0.workspace.Viewport",
+              "doc": "Protobuf field number 1; repeated=True"
+            }
+          ]
+        },
+        "UpdateViewportRequest": {
+          "name": "UpdateViewportRequest",
+          "doc": "Protocol message ansys.api.result_explorer.v0.workspace.UpdateViewportRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "viewport_id",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "solution_id",
+              "type": "string",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "view_id",
+              "type": "string",
+              "doc": "Protobuf field number 4; repeated=False"
+            },
+            {
+              "name": "metadata",
+              "type": "google.protobuf.Struct",
+              "doc": "Protobuf field number 5; repeated=False"
+            },
+            {
+              "name": "sync_options",
+              "type": "ansys.api.result_explorer.v0.workspace.SyncOptions",
+              "doc": "Protobuf field number 6; repeated=False"
+            },
+            {
+              "name": "size",
+              "type": "float",
+              "doc": "Protobuf field number 7; repeated=False"
+            },
+            {
+              "name": "hidden",
+              "type": "bool",
+              "doc": "Protobuf field number 8; repeated=False"
+            },
+            {
+              "name": "display_options",
+              "type": "google.protobuf.Struct",
+              "doc": "Protobuf field number 9; repeated=False"
+            },
+            {
+              "name": "wait",
+              "type": "bool",
+              "doc": "Protobuf field number 20; repeated=False"
+            }
+          ]
+        },
+        "CreateViewportRequest": {
+          "name": "CreateViewportRequest",
+          "doc": "Protocol message ansys.api.result_explorer.v0.workspace.CreateViewportRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "workspace_id",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "viewport_id",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "direction",
+              "type": "ansys.api.result_explorer.v0.workspace.ViewportDirection",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "size",
+              "type": "float",
+              "doc": "Protobuf field number 4; repeated=False"
+            }
+          ]
+        },
+        "SnapshotSettings": {
+          "name": "SnapshotSettings",
+          "doc": "Protocol message ansys.api.result_explorer.v0.workspace.SnapshotSettings",
+          "methods": [],
+          "properties": [
+            {
+              "name": "background_color",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "transparent_background",
+              "type": "bool",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "show_logo",
+              "type": "bool",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "text_color",
+              "type": "string",
+              "doc": "Protobuf field number 4; repeated=False"
+            },
+            {
+              "name": "metadata_text_size",
+              "type": "int32",
+              "doc": "Protobuf field number 6; repeated=False"
+            },
+            {
+              "name": "show_legend",
+              "type": "bool",
+              "doc": "Protobuf field number 7; repeated=False"
+            },
+            {
+              "name": "show_result_picker",
+              "type": "bool",
+              "doc": "Protobuf field number 8; repeated=False"
+            },
+            {
+              "name": "show_solution_name",
+              "type": "bool",
+              "doc": "Protobuf field number 9; repeated=False"
+            },
+            {
+              "name": "solution_name",
+              "type": "string",
+              "doc": "Protobuf field number 10; repeated=False"
+            },
+            {
+              "name": "show_time_stamp",
+              "type": "bool",
+              "doc": "Protobuf field number 11; repeated=False"
+            },
+            {
+              "name": "scale_logo_with_metadata",
+              "type": "bool",
+              "doc": "Protobuf field number 12; repeated=False"
+            },
+            {
+              "name": "height",
+              "type": "int32",
+              "doc": "Protobuf field number 13; repeated=False"
+            },
+            {
+              "name": "width",
+              "type": "int32",
+              "doc": "Protobuf field number 14; repeated=False"
+            }
+          ]
+        },
+        "CreateSnapshotRequest": {
+          "name": "CreateSnapshotRequest",
+          "doc": "Protocol message ansys.api.result_explorer.v0.workspace.CreateSnapshotRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "viewport_id",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "settings",
+              "type": "ansys.api.result_explorer.v0.workspace.SnapshotSettings",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "Snapshot": {
+          "name": "Snapshot",
+          "doc": "Protocol message ansys.api.result_explorer.v0.workspace.Snapshot",
+          "methods": [],
+          "properties": [
+            {
+              "name": "data",
+              "type": "bytes",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "WorkspaceTemplate": {
+          "name": "WorkspaceTemplate",
+          "doc": "Protocol message ansys.api.result_explorer.v0.workspace.WorkspaceTemplate",
+          "methods": [],
+          "properties": [
+            {
+              "name": "data",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "WorkspaceImportRequest": {
+          "name": "WorkspaceImportRequest",
+          "doc": "Protocol message ansys.api.result_explorer.v0.workspace.WorkspaceImportRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "template",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "workspace_name",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "solutions",
+              "type": "ansys.api.result_explorer.v0.workspace.WorkspaceImportRequest.SolutionInfo",
+              "doc": "Protobuf field number 3; repeated=True"
+            },
+            {
+              "name": "use_camera_position",
+              "type": "bool",
+              "doc": "Protobuf field number 10; repeated=False"
+            },
+            {
+              "name": "use_time_freq",
+              "type": "bool",
+              "doc": "Protobuf field number 11; repeated=False"
+            },
+            {
+              "name": "use_body_visibility",
+              "type": "bool",
+              "doc": "Protobuf field number 12; repeated=False"
+            }
+          ]
+        },
+        "WorkspaceService": {
+          "name": "WorkspaceService",
+          "doc": "gRPC service ansys.api.result_explorer.v0.workspace.WorkspaceService",
+          "methods": [
+            {
+              "name": "Create",
+              "signature": "(ansys.api.result_explorer.v0.workspace.WorkspaceCreate) -> ansys.api.result_explorer.v0.workspace.Workspace [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "List",
+              "signature": "(ansys.api.result_explorer.v0.base.Empty) -> ansys.api.result_explorer.v0.workspace.WorkspaceList [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "Get",
+              "signature": "(ansys.api.result_explorer.v0.base.ResourceId) -> ansys.api.result_explorer.v0.workspace.Workspace [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "Delete",
+              "signature": "(ansys.api.result_explorer.v0.base.ResourceId) -> ansys.api.result_explorer.v0.base.Empty [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "Update",
+              "signature": "(ansys.api.result_explorer.v0.workspace.WorkspaceUpdateRequest) -> ansys.api.result_explorer.v0.workspace.Workspace [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "ListViewports",
+              "signature": "(ansys.api.result_explorer.v0.base.ResourceId) -> ansys.api.result_explorer.v0.workspace.ViewportList [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "CreateViewport",
+              "signature": "(ansys.api.result_explorer.v0.workspace.CreateViewportRequest) -> ansys.api.result_explorer.v0.workspace.Viewport [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "DeleteViewport",
+              "signature": "(ansys.api.result_explorer.v0.base.ResourceId) -> ansys.api.result_explorer.v0.base.Empty [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "UpdateViewport",
+              "signature": "(ansys.api.result_explorer.v0.workspace.UpdateViewportRequest) -> ansys.api.result_explorer.v0.workspace.Viewport [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "CreateSnapshot",
+              "signature": "(ansys.api.result_explorer.v0.workspace.CreateSnapshotRequest) -> ansys.api.result_explorer.v0.workspace.Snapshot [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "ExportWorkspace",
+              "signature": "(ansys.api.result_explorer.v0.base.ResourceId) -> ansys.api.result_explorer.v0.workspace.WorkspaceTemplate [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "ImportWorkspace",
+              "signature": "(ansys.api.result_explorer.v0.workspace.WorkspaceImportRequest) -> ansys.api.result_explorer.v0.base.ResourceId [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            }
+          ],
+          "properties": []
+        }
+      },
+      "functions": []
+    }
+  },
+  "statistics": {
+    "total_modules": 6,
+    "total_classes": 131,
+    "total_methods": 41,
+    "total_properties": 615,
+    "total_functions": 0
+  }
+}

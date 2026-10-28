@@ -1,0 +1,66 @@
+{
+  "module": "NativeExports",
+  "version": "v251",
+  "interface": "DPF math component; support status unverified",
+  "scope": "This snapshot lists PE export names from llvm-readobj. An export name does not prove API support. A signature appears only when the MSVC symbol name contains type data. The extractor does not read function bodies or run the DLL.",
+  "sources": {
+    "assembly": {
+      "path": "$env:AWP_ROOT251/dpf/bin/winx64/Ans.Dpf.Math.dll",
+      "sha256": "61a6dfb9b77ff2ce02586af5c0fd5ae544083e3084fa449eb0d94e40626527e4",
+      "byte_length": 2036736
+    },
+    "analysis": {
+      "tool": "llvm-readobj",
+      "version": "19.1.5",
+      "operation": "--coff-exports"
+    }
+  },
+  "modules": {
+    "NativeExports": {
+      "doc": "DPF math component; support status unverified",
+      "classes": {},
+      "functions": [
+        {
+          "name": "??0FFTTable@@QEAA@XZ",
+          "signature": "public: __cdecl FFTTable::FFTTable(void) __ptr64",
+          "doc": "PE export. Ordinal: 1. RVA: 0x8C820. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: __cdecl FFTTable::FFTTable(void) __ptr64."
+        },
+        {
+          "name": "??0FFTTable@@QEAA@_KPEBN1H@Z",
+          "signature": "public: __cdecl FFTTable::FFTTable(unsigned __int64,double const * __ptr64,double const * __ptr64,int) __ptr64",
+          "doc": "PE export. Ordinal: 2. RVA: 0x8C170. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: __cdecl FFTTable::FFTTable(unsigned __int64,double const * __ptr64,double const * __ptr64,int) __ptr64."
+        },
+        {
+          "name": "?CreateDerivativeTable@FFTTable@@UEAA?AW4status@@XZ",
+          "signature": "public: virtual enum status __cdecl FFTTable::CreateDerivativeTable(void) __ptr64",
+          "doc": "PE export. Ordinal: 3. RVA: 0x8CE70. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: virtual enum status __cdecl FFTTable::CreateDerivativeTable(void) __ptr64."
+        },
+        {
+          "name": "?Evaluate@FFTTable@@UEAA?AW4status@@AEBQEBNAEBQEAN@Z",
+          "signature": "public: virtual enum status __cdecl FFTTable::Evaluate(double const * __ptr64 const & __ptr64,double * __ptr64 const & __ptr64) __ptr64",
+          "doc": "PE export. Ordinal: 4. RVA: 0x8C9D0. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: virtual enum status __cdecl FFTTable::Evaluate(double const * __ptr64 const & __ptr64,double * __ptr64 const & __ptr64) __ptr64."
+        },
+        {
+          "name": "?EvaluateFirstDerivative@FFTTable@@UEAA?AW4status@@AEBQEBNAEBQEAN@Z",
+          "signature": "public: virtual enum status __cdecl FFTTable::EvaluateFirstDerivative(double const * __ptr64 const & __ptr64,double * __ptr64 const & __ptr64) __ptr64",
+          "doc": "PE export. Ordinal: 5. RVA: 0x8CDB0. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: virtual enum status __cdecl FFTTable::EvaluateFirstDerivative(double const * __ptr64 const & __ptr64,double * __ptr64 const & __ptr64) __ptr64."
+        },
+        {
+          "name": "?EvaluateSecondDerivative@FFTTable@@UEAA?AW4status@@AEBQEBNAEBQEAN@Z",
+          "signature": "public: virtual enum status __cdecl FFTTable::EvaluateSecondDerivative(double const * __ptr64 const & __ptr64,double * __ptr64 const & __ptr64) __ptr64",
+          "doc": "PE export. Ordinal: 6. RVA: 0x8CE10. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: virtual enum status __cdecl FFTTable::EvaluateSecondDerivative(double const * __ptr64 const & __ptr64,double * __ptr64 const & __ptr64) __ptr64."
+        },
+        {
+          "name": "LoadOperators",
+          "signature": "",
+          "doc": "PE export. Ordinal: 7. RVA: 0x48C10. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        }
+      ]
+    }
+  },
+  "statistics": {
+    "total_modules": 1,
+    "total_functions": 7,
+    "demangled_signatures": 6
+  }
+}

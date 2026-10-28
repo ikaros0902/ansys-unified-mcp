@@ -1,0 +1,90 @@
+{
+  "module": "Ans.Ansoft.Q3DExtractorAddinPlugin.dll",
+  "version": "2025 R1 (v251)",
+  "source": "REA CLI inspect-managed-members 6.0.0",
+  "interface": "Q3D Extractor Ansoft add-in v251 REA metadata; support status unverified",
+  "scope": "This snapshot lists managed TypeDef and MethodDef rows. It can include non-public members. Type visibility flags are recorded in class docs. Some signatures contain unresolved class:<rid> values. It is not a complete or supported public API declaration.",
+  "sources": {
+    "assembly": {
+      "file": "Ans.Ansoft.Q3DExtractorAddinPlugin.dll",
+      "sha256": "152288642233e5aed659424f64138c12833647f94a994782bfa4053e70f7db9b",
+      "bytes": 18624,
+      "mvid": "3f884677-04f6-4b41-a4e9-40f66e5dd28d",
+      "rea_evidence_id": "ev_6460dfe92cdba68cbc85605adc2b4554a71289bedbfed085edd4c8cc06198123"
+    }
+  },
+  "modules": {
+    "Ansys.Ansoft.Q3DExtractorAddinPlugin": {
+      "doc": "Namespace from REA metadata.",
+      "classes": {
+        "Q3DExtractorProductDefinition": {
+          "name": "Q3DExtractorProductDefinition",
+          "doc": "REA TypeDef; kind=type; visibility=not-public; flags=1048576. Static metadata only. Product support status is unverified.",
+          "methods": [
+            {
+              "name": ".ctor",
+              "signature": "() -> void",
+              "doc": "REA MethodDef; access=public; flags=6278; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "ResultsFolderPath",
+              "signature": "(string) -> string",
+              "doc": "REA MethodDef; access=public; flags=198; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "AdditionalProjectOwnedFilesAndFoldersForDelete",
+              "signature": "<unresolved signature sha256=4fd46fe76c478f8f99829eed30ebce93bacac43d45726469b16abd7db6b36f97>",
+              "doc": "REA MethodDef; access=public; flags=198; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "DoRegisterFileType",
+              "signature": "() -> bool",
+              "doc": "REA MethodDef; access=public; flags=198; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "Build3DExtractorSystem",
+              "signature": "() -> void",
+              "doc": "REA MethodDef; access=private; flags=129; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "Build2DExtractorSystem",
+              "signature": "() -> void",
+              "doc": "REA MethodDef; access=private; flags=129; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "CreateStandardComponents",
+              "signature": "(class:33) -> void",
+              "doc": "REA MethodDef; access=private; flags=129; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            }
+          ],
+          "properties": []
+        },
+        "Plugin": {
+          "name": "Plugin",
+          "doc": "REA TypeDef; kind=type; visibility=public; flags=1048577. Static metadata only. Product support status is unverified.",
+          "methods": [
+            {
+              "name": ".ctor",
+              "signature": "() -> void",
+              "doc": "REA MethodDef; access=public; flags=6278; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "get_ProductDefinition",
+              "signature": "() -> class:53",
+              "doc": "REA MethodDef; access=public; flags=2534; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            }
+          ],
+          "properties": []
+        }
+      },
+      "functions": []
+    }
+  },
+  "statistics": {
+    "total_modules": 1,
+    "total_classes": 2,
+    "total_methods": 9,
+    "total_properties": 0,
+    "total_functions": 0
+  }
+}

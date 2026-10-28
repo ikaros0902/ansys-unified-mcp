@@ -1,0 +1,811 @@
+{
+  "module": "Ansys.Geometry.Api.dll",
+  "version": "2025 R1 (v251)",
+  "source": "REA CLI inspect-managed-members 6.0.0",
+  "interface": "Discovery Geometry API v251 REA managed metadata; support status unverified",
+  "scope": "This snapshot lists managed TypeDef and MethodDef rows. It can include non-public members. Type visibility flags are recorded in class docs. Some signatures contain unresolved class:<rid> values. It is not a complete or supported public API declaration.",
+  "sources": {
+    "assembly": {
+      "file": "Ansys.Geometry.Api.dll",
+      "sha256": "4866343565cd738d079533abc19e0d5d4c76a5d4cb568553907e2d2982050a25",
+      "bytes": 62592,
+      "mvid": "4b3e892f-854b-4f5f-9897-379b182a389a",
+      "rea_evidence_id": "ev_08f75a05db1352d8c2671f90ccb45c8d40b8c0aff340085763bd5f73d02eefb0"
+    }
+  },
+  "modules": {
+    "Ansys.Geometry.Api": {
+      "doc": "Namespace from REA metadata.",
+      "classes": {
+        "ClientFactory": {
+          "name": "ClientFactory",
+          "doc": "REA TypeDef; kind=type; visibility=public; flags=1048833. Static metadata only. Product support status is unverified.",
+          "methods": [
+            {
+              "name": ".ctor",
+              "signature": "(class:61) -> void",
+              "doc": "REA MethodDef; access=public; flags=6278; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "Create",
+              "signature": "(string, class:65, class:69, class:77, class:81, string, class:85) -> class:8",
+              "doc": "REA MethodDef; access=public; flags=150; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "Create",
+              "signature": "(class:89, string, class:65, class:69, string, class:85) -> class:8",
+              "doc": "REA MethodDef; access=public; flags=150; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "get_BodiesClient",
+              "signature": "() -> class:12",
+              "doc": "REA MethodDef; access=public; flags=2182; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "get_GeometryClient",
+              "signature": "() -> class:20",
+              "doc": "REA MethodDef; access=public; flags=2182; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            }
+          ],
+          "properties": []
+        }
+      },
+      "functions": []
+    },
+    "Ansys.Geometry.Api.Clients": {
+      "doc": "Namespace from REA metadata.",
+      "classes": {
+        "IBodiesClient": {
+          "name": "IBodiesClient",
+          "doc": "REA TypeDef; kind=interface; visibility=public; flags=1048737. Static metadata only. Product support status is unverified.",
+          "methods": [
+            {
+              "name": "CreateBodyAsync",
+              "signature": "<unresolved signature sha256=7a866a42af4b53b4b377428cc420db5819aa8b139f52ddcc5ccb67f5a9647d82>",
+              "doc": "REA MethodDef; access=public; flags=1478; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "GetBodyAsync",
+              "signature": "<unresolved signature sha256=3e78151a378f48c16efa62353682b561f033ae9189bde4618a5f0f2655397511>",
+              "doc": "REA MethodDef; access=public; flags=1478; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "GetBodyVolumeAsync",
+              "signature": "<unresolved signature sha256=a61e5faf33be365258f5dff3c786dfe7fbabf20060a3c0f7a82e1737add6d62f>",
+              "doc": "REA MethodDef; access=public; flags=1478; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            }
+          ],
+          "properties": []
+        },
+        "BodiesClient": {
+          "name": "BodiesClient",
+          "doc": "REA TypeDef; kind=type; visibility=not-public; flags=1048576. Static metadata only. Product support status is unverified.",
+          "methods": [
+            {
+              "name": ".ctor",
+              "signature": "(class:61) -> void",
+              "doc": "REA MethodDef; access=public; flags=6278; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "CreateSerializerSettings",
+              "signature": "() -> class:121",
+              "doc": "REA MethodDef; access=private; flags=145; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "get_JsonSerializerSettings",
+              "signature": "() -> class:121",
+              "doc": "REA MethodDef; access=family; flags=2180; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "CreateBodyAsync",
+              "signature": "<unresolved signature sha256=7a866a42af4b53b4b377428cc420db5819aa8b139f52ddcc5ccb67f5a9647d82>",
+              "doc": "REA MethodDef; access=public; flags=454; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "GetBodyAsync",
+              "signature": "<unresolved signature sha256=3e78151a378f48c16efa62353682b561f033ae9189bde4618a5f0f2655397511>",
+              "doc": "REA MethodDef; access=public; flags=454; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "GetBodyVolumeAsync",
+              "signature": "<unresolved signature sha256=a61e5faf33be365258f5dff3c786dfe7fbabf20060a3c0f7a82e1737add6d62f>",
+              "doc": "REA MethodDef; access=public; flags=454; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "get_ReadResponseAsString",
+              "signature": "() -> bool",
+              "doc": "REA MethodDef; access=public; flags=2182; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "set_ReadResponseAsString",
+              "signature": "(bool) -> void",
+              "doc": "REA MethodDef; access=public; flags=2182; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "ReadObjectResponseAsync",
+              "signature": "<unresolved signature sha256=2003424a2130bd4375d8a024f7f0b65f59514c7335661d243593bab1bb3e1268>",
+              "doc": "REA MethodDef; access=family; flags=452; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "ConvertToString",
+              "signature": "(object, class:153) -> string",
+              "doc": "REA MethodDef; access=private; flags=129; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": ".cctor",
+              "signature": "() -> void",
+              "doc": "REA MethodDef; access=private; flags=6289; static=True; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            }
+          ],
+          "properties": []
+        },
+        "IGeometryClient": {
+          "name": "IGeometryClient",
+          "doc": "REA TypeDef; kind=interface; visibility=public; flags=1048737. Static metadata only. Product support status is unverified.",
+          "methods": [
+            {
+              "name": "GetGeometryDataAsync",
+              "signature": "<unresolved signature sha256=2df066e577313b11f34fa22871d76d5a625d00c0b00705bee5c873475e51f4e7>",
+              "doc": "REA MethodDef; access=public; flags=1478; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "GetVisualizationDataAsync",
+              "signature": "<unresolved signature sha256=7ab2513d1676bc0aef4ce96d903b0aa344c126b8f1791a14cc9985c0254625cf>",
+              "doc": "REA MethodDef; access=public; flags=1478; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "PushVisualizationDataAsync",
+              "signature": "<unresolved signature sha256=e7c4fd49384d00fbb4ee11bb58ba89ca1a422ae7818db03dec42979666b9636f>",
+              "doc": "REA MethodDef; access=public; flags=1478; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            }
+          ],
+          "properties": []
+        },
+        "GeometryClient": {
+          "name": "GeometryClient",
+          "doc": "REA TypeDef; kind=type; visibility=not-public; flags=1048576. Static metadata only. Product support status is unverified.",
+          "methods": [
+            {
+              "name": ".ctor",
+              "signature": "(class:61) -> void",
+              "doc": "REA MethodDef; access=public; flags=6278; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "CreateSerializerSettings",
+              "signature": "() -> class:121",
+              "doc": "REA MethodDef; access=private; flags=145; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "get_JsonSerializerSettings",
+              "signature": "() -> class:121",
+              "doc": "REA MethodDef; access=family; flags=2180; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "GetGeometryDataAsync",
+              "signature": "<unresolved signature sha256=2df066e577313b11f34fa22871d76d5a625d00c0b00705bee5c873475e51f4e7>",
+              "doc": "REA MethodDef; access=public; flags=454; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "GetVisualizationDataAsync",
+              "signature": "<unresolved signature sha256=7ab2513d1676bc0aef4ce96d903b0aa344c126b8f1791a14cc9985c0254625cf>",
+              "doc": "REA MethodDef; access=public; flags=454; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "PushVisualizationDataAsync",
+              "signature": "<unresolved signature sha256=e7c4fd49384d00fbb4ee11bb58ba89ca1a422ae7818db03dec42979666b9636f>",
+              "doc": "REA MethodDef; access=public; flags=454; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "get_ReadResponseAsString",
+              "signature": "() -> bool",
+              "doc": "REA MethodDef; access=public; flags=2182; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "set_ReadResponseAsString",
+              "signature": "(bool) -> void",
+              "doc": "REA MethodDef; access=public; flags=2182; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "ReadObjectResponseAsync",
+              "signature": "<unresolved signature sha256=09d0667408fd650e0e87fc9e24ef2be0b3d3979731eaed92ec977a487eb0f9e4>",
+              "doc": "REA MethodDef; access=family; flags=452; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "ConvertToString",
+              "signature": "(object, class:153) -> string",
+              "doc": "REA MethodDef; access=private; flags=129; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": ".cctor",
+              "signature": "() -> void",
+              "doc": "REA MethodDef; access=private; flags=6289; static=True; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            }
+          ],
+          "properties": []
+        },
+        "IPrepareToolsClient": {
+          "name": "IPrepareToolsClient",
+          "doc": "REA TypeDef; kind=interface; visibility=public; flags=1048737. Static metadata only. Product support status is unverified.",
+          "methods": [
+            {
+              "name": "ExtractVolumeFromFacesAsync",
+              "signature": "<unresolved signature sha256=4d498ec8e67fc65803931e1155cdec90db93f82f289f3cf4d0d564aa7c3e2ac1>",
+              "doc": "REA MethodDef; access=public; flags=1478; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            }
+          ],
+          "properties": []
+        },
+        "PrepareToolsClient": {
+          "name": "PrepareToolsClient",
+          "doc": "REA TypeDef; kind=type; visibility=not-public; flags=1048576. Static metadata only. Product support status is unverified.",
+          "methods": [
+            {
+              "name": ".ctor",
+              "signature": "(class:61) -> void",
+              "doc": "REA MethodDef; access=public; flags=6278; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "CreateSerializerSettings",
+              "signature": "() -> class:121",
+              "doc": "REA MethodDef; access=private; flags=145; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "get_JsonSerializerSettings",
+              "signature": "() -> class:121",
+              "doc": "REA MethodDef; access=family; flags=2180; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "ExtractVolumeFromFacesAsync",
+              "signature": "<unresolved signature sha256=4d498ec8e67fc65803931e1155cdec90db93f82f289f3cf4d0d564aa7c3e2ac1>",
+              "doc": "REA MethodDef; access=public; flags=454; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "get_ReadResponseAsString",
+              "signature": "() -> bool",
+              "doc": "REA MethodDef; access=public; flags=2182; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "set_ReadResponseAsString",
+              "signature": "(bool) -> void",
+              "doc": "REA MethodDef; access=public; flags=2182; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "ReadObjectResponseAsync",
+              "signature": "<unresolved signature sha256=e43bdd8e58279c8050d948b75c4d5d10278ed39be26265c6c7037407288fdc85>",
+              "doc": "REA MethodDef; access=family; flags=452; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "ConvertToString",
+              "signature": "(object, class:153) -> string",
+              "doc": "REA MethodDef; access=private; flags=129; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": ".cctor",
+              "signature": "() -> void",
+              "doc": "REA MethodDef; access=private; flags=6289; static=True; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            }
+          ],
+          "properties": []
+        },
+        "ISessionManagerClient": {
+          "name": "ISessionManagerClient",
+          "doc": "REA TypeDef; kind=interface; visibility=public; flags=1048737. Static metadata only. Product support status is unverified.",
+          "methods": [
+            {
+              "name": "StartSessionAsync",
+              "signature": "<unresolved signature sha256=e9fb23d7ed79fafbde7b081d2aae3f25f0b6c9043e5c27f18fb4ce9c644679c5>",
+              "doc": "REA MethodDef; access=public; flags=1478; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "StopSessionAsync",
+              "signature": "(class:265, valuetype:113) -> class:273",
+              "doc": "REA MethodDef; access=public; flags=1478; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            }
+          ],
+          "properties": []
+        },
+        "SessionManagerClient": {
+          "name": "SessionManagerClient",
+          "doc": "REA TypeDef; kind=type; visibility=not-public; flags=1048576. Static metadata only. Product support status is unverified.",
+          "methods": [
+            {
+              "name": ".ctor",
+              "signature": "(class:61) -> void",
+              "doc": "REA MethodDef; access=public; flags=6278; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "CreateSerializerSettings",
+              "signature": "() -> class:121",
+              "doc": "REA MethodDef; access=private; flags=145; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "get_JsonSerializerSettings",
+              "signature": "() -> class:121",
+              "doc": "REA MethodDef; access=family; flags=2180; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "StartSessionAsync",
+              "signature": "<unresolved signature sha256=e9fb23d7ed79fafbde7b081d2aae3f25f0b6c9043e5c27f18fb4ce9c644679c5>",
+              "doc": "REA MethodDef; access=public; flags=454; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "StopSessionAsync",
+              "signature": "(class:265, valuetype:113) -> class:273",
+              "doc": "REA MethodDef; access=public; flags=454; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "get_ReadResponseAsString",
+              "signature": "() -> bool",
+              "doc": "REA MethodDef; access=public; flags=2182; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "set_ReadResponseAsString",
+              "signature": "(bool) -> void",
+              "doc": "REA MethodDef; access=public; flags=2182; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "ReadObjectResponseAsync",
+              "signature": "<unresolved signature sha256=6a9992e8e22d2bd6dfedd6753168dea9a5d65139873d8a1d5e020865523cc214>",
+              "doc": "REA MethodDef; access=family; flags=452; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "ConvertToString",
+              "signature": "(object, class:153) -> string",
+              "doc": "REA MethodDef; access=private; flags=129; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": ".cctor",
+              "signature": "() -> void",
+              "doc": "REA MethodDef; access=private; flags=6289; static=True; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            }
+          ],
+          "properties": []
+        },
+        "FileResponse": {
+          "name": "FileResponse",
+          "doc": "REA TypeDef; kind=type; visibility=public; flags=1048577. Static metadata only. Product support status is unverified.",
+          "methods": [
+            {
+              "name": "get_StatusCode",
+              "signature": "() -> i4",
+              "doc": "REA MethodDef; access=public; flags=2182; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "set_StatusCode",
+              "signature": "(i4) -> void",
+              "doc": "REA MethodDef; access=private; flags=2177; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "get_Headers",
+              "signature": "<unresolved signature sha256=a78899491b7c498860699991c3da360098451770b2065364058baf1133b7a9e0>",
+              "doc": "REA MethodDef; access=public; flags=2182; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "set_Headers",
+              "signature": "<unresolved signature sha256=e683cd3c0a712baea7ee29e8e6cca3613b4b80feaa4c09df92b061e1b08323d6>",
+              "doc": "REA MethodDef; access=private; flags=2177; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "get_Stream",
+              "signature": "() -> class:237",
+              "doc": "REA MethodDef; access=public; flags=2182; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "set_Stream",
+              "signature": "(class:237) -> void",
+              "doc": "REA MethodDef; access=private; flags=2177; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "get_IsPartial",
+              "signature": "() -> bool",
+              "doc": "REA MethodDef; access=public; flags=2182; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": ".ctor",
+              "signature": "<unresolved signature sha256=0693476480d251a8d696a3156af6d340dffd982086f9d09a14290bb80d4076e4>",
+              "doc": "REA MethodDef; access=public; flags=6278; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "Dispose",
+              "signature": "() -> void",
+              "doc": "REA MethodDef; access=public; flags=486; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            }
+          ],
+          "properties": []
+        },
+        "ApiException": {
+          "name": "ApiException",
+          "doc": "REA TypeDef; kind=type; visibility=public; flags=1048577. Static metadata only. Product support status is unverified.",
+          "methods": [
+            {
+              "name": "get_StatusCode",
+              "signature": "() -> i4",
+              "doc": "REA MethodDef; access=public; flags=2182; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "set_StatusCode",
+              "signature": "(i4) -> void",
+              "doc": "REA MethodDef; access=private; flags=2177; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "get_Response",
+              "signature": "() -> string",
+              "doc": "REA MethodDef; access=public; flags=2182; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "set_Response",
+              "signature": "(string) -> void",
+              "doc": "REA MethodDef; access=private; flags=2177; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "get_Headers",
+              "signature": "<unresolved signature sha256=a78899491b7c498860699991c3da360098451770b2065364058baf1133b7a9e0>",
+              "doc": "REA MethodDef; access=public; flags=2182; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "set_Headers",
+              "signature": "<unresolved signature sha256=e683cd3c0a712baea7ee29e8e6cca3613b4b80feaa4c09df92b061e1b08323d6>",
+              "doc": "REA MethodDef; access=private; flags=2177; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": ".ctor",
+              "signature": "<unresolved signature sha256=1762b2ba3e672cc936c7a252c850bc9a9cb7cb2831cce6e349a030446899072f>",
+              "doc": "REA MethodDef; access=public; flags=6278; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "ToString",
+              "signature": "() -> string",
+              "doc": "REA MethodDef; access=public; flags=198; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            }
+          ],
+          "properties": []
+        },
+        "ApiException`1": {
+          "name": "ApiException`1",
+          "doc": "REA TypeDef; kind=type; visibility=public; flags=1048577. Static metadata only. Product support status is unverified.",
+          "methods": [
+            {
+              "name": "get_Result",
+              "signature": "() -> var:0",
+              "doc": "REA MethodDef; access=public; flags=2182; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "set_Result",
+              "signature": "(var:0) -> void",
+              "doc": "REA MethodDef; access=private; flags=2177; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": ".ctor",
+              "signature": "<unresolved signature sha256=b19d0e6c8c7447a0b19d478013096dc359d531795d5d0f030d3be53e4e3acff6>",
+              "doc": "REA MethodDef; access=public; flags=6278; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            }
+          ],
+          "properties": []
+        }
+      },
+      "functions": []
+    },
+    "global": {
+      "doc": "Namespace from REA metadata.",
+      "classes": {
+        "ObjectResponseResult`1": {
+          "name": "ObjectResponseResult`1",
+          "doc": "REA TypeDef; kind=type; visibility=nested-family; flags=1048844. Static metadata only. Product support status is unverified.",
+          "methods": [
+            {
+              "name": ".ctor",
+              "signature": "(var:0, string) -> void",
+              "doc": "REA MethodDef; access=public; flags=6278; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "get_Object",
+              "signature": "() -> var:0",
+              "doc": "REA MethodDef; access=public; flags=2182; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "get_Text",
+              "signature": "() -> string",
+              "doc": "REA MethodDef; access=public; flags=2182; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            }
+          ],
+          "properties": []
+        },
+        "<CreateBodyAsync>d__7": {
+          "name": "<CreateBodyAsync>d__7",
+          "doc": "REA TypeDef; kind=type; visibility=nested-private; flags=1048835. Static metadata only. Product support status is unverified.",
+          "methods": [
+            {
+              "name": "MoveNext",
+              "signature": "() -> void",
+              "doc": "REA MethodDef; access=private; flags=481; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "SetStateMachine",
+              "signature": "(class:173) -> void",
+              "doc": "REA MethodDef; access=private; flags=481; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            }
+          ],
+          "properties": []
+        },
+        "<GetBodyAsync>d__8": {
+          "name": "<GetBodyAsync>d__8",
+          "doc": "REA TypeDef; kind=type; visibility=nested-private; flags=1048835. Static metadata only. Product support status is unverified.",
+          "methods": [
+            {
+              "name": "MoveNext",
+              "signature": "() -> void",
+              "doc": "REA MethodDef; access=private; flags=481; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "SetStateMachine",
+              "signature": "(class:173) -> void",
+              "doc": "REA MethodDef; access=private; flags=481; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            }
+          ],
+          "properties": []
+        },
+        "<GetBodyVolumeAsync>d__9": {
+          "name": "<GetBodyVolumeAsync>d__9",
+          "doc": "REA TypeDef; kind=type; visibility=nested-private; flags=1048835. Static metadata only. Product support status is unverified.",
+          "methods": [
+            {
+              "name": "MoveNext",
+              "signature": "() -> void",
+              "doc": "REA MethodDef; access=private; flags=481; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "SetStateMachine",
+              "signature": "(class:173) -> void",
+              "doc": "REA MethodDef; access=private; flags=481; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            }
+          ],
+          "properties": []
+        },
+        "<ReadObjectResponseAsync>d__15`1": {
+          "name": "<ReadObjectResponseAsync>d__15`1",
+          "doc": "REA TypeDef; kind=type; visibility=nested-private; flags=1048835. Static metadata only. Product support status is unverified.",
+          "methods": [
+            {
+              "name": "MoveNext",
+              "signature": "() -> void",
+              "doc": "REA MethodDef; access=private; flags=481; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "SetStateMachine",
+              "signature": "(class:173) -> void",
+              "doc": "REA MethodDef; access=private; flags=481; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            }
+          ],
+          "properties": []
+        },
+        "ObjectResponseResult`1__0x02000013": {
+          "name": "ObjectResponseResult`1__0x02000013",
+          "doc": "REA TypeDef; kind=type; visibility=nested-family; flags=1048844. Static metadata only. Product support status is unverified.",
+          "methods": [
+            {
+              "name": ".ctor",
+              "signature": "(var:0, string) -> void",
+              "doc": "REA MethodDef; access=public; flags=6278; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "get_Object",
+              "signature": "() -> var:0",
+              "doc": "REA MethodDef; access=public; flags=2182; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "get_Text",
+              "signature": "() -> string",
+              "doc": "REA MethodDef; access=public; flags=2182; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            }
+          ],
+          "properties": []
+        },
+        "<GetGeometryDataAsync>d__7": {
+          "name": "<GetGeometryDataAsync>d__7",
+          "doc": "REA TypeDef; kind=type; visibility=nested-private; flags=1048835. Static metadata only. Product support status is unverified.",
+          "methods": [
+            {
+              "name": "MoveNext",
+              "signature": "() -> void",
+              "doc": "REA MethodDef; access=private; flags=481; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "SetStateMachine",
+              "signature": "(class:173) -> void",
+              "doc": "REA MethodDef; access=private; flags=481; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            }
+          ],
+          "properties": []
+        },
+        "<GetVisualizationDataAsync>d__8": {
+          "name": "<GetVisualizationDataAsync>d__8",
+          "doc": "REA TypeDef; kind=type; visibility=nested-private; flags=1048835. Static metadata only. Product support status is unverified.",
+          "methods": [
+            {
+              "name": "MoveNext",
+              "signature": "() -> void",
+              "doc": "REA MethodDef; access=private; flags=481; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "SetStateMachine",
+              "signature": "(class:173) -> void",
+              "doc": "REA MethodDef; access=private; flags=481; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            }
+          ],
+          "properties": []
+        },
+        "<PushVisualizationDataAsync>d__9": {
+          "name": "<PushVisualizationDataAsync>d__9",
+          "doc": "REA TypeDef; kind=type; visibility=nested-private; flags=1048835. Static metadata only. Product support status is unverified.",
+          "methods": [
+            {
+              "name": "MoveNext",
+              "signature": "() -> void",
+              "doc": "REA MethodDef; access=private; flags=481; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "SetStateMachine",
+              "signature": "(class:173) -> void",
+              "doc": "REA MethodDef; access=private; flags=481; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            }
+          ],
+          "properties": []
+        },
+        "<ReadObjectResponseAsync>d__15`1__0x02000017": {
+          "name": "<ReadObjectResponseAsync>d__15`1__0x02000017",
+          "doc": "REA TypeDef; kind=type; visibility=nested-private; flags=1048835. Static metadata only. Product support status is unverified.",
+          "methods": [
+            {
+              "name": "MoveNext",
+              "signature": "() -> void",
+              "doc": "REA MethodDef; access=private; flags=481; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "SetStateMachine",
+              "signature": "(class:173) -> void",
+              "doc": "REA MethodDef; access=private; flags=481; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            }
+          ],
+          "properties": []
+        },
+        "ObjectResponseResult`1__0x02000018": {
+          "name": "ObjectResponseResult`1__0x02000018",
+          "doc": "REA TypeDef; kind=type; visibility=nested-family; flags=1048844. Static metadata only. Product support status is unverified.",
+          "methods": [
+            {
+              "name": ".ctor",
+              "signature": "(var:0, string) -> void",
+              "doc": "REA MethodDef; access=public; flags=6278; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "get_Object",
+              "signature": "() -> var:0",
+              "doc": "REA MethodDef; access=public; flags=2182; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "get_Text",
+              "signature": "() -> string",
+              "doc": "REA MethodDef; access=public; flags=2182; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            }
+          ],
+          "properties": []
+        },
+        "<ExtractVolumeFromFacesAsync>d__7": {
+          "name": "<ExtractVolumeFromFacesAsync>d__7",
+          "doc": "REA TypeDef; kind=type; visibility=nested-private; flags=1048835. Static metadata only. Product support status is unverified.",
+          "methods": [
+            {
+              "name": "MoveNext",
+              "signature": "() -> void",
+              "doc": "REA MethodDef; access=private; flags=481; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "SetStateMachine",
+              "signature": "(class:173) -> void",
+              "doc": "REA MethodDef; access=private; flags=481; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            }
+          ],
+          "properties": []
+        },
+        "<ReadObjectResponseAsync>d__13`1": {
+          "name": "<ReadObjectResponseAsync>d__13`1",
+          "doc": "REA TypeDef; kind=type; visibility=nested-private; flags=1048835. Static metadata only. Product support status is unverified.",
+          "methods": [
+            {
+              "name": "MoveNext",
+              "signature": "() -> void",
+              "doc": "REA MethodDef; access=private; flags=481; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "SetStateMachine",
+              "signature": "(class:173) -> void",
+              "doc": "REA MethodDef; access=private; flags=481; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            }
+          ],
+          "properties": []
+        },
+        "ObjectResponseResult`1__0x0200001b": {
+          "name": "ObjectResponseResult`1__0x0200001b",
+          "doc": "REA TypeDef; kind=type; visibility=nested-family; flags=1048844. Static metadata only. Product support status is unverified.",
+          "methods": [
+            {
+              "name": ".ctor",
+              "signature": "(var:0, string) -> void",
+              "doc": "REA MethodDef; access=public; flags=6278; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "get_Object",
+              "signature": "() -> var:0",
+              "doc": "REA MethodDef; access=public; flags=2182; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "get_Text",
+              "signature": "() -> string",
+              "doc": "REA MethodDef; access=public; flags=2182; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            }
+          ],
+          "properties": []
+        },
+        "<ReadObjectResponseAsync>d__14`1": {
+          "name": "<ReadObjectResponseAsync>d__14`1",
+          "doc": "REA TypeDef; kind=type; visibility=nested-private; flags=1048835. Static metadata only. Product support status is unverified.",
+          "methods": [
+            {
+              "name": "MoveNext",
+              "signature": "() -> void",
+              "doc": "REA MethodDef; access=private; flags=481; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "SetStateMachine",
+              "signature": "(class:173) -> void",
+              "doc": "REA MethodDef; access=private; flags=481; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            }
+          ],
+          "properties": []
+        },
+        "<StartSessionAsync>d__7": {
+          "name": "<StartSessionAsync>d__7",
+          "doc": "REA TypeDef; kind=type; visibility=nested-private; flags=1048835. Static metadata only. Product support status is unverified.",
+          "methods": [
+            {
+              "name": "MoveNext",
+              "signature": "() -> void",
+              "doc": "REA MethodDef; access=private; flags=481; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "SetStateMachine",
+              "signature": "(class:173) -> void",
+              "doc": "REA MethodDef; access=private; flags=481; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            }
+          ],
+          "properties": []
+        },
+        "<StopSessionAsync>d__8": {
+          "name": "<StopSessionAsync>d__8",
+          "doc": "REA TypeDef; kind=type; visibility=nested-private; flags=1048835. Static metadata only. Product support status is unverified.",
+          "methods": [
+            {
+              "name": "MoveNext",
+              "signature": "() -> void",
+              "doc": "REA MethodDef; access=private; flags=481; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "SetStateMachine",
+              "signature": "(class:173) -> void",
+              "doc": "REA MethodDef; access=private; flags=481; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            }
+          ],
+          "properties": []
+        }
+      },
+      "functions": []
+    }
+  },
+  "statistics": {
+    "total_modules": 3,
+    "total_classes": 29,
+    "total_methods": 113,
+    "total_properties": 0,
+    "total_functions": 0
+  }
+}

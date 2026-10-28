@@ -1,0 +1,437 @@
+{
+  "module": "Ansys.ACTLSDYNA.Interfaces.dll",
+  "version": "2025 R1 (v251)",
+  "source": "REA CLI inspect-managed-members 6.0.0",
+  "interface": "LS-DYNA ACT Interfaces v251 REA metadata; product mapping unverified",
+  "scope": "This snapshot lists managed TypeDef and MethodDef rows. It can include non-public members. Type visibility flags are recorded in class docs. Some signatures contain unresolved class:<rid> values. It is not a complete or supported public API declaration.",
+  "sources": {
+    "assembly": {
+      "file": "Ansys.ACTLSDYNA.Interfaces.dll",
+      "sha256": "01e7d0a3f0bb56668665fb3ad90f198666373a40a7c56166701069f4c3fd8120",
+      "bytes": 22208,
+      "mvid": "68001726-0e3b-4c1c-b1eb-4afd5b70bdce",
+      "rea_evidence_id": "ev_45f58ec39e3b6e09ff1773639f0d10b2d10e8f2dd0c57124a88fa669e4a2e1c7"
+    }
+  },
+  "modules": {
+    "Ansys.ACTLSDYNA.Interfaces": {
+      "doc": "Namespace from REA metadata.",
+      "classes": {
+        "BinoutReader": {
+          "name": "BinoutReader",
+          "doc": "REA TypeDef; kind=type; visibility=public; flags=1048577. Static metadata only. Product support status is unverified.",
+          "methods": [
+            {
+              "name": "Binout_Close",
+              "signature": "(native-int) -> void",
+              "doc": "REA MethodDef; access=public; flags=8342; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "Binout_Open",
+              "signature": "(string) -> native-int",
+              "doc": "REA MethodDef; access=public; flags=8342; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "Binout_CreateInstance",
+              "signature": "(string) -> native-int",
+              "doc": "REA MethodDef; access=public; flags=8342; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "Binout_ReleaseInstance",
+              "signature": "(native-int) -> void",
+              "doc": "REA MethodDef; access=public; flags=8342; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "Binout_GetBranch",
+              "signature": "(native-int, native-int[]) -> i4",
+              "doc": "REA MethodDef; access=public; flags=8342; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "Binout_GetNumberOfBranch",
+              "signature": "(native-int, u4&) -> i4",
+              "doc": "REA MethodDef; access=public; flags=8342; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "Binout_SetBranch",
+              "signature": "(native-int, string) -> bool",
+              "doc": "REA MethodDef; access=public; flags=8342; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "Binout_GetComponent",
+              "signature": "(native-int, native-int[]) -> i4",
+              "doc": "REA MethodDef; access=public; flags=8342; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "Binout_GetNumberOfComponent",
+              "signature": "(native-int, u4&) -> i4",
+              "doc": "REA MethodDef; access=public; flags=8342; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "Binout_IsValid",
+              "signature": "(string) -> bool",
+              "doc": "REA MethodDef; access=public; flags=8342; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "Binout_GetNumberOfId",
+              "signature": "(native-int) -> i4",
+              "doc": "REA MethodDef; access=public; flags=8342; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "Binout_GetId",
+              "signature": "(native-int, native-int) -> i4",
+              "doc": "REA MethodDef; access=public; flags=8342; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "Binout_GetXArray",
+              "signature": "(native-int, native-int) -> bool",
+              "doc": "REA MethodDef; access=public; flags=8342; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "Binout_GetNumberOfXArray",
+              "signature": "(native-int) -> i4",
+              "doc": "REA MethodDef; access=public; flags=8342; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "Binout_GetYArray",
+              "signature": "(native-int, native-int) -> bool",
+              "doc": "REA MethodDef; access=public; flags=8342; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "Binout_GetNumberOfYArray",
+              "signature": "(native-int) -> i4",
+              "doc": "REA MethodDef; access=public; flags=8342; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "Binout_GetSumYArray",
+              "signature": "(native-int, native-int, native-int, u4) -> bool",
+              "doc": "REA MethodDef; access=public; flags=8342; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "Binout_SetComponent",
+              "signature": "(native-int, string) -> bool",
+              "doc": "REA MethodDef; access=public; flags=8342; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "Binout_SetId",
+              "signature": "(native-int, u4) -> bool",
+              "doc": "REA MethodDef; access=public; flags=8342; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "Binout_SetStrId",
+              "signature": "(native-int, string) -> bool",
+              "doc": "REA MethodDef; access=public; flags=8342; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "Binout_SetIdMasterSlave",
+              "signature": "(native-int, u4, bool) -> bool",
+              "doc": "REA MethodDef; access=public; flags=8342; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "Binout_WriteGST",
+              "signature": "(native-int, string, string) -> bool",
+              "doc": "REA MethodDef; access=public; flags=8342; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "Binout_CreateDynainLSDACopyWithoutMesh",
+              "signature": "(native-int, string) -> bool",
+              "doc": "REA MethodDef; access=public; flags=8342; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "Binout_GetVariableLength",
+              "signature": "(native-int, string, string) -> u4",
+              "doc": "REA MethodDef; access=public; flags=8342; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "Binout_GetIntegerArray",
+              "signature": "(native-int, string, string, native-int) -> bool",
+              "doc": "REA MethodDef; access=public; flags=8342; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": ".ctor",
+              "signature": "(string) -> void",
+              "doc": "REA MethodDef; access=public; flags=6278; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "Close",
+              "signature": "() -> void",
+              "doc": "REA MethodDef; access=public; flags=486; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "GetBranch",
+              "signature": "() -> string[]",
+              "doc": "REA MethodDef; access=public; flags=486; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "GetComponent",
+              "signature": "() -> string[]",
+              "doc": "REA MethodDef; access=public; flags=486; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "GetId",
+              "signature": "() -> u4[]",
+              "doc": "REA MethodDef; access=public; flags=486; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "GetXArray",
+              "signature": "() -> r8[]",
+              "doc": "REA MethodDef; access=public; flags=486; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "GetYArray",
+              "signature": "() -> r8[]",
+              "doc": "REA MethodDef; access=public; flags=486; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "GetSumYArray",
+              "signature": "<unresolved signature sha256=7246f1f242afd4f6f80cbfff2e642e964f88edf474cc22e26d2a1c42a7e6b9e6>",
+              "doc": "REA MethodDef; access=public; flags=486; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "SetBranch",
+              "signature": "(string) -> bool",
+              "doc": "REA MethodDef; access=public; flags=486; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "SetComponent",
+              "signature": "(string) -> bool",
+              "doc": "REA MethodDef; access=public; flags=486; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "SetId",
+              "signature": "(string) -> bool",
+              "doc": "REA MethodDef; access=public; flags=486; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "SetId",
+              "signature": "(u4) -> bool",
+              "doc": "REA MethodDef; access=public; flags=486; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "SetId",
+              "signature": "(u4, bool) -> bool",
+              "doc": "REA MethodDef; access=public; flags=486; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "IsValid",
+              "signature": "(string) -> bool",
+              "doc": "REA MethodDef; access=public; flags=150; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "WriteGST",
+              "signature": "(string, string) -> bool",
+              "doc": "REA MethodDef; access=public; flags=134; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "CreateDynainLsdaCopyWithoutMesh",
+              "signature": "(string) -> bool",
+              "doc": "REA MethodDef; access=public; flags=134; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "GetIntegerArray",
+              "signature": "(string, string) -> i4[]",
+              "doc": "REA MethodDef; access=public; flags=486; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "Dispose",
+              "signature": "() -> void",
+              "doc": "REA MethodDef; access=public; flags=486; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "Dispose",
+              "signature": "(bool) -> void",
+              "doc": "REA MethodDef; access=family; flags=452; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "Finalize",
+              "signature": "() -> void",
+              "doc": "REA MethodDef; access=family; flags=196; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": ".ctor",
+              "signature": "(native-int) -> void",
+              "doc": "REA MethodDef; access=assembly; flags=6275; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            }
+          ],
+          "properties": []
+        },
+        "CndWriter": {
+          "name": "CndWriter",
+          "doc": "REA TypeDef; kind=type; visibility=public; flags=1048961. Static metadata only. Product support status is unverified.",
+          "methods": [
+            {
+              "name": "CND_WriteCndFile",
+              "signature": "(r8, string) -> bool",
+              "doc": "REA MethodDef; access=public; flags=8342; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "Write",
+              "signature": "(r8, string, bool) -> bool",
+              "doc": "REA MethodDef; access=public; flags=150; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            }
+          ],
+          "properties": []
+        },
+        "ContactSideEnum": {
+          "name": "ContactSideEnum",
+          "doc": "REA TypeDef; kind=type; visibility=public; flags=257. Static metadata only. Product support status is unverified.",
+          "methods": [],
+          "properties": []
+        },
+        "ICustomContactResultReader": {
+          "name": "ICustomContactResultReader",
+          "doc": "REA TypeDef; kind=interface; visibility=public; flags=161. Static metadata only. Product support status is unverified.",
+          "methods": [
+            {
+              "name": "SetContact",
+              "signature": "(i4) -> void",
+              "doc": "REA MethodDef; access=public; flags=1478; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "SetContactSide",
+              "signature": "(valuetype:16) -> void",
+              "doc": "REA MethodDef; access=public; flags=1478; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            }
+          ],
+          "properties": []
+        },
+        "IDynaResultReader": {
+          "name": "IDynaResultReader",
+          "doc": "REA TypeDef; kind=interface; visibility=public; flags=161. Static metadata only. Product support status is unverified.",
+          "methods": [
+            {
+              "name": "SetDirectory",
+              "signature": "(string) -> void",
+              "doc": "REA MethodDef; access=public; flags=1478; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "get_TimeSteps",
+              "signature": "() -> r8[]",
+              "doc": "REA MethodDef; access=public; flags=3526; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            }
+          ],
+          "properties": []
+        },
+        "IBinoutReader": {
+          "name": "IBinoutReader",
+          "doc": "REA TypeDef; kind=interface; visibility=public; flags=161. Static metadata only. Product support status is unverified.",
+          "methods": [
+            {
+              "name": "Close",
+              "signature": "() -> void",
+              "doc": "REA MethodDef; access=public; flags=1478; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "GetBranch",
+              "signature": "() -> string[]",
+              "doc": "REA MethodDef; access=public; flags=1478; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "GetComponent",
+              "signature": "() -> string[]",
+              "doc": "REA MethodDef; access=public; flags=1478; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "GetId",
+              "signature": "() -> u4[]",
+              "doc": "REA MethodDef; access=public; flags=1478; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "GetXArray",
+              "signature": "() -> r8[]",
+              "doc": "REA MethodDef; access=public; flags=1478; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "GetYArray",
+              "signature": "() -> r8[]",
+              "doc": "REA MethodDef; access=public; flags=1478; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "GetSumYArray",
+              "signature": "<unresolved signature sha256=7246f1f242afd4f6f80cbfff2e642e964f88edf474cc22e26d2a1c42a7e6b9e6>",
+              "doc": "REA MethodDef; access=public; flags=1478; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "SetBranch",
+              "signature": "(string) -> bool",
+              "doc": "REA MethodDef; access=public; flags=1478; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "SetComponent",
+              "signature": "(string) -> bool",
+              "doc": "REA MethodDef; access=public; flags=1478; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "SetId",
+              "signature": "(string) -> bool",
+              "doc": "REA MethodDef; access=public; flags=1478; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "SetId",
+              "signature": "(u4) -> bool",
+              "doc": "REA MethodDef; access=public; flags=1478; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "SetId",
+              "signature": "(u4, bool) -> bool",
+              "doc": "REA MethodDef; access=public; flags=1478; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "GetIntegerArray",
+              "signature": "(string, string) -> i4[]",
+              "doc": "REA MethodDef; access=public; flags=1478; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            }
+          ],
+          "properties": []
+        },
+        "DynaResultReaderExtensions": {
+          "name": "DynaResultReaderExtensions",
+          "doc": "REA TypeDef; kind=type; visibility=public; flags=1048961. Static metadata only. Product support status is unverified.",
+          "methods": [
+            {
+              "name": "GetResultSetsAtTime",
+              "signature": "<unresolved signature sha256=22da66ffd5507e127a1d384d110f53c5174926aaae2ba52a09386aabda888a69>",
+              "doc": "REA MethodDef; access=public; flags=150; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            }
+          ],
+          "properties": []
+        }
+      },
+      "functions": []
+    },
+    "global": {
+      "doc": "Namespace from REA metadata.",
+      "classes": {
+        "<>c": {
+          "name": "<>c",
+          "doc": "REA TypeDef; kind=type; visibility=nested-private; flags=1057027. Static metadata only. Product support status is unverified.",
+          "methods": [
+            {
+              "name": ".cctor",
+              "signature": "() -> void",
+              "doc": "REA MethodDef; access=private; flags=6289; static=True; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": ".ctor",
+              "signature": "() -> void",
+              "doc": "REA MethodDef; access=public; flags=6278; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "<GetSumYArray>b__36_0",
+              "signature": "(u4) -> i4",
+              "doc": "REA MethodDef; access=assembly; flags=131; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            }
+          ],
+          "properties": []
+        }
+      },
+      "functions": []
+    }
+  },
+  "statistics": {
+    "total_modules": 2,
+    "total_classes": 8,
+    "total_methods": 69,
+    "total_properties": 0,
+    "total_functions": 0
+  }
+}

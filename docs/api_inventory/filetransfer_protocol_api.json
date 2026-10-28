@@ -1,0 +1,211 @@
+{
+  "module": "generated protobuf modules",
+  "version": "unknown",
+  "sdk_package": "ansys-api-tools-filetransfer",
+  "sdk_version": "0.2.0",
+  "interface": "filetransfer gRPC protocol schema",
+  "scope": "限於套件內 protobuf message 欄位與 gRPC service RPC signatures。這是傳輸協定 schema，不是產品 scripting API 或支援狀態聲明。",
+  "sources": {
+    "sdk_files": [
+      {
+        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/tools/filetransfer/v1/file_transfer_service_pb2.py",
+        "sha256": "660740cb74bdde58f283145e85dd4f779dfa21c06e135f2cee8f051295a06046"
+      }
+    ]
+  },
+  "modules": {
+    "ansys.api.tools.filetransfer.v1.file_transfer_service_pb2": {
+      "doc": "ansys.api.tools.filetransfer.v1",
+      "classes": {
+        "ProgressRequest": {
+          "name": "ProgressRequest",
+          "doc": "Protocol message ansys.api.tools.filetransfer.v1.ProgressRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "interrupt",
+              "type": "bool",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "ProgressResponse": {
+          "name": "ProgressResponse",
+          "doc": "Protocol message ansys.api.tools.filetransfer.v1.ProgressResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "state",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "SHA1": {
+          "name": "SHA1",
+          "doc": "Protocol message ansys.api.tools.filetransfer.v1.SHA1",
+          "methods": [],
+          "properties": [
+            {
+              "name": "hex_digest",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "FileInfo": {
+          "name": "FileInfo",
+          "doc": "Protocol message ansys.api.tools.filetransfer.v1.FileInfo",
+          "methods": [],
+          "properties": [
+            {
+              "name": "name",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "size",
+              "type": "int64",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "sha1",
+              "type": "ansys.api.tools.filetransfer.v1.SHA1",
+              "doc": "Protobuf field number 3; repeated=False"
+            }
+          ]
+        },
+        "FileChunk": {
+          "name": "FileChunk",
+          "doc": "Protocol message ansys.api.tools.filetransfer.v1.FileChunk",
+          "methods": [],
+          "properties": [
+            {
+              "name": "offset",
+              "type": "int64",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "data",
+              "type": "bytes",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "UploadFileRequest": {
+          "name": "UploadFileRequest",
+          "doc": "Protocol message ansys.api.tools.filetransfer.v1.UploadFileRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "progress",
+              "type": "ansys.api.tools.filetransfer.v1.ProgressRequest",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "initialize",
+              "type": "ansys.api.tools.filetransfer.v1.UploadFileRequest.Initialize",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "send_data",
+              "type": "ansys.api.tools.filetransfer.v1.UploadFileRequest.SendData",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "finalize",
+              "type": "ansys.api.tools.filetransfer.v1.UploadFileRequest.Finalize",
+              "doc": "Protobuf field number 4; repeated=False"
+            }
+          ]
+        },
+        "UploadFileResponse": {
+          "name": "UploadFileResponse",
+          "doc": "Protocol message ansys.api.tools.filetransfer.v1.UploadFileResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "progress",
+              "type": "ansys.api.tools.filetransfer.v1.ProgressResponse",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "DownloadFileRequest": {
+          "name": "DownloadFileRequest",
+          "doc": "Protocol message ansys.api.tools.filetransfer.v1.DownloadFileRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "progress",
+              "type": "ansys.api.tools.filetransfer.v1.ProgressRequest",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "initialize",
+              "type": "ansys.api.tools.filetransfer.v1.DownloadFileRequest.Initialize",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "receive_data",
+              "type": "ansys.api.tools.filetransfer.v1.DownloadFileRequest.ReceiveData",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "finalize",
+              "type": "ansys.api.tools.filetransfer.v1.DownloadFileRequest.Finalize",
+              "doc": "Protobuf field number 4; repeated=False"
+            }
+          ]
+        },
+        "DownloadFileResponse": {
+          "name": "DownloadFileResponse",
+          "doc": "Protocol message ansys.api.tools.filetransfer.v1.DownloadFileResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "progress",
+              "type": "ansys.api.tools.filetransfer.v1.ProgressResponse",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "file_info",
+              "type": "ansys.api.tools.filetransfer.v1.FileInfo",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "file_data",
+              "type": "ansys.api.tools.filetransfer.v1.FileChunk",
+              "doc": "Protobuf field number 3; repeated=False"
+            }
+          ]
+        },
+        "FileTransferService": {
+          "name": "FileTransferService",
+          "doc": "gRPC service ansys.api.tools.filetransfer.v1.FileTransferService",
+          "methods": [
+            {
+              "name": "DownloadFile",
+              "signature": "(ansys.api.tools.filetransfer.v1.DownloadFileRequest) -> ansys.api.tools.filetransfer.v1.DownloadFileResponse [client_streaming=True, server_streaming=True]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "UploadFile",
+              "signature": "(ansys.api.tools.filetransfer.v1.UploadFileRequest) -> ansys.api.tools.filetransfer.v1.UploadFileResponse [client_streaming=True, server_streaming=True]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            }
+          ],
+          "properties": []
+        }
+      },
+      "functions": []
+    }
+  },
+  "statistics": {
+    "total_modules": 1,
+    "total_classes": 10,
+    "total_methods": 2,
+    "total_properties": 20,
+    "total_functions": 0
+  }
+}

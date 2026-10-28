@@ -1,0 +1,116 @@
+{
+  "module": "NativeExports",
+  "version": "v251",
+  "interface": "CFX Acmo native exports; support status unverified",
+  "scope": "This snapshot lists PE export names from llvm-readobj. An export name does not prove API support. A signature appears only when the MSVC symbol name contains type data. The extractor does not read function bodies or run the DLL.",
+  "sources": {
+    "assembly": {
+      "path": "$env:AWP_ROOT251/CFX/lib/winnt-amd64/Ans.CFX.Acmo.dll",
+      "sha256": "c3aa76898adab0b6d40a396aabd97874531a74c42cc601736568f19074bce126",
+      "byte_length": 284864
+    },
+    "analysis": {
+      "tool": "llvm-readobj",
+      "version": "19.1.5",
+      "operation": "--coff-exports"
+    }
+  },
+  "modules": {
+    "NativeExports": {
+      "doc": "CFX Acmo native exports; support status unverified",
+      "classes": {},
+      "functions": [
+        {
+          "name": "ACMO_ADD_ELEMENTS",
+          "signature": "",
+          "doc": "PE export. Ordinal: 1. RVA: 0x1C3E0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "ACMO_ADD_FACES",
+          "signature": "",
+          "doc": "PE export. Ordinal: 2. RVA: 0x1C430. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "ACMO_ADD_NAMED_REGIONS",
+          "signature": "",
+          "doc": "PE export. Ordinal: 3. RVA: 0x1C4A0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "ACMO_ADD_NODES",
+          "signature": "",
+          "doc": "PE export. Ordinal: 4. RVA: 0x1C560. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "ACMO_BEGIN",
+          "signature": "",
+          "doc": "PE export. Ordinal: 5. RVA: 0x1C5B0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "ACMO_BODY_ORDER",
+          "signature": "",
+          "doc": "PE export. Ordinal: 6. RVA: 0x1C6B0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "ACMO_END",
+          "signature": "",
+          "doc": "PE export. Ordinal: 7. RVA: 0x1C6F0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "ACMO_SAVE",
+          "signature": "",
+          "doc": "PE export. Ordinal: 8. RVA: 0x1C740. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "DSDB_CLOSE",
+          "signature": "",
+          "doc": "PE export. Ordinal: 9. RVA: 0x1C800. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "DSDB_CONTACT_OPTIONS",
+          "signature": "",
+          "doc": "PE export. Ordinal: 10. RVA: 0x1C850. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "DSDB_DUMP",
+          "signature": "",
+          "doc": "PE export. Ordinal: 11. RVA: 0x1C8E0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "DSDB_EXPORT",
+          "signature": "",
+          "doc": "PE export. Ordinal: 12. RVA: 0x1C920. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "DSDB_MODEL_NAMES",
+          "signature": "",
+          "doc": "PE export. Ordinal: 13. RVA: 0x1CA20. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "DSDB_NAME_OPTIONS",
+          "signature": "",
+          "doc": "PE export. Ordinal: 14. RVA: 0x1CC90. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "DSDB_NO_OF_MODELS",
+          "signature": "",
+          "doc": "PE export. Ordinal: 15. RVA: 0x1CE60. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "DSDB_OPEN",
+          "signature": "",
+          "doc": "PE export. Ordinal: 16. RVA: 0x1CE90. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "DSDB_VALIDATE_PARTS",
+          "signature": "",
+          "doc": "PE export. Ordinal: 17. RVA: 0x1D050. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        }
+      ]
+    }
+  },
+  "statistics": {
+    "total_modules": 1,
+    "total_functions": 17,
+    "demangled_signatures": 0
+  }
+}

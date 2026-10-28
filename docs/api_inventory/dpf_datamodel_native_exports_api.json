@@ -1,0 +1,36 @@
+{
+  "module": "NativeExports",
+  "version": "v251",
+  "interface": "DPF simulation data model plugin; support status unverified",
+  "scope": "This snapshot lists PE export names from llvm-readobj. An export name does not prove API support. A signature appears only when the MSVC symbol name contains type data. The extractor does not read function bodies or run the DLL.",
+  "sources": {
+    "assembly": {
+      "path": "$env:AWP_ROOT251/dpf/plugins/dpf_simulationdatamodel/Ans.Dpf.DataModel.dll",
+      "sha256": "cb9b2b0a0fee4a008f044385702e0b34066c705d3824d017a100f6786e4b7d90",
+      "byte_length": 2660352
+    },
+    "analysis": {
+      "tool": "llvm-readobj",
+      "version": "19.1.5",
+      "operation": "--coff-exports"
+    }
+  },
+  "modules": {
+    "NativeExports": {
+      "doc": "DPF simulation data model plugin; support status unverified",
+      "classes": {},
+      "functions": [
+        {
+          "name": "LoadOperators",
+          "signature": "",
+          "doc": "PE export. Ordinal: 1. RVA: 0x14BA20. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        }
+      ]
+    }
+  },
+  "statistics": {
+    "total_modules": 1,
+    "total_functions": 1,
+    "demangled_signatures": 0
+  }
+}

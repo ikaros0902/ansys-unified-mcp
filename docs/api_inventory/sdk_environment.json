@@ -1,0 +1,197 @@
+{
+  "schema_version": 1,
+  "observed_at_utc": "2026-10-27T13:48:42+00:00",
+  "environment": {
+    "python_executable": "F:\\Ming_python\\ansys-unified-mcp\\.venv\\Scripts\\python.exe",
+    "python_version": "3.14.2",
+    "scope": "repo .venv only; no global/system Python or product installation scan"
+  },
+  "source": "src/ansys_unified_mcp/resources/manifests/document_sources.json products[].sdk_package",
+  "scope_note": "Installed means exact normalized distribution-name match in this Python environment. Absence here does not mean the Ansys product or another SDK is unavailable.",
+  "sdk_package_count": 25,
+  "installed_count": 9,
+  "packages": [
+    {
+      "package": "ansys-acp-core",
+      "status": "not_installed_in_this_environment",
+      "version": null
+    },
+    {
+      "package": "ansys-aedt-core",
+      "status": "not_installed_in_this_environment",
+      "version": null
+    },
+    {
+      "package": "ansys-cfx-core",
+      "status": "not_installed_in_this_environment",
+      "version": null
+    },
+    {
+      "package": "ansys-dpf-core",
+      "status": "installed",
+      "version": "0.16.1"
+    },
+    {
+      "package": "ansys-dyna-core",
+      "status": "installed",
+      "version": "0.12.1"
+    },
+    {
+      "package": "ansys-dynamicreporting-core",
+      "status": "not_installed_in_this_environment",
+      "version": null
+    },
+    {
+      "package": "ansys-fluent-core",
+      "status": "installed",
+      "version": "0.42.1"
+    },
+    {
+      "package": "ansys-geometry-core",
+      "status": "installed",
+      "version": "0.17.1"
+    },
+    {
+      "package": "ansys-grantami-recordlists",
+      "status": "not_installed_in_this_environment",
+      "version": null
+    },
+    {
+      "package": "ansys-mapdl-core",
+      "status": "installed",
+      "version": "0.74.1"
+    },
+    {
+      "package": "ansys-mechanical-core",
+      "status": "installed",
+      "version": "0.13.2"
+    },
+    {
+      "package": "ansys-meshing-prime",
+      "status": "installed",
+      "version": "0.10.5"
+    },
+    {
+      "package": "ansys-modelcenter-workflow",
+      "status": "not_installed_in_this_environment",
+      "version": null
+    },
+    {
+      "package": "ansys-motorcad-core",
+      "status": "not_installed_in_this_environment",
+      "version": null
+    },
+    {
+      "package": "ansys-optislang-core",
+      "status": "installed",
+      "version": "1.6.0"
+    },
+    {
+      "package": "ansys-pyensight-core",
+      "status": "not_installed_in_this_environment",
+      "version": null
+    },
+    {
+      "package": "ansys-rocky-core",
+      "status": "not_installed_in_this_environment",
+      "version": null
+    },
+    {
+      "package": "ansys-scadeone-core",
+      "status": "not_installed_in_this_environment",
+      "version": null
+    },
+    {
+      "package": "ansys-sherlock-core",
+      "status": "not_installed_in_this_environment",
+      "version": null
+    },
+    {
+      "package": "ansys-simai-core",
+      "status": "not_installed_in_this_environment",
+      "version": null
+    },
+    {
+      "package": "ansys-sound-core",
+      "status": "installed",
+      "version": "0.3.0"
+    },
+    {
+      "package": "ansys-speos-core",
+      "status": "not_installed_in_this_environment",
+      "version": null
+    },
+    {
+      "package": "ansys-systemcoupling-core",
+      "status": "not_installed_in_this_environment",
+      "version": null
+    },
+    {
+      "package": "ansys-turbogrid-core",
+      "status": "not_installed_in_this_environment",
+      "version": null
+    },
+    {
+      "package": "pytwin",
+      "status": "not_installed_in_this_environment",
+      "version": null
+    }
+  ],
+  "related_ansys_api_distributions": [
+    {
+      "package": "ansys-api-dbu",
+      "version": "0.3.29",
+      "status": "separate_protocol_distribution_not_exact_sdk_package_match"
+    },
+    {
+      "package": "ansys-api-discovery",
+      "version": "1.2.12",
+      "status": "separate_protocol_distribution_not_exact_sdk_package_match"
+    },
+    {
+      "package": "ansys-api-fluent",
+      "version": "0.6.0",
+      "status": "separate_protocol_distribution_not_exact_sdk_package_match"
+    },
+    {
+      "package": "ansys-api-geometry",
+      "version": "0.4.92",
+      "status": "separate_protocol_distribution_not_exact_sdk_package_match"
+    },
+    {
+      "package": "ansys-api-mapdl",
+      "version": "0.6.0",
+      "status": "separate_protocol_distribution_not_exact_sdk_package_match"
+    },
+    {
+      "package": "ansys-api-mechanical",
+      "version": "0.1.4",
+      "status": "separate_protocol_distribution_not_exact_sdk_package_match"
+    },
+    {
+      "package": "ansys-api-meshing-prime",
+      "version": "0.2.0",
+      "status": "separate_protocol_distribution_not_exact_sdk_package_match"
+    },
+    {
+      "package": "ansys-api-platform-instancemanagement",
+      "version": "1.2.0",
+      "status": "separate_protocol_distribution_not_exact_sdk_package_match"
+    },
+    {
+      "package": "ansys-api-result-explorer",
+      "version": "0.1.1",
+      "status": "separate_protocol_distribution_not_exact_sdk_package_match"
+    },
+    {
+      "package": "ansys-api-tools-filetransfer",
+      "version": "0.2.0",
+      "status": "separate_protocol_distribution_not_exact_sdk_package_match"
+    },
+    {
+      "package": "ansys-api-workbench",
+      "version": "0.4.0",
+      "status": "separate_protocol_distribution_not_exact_sdk_package_match"
+    }
+  ]
+}

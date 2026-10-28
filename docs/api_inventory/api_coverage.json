@@ -1,0 +1,3265 @@
+{
+  "products": [
+    {
+      "documentation_coverage": [
+        {
+          "api_count": 30,
+          "failed_source_count": 0,
+          "files": 39,
+          "guide_count": 4,
+          "indexed_candidates": 36,
+          "input_pending": 0,
+          "missing": [
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "unknown",
+          "release_availability": "not_verified",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 1,
+          "failed_source_count": 0,
+          "files": 1,
+          "guide_count": 0,
+          "indexed_candidates": 1,
+          "input_pending": 0,
+          "missing": [
+            "guide",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v251",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 7,
+          "failed_source_count": 0,
+          "files": 7,
+          "guide_count": 0,
+          "indexed_candidates": 7,
+          "input_pending": 0,
+          "missing": [
+            "guide",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v252",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 2785,
+          "failed_source_count": 0,
+          "files": 2785,
+          "guide_count": 0,
+          "indexed_candidates": 2785,
+          "input_pending": 0,
+          "missing": [
+            "guide",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v261",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        }
+      ],
+      "folder": "ACP",
+      "has_direct_snapshot": false,
+      "mapping_status": "not_assessed",
+      "overview_url": "https://developer.synopsys.com/docs/acp.md",
+      "product": "acp",
+      "rea_evidence": {},
+      "sdk_package": "ansys-acp-core",
+      "snapshot_status": "no_direct_snapshot",
+      "snapshots": []
+    },
+    {
+      "documentation_coverage": [
+        {
+          "api_count": 3338,
+          "failed_source_count": 6,
+          "files": 3480,
+          "guide_count": 3,
+          "indexed_candidates": 3355,
+          "input_pending": 0,
+          "missing": [
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "unknown",
+          "release_availability": "not_verified",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 132800,
+          "failed_source_count": 6,
+          "files": 132849,
+          "guide_count": 0,
+          "indexed_candidates": 132805,
+          "input_pending": 0,
+          "missing": [
+            "guide",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v251",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 132468,
+          "failed_source_count": 6,
+          "files": 132517,
+          "guide_count": 0,
+          "indexed_candidates": 132473,
+          "input_pending": 0,
+          "missing": [
+            "guide",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v252",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 134796,
+          "failed_source_count": 6,
+          "files": 134854,
+          "guide_count": 4,
+          "indexed_candidates": 134805,
+          "input_pending": 0,
+          "missing": [
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v261",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        }
+      ],
+      "folder": "ACT",
+      "has_direct_snapshot": false,
+      "mapping_status": "product_component_evidence_only",
+      "overview_url": "https://developer.synopsys.com/docs/act.md",
+      "product": "act",
+      "rea_evidence": {
+        "component": "Ansys.ACT.Interfaces.dll; Ansys.ACT.Core.dll",
+        "path": "docs/api_inventory/REA_EVIDENCE.md",
+        "version": "v251"
+      },
+      "sdk_package": null,
+      "snapshot_status": "no_direct_snapshot",
+      "snapshots": []
+    },
+    {
+      "documentation_coverage": [
+        {
+          "api_count": 0,
+          "failed_source_count": 0,
+          "files": 0,
+          "guide_count": 0,
+          "indexed_candidates": 0,
+          "input_pending": 0,
+          "missing": [
+            "guide",
+            "api_reference",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "unknown",
+          "release_availability": "not_verified",
+          "required_examples": 3,
+          "status": "not_verified"
+        }
+      ],
+      "folder": "Additive",
+      "has_direct_snapshot": false,
+      "mapping_status": "product_component_evidence_only",
+      "overview_url": "",
+      "product": "additive",
+      "rea_evidence": {
+        "component": "Ansys.Api.Additive.dll",
+        "path": "docs/api_inventory/REA_EVIDENCE.md",
+        "version": "v251"
+      },
+      "sdk_package": null,
+      "snapshot_status": "no_direct_snapshot",
+      "snapshots": []
+    },
+    {
+      "documentation_coverage": [
+        {
+          "api_count": 0,
+          "failed_source_count": 1,
+          "files": 14,
+          "guide_count": 0,
+          "indexed_candidates": 5,
+          "input_pending": 2,
+          "missing": [
+            "guide",
+            "api_reference",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 1,
+          "release": "unknown",
+          "release_availability": "not_verified",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 0,
+          "failed_source_count": 1,
+          "files": 1,
+          "guide_count": 1,
+          "indexed_candidates": 1,
+          "input_pending": 0,
+          "missing": [
+            "api_reference",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v252",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 0,
+          "failed_source_count": 1,
+          "files": 21,
+          "guide_count": 6,
+          "indexed_candidates": 21,
+          "input_pending": 0,
+          "missing": [
+            "api_reference",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v261",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        }
+      ],
+      "folder": "ADR",
+      "has_direct_snapshot": false,
+      "mapping_status": "not_assessed",
+      "overview_url": "https://developer.synopsys.com/docs/adr.md",
+      "product": "adr",
+      "rea_evidence": {},
+      "sdk_package": "ansys-dynamicreporting-core",
+      "snapshot_status": "no_direct_snapshot",
+      "snapshots": []
+    },
+    {
+      "documentation_coverage": [
+        {
+          "api_count": 30,
+          "failed_source_count": 0,
+          "files": 45,
+          "guide_count": 14,
+          "indexed_candidates": 44,
+          "input_pending": 0,
+          "missing": [
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "unknown",
+          "release_availability": "not_verified",
+          "required_examples": 3,
+          "status": "partial"
+        }
+      ],
+      "folder": "AEDT",
+      "has_direct_snapshot": false,
+      "mapping_status": "not_assessed",
+      "overview_url": "",
+      "product": "aedt",
+      "rea_evidence": {},
+      "sdk_package": "ansys-aedt-core",
+      "snapshot_status": "no_direct_snapshot",
+      "snapshots": []
+    },
+    {
+      "documentation_coverage": [
+        {
+          "api_count": 0,
+          "failed_source_count": 0,
+          "files": 6,
+          "guide_count": 0,
+          "indexed_candidates": 5,
+          "input_pending": 0,
+          "missing": [
+            "guide",
+            "api_reference",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "unknown",
+          "release_availability": "not_verified",
+          "required_examples": 3,
+          "status": "partial"
+        }
+      ],
+      "folder": "Ansys_ID_Portal",
+      "has_direct_snapshot": false,
+      "mapping_status": "not_assessed",
+      "overview_url": "https://developer.synopsys.com/docs/ansys-id-portal.md",
+      "product": "ansys_id_portal",
+      "rea_evidence": {},
+      "sdk_package": null,
+      "snapshot_status": "no_direct_snapshot",
+      "snapshots": []
+    },
+    {
+      "documentation_coverage": [
+        {
+          "api_count": 0,
+          "failed_source_count": 0,
+          "files": 2,
+          "guide_count": 0,
+          "indexed_candidates": 1,
+          "input_pending": 0,
+          "missing": [
+            "guide",
+            "api_reference",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "unknown",
+          "release_availability": "not_verified",
+          "required_examples": 3,
+          "status": "partial"
+        }
+      ],
+      "folder": "Ansys_ID_SSO",
+      "has_direct_snapshot": false,
+      "mapping_status": "not_assessed",
+      "overview_url": "https://developer.synopsys.com/docs/ansys-id-sso.md",
+      "product": "ansys_id_sso",
+      "rea_evidence": {},
+      "sdk_package": null,
+      "snapshot_status": "no_direct_snapshot",
+      "snapshots": []
+    },
+    {
+      "documentation_coverage": [
+        {
+          "api_count": 0,
+          "failed_source_count": 0,
+          "files": 9,
+          "guide_count": 9,
+          "indexed_candidates": 9,
+          "input_pending": 0,
+          "missing": [
+            "api_reference",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "unknown",
+          "release_availability": "not_verified",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 0,
+          "failed_source_count": 0,
+          "files": 1,
+          "guide_count": 1,
+          "indexed_candidates": 1,
+          "input_pending": 0,
+          "missing": [
+            "api_reference",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v212",
+          "release_availability": "not_verified",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 0,
+          "failed_source_count": 0,
+          "files": 17,
+          "guide_count": 7,
+          "indexed_candidates": 16,
+          "input_pending": 0,
+          "missing": [
+            "api_reference",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v261",
+          "release_availability": "not_verified",
+          "required_examples": 3,
+          "status": "partial"
+        }
+      ],
+      "folder": "AnsysEM",
+      "has_direct_snapshot": false,
+      "mapping_status": "product_component_evidence_only",
+      "overview_url": "",
+      "product": "ansysem",
+      "rea_evidence": {
+        "component": "Ansys.Ansoft.CoreCOMScripting.dll; Ansys.Ansoft.CoreDotNet.dll",
+        "path": "docs/api_inventory/REA_EVIDENCE.md",
+        "version": "v251"
+      },
+      "sdk_package": null,
+      "snapshot_status": "no_direct_snapshot",
+      "snapshots": []
+    },
+    {
+      "documentation_coverage": [
+        {
+          "api_count": 0,
+          "failed_source_count": 0,
+          "files": 0,
+          "guide_count": 0,
+          "indexed_candidates": 0,
+          "input_pending": 0,
+          "missing": [
+            "guide",
+            "api_reference",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "unknown",
+          "release_availability": "not_verified",
+          "required_examples": 3,
+          "status": "not_verified"
+        }
+      ],
+      "folder": "Aqwa",
+      "has_direct_snapshot": false,
+      "mapping_status": "product_component_evidence_only",
+      "overview_url": "",
+      "product": "aqwa",
+      "rea_evidence": {
+        "component": "Ans.AQWA.Core.dll",
+        "path": "docs/api_inventory/REA_EVIDENCE.md",
+        "version": "v251"
+      },
+      "sdk_package": null,
+      "snapshot_status": "no_direct_snapshot",
+      "snapshots": []
+    },
+    {
+      "documentation_coverage": [
+        {
+          "api_count": 3,
+          "failed_source_count": 0,
+          "files": 25,
+          "guide_count": 0,
+          "indexed_candidates": 19,
+          "input_pending": 0,
+          "missing": [
+            "guide",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "unknown",
+          "release_availability": "not_verified",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 31,
+          "failed_source_count": 0,
+          "files": 43,
+          "guide_count": 12,
+          "indexed_candidates": 43,
+          "input_pending": 0,
+          "missing": [
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v251",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 0,
+          "failed_source_count": 0,
+          "files": 28,
+          "guide_count": 28,
+          "indexed_candidates": 28,
+          "input_pending": 0,
+          "missing": [
+            "api_reference",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v252",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 12,
+          "failed_source_count": 0,
+          "files": 217,
+          "guide_count": 9,
+          "indexed_candidates": 216,
+          "input_pending": 0,
+          "missing": [
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v261",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        }
+      ],
+      "folder": "AVxcelerate",
+      "has_direct_snapshot": false,
+      "mapping_status": "not_assessed",
+      "overview_url": "https://developer.synopsys.com/docs/avxcelerate.md",
+      "product": "avxcelerate",
+      "rea_evidence": {},
+      "sdk_package": null,
+      "snapshot_status": "no_direct_snapshot",
+      "snapshots": []
+    },
+    {
+      "documentation_coverage": [
+        {
+          "api_count": 0,
+          "failed_source_count": 0,
+          "files": 3,
+          "guide_count": 0,
+          "indexed_candidates": 1,
+          "input_pending": 0,
+          "missing": [
+            "guide",
+            "api_reference",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "unknown",
+          "release_availability": "not_verified",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 0,
+          "failed_source_count": 0,
+          "files": 7,
+          "guide_count": 7,
+          "indexed_candidates": 7,
+          "input_pending": 0,
+          "missing": [
+            "api_reference",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v251",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 0,
+          "failed_source_count": 0,
+          "files": 29,
+          "guide_count": 29,
+          "indexed_candidates": 29,
+          "input_pending": 0,
+          "missing": [
+            "api_reference",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v252",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 0,
+          "failed_source_count": 0,
+          "files": 50,
+          "guide_count": 49,
+          "indexed_candidates": 50,
+          "input_pending": 0,
+          "missing": [
+            "api_reference",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v261",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        }
+      ],
+      "folder": "CFF",
+      "has_direct_snapshot": false,
+      "mapping_status": "not_assessed",
+      "overview_url": "https://developer.synopsys.com/docs/cff.md",
+      "product": "cff",
+      "rea_evidence": {},
+      "sdk_package": null,
+      "snapshot_status": "no_direct_snapshot",
+      "snapshots": []
+    },
+    {
+      "documentation_coverage": [
+        {
+          "api_count": 30,
+          "failed_source_count": 0,
+          "files": 44,
+          "guide_count": 6,
+          "indexed_candidates": 39,
+          "input_pending": 2,
+          "missing": [
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "unknown",
+          "release_availability": "not_verified",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 0,
+          "failed_source_count": 0,
+          "files": 2,
+          "guide_count": 2,
+          "indexed_candidates": 2,
+          "input_pending": 0,
+          "missing": [
+            "api_reference",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v251",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 0,
+          "failed_source_count": 0,
+          "files": 2,
+          "guide_count": 2,
+          "indexed_candidates": 2,
+          "input_pending": 0,
+          "missing": [
+            "api_reference",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v261",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        }
+      ],
+      "folder": "CFX",
+      "has_direct_snapshot": false,
+      "mapping_status": "product_component_evidence_only",
+      "overview_url": "",
+      "product": "cfx",
+      "rea_evidence": {
+        "component": "Ans.CFX.CadApi.dll; Ans.CFX.CFXCore.dll",
+        "path": "docs/api_inventory/REA_EVIDENCE.md",
+        "version": "v251"
+      },
+      "sdk_package": "ansys-cfx-core",
+      "snapshot_status": "no_direct_snapshot",
+      "snapshots": []
+    },
+    {
+      "documentation_coverage": [
+        {
+          "api_count": 0,
+          "failed_source_count": 0,
+          "files": 4,
+          "guide_count": 1,
+          "indexed_candidates": 2,
+          "input_pending": 0,
+          "missing": [
+            "api_reference",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "unknown",
+          "release_availability": "not_verified",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 4,
+          "failed_source_count": 0,
+          "files": 78,
+          "guide_count": 6,
+          "indexed_candidates": 78,
+          "input_pending": 0,
+          "missing": [
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v261",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        }
+      ],
+      "folder": "Discovery",
+      "has_direct_snapshot": true,
+      "mapping_status": "direct_product_id",
+      "overview_url": "https://developer.synopsys.com/docs/discovery.md",
+      "product": "discovery",
+      "rea_evidence": {
+        "component": "Ansys.Collaboration.Api.dll; Ansys.Gateway.Api.dll; Ansys.Geometry.Api.dll; Ansys.OnScale.Api.dll; Ansys.Physics.Api.dll; Ansys.Project.Api.dll; Ansys.Results.Api.dll",
+        "path": "docs/api_inventory/REA_EVIDENCE.md",
+        "version": "v251"
+      },
+      "sdk_package": null,
+      "snapshot_status": "direct_snapshot",
+      "snapshots": [
+        {
+          "sha256": "356a05dd6bab65e3ceda08d232c839248d091caed2fcb2b09e4d0e4a174a2c44",
+          "snapshot_path": "docs/api_inventory/discovery_protocol_api.json",
+          "snapshot_version": "unknown",
+          "statistics": {
+            "total_classes": 1872,
+            "total_functions": 0,
+            "total_methods": 1422,
+            "total_modules": 142,
+            "total_properties": 4119
+          }
+        }
+      ]
+    },
+    {
+      "documentation_coverage": [
+        {
+          "api_count": 11,
+          "failed_source_count": 3,
+          "files": 36,
+          "guide_count": 10,
+          "indexed_candidates": 27,
+          "input_pending": 0,
+          "missing": [],
+          "ready_examples": 3,
+          "release": "unknown",
+          "release_availability": "not_verified",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 0,
+          "failed_source_count": 3,
+          "files": 7,
+          "guide_count": 7,
+          "indexed_candidates": 7,
+          "input_pending": 0,
+          "missing": [
+            "api_reference",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v251",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 0,
+          "failed_source_count": 3,
+          "files": 10,
+          "guide_count": 10,
+          "indexed_candidates": 10,
+          "input_pending": 0,
+          "missing": [
+            "api_reference",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v252",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 204,
+          "failed_source_count": 3,
+          "files": 2109,
+          "guide_count": 34,
+          "indexed_candidates": 2105,
+          "input_pending": 1,
+          "missing": [
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v261",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        }
+      ],
+      "folder": "DPF",
+      "has_direct_snapshot": true,
+      "mapping_status": "direct_product_id",
+      "overview_url": "https://developer.synopsys.com/docs/dpf.md",
+      "product": "dpf",
+      "rea_evidence": {
+        "component": "23 個 `Ans.Dpf.*` PE 元件（native exports，詳見 REA_EVIDENCE.md）",
+        "path": "docs/api_inventory/REA_EVIDENCE.md",
+        "version": "v251"
+      },
+      "sdk_package": "ansys-dpf-core",
+      "snapshot_status": "direct_snapshot",
+      "snapshots": [
+        {
+          "sha256": "9f9c3b3634afd56f06c674b549ff7b4a78f94a3f4a5aae11fa6bbb7633b096a8",
+          "snapshot_path": "docs/api_inventory/dpf_api.json",
+          "snapshot_version": "unknown",
+          "statistics": {
+            "total_classes": 5,
+            "total_functions": 0,
+            "total_methods": 52,
+            "total_modules": 5,
+            "total_properties": 26
+          }
+        }
+      ]
+    },
+    {
+      "documentation_coverage": [
+        {
+          "api_count": 0,
+          "failed_source_count": 0,
+          "files": 1,
+          "guide_count": 0,
+          "indexed_candidates": 0,
+          "input_pending": 0,
+          "missing": [
+            "guide",
+            "api_reference",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "unknown",
+          "release_availability": "not_verified",
+          "required_examples": 3,
+          "status": "not_verified"
+        }
+      ],
+      "folder": "edupack",
+      "has_direct_snapshot": false,
+      "mapping_status": "not_assessed",
+      "overview_url": "",
+      "product": "edupack",
+      "rea_evidence": {},
+      "sdk_package": null,
+      "snapshot_status": "no_direct_snapshot",
+      "snapshots": []
+    },
+    {
+      "documentation_coverage": [
+        {
+          "api_count": 0,
+          "failed_source_count": 0,
+          "files": 11,
+          "guide_count": 7,
+          "indexed_candidates": 8,
+          "input_pending": 0,
+          "missing": [
+            "api_reference",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "unknown",
+          "release_availability": "not_verified",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 4,
+          "failed_source_count": 0,
+          "files": 75,
+          "guide_count": 71,
+          "indexed_candidates": 75,
+          "input_pending": 0,
+          "missing": [
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v252",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 9,
+          "failed_source_count": 0,
+          "files": 163,
+          "guide_count": 5,
+          "indexed_candidates": 163,
+          "input_pending": 0,
+          "missing": [
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v261",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        }
+      ],
+      "folder": "EnSight",
+      "has_direct_snapshot": false,
+      "mapping_status": "not_assessed",
+      "overview_url": "https://developer.synopsys.com/docs/ensight.md",
+      "product": "ensight",
+      "rea_evidence": {},
+      "sdk_package": "ansys-pyensight-core",
+      "snapshot_status": "no_direct_snapshot",
+      "snapshots": []
+    },
+    {
+      "documentation_coverage": [
+        {
+          "api_count": 0,
+          "failed_source_count": 0,
+          "files": 0,
+          "guide_count": 0,
+          "indexed_candidates": 0,
+          "input_pending": 0,
+          "missing": [
+            "guide",
+            "api_reference",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "unknown",
+          "release_availability": "not_verified",
+          "required_examples": 3,
+          "status": "not_verified"
+        }
+      ],
+      "folder": "FENSAP-ICE",
+      "has_direct_snapshot": false,
+      "mapping_status": "not_assessed",
+      "overview_url": "",
+      "product": "fensap_ice",
+      "rea_evidence": {},
+      "sdk_package": null,
+      "snapshot_status": "no_direct_snapshot",
+      "snapshots": []
+    },
+    {
+      "documentation_coverage": [
+        {
+          "api_count": 30,
+          "failed_source_count": 0,
+          "files": 54,
+          "guide_count": 10,
+          "indexed_candidates": 45,
+          "input_pending": 3,
+          "missing": [
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "unknown",
+          "release_availability": "not_verified",
+          "required_examples": 3,
+          "status": "partial"
+        }
+      ],
+      "folder": "Fluent",
+      "has_direct_snapshot": true,
+      "mapping_status": "direct_product_id",
+      "overview_url": "https://developer.synopsys.com/docs/fluent.md",
+      "product": "fluent",
+      "rea_evidence": {
+        "component": "Ans.Fluent.dll",
+        "path": "docs/api_inventory/REA_EVIDENCE.md",
+        "version": "v251"
+      },
+      "sdk_package": "ansys-fluent-core",
+      "snapshot_status": "direct_snapshot",
+      "snapshots": [
+        {
+          "sha256": "1da47b2cb961d287baaf9fcc82bf04d4dc209785120eaece7b58cbe2cc59e4b9",
+          "snapshot_path": "docs/api_inventory/fluent_api.json",
+          "snapshot_version": "unknown",
+          "statistics": {
+            "total_functions": 2,
+            "total_modules": 1
+          }
+        },
+        {
+          "sha256": "f20ee08937bd3a83f1441f7b43b5949a52a8acd9d1409ea8a37008e4b9c9bad0",
+          "snapshot_path": "docs/api_inventory/fluent_protocol_api.json",
+          "snapshot_version": "unknown",
+          "statistics": {
+            "total_classes": 841,
+            "total_functions": 0,
+            "total_methods": 290,
+            "total_modules": 35,
+            "total_properties": 1697
+          }
+        }
+      ]
+    },
+    {
+      "documentation_coverage": [
+        {
+          "api_count": 30,
+          "failed_source_count": 0,
+          "files": 34,
+          "guide_count": 3,
+          "indexed_candidates": 33,
+          "input_pending": 0,
+          "missing": [
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "unknown",
+          "release_availability": "not_verified",
+          "required_examples": 3,
+          "status": "partial"
+        }
+      ],
+      "folder": "Geometry",
+      "has_direct_snapshot": true,
+      "mapping_status": "direct_product_id",
+      "overview_url": "",
+      "product": "geometry",
+      "rea_evidence": {},
+      "sdk_package": "ansys-geometry-core",
+      "snapshot_status": "direct_snapshot",
+      "snapshots": [
+        {
+          "sha256": "934c7d1ed47f01e0be299dd899031a0685dae849414aab46fe8ee044f5cb2aeb",
+          "snapshot_path": "docs/api_inventory/geometry_core_api.json",
+          "snapshot_version": "unknown",
+          "statistics": {
+            "total_classes": 1,
+            "total_functions": 1,
+            "total_methods": 10,
+            "total_modules": 2,
+            "total_properties": 7
+          }
+        },
+        {
+          "sha256": "8e824d2063f6695761c7429dfa6025f0e49dfa3f24a04af55233b5db8ef778e0",
+          "snapshot_path": "docs/api_inventory/geometry_protocol_api.json",
+          "snapshot_version": "unknown",
+          "statistics": {
+            "total_classes": 508,
+            "total_functions": 0,
+            "total_methods": 298,
+            "total_modules": 18,
+            "total_properties": 1272
+          }
+        }
+      ]
+    },
+    {
+      "documentation_coverage": [
+        {
+          "api_count": 3,
+          "failed_source_count": 1,
+          "files": 96,
+          "guide_count": 1,
+          "indexed_candidates": 82,
+          "input_pending": 1,
+          "missing": [],
+          "ready_examples": 3,
+          "release": "unknown",
+          "release_availability": "not_verified",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 0,
+          "failed_source_count": 1,
+          "files": 20,
+          "guide_count": 1,
+          "indexed_candidates": 20,
+          "input_pending": 0,
+          "missing": [
+            "api_reference",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v261",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        }
+      ],
+      "folder": "Granta_MI",
+      "has_direct_snapshot": false,
+      "mapping_status": "product_component_evidence_only",
+      "overview_url": "https://developer.synopsys.com/docs/granta-mi.md",
+      "product": "granta_mi",
+      "rea_evidence": {
+        "component": "Ansys.Apip.Client.dll",
+        "path": "docs/api_inventory/REA_EVIDENCE.md",
+        "version": "v251"
+      },
+      "sdk_package": "ansys-grantami-recordlists",
+      "snapshot_status": "no_direct_snapshot",
+      "snapshots": []
+    },
+    {
+      "documentation_coverage": [
+        {
+          "api_count": 0,
+          "failed_source_count": 0,
+          "files": 5,
+          "guide_count": 5,
+          "indexed_candidates": 5,
+          "input_pending": 0,
+          "missing": [
+            "api_reference",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v261",
+          "release_availability": "not_verified",
+          "required_examples": 3,
+          "status": "partial"
+        }
+      ],
+      "folder": "HFSS",
+      "has_direct_snapshot": false,
+      "mapping_status": "product_component_evidence_only",
+      "overview_url": "",
+      "product": "hfss",
+      "rea_evidence": {
+        "component": "Ans.Ansoft.HFSSAddinPlugin.dll",
+        "path": "docs/api_inventory/REA_EVIDENCE.md",
+        "version": "v251"
+      },
+      "sdk_package": null,
+      "snapshot_status": "no_direct_snapshot",
+      "snapshots": []
+    },
+    {
+      "documentation_coverage": [
+        {
+          "api_count": 0,
+          "failed_source_count": 0,
+          "files": 1,
+          "guide_count": 1,
+          "indexed_candidates": 1,
+          "input_pending": 0,
+          "missing": [
+            "api_reference",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "unknown",
+          "release_availability": "not_verified",
+          "required_examples": 3,
+          "status": "partial"
+        }
+      ],
+      "folder": "ICEM_CFD",
+      "has_direct_snapshot": false,
+      "mapping_status": "not_assessed",
+      "overview_url": "",
+      "product": "icem_cfd",
+      "rea_evidence": {},
+      "sdk_package": null,
+      "snapshot_status": "no_direct_snapshot",
+      "snapshots": []
+    },
+    {
+      "documentation_coverage": [
+        {
+          "api_count": 0,
+          "failed_source_count": 0,
+          "files": 15,
+          "guide_count": 14,
+          "indexed_candidates": 15,
+          "input_pending": 0,
+          "missing": [
+            "api_reference",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v261",
+          "release_availability": "not_verified",
+          "required_examples": 3,
+          "status": "partial"
+        }
+      ],
+      "folder": "Icepak",
+      "has_direct_snapshot": false,
+      "mapping_status": "product_component_evidence_only",
+      "overview_url": "",
+      "product": "icepak",
+      "rea_evidence": {
+        "component": "Ans.Icepak.Core.dll; Ans.Ansoft.IcepakAddinPlugin.dll",
+        "path": "docs/api_inventory/REA_EVIDENCE.md",
+        "version": "v251"
+      },
+      "sdk_package": null,
+      "snapshot_status": "no_direct_snapshot",
+      "snapshots": []
+    },
+    {
+      "documentation_coverage": [
+        {
+          "api_count": 0,
+          "failed_source_count": 0,
+          "files": 2,
+          "guide_count": 2,
+          "indexed_candidates": 2,
+          "input_pending": 0,
+          "missing": [
+            "api_reference",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v261",
+          "release_availability": "not_verified",
+          "required_examples": 3,
+          "status": "partial"
+        }
+      ],
+      "folder": "Installation_and_Licensing",
+      "has_direct_snapshot": false,
+      "mapping_status": "not_assessed",
+      "overview_url": "",
+      "product": "installation_and_licensing",
+      "rea_evidence": {},
+      "sdk_package": null,
+      "snapshot_status": "no_direct_snapshot",
+      "snapshots": []
+    },
+    {
+      "documentation_coverage": [
+        {
+          "api_count": 0,
+          "failed_source_count": 0,
+          "files": 0,
+          "guide_count": 0,
+          "indexed_candidates": 0,
+          "input_pending": 0,
+          "missing": [
+            "guide",
+            "api_reference",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "unknown",
+          "release_availability": "not_verified",
+          "required_examples": 3,
+          "status": "not_verified"
+        }
+      ],
+      "folder": "LS-PrePost",
+      "has_direct_snapshot": false,
+      "mapping_status": "unmapped_shared_interface",
+      "overview_url": "",
+      "product": "ls_prepost",
+      "rea_evidence": {},
+      "sdk_package": null,
+      "snapshot_status": "no_direct_snapshot",
+      "snapshots": []
+    },
+    {
+      "documentation_coverage": [
+        {
+          "api_count": 30,
+          "failed_source_count": 0,
+          "files": 44,
+          "guide_count": 0,
+          "indexed_candidates": 34,
+          "input_pending": 2,
+          "missing": [
+            "guide",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 1,
+          "release": "unknown",
+          "release_availability": "not_verified",
+          "required_examples": 3,
+          "status": "partial"
+        }
+      ],
+      "folder": "LS-DYNA",
+      "has_direct_snapshot": true,
+      "mapping_status": "direct_product_id",
+      "overview_url": "",
+      "product": "lsdyna",
+      "rea_evidence": {
+        "component": "Ansys.ACTLSDYNA.Interfaces.dll",
+        "path": "docs/api_inventory/REA_EVIDENCE.md",
+        "version": "v251"
+      },
+      "sdk_package": "ansys-dyna-core",
+      "snapshot_status": "direct_snapshot",
+      "snapshots": [
+        {
+          "sha256": "2aaa7c4977fea4def15c8efd136672a7edcfd0036fd4fae23004cf23e67bf2ae",
+          "snapshot_path": "docs/api_inventory/lsdyna_api.json",
+          "snapshot_version": "Ansys 2025 R1 (LS-DYNA / LS-PrePost 4.12)",
+          "statistics": {
+            "total_datacenter_query_keys": 10,
+            "total_defined_keywords": 35,
+            "total_keyword_categories": 6,
+            "total_python_functions": 3,
+            "total_scl_command_token_groups": 6,
+            "total_scl_functions": 8
+          }
+        },
+        {
+          "sha256": "9033fc590b79276d441efba434cf02f1b07cf8228e7637c09c6073ac641b7674",
+          "snapshot_path": "docs/api_inventory/pydyna_api.json",
+          "snapshot_version": "unknown",
+          "statistics": {
+            "total_classes": 1,
+            "total_functions": 0,
+            "total_methods": 19,
+            "total_modules": 1,
+            "total_properties": 17
+          }
+        }
+      ]
+    },
+    {
+      "documentation_coverage": [
+        {
+          "api_count": 0,
+          "failed_source_count": 0,
+          "files": 6,
+          "guide_count": 0,
+          "indexed_candidates": 5,
+          "input_pending": 0,
+          "missing": [
+            "guide",
+            "api_reference",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "unknown",
+          "release_availability": "not_verified",
+          "required_examples": 3,
+          "status": "partial"
+        }
+      ],
+      "folder": "Lumerical",
+      "has_direct_snapshot": false,
+      "mapping_status": "product_component_evidence_only",
+      "overview_url": "https://developer.synopsys.com/docs/lumerical.md",
+      "product": "lumerical",
+      "rea_evidence": {
+        "component": "Lumerical Python and Tcl interop DLLs (native export evidence)",
+        "path": "docs/api_inventory/REA_EVIDENCE.md",
+        "version": "v251"
+      },
+      "sdk_package": null,
+      "snapshot_status": "no_direct_snapshot",
+      "snapshots": []
+    },
+    {
+      "documentation_coverage": [
+        {
+          "api_count": 50,
+          "failed_source_count": 3,
+          "files": 80,
+          "guide_count": 8,
+          "indexed_candidates": 79,
+          "input_pending": 0,
+          "missing": [
+            "tutorial_inputs"
+          ],
+          "ready_examples": 1,
+          "release": "unknown",
+          "release_availability": "not_verified",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 1,
+          "failed_source_count": 3,
+          "files": 2,
+          "guide_count": 1,
+          "indexed_candidates": 2,
+          "input_pending": 0,
+          "missing": [
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v251",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 1,
+          "failed_source_count": 3,
+          "files": 2,
+          "guide_count": 1,
+          "indexed_candidates": 2,
+          "input_pending": 0,
+          "missing": [
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v261",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        }
+      ],
+      "folder": "MAPDL",
+      "has_direct_snapshot": true,
+      "mapping_status": "direct_product_id",
+      "overview_url": "",
+      "product": "mapdl",
+      "rea_evidence": {},
+      "sdk_package": "ansys-mapdl-core",
+      "snapshot_status": "direct_snapshot",
+      "snapshots": [
+        {
+          "sha256": "e3e0f19f04a0f5aa5b7be7d15838365b66ff5c769c4a926d7aa715c2ee5fefa3",
+          "snapshot_path": "docs/api_inventory/mapdl_api.json",
+          "snapshot_version": "unknown",
+          "statistics": {
+            "total_classes": 1,
+            "total_functions": 1,
+            "total_methods": 27,
+            "total_properties": 38,
+            "unresolved_members": 2
+          }
+        },
+        {
+          "sha256": "09f2a79a4ab77cf986073cf43da541a5159a92aa7574fc97f85ffc0d26a0dd12",
+          "snapshot_path": "docs/api_inventory/mapdl_protocol_api.json",
+          "snapshot_version": "unknown",
+          "statistics": {
+            "total_classes": 108,
+            "total_functions": 0,
+            "total_methods": 84,
+            "total_modules": 4,
+            "total_properties": 227
+          }
+        }
+      ]
+    },
+    {
+      "documentation_coverage": [
+        {
+          "api_count": 0,
+          "failed_source_count": 0,
+          "files": 1,
+          "guide_count": 1,
+          "indexed_candidates": 1,
+          "input_pending": 0,
+          "missing": [
+            "api_reference",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v261",
+          "release_availability": "not_verified",
+          "required_examples": 3,
+          "status": "partial"
+        }
+      ],
+      "folder": "Maxwell",
+      "has_direct_snapshot": false,
+      "mapping_status": "product_component_evidence_only",
+      "overview_url": "",
+      "product": "maxwell",
+      "rea_evidence": {
+        "component": "Ans.Ansoft.MaxwellAddinPlugin.dll",
+        "path": "docs/api_inventory/REA_EVIDENCE.md",
+        "version": "v251"
+      },
+      "sdk_package": null,
+      "snapshot_status": "no_direct_snapshot",
+      "snapshots": []
+    },
+    {
+      "documentation_coverage": [
+        {
+          "api_count": 50,
+          "failed_source_count": 0,
+          "files": 105,
+          "guide_count": 22,
+          "indexed_candidates": 96,
+          "input_pending": 9,
+          "missing": [
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "unknown",
+          "release_availability": "not_verified",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 0,
+          "failed_source_count": 0,
+          "files": 1911,
+          "guide_count": 4,
+          "indexed_candidates": 1911,
+          "input_pending": 0,
+          "missing": [
+            "api_reference",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v261",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        }
+      ],
+      "folder": "Mechanical",
+      "has_direct_snapshot": true,
+      "mapping_status": "direct_product_id",
+      "overview_url": "https://developer.synopsys.com/docs/mechanical.md",
+      "product": "mechanical",
+      "rea_evidence": {
+        "component": "Mechanical DataModel; Ansys.Mechanical.Interfaces.dll; Ansys.Mechanical.DataModel.dll",
+        "path": "docs/api_inventory/REA_EVIDENCE.md",
+        "version": "v251"
+      },
+      "sdk_package": "ansys-mechanical-core",
+      "snapshot_status": "direct_snapshot",
+      "snapshots": [
+        {
+          "rea_evidence": {
+            "component": "Mechanical DataModel; Ansys.Mechanical.Interfaces.dll; Ansys.Mechanical.DataModel.dll",
+            "path": "docs/api_inventory/REA_EVIDENCE.md",
+            "version": "v251"
+          },
+          "sha256": "ef8c5c515bf8651d1a517068423998209c3fdebcfea153cd33acb470201b1c2b",
+          "snapshot_path": "docs/api_inventory/mechanical_api.json",
+          "snapshot_version": "2025 R1 (v251)",
+          "statistics": {
+            "total_classes": 1728,
+            "total_functions": 0,
+            "total_methods": 40886,
+            "total_modules": 105,
+            "total_properties": 46626
+          }
+        },
+        {
+          "sha256": "401fd5a9b14f400bc39e527d8c9d8e0afc3515b23b19aab5879d590bfeceab9e",
+          "snapshot_path": "docs/api_inventory/mechanical_core_api.json",
+          "snapshot_version": "unknown",
+          "statistics": {
+            "total_classes": 1,
+            "total_functions": 2,
+            "total_methods": 21,
+            "total_modules": 1,
+            "total_properties": 9
+          }
+        },
+        {
+          "sha256": "a664f0066e5540369e8f0933dabec63b27d2621d955bc9cff57dc33bd5886482",
+          "snapshot_path": "docs/api_inventory/mechanical_protocol_api.json",
+          "snapshot_version": "unknown",
+          "statistics": {
+            "total_classes": 10,
+            "total_functions": 0,
+            "total_methods": 5,
+            "total_modules": 1,
+            "total_properties": 18
+          }
+        }
+      ]
+    },
+    {
+      "documentation_coverage": [
+        {
+          "api_count": 0,
+          "failed_source_count": 1,
+          "files": 2,
+          "guide_count": 0,
+          "indexed_candidates": 1,
+          "input_pending": 0,
+          "missing": [
+            "guide",
+            "api_reference",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "unknown",
+          "release_availability": "not_verified",
+          "required_examples": 3,
+          "status": "partial"
+        }
+      ],
+      "folder": "Minerva",
+      "has_direct_snapshot": false,
+      "mapping_status": "not_assessed",
+      "overview_url": "https://developer.synopsys.com/docs/minerva.md",
+      "product": "minerva",
+      "rea_evidence": {},
+      "sdk_package": null,
+      "snapshot_status": "no_direct_snapshot",
+      "snapshots": []
+    },
+    {
+      "documentation_coverage": [
+        {
+          "api_count": 30,
+          "failed_source_count": 0,
+          "files": 35,
+          "guide_count": 1,
+          "indexed_candidates": 32,
+          "input_pending": 0,
+          "missing": [
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "unknown",
+          "release_availability": "not_verified",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 3,
+          "failed_source_count": 0,
+          "files": 3,
+          "guide_count": 0,
+          "indexed_candidates": 3,
+          "input_pending": 0,
+          "missing": [
+            "guide",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v251",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 11,
+          "failed_source_count": 0,
+          "files": 11,
+          "guide_count": 0,
+          "indexed_candidates": 11,
+          "input_pending": 0,
+          "missing": [
+            "guide",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v252",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 476,
+          "failed_source_count": 0,
+          "files": 1536,
+          "guide_count": 8,
+          "indexed_candidates": 1536,
+          "input_pending": 0,
+          "missing": [
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v261",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        }
+      ],
+      "folder": "ModelCenter",
+      "has_direct_snapshot": false,
+      "mapping_status": "not_assessed",
+      "overview_url": "https://developer.synopsys.com/docs/modelcenter.md",
+      "product": "modelcenter",
+      "rea_evidence": {},
+      "sdk_package": "ansys-modelcenter-workflow",
+      "snapshot_status": "no_direct_snapshot",
+      "snapshots": []
+    },
+    {
+      "documentation_coverage": [
+        {
+          "api_count": 0,
+          "failed_source_count": 2,
+          "files": 3,
+          "guide_count": 0,
+          "indexed_candidates": 1,
+          "input_pending": 0,
+          "missing": [
+            "guide",
+            "api_reference",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "unknown",
+          "release_availability": "not_verified",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 0,
+          "failed_source_count": 2,
+          "files": 2,
+          "guide_count": 2,
+          "indexed_candidates": 2,
+          "input_pending": 0,
+          "missing": [
+            "api_reference",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v251",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 0,
+          "failed_source_count": 2,
+          "files": 1,
+          "guide_count": 1,
+          "indexed_candidates": 1,
+          "input_pending": 0,
+          "missing": [
+            "api_reference",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v252",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 4191,
+          "failed_source_count": 2,
+          "files": 4289,
+          "guide_count": 74,
+          "indexed_candidates": 4289,
+          "input_pending": 0,
+          "missing": [
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v261",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        }
+      ],
+      "folder": "Motion",
+      "has_direct_snapshot": false,
+      "mapping_status": "not_assessed",
+      "overview_url": "https://developer.synopsys.com/docs/motion.md",
+      "product": "motion",
+      "rea_evidence": {},
+      "sdk_package": null,
+      "snapshot_status": "no_direct_snapshot",
+      "snapshots": []
+    },
+    {
+      "documentation_coverage": [
+        {
+          "api_count": 0,
+          "failed_source_count": 0,
+          "files": 80,
+          "guide_count": 8,
+          "indexed_candidates": 73,
+          "input_pending": 0,
+          "missing": [
+            "api_reference"
+          ],
+          "ready_examples": 3,
+          "release": "unknown",
+          "release_availability": "not_verified",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 0,
+          "failed_source_count": 0,
+          "files": 1,
+          "guide_count": 0,
+          "indexed_candidates": 1,
+          "input_pending": 0,
+          "missing": [
+            "guide",
+            "api_reference",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v231",
+          "release_availability": "not_verified",
+          "required_examples": 3,
+          "status": "partial"
+        }
+      ],
+      "folder": "MotorCAD",
+      "has_direct_snapshot": false,
+      "mapping_status": "not_assessed",
+      "overview_url": "",
+      "product": "motorcad",
+      "rea_evidence": {},
+      "sdk_package": "ansys-motorcad-core",
+      "snapshot_status": "no_direct_snapshot",
+      "snapshots": []
+    },
+    {
+      "documentation_coverage": [
+        {
+          "api_count": 30,
+          "failed_source_count": 0,
+          "files": 56,
+          "guide_count": 6,
+          "indexed_candidates": 47,
+          "input_pending": 0,
+          "missing": [],
+          "ready_examples": 3,
+          "release": "unknown",
+          "release_availability": "not_verified",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 73,
+          "failed_source_count": 0,
+          "files": 75,
+          "guide_count": 0,
+          "indexed_candidates": 73,
+          "input_pending": 0,
+          "missing": [
+            "guide",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v251",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 3,
+          "failed_source_count": 0,
+          "files": 4,
+          "guide_count": 1,
+          "indexed_candidates": 4,
+          "input_pending": 0,
+          "missing": [
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v252",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 63,
+          "failed_source_count": 0,
+          "files": 89,
+          "guide_count": 1,
+          "indexed_candidates": 89,
+          "input_pending": 0,
+          "missing": [
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v261",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        }
+      ],
+      "folder": "optiSLang",
+      "has_direct_snapshot": true,
+      "mapping_status": "direct_product_id",
+      "overview_url": "https://developer.synopsys.com/docs/optislang.md",
+      "product": "optislang",
+      "rea_evidence": {},
+      "sdk_package": "ansys-optislang-core",
+      "snapshot_status": "direct_snapshot",
+      "snapshots": [
+        {
+          "sha256": "bf18a47648b95af776ed2afb833017a930900fff977f050eafd8064a390ddd75",
+          "snapshot_path": "docs/api_inventory/optislang_api.json",
+          "snapshot_version": "1.6.1",
+          "statistics": {
+            "total_classes": 241,
+            "total_functions": 133,
+            "total_methods": 1691,
+            "total_modules": 37
+          }
+        },
+        {
+          "sha256": "8065421b59ca65f035486e9396eeb219b826cdc8cb0a43f16b9ee077f5c26cfe",
+          "snapshot_path": "docs/api_inventory/optislang_core_api.json",
+          "snapshot_version": "unknown",
+          "statistics": {
+            "total_classes": 1,
+            "total_functions": 0,
+            "total_methods": 18,
+            "total_modules": 1,
+            "total_properties": 9
+          }
+        }
+      ]
+    },
+    {
+      "documentation_coverage": [
+        {
+          "api_count": 0,
+          "failed_source_count": 0,
+          "files": 0,
+          "guide_count": 0,
+          "indexed_candidates": 0,
+          "input_pending": 0,
+          "missing": [
+            "guide",
+            "api_reference",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "unknown",
+          "release_availability": "not_verified",
+          "required_examples": 3,
+          "status": "not_verified"
+        }
+      ],
+      "folder": "Polyflow",
+      "has_direct_snapshot": false,
+      "mapping_status": "product_component_evidence_only",
+      "overview_url": "",
+      "product": "polyflow",
+      "rea_evidence": {
+        "component": "Ans.Polyflow.dll",
+        "path": "docs/api_inventory/REA_EVIDENCE.md",
+        "version": "v251"
+      },
+      "sdk_package": null,
+      "snapshot_status": "no_direct_snapshot",
+      "snapshots": []
+    },
+    {
+      "documentation_coverage": [
+        {
+          "api_count": 6,
+          "failed_source_count": 0,
+          "files": 21,
+          "guide_count": 1,
+          "indexed_candidates": 12,
+          "input_pending": 3,
+          "missing": [
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "unknown",
+          "release_availability": "not_verified",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 0,
+          "failed_source_count": 0,
+          "files": 2,
+          "guide_count": 2,
+          "indexed_candidates": 2,
+          "input_pending": 0,
+          "missing": [
+            "api_reference",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v251",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 0,
+          "failed_source_count": 0,
+          "files": 5,
+          "guide_count": 5,
+          "indexed_candidates": 5,
+          "input_pending": 0,
+          "missing": [
+            "api_reference",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v252",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 2504,
+          "failed_source_count": 0,
+          "files": 2548,
+          "guide_count": 2,
+          "indexed_candidates": 2548,
+          "input_pending": 42,
+          "missing": [
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v261",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        }
+      ],
+      "folder": "PrimeMesh",
+      "has_direct_snapshot": true,
+      "mapping_status": "direct_product_id",
+      "overview_url": "https://developer.synopsys.com/docs/primemesh.md",
+      "product": "primemesh",
+      "rea_evidence": {},
+      "sdk_package": "ansys-meshing-prime",
+      "snapshot_status": "direct_snapshot",
+      "snapshots": [
+        {
+          "sha256": "79bcbdce307dab296e6f157826984dae381d9789c86b85a318bb9a4bdd7b5406",
+          "snapshot_path": "docs/api_inventory/primemesh_api.json",
+          "snapshot_version": "unknown",
+          "statistics": {
+            "total_classes": 1,
+            "total_functions": 1,
+            "total_methods": 2,
+            "total_modules": 1,
+            "total_properties": 1
+          }
+        },
+        {
+          "sha256": "4a1844abc5357a970330abbc138157c0c063084bbf76f42c68ba28bcff09d0f8",
+          "snapshot_path": "docs/api_inventory/primemesh_protocol_api.json",
+          "snapshot_version": "unknown",
+          "statistics": {
+            "total_classes": 11,
+            "total_functions": 0,
+            "total_methods": 7,
+            "total_modules": 1,
+            "total_properties": 11
+          }
+        }
+      ]
+    },
+    {
+      "documentation_coverage": [
+        {
+          "api_count": 0,
+          "failed_source_count": 0,
+          "files": 3,
+          "guide_count": 0,
+          "indexed_candidates": 1,
+          "input_pending": 0,
+          "missing": [
+            "guide",
+            "api_reference",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "unknown",
+          "release_availability": "not_verified",
+          "required_examples": 3,
+          "status": "partial"
+        }
+      ],
+      "folder": "PyAnsys",
+      "has_direct_snapshot": false,
+      "mapping_status": "not_assessed",
+      "overview_url": "https://developer.synopsys.com/docs/pyansys.md",
+      "product": "pyansys",
+      "rea_evidence": {},
+      "sdk_package": null,
+      "snapshot_status": "no_direct_snapshot",
+      "snapshots": []
+    },
+    {
+      "documentation_coverage": [
+        {
+          "api_count": 0,
+          "failed_source_count": 0,
+          "files": 1,
+          "guide_count": 1,
+          "indexed_candidates": 1,
+          "input_pending": 0,
+          "missing": [
+            "api_reference",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v261",
+          "release_availability": "not_verified",
+          "required_examples": 3,
+          "status": "partial"
+        }
+      ],
+      "folder": "Q3D",
+      "has_direct_snapshot": false,
+      "mapping_status": "product_component_evidence_only",
+      "overview_url": "",
+      "product": "q3d",
+      "rea_evidence": {
+        "component": "Ans.Ansoft.Q3DExtractorAddinPlugin.dll",
+        "path": "docs/api_inventory/REA_EVIDENCE.md",
+        "version": "v251"
+      },
+      "sdk_package": null,
+      "snapshot_status": "no_direct_snapshot",
+      "snapshots": []
+    },
+    {
+      "documentation_coverage": [
+        {
+          "api_count": 0,
+          "failed_source_count": 0,
+          "files": 1,
+          "guide_count": 1,
+          "indexed_candidates": 1,
+          "input_pending": 0,
+          "missing": [
+            "api_reference",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "unknown",
+          "release_availability": "not_verified",
+          "required_examples": 3,
+          "status": "partial"
+        }
+      ],
+      "folder": "Reaction_Chemkin",
+      "has_direct_snapshot": false,
+      "mapping_status": "not_assessed",
+      "overview_url": "",
+      "product": "reaction_chemkin",
+      "rea_evidence": {},
+      "sdk_package": null,
+      "snapshot_status": "no_direct_snapshot",
+      "snapshots": []
+    },
+    {
+      "documentation_coverage": [
+        {
+          "api_count": 0,
+          "failed_source_count": 0,
+          "files": 3,
+          "guide_count": 0,
+          "indexed_candidates": 1,
+          "input_pending": 0,
+          "missing": [
+            "guide",
+            "api_reference",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "unknown",
+          "release_availability": "not_verified",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 8,
+          "failed_source_count": 0,
+          "files": 8,
+          "guide_count": 0,
+          "indexed_candidates": 8,
+          "input_pending": 0,
+          "missing": [
+            "guide",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v251",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 37,
+          "failed_source_count": 0,
+          "files": 37,
+          "guide_count": 0,
+          "indexed_candidates": 37,
+          "input_pending": 0,
+          "missing": [
+            "guide",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v252",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 87,
+          "failed_source_count": 0,
+          "files": 87,
+          "guide_count": 0,
+          "indexed_candidates": 87,
+          "input_pending": 0,
+          "missing": [
+            "guide",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v261",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        }
+      ],
+      "folder": "Rigid_Body_Dynamics",
+      "has_direct_snapshot": false,
+      "mapping_status": "not_assessed",
+      "overview_url": "https://developer.synopsys.com/docs/rigid-body-dynamics.md",
+      "product": "rigid_body_dynamics",
+      "rea_evidence": {},
+      "sdk_package": null,
+      "snapshot_status": "no_direct_snapshot",
+      "snapshots": []
+    },
+    {
+      "documentation_coverage": [
+        {
+          "api_count": 30,
+          "failed_source_count": 0,
+          "files": 45,
+          "guide_count": 1,
+          "indexed_candidates": 36,
+          "input_pending": 2,
+          "missing": [
+            "tutorial_inputs"
+          ],
+          "ready_examples": 1,
+          "release": "unknown",
+          "release_availability": "not_verified",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 1,
+          "failed_source_count": 0,
+          "files": 2,
+          "guide_count": 1,
+          "indexed_candidates": 2,
+          "input_pending": 0,
+          "missing": [
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v251",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 1,
+          "failed_source_count": 0,
+          "files": 2,
+          "guide_count": 1,
+          "indexed_candidates": 2,
+          "input_pending": 0,
+          "missing": [
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v252",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 82,
+          "failed_source_count": 0,
+          "files": 273,
+          "guide_count": 2,
+          "indexed_candidates": 273,
+          "input_pending": 0,
+          "missing": [
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v261",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        }
+      ],
+      "folder": "Rocky",
+      "has_direct_snapshot": false,
+      "mapping_status": "not_assessed",
+      "overview_url": "https://developer.synopsys.com/docs/rocky.md",
+      "product": "rocky",
+      "rea_evidence": {},
+      "sdk_package": "ansys-rocky-core",
+      "snapshot_status": "no_direct_snapshot",
+      "snapshots": []
+    },
+    {
+      "documentation_coverage": [
+        {
+          "api_count": 0,
+          "failed_source_count": 0,
+          "files": 2,
+          "guide_count": 0,
+          "indexed_candidates": 1,
+          "input_pending": 0,
+          "missing": [
+            "guide",
+            "api_reference",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "unknown",
+          "release_availability": "not_verified",
+          "required_examples": 3,
+          "status": "partial"
+        }
+      ],
+      "folder": "SAF",
+      "has_direct_snapshot": false,
+      "mapping_status": "not_assessed",
+      "overview_url": "https://developer.synopsys.com/docs/saf.md",
+      "product": "saf",
+      "rea_evidence": {},
+      "sdk_package": null,
+      "snapshot_status": "no_direct_snapshot",
+      "snapshots": []
+    },
+    {
+      "documentation_coverage": [
+        {
+          "api_count": 0,
+          "failed_source_count": 0,
+          "files": 16,
+          "guide_count": 11,
+          "indexed_candidates": 12,
+          "input_pending": 0,
+          "missing": [
+            "api_reference",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "unknown",
+          "release_availability": "not_verified",
+          "required_examples": 3,
+          "status": "partial"
+        }
+      ],
+      "folder": "SCADE",
+      "has_direct_snapshot": false,
+      "mapping_status": "not_assessed",
+      "overview_url": "https://developer.synopsys.com/docs/scade.md",
+      "product": "scade",
+      "rea_evidence": {},
+      "sdk_package": null,
+      "snapshot_status": "no_direct_snapshot",
+      "snapshots": []
+    },
+    {
+      "documentation_coverage": [
+        {
+          "api_count": 24,
+          "failed_source_count": 0,
+          "files": 51,
+          "guide_count": 5,
+          "indexed_candidates": 41,
+          "input_pending": 0,
+          "missing": [
+            "tutorial_inputs"
+          ],
+          "ready_examples": 1,
+          "release": "unknown",
+          "release_availability": "not_verified",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 0,
+          "failed_source_count": 0,
+          "files": 12,
+          "guide_count": 12,
+          "indexed_candidates": 12,
+          "input_pending": 0,
+          "missing": [
+            "api_reference",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v251",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 0,
+          "failed_source_count": 0,
+          "files": 12,
+          "guide_count": 12,
+          "indexed_candidates": 12,
+          "input_pending": 0,
+          "missing": [
+            "api_reference",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v252",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 0,
+          "failed_source_count": 0,
+          "files": 264,
+          "guide_count": 64,
+          "indexed_candidates": 264,
+          "input_pending": 0,
+          "missing": [
+            "api_reference",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v261",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        }
+      ],
+      "folder": "Scade_One",
+      "has_direct_snapshot": false,
+      "mapping_status": "not_assessed",
+      "overview_url": "https://developer.synopsys.com/docs/scade-one.md",
+      "product": "scade_one",
+      "rea_evidence": {},
+      "sdk_package": "ansys-scadeone-core",
+      "snapshot_status": "no_direct_snapshot",
+      "snapshots": []
+    },
+    {
+      "documentation_coverage": [
+        {
+          "api_count": 30,
+          "failed_source_count": 3,
+          "files": 41,
+          "guide_count": 2,
+          "indexed_candidates": 38,
+          "input_pending": 0,
+          "missing": [
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "unknown",
+          "release_availability": "not_verified",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 4,
+          "failed_source_count": 3,
+          "files": 4,
+          "guide_count": 0,
+          "indexed_candidates": 4,
+          "input_pending": 0,
+          "missing": [
+            "guide",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v251",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 4,
+          "failed_source_count": 3,
+          "files": 4,
+          "guide_count": 0,
+          "indexed_candidates": 4,
+          "input_pending": 0,
+          "missing": [
+            "guide",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v252",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 9,
+          "failed_source_count": 3,
+          "files": 114,
+          "guide_count": 0,
+          "indexed_candidates": 114,
+          "input_pending": 0,
+          "missing": [
+            "guide",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v261",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        }
+      ],
+      "folder": "Sherlock",
+      "has_direct_snapshot": false,
+      "mapping_status": "product_component_evidence_only",
+      "overview_url": "https://developer.synopsys.com/docs/sherlock.md",
+      "product": "sherlock",
+      "rea_evidence": {
+        "component": "Ans.Sherlock.Addin.dll",
+        "path": "docs/api_inventory/REA_EVIDENCE.md",
+        "version": "v251"
+      },
+      "sdk_package": "ansys-sherlock-core",
+      "snapshot_status": "no_direct_snapshot",
+      "snapshots": []
+    },
+    {
+      "documentation_coverage": [
+        {
+          "api_count": 24,
+          "failed_source_count": 0,
+          "files": 45,
+          "guide_count": 17,
+          "indexed_candidates": 42,
+          "input_pending": 0,
+          "missing": [
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "unknown",
+          "release_availability": "not_verified",
+          "required_examples": 3,
+          "status": "partial"
+        }
+      ],
+      "folder": "SimAI",
+      "has_direct_snapshot": false,
+      "mapping_status": "not_assessed",
+      "overview_url": "https://developer.synopsys.com/docs/simai.md",
+      "product": "simai",
+      "rea_evidence": {},
+      "sdk_package": "ansys-simai-core",
+      "snapshot_status": "no_direct_snapshot",
+      "snapshots": []
+    },
+    {
+      "documentation_coverage": [
+        {
+          "api_count": 0,
+          "failed_source_count": 0,
+          "files": 3,
+          "guide_count": 3,
+          "indexed_candidates": 3,
+          "input_pending": 0,
+          "missing": [
+            "api_reference",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v261",
+          "release_availability": "not_verified",
+          "required_examples": 3,
+          "status": "partial"
+        }
+      ],
+      "folder": "SIwave",
+      "has_direct_snapshot": false,
+      "mapping_status": "not_assessed",
+      "overview_url": "",
+      "product": "siwave",
+      "rea_evidence": {},
+      "sdk_package": null,
+      "snapshot_status": "no_direct_snapshot",
+      "snapshots": []
+    },
+    {
+      "documentation_coverage": [
+        {
+          "api_count": 30,
+          "failed_source_count": 0,
+          "files": 45,
+          "guide_count": 1,
+          "indexed_candidates": 36,
+          "input_pending": 0,
+          "missing": [],
+          "ready_examples": 3,
+          "release": "unknown",
+          "release_availability": "not_verified",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 15,
+          "failed_source_count": 0,
+          "files": 15,
+          "guide_count": 0,
+          "indexed_candidates": 15,
+          "input_pending": 0,
+          "missing": [
+            "guide",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v251",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 15,
+          "failed_source_count": 0,
+          "files": 15,
+          "guide_count": 0,
+          "indexed_candidates": 15,
+          "input_pending": 0,
+          "missing": [
+            "guide",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v252",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 28,
+          "failed_source_count": 0,
+          "files": 28,
+          "guide_count": 0,
+          "indexed_candidates": 28,
+          "input_pending": 0,
+          "missing": [
+            "guide",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v261",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        }
+      ],
+      "folder": "Sound",
+      "has_direct_snapshot": true,
+      "mapping_status": "direct_product_id",
+      "overview_url": "https://developer.synopsys.com/docs/sound.md",
+      "product": "sound",
+      "rea_evidence": {},
+      "sdk_package": "ansys-sound-core",
+      "snapshot_status": "direct_snapshot",
+      "snapshots": [
+        {
+          "sha256": "5df6652b1697b3353ad5de0e330da1d6629177919b160fb44b07f03b80a2b6e6",
+          "snapshot_path": "docs/api_inventory/sound_api.json",
+          "snapshot_version": "unknown",
+          "statistics": {
+            "total_classes": 2,
+            "total_functions": 0,
+            "total_methods": 13,
+            "total_modules": 2,
+            "total_properties": 6
+          }
+        }
+      ]
+    },
+    {
+      "documentation_coverage": [
+        {
+          "api_count": 0,
+          "failed_source_count": 0,
+          "files": 1,
+          "guide_count": 1,
+          "indexed_candidates": 1,
+          "input_pending": 0,
+          "missing": [
+            "api_reference",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "legacy",
+          "release_availability": "not_verified",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 1,
+          "failed_source_count": 0,
+          "files": 1,
+          "guide_count": 0,
+          "indexed_candidates": 1,
+          "input_pending": 0,
+          "missing": [
+            "guide",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "unknown",
+          "release_availability": "not_verified",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 0,
+          "failed_source_count": 0,
+          "files": 1,
+          "guide_count": 1,
+          "indexed_candidates": 1,
+          "input_pending": 0,
+          "missing": [
+            "api_reference",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v251",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 0,
+          "failed_source_count": 0,
+          "files": 3,
+          "guide_count": 3,
+          "indexed_candidates": 3,
+          "input_pending": 0,
+          "missing": [
+            "api_reference",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v261",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        }
+      ],
+      "folder": "SpaceClaim",
+      "has_direct_snapshot": true,
+      "mapping_status": "direct_product_id",
+      "overview_url": "",
+      "product": "spaceclaim",
+      "rea_evidence": {
+        "component": "SpaceClaim.Api.V251.dll; SpaceClaim.Api.V251.Scripting.dll",
+        "path": "docs/api_inventory/REA_EVIDENCE.md",
+        "version": "v251"
+      },
+      "sdk_package": null,
+      "snapshot_status": "direct_snapshot",
+      "snapshots": [
+        {
+          "rea_evidence": {
+            "component": "SpaceClaim.Api.V251.dll; SpaceClaim.Api.V251.Scripting.dll",
+            "path": "docs/api_inventory/REA_EVIDENCE.md",
+            "version": "v251"
+          },
+          "sha256": "842645f05a06a1097c364648cf9370f1432d2a56c748124ddee7c0c3a5144219",
+          "snapshot_path": "docs/api_inventory/spaceclaim_api.json",
+          "snapshot_version": "2025 R1 (v251)",
+          "statistics": {
+            "total_enums": 114,
+            "total_methods": 2845,
+            "total_properties": 1551,
+            "total_types": 1266
+          }
+        }
+      ]
+    },
+    {
+      "documentation_coverage": [
+        {
+          "api_count": 30,
+          "failed_source_count": 4,
+          "files": 98,
+          "guide_count": 63,
+          "indexed_candidates": 94,
+          "input_pending": 0,
+          "missing": [
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "unknown",
+          "release_availability": "not_verified",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 8,
+          "failed_source_count": 4,
+          "files": 11,
+          "guide_count": 3,
+          "indexed_candidates": 11,
+          "input_pending": 0,
+          "missing": [
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v251",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 8,
+          "failed_source_count": 4,
+          "files": 12,
+          "guide_count": 4,
+          "indexed_candidates": 12,
+          "input_pending": 0,
+          "missing": [
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v252",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 122,
+          "failed_source_count": 4,
+          "files": 596,
+          "guide_count": 5,
+          "indexed_candidates": 596,
+          "input_pending": 0,
+          "missing": [
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v261",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        }
+      ],
+      "folder": "Speos",
+      "has_direct_snapshot": false,
+      "mapping_status": "product_component_evidence_only",
+      "overview_url": "https://developer.synopsys.com/docs/speos.md",
+      "product": "speos",
+      "rea_evidence": {
+        "component": "Optical Products/Speos/bin/ApipWrapper.dll",
+        "path": "docs/api_inventory/REA_EVIDENCE.md",
+        "version": "v251"
+      },
+      "sdk_package": "ansys-speos-core",
+      "snapshot_status": "no_direct_snapshot",
+      "snapshots": []
+    },
+    {
+      "documentation_coverage": [
+        {
+          "api_count": 30,
+          "failed_source_count": 4,
+          "files": 45,
+          "guide_count": 1,
+          "indexed_candidates": 36,
+          "input_pending": 3,
+          "missing": [
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "unknown",
+          "release_availability": "not_verified",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 0,
+          "failed_source_count": 4,
+          "files": 40,
+          "guide_count": 38,
+          "indexed_candidates": 38,
+          "input_pending": 0,
+          "missing": [
+            "api_reference",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v251",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 0,
+          "failed_source_count": 4,
+          "files": 22,
+          "guide_count": 21,
+          "indexed_candidates": 21,
+          "input_pending": 0,
+          "missing": [
+            "api_reference",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v252",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 253,
+          "failed_source_count": 4,
+          "files": 281,
+          "guide_count": 21,
+          "indexed_candidates": 279,
+          "input_pending": 0,
+          "missing": [
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v261",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        }
+      ],
+      "folder": "System_Coupling",
+      "has_direct_snapshot": false,
+      "mapping_status": "product_component_evidence_only",
+      "overview_url": "https://developer.synopsys.com/docs/system-coupling.md",
+      "product": "system_coupling",
+      "rea_evidence": {
+        "component": "SysC.AnsRpc.Wrapper.dll; SysC.SystemCouplingParticipant.dll (native PE exports)",
+        "path": "docs/api_inventory/REA_EVIDENCE.md",
+        "version": "v251"
+      },
+      "sdk_package": "ansys-systemcoupling-core",
+      "snapshot_status": "no_direct_snapshot",
+      "snapshots": []
+    },
+    {
+      "documentation_coverage": [
+        {
+          "api_count": 0,
+          "failed_source_count": 2,
+          "files": 14,
+          "guide_count": 6,
+          "indexed_candidates": 7,
+          "input_pending": 0,
+          "missing": [
+            "api_reference",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "unknown",
+          "release_availability": "not_verified",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 0,
+          "failed_source_count": 2,
+          "files": 1,
+          "guide_count": 1,
+          "indexed_candidates": 1,
+          "input_pending": 0,
+          "missing": [
+            "api_reference",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v251",
+          "release_availability": "not_verified",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 2,
+          "failed_source_count": 2,
+          "files": 3,
+          "guide_count": 1,
+          "indexed_candidates": 3,
+          "input_pending": 0,
+          "missing": [
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v252",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 1050,
+          "failed_source_count": 2,
+          "files": 1080,
+          "guide_count": 1,
+          "indexed_candidates": 1079,
+          "input_pending": 0,
+          "missing": [
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v261",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        }
+      ],
+      "folder": "Thermal_Desktop",
+      "has_direct_snapshot": false,
+      "mapping_status": "not_assessed",
+      "overview_url": "https://developer.synopsys.com/docs/thermal-desktop.md",
+      "product": "thermal_desktop",
+      "rea_evidence": {},
+      "sdk_package": null,
+      "snapshot_status": "no_direct_snapshot",
+      "snapshots": []
+    },
+    {
+      "documentation_coverage": [
+        {
+          "api_count": 1,
+          "failed_source_count": 0,
+          "files": 13,
+          "guide_count": 1,
+          "indexed_candidates": 6,
+          "input_pending": 0,
+          "missing": [],
+          "ready_examples": 3,
+          "release": "unknown",
+          "release_availability": "not_verified",
+          "required_examples": 3,
+          "status": "partial"
+        }
+      ],
+      "folder": "TurboGrid",
+      "has_direct_snapshot": false,
+      "mapping_status": "not_assessed",
+      "overview_url": "",
+      "product": "turbogrid",
+      "rea_evidence": {},
+      "sdk_package": "ansys-turbogrid-core",
+      "snapshot_status": "no_direct_snapshot",
+      "snapshots": []
+    },
+    {
+      "documentation_coverage": [
+        {
+          "api_count": 30,
+          "failed_source_count": 0,
+          "files": 45,
+          "guide_count": 2,
+          "indexed_candidates": 37,
+          "input_pending": 3,
+          "missing": [
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "unknown",
+          "release_availability": "not_verified",
+          "required_examples": 3,
+          "status": "partial"
+        }
+      ],
+      "folder": "TwinAI",
+      "has_direct_snapshot": false,
+      "mapping_status": "not_assessed",
+      "overview_url": "",
+      "product": "twinai",
+      "rea_evidence": {},
+      "sdk_package": "pytwin",
+      "snapshot_status": "no_direct_snapshot",
+      "snapshots": []
+    },
+    {
+      "documentation_coverage": [
+        {
+          "api_count": 0,
+          "failed_source_count": 0,
+          "files": 4,
+          "guide_count": 4,
+          "indexed_candidates": 4,
+          "input_pending": 0,
+          "missing": [
+            "api_reference",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v261",
+          "release_availability": "not_verified",
+          "required_examples": 3,
+          "status": "partial"
+        }
+      ],
+      "folder": "Workbench",
+      "has_direct_snapshot": true,
+      "mapping_status": "direct_product_id",
+      "overview_url": "",
+      "product": "workbench",
+      "rea_evidence": {},
+      "sdk_package": null,
+      "snapshot_status": "direct_snapshot",
+      "snapshots": [
+        {
+          "sha256": "54c4e9a920e7fc5dc79801559e640efd920350cf2664baa86d6ee7abb16cf7ba",
+          "snapshot_path": "docs/api_inventory/workbench_api.json",
+          "snapshot_version": "unknown",
+          "statistics": {
+            "total_classes": 4,
+            "total_functions": 4,
+            "total_methods": 19,
+            "total_modules": 2,
+            "total_properties": 1
+          }
+        },
+        {
+          "sha256": "c54ebe9456614a7669faa48ea1432aad8523e17c0e2c90c1fd839cfd276f41ae",
+          "snapshot_path": "docs/api_inventory/workbench_protocol_api.json",
+          "snapshot_version": "unknown",
+          "statistics": {
+            "total_classes": 11,
+            "total_functions": 0,
+            "total_methods": 3,
+            "total_modules": 1,
+            "total_properties": 19
+          }
+        }
+      ]
+    },
+    {
+      "documentation_coverage": [
+        {
+          "api_count": 0,
+          "failed_source_count": 0,
+          "files": 4,
+          "guide_count": 1,
+          "indexed_candidates": 2,
+          "input_pending": 0,
+          "missing": [
+            "api_reference",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "unknown",
+          "release_availability": "not_verified",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 8,
+          "failed_source_count": 0,
+          "files": 8,
+          "guide_count": 0,
+          "indexed_candidates": 8,
+          "input_pending": 0,
+          "missing": [
+            "guide",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v251",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 12,
+          "failed_source_count": 0,
+          "files": 14,
+          "guide_count": 2,
+          "indexed_candidates": 14,
+          "input_pending": 0,
+          "missing": [
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v252",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        },
+        {
+          "api_count": 762,
+          "failed_source_count": 0,
+          "files": 788,
+          "guide_count": 0,
+          "indexed_candidates": 788,
+          "input_pending": 0,
+          "missing": [
+            "guide",
+            "tutorial_inputs"
+          ],
+          "ready_examples": 0,
+          "release": "v261",
+          "release_availability": "observed",
+          "required_examples": 3,
+          "status": "partial"
+        }
+      ],
+      "folder": "Zemax",
+      "has_direct_snapshot": false,
+      "mapping_status": "product_component_evidence_only",
+      "overview_url": "https://developer.synopsys.com/docs/zemax.md",
+      "product": "zemax",
+      "rea_evidence": {
+        "component": "Zemax OpticStudio/ZOSAPI.dll; Zemax OpticStudio/ZOSAPI_Interfaces.dll",
+        "path": "docs/api_inventory/REA_EVIDENCE.md",
+        "version": "v251"
+      },
+      "sdk_package": null,
+      "snapshot_status": "no_direct_snapshot",
+      "snapshots": []
+    }
+  ],
+  "schema_version": 3,
+  "scope": {
+    "description": "API 快照只記錄目前可直接或透過明示 alias 對應產品 ID 的快照，不代表 API 完整度。documentation_coverage 是獨立的本機文件語料盤點，不證明 API 是否存在或完整。rea_evidence 指向靜態組件 metadata 或 PE export 摘要，不代表公開 API 已分類或完整。",
+    "matching_rule": "API 快照以 docs/api_inventory/<product>_api.json 與 <product>_api_v*.json 命名；除 SNAPSHOT_PRODUCT_ALIASES 明示對應外，產品 ID 精確配對。文件覆蓋列仍以 manifest 產品 ID 配對，保留來源版本；不推測版本或共享介面關係。",
+    "snapshot_product_aliases": {
+      "discovery_protocol": "discovery",
+      "fluent_protocol": "fluent",
+      "geometry_core": "geometry",
+      "geometry_protocol": "geometry",
+      "mapdl_protocol": "mapdl",
+      "mechanical_core": "mechanical",
+      "mechanical_protocol": "mechanical",
+      "optislang_core": "optislang",
+      "primemesh_protocol": "primemesh",
+      "pydyna": "lsdyna",
+      "workbench_protocol": "workbench"
+    },
+    "unmapped_shared_interfaces": [
+      "ls_prepost"
+    ]
+  },
+  "sources": {
+    "api_snapshots": "docs/api_inventory/",
+    "documentation_coverage": "ANSYS_Document/_catalog/coverage.json",
+    "rea_evidence": "docs/api_inventory/REA_EVIDENCE.md"
+  }
+}

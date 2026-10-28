@@ -1,0 +1,123 @@
+{
+  "module": "ansys.meshing.prime",
+  "version": "unknown",
+  "sdk_package": "ansys-meshing-prime",
+  "sdk_version": "0.10.5",
+  "interface": "PyPrimeMesh 0.10.5 Client and launch_prime",
+  "scope": "範圍限於 Client 直接宣告的 run_on_server、exit、model 及 launch_prime。本擷取只讀取 SDK 與已核對 0.10.5 的 API reference，不建立 Client、不呼叫成員、不啟動 Prime Server。",
+  "sources": {
+    "api_references": [
+      {
+        "name": "launch_prime",
+        "path": "ANSYS_Document/Primemesh/sdk/ansys-meshing-prime/0.10.5/api_reference/8c777aa89711-ansys.meshing.prime.launch_prime.md",
+        "url": "https://prime.docs.pyansys.com/version/stable/api/_autosummary/ansys.meshing.prime.launch_prime.html",
+        "sha256": "beb271afa43c714c5f18e206e46dc5fb9f2c6332e98246ae850127679de58c2e",
+        "html_path": "ANSYS_Document/Primemesh/sdk/ansys-meshing-prime/0.10.5/api_reference/8c777aa89711-ansys.meshing.prime.launch_prime.html",
+        "html_sha256": "947a69e90d5e8bc01eb12c8fd9a2f93ee24c1314e4e048c8e7650eac3ecd723b",
+        "html_version": "0.10.5"
+      },
+      {
+        "name": "Client",
+        "path": "ANSYS_Document/Primemesh/sdk/ansys-meshing-prime/0.10.5/api_reference/ef19d6c98b8a-ansys.meshing.prime.Client.md",
+        "url": "https://prime.docs.pyansys.com/version/stable/api/_autosummary/ansys.meshing.prime.Client.html",
+        "sha256": "83a653566a3f5721acdfce37e90af3a29686467a8c7a6933d2f9043a2f8be8fb",
+        "html_path": "ANSYS_Document/Primemesh/sdk/ansys-meshing-prime/0.10.5/api_reference/ef19d6c98b8a-ansys.meshing.prime.Client.html",
+        "html_sha256": "dfcb112ae034ad89724f97039e8337de366fd3e5b320f4a3f4d208d1d7f29654",
+        "html_version": "0.10.5"
+      },
+      {
+        "name": "Client.model",
+        "path": "ANSYS_Document/Primemesh/sdk/ansys-meshing-prime/0.10.5/api_reference/fe7831a5971b-ansys.meshing.prime.Client.model.md",
+        "url": "https://prime.docs.pyansys.com/version/stable/api/_autosummary/ansys.meshing.prime.Client.model.html",
+        "sha256": "1cba61c7b8cef82638a3a55684858001890c628c0747e84952c608299933f778",
+        "html_path": "ANSYS_Document/Primemesh/sdk/ansys-meshing-prime/0.10.5/api_reference/fe7831a5971b-ansys.meshing.prime.Client.model.html",
+        "html_sha256": "865a603d7a6005d882df32d339ffb08b112267a53333a5f89afbb35710821c8f",
+        "html_version": "0.10.5"
+      },
+      {
+        "name": "Client.run_on_server",
+        "path": "ANSYS_Document/Primemesh/sdk/ansys-meshing-prime/0.10.5/api_reference/7b49ba52a5b7-ansys.meshing.prime.Client.run_on_server.md",
+        "url": "https://prime.docs.pyansys.com/version/stable/api/_autosummary/ansys.meshing.prime.Client.run_on_server.html",
+        "sha256": "9e451323bff9fb03ad180d48a6ea070da44302379cace546e6fcc22819e91aee",
+        "html_path": "ANSYS_Document/Primemesh/sdk/ansys-meshing-prime/0.10.5/api_reference/7b49ba52a5b7-ansys.meshing.prime.Client.run_on_server.html",
+        "html_sha256": "900d75cc1118b82af79a8cf175c40499a09c78dff9de2b87e9e11bbf9e878dfe",
+        "html_version": "0.10.5"
+      },
+      {
+        "name": "Client.exit",
+        "path": "ANSYS_Document/Primemesh/sdk/ansys-meshing-prime/0.10.5/api_reference/5d2aacca5459-ansys.meshing.prime.Client.exit.md",
+        "url": "https://prime.docs.pyansys.com/version/stable/api/_autosummary/ansys.meshing.prime.Client.exit.html",
+        "sha256": "a8bdbc8757405bd7713aa0e4f34d2b74ed786cc8c3e146b9c9a31ea2f1e04e06",
+        "html_path": "ANSYS_Document/Primemesh/sdk/ansys-meshing-prime/0.10.5/api_reference/5d2aacca5459-ansys.meshing.prime.Client.exit.html",
+        "html_sha256": "eea9b5bbb92732e8ae1c7ce4be387b730306d243a2981892b039a22a31ce3a63",
+        "html_version": "0.10.5"
+      }
+    ],
+    "sdk_files": [
+      {
+        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/meshing/prime/__init__.py",
+        "sha256": "c397aba91032fd5b9017277b275fffc7b2524bc3881098cded56511d785add52"
+      },
+      {
+        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/meshing/prime/internals/client.py",
+        "sha256": "63e878388246195b728d676f5ec97bd37161d889586638fb8c693e072d1ef673"
+      },
+      {
+        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/meshing/prime/internals/launcher.py",
+        "sha256": "bab285b78afecd1cd0a841697380acc5c22b1117d5df9e73d2d0857ae089f09d"
+      }
+    ]
+  },
+  "modules": {
+    "ansys.meshing.prime": {
+      "doc": "PyPrimeMesh Client library",
+      "classes": {
+        "Client": {
+          "name": "Client",
+          "doc": "Provides the ``Client`` class for PyPrimeMesh.\n\nParameters\n----------\nserver_process : Any, optional\n    Server process in the system. The default is ``None``.\nip : str, optional\n    IP address where the server is located. The default is ``defaults.ip()``.\nport : int, optional\n    Port where the server is deployed. The default is ``defaults.port()``.\ntimeout : float, optional\n    Maximum time to wait for connection. The default is ``defaults.connection_timeout()``.\ncredentials : Any, optional\n    Credentials to connect to the server. The default is ``None``.\nuds_id : Optional[str], optional\n    Id for the Unix Domain Socket (UDS). The default is ``None``.\nclient_certs_dir : Optional[str]\n    Directory containing client certificates for mutual TLS.\nRaises\n------\nValueError\n    Failed to load the communicator.",
+          "methods": [
+            {
+              "name": "run_on_server",
+              "signature": "(self, recipe: str)",
+              "doc": "Run a recipe on the server.\n\nParameters\n----------\nrecipe: str\n    Recipe to run. This must be a valid Python script.",
+              "sdk_source_path": "F:\\Ming_python\\ansys-unified-mcp\\.venv\\Lib\\site-packages\\ansys\\meshing\\prime\\internals\\client.py",
+              "signature_source_path": "F:\\Ming_python\\ansys-unified-mcp\\.venv\\Lib\\site-packages\\ansys\\meshing\\prime\\internals\\client.py"
+            },
+            {
+              "name": "exit",
+              "signature": "(self)",
+              "doc": "Close the connection with the server.\n\nIf the client has launched the server, this method also\nkills the server process.\n\nExamples\n--------\n>>> import ansys.meshing.prime as prime\n>>> prime_client = prime.launch_prime() # This launches a server process.\n>>> model = prime_client.model\n>>> fileio = prime.FileIO(model)\n>>> result = fileio.read_pmdat('example.pmdat', prime.FileReadParams(model=model))\n>>> print(result)\n>>> prime_client.exit() # Sever connection with server and kill the server.",
+              "sdk_source_path": "F:\\Ming_python\\ansys-unified-mcp\\.venv\\Lib\\site-packages\\ansys\\meshing\\prime\\internals\\client.py",
+              "signature_source_path": "F:\\Ming_python\\ansys-unified-mcp\\.venv\\Lib\\site-packages\\ansys\\meshing\\prime\\internals\\client.py"
+            }
+          ],
+          "properties": [
+            {
+              "name": "model",
+              "type": "",
+              "doc": "Get model associated with the client.",
+              "sdk_source_path": "F:\\Ming_python\\ansys-unified-mcp\\.venv\\Lib\\site-packages\\ansys\\meshing\\prime\\internals\\client.py",
+              "signature_source_path": "F:\\Ming_python\\ansys-unified-mcp\\.venv\\Lib\\site-packages\\ansys\\meshing\\prime\\internals\\client.py"
+            }
+          ]
+        }
+      },
+      "functions": [
+        {
+          "name": "launch_prime",
+          "signature": "(prime_root: str | None = None, ip: str = '127.0.0.1', port: int = 50055, timeout: float = 20.0, connection_type: ansys.meshing.prime.internals.config.ConnectionType = <ConnectionType.GRPC_SECURE: 1>, client_certs_dir: str | None = None, server_certs_dir: str | None = None, n_procs: int | None = None, version: str | None = None, **kwargs)",
+          "doc": "Launch an instance of Ansys Prime Server and get a client for it.\n\nParameters\n----------\nprime_root: Optional[str]\n    Root directory for Ansys Prime Server.\nip: str\n    IP address to start the server at. The default is ``127.0.0.1``.\nport: int\n    Port at which the server is started. The default is ``50055``.\ntimeout: float\n    Maximum time in seconds to wait for the client to connect to the server.\n    The default is ``20.0``.\nn_procs: Optional[int]\n    When running in distributed mode, the number of distributed\n    processes to spawn. The default is ``None``, in which case\n    the server is launched as the only process (normal mode). The\n    process marked as ``Node 0`` hosts the gRPC server.\nclient_certs_dir : Optional[str]\n    Directory containing client certificates for mutual TLS.\nserver_certs_dir : Optional[str]\n    Directory containing server certificates for mutual TLS.\n\nReturns\n-------\nClient\n    Instance of the client that is connected to the launched server.\n\nRaises\n------\nFileNotFoundError\n    When there is an error in file paths used to launch the server.\nConnectionError\n    When there is an error in connecting to the gRPC server.",
+          "sdk_source_path": "F:\\Ming_python\\ansys-unified-mcp\\.venv\\Lib\\site-packages\\ansys\\meshing\\prime\\internals\\launcher.py",
+          "signature_source_path": "F:\\Ming_python\\ansys-unified-mcp\\.venv\\Lib\\site-packages\\ansys\\meshing\\prime\\internals\\launcher.py"
+        }
+      ]
+    }
+  },
+  "statistics": {
+    "total_modules": 1,
+    "total_classes": 1,
+    "total_methods": 2,
+    "total_properties": 1,
+    "total_functions": 1
+  }
+}

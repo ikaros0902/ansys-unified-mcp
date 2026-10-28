@@ -1,0 +1,222 @@
+{
+  "module": "ansys.api.workbench.v0.workbench_pb2",
+  "version": "unknown",
+  "sdk_package": "ansys-api-workbench",
+  "sdk_version": "0.4.0",
+  "interface": "Workbench gRPC protocol schema",
+  "scope": "僅記錄 protobuf message 欄位與 gRPC service RPC signatures。這是傳輸協定 schema，不是 Workbench Python scripting API 或支援狀態聲明。",
+  "sources": {
+    "sdk_files": [
+      {
+        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/workbench/v0/workbench_pb2.py",
+        "sha256": "2521410f419f523367f9b03186ced108cc6228da14b7acf0057c539f6408b952"
+      },
+      {
+        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/workbench/v0/workbench_pb2_grpc.py",
+        "sha256": "430bebb508894b6d901492ff001f28fd09ef56518a4aeb4d3426da205387d028"
+      }
+    ]
+  },
+  "modules": {
+    "ansys.api.workbench.v0.workbench_pb2": {
+      "doc": "ansys.api.workbench.v0",
+      "classes": {
+        "LogEntry": {
+          "name": "LogEntry",
+          "doc": "Protocol message ansys.api.workbench.v0.LogEntry",
+          "methods": [],
+          "properties": [
+            {
+              "name": "level",
+              "type": "ansys.api.workbench.v0.LogLevel",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "message",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "RunScriptRequest": {
+          "name": "RunScriptRequest",
+          "doc": "Protocol message ansys.api.workbench.v0.RunScriptRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "content",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "log_level",
+              "type": "ansys.api.workbench.v0.LogLevel",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "RunScriptResult": {
+          "name": "RunScriptResult",
+          "doc": "Protocol message ansys.api.workbench.v0.RunScriptResult",
+          "methods": [],
+          "properties": [
+            {
+              "name": "error",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "result",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "RunScriptLog": {
+          "name": "RunScriptLog",
+          "doc": "Protocol message ansys.api.workbench.v0.RunScriptLog",
+          "methods": [],
+          "properties": [
+            {
+              "name": "messages",
+              "type": "ansys.api.workbench.v0.LogEntry",
+              "doc": "Protobuf field number 1; repeated=True"
+            }
+          ]
+        },
+        "RunScriptResponse": {
+          "name": "RunScriptResponse",
+          "doc": "Protocol message ansys.api.workbench.v0.RunScriptResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "result",
+              "type": "ansys.api.workbench.v0.RunScriptResult",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "log",
+              "type": "ansys.api.workbench.v0.RunScriptLog",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "UploadFileRequest": {
+          "name": "UploadFileRequest",
+          "doc": "Protocol message ansys.api.workbench.v0.UploadFileRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "file_name",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "file_content",
+              "type": "bytes",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "UploadFileResponse": {
+          "name": "UploadFileResponse",
+          "doc": "Protocol message ansys.api.workbench.v0.UploadFileResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "error",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "file_name",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "DownloadFileRequest": {
+          "name": "DownloadFileRequest",
+          "doc": "Protocol message ansys.api.workbench.v0.DownloadFileRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "file_name",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "DownloadFileInfo": {
+          "name": "DownloadFileInfo",
+          "doc": "Protocol message ansys.api.workbench.v0.DownloadFileInfo",
+          "methods": [],
+          "properties": [
+            {
+              "name": "is_archive",
+              "type": "bool",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "file_size",
+              "type": "uint64",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "DownloadFileResponse": {
+          "name": "DownloadFileResponse",
+          "doc": "Protocol message ansys.api.workbench.v0.DownloadFileResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "error",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "file_content",
+              "type": "bytes",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "file_info",
+              "type": "ansys.api.workbench.v0.DownloadFileInfo",
+              "doc": "Protobuf field number 3; repeated=False"
+            }
+          ]
+        },
+        "WorkbenchService": {
+          "name": "WorkbenchService",
+          "doc": "gRPC service ansys.api.workbench.v0.WorkbenchService",
+          "methods": [
+            {
+              "name": "RunScript",
+              "signature": "(ansys.api.workbench.v0.RunScriptRequest) -> ansys.api.workbench.v0.RunScriptResponse [client_streaming=False, server_streaming=True]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "UploadFile",
+              "signature": "(ansys.api.workbench.v0.UploadFileRequest) -> ansys.api.workbench.v0.UploadFileResponse [client_streaming=True, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "DownloadFile",
+              "signature": "(ansys.api.workbench.v0.DownloadFileRequest) -> ansys.api.workbench.v0.DownloadFileResponse [client_streaming=False, server_streaming=True]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            }
+          ],
+          "properties": []
+        }
+      },
+      "functions": []
+    }
+  },
+  "statistics": {
+    "total_modules": 1,
+    "total_classes": 11,
+    "total_methods": 3,
+    "total_properties": 19,
+    "total_functions": 0
+  }
+}

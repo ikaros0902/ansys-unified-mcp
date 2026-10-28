@@ -1,0 +1,427 @@
+{
+  "module": "generated protobuf modules",
+  "version": "unknown",
+  "sdk_package": "ansys-api-platform-instancemanagement",
+  "sdk_version": "1.2.0",
+  "interface": "platform_instance_management gRPC protocol schema",
+  "scope": "限於套件內 protobuf message 欄位與 gRPC service RPC signatures。這是傳輸協定 schema，不是產品 scripting API 或支援狀態聲明。",
+  "sources": {
+    "sdk_files": [
+      {
+        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/platform/instancemanagement/v1/product_instance_manager_pb2.py",
+        "sha256": "1f98756a59b6035eaecca8b61183e0f97a94b03576b119315925759fd83dc93f"
+      }
+    ]
+  },
+  "modules": {
+    "ansys.api.platform.instancemanagement.v1.product_instance_manager_pb2": {
+      "doc": "ansys.api.platform.instancemanagement.v1",
+      "classes": {
+        "Instance": {
+          "name": "Instance",
+          "doc": "Protocol message ansys.api.platform.instancemanagement.v1.Instance",
+          "methods": [],
+          "properties": [
+            {
+              "name": "name",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "definition_name",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "ready",
+              "type": "bool",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "status_message",
+              "type": "string",
+              "doc": "Protobuf field number 4; repeated=False"
+            },
+            {
+              "name": "services",
+              "type": "ansys.api.platform.instancemanagement.v1.Instance.ServicesEntry",
+              "doc": "Protobuf field number 5; repeated=True"
+            }
+          ]
+        },
+        "Definition": {
+          "name": "Definition",
+          "doc": "Protocol message ansys.api.platform.instancemanagement.v1.Definition",
+          "methods": [],
+          "properties": [
+            {
+              "name": "name",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "product_name",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "product_version",
+              "type": "string",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "available_service_names",
+              "type": "string",
+              "doc": "Protobuf field number 4; repeated=True"
+            }
+          ]
+        },
+        "MtlsClientInfo": {
+          "name": "MtlsClientInfo",
+          "doc": "Protocol message ansys.api.platform.instancemanagement.v1.MtlsClientInfo",
+          "methods": [],
+          "properties": [
+            {
+              "name": "ca_certificate_path",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "client_certificate_path",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "client_key_path",
+              "type": "string",
+              "doc": "Protobuf field number 3; repeated=False"
+            }
+          ]
+        },
+        "ServiceSecurityInfo": {
+          "name": "ServiceSecurityInfo",
+          "doc": "Protocol message ansys.api.platform.instancemanagement.v1.ServiceSecurityInfo",
+          "methods": [],
+          "properties": [
+            {
+              "name": "insecure",
+              "type": "google.protobuf.Empty",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "mtls",
+              "type": "ansys.api.platform.instancemanagement.v1.MtlsClientInfo",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "wnua",
+              "type": "google.protobuf.Empty",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "uds",
+              "type": "google.protobuf.Empty",
+              "doc": "Protobuf field number 4; repeated=False"
+            }
+          ]
+        },
+        "Service": {
+          "name": "Service",
+          "doc": "Protocol message ansys.api.platform.instancemanagement.v1.Service",
+          "methods": [],
+          "properties": [
+            {
+              "name": "uri",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "headers",
+              "type": "ansys.api.platform.instancemanagement.v1.Service.HeadersEntry",
+              "doc": "Protobuf field number 2; repeated=True"
+            },
+            {
+              "name": "security",
+              "type": "ansys.api.platform.instancemanagement.v1.ServiceSecurityInfo",
+              "doc": "Protobuf field number 3; repeated=False"
+            }
+          ]
+        },
+        "MtlsCertificatePaths": {
+          "name": "MtlsCertificatePaths",
+          "doc": "Protocol message ansys.api.platform.instancemanagement.v1.MtlsCertificatePaths",
+          "methods": [],
+          "properties": [
+            {
+              "name": "server_key_path",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "server_certificate_path",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "ca_certificate_path",
+              "type": "string",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "client_key_path",
+              "type": "string",
+              "doc": "Protobuf field number 4; repeated=False"
+            },
+            {
+              "name": "client_certificate_path",
+              "type": "string",
+              "doc": "Protobuf field number 5; repeated=False"
+            }
+          ]
+        },
+        "MtlsSettings": {
+          "name": "MtlsSettings",
+          "doc": "Protocol message ansys.api.platform.instancemanagement.v1.MtlsSettings",
+          "methods": [],
+          "properties": [
+            {
+              "name": "certificates_directory",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "certificate_paths",
+              "type": "ansys.api.platform.instancemanagement.v1.MtlsCertificatePaths",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "UdsSettings": {
+          "name": "UdsSettings",
+          "doc": "Protocol message ansys.api.platform.instancemanagement.v1.UdsSettings",
+          "methods": [],
+          "properties": [
+            {
+              "name": "socket_path",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "socket_directory",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "socket_identifier",
+              "type": "string",
+              "doc": "Protobuf field number 3; repeated=False"
+            }
+          ]
+        },
+        "InstanceSecuritySettings": {
+          "name": "InstanceSecuritySettings",
+          "doc": "Protocol message ansys.api.platform.instancemanagement.v1.InstanceSecuritySettings",
+          "methods": [],
+          "properties": [
+            {
+              "name": "insecure",
+              "type": "google.protobuf.Empty",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "mtls",
+              "type": "ansys.api.platform.instancemanagement.v1.MtlsSettings",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "wnua",
+              "type": "google.protobuf.Empty",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "uds",
+              "type": "ansys.api.platform.instancemanagement.v1.UdsSettings",
+              "doc": "Protobuf field number 4; repeated=False"
+            }
+          ]
+        },
+        "CreateInstanceRequest": {
+          "name": "CreateInstanceRequest",
+          "doc": "Protocol message ansys.api.platform.instancemanagement.v1.CreateInstanceRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "instance",
+              "type": "ansys.api.platform.instancemanagement.v1.Instance",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "security_settings",
+              "type": "ansys.api.platform.instancemanagement.v1.InstanceSecuritySettings",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "DeleteInstanceRequest": {
+          "name": "DeleteInstanceRequest",
+          "doc": "Protocol message ansys.api.platform.instancemanagement.v1.DeleteInstanceRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "name",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "GetInstanceRequest": {
+          "name": "GetInstanceRequest",
+          "doc": "Protocol message ansys.api.platform.instancemanagement.v1.GetInstanceRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "name",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "ListInstancesRequest": {
+          "name": "ListInstancesRequest",
+          "doc": "Protocol message ansys.api.platform.instancemanagement.v1.ListInstancesRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "page_size",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "page_token",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "ListInstancesResponse": {
+          "name": "ListInstancesResponse",
+          "doc": "Protocol message ansys.api.platform.instancemanagement.v1.ListInstancesResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "instances",
+              "type": "ansys.api.platform.instancemanagement.v1.Instance",
+              "doc": "Protobuf field number 1; repeated=True"
+            },
+            {
+              "name": "next_page_token",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "ListDefinitionsRequest": {
+          "name": "ListDefinitionsRequest",
+          "doc": "Protocol message ansys.api.platform.instancemanagement.v1.ListDefinitionsRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "page_size",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "page_token",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "product_name",
+              "type": "string",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "product_version",
+              "type": "string",
+              "doc": "Protobuf field number 4; repeated=False"
+            }
+          ]
+        },
+        "ListDefinitionsResponse": {
+          "name": "ListDefinitionsResponse",
+          "doc": "Protocol message ansys.api.platform.instancemanagement.v1.ListDefinitionsResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "definitions",
+              "type": "ansys.api.platform.instancemanagement.v1.Definition",
+              "doc": "Protobuf field number 1; repeated=True"
+            },
+            {
+              "name": "next_page_token",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "GetDefinitionRequest": {
+          "name": "GetDefinitionRequest",
+          "doc": "Protocol message ansys.api.platform.instancemanagement.v1.GetDefinitionRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "name",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "ProductInstanceManager": {
+          "name": "ProductInstanceManager",
+          "doc": "gRPC service ansys.api.platform.instancemanagement.v1.ProductInstanceManager",
+          "methods": [
+            {
+              "name": "CreateInstance",
+              "signature": "(ansys.api.platform.instancemanagement.v1.CreateInstanceRequest) -> ansys.api.platform.instancemanagement.v1.Instance [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "DeleteInstance",
+              "signature": "(ansys.api.platform.instancemanagement.v1.DeleteInstanceRequest) -> google.protobuf.Empty [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "ListInstances",
+              "signature": "(ansys.api.platform.instancemanagement.v1.ListInstancesRequest) -> ansys.api.platform.instancemanagement.v1.ListInstancesResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "GetInstance",
+              "signature": "(ansys.api.platform.instancemanagement.v1.GetInstanceRequest) -> ansys.api.platform.instancemanagement.v1.Instance [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "ListDefinitions",
+              "signature": "(ansys.api.platform.instancemanagement.v1.ListDefinitionsRequest) -> ansys.api.platform.instancemanagement.v1.ListDefinitionsResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "GetDefinition",
+              "signature": "(ansys.api.platform.instancemanagement.v1.GetDefinitionRequest) -> ansys.api.platform.instancemanagement.v1.Definition [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            }
+          ],
+          "properties": []
+        }
+      },
+      "functions": []
+    }
+  },
+  "statistics": {
+    "total_modules": 1,
+    "total_classes": 18,
+    "total_methods": 6,
+    "total_properties": 48,
+    "total_functions": 0
+  }
+}
