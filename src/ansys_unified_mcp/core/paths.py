@@ -90,6 +90,24 @@ def find_cfx_solve_exe() -> Optional[Path]:
         return config.cfx_solve_exe
     return _search_awp_roots("cfx5solve.exe")
 
+def find_lsdyna_exe() -> Optional[Path]:
+    """使用共用 ANSYS 路徑政策尋找 LS-DYNA 執行檔。"""
+    explicit = _env_path("ANSYS_LSDYNA")
+    if explicit:
+        return explicit
+    names = ("LSDYNA.exe", "lsdyna_dp.exe", "lsdyna_sp.exe", "lsdyna.exe")
+    if config.available:
+        bin_dir = config.root_path / "ansys" / "bin" / "winx64"
+        for name in names:
+            candidate = bin_dir / name
+            if candidate.exists():
+                return candidate
+    for name in names:
+        candidate = _search_awp_roots(name)
+        if candidate:
+            return candidate
+    return None
+
 
 def find_mechanical_cli() -> Optional[Path]:
     """Locate the ansys-mechanical CLI installed in this MCP virtual environment."""

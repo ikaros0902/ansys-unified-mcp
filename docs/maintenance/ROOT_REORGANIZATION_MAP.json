@@ -1,0 +1,154 @@
+{
+  "schema_version": 1,
+  "hash_scope": "SHA-256 and byte counts describe the source files in the pre-migration HEAD. They do not certify current destination content.",
+  "target_github_directories": [
+    "agents",
+    "docs",
+    "scripts",
+    "src",
+    "tests"
+  ],
+  "local_runtime_moves": [
+    {
+      "source": "src/Documentation_clean/api_kb.sqlite",
+      "destination": ".runtime/api-rag/legacy-src-api_kb-20261009.sqlite",
+      "status": "moved_and_preserved",
+      "sha256": "0aed937da91c9cb797807756d615a1ca94fcc5a47bfb7d9942bb717ecf049ed4",
+      "bytes": 57344,
+      "reason": "Ignored legacy SQLite cache; no source reference to the nested src path was found."
+    }
+  ],
+  "mappings": [
+    {
+      "source": "evaluations/ansys_mcp_eval.xml",
+      "destination": "tests/evaluations/ansys_mcp_eval.xml",
+      "status": "moved",
+      "source_sha256": "e38e90ab17d95eabf5c92e6c570071dcd1d422ded158106b52d716b40347cc65",
+      "source_bytes": 3353,
+      "current_consumers": [
+        "tests/evaluations/run_mcp_evaluation.py",
+        "tests/unit/test_phase4_evaluation_suite.py",
+        "tests/unit/test_stage2_meta_router_and_damg.py"
+      ]
+    },
+    {
+      "source": "evaluations/eval_report.json",
+      "destination": "tests/evaluations/eval_report.json",
+      "status": "moved",
+      "source_sha256": "5a0c74f425c73ead32af507026e4940f865fb77c7ecc1f0219d73bf1a62acd96",
+      "source_bytes": 5311,
+      "current_consumers": []
+    },
+    {
+      "source": "evaluations/run_mcp_evaluation.py",
+      "destination": "tests/evaluations/run_mcp_evaluation.py",
+      "status": "moved",
+      "source_sha256": "96b0816191ae5e0525655c7e9a95f35c7dfe789a14a895cb3ae2fda671fddc21",
+      "source_bytes": 13603,
+      "current_consumers": [
+        "tests/unit/test_phase4_evaluation_suite.py",
+        "tests/unit/test_stage2_meta_router_and_damg.py"
+      ]
+    },
+    {
+      "source": "manifests/damg_rules.yaml",
+      "destination": "src/ansys_unified_mcp/resources/manifests/damg_rules.yaml",
+      "status": "moved",
+      "source_sha256": "457a11c520ce9428efa9002757ee5b22605672cc706a87c297957eec004c697d",
+      "source_bytes": 44250,
+      "current_consumers": [
+        "src/ansys_unified_mcp/core/damg/damg_state_machine.py",
+        "tests/unit/test_stage2_meta_router_and_damg.py"
+      ]
+    },
+    {
+      "source": "manifests/permissions.yaml",
+      "destination": "src/ansys_unified_mcp/resources/manifests/permissions.yaml",
+      "status": "moved",
+      "source_sha256": "74038b28e3293fae16d50975be570c2dd9f9ce4a3aa9aa8f7ae4369a20504332",
+      "source_bytes": 5954,
+      "current_consumers": [
+        "src/ansys_unified_mcp/core/permission_gate.py",
+        "tests/unit/test_permission_gate.py"
+      ]
+    },
+    {
+      "source": "verification_report_stage5.json",
+      "destination": "tests/evaluations/reports/verification_report_stage5.json",
+      "status": "moved",
+      "source_sha256": "82e2d77a099f5f1b21f77fb4cf2914cc119464299b6c76709a6e5acb5b0d28eb",
+      "source_bytes": 4956,
+      "current_consumers": [
+        "docs/index.md",
+        "scripts/maintenance/reorganize_workspace.py"
+      ]
+    },
+    {
+      "source": "setup_skill_links.py",
+      "destination": "scripts/skill_governance/setup_skill_links.py",
+      "status": "moved_and_root_resolver_updated",
+      "source_sha256": "13b23f564019e6daa9578ba3eb8534ac24654db8bdaeb785536ea1f531ecc2fd",
+      "source_bytes": 11841,
+      "current_consumers": [
+        "scripts/skill_governance/setup_skill_junctions.py",
+        "tests/unit/test_stage0_links_and_eviction.py"
+      ]
+    },
+    {
+      "source": "scripts/maintenance/setup_skill_junctions.py",
+      "destination": "scripts/skill_governance/setup_skill_junctions.py",
+      "status": "replaced_with_compatibility_shim",
+      "source_sha256": "4ad3d1d70104c5d2bf928430f3278bbd05a26b59517eb45fbef9aad2ae324a8c",
+      "source_bytes": 7303,
+      "current_consumers": []
+    },
+    {
+      "source": "INSTALL_SOP.md",
+      "destination": "docs/deployment/DEPLOYMENT_SOP.md",
+      "status": "superseded_by_current_deployment_manual",
+      "source_sha256": "9ba446dbc46c157cfc30772534a47b5aa8aedd9ffd1ca42c580ee2a00b60a50c",
+      "source_bytes": 2268,
+      "current_consumers": [
+        "README.md",
+        "docs/index.md"
+      ]
+    },
+    {
+      "source": "scripts/maintenance/audit_architecture_compliance.py",
+      "destination": "scripts/skill_governance/audit_architecture_compliance.py",
+      "status": "moved",
+      "source_sha256": "7a443b3fa6a0f368e7f359168999452f651a62a18bddde368ea0d6f85791c2ac",
+      "source_bytes": 14082,
+      "current_consumers": [
+        "pyproject.toml",
+        "tests/unit/test_skills_audit.py"
+      ]
+    },
+    {
+      "source": "scripts/maintenance/evict_global_ansys_skills.py",
+      "destination": "scripts/skill_governance/evict_global_ansys_skills.py",
+      "status": "moved",
+      "source_sha256": "9a19e9f75a0a8a34492fd196d40db223c96b697093a710ef7e72344ac08d3a18",
+      "source_bytes": 11143,
+      "current_consumers": [
+        "tests/unit/test_stage0_links_and_eviction.py"
+      ]
+    },
+    {
+      "source": "scripts/maintenance/sync_skills_bidirectional.py",
+      "destination": "scripts/skill_governance/sync_skills_bidirectional.py",
+      "status": "moved",
+      "source_sha256": "4f29f6d5184bc5c0666123b77d2f9a43a976f5b240fbe8d89a6dda82db4f15f3",
+      "source_bytes": 16748,
+      "current_consumers": [
+        "tests/unit/test_skills_audit.py",
+        "tests/unit/test_skills_integrity.py"
+      ]
+    }
+  ],
+  "reference_scan": {
+    "date": "2026-10-28",
+    "scope": "Current text references under agents/, docs/, scripts/, src/, tests/, README.md, pyproject.toml, .gitignore, and mcp_server.py; docs/archive/ and docs/reviews/ historical mentions excluded.",
+    "note": "Current path references use destination paths. Historical source paths remain in this migration map."
+  }
+}

@@ -6,7 +6,8 @@ from pathlib import Path
 import pytest
 import warnings
 
-from ansys_unified_mcp.core.paths import resolve_runtime_dir
+import ansys_unified_mcp.core.paths as paths
+from ansys_unified_mcp.core.paths import find_lsdyna_exe, resolve_runtime_dir
 from ansys_unified_mcp.core.jobs.manager import JobManager
 
 
@@ -106,3 +107,36 @@ def test_tools_visibility_clean_import():
     assert COMMON_PRODUCT == "common"
     assert product_of_module("ansys_unified_mcp.products.mechanical.tools") == "mechanical"
     assert WorkspaceVisibilityMiddleware is not None
+
+def test_find_lsdyna_exe_uses_existing_environment_override(tmp_path, monkeypatch):
+    explicit = tmp_path / "custom_solver.exe"
+    explicit.touch()
+    monkeypatch.setenv("ANSYS_LSDYNA", str(explicit))
+
+    assert find_lsdyna_exe() == explicit
+
+
+def test_find_lsdyna_exe_preserves_candidate_order_under_config_root(tmp_path, monkeypatch):
+    monkeypatch.delenv("ANSYS_LSDYNA", raising=False)
+    root = tmp_path / "v251"
+    bin_dir = root / "ansys" / "bin" / "winx64"
+    preferred = bin_dir / "LSDYNA.exe"
+    preferred.parent.mkdir(parents=True)
+    preferred.touch()
+    (bin_dir / "lsdyna_dp.exe").touch()
+    monkeypatch.setattr(paths.config, "available", True)
+    monkeypatch.setattr(paths.config, "root_path", root)
+
+    assert find_lsdyna_exe() == preferred
+
+
+def test_find_lsdyna_exe_searches_awp_roots_when_config_is_unavailable(tmp_path, monkeypatch):
+    monkeypatch.delenv("ANSYS_LSDYNA", raising=False)
+    root = tmp_path / "v251"
+    expected = root / "ansys" / "bin" / "winx64" / "lsdyna_sp.exe"
+    expected.parent.mkdir(parents=True)
+    expected.touch()
+    monkeypatch.setenv("AWP_ROOT251", str(root))
+    monkeypatch.setattr(paths.config, "available", False)
+
+    assert find_lsdyna_exe() == expected

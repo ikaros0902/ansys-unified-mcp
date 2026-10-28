@@ -4,7 +4,7 @@
 Ansys Unified MCP - Phase 4 確定性標量評估套件執行器 (Deterministic Scalar Evaluation Runner)
 
 遵循 mcp-builder Phase 4 規範：
-- 讀取 evaluations/ansys_mcp_eval.xml
+- 讀取 tests/evaluations/ansys_mcp_eval.xml
 - 執行 100% 確定性標量值比對 (Direct String Comparison / Scalar Comparison)
 - 零 LLM-as-a-Judge 依賴，保證可重複性與客觀判定
 - 輸出標準化指標：總題數、通過題數、通過率、平均延遲與判定證據

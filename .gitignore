@@ -8,6 +8,7 @@ venv.bak/
 
 # Python 快取與編譯檔案
 __pycache__/
+.zvec-grep/
 *.py[cod]
 *$py.class
 *.so
@@ -33,20 +34,10 @@ __pycache__/
 # 執行日誌與暫存
 .runtime/
 .audit/
+dist/
 *.log
 *.txt
 !requirements.txt
-# 稽核日誌目錄（避免本機大量 audit log 納入版本控制），僅保留佔位檔。
-# 必須寫 logs/* 而非 logs/：git 無法對「已被排除的目錄」內的檔案做 !negation，
-# 寫成 logs/ 會讓 !logs/.gitkeep 失效（與既有 jobs/* 的寫法一致）。
-logs/*
-!logs/.gitkeep
-workbench_queue/*
-!workbench_queue/.gitkeep
-!workbench_queue/*/.gitkeep
-**/workbench_queue/*
-!**/workbench_queue/.gitkeep
-!**/workbench_queue/*/.gitkeep
 
 # Generated files & workbench journals
 results/

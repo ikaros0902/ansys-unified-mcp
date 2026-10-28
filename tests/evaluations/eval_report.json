@@ -1,6 +1,6 @@
 {
   "suite_name": "ansys_mcp_eval",
-  "xml_path": "F:\\Ming_python\\ansys-unified-mcp\\evaluations\\ansys_mcp_eval.xml",
+  "xml_path": "tests/evaluations/ansys_mcp_eval.xml",
   "timestamp": "2026-10-26T12:03:01.867595+00:00",
   "total_questions": 10,
   "passed_questions": 10,

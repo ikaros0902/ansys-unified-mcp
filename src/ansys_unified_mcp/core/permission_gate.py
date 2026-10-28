@@ -64,7 +64,7 @@ class PermissionGate:
             if env_manifest:
                 self.manifest_path = Path(env_manifest).resolve()
             else:
-                self.manifest_path = self.project_root / "manifests" / "permissions.yaml"
+                self.manifest_path = Path(__file__).resolve().parents[1] / "resources" / "manifests" / "permissions.yaml"
 
         # Initialize collections
         self.categories: Dict[str, Dict[str, Any]] = {}

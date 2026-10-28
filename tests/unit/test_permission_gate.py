@@ -115,7 +115,7 @@ def test_check_path_write_to_read_only_root() -> None:
     """Writing to read-only roots (like ANSYS install dir) must raise PermissionError."""
     custom_gate = PermissionGate()
     # Configure a mock read-only root
-    read_only_dir = custom_gate.project_root / "manifests"
+    read_only_dir = custom_gate.project_root / "src" / "ansys_unified_mcp" / "resources" / "manifests"
     custom_gate.allowed_roots = [
         AllowedRoot(
             id="read_only_manifests",

@@ -17,7 +17,7 @@ from pathlib import Path
 import pytest
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-SCRIPTS_DIR = REPO_ROOT / "scripts" / "maintenance"
+SCRIPTS_DIR = REPO_ROOT / "scripts" / "skill_governance"
 
 # 載入受測模組
 sys.path.insert(0, str(REPO_ROOT))

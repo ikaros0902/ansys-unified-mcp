@@ -127,12 +127,12 @@ class DAMGStateMachine:
         # src/ansys_unified_mcp/core/damg/damg_state_machine.py
         # Project root is parents[4]
         project_root = Path(__file__).resolve().parents[4]
-        candidate = project_root / "manifests" / "damg_rules.yaml"
+        candidate = Path(__file__).resolve().parents[2] / "resources" / "manifests" / "damg_rules.yaml"
         if candidate.exists():
             return candidate
 
         # Fallback search in working directory
-        cwd_candidate = Path.cwd() / "manifests" / "damg_rules.yaml"
+        cwd_candidate = Path.cwd() / "src" / "ansys_unified_mcp" / "resources" / "manifests" / "damg_rules.yaml"
         if cwd_candidate.exists():
             return cwd_candidate
 

@@ -16,7 +16,7 @@ Stage 2 單元測試：Meta-Router、扁平 Schema 驗證、DAMG 狀態機與 Ph
    - 節點狀態轉換、前置依賴檢查。
    - 上游節點變更時，下游節點自動標記為 DIRTY 的 BFS 傳播。
    - 前置未滿足時，裝飾器 0 秒精準攔截並回傳 DAMG_PRECONDITION_VIOLATION。
-5. run_mcp_evaluation.py 與 evaluations/ansys_mcp_eval.xml：
+5. run_mcp_evaluation.py 與 tests/evaluations/ansys_mcp_eval.xml：
    - 10 題確定性標量 XML 解析、比對邏輯 (Direct String Comparison, 數值, 大小寫, 符號剝離) 與報告生成。
 """
 
@@ -81,7 +81,7 @@ from ansys_unified_mcp.core.damg.damg_decorators import (
 )
 
 # 5. Phase 4 標量評測套件
-from evaluations.run_mcp_evaluation import (
+from tests.evaluations.run_mcp_evaluation import (
     load_evaluation_xml,
     compare_scalar,
     run_evaluation,
@@ -90,7 +90,7 @@ from evaluations.run_mcp_evaluation import (
 )
 
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent
-EVAL_XML = REPO_ROOT / "evaluations" / "ansys_mcp_eval.xml"
+EVAL_XML = REPO_ROOT / "tests" / "evaluations" / "ansys_mcp_eval.xml"
 
 
 # ============================================================================
@@ -512,7 +512,7 @@ class TestDAMGStateMachineAndPrecondition:
     """測試 DAMG 會話級狀態機、Dirty 失效 BFS 傳播與前置門禁。"""
 
     def test_damg_dag_initialization_and_acyclic(self):
-        """驗證 DAMGStateMachine 正確載入 manifests/damg_rules.yaml 且為無環圖 (DAG)。"""
+        """驗證 DAMGStateMachine 正確載入 resources/manifests/damg_rules.yaml 且為無環圖 (DAG)。"""
         sm = DAMGStateMachine(session_id="test_dag_init")
         assert len(sm.nodes) >= 15, "DAMG 規則應包含各領域主要因果節點"
 
@@ -637,7 +637,7 @@ class TestDAMGStateMachineAndPrecondition:
 
 
 # ============================================================================
-# 5. 測試 run_mcp_evaluation.py 與 evaluations/ansys_mcp_eval.xml
+# 5. 測試 run_mcp_evaluation.py 與 tests/evaluations/ansys_mcp_eval.xml
 # ============================================================================
 
 class TestEvaluationSuiteAndScalarXML:
