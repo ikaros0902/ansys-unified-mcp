@@ -46,6 +46,7 @@ SOURCES = {
     "result_explorer_protocol": DOCS_DIR / "result_explorer_protocol_api.json",
     "platform_instance_management_protocol": DOCS_DIR / "platform_instance_management_protocol_api.json",
     "filetransfer_protocol": DOCS_DIR / "filetransfer_protocol_api.json",
+    "rsm_jobmanagement_rea": DOCS_DIR / "rsm_jobmanagement_rea_api.json",
     "acp_core_rea": DOCS_DIR / "acp_core_rea_api.json",
     "autodyn_rea": DOCS_DIR / "autodyn_rea_api.json",
     "designxplorer_rea": DOCS_DIR / "designxplorer_rea_api.json",

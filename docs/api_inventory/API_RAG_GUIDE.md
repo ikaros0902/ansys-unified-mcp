@@ -26,7 +26,7 @@
 2. 用 `api_search(query="<member name>", product="<source_key>")` 找成員，再用 `api_get` 讀取完整名稱與來源欄位。
 3. 用[REA 組件證據摘要](./REA_EVIDENCE.md)比對組件 SHA-256、MVID、REA Evidence ID 和分析限制。
 
-例如，可用 `api_search(query="<member name>", product="aqwa_remote_itf_rea")` 查找 AQWA RemoteItf、用 `product="acp_core_rea"` 查找 ACP、用 `product="motion_api_rea"` 查找 ANSYS Motion，或用 `product="siwave_libironpythoncmd_rea"` 查找 SIwave 的靜態候選。先確認來源索引中的組件身分，再判讀命中內容；結果不代表公開支援 API 或可在宿主呼叫。
+例如，可用 `api_search(query="<member name>", product="aqwa_remote_itf_rea")` 查找 AQWA RemoteItf、用 `product="acp_core_rea"` 查找 ACP、用 `product="motion_api_rea"` 查找 ANSYS Motion，或用 `product="siwave_libironpythoncmd_rea"` 查找 SIwave、用 `product="rsm_jobmanagement_rea"` 查找未映射的 RSM JobManagement 靜態候選。先確認來源索引中的組件身分，再判讀命中內容；結果不代表公開支援 API 或可在宿主呼叫。
 
 REA metadata 可包含非公開成員。`public_status` 和 `validation_status` 是證據欄位，不代表 Ansys 支援承諾或 runtime 可用性。
 

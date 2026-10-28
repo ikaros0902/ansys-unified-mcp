@@ -1,6 +1,6 @@
 # REA v251 managed candidate index
 
-This index covers 46 captured REA JSON snapshots. Together, they contain 12,456 class records and 96,357 MethodDef rows.
+This index covers 47 captured REA JSON snapshots. Together, they contain 12,539 class records and 96,806 MethodDef rows.
 
 > These are static metadata rows. They can include non-public members. They do not establish product ownership, public API status, vendor support, or runtime behavior.
 > Use [the product matrix](../../PRODUCT_API_MATRIX.md) for current product mapping and gaps. Use APIKB for member-level search.
@@ -45,6 +45,7 @@ This index covers 46 captured REA JSON snapshots. Together, they contain 12,456 
 | `motion_api_rea` | `MotionAPI.dll` | 3 | 7 | 36 | [JSON](../../motion_api_rea_api.json) |
 | `polyflow_addin_rea` | `Ans.Polyflow.dll` | 6 | 283 | 3263 | [JSON](../../polyflow_addin_rea_api.json) |
 | `q3d_addin_rea` | `Ans.Ansoft.Q3DExtractorAddinPlugin.dll` | 1 | 2 | 9 | [JSON](../../q3d_addin_rea_api.json) |
+| `rsm_jobmanagement_rea` | `Ans.Rsm.JobManagement.dll` | 5 | 83 | 449 | [JSON](../../rsm_jobmanagement_rea_api.json) |
 | `sherlock_addin_rea` | `Ans.Sherlock.Addin.dll` | 44 | 465 | 5357 | [JSON](../../sherlock_addin_rea_api.json) |
 | `simplorer_addin_rea` | `Ans.Ansoft.SimplorerAddinPlugin.dll` | 2 | 5 | 17 | [JSON](../../simplorer_addin_rea_api.json) |
 | `siwave_libironpythoncmd_rea` | `Ansys.Ansoft.SIwave.LibIronPythonCmd.dll` | 2 | 95 | 710 | [JSON](../../siwave_libironpythoncmd_rea_api.json) |
@@ -94,6 +95,7 @@ This index covers 46 captured REA JSON snapshots. Together, they contain 12,456 
 - `motion_api_rea` — SHA-256 `16f4d9ea21db2dfd54a4f35cb24e8da4ca948aa31f17b4cf53b0f50776ba0908`; MVID `42af1136-5856-4d26-b8aa-3112c2d5f3e1`; REA Evidence ID `ev_4afc0b4c875028a3b73040b00f2847c87dcb44aba2c7ae1891df06ed8a213ca4`.
 - `polyflow_addin_rea` — SHA-256 `2b40cc3cc511170dfb63f4fb6b233750899b3ad1d7b81fcea536f9ca7739e19e`; MVID `3cfa1cf7-9403-4755-bd8f-c7ed3bf26f51`; REA Evidence ID `ev_d540d49f47827d1d26472f8f9e4a33988c26f32233aa4e63f1ef6ebd162103fd`.
 - `q3d_addin_rea` — SHA-256 `152288642233e5aed659424f64138c12833647f94a994782bfa4053e70f7db9b`; MVID `3f884677-04f6-4b41-a4e9-40f66e5dd28d`; REA Evidence ID `ev_6460dfe92cdba68cbc85605adc2b4554a71289bedbfed085edd4c8cc06198123`.
+- `rsm_jobmanagement_rea` — SHA-256 `618f2d05c9da8eded6a5da6f8a8eff19d78aad4510a3a798e94ee7328b726fcd`; MVID `2369ae8c-270f-4cea-a918-8fff562ae627`; REA Evidence ID `ev_9f58eff65f2cc07b630eb2b8dd224f2c424cd599d9525e228d86b0eb38ace6f2`.
 - `sherlock_addin_rea` — SHA-256 `50e7b2d3bf8f00a976206ed7026c211f22f79cd7a775e996bd10efffbff01c11`; MVID `4a63eb54-86b8-4406-bc55-c88ea89e439b`; REA Evidence ID `ev_c8068896ce4c32b935f91f820680f51b1fc98549cf660adcfb9df4320c797e62`.
 - `simplorer_addin_rea` — SHA-256 `bba079e08078996e1ffeb7491234732e673bd8365dadcde52cfd520efeab3088`; MVID `02dd607e-0fb9-4681-bfd4-39ce62e72f7f`; REA Evidence ID `ev_c652559083b9c565bd888b2be7cd86bd439eb1571e7b627c74922e3ebe2caee1`.
 - `siwave_libironpythoncmd_rea` — SHA-256 `73b7de096fabf53f18293248706082eef982f3d6a7ee3e05e9395165da5aec8d`; MVID `d4c1ce51-265b-46e1-8c51-90604ba9dbe6`; REA Evidence ID `ev_7dfa98fb8636c8d57b384efde9161101582f658ebb548d390171c0cef5b538db`.

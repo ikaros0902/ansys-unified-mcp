@@ -483,6 +483,12 @@ def build_rea_metadata_snapshots() -> list[Path]:
     output_root = repo_root / "docs" / "api_inventory"
     components = (
         (
+            "Ans.Rsm.JobManagement.json",
+            "rsm_jobmanagement_rea_api.json",
+            "rsm_jobmanagement_rea",
+            "Remote Solve Manager JobManagement v251 REA metadata; product mapping and support status unverified",
+        ),
+        (
             "ACP.Core.json",
             "acp_core_rea_api.json",
             "acp_core_rea",
