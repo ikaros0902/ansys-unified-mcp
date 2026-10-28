@@ -111,9 +111,11 @@ def main():
 
     from render_protocol_dictionaries import main as render_protocol_dictionaries
     from render_rea_source_index import main as render_rea_source_index
+    from render_sdk_dictionaries import main as render_sdk_dictionaries
 
     render_protocol_dictionaries()
     render_rea_source_index()
+    render_sdk_dictionaries()
 
     print("\n[17/17] 建置 API 知識層 SQLite 索引庫 (api_kb.sqlite)...")
     t0 = time.time()
@@ -481,6 +483,24 @@ def build_rea_metadata_snapshots() -> list[Path]:
     output_root = repo_root / "docs" / "api_inventory"
     components = (
         (
+            "ACP.Core.json",
+            "acp_core_rea_api.json",
+            "acp_core_rea",
+            "ACP v251 core add-in REA metadata; support status unverified",
+        ),
+        (
+            "MotionAPI.json",
+            "motion_api_rea_api.json",
+            "motion_api_rea",
+            "ANSYS Motion v251 MotionAPI REA metadata; support status unverified",
+        ),
+        (
+            "Ansys.Ansoft.SIwave.LibIronPythonCmd.json",
+            "siwave_libironpythoncmd_rea_api.json",
+            "siwave_libironpythoncmd_rea",
+            "AnsysEM SIwave IronPython command library v251 REA candidate; support status unverified",
+        ),
+        (
             "Ans.AUTODYN.DataModel.json",
             "autodyn_rea_api.json",
             "autodyn_rea",
@@ -659,6 +679,12 @@ def build_rea_metadata_snapshots() -> list[Path]:
             "aqwa_addin_rea_api.json",
             "aqwa_addin_rea",
             "AQWA Core add-in v251 REA metadata; support status unverified",
+        ),
+        (
+            "Ans.AQWA.RemoteItf.json",
+            "aqwa_remote_itf_rea_api.json",
+            "aqwa_remote_itf_rea",
+            "AQWA RemoteItf v251 REA metadata; support status unverified",
         ),
         (
             "Ans.CFX.CFXCore.json",
@@ -878,6 +904,9 @@ def build_rea_metadata_snapshots() -> list[Path]:
             previous_evidence = previous.get("sources", {}).get("assembly", {}).get("rea_evidence_id")
             if previous_evidence != source_payload.get("evidence_id"):
                 raise FileExistsError(f"Refusing to replace unrelated snapshot: {output_path}")
+            print(f"Preserved unchanged REA snapshot: {output_path.name}")
+            written.append(output_path)
+            continue
         fd, temp_name = tempfile.mkstemp(
             prefix=f"{output_path.stem}.", suffix=".tmp", dir=output_root
         )

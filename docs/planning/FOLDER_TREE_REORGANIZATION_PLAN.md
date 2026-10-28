@@ -1,10 +1,27 @@
 # ANSYS 專案目錄、API 字典與 RAG 重構
 
+## 目前 checkpoint（2026-10-28）
+
+- HEAD 為 `af57bda`（`docs: keep derived API inventory local`），其前一筆為 `e09a196`（`test: add unit test suites for API extraction, APIKB indexing, and docsearch catalog`）。已提交的安全範圍僅含 `.gitignore`、README、`docs/index.md` 與 `docs/maintenance/FOLDER_STRUCTURE.md`。目前 Git tree 的正式資料夾只有 `agents/`、`docs/`、`scripts/`、`src/`、`tests/`；根層另有啟動器與專案設定檔。工作樹有 API/RAG 文件與索引設定的修改，以及新 SDK 字典產生器；本段不代表搬移驗收通過。
+- 最新 APIKB 來源口徑為 104 keys：25 份 API／SDK／protocol snapshots（21 份映射至 12 個產品 ID，4 份未映射）、46 份 REA managed snapshots、33 份 native export snapshots。REA 安裝盤點的 47 份檢查結果是另一母體，包含 42 份 metadata complete 與 5 份 absent，不等於 APIKB 的 46 份 snapshots。
+- 57 個產品 coverage 狀態為 12 個有直接 snapshot、19 個只有產品組件證據、25 個尚未評估、1 個未映射共用介面。這些計數描述目前清冊，不表示完整 API 覆蓋。
+- 使用者要求目錄與 API/RAG 工作並行，暫不做驗證。Ansys 衍生資料的公開散布權限尚未確認，因此 REA/SDK 原件、快照、字典及其索引留在本機；已追蹤檔案不會因 `.gitignore` 而自動排除。提交或 push 前需逐一選定可分享檔案。
+- 使用者已明確授權 commit 與完成後 push。早先一次 commit 操作遭自動審查拒絕，並要求不得以替代方式繞過；該次拒絕不是完成提交的證據。任何後續 Git 發佈仍須符合明確授權範圍與資料散布限制。
+- 本 checkpoint 只核對 Git tree、狀態輸出及現有文件記載；沒有執行測試、驗證器、API/RAG 查詢或 ANSYS 求解。
+
 ## 2026-10-28 延續進度
 
-- 本輪校正 API/RAG 文件與計畫現況：修正 API Catalog 的來源計數重複及 protocol 索引重複敘述，補足 Workbench 字典範圍；將計畫內舊的 13 份快照／8 份 native export 更新為 25 份快照、42 份 REA 候選及 33 份 native export。另新增 `scripts/api_extraction/render_protocol_dictionaries.py`，可從 11 份 protocol JSON 重建 RPC／message 欄位字典；協定索引與 `docs/index.md` 均提供入口，涵蓋 7 個產品協定及 4 個未映射來源。完整 API snapshot 批次流程會自動刷新 protocol 字典及 42 份 managed REA snapshot 的[REA source index](../api_inventory/curated/rea/index.md)，列出 source key、assembly identity 與 metadata 計數。REA 專用批次也會刷新 REA 索引；[RAG 指南](../api_inventory/API_RAG_GUIDE.md)新增依 source key 查詢 REA 成員的步驟。APIKB 重建屬資料產生，仍不代表 API 查詢驗收。本輪未執行測試、驗證器或查詢驗收。
+- SIwave REA 靜態候選新增：REA 6.0.0 檢視 v251 `AnsysEM/Ansys.Ansoft.SIwave.LibIronPythonCmd.dll`，取得 96 個 TypeDef、710 個 MethodDef；metadata complete。Evidence JSON 保留於被忽略的 `.audit/repo-restructure/rea-managed-v251/`，來源鍵 `siwave_libironpythoncmd_rea` 已接入 APIKB 與產品清冊。名稱與型別支持 SIwave 候選映射，但官方 API／支援狀態和宿主行為仍未核實。
+- 缺口更新：REA 在 `commonfiles/fluids/lib/winx64/Ans.Fluent.CffWrapper.dll` 找到 Fluent namespace 的 wrapper，不能歸屬為 CFF API；LS-PrePost 與 Thermal Desktop 在 v251 managed inventory 中沒有明確命名的組件候選。三者繼續列為待來源項目，不以相似字串或共用元件補成 API 覆蓋。
+- 全產品來源缺口摘要：coverage 清冊有 57 個產品 ID；12 個列有直接 snapshot、19 個只有產品組件證據、25 個尚未評估、1 個是未映射共用介面。另有 45 個產品沒有直接 snapshot、25 個產品列出 SDK package。16 個產品目前同時沒有直接 snapshot、REA 組件證據或 SDK package：`ansys_id_portal`、`ansys_id_sso`、`avxcelerate`、`cff`、`edupack`、`fensap_ice`、`icem_cfd`、`installation_and_licensing`、`ls_prepost`、`minerva`、`pyansys`、`reaction_chemkin`、`rigid_body_dynamics`、`saf`、`scade`、`thermal_desktop`。這是清冊狀態摘要，不代表產品沒有 API；每項需另找版本來源或記錄阻礙。
+- ACP REA 靜態候選新增：REA 6.0.0 對 v251 `Addins/ACP/bin/win64/ACP.dll` 擷取 211 個 TypeDef、2,172 個 MethodDef；metadata 狀態為 complete。原始 Evidence JSON 留在被忽略的 `.audit/repo-restructure/rea-managed-v251/ACP.Core.json`，快照 source key 為 `acp_core_rea`，並補入 ACP coverage 與產品矩陣。這是組件靜態 metadata，不代表公開支援 API；`ansys-acp-core` 的 SDK 版本仍未確認。
+- AQWA REA 靜態候選新增：REA 6.0.0 對 v251 `aisol/bin/winx64/Ans.AQWA.RemoteItf.dll` 擷取 13 個 TypeDef、74 個 MethodDef，metadata 狀態為 complete。原始 Evidence JSON 留在被忽略的 `.audit/repo-restructure/rea-managed-v251/Ans.AQWA.RemoteItf.json`；快照 source key 為 `aqwa_remote_itf_rea`，APIKB 與 REA source index 已更新。此為靜態 metadata，不確認公開支援狀態、宿主行為或完整 AQWA API。
+- REA source 批次現已輸出 46 份 managed snapshots，APIKB build 回報 31,620 symbols、114,702 unique members、197,302 symbol-members、40,074 edges、144,927 FTS entries。新增 ACP 與 AQWA 來源後統計未變；本輪未查詢 APIKB 驗證新增 key 是否可檢索，因此不以 build 成功推論查詢行為。
+- Python SDK 人讀字典：新增 `scripts/api_extraction/render_sdk_dictionaries.py`，從具版本標記、非 protocol 的 SDK snapshots 產生每個 source key 的模組、類別、方法、屬性、函式與 docstring 頁面。依現有 snapshot 產生 10 份字典及索引，並接入完整 API 擷取批次流程；API Catalog 與 RAG 指南已加入入口。輸出是本機快照的衍生文件，尚未核對官方文件或宿主相容性，依授權決定不加入 GitHub。僅執行文件產生，不跑測試、驗證器或 API 查詢驗收。
 
-- 目錄階段狀態：目標正式目錄為 `agents/`、`docs/`、`scripts/`、`src/`、`tests/`；舊 `evaluations/`、`manifests/`、`agents/skills-tier2/`、根層 `INSTALL_SOP.md`、`setup_skill_links.py` 與 `verification_report_stage5.json` 已移出。目錄階段有 417 個已暫存路徑變更。依目前目標，交付順序是先完成目錄整理，再完成 API/RAG 文件與擷取工作；每階段完成後 commit，全部完成後 push。曾嘗試建立目錄階段 commit，但自動審查拒絕了該 Git 操作，並要求不得透過替代方式繞過；因此目前仍未提交，也不再重試。此段只記錄工作狀態，不代表搬移驗收完成。
+- 本輪校正 API/RAG 文件與計畫現況：修正 API Catalog 的來源計數重複及 protocol 索引重複敘述，補足 Workbench 字典範圍；將計畫內舊的 13 份快照／8 份 native export 更新為 25 份快照、46 份 REA 候選及 33 份 native export。另新增 `scripts/api_extraction/render_protocol_dictionaries.py`，可從 11 份 protocol JSON 重建 RPC／message 欄位字典；協定索引與 `docs/index.md` 均提供入口，涵蓋 7 個產品協定及 4 個未映射來源。完整 API snapshot 批次流程會自動刷新 protocol 字典、版本化 SDK 字典及 managed REA snapshot 的[REA source index](../api_inventory/curated/rea/index.md)，列出 source key、assembly identity 與 metadata 計數。REA 專用批次也會刷新 REA 索引；[RAG 指南](../api_inventory/API_RAG_GUIDE.md)新增依 source key 查詢 REA 成員的步驟。APIKB 重建屬資料產生，仍不代表 API 查詢驗收。本輪未執行測試、驗證器或查詢驗收。
+
+- 目錄階段歷史狀態：目標正式目錄為 `agents/`、`docs/`、`scripts/`、`src/`、`tests/`；舊 `evaluations/`、`manifests/`、`agents/skills-tier2/`、根層 `INSTALL_SOP.md`、`setup_skill_links.py` 與 `verification_report_stage5.json` 已移出。先前工作樹曾有 417 個 staged 路徑變更；這不是目前狀態。現行提交與工作樹狀態以本文件「目前 checkpoint」及 `git status` 為準。早先 commit 操作遭自動審查拒絕；不以替代方式繞過。此段不代表搬移驗收完成。
 
 - 初版 API 盤點新增[全產品 API 來源與缺口索引](../api_inventory/PRODUCT_API_MATRIX.md)，以 57 個清冊產品 ID 串接當時的 13 份直接 API/SDK 快照及已映射 REA 組件證據。當時清冊有 10 個產品 ID 含直接快照、17 個產品 ID 有映射 REA 組件證據；此統計是初版基線，後續已擴充 API/SDK/protocol snapshots。索引明確標示版本、映射與涵蓋限制，不將缺少快照寫成產品沒有 API。
 - 目錄盤點顯示正式 GitHub 根目錄只有五個目標資料夾；`agents/skills-workspace/` 是被忽略的本機評測輸出。名稱相近的 `scripts/maintenance/`、`scripts/verification/`、`scripts/skill_governance/`、`tests/evaluations/` 與技能內 `evals/` 責任不同，本輪沒有將它們合併。此為結構盤點，沒有執行目錄或連結驗證。
@@ -14,7 +31,7 @@
 - 路徑引用續查：掃描正式目錄、README、pyproject 與根設定，排除 archive/reviews 的歷史提及。將 `eval_report.json` 內舊絕對 `F:\\Ming_python\\ansys-unified-mcp\\evaluations\\ansys_mcp_eval.xml` 改為 `tests/evaluations/ansys_mcp_eval.xml`；並在[根目錄搬移清單](../maintenance/ROOT_REORGANIZATION_MAP.json)補入 12 項搬移的目前使用端。沒有執行測試或連結驗證。
 - 技能路徑續查發現評測器仍接受舊 `agents/skills-tier2/<skill>/` 輸入並映射到模組分類後的技能。此解析行為及相應測試案例承接舊呼叫端，本輪保留相容邏輯，並在目錄分工文件說明新引用必須使用 `agents/skills/<module>/<skill>/`。
 - 測試文件整理：`docs/testing/TEST_INFRA.md` 原有的四層制度、固定時限與 2026 R1 授權環境，與目前資料夾及 pytest 設定不一致。已改為現行 `tests/` 目錄導覽和選擇性執行原則；保留測試資料與案例，不要求每次執行全套。沒有執行測試。
-- REA 範圍盤點：`AWP_ROOT251` 可讀取；本機安裝含 40 個頂層目錄、29,969 個 DLL（55,598,911,966 bytes）。分布及限制見[ANSYS 來源清冊](../maintenance/ANSYS_SOURCE_INVENTORY.md)。其中 `AnsysEM`、`Optical Products`、`AddPrint`、`commonfiles` 分別含 4,514、4,448、3,453、3,014 個 DLL。現有 REA 來源表選出 47 個 REA managed 候選檢查結果，42 個 metadata complete、5 個 absent，APIKB 有 42 個 REA snapshot key 與 33 個 native export snapshot key；候選集不等於全安裝組件或完整產品 API。後續須先依產品文件與模組邊界列出可追溯的組件清單，再逐批擷取、映射或標記不可分析原因。這是來源盤點，未載入或執行組件。
+- REA 範圍盤點：`AWP_ROOT251` 可讀取；本機安裝含 40 個頂層目錄、29,969 個 DLL（55,598,911,966 bytes）。分布及限制見[ANSYS 來源清冊](../maintenance/ANSYS_SOURCE_INVENTORY.md)。其中 `AnsysEM`、`Optical Products`、`AddPrint`、`commonfiles` 分別含 4,514、4,448、3,453、3,014 個 DLL。現有 REA 來源表選出 47 個 REA managed 候選檢查結果，42 個 metadata complete、5 個 absent，APIKB 有 46 個 REA snapshot key 與 33 個 native export snapshot key；候選集不等於全安裝組件或完整產品 API。後續須先依產品文件與模組邊界列出可追溯的組件清單，再逐批擷取、映射或標記不可分析原因。這是來源盤點，未載入或執行組件。
 
 - 目錄重構續查：工作樹正式根目錄為 `agents/`、`docs/`、`scripts/`、`src/`、`tests/`；舊根目錄 `evaluations/`、`manifests/` 已移除，目的位置 `tests/evaluations/` 與 `src/ansys_unified_mcp/resources/manifests/` 存在。`agents/skills/` 依模組收納，無 tier 目錄。文件語料、`skills-workspace/`、快取及執行資料仍是被 Git 忽略的本機資料，予以保留。本輪未執行目錄驗證器或測試。
 - 對照前兩個 session 的目錄待辦後，將相似命名但用途不同的目錄邊界補入[目錄分工文件](../maintenance/FOLDER_STRUCTURE.md)：技能局部 scripts/evals 與 repo 級維護工具／MCP 評測、範例入口與技能實作、API 字典資料與 APIKB/docsearch 程式，以及產品 driver 與跨產品 bridge。PCB 範例入口仍委派給技能唯一實作；本輪只整理責任說明，未執行測試或驗證器。
@@ -25,10 +42,10 @@
 
 - 延續既有未提交工作與備份，未重置工作樹。使用者已明確要求每階段 commit，並於所有目標完成後 push；但本輪 commit 嘗試遭自動審查拒絕，故不得另用其他方式重試。REA 衍生資料的公開散布審查尚未完成，這些資料及其衍生索引仍留在本機，不納入公開推送。
 - 新增[API 與文件檢索指南](../api_inventory/API_RAG_GUIDE.md)，記錄現有 APIKB／docsearch MCP 查詢流程、版本欄位、來源追溯與證據限制，並由 API Catalog 和文件首頁連結。未新增搜尋服務或觸發完整索引重建。
-- 延續範圍仍未完成：57 個產品逐項來源與版本盤點、所有可取得模組的官方 API 對照、人讀字典擴充、代表性檢索結果驗收、公開散布審查及 GitHub PR。Mechanical／SpaceClaim 仍是目前僅有的兩份整理型人讀字典。
+- 延續範圍仍未完成：57 個產品逐項來源與版本盤點、所有可取得模組的官方 API 對照、人讀字典擴充、代表性檢索結果驗收、公開散布審查及 GitHub PR。已整理 Mechanical、SpaceClaim、Workbench 與 10 份版本化 Python SDK 字典；REA 與 protocol 索引仍是靜態清單／schema 字典，不代表官方 API 對照已完成。
 - 依使用者要求，本輪不執行測試或驗證器。新增文件尚未以 MCP 實際查詢驗收；文件索引是否已切換到最新正式資料庫仍未確認。上次未能確認的暫存視圖目錄可能仍在背景寫入，不清理該資料。
 - 目錄整理續作：將 `src/Documentation_clean/api_kb.sqlite` 舊快取搬到 `.runtime/api-rag/legacy-src-api_kb-20261009.sqlite`，搬移前後 SHA-256 相同。更新目錄說明、整理報告與搬移對照；快取保留，未刪除。
-- API 擷取續作：REA 對 CFX v251 `Ans.CFX.CadApi.dll` 和 `Ans.CFX.Acmo.dll` 回報 CLI metadata absent。REA artifact inspection 僅保留 PE root 與檔案 occurrence；LLVM 19.1.5 另擷取 43 與 17 個 export 名稱，沒有解碼簽名。兩個 native export snapshots 已加入 APIKB 來源設定。首次建置統計未增加，程式追查找到建置器 allowlist 未包含兩個新 key；補入後重建，symbols 與 FTS entries 各增加 60。最新建置統計為 16,302 symbols、104,308 unique members、186,908 symbol-members、34,370 edges、119,215 FTS entries；來源設定含 62 個來源鍵。API Catalog 與 REA evidence 已更新。此項只證明靜態 export 名稱，不代表可呼叫或受支援 API；依使用者要求尚未跑測試或 API 查詢驗收。
+- API 擷取續作：REA 對 CFX v251 `Ans.CFX.CadApi.dll` 和 `Ans.CFX.Acmo.dll` 回報 CLI metadata absent。REA artifact inspection 僅保留 PE root 與檔案 occurrence；LLVM 19.1.5 另擷取 43 與 17 個 export 名稱，沒有解碼簽名。兩個 native export snapshots 已加入 APIKB 來源設定。首次建置統計未增加，程式追查找到建置器 allowlist 未包含兩個新 key；補入後重建，symbols 與 FTS entries 各增加 60。當時 APIKB build 統計為 16,302 symbols、104,308 unique members、186,908 symbol-members、34,370 edges、119,215 FTS entries；來源設定含 62 個來源鍵。這是歷史 checkpoint。API Catalog 與 REA evidence 已更新。此項只證明靜態 export 名稱，不代表可呼叫或受支援 API；依使用者要求尚未跑測試或 API 查詢驗收。
 - DPF 擷取續作：REA 對 v251 `Ans.Dpf.MechanicalResults.dll` 回報 CLI metadata absent；artifact evidence 僅記錄 PE root/occurrence。LLVM 19.1.5 發現一個 `LoadOperators` export，無可解碼簽名。快照與 APIKB source key `dpf_mechanicalresults_native` 已加入既有建置器，索引增加 1 symbol 和 1 FTS entry。組件 SHA-256、REA Evidence ID、export snapshot hash 與限制已記入 API Catalog 和 REA evidence。未執行產品宿主或查詢驗收。
 
 ## 目標與現況
@@ -39,9 +56,9 @@ GitHub 的正式根目錄目標為 `agents/`、`docs/`、`scripts/`、`src/`、`
 
 ## 執行順序與交付界線
 
-1. 完成根目錄與技能分類、必要的路徑更新及搬移清冊；本階段已完成主要搬移，後續仍需使用者解除 Git 操作審查阻擋後才能 commit。
-2. 擴充全產品 API 來源矩陣、版本與缺口記錄，完成可分享範圍內的人讀字典及 AI 檢索文件；來源權限不明的 REA／SDK／Ansys 衍生內容只保留於本機，不推送。
-3. 使用者解除目前 Git 操作阻擋後，逐階段提交已授權且可公開的變更；所有目標完成且公開範圍確認後，再依授權 push。
+1. 目錄與技能整理、API 來源盤點及字典/RAG 工作並行推進。以 `api_coverage.json` 作逐產品狀態來源。現有 schema 已記錄 product、snapshots、REA evidence、SDK package、mapping status 與 documentation coverage；後續需補來源版本、證據狀態、限制及下一步欄位。這些是待擴充欄位，不代表現有資料已齊全。沒有來源時需記錄已查範圍和具體阻礙。
+2. 完成人讀字典與 AI 檢索文件。API/RAG 條目需連回可追溯來源，區分官方文件、SDK、managed metadata、native exports 與 protocol schema；不把靜態候選描述為完整或受支援 API。
+3. 使用者已明確授權逐階段 commit，並在所有目標完成後 push。每次提交只納入已完成且確認可分享的檔案；REA/SDK/Ansys 衍生資料在權限未確認前留本機。已追蹤資料需從提交範圍明確排除，不能只依賴 ignore 規則。
 4. 驗證目前暫緩。未執行測試、驗證器、代表性 API/RAG 查詢、搬移雜湊核對或宿主求解；不可把歷史測試紀錄當作本輪驗收。
 
 目錄收尾：根目錄過時的 `INSTALL_SOP.md` 已移除，由 `docs/deployment/DEPLOYMENT_SOP.md` 作為安裝與操作入口。技能連結工具已歸入 `scripts/skill_governance/`，`setup_skill_links.py` 保存唯一實作，`setup_skill_junctions.py` 保留舊命令列相容入口。README 與文件索引已指向現行部署手冊，README 的目錄與套件說明已更新以移除過時的 `drivers/sim_impl.py` 描述。`mcp_server.py` 仍留根目錄，供既有客戶端相容啟動。
@@ -50,11 +67,11 @@ GitHub 的正式根目錄目標為 `agents/`、`docs/`、`scripts/`、`src/`、`
 
 根目錄遷移對照見 `docs/maintenance/ROOT_REORGANIZATION_MAP.json`，記錄評測、manifests、報告、技能連結工具、部署手冊及三支技能治理腳本的來源、目的和搬移前 SHA-256。`document_sources.json` 是新加入的套件資源，並非舊根目錄 manifest 的搬移項目。
 
-API 文件切片已擴展至已安裝的 ANSYS 2025 R1 樹。`.audit/repo-restructure/rea-managed-v251/` 有 46 個候選結果，其中 42 個 managed metadata complete、4 個 absent；另有 DPF 與 CFX native PE 證據。APIKB 索引 42 個 REA 候選來源鍵，涵蓋 13 個產品／SDK 快照以外的 shared、managed 與 add-in 元件。新增八個 product add-in 候選來源來自 AQWA、CFX、Fluent、Icepak、Meshing、Polyflow、Sherlock 與 HFSS host add-in；另新增 Discovery 目錄七個 API assembly source keys，以及 Maxwell、Q3D、Icepak 三份 Ansoft add-in key；這些是靜態 implementation metadata，不等同公開或受支援 API。Zemax ZOS-API 兩組件及三個未映射 Ansoft add-in 已由 v251 安裝樹加入 REA 靜態候選；官方簽名對照仍待處理。API Server、Material Designer、TurboSystem、Units、Vista TF 與其他產品映射仍待處理；四個 managed-metadata-absent PE 已新增 native export 候選清冊，但函式本體、呼叫慣例與官方支援狀態尚未分析。完整產品 API 分類與散布權審查未完成；原始 REA JSON 留在忽略的 `.audit/`。
+API 文件切片已擴展至已安裝的 ANSYS 2025 R1 樹。`.audit/repo-restructure/rea-managed-v251/` 的來源盤點有 47 份檢查結果，其中 42 個 managed metadata complete、5 個 absent；APIKB 則索引 46 份 REA snapshot。這兩組數字的母體不同；另有 DPF 與 CFX native PE 證據。APIKB 現索引 46 個 REA 候選來源鍵；這些候選涵蓋 shared、managed 與 add-in 元件。新增八個 product add-in 候選來源來自 AQWA、CFX、Fluent、Icepak、Meshing、Polyflow、Sherlock 與 HFSS host add-in；另新增 Discovery 目錄七個 API assembly source keys，以及 Maxwell、Q3D、Icepak 三份 Ansoft add-in key；這些是靜態 implementation metadata，不等同公開或受支援 API。Zemax ZOS-API 兩組件及三個未映射 Ansoft add-in 已由 v251 安裝樹加入 REA 靜態候選；官方簽名對照仍待處理。API Server、Material Designer、TurboSystem、Units、Vista TF 與其他產品映射仍待處理；四個 managed-metadata-absent PE 已新增 native export 候選清冊，但函式本體、呼叫慣例與官方支援狀態尚未分析。完整產品 API 分類與散布權審查未完成；原始 REA JSON 留在忽略的 `.audit/`。
 
 ## 已完成工作
 
-本節彙整前兩個 sessions 的成果與本輪新增證據。使用者要求先處理目錄，並暫緩驗證；本輪先完成目錄與 API/RAG 文件的可逆整理，測試及驗收留在後續階段。
+本節彙整前兩個 sessions 的成果與本輪新增證據。使用者要求目錄與 API/RAG 工作並行，並暫緩驗證；測試及驗收留在後續階段。
 
 - 專案 GitHub 根目錄已整理為五個正式目錄：`agents/`、`docs/`、`scripts/`、`src/`、`tests/`。本次續接先核對目前工作樹與遷移報告，未執行測試或驗證器。根層的 `INSTALL_SOP.md`、`setup_skill_links.py`、`verification_report_stage5.json` 已移出或刪除。根層 `mcp_server.py`、README、設定及套件管理檔保留作相容入口或必要專案檔。
 - 本輪清除工作樹內殘留的 `agents/skills-tier2/` 快取目錄：92 個索引檔、11,194,336 bytes 移至被忽略的 `.runtime/folder-tree-reorganization/archived-caches/skills-tier2-zvec-grep/`，並保存逐檔 SHA-256 清單；本機 `.zvec-grep/`、ANSYS 語料、快取及 wheel/sdist 建置輸出保留並排除於 Git。以目前存在的追蹤檔與非忽略新檔盤點，GitHub 候選根目錄為上述五個正式目錄。
@@ -62,8 +79,8 @@ API 文件切片已擴展至已安裝的 ANSYS 2025 R1 樹。`.audit/repo-restru
 - 續查 Mechanical／SpaceClaim 字典時，從 Python.NET System.Reflection 產生的 v251 `spaceclaim_api.json` 讀出五筆 `DatumPlaneCreator.Create` 反射簽名（含 `ISelection` overload）；先前的四筆摘要不完整，已更正文檔並列出全部 snapshot 參數型別與來源識別。參數預設值和官方 CHM 對照仍未核實。
 - `evaluations/` 已併入 `tests/evaluations/`；執行期 manifests 已併入 `src/ansys_unified_mcp/resources/manifests/`；技能治理工具已歸入 `scripts/skill_governance/`。根目錄遷移表見[根目錄搬移清單](../maintenance/ROOT_REORGANIZATION_MAP.json)。
 - ANSYS 文件歸位、重複副本處理、備份和當時的雜湊結果記錄於[資料夾清理報告](../maintenance/FOLDER_CLEANUP_REPORT.md)。官方文件原件及完整 REA JSON 保留於本機忽略資料夾，不納入 GitHub 結構。
-- 前兩個 sessions 記錄 API 覆蓋清冊 schema 3、57 個產品 ID、13 份產品／SDK API snapshot，以及 SDK 快照、版本標記和 APIKB 接線。REA v251 來源目前共 42 個 candidate APIKB keys；ACT Core、Mechanical Interfaces、Granta MI 對應既有 ACT／Mechanical／Granta MI 產品證據。ACT Interfaces、LS-DYNA ACT Interfaces、AnsysEM CoreDotNet、Ansys Additive 保留獨立 key；Discovery 七份產品目錄 API 組件及 Maxwell、Q3D、Icepak 三份 Ansoft add-in 另以獨立 key 收錄，支援狀態仍未核實。
-- 較早 checkpoint 曾記錄本機 APIKB 有 59 個來源鍵：13 份產品／SDK 快照、42 份 REA managed 候選快照及 4 份 native PE export 清冊。這是歷史統計；後續增加 Workbench SDK、產品 protocol schema 與 native export 來源後，現況為 100 個來源鍵：25 份 API／SDK／protocol 快照、42 份 REA 靜態候選快照及 33 份 native PE export 快照。REA 候選涵蓋 12,132 個 snapshot class 與 93,365 個 MethodDef；native 清冊有 727 個 export 名稱，其中 181 個 symbol 可反修飾。REA APIKB 查詢回傳 snapshot SHA、assembly SHA、REA Evidence ID、版本、`public_status` 與 `validation_status`；SpaceClaim direct snapshot 回傳 assembly SHA，但不宣稱有 REA Evidence ID；`spaceclaim_core_rea` 是獨立 REA 來源鍵。Native export 結果另列 LLVM snapshot SHA、元件 SHA、ordinal、RVA 及可解碼 symbol signature。這些結果都未確認官方支援狀態。Mechanical `AddFixedSupport` 的官方 v251 說明示範無參數呼叫；SpaceClaim datum plane 手冊有 GUI 主題，但 class library CHM 尚未逐項解析 `DatumPlaneCreator` overload。宿主 runtime 未驗證。該次較早的 REA-only rebuild 記錄 16,241 symbols、104,308 unique members、186,908 symbol-members、34,370 edges、119,154 FTS entries。後續加入 Workbench、protocol 與 native export 來源後，APIKB rebuild 記錄 31,620 symbols、114,702 unique members、197,302 symbol-members、40,074 edges、144,927 FTS entries。
+- 歷史基線：前兩個 sessions 記錄 API 覆蓋清冊 schema 3、57 個產品 ID、13 份產品／SDK API snapshot，以及 SDK 快照、版本標記和 APIKB 接線。這不是現況統計。最新來源鍵與 REA 數量見本文件「目前 checkpoint」；ACT Interfaces、LS-DYNA ACT Interfaces、AnsysEM CoreDotNet、Ansys Additive 等仍須依官方資料確認產品映射及支援狀態。
+- 歷史 APIKB checkpoint：較早紀錄曾有 59 個來源鍵，之後又記錄 100 個來源鍵；兩者均已過時。現況以「目前 checkpoint」列出的 104 個來源鍵為準。最新 REA 範圍另記於 [REA 證據摘要](../api_inventory/REA_EVIDENCE.md)。靜態 metadata、native exports 和 protocol schema 不證明官方支援狀態或宿主行為。APIKB 的歷史 build 統計只作時間點記錄，不作本輪驗收依據。
 - 技能 evaluator 的舊 tier 相容路徑已修正為從舊路徑辨識技能名稱，再於巢狀模組目錄唯一解析；legacy Markdown 路徑回歸測試通過。獨立複查確認 44 個技能、14 個模組、兩份搬移對照的來源雜湊／檔案數與目的路徑相符，正式根目錄為五個目錄。此複查是靜態目錄／對照審查，未執行 ANSYS。
 - 先前 session 曾記錄 APIKB build、APIKB MCP tools 及技能 evaluator discovery 各 7 項定向測試通過。這些是歷史結果，本輪沒有重跑，也不代表 ANSYS host runtime 或完整產品 API 覆蓋。
 - 前兩個 sessions 留有目錄、技能、APIKB、文件索引及套件封裝等既有檢查紀錄。個別結果與限制應以 checkpoint 和相關報告為準；本輪沒有重跑。
@@ -72,21 +89,21 @@ API 文件切片已擴展至已安裝的 ANSYS 2025 R1 樹。`.audit/repo-restru
 
 - 五個正式根目錄、技能分類、評測與 manifests 搬移、引用修正及 44 個技能掃描已完成。`verify_directory_topology.py` 通過；wheel 建置成功，拆包後可載入 permission manifest（5 類）與 DAMG（73 節點）。Windows 暫存目錄 ACL 阻止 pip `--target` 安裝，因此未驗證乾淨環境 pip 安裝。
 - 技能驗證 44 個通過；技能完整性 90 項通過；鏡像同步 dry-run 為 370/370 檔案雜湊相同。API inventory/APIKB 測試 31 項、文件同步 34 項、phase-4/evaluation 22 項、M5 remediation 5 項及技能驗證 3 項曾分組通過。
-- 人讀導覽為 `docs/api_inventory/API_CATALOG.md`；新增 Mechanical 與 SpaceClaim v251 條目頁，並清楚區分官方文件確認與 snapshot-only 簽名。AI 檢索沿用 APIKB 查詢簽名與來源，docsearch 查詢官方文件。字典頁目前未納入 docsearch 索引。API 覆蓋清冊列 57 個產品 ID，13 份產品／SDK snapshot。產品 ID、文件版本、SDK snapshot 和 REA 組件是不同證據層，不能互相替代。官方文件、SDK、REA 與版本覆蓋尚未逐產品完整核實。
+- 人讀導覽為 `docs/api_inventory/API_CATALOG.md`；新增 Mechanical 與 SpaceClaim v251 條目頁，並清楚區分官方文件確認與 snapshot-only 簽名。AI 檢索沿用 APIKB 查詢簽名與來源，docsearch 查詢官方文件。字典頁目前未納入 docsearch 索引。API 覆蓋清冊列 57 個產品 ID，25 份 API／SDK／protocol snapshot（21 份映射至 12 個產品 ID，4 份未映射）。產品 ID、文件版本、SDK snapshot 和 REA 組件是不同證據層，不能互相替代。官方文件、SDK、REA 與版本覆蓋尚未逐產品完整核實。
 - 已記錄 22,987 個文件歸位操作、45,984 個來源／目的雜湊比對且 0 不一致；16 份確認重複的文件副本移除，清理報告與本機可回復備份索引保留於 `docs/maintenance/FOLDER_CLEANUP_REPORT.md` 及被忽略的 `.runtime/folder-document-cleanup/`。
 
 ## 尚未完成
 
 1. **目錄收尾**：五個正式根目錄和現行目的路徑已整理。搬移對照目前保存來源 hash、大小和使用端；待補目的檔 hash、完整語意去重和獨立搬移審查。已做文字層級的目前路徑引用盤點並修正評測報告的舊絕對路徑；連結目標是否可用尚未驗證。依使用者要求，暫不執行測試或驗證器。
-2. **API 來源盤點**：`api_coverage.json` 列 57 個產品 ID。APIKB 索引 100 個來源鍵：25 份 API／SDK／protocol 快照（21 份映射至 12 個產品 ID、4 份協定來源未映射）、42 份 REA 靜態候選及 33 份 native export 快照。人讀[產品 API 來源與缺口索引](../api_inventory/PRODUCT_API_MATRIX.md)列出來源與缺口。仍需逐產品核對 2025 R1 起可取得的官方文件、SDK、REA 和版本；不可將候選證據標成完整或受支援 API。
-3. **人讀字典與 AI RAG**：Mechanical／SpaceClaim v251 有整理型 API 使用字典；Workbench SDK 有來源摘要；11 份 protocol snapshots 已產生逐 RPC、message 與 field 的人讀索引，enum 成員未包含在原始 snapshot。42 份 managed REA snapshot 另有來源 key、組件身分與 metadata 計數索引，完整 member 檢索仍使用 APIKB。Mechanical `AddFixedSupport()` 有官方文件呼叫形式佐證，回傳型別仍來自 snapshot；SpaceClaim 五個 `DatumPlaneCreator.Create` overload 仍是反射 snapshot，尚未逐項比對官方 CHM。APIKB 已依目前來源重建，記錄 100 個來源鍵及 31,620 個 symbols；API 查詢驗收、官方文件交叉核對與 docsearch 索引切換狀態仍待確認。其他產品的來源差異、版本追溯和人讀字典須分批擴充。
+2. **API 來源盤點**：`api_coverage.json` 列 57 個產品 ID。APIKB 索引 104 個來源鍵：25 份 API／SDK／protocol 快照（21 份映射至 12 個產品 ID、4 份協定來源未映射）、46 份 REA 靜態候選及 33 份 native export 快照。人讀[產品 API 來源與缺口索引](../api_inventory/PRODUCT_API_MATRIX.md)列出來源與缺口。仍需逐產品核對 2025 R1 起可取得的官方文件、SDK、REA 和版本；不可將候選證據標成完整或受支援 API。
+3. **人讀字典與 AI RAG**：Mechanical／SpaceClaim v251 有整理型 API 使用字典；Workbench SDK 有來源摘要；10 份有版本標記的 Python SDK snapshots 已產生模組／成員字典；11 份 protocol snapshots 已產生逐 RPC、message 與 field 的人讀索引，enum 成員未包含在原始 snapshot。46 份 managed REA snapshot 另有 source key、組件身分與 metadata 計數索引，完整 member 檢索仍使用 APIKB。Mechanical `AddFixedSupport()` 有官方文件呼叫形式佐證，回傳型別仍來自 snapshot；SpaceClaim 五個 `DatumPlaneCreator.Create` overload 仍是反射 snapshot，尚未逐項比對官方 CHM。APIKB 已依目前來源重建，但代表性 API 查詢驗收、官方文件交叉核對與 docsearch 索引切換狀態仍待確認。其他產品的來源差異、版本追溯和官方文件對照須分批擴充。
 4. **獨立審查與驗收**：資源佔位清理曾經過獨立 reviewer；完整根目錄搬移與本輪路徑修正尚未完成獨立審查。使用者要求先不做驗證，因此定向測試、連結目標檢查、搬移目的檔 hash 對照及代表性 API/RAG 查詢均待後續安排。APIKB 重建已作為資料產生步驟完成，但不代表查詢行為已驗收。既有測試結果只保留為歷史證據。
-5. **公開發布**：使用者表示沒有或不確定公開散布許可。Ansys 軟體、組件與文件的適用條款須按實際授權判斷；在取得授權或書面許可前，REA/SDK 快照、衍生字典及其來源索引留在本機，不建立公開提交或 PR。完整風險記錄見[公開發佈檢查](../maintenance/PUBLICATION_REVIEW.md)。
+5. **公開發布**：使用者表示沒有或不確定公開散布許可。Ansys 軟體、組件與文件的適用條款須按實際授權判斷；在取得授權或書面許可前，REA/SDK 快照、衍生字典及其來源索引留在本機，不提交或 push 這些資料。純目錄文件及不含衍生內容的工具程式，需逐檔確認後才可納入階段提交。已追蹤的 API 清冊與證據文件仍須排除在公開變更之外。完整風險記錄見[公開發佈檢查](../maintenance/PUBLICATION_REVIEW.md)。
 
-## 驗收與限制
+## 驗收與限制（歷史紀錄與待辦）
 
 - 根目錄正式目錄恰為五個，忽略的本機語料、快取和建置輸出不計入 GitHub 結構。
-- 所有 44 個技能由驗證器發現，舊技能路徑、tier manifest 引用及死連結清零。
+- 歷史驗收：當時技能驗證器發現 44 個技能，並記錄舊技能路徑、tier manifest 引用及死連結清零。本輪未重跑，不作目前驗收證據。
 - 目前已執行的分組測試和 wheel 建置結果如上；全套單元測試與 pip 乾淨安裝尚未通過驗收。代表性 API 查詢及各產品 RAG 覆蓋仍需續驗。
 - 不執行 ANSYS 求解。依賴授權或特定宿主的項目明確標示未驗證。
 

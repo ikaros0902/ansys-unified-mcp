@@ -26,6 +26,8 @@
 2. 用 `api_search(query="<member name>", product="<source_key>")` 找成員，再用 `api_get` 讀取完整名稱與來源欄位。
 3. 用[REA 組件證據摘要](./REA_EVIDENCE.md)比對組件 SHA-256、MVID、REA Evidence ID 和分析限制。
 
+例如，可用 `api_search(query="<member name>", product="aqwa_remote_itf_rea")` 查找 AQWA RemoteItf、用 `product="acp_core_rea"` 查找 ACP、用 `product="motion_api_rea"` 查找 ANSYS Motion，或用 `product="siwave_libironpythoncmd_rea"` 查找 SIwave 的靜態候選。先確認來源索引中的組件身分，再判讀命中內容；結果不代表公開支援 API 或可在宿主呼叫。
+
 REA metadata 可包含非公開成員。`public_status` 和 `validation_status` 是證據欄位，不代表 Ansys 支援承諾或 runtime 可用性。
 
 ## 工具用途
@@ -62,11 +64,12 @@ REA metadata 可包含非公開成員。`public_status` 和 `validation_status` 
 - [全產品 API 來源與缺口索引](./PRODUCT_API_MATRIX.md)
 - [Workbench SDK 0.14.0 簽名摘要](./curated/workbench/sdk_0_14_0_inventory.md)
 - [Workbench gRPC protocol 0.4.0 字典](./curated/workbench/protocol_0_4_0.md)
+- [有版本標記的 Python SDK 人讀字典](./curated/sdk/index.md)
 - [PyAnsys gRPC/protobuf 協定索引](./curated/protocols/index.md)（含 11 份服務、RPC、訊息與欄位字典）
-- [REA managed snapshot 索引](./curated/rea/index.md)（42 個來源 key、assembly identity 與 metadata 計數）
+- [REA managed snapshot 索引](./curated/rea/index.md)（46 個來源 key、assembly identity 與 metadata 計數）
 - [產品與來源覆蓋清冊](./api_coverage.json)
 - [REA 組件證據摘要](./REA_EVIDENCE.md)
 - [REA managed snapshot source index](./curated/rea/index.md)
 - [API 快照目錄](./API_CATALOG.md)
 
-Mechanical 與 SpaceClaim 有整理型 API 使用字典。Workbench SDK 與 11 份 protocol snapshot 另有摘要或逐 RPC／欄位字典；這些協定字典由 snapshot 產生，尚未逐項對照官方文件，也不代表宿主 API。APIKB 的 100 個來源鍵不等於 57 個產品，也不等於完整公開 API。57 個 manifest 產品 ID 的來源、版本、介面和缺口請以覆蓋清冊為準。
+Mechanical 與 SpaceClaim 有整理型 API 使用字典。Workbench SDK 與其他有版本標記的 Python SDK 快照另有摘要及人讀字典；11 份 protocol snapshot 另有逐 RPC／欄位字典。這些字典由 snapshot 產生，尚未逐項對照官方文件，也不代表宿主 API。APIKB 的來源鍵數不等於產品數，也不等於完整公開 API。57 個 manifest 產品 ID 的來源、版本、介面和缺口請以覆蓋清冊為準。

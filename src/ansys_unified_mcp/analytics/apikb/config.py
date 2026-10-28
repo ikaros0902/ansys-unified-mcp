@@ -46,6 +46,7 @@ SOURCES = {
     "result_explorer_protocol": DOCS_DIR / "result_explorer_protocol_api.json",
     "platform_instance_management_protocol": DOCS_DIR / "platform_instance_management_protocol_api.json",
     "filetransfer_protocol": DOCS_DIR / "filetransfer_protocol_api.json",
+    "acp_core_rea": DOCS_DIR / "acp_core_rea_api.json",
     "autodyn_rea": DOCS_DIR / "autodyn_rea_api.json",
     "designxplorer_rea": DOCS_DIR / "designxplorer_rea_api.json",
     "engineeringdata_rea": DOCS_DIR / "engineeringdata_rea_api.json",
@@ -75,6 +76,7 @@ SOURCES = {
     "ansysem_coredotnet_rea": DOCS_DIR / "ansysem_coredotnet_rea_api.json",
     "additive_rea": DOCS_DIR / "additive_rea_api.json",
     "aqwa_addin_rea": DOCS_DIR / "aqwa_addin_rea_api.json",
+    "aqwa_remote_itf_rea": DOCS_DIR / "aqwa_remote_itf_rea_api.json",
     "cfx_addin_rea": DOCS_DIR / "cfx_addin_rea_api.json",
     "cfx_cadapi_native": DOCS_DIR / "cfx_cadapi_native_exports_api.json",
     "cfx_acmo_native": DOCS_DIR / "cfx_acmo_native_exports_api.json",
@@ -109,6 +111,7 @@ SOURCES = {
     "meshing_addin_rea": DOCS_DIR / "meshing_addin_rea_api.json",
     "polyflow_addin_rea": DOCS_DIR / "polyflow_addin_rea_api.json",
     "sherlock_addin_rea": DOCS_DIR / "sherlock_addin_rea_api.json",
+    "siwave_libironpythoncmd_rea": DOCS_DIR / "siwave_libironpythoncmd_rea_api.json",
     "hfss_addin_rea": DOCS_DIR / "hfss_addin_rea_api.json",
     "apip_wrapper_native": DOCS_DIR / "apip_wrapper_native_exports_api.json",
     "rom_api_native": DOCS_DIR / "rom_api_native_exports_api.json",
@@ -119,6 +122,7 @@ SOURCES = {
     "zemax_zosapi_interfaces_rea": DOCS_DIR / "zemax_zosapi_interfaces_rea_api.json",
     "designer_addin_rea": DOCS_DIR / "designer_addin_rea_api.json",
     "mechanical_ansoft_addin_rea": DOCS_DIR / "mechanical_ansoft_addin_rea_api.json",
+    "motion_api_rea": DOCS_DIR / "motion_api_rea_api.json",
     "simplorer_addin_rea": DOCS_DIR / "simplorer_addin_rea_api.json",
 }
 

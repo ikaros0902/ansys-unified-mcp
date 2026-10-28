@@ -1,6 +1,6 @@
 # ANSYS 產品 API 來源與缺口索引
 
-本索引依目前 coverage 清冊列出的 57 個產品 ID，彙整直接 API 快照、已映射 REA 組件證據和來源缺口。21 份直接 API／SDK／protocol 快照分布於 12 個產品 ID；APIKB 另索引 42 個 REA 靜態候選來源鍵和 33 份 native export 清冊，逐來源細節見 [API Catalog](./API_CATALOG.md)及[REA source index](./curated/rea/index.md)。
+本索引依目前 coverage 清冊列出的 57 個產品 ID，彙整直接 API 快照、已映射 REA 組件證據和來源缺口。21 份直接 API／SDK／protocol 快照分布於 12 個產品 ID；APIKB 另索引 46 個 REA 靜態候選來源鍵和 33 份 native export 清冊，逐來源細節見 [API Catalog](./API_CATALOG.md)及[REA source index](./curated/rea/index.md)。
 
 ## 證據狀態
 
@@ -13,7 +13,7 @@
 
 | 產品 | 現有證據 | 直接 API 快照 | REA v251 組件證據 | 映射狀態與缺口 |
 | --- | --- | --- | --- | --- |
-| `ACP` (`acp`) | 待來源／映射 | — | — | 尚未完成來源、版本或 API owner 盤點。 (`not_assessed`) |
+| `ACP` (`acp`) | REA 組件證據 | — | [ACP.dll](./REA_EVIDENCE.md)（v251） | 已記錄 ACP managed component 靜態 metadata 候選；SDK 版本、官方 API 對照及支援狀態仍待核對。 (`product_component_evidence_only`) |
 | `ACT` (`act`) | REA 組件證據 | — | [Ansys.ACT.Interfaces.dll; Ansys.ACT.Core.dll](./REA_EVIDENCE.md)（v251） | 已記錄相關組件證據；產品歸屬或官方 API 對照仍待處理。 (`product_component_evidence_only`) |
 | `Additive` (`additive`) | REA 組件證據 | — | [Ansys.Api.Additive.dll](./REA_EVIDENCE.md)（v251） | 已記錄相關組件證據；產品歸屬或官方 API 對照仍待處理。 (`product_component_evidence_only`) |
 | `ADR` (`adr`) | 待來源／映射 | — | — | 尚未完成來源、版本或 API owner 盤點。 (`not_assessed`) |
@@ -21,9 +21,9 @@
 | `Ansys_ID_Portal` (`ansys_id_portal`) | 待來源／映射 | — | — | 尚未完成來源、版本或 API owner 盤點。 (`not_assessed`) |
 | `Ansys_ID_SSO` (`ansys_id_sso`) | 待來源／映射 | — | — | 尚未完成來源、版本或 API owner 盤點。 (`not_assessed`) |
 | `AnsysEM` (`ansysem`) | REA 組件證據 | — | [Ansys.Ansoft.CoreCOMScripting.dll; Ansys.Ansoft.CoreDotNet.dll](./REA_EVIDENCE.md)（v251） | 已記錄相關組件證據；產品歸屬或官方 API 對照仍待處理。 (`product_component_evidence_only`) |
-| `Aqwa` (`aqwa`) | REA 組件證據 | — | [Ans.AQWA.Core.dll](./REA_EVIDENCE.md)（v251） | 已記錄相關組件證據；產品歸屬或官方 API 對照仍待處理。 (`product_component_evidence_only`) |
+| `Aqwa` (`aqwa`) | REA 組件證據 | — | [Ans.AQWA.Core.dll; Ans.AQWA.RemoteItf.dll](./REA_EVIDENCE.md)（v251） | 兩份組件均為 REA 靜態 metadata 候選；產品支援狀態與官方 API 對照仍待處理。 (`product_component_evidence_only`) |
 | `AVxcelerate` (`avxcelerate`) | 待來源／映射 | — | — | 尚未完成來源、版本或 API owner 盤點。 (`not_assessed`) |
-| `CFF` (`cff`) | 待來源／映射 | — | — | 尚未完成來源、版本或 API owner 盤點。 (`not_assessed`) |
+| `CFF` (`cff`) | 待來源／映射 | — | — | 只找到 `Ans.Fluent.CffWrapper.dll` 共用 wrapper 候選，型別屬 Fluent namespace；不足以映射為 CFF API。 (`not_assessed`) |
 | `CFX` (`cfx`) | REA 組件證據 | — | [Ans.CFX.CadApi.dll; Ans.CFX.CFXCore.dll](./REA_EVIDENCE.md)（v251） | 已記錄相關組件證據；產品歸屬或官方 API 對照仍待處理。 (`product_component_evidence_only`) |
 | `Discovery` (`discovery`) | 直接快照與 REA 組件證據 | [discovery_protocol_api.json](./discovery_protocol_api.json)（ansys-api-discovery 1.2.12：142 modules、130 services、1,422 RPC、1,742 messages、4,119 fields） | [Ansys.Collaboration.Api.dll; Ansys.Gateway.Api.dll; Ansys.Geometry.Api.dll; Ansys.OnScale.Api.dll; Ansys.Physics.Api.dll; Ansys.Project.Api.dll; Ansys.Results.Api.dll](./REA_EVIDENCE.md)（v251） | 協定 schema 與 v251 REA 組件證據分開列示；產品版本對照、支援狀態及宿主行為未核實。 (`direct_product_id`) |
 | `DPF` (`dpf`) | 直接快照 | [dpf_api.json](./dpf_api.json)（unknown；類別 5、方法 52、屬性 26、函式 0） | [23 個 DPF PE 元件（REA/PE sweep）](./REA_EVIDENCE.md)（v251） | 清冊以產品 ID 對應來源；快照僅涵蓋所列版本與範圍。 (`direct_product_id`) |
@@ -37,7 +37,7 @@
 | `ICEM_CFD` (`icem_cfd`) | 待來源／映射 | — | — | 尚未完成來源、版本或 API owner 盤點。 (`not_assessed`) |
 | `Icepak` (`icepak`) | REA 組件證據 | — | [Ans.Icepak.Core.dll; Ans.Ansoft.IcepakAddinPlugin.dll](./REA_EVIDENCE.md)（v251） | 已記錄相關組件證據；產品歸屬或官方 API 對照仍待處理。 (`product_component_evidence_only`) |
 | `Installation_and_Licensing` (`installation_and_licensing`) | 待來源／映射 | — | — | 尚未完成來源、版本或 API owner 盤點。 (`not_assessed`) |
-| `LS-PrePost` (`ls_prepost`) | 待來源／映射 | — | — | 已辨識共用介面；尚無足夠證據將它歸屬到單一產品。 (`unmapped_shared_interface`) |
+| `LS-PrePost` (`ls_prepost`) | 待來源／映射 | — | — | v251 managed inventory 未找到名稱明確指向 LS-PrePost 的組件；仍需產品安裝樹或官方介面來源。 (`not_assessed`) |
 | `LS-DYNA` (`lsdyna`) | 直接快照 | [lsdyna_api.json](./lsdyna_api.json)（Ansys 2025 R1 (LS-DYNA / LS-PrePost 4.12)；類別 0、方法 0、屬性 0、函式 0）<br>[pydyna_api.json](./pydyna_api.json)（unknown；類別 1、方法 19、屬性 17、函式 0） | [Ansys.ACTLSDYNA.Interfaces.dll](./REA_EVIDENCE.md)（v251） | 清冊以產品 ID 對應來源；快照僅涵蓋所列版本與範圍。 (`direct_product_id`) |
 | `Lumerical` (`lumerical`) | REA 組件證據 | — | [Python `interopapi.dll`、`interopapi-remote.dll` 與 Tcl `lumapi.dll`](./REA_EVIDENCE.md)（v251） | 已記錄 39 個 native export 候選；函式簽名、產品支援與 runtime 均未確認。 (`product_component_evidence_only`) |
 | `MAPDL` (`mapdl`) | 直接快照 | [mapdl_api.json](./mapdl_api.json)（PyMAPDL 0.74.1）；[mapdl_protocol_api.json](./mapdl_protocol_api.json)（ansys-api-mapdl 0.6.0：3 services、84 RPC、105 messages、227 fields） | — | 協定 schema 描述 gRPC 傳輸介面；不代表產品 API 完整或 runtime 可用。 (`direct_product_id`) |
@@ -45,7 +45,7 @@
 | `Mechanical` (`mechanical`) | 直接快照 | [mechanical_api.json](./mechanical_api.json)（2025 R1 v251）；[mechanical_core_api.json](./mechanical_core_api.json)（PyMechanical 0.13.2）；[mechanical_protocol_api.json](./mechanical_protocol_api.json)（ansys-api-mechanical 0.1.4：1 service、5 RPC、9 messages、18 fields） | [Mechanical DataModel; Ansys.Mechanical.Interfaces.dll; Ansys.Mechanical.DataModel.dll](./REA_EVIDENCE.md)（v251） | 清冊以產品 ID 對應快照；協定 schema 與 Python client 各自記錄，不代表宿主 API 完整或 runtime 可用。 (`direct_product_id`) |
 | `Minerva` (`minerva`) | 待來源／映射 | — | — | 尚未完成來源、版本或 API owner 盤點。 (`not_assessed`) |
 | `ModelCenter` (`modelcenter`) | 待來源／映射 | — | — | 尚未完成來源、版本或 API owner 盤點。 (`not_assessed`) |
-| `Motion` (`motion`) | 待來源／映射 | — | — | 尚未完成來源、版本或 API owner 盤點。 (`not_assessed`) |
+| `Motion` (`motion`) | REA 組件證據 | — | [MotionAPI.dll](./REA_EVIDENCE.md)（v251） | 已記錄 managed metadata 候選；官方 API 對照與支援狀態仍待核對。 (`product_component_evidence_only`) |
 | `MotorCAD` (`motorcad`) | 待來源／映射 | — | — | 尚未完成來源、版本或 API owner 盤點。 (`not_assessed`) |
 | `optiSLang` (`optislang`) | 直接快照 | [optislang_api.json](./optislang_api.json)（1.6.1；類別 241、方法 1691、屬性 0、函式 133）<br>[optislang_core_api.json](./optislang_core_api.json)（unknown；類別 1、方法 18、屬性 9、函式 0） | — | 清冊以產品 ID 對應來源；快照僅涵蓋所列版本與範圍。 (`direct_product_id`) |
 | `Polyflow` (`polyflow`) | REA 組件證據 | — | [Ans.Polyflow.dll](./REA_EVIDENCE.md)（v251） | 已記錄相關組件證據；產品歸屬或官方 API 對照仍待處理。 (`product_component_evidence_only`) |
@@ -60,12 +60,12 @@
 | `Scade_One` (`scade_one`) | 待來源／映射 | — | — | 尚未完成來源、版本或 API owner 盤點。 (`not_assessed`) |
 | `Sherlock` (`sherlock`) | REA 組件證據 | — | [Ans.Sherlock.Addin.dll](./REA_EVIDENCE.md)（v251） | 已記錄相關組件證據；產品歸屬或官方 API 對照仍待處理。 (`product_component_evidence_only`) |
 | `SimAI` (`simai`) | 待來源／映射 | — | — | 尚未完成來源、版本或 API owner 盤點。 (`not_assessed`) |
-| `SIwave` (`siwave`) | 待來源／映射 | — | — | 尚未完成來源、版本或 API owner 盤點。 (`not_assessed`) |
+| `SIwave` (`siwave`) | REA 組件證據 | — | [Ansys.Ansoft.SIwave.LibIronPythonCmd.dll](./REA_EVIDENCE.md)（v251） | 有名稱與型別可辨識的 managed metadata 候選；官方 API 對照及支援狀態未確認。 (`product_component_evidence_only`) |
 | `Sound` (`sound`) | 直接快照 | [sound_api.json](./sound_api.json)（unknown；類別 2、方法 13、屬性 6、函式 0） | — | 清冊以產品 ID 對應來源；快照僅涵蓋所列版本與範圍。 (`direct_product_id`) |
 | `SpaceClaim` (`spaceclaim`) | 直接快照 | [spaceclaim_api.json](./spaceclaim_api.json)（2025 R1 (v251)；類別 0、方法 2845、屬性 1551、函式 0） | [SpaceClaim.Api.V251.dll; SpaceClaim.Api.V251.Scripting.dll](./REA_EVIDENCE.md)（v251） | 清冊以產品 ID 對應來源；快照僅涵蓋所列版本與範圍。 (`direct_product_id`) |
 | `Speos` (`speos`) | REA 組件證據 | — | [Optical Products/Speos/bin/ApipWrapper.dll](./REA_EVIDENCE.md)（v251） | 已記錄相關組件證據；產品歸屬或官方 API 對照仍待處理。 (`product_component_evidence_only`) |
 | `System_Coupling` (`system_coupling`) | REA 組件證據 | — | [SysC.AnsRpc.Wrapper.dll; SysC.SystemCouplingParticipant.dll（native PE exports）](./REA_EVIDENCE.md)（v251） | 已記錄 native export 候選；產品公開 API 映射、協定、簽名及 runtime 仍未確認。 (`product_component_evidence_only`) |
-| `Thermal_Desktop` (`thermal_desktop`) | 待來源／映射 | — | — | 尚未完成來源、版本或 API owner 盤點。 (`not_assessed`) |
+| `Thermal_Desktop` (`thermal_desktop`) | 待來源／映射 | — | — | v251 managed inventory 未找到名稱明確指向 Thermal Desktop 的組件；仍需產品安裝樹或官方介面來源。 (`not_assessed`) |
 | `TurboGrid` (`turbogrid`) | 待來源／映射 | — | — | 尚未完成來源、版本或 API owner 盤點。 (`not_assessed`) |
 | `TwinAI` (`twinai`) | 待來源／映射 | — | — | 尚未完成來源、版本或 API owner 盤點。 (`not_assessed`) |
 | `Workbench` (`workbench`) | 直接快照 | [workbench_api.json](./workbench_api.json)（ansys-workbench-core 0.14.0）；[workbench_protocol_api.json](./workbench_protocol_api.json)（ansys-api-workbench 0.4.0） | — | Python SDK 與 transport protocol 分開記錄；未核對官方支援狀態或伺服器相容性。 (`direct_product_id`) |

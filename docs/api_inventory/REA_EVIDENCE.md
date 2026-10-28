@@ -1,6 +1,6 @@
 # REA v251 靜態組件證據
 
-記錄日期：2026-10-28。主候選清冊位於被忽略的 `.audit/repo-restructure/rea-managed-v251/`，保存 47 個 REA 結果，其中 42 個 `normalized_result.metadata.status=complete`、5 個為 `absent`。另有 23 個 DPF DLL 與三個 Lumerical API DLL 的獨立掃描，見本文件後段。另有 DPF、CFX、System Coupling、ROM、AnsysEM 與 Speos 的 PE 元件分析記錄於本文件後段；這些是本機 v251 樣本，不推定其他產品或版本的覆蓋。
+記錄日期：2026-10-28。主候選清冊位於被忽略的 `.audit/repo-restructure/rea-managed-v251/`，保存 47 個 REA 結果，其中 42 個 `normalized_result.metadata.status=complete`、5 個為 `absent`。另補充分析 ACP、AQWA、Motion 與 SIwave managed 組件，詳見「額外產品 managed 候選」段落。另有 23 個 DPF DLL 與三個 Lumerical API DLL 的獨立掃描，見本文件後段。另有 DPF、CFX、System Coupling、ROM、AnsysEM 與 Speos 的 PE 元件分析記錄於本文件後段；這些是本機 v251 樣本，不推定其他產品或版本的覆蓋。
 
 分析使用 REA CLI `6.0.0` 的 `inspect-managed-members`。provider 為 `rea-dotnet-static`（REA managed static analysis provider），provider version 為 `1`。已處理的 managed 組件 metadata 回報 `complete`、version `v4.0.30319`；System Coupling 的 ANSRPC wrapper 與 participant component 均沒有 CLI metadata。這些狀態只描述檔案解析範圍，不表示 API 完整或受支援。
 
@@ -254,13 +254,13 @@ Speos wrapper 使用獨立 APIKB key `speos_apip_wrapper_native`。它未與 Ans
 
 ### 產生 APIKB 候選快照
 
-在保留本文件列出的 managed REA JSON 的本機工作樹執行以下命令，可重建四十二份 managed 候選 snapshot 並更新本機 APIKB。此命令只轉換已保存的 JSON，不啟動 ANSYS 或載入 DLL。
+在保留本文件列出的 managed REA JSON 的本機工作樹執行以下命令，可重建四十六份 managed 候選 snapshot 並更新本機 APIKB。此命令只轉換已保存的 JSON，不啟動 ANSYS 或載入 DLL。
 
 ```powershell
 .venv\Scripts\python.exe scripts\api_extraction\extract_all_apis.py --rea-metadata
 ```
 
-輸出的四十二份 JSON 位於 `docs/api_inventory/`。原始 REA JSON 仍只保留在被忽略的 `.audit/repo-restructure/rea-managed-v251/`；若該本機證據不存在，轉換會停止並保留既有輸出。
+輸出的四十六份 JSON 位於 `docs/api_inventory/`。原始 REA JSON 仍只保留在被忽略的 `.audit/repo-restructure/rea-managed-v251/`；若該本機證據不存在，轉換會停止並保留既有輸出。
 
 Native PE export 清冊使用獨立命令。它需要 `AWP_ROOT251` 指向 v251 安裝，且 `llvm-readobj` 可從 PATH 取得；也可用 `LLVM_READOBJ` 指定執行檔。此流程讀取 PE export table，不執行 DLL。
 
@@ -338,9 +338,9 @@ Mechanical 組件命名空間為 `Ansys.ACT.Mechanical`／`Ansys.Mechanical.Data
 | `Infrastructure.ApiGeometryV251.dll` | `ev_9d8b98b67c0e827c9b8b99fc24da87e41f1eac812cbd7dde6b07c782e02a8b32` | `bf9a302f0b78f8ca8f32a59a7623c7b73eb74aaab5167cc864f9fe58c9eccd76` | TypeDef 150; MethodDef 678; Property 25; Field 463 | 完整 metadata；APIKB `api_geometry_rea`；MVID `52d2c08a-5e95-4d7f-95e0-59d87f5b405d`；產品映射待查 |
 | `AnsysEM\\ApipWrapper.dll` | `ev_6afce84a9fcd4b8256164b47103964cd416a57e7f300e6c09e83d60aeb17ff78` | `49e755e1515416646138f2f22117b862ca2441417e06602af91a5f853697410e` | metadata absent | 155 native exports；72 個 decorated names 可反修飾；[snapshot](./apip_wrapper_native_exports_api.json)；產品映射未確認 |
 
-三份新 snapshot 初次納入時的 APIKB 統計是歷史 checkpoint；後續候選已分批加入，目前共有 42 份 REA 候選 snapshot 與 33 份 native export 清冊。現行統計列於本文件末段，不能與舊 checkpoint 混用。完整 JSON 原件及 hash 留在被忽略的 `.audit/repo-restructure/rea-managed-v251/`，不列入 Git。`Ansys.Mechanical.DataModel.dll` 位於 `$env:AWP_ROOT251\aisol\bin\winx64\Ansys.Mechanical.DataModel.dll`，assembly SHA-256 為 `c3a8de009f71f8d7a8a67a870d2c6a1273d7455d87c1536221c4178486281435`，MVID 為 `90519b63-186f-4533-9899-575ad499c6e7`，REA Evidence ID 為 `ev_4e53de05f4e13f6a507df9d24f5fd5abed5f060b712e6b52e5dd798aa5063ea5`；完整 REA JSON 為 8,500,434 bytes，SHA-256 `9fc6bcbdbebf6a9de7f507e7af1840ec739d6d1b0f17351d4b041130d05c9d38`。API snapshot 為 570,135 bytes，SHA-256 `0a2e747e42d446e4090b61f82865fda3fbbeefe0e1c8e472ef57253c6e07506e`。`Ansys.ACT.Core.dll` 原件 SHA-256 為 `61f9c36f0ef405e004a5900efc4c3e52e12bdc972a0dc74c70bb7d50b1243748`；兩個 API Server 元件目前不推測所屬產品。
+三份新 snapshot 初次納入時的 APIKB 統計是歷史 checkpoint；後續候選已分批加入，目前共有 46 份 REA 候選 snapshot 與 33 份 native export 清冊。現行統計列於本文件末段，不能與舊 checkpoint 混用。完整 JSON 原件及 hash 留在被忽略的 `.audit/repo-restructure/rea-managed-v251/`，不列入 Git。`Ansys.Mechanical.DataModel.dll` 位於 `$env:AWP_ROOT251\aisol\bin\winx64\Ansys.Mechanical.DataModel.dll`，assembly SHA-256 為 `c3a8de009f71f8d7a8a67a870d2c6a1273d7455d87c1536221c4178486281435`，MVID 為 `90519b63-186f-4533-9899-575ad499c6e7`，REA Evidence ID 為 `ev_4e53de05f4e13f6a507df9d24f5fd5abed5f060b712e6b52e5dd798aa5063ea5`；完整 REA JSON 為 8,500,434 bytes，SHA-256 `9fc6bcbdbebf6a9de7f507e7af1840ec739d6d1b0f17351d4b041130d05c9d38`。API snapshot 為 570,135 bytes，SHA-256 `0a2e747e42d446e4090b61f82865fda3fbbeefe0e1c8e472ef57253c6e07506e`。`Ansys.ACT.Core.dll` 原件 SHA-256 為 `61f9c36f0ef405e004a5900efc4c3e52e12bdc972a0dc74c70bb7d50b1243748`；兩個 API Server 元件目前不推測所屬產品。
 
-本次以 extract_all_apis.py --rea-metadata 重建四十二份 REA 候選 snapshot，再以 extract_all_apis.py --native-pe-exports 擷取三十三份 native PE export 清冊並更新本機 APIKB。新增 CFX CadApi 與 Acmo 共 60 個 export；System Coupling participant 有 743 個 export；DPF 元件掃描有 10,947 個 export。所有 PE 匯出都只作靜態候選，沒有確認支援或 runtime 行為。這些名稱不證明 API 支援或 runtime 可用。LLVM snapshot 提供組件 SHA-256、export ordinal、RVA 與可解碼 symbol signature；不含 REA Evidence ID。APIKB 查詢結果另含版本、來源快照 SHA 與來源元件 SHA。目前最新建置統計為 31,620 symbols、114,702 unique members、197,302 symbol-members、40,074 edges、144,927 FTS entries；這是索引建置統計，不表示全部產品 API 或官方支援介面。尚未完成全量 APIKB/docsearch 範圍審查與 runtime 驗證；重新發布前仍須確認 REA、SDK 與手冊衍生內容的散布權。
+本次以 extract_all_apis.py --rea-metadata 重建四十六份 REA 候選 snapshot，再以 extract_all_apis.py --native-pe-exports 擷取三十三份 native PE export 清冊並更新本機 APIKB。新增 CFX CadApi 與 Acmo 共 60 個 export；System Coupling participant 有 743 個 export；DPF 元件掃描有 10,947 個 export。所有 PE 匯出都只作靜態候選，沒有確認支援或 runtime 行為。這些名稱不證明 API 支援或 runtime 可用。LLVM snapshot 提供組件 SHA-256、export ordinal、RVA 與可解碼 symbol signature；不含 REA Evidence ID。APIKB 查詢結果另含版本、來源快照 SHA 與來源元件 SHA。目前最新建置統計為 31,620 symbols、114,702 unique members、197,302 symbol-members、40,074 edges、144,927 FTS entries；這是索引建置統計，不表示全部產品 API 或官方支援介面。尚未完成全量 APIKB/docsearch 範圍審查與 runtime 驗證；重新發布前仍須確認 REA、SDK 與手冊衍生內容的散布權。
 
 ### ACT Interfaces、LS-DYNA Interfaces、AnsysEM CoreDotNet 與 Additive
 
@@ -360,6 +360,7 @@ The following files come from product-specific add-in folders. REA inspected PE 
 | Component and install-relative path | REA Evidence ID | Assembly SHA-256 | MVID | TypeDef / MethodDef | APIKB key; snapshot classes |
 | --- | --- | --- | --- | ---: | --- |
 | `Ans.AQWA.Core.dll` — `Addins/AQWA/bin/Win64` | `ev_ec6ec94ac0298cfde397a2e3ce4827ffbf2e6b22cbd8a766bef5289afeb6b569` | `2733eb3c5b4e68ed05f74c76c4cda5a5eb0e85aa895b53bfa827d251d60c37aa` | `24fc83bc-72cf-41a7-b725-7a6a53166748` | 291 / 3,464 | `aqwa_addin_rea`; 290 classes |
+| `Ans.AQWA.RemoteItf.dll` — `aisol/bin/winx64` | `ev_b925106850ff1204878666c3dd8b9058963c74e5a5870420b291e983cbf858fb` | `0751eb9e76fa77c897a42643ed0c31ebc95229c285f49de0e9414a040b1fa5e0` | `453a71de-a1d7-4284-a0bb-b60fc48c4422` | 13 / 74 | `aqwa_remote_itf_rea`; 13 classes |
 | `Ans.CFX.CFXCore.dll` — `Addins/CFX/bin/Win64` | `ev_5b1ce8ca5541a66590512c80cd6dfc5142c90644d4980e9657a5a1362a3645fb` | `421e31ab499d1993a2520e353ef8e9871e0c0cd512fc25fd09905b50c440e34b` | `d6f7081c-c12c-42ad-8bae-4e97bfce78ed` | 241 / 2,505 | `cfx_addin_rea`; 240 classes |
 | `Ans.Fluent.dll` — `Addins/Fluent/bin/Win64` | `ev_02ab1aa25aa1b97e07ea9d7c4e93cb4cf3c944605d9fe985435f53ed187a85df` | `e1742d642bab37ebe26aa147ac4aa4d5a034b26c534da7e963ec18bd9e4f96b4` | `30798882-87b3-442f-b9bc-a784f287950d` | 483 / 7,652 | `fluent_addin_rea`; 482 classes |
 | `Ans.Icepak.Core.dll` — `Addins/Icepak/bin/Win64` | `ev_1ee942b070e6c88dcac9cc4ab08276757e9db998faae78901d874e63e25443e2` | `1e5c4b058a6ec33ff077fe8633605e8157b632aeaa90dc7d84621895163b8bc8` | `80d97523-9c84-4df1-91f3-b19a1096471a` | 116 / 1,588 | `icepak_addin_rea`; 115 classes |
@@ -369,6 +370,21 @@ The following files come from product-specific add-in folders. REA inspected PE 
 | `Ans.Ansoft.HFSSAddinPlugin.dll` — `Addins/Ansoft/bin/Win64` | `ev_a34a6017824741cb2271983bcbcbf47a906fbd9263ec27e1386ed005768c7a5b` | `0b042c5cb5a2df9a191b45e5f4b0b4201e9fab1717058a6eb80e566892f61685` | `ef78f98a-e63d-4916-891e-570d2a2b7a0a` | 3 / 8 | `hfss_addin_rea`; 2 classes |
 
 These add-in snapshots expand the searchable v251 candidate set. They preserve declaring-type ownership, flags, artifact hash, MVID, and REA Evidence ID. They do not establish support status. The proprietary originals and full REA results remain in ignored local `.audit/` storage.
+
+### 額外產品 managed 候選（2026-10-28）
+
+REA 6.0.0 `inspect-managed-members` 檢查下列 v251 組件，沒有載入或執行目標程式。metadata complete 只表示可讀取該檔案的 managed metadata；兩個來源仍是靜態候選，不代表產品支援或穩定公開 API。
+
+| Component and install-relative path | REA Evidence ID | Assembly SHA-256 | MVID | TypeDef / MethodDef | APIKB source key |
+| --- | --- | --- | --- | ---: | --- |
+| `ACP.dll` — `Addins/ACP/bin/win64` | `ev_821ff672bbb6c7e195d7e57bd25703f1067fe70435c8091b8a14313b0902f067` | `441a04df502ce419540279c4a389f592306f49946f9e3e7c6205cb0adb10c49e` | `e9bf8578-00b3-48ce-b089-7dbe2ab05e0c` | 211 / 2,172 | `acp_core_rea` |
+| `Ans.AQWA.RemoteItf.dll` — `aisol/bin/winx64` | `ev_b925106850ff1204878666c3dd8b9058963c74e5a5870420b291e983cbf858fb` | `0751eb9e76fa77c897a42643ed0c31ebc95229c285f49de0e9414a040b1fa5e0` | `453a71de-a1d7-4284-a0bb-b60fc48c4422` | 13 / 74 | `aqwa_remote_itf_rea` |
+| `MotionAPI.dll` — `aisol/WBAddins/MechanicalExtensions/ANSYSMotion/dll` | `ev_4afc0b4c875028a3b73040b00f2847c87dcb44aba2c7ae1891df06ed8a213ca4` | `16f4d9ea21db2dfd54a4f35cb24e8da4ca948aa31f17b4cf53b0f50776ba0908` | `42af1136-5856-4d26-b8aa-3112c2d5f3e1` | 8 / 36 | `motion_api_rea` |
+| `Ansys.Ansoft.SIwave.LibIronPythonCmd.dll` — `AnsysEM` | `ev_7dfa98fb8636c8d57b384efde9161101582f658ebb548d390171c0cef5b538db` | `73b7de096fabf53f18293248706082eef982f3d6a7ee3e05e9395165da5aec8d` | `d4c1ce51-265b-46e1-8c51-90604ba9dbe6` | 96 / 710 | `siwave_libironpythoncmd_rea` |
+
+Full REA Evidence JSON files remain in ignored `.audit/repo-restructure/rea-managed-v251/`. Snapshot contents can include internal types or members. Public status and host behavior remain unverified.
+
+`commonfiles/fluids/lib/winx64/Ans.Fluent.CffWrapper.dll` was inspected as a CFF candidate. It has 2 TypeDef rows and 5 MethodDef rows, but its type namespace is `Ans.Fluent.CffWrapper`. REA Evidence ID is `ev_86189ba204b2bb7177e088f076d32063fbc6072c7c22c6aadd08ff395e2d2c43`; assembly SHA-256 is `c94a638df525bb8f8cbad4b81b348399cc0a69fb734d55f41c32ec156646ec9d`; MVID is `01f32545-c77b-426e-b61e-b8a0d4f278c4`. It is retained as unassigned evidence and is not mapped to CFF API.
 
 ### Discovery product API assemblies
 
@@ -398,7 +414,7 @@ These small managed add-ins were found under the v251 Ansoft add-in folder. Thei
 
 These add-ins add six snapshot classes and 27 MethodDef rows. `REA_EVIDENCE.md` retains member details and build-local metadata evidence.
 
-APIKB 現在索引 42 份 REA managed 候選 snapshot 與 33 份 native PE export 清冊。REA snapshot 涵蓋 12,132 個 snapshot class 與 93,365 個 MethodDef；native 清冊另含 12,516 個 export 名稱，其中 9,925 個 symbol 可反修飾。REA member identity 包含 declaring type，避免同簽名成員跨 owner 合併；access 標籤保留連字號。加上 21 份映射產品 snapshots、四份未映射 protocol snapshots 後共 100 個來源鍵。`api_search` 和 `api_get` 對 REA 結果回傳 snapshot SHA-256、組件 SHA-256、REA Evidence ID、版本、visibility/access 標記及 `static_metadata_only; runtime_unverified` 狀態；native 結果回傳 snapshot SHA、組件 SHA、export name、ordinal、RVA 與可解碼 symbol signature。組件映射、官方簽名對照及公開／支援狀態仍未完成；這些數字不是公開 API 數量。
+APIKB 現在索引 46 份 REA managed 候選 snapshot 與 33 份 native PE export 清冊。REA snapshot 涵蓋 12,456 個 snapshot class 與 96,357 個 MethodDef；native 清冊另含 12,516 個 export 名稱，其中 9,925 個 symbol 可反修飾。REA member identity 包含 declaring type，避免同簽名成員跨 owner 合併；access 標籤保留連字號。加上 21 份映射產品 snapshots、四份未映射 protocol snapshots 後共 104 個來源鍵。`api_search` 和 `api_get` 對 REA 結果回傳 snapshot SHA-256、組件 SHA-256、REA Evidence ID、版本、visibility/access 標記及 `static_metadata_only; runtime_unverified` 狀態；native 結果回傳 snapshot SHA、組件 SHA、export name、ordinal、RVA 與可解碼 symbol signature。組件映射、官方簽名對照及公開／支援狀態仍未完成；這些數字不是公開 API 數量。
 
 
 

@@ -72,10 +72,14 @@
       ],
       "folder": "ACP",
       "has_direct_snapshot": false,
-      "mapping_status": "not_assessed",
+      "mapping_status": "product_component_evidence_only",
       "overview_url": "https://developer.synopsys.com/docs/acp.md",
       "product": "acp",
-      "rea_evidence": {},
+      "rea_evidence": {
+        "component": "ACP.dll",
+        "path": "docs/api_inventory/REA_EVIDENCE.md",
+        "version": "v251"
+      },
       "sdk_package": "ansys-acp-core",
       "snapshot_status": "no_direct_snapshot",
       "snapshots": []
@@ -1772,10 +1776,14 @@
       ],
       "folder": "Motion",
       "has_direct_snapshot": false,
-      "mapping_status": "not_assessed",
+      "mapping_status": "product_component_evidence_only",
       "overview_url": "https://developer.synopsys.com/docs/motion.md",
       "product": "motion",
-      "rea_evidence": {},
+      "rea_evidence": {
+        "component": "MotionAPI.dll",
+        "path": "docs/api_inventory/REA_EVIDENCE.md",
+        "version": "v251"
+      },
       "sdk_package": null,
       "snapshot_status": "no_direct_snapshot",
       "snapshots": []
@@ -2596,10 +2604,14 @@
       ],
       "folder": "SIwave",
       "has_direct_snapshot": false,
-      "mapping_status": "not_assessed",
+      "mapping_status": "product_component_evidence_only",
       "overview_url": "",
       "product": "siwave",
-      "rea_evidence": {},
+      "rea_evidence": {
+        "component": "Ansys.Ansoft.SIwave.LibIronPythonCmd.dll",
+        "path": "docs/api_inventory/REA_EVIDENCE.md",
+        "version": "v251"
+      },
       "sdk_package": null,
       "snapshot_status": "no_direct_snapshot",
       "snapshots": []
