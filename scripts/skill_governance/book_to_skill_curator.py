@@ -1148,7 +1148,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--target-skill",
         type=str,
         default=None,
-        help="目標技能路徑 (例如: agents/skills/pymechanical-operations/)",
+        help="目標技能路徑 (例如: agents/skills/structural-mechanics/pymechanical-operations/)",
     )
     parser.add_argument(
         "--dry-run",

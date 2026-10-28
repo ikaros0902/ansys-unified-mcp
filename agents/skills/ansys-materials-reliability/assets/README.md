@@ -1,1 +1,0 @@
-# Assets for ansys-materials-reliability

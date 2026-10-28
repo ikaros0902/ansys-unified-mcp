@@ -1,0 +1,2842 @@
+{
+  "schema_version": 1,
+  "state": "migrated",
+  "source_manifest": "本機忽略的 .runtime/folder-tree-reorganization/skill-root-migration/manifest.json",
+  "skill_count": 44,
+  "file_count": 472,
+  "files": [
+    {
+      "source": "agents/skills-tier2/act-extension-development/SKILL.md",
+      "destination": "agents/skills/geometry-meshing/act-extension-development/SKILL.md",
+      "source_sha256": "2a4c6b23decd03699f167d5c8dc19dd1da80d8adec42b89a98caf8e269260051",
+      "source_bytes": 3796
+    },
+    {
+      "source": "agents/skills-tier2/act-extension-development/assets/wbex_manifest_template.xml",
+      "destination": "agents/skills/geometry-meshing/act-extension-development/assets/wbex_manifest_template.xml",
+      "source_sha256": "b97da79e3ff9efe866de842daf433543f98b1c2ab8830a9aea845e518af1dc66",
+      "source_bytes": 2821
+    },
+    {
+      "source": "agents/skills-tier2/act-extension-development/references/extension_xml_schema.md",
+      "destination": "agents/skills/geometry-meshing/act-extension-development/references/extension_xml_schema.md",
+      "source_sha256": "b98c596e9ad222b27a71e92c19c666a140f00ae5b0b947baa7ac39a74d932c1b",
+      "source_bytes": 5011
+    },
+    {
+      "source": "agents/skills-tier2/act-extension-development/references/filesystemwatcher_pattern.md",
+      "destination": "agents/skills/geometry-meshing/act-extension-development/references/filesystemwatcher_pattern.md",
+      "source_sha256": "80aaef5b649b1b2de1dce85d1e6f22bc2426e2f0552f4de5d0da05723b151581",
+      "source_bytes": 1282
+    },
+    {
+      "source": "agents/skills-tier2/act-extension-development/references/ironpython_quirks.md",
+      "destination": "agents/skills/geometry-meshing/act-extension-development/references/ironpython_quirks.md",
+      "source_sha256": "86f98b6112b4b37fec63b631c535f36ca53267719239e1690a4876a80ed45477",
+      "source_bytes": 3374
+    },
+    {
+      "source": "agents/skills-tier2/act-extension-development/references/ironpython_to_cpython_migration.md",
+      "destination": "agents/skills/geometry-meshing/act-extension-development/references/ironpython_to_cpython_migration.md",
+      "source_sha256": "bb05854132a8a0e4cd3994696276d0b3640561f07804c1918b572a7404bc0873",
+      "source_bytes": 4601
+    },
+    {
+      "source": "agents/skills-tier2/act-extension-development/references/wizard_api.md",
+      "destination": "agents/skills/geometry-meshing/act-extension-development/references/wizard_api.md",
+      "source_sha256": "ea7635d7f43f69f0d8bfe5a549b0819a7b3ab1dd8c6f8a4a4da302587c2c82e2",
+      "source_bytes": 6919
+    },
+    {
+      "source": "agents/skills-tier2/act-extension-development/references/workbench_vs_mechanical_api.md",
+      "destination": "agents/skills/geometry-meshing/act-extension-development/references/workbench_vs_mechanical_api.md",
+      "source_sha256": "48e53271bbfa18bdd2c2bc9018f59038f0532e5220be6dc616e1169def7c3c5d",
+      "source_bytes": 4822
+    },
+    {
+      "source": "agents/skills-tier2/act-extension-development/scripts/act_wizard_automation.py",
+      "destination": "agents/skills/geometry-meshing/act-extension-development/scripts/act_wizard_automation.py",
+      "source_sha256": "2c3e572bdc8408ca73eba131e408511f001e06c5705c7bc8499609bfe15702df",
+      "source_bytes": 1890
+    },
+    {
+      "source": "agents/skills-tier2/act-extension-development/scripts/file_system_watcher_listener.py",
+      "destination": "agents/skills/geometry-meshing/act-extension-development/scripts/file_system_watcher_listener.py",
+      "source_sha256": "95e1ac649326452e1bbe6594aee7a3c6af9d4c5f5d5d57e66df68ede1e35f266",
+      "source_bytes": 2646
+    },
+    {
+      "source": "agents/skills-tier2/act-extension-development/scripts/invoke_act_wizard.py",
+      "destination": "agents/skills/geometry-meshing/act-extension-development/scripts/invoke_act_wizard.py",
+      "source_sha256": "38cf12fe9e7defda26848cd7547de09167133f31fc866cdcc58cac89e3c95d8d",
+      "source_bytes": 1148
+    },
+    {
+      "source": "agents/skills-tier2/act-extension-development/scripts/wb_event_listener.py",
+      "destination": "agents/skills/geometry-meshing/act-extension-development/scripts/wb_event_listener.py",
+      "source_sha256": "f1871bb3be025948c3cb311242f331d812e1170e8c6acd15af8cad1791131c58",
+      "source_bytes": 1848
+    },
+    {
+      "source": "agents/skills-tier2/act-extension-development/scripts/__pycache__/act_wizard_automation.cpython-314.pyc",
+      "destination": "agents/skills/geometry-meshing/act-extension-development/scripts/__pycache__/act_wizard_automation.cpython-314.pyc",
+      "source_sha256": "580323a3635dc08e1da3b10a024841e19f877b84a54434fcf1c3ed7c01fb8633",
+      "source_bytes": 2757
+    },
+    {
+      "source": "agents/skills-tier2/act-extension-development/scripts/__pycache__/act_wizard_automation.cpython-39.pyc",
+      "destination": "agents/skills/geometry-meshing/act-extension-development/scripts/__pycache__/act_wizard_automation.cpython-39.pyc",
+      "source_sha256": "e69a4f20a1ca652424421ee506b5f68b7759b766136979b96ad63201f1386174",
+      "source_bytes": 1663
+    },
+    {
+      "source": "agents/skills-tier2/act-extension-development/scripts/__pycache__/file_system_watcher_listener.cpython-314.pyc",
+      "destination": "agents/skills/geometry-meshing/act-extension-development/scripts/__pycache__/file_system_watcher_listener.cpython-314.pyc",
+      "source_sha256": "908dc164b99a36ff11e4139ff79a9fa7154141fe2dfb3f7df5dceb1dd0768ee8",
+      "source_bytes": 4778
+    },
+    {
+      "source": "agents/skills-tier2/act-extension-development/scripts/__pycache__/file_system_watcher_listener.cpython-39.pyc",
+      "destination": "agents/skills/geometry-meshing/act-extension-development/scripts/__pycache__/file_system_watcher_listener.cpython-39.pyc",
+      "source_sha256": "6bed75095da930672d93e077e64333b0e4846bed752e0bf53381f08b05ce5ddb",
+      "source_bytes": 2873
+    },
+    {
+      "source": "agents/skills-tier2/act-extension-development/scripts/__pycache__/invoke_act_wizard.cpython-314.pyc",
+      "destination": "agents/skills/geometry-meshing/act-extension-development/scripts/__pycache__/invoke_act_wizard.cpython-314.pyc",
+      "source_sha256": "7873f59b2c942f86983da0670253e786fd33f76930f90356ea5016f835b40818",
+      "source_bytes": 1766
+    },
+    {
+      "source": "agents/skills-tier2/act-extension-development/scripts/__pycache__/invoke_act_wizard.cpython-39.pyc",
+      "destination": "agents/skills/geometry-meshing/act-extension-development/scripts/__pycache__/invoke_act_wizard.cpython-39.pyc",
+      "source_sha256": "5ead50a9063069f57ce44ba04f3891d5c9abbe90e866ef4d89ddfeaad19299b2",
+      "source_bytes": 1113
+    },
+    {
+      "source": "agents/skills-tier2/act-extension-development/scripts/__pycache__/wb_event_listener.cpython-314.pyc",
+      "destination": "agents/skills/geometry-meshing/act-extension-development/scripts/__pycache__/wb_event_listener.cpython-314.pyc",
+      "source_sha256": "d90f46db4696cf5a62f9e9385d3668eea38fb2bc9dae4ca90703a072f16daabb",
+      "source_bytes": 3824
+    },
+    {
+      "source": "agents/skills-tier2/act-extension-development/scripts/__pycache__/wb_event_listener.cpython-39.pyc",
+      "destination": "agents/skills/geometry-meshing/act-extension-development/scripts/__pycache__/wb_event_listener.cpython-39.pyc",
+      "source_sha256": "e07dfe520c398672bef5997124489fa16527fab8f512263476a27c101115dc0b",
+      "source_bytes": 2237
+    },
+    {
+      "source": "agents/skills-tier2/ansys-acp-granta/SKILL.md",
+      "destination": "agents/skills/materials-reliability/ansys-acp-granta/SKILL.md",
+      "source_sha256": "d32711fc74053746255776a83dadb6aa36c341fd3d466d9ae6e191206f5c76ac",
+      "source_bytes": 2028
+    },
+    {
+      "source": "agents/skills-tier2/ansys-acp-granta/assets/README.md",
+      "destination": "agents/skills/materials-reliability/ansys-acp-granta/assets/README.md",
+      "source_sha256": "8367be7a4960bc486d6b23228b54a56f9321f1fc4458f5bb4860a86bb8363298",
+      "source_bytes": 94
+    },
+    {
+      "source": "agents/skills-tier2/ansys-acp-granta/evals/evals.json",
+      "destination": "agents/skills/materials-reliability/ansys-acp-granta/evals/evals.json",
+      "source_sha256": "ca9a88ffb2d30c3ca2fea19e114854a09347d21049702c60d67f2b9cf835d631",
+      "source_bytes": 564
+    },
+    {
+      "source": "agents/skills-tier2/ansys-acp-granta/references/failure_criteria_composites.md",
+      "destination": "agents/skills/materials-reliability/ansys-acp-granta/references/failure_criteria_composites.md",
+      "source_sha256": "03b32b71503758894701befe51d9ea1e0a03fec6dd4a36d33ba62f8a645817d1",
+      "source_bytes": 317
+    },
+    {
+      "source": "agents/skills-tier2/ansys-acp-granta/references/granta_material_governance.md",
+      "destination": "agents/skills/materials-reliability/ansys-acp-granta/references/granta_material_governance.md",
+      "source_sha256": "35f4ac3887f01aafdf9878cade9c7c749f3801dc01d577d9a06110503f8f82c4",
+      "source_bytes": 147
+    },
+    {
+      "source": "agents/skills-tier2/ansys-acp-granta/scripts/ply_stackup_generator.py",
+      "destination": "agents/skills/materials-reliability/ansys-acp-granta/scripts/ply_stackup_generator.py",
+      "source_sha256": "247312ecc42a9f29d739211d84aa96f346b9334cfcb612a89a1220229dc87e53",
+      "source_bytes": 987
+    },
+    {
+      "source": "agents/skills-tier2/ansys-aqwa-sound/SKILL.md",
+      "destination": "agents/skills/multiphysics/ansys-aqwa-sound/SKILL.md",
+      "source_sha256": "154970cda5420a082255ffd06a0a01daef88e7a1c059d02b743914603650d424",
+      "source_bytes": 1973
+    },
+    {
+      "source": "agents/skills-tier2/ansys-aqwa-sound/assets/README.md",
+      "destination": "agents/skills/multiphysics/ansys-aqwa-sound/assets/README.md",
+      "source_sha256": "a03d55718819f609b1db1146fa9aaaee5b8c1c9ccde0ebf190edcf70efb96f45",
+      "source_bytes": 94
+    },
+    {
+      "source": "agents/skills-tier2/ansys-aqwa-sound/evals/evals.json",
+      "destination": "agents/skills/multiphysics/ansys-aqwa-sound/evals/evals.json",
+      "source_sha256": "5fb8bc4541c6ec0ab103b52dcf7276083d935bea8b9ce6887d1cf2b6285169b4",
+      "source_bytes": 560
+    },
+    {
+      "source": "agents/skills-tier2/ansys-aqwa-sound/references/aqwa_diffraction_radiation.md",
+      "destination": "agents/skills/multiphysics/ansys-aqwa-sound/references/aqwa_diffraction_radiation.md",
+      "source_sha256": "cb137c63bf535ffd180895e341993741f11d1d5d38952c47b19ca95291eff2a9",
+      "source_bytes": 152
+    },
+    {
+      "source": "agents/skills-tier2/ansys-aqwa-sound/references/sound_psychoacoustics_metrics.md",
+      "destination": "agents/skills/multiphysics/ansys-aqwa-sound/references/sound_psychoacoustics_metrics.md",
+      "source_sha256": "2d1ecd986fdf1793a8e2af062e2351f29b339dbd048b0dfd0db90b02f8cf74a5",
+      "source_bytes": 163
+    },
+    {
+      "source": "agents/skills-tier2/ansys-aqwa-sound/scripts/acoustic_signal_metrics.py",
+      "destination": "agents/skills/multiphysics/ansys-aqwa-sound/scripts/acoustic_signal_metrics.py",
+      "source_sha256": "a56dcb07d23ba05f28770dc14f95d1ffc1376d45708ba97ca2720f41b3b4a89c",
+      "source_bytes": 792
+    },
+    {
+      "source": "agents/skills-tier2/ansys-cfx/SKILL.md",
+      "destination": "agents/skills/fluids-cfd/ansys-cfx/SKILL.md",
+      "source_sha256": "3a46d26255d404d26bf5122b2f9105eb3d1140687b51faecdc22c669541c13d7",
+      "source_bytes": 1857
+    },
+    {
+      "source": "agents/skills-tier2/ansys-cfx/assets/README.md",
+      "destination": "agents/skills/fluids-cfd/ansys-cfx/assets/README.md",
+      "source_sha256": "7055715c04646f5078b65ea7f121bfcd524f9552bce7b0f341e439083b6eb8bf",
+      "source_bytes": 87
+    },
+    {
+      "source": "agents/skills-tier2/ansys-cfx/evals/evals.json",
+      "destination": "agents/skills/fluids-cfd/ansys-cfx/evals/evals.json",
+      "source_sha256": "032cec50ce3c3ba8d885087ae3b6d307c030f3d4290c70b373bc0633c4ed5923",
+      "source_bytes": 481
+    },
+    {
+      "source": "agents/skills-tier2/ansys-cfx/references/ccl_scripting_guide.md",
+      "destination": "agents/skills/fluids-cfd/ansys-cfx/references/ccl_scripting_guide.md",
+      "source_sha256": "b356aa232ebe9e975f6c0be9ab922599b09155bbcc1cd5eccfb8d2145ebb5f61",
+      "source_bytes": 266
+    },
+    {
+      "source": "agents/skills-tier2/ansys-cfx/references/turbomachinery_best_practices.md",
+      "destination": "agents/skills/fluids-cfd/ansys-cfx/references/turbomachinery_best_practices.md",
+      "source_sha256": "f18b9ba35ca0d98ef22eb4c29ea33852509ee83174b4e7547e2774fbd9e0d44d",
+      "source_bytes": 323
+    },
+    {
+      "source": "agents/skills-tier2/ansys-cfx/scripts/cfx_solver_runner.py",
+      "destination": "agents/skills/fluids-cfd/ansys-cfx/scripts/cfx_solver_runner.py",
+      "source_sha256": "87b4f804f4a1041f7c2eba8a679729903daee02899e4b829022ac6da39a1449f",
+      "source_bytes": 987
+    },
+    {
+      "source": "agents/skills-tier2/ansys-error-catalog/SKILL.md",
+      "destination": "agents/skills/mcp-foundation/ansys-error-catalog/SKILL.md",
+      "source_sha256": "b166e4443bf4b951166ac560e7882eb8d01b59400021a36b1a9b8f0f8c4908f7",
+      "source_bytes": 2112
+    },
+    {
+      "source": "agents/skills-tier2/ansys-error-catalog/references/ironpython_general.md",
+      "destination": "agents/skills/mcp-foundation/ansys-error-catalog/references/ironpython_general.md",
+      "source_sha256": "033c38cab054d3dcc5fcf4815bbbaf569b2facd4eeaf30cbe8cd84427015f20b",
+      "source_bytes": 5319
+    },
+    {
+      "source": "agents/skills-tier2/ansys-error-catalog/references/mechanical_scripting.md",
+      "destination": "agents/skills/mcp-foundation/ansys-error-catalog/references/mechanical_scripting.md",
+      "source_sha256": "7cf52e6517830c0ab02b6c13d35b631552ca48270d1dceef3be7708fdaf72505",
+      "source_bytes": 6283
+    },
+    {
+      "source": "agents/skills-tier2/ansys-error-catalog/references/spaceclaim_pygeometry.md",
+      "destination": "agents/skills/mcp-foundation/ansys-error-catalog/references/spaceclaim_pygeometry.md",
+      "source_sha256": "b38faec832097e8fbfb5b9251a749a78eaf0a006d3af80219df1329c6ea72499",
+      "source_bytes": 19361
+    },
+    {
+      "source": "agents/skills-tier2/ansys-error-catalog/references/workbench_act.md",
+      "destination": "agents/skills/mcp-foundation/ansys-error-catalog/references/workbench_act.md",
+      "source_sha256": "0714f941144436244110b659bdd8cda2c567019db06bf4c64650ba7ae6a9bce1",
+      "source_bytes": 4840
+    },
+    {
+      "source": "agents/skills-tier2/ansys-error-catalog/scripts/diagnose_ironpython.py",
+      "destination": "agents/skills/mcp-foundation/ansys-error-catalog/scripts/diagnose_ironpython.py",
+      "source_sha256": "fa2439000745b6cac3119427be1a78aacce06d53c7981d9a955268d30404a107",
+      "source_bytes": 1085
+    },
+    {
+      "source": "agents/skills-tier2/ansys-error-catalog/scripts/error_diagnostic_helper.py",
+      "destination": "agents/skills/mcp-foundation/ansys-error-catalog/scripts/error_diagnostic_helper.py",
+      "source_sha256": "2820b4ed33d4fd09031ad6a6971fd1c273247a333a0ca4808d34bed0fa25d0a7",
+      "source_bytes": 1326
+    },
+    {
+      "source": "agents/skills-tier2/ansys-error-catalog/scripts/__pycache__/diagnose_ironpython.cpython-314.pyc",
+      "destination": "agents/skills/mcp-foundation/ansys-error-catalog/scripts/__pycache__/diagnose_ironpython.cpython-314.pyc",
+      "source_sha256": "1adad2796eeb62eca7192cf0bf7d634feff2d04e8cd993703df33e9890088d25",
+      "source_bytes": 1703
+    },
+    {
+      "source": "agents/skills-tier2/ansys-error-catalog/scripts/__pycache__/diagnose_ironpython.cpython-39.pyc",
+      "destination": "agents/skills/mcp-foundation/ansys-error-catalog/scripts/__pycache__/diagnose_ironpython.cpython-39.pyc",
+      "source_sha256": "55a9d0b2d814964ba92aa23f4f58f33b63cf95fb03af5b435024d718fc98d371",
+      "source_bytes": 1248
+    },
+    {
+      "source": "agents/skills-tier2/ansys-error-catalog/scripts/__pycache__/error_diagnostic_helper.cpython-314.pyc",
+      "destination": "agents/skills/mcp-foundation/ansys-error-catalog/scripts/__pycache__/error_diagnostic_helper.cpython-314.pyc",
+      "source_sha256": "17d5bed1a368f131fcd44215f1a7a2da15ddb6a104ff1a622bd00d3b164436a2",
+      "source_bytes": 1797
+    },
+    {
+      "source": "agents/skills-tier2/ansys-error-catalog/scripts/__pycache__/error_diagnostic_helper.cpython-39.pyc",
+      "destination": "agents/skills/mcp-foundation/ansys-error-catalog/scripts/__pycache__/error_diagnostic_helper.cpython-39.pyc",
+      "source_sha256": "6ccd92fe4d8779017cb3bb59aaddb3c229e292964a474b2489bb9c24e3d3726e",
+      "source_bytes": 1356
+    },
+    {
+      "source": "agents/skills-tier2/ansys-fluent/SKILL.md",
+      "destination": "agents/skills/fluids-cfd/ansys-fluent/SKILL.md",
+      "source_sha256": "e7f6bc0c7bf8a618f18d134a8f28dabcb01b6fa60cca89fd95d6b6dc27337368",
+      "source_bytes": 7347
+    },
+    {
+      "source": "agents/skills-tier2/ansys-fluent/references/boundary_conditions.md",
+      "destination": "agents/skills/fluids-cfd/ansys-fluent/references/boundary_conditions.md",
+      "source_sha256": "871228d25939a1517a2c32a341348ad7ef565603b5725657eb36a54d984534cd",
+      "source_bytes": 5749
+    },
+    {
+      "source": "agents/skills-tier2/ansys-fluent/references/fluent_diagnostics.md",
+      "destination": "agents/skills/fluids-cfd/ansys-fluent/references/fluent_diagnostics.md",
+      "source_sha256": "c227da5f46a4f066064967319312f08c520cf236c56d71834290557c688d7caf",
+      "source_bytes": 5660
+    },
+    {
+      "source": "agents/skills-tier2/ansys-fluent/references/fluent_judgment.md",
+      "destination": "agents/skills/fluids-cfd/ansys-fluent/references/fluent_judgment.md",
+      "source_sha256": "1ae85891ebc6066d4d20881b9b743a9797bb28e80b7ce2c1c86524b59ccdc016",
+      "source_bytes": 5383
+    },
+    {
+      "source": "agents/skills-tier2/ansys-fluent/references/official_examples.md",
+      "destination": "agents/skills/fluids-cfd/ansys-fluent/references/official_examples.md",
+      "source_sha256": "968ca2dbf5bcb990523587e41088949ac15a9b14eeb4d04a0afb9c3d779d383b",
+      "source_bytes": 3329
+    },
+    {
+      "source": "agents/skills-tier2/ansys-fluent/references/physics_models.md",
+      "destination": "agents/skills/fluids-cfd/ansys-fluent/references/physics_models.md",
+      "source_sha256": "5d6126f8c453758c89f127d2b74aed35df3c021cd72e2ce11b2764d2174e3466",
+      "source_bytes": 6787
+    },
+    {
+      "source": "agents/skills-tier2/ansys-fluent/references/solver_settings.md",
+      "destination": "agents/skills/fluids-cfd/ansys-fluent/references/solver_settings.md",
+      "source_sha256": "431bd71ba1a2c27fe3913dbd8bb063838cc28ef801d31d40dd38ee51c553561f",
+      "source_bytes": 5728
+    },
+    {
+      "source": "agents/skills-tier2/ansys-fluent/references/watertight_meshing.md",
+      "destination": "agents/skills/fluids-cfd/ansys-fluent/references/watertight_meshing.md",
+      "source_sha256": "949d41e4670166081738657e81148bfeda28296046ffaaec18deee37738b7d81",
+      "source_bytes": 6158
+    },
+    {
+      "source": "agents/skills-tier2/ansys-fluent/scripts/check_fluent_mesh.py",
+      "destination": "agents/skills/fluids-cfd/ansys-fluent/scripts/check_fluent_mesh.py",
+      "source_sha256": "839b65c2300d7dc6fff507b892f9d6bd114f7965e671229579f3cea2d7bb7f84",
+      "source_bytes": 11053
+    },
+    {
+      "source": "agents/skills-tier2/ansys-fluent/scripts/run_mixing_elbow_e2e.py",
+      "destination": "agents/skills/fluids-cfd/ansys-fluent/scripts/run_mixing_elbow_e2e.py",
+      "source_sha256": "dac4b6dc50e397f550400da9e6ec1c92f61c638b9be7aaf78763c6a7cac36239",
+      "source_bytes": 7484
+    },
+    {
+      "source": "agents/skills-tier2/ansys-fluent/scripts/__pycache__/check_fluent_mesh.cpython-314.pyc",
+      "destination": "agents/skills/fluids-cfd/ansys-fluent/scripts/__pycache__/check_fluent_mesh.cpython-314.pyc",
+      "source_sha256": "a0e24e6809222946a2aa9f643b9a3ffa65524a1d271f8a7261fb0f551e96c98e",
+      "source_bytes": 12965
+    },
+    {
+      "source": "agents/skills-tier2/ansys-fluent/scripts/__pycache__/check_fluent_mesh.cpython-39.pyc",
+      "destination": "agents/skills/fluids-cfd/ansys-fluent/scripts/__pycache__/check_fluent_mesh.cpython-39.pyc",
+      "source_sha256": "0ed60f167ac26d44f92a9a777e9ce46560c0a1f4e024e246840e9413fb712323",
+      "source_bytes": 8582
+    },
+    {
+      "source": "agents/skills-tier2/ansys-fluent/scripts/__pycache__/run_mixing_elbow_e2e.cpython-314.pyc",
+      "destination": "agents/skills/fluids-cfd/ansys-fluent/scripts/__pycache__/run_mixing_elbow_e2e.cpython-314.pyc",
+      "source_sha256": "ea254674791f3e0e3f0fb38e51fb63a57a503d72d882b04d6df1508577ca1817",
+      "source_bytes": 10596
+    },
+    {
+      "source": "agents/skills-tier2/ansys-fluent/scripts/__pycache__/run_mixing_elbow_e2e.cpython-39.pyc",
+      "destination": "agents/skills/fluids-cfd/ansys-fluent/scripts/__pycache__/run_mixing_elbow_e2e.cpython-39.pyc",
+      "source_sha256": "28ca16179a0f979508dfdba1b32e8db96528db7aad5ff023ee5d96a0f6d95a84",
+      "source_bytes": 5777
+    },
+    {
+      "source": "agents/skills-tier2/ansys-hfss/SKILL.md",
+      "destination": "agents/skills/electromagnetics/ansys-hfss/SKILL.md",
+      "source_sha256": "f7ac7704484cf70ac0480ee68b42d43bff2b5d7e0450a21a599559782f65297b",
+      "source_bytes": 1972
+    },
+    {
+      "source": "agents/skills-tier2/ansys-hfss/assets/README.md",
+      "destination": "agents/skills/electromagnetics/ansys-hfss/assets/README.md",
+      "source_sha256": "67f821643ab4d22f31ed1858ca71cf0d0184625a81dacccdcbd5294c59997f33",
+      "source_bytes": 88
+    },
+    {
+      "source": "agents/skills-tier2/ansys-hfss/evals/evals.json",
+      "destination": "agents/skills/electromagnetics/ansys-hfss/evals/evals.json",
+      "source_sha256": "4c2116185ce0bed77c53885c0a129130aafd7a53aeb7a5571cd356d1cf2cf65b",
+      "source_bytes": 579
+    },
+    {
+      "source": "agents/skills-tier2/ansys-hfss/references/adaptive_meshing_convergence.md",
+      "destination": "agents/skills/electromagnetics/ansys-hfss/references/adaptive_meshing_convergence.md",
+      "source_sha256": "8b9769c15cde178daebf41b54d7d9b3203bd9ab85dbba517b7e4ca81c3c1f544",
+      "source_bytes": 167
+    },
+    {
+      "source": "agents/skills-tier2/ansys-hfss/references/port_setup_guidelines.md",
+      "destination": "agents/skills/electromagnetics/ansys-hfss/references/port_setup_guidelines.md",
+      "source_sha256": "9840272894a4cf2a322b3c6974f61b32c7f49a7e125d92ba3466a0e8dd678ed0",
+      "source_bytes": 298
+    },
+    {
+      "source": "agents/skills-tier2/ansys-hfss/scripts/hfss_project_setup.py",
+      "destination": "agents/skills/electromagnetics/ansys-hfss/scripts/hfss_project_setup.py",
+      "source_sha256": "bb0b11a6d4c565dd74f5915885522da172181cff7789663e16282e73051c9f38",
+      "source_bytes": 937
+    },
+    {
+      "source": "agents/skills-tier2/ansys-icepak/SKILL.md",
+      "destination": "agents/skills/thermal-cooling/ansys-icepak/SKILL.md",
+      "source_sha256": "7c315f59fe4bf06d5885974179572c17bea613ebb9c9da19de6613148b36b0ca",
+      "source_bytes": 1569
+    },
+    {
+      "source": "agents/skills-tier2/ansys-ls-prepost/SKILL.md",
+      "destination": "agents/skills/structural-mechanics/ansys-ls-prepost/SKILL.md",
+      "source_sha256": "f21be00c971fb3d04c70260500060a31b263984779abd6e440d4d5b2d085ab8f",
+      "source_bytes": 2349
+    },
+    {
+      "source": "agents/skills-tier2/ansys-ls-prepost/evals/evals.json",
+      "destination": "agents/skills/structural-mechanics/ansys-ls-prepost/evals/evals.json",
+      "source_sha256": "b32e56c2c28304fcecd0d590f1e6fffbcd8aff8244bbeacf39cee8ee405dac2b",
+      "source_bytes": 1814
+    },
+    {
+      "source": "agents/skills-tier2/ansys-ls-prepost/references/gui_result_review_sop.md",
+      "destination": "agents/skills/structural-mechanics/ansys-ls-prepost/references/gui_result_review_sop.md",
+      "source_sha256": "3b777ae74ccdd629854e334884716b52993727ca1974e2eaf6ccd5e44db45f57",
+      "source_bytes": 7833
+    },
+    {
+      "source": "agents/skills-tier2/ansys-ls-prepost/references/model_build.md",
+      "destination": "agents/skills/structural-mechanics/ansys-ls-prepost/references/model_build.md",
+      "source_sha256": "0b9fdf5a83e15d7631e8dcbce1755827695165b52429b948f28f9a2976a10dd2",
+      "source_bytes": 1464
+    },
+    {
+      "source": "agents/skills-tier2/ansys-ls-prepost/references/model_query.md",
+      "destination": "agents/skills/structural-mechanics/ansys-ls-prepost/references/model_query.md",
+      "source_sha256": "1b5fd2803f575e020aa66f6596c1fb3be38e9d9c45d3f6ca0b9bde95449f6763",
+      "source_bytes": 2171
+    },
+    {
+      "source": "agents/skills-tier2/ansys-ls-prepost/references/output_export.md",
+      "destination": "agents/skills/structural-mechanics/ansys-ls-prepost/references/output_export.md",
+      "source_sha256": "dcf58f4eab16674f593f72243cee11cc8b7eb3da2c25072c15e89105735f6223",
+      "source_bytes": 1528
+    },
+    {
+      "source": "agents/skills-tier2/ansys-ls-prepost/references/python_module_interface.md",
+      "destination": "agents/skills/structural-mechanics/ansys-ls-prepost/references/python_module_interface.md",
+      "source_sha256": "4b89cb831753f31f7e41b33d4a4efd13a9ab72fbd573b077df2d1a44111dd15c",
+      "source_bytes": 3592
+    },
+    {
+      "source": "agents/skills-tier2/ansys-ls-prepost/references/session_and_cfile.md",
+      "destination": "agents/skills/structural-mechanics/ansys-ls-prepost/references/session_and_cfile.md",
+      "source_sha256": "3546d96c509a7013418b30b21696c614f2f563c2c82ac09bf929b870204d0095",
+      "source_bytes": 1835
+    },
+    {
+      "source": "agents/skills-tier2/ansys-ls-prepost/references/states_and_results.md",
+      "destination": "agents/skills/structural-mechanics/ansys-ls-prepost/references/states_and_results.md",
+      "source_sha256": "7ed500820493fe58c5cc6d92d35a6ea7f57b921a5c32ae4b5c686aa4995422b7",
+      "source_bytes": 2009
+    },
+    {
+      "source": "agents/skills-tier2/ansys-ls-prepost/scripts/lspp_bga_eps_only.py",
+      "destination": "agents/skills/structural-mechanics/ansys-ls-prepost/scripts/lspp_bga_eps_only.py",
+      "source_sha256": "84d839417138ee32eb5bf81114098e2626fe5fcfa6be0532a01f770c3ecb7be9",
+      "source_bytes": 11493
+    },
+    {
+      "source": "agents/skills-tier2/ansys-ls-prepost/scripts/lspp_cfile_runner.py",
+      "destination": "agents/skills/structural-mechanics/ansys-ls-prepost/scripts/lspp_cfile_runner.py",
+      "source_sha256": "cea6094490ecb74a747abbbfbdd2c295feec9c8a1ec1abf72957890a4443d459",
+      "source_bytes": 956
+    },
+    {
+      "source": "agents/skills-tier2/ansys-ls-prepost/scripts/lspp_mvp_post_bga_eps.py",
+      "destination": "agents/skills/structural-mechanics/ansys-ls-prepost/scripts/lspp_mvp_post_bga_eps.py",
+      "source_sha256": "8454c7a4ab44d01e46607eb61ad05b123c4bc98a52a9c81bb2e8c7bfdb76496a",
+      "source_bytes": 21228
+    },
+    {
+      "source": "agents/skills-tier2/ansys-ls-prepost/scripts/lspp_scl_data_center.py",
+      "destination": "agents/skills/structural-mechanics/ansys-ls-prepost/scripts/lspp_scl_data_center.py",
+      "source_sha256": "d3db32d57de35b27ca0d41ff7c6112dbbdf1f7835ee650c1d73b120493f470d7",
+      "source_bytes": 1132
+    },
+    {
+      "source": "agents/skills-tier2/ansys-ls-prepost/scripts/__pycache__/lspp_bga_eps_only.cpython-314.pyc",
+      "destination": "agents/skills/structural-mechanics/ansys-ls-prepost/scripts/__pycache__/lspp_bga_eps_only.cpython-314.pyc",
+      "source_sha256": "e914a4bbddac6d58c6b4752fdbf7eb83fae93f674ab31c2652618502f9858627",
+      "source_bytes": 10696
+    },
+    {
+      "source": "agents/skills-tier2/ansys-ls-prepost/scripts/__pycache__/lspp_bga_eps_only.cpython-39.pyc",
+      "destination": "agents/skills/structural-mechanics/ansys-ls-prepost/scripts/__pycache__/lspp_bga_eps_only.cpython-39.pyc",
+      "source_sha256": "865102eb923623179dc2077ae0d8b76fa73cb185fd4e781d6fe6516c1c0a4cec",
+      "source_bytes": 5146
+    },
+    {
+      "source": "agents/skills-tier2/ansys-ls-prepost/scripts/__pycache__/lspp_cfile_runner.cpython-314.pyc",
+      "destination": "agents/skills/structural-mechanics/ansys-ls-prepost/scripts/__pycache__/lspp_cfile_runner.cpython-314.pyc",
+      "source_sha256": "b546a985f5119f6a7d1b6f828ca0d3986c9bdd4a983985a6262d33cce1a82dbe",
+      "source_bytes": 1645
+    },
+    {
+      "source": "agents/skills-tier2/ansys-ls-prepost/scripts/__pycache__/lspp_cfile_runner.cpython-39.pyc",
+      "destination": "agents/skills/structural-mechanics/ansys-ls-prepost/scripts/__pycache__/lspp_cfile_runner.cpython-39.pyc",
+      "source_sha256": "4f6e85024aee5a94acef321cbf8874093d1b0f870ab9ed20692d5599634d599e",
+      "source_bytes": 1070
+    },
+    {
+      "source": "agents/skills-tier2/ansys-ls-prepost/scripts/__pycache__/lspp_mvp_post_bga_eps.cpython-314.pyc",
+      "destination": "agents/skills/structural-mechanics/ansys-ls-prepost/scripts/__pycache__/lspp_mvp_post_bga_eps.cpython-314.pyc",
+      "source_sha256": "5fcaece280a65f06b21bb25b0fcca0e77d999f46b058a7e801e246c367e28833",
+      "source_bytes": 23250
+    },
+    {
+      "source": "agents/skills-tier2/ansys-ls-prepost/scripts/__pycache__/lspp_mvp_post_bga_eps.cpython-39.pyc",
+      "destination": "agents/skills/structural-mechanics/ansys-ls-prepost/scripts/__pycache__/lspp_mvp_post_bga_eps.cpython-39.pyc",
+      "source_sha256": "0f75a853361c0bf9e7013ca14d6f9d39c8985ae9c770ed091f1ae0e7816d7e6d",
+      "source_bytes": 10434
+    },
+    {
+      "source": "agents/skills-tier2/ansys-ls-prepost/scripts/__pycache__/lspp_scl_data_center.cpython-314.pyc",
+      "destination": "agents/skills/structural-mechanics/ansys-ls-prepost/scripts/__pycache__/lspp_scl_data_center.cpython-314.pyc",
+      "source_sha256": "a5cb6ab88000c01d14eeba35a33afe4319ef8b4742c8a950bee590faad1ab98a",
+      "source_bytes": 1366
+    },
+    {
+      "source": "agents/skills-tier2/ansys-ls-prepost/scripts/__pycache__/lspp_scl_data_center.cpython-39.pyc",
+      "destination": "agents/skills/structural-mechanics/ansys-ls-prepost/scripts/__pycache__/lspp_scl_data_center.cpython-39.pyc",
+      "source_sha256": "fad10f58bd214626851f0c4ddce455a1c40eebaf2bd047d856e3faee6bb335a2",
+      "source_bytes": 1023
+    },
+    {
+      "source": "agents/skills-tier2/ansys-lsdyna/SKILL.md",
+      "destination": "agents/skills/structural-mechanics/ansys-lsdyna/SKILL.md",
+      "source_sha256": "53a8f24cbf0d91d92918f82066b13b497edfaa16a36f782fa49e9cfcce9f5343",
+      "source_bytes": 5988
+    },
+    {
+      "source": "agents/skills-tier2/ansys-lsdyna/evals/evals.json",
+      "destination": "agents/skills/structural-mechanics/ansys-lsdyna/evals/evals.json",
+      "source_sha256": "d94570b249ac277bd05426acbbf85b1c4156d54d6181416af2a9b6587b0282ec",
+      "source_bytes": 1639
+    },
+    {
+      "source": "agents/skills-tier2/ansys-lsdyna/references/contacts.md",
+      "destination": "agents/skills/structural-mechanics/ansys-lsdyna/references/contacts.md",
+      "source_sha256": "9e31cc1c9e59ab4114fbd6c43524a581a62a36c59dd210da5e9965d9a9149d0f",
+      "source_bytes": 2738
+    },
+    {
+      "source": "agents/skills-tier2/ansys-lsdyna/references/drop_test_wizard_workflow.md",
+      "destination": "agents/skills/structural-mechanics/ansys-lsdyna/references/drop_test_wizard_workflow.md",
+      "source_sha256": "29378156ba0ad7a7443e582111b7bcd5a92d42350770b0493284e7d6d3ca6f72",
+      "source_bytes": 8409
+    },
+    {
+      "source": "agents/skills-tier2/ansys-lsdyna/references/energy_diagnostics.md",
+      "destination": "agents/skills/structural-mechanics/ansys-lsdyna/references/energy_diagnostics.md",
+      "source_sha256": "1767ebe197805b15fdbed9adc3beff4df8743c25f1c7e19c88aacd595a3ef467",
+      "source_bytes": 3270
+    },
+    {
+      "source": "agents/skills-tier2/ansys-lsdyna/references/initial_boundary.md",
+      "destination": "agents/skills/structural-mechanics/ansys-lsdyna/references/initial_boundary.md",
+      "source_sha256": "2a2a8d8a1dd931edf4d7e841f20d978f89d24bca33a8a4127fde3dbe8cec0bf3",
+      "source_bytes": 2694
+    },
+    {
+      "source": "agents/skills-tier2/ansys-lsdyna/references/mass_scaling_rules.md",
+      "destination": "agents/skills/structural-mechanics/ansys-lsdyna/references/mass_scaling_rules.md",
+      "source_sha256": "e9adf36bd0d07c4f9c31c6bb0b05f589de53ab0fa3b5e3f39efd0d18e9bda5be",
+      "source_bytes": 2016
+    },
+    {
+      "source": "agents/skills-tier2/ansys-lsdyna/references/material_cards.md",
+      "destination": "agents/skills/structural-mechanics/ansys-lsdyna/references/material_cards.md",
+      "source_sha256": "926d088b340e8b9987537d44f4e9c9e1161101bed99abc67e7806a5b03029723",
+      "source_bytes": 11558
+    },
+    {
+      "source": "agents/skills-tier2/ansys-lsdyna/references/official_examples.md",
+      "destination": "agents/skills/structural-mechanics/ansys-lsdyna/references/official_examples.md",
+      "source_sha256": "e68a4a536741bbeea6acd06d49f3f1cde56b12b2d455f4c5728e7d70f9d6e426",
+      "source_bytes": 2306
+    },
+    {
+      "source": "agents/skills-tier2/ansys-lsdyna/references/parts_and_sections.md",
+      "destination": "agents/skills/structural-mechanics/ansys-lsdyna/references/parts_and_sections.md",
+      "source_sha256": "ecde033ddea1d8ff46ab123592c2f0c58e4fddb7b41d2dee1ab3f923084ecb44",
+      "source_bytes": 4197
+    },
+    {
+      "source": "agents/skills-tier2/ansys-lsdyna/references/solver_execution_lsrun.md",
+      "destination": "agents/skills/structural-mechanics/ansys-lsdyna/references/solver_execution_lsrun.md",
+      "source_sha256": "53a8998981ab1af9661551f53f2c0b215378cf08ec5c6599e43db16784dbff09",
+      "source_bytes": 6940
+    },
+    {
+      "source": "agents/skills-tier2/ansys-lsdyna/scripts/lsdyna_drop_test_setup.py",
+      "destination": "agents/skills/structural-mechanics/ansys-lsdyna/scripts/lsdyna_drop_test_setup.py",
+      "source_sha256": "5c2fd23a3ff8f8869b700b0bab23eb9c531e433a6022fdf912cbbd4cd04926fe",
+      "source_bytes": 76661
+    },
+    {
+      "source": "agents/skills-tier2/ansys-lsdyna/scripts/lsdyna_section_mass_implicit.py",
+      "destination": "agents/skills/structural-mechanics/ansys-lsdyna/scripts/lsdyna_section_mass_implicit.py",
+      "source_sha256": "9122fbe7c179823d8ea9a20c485b3fdceaff13ac13d4449426f652963aa7fa68",
+      "source_bytes": 14624
+    },
+    {
+      "source": "agents/skills-tier2/ansys-lsdyna/scripts/lsdyna_shock_analysis_setup.py",
+      "destination": "agents/skills/structural-mechanics/ansys-lsdyna/scripts/lsdyna_shock_analysis_setup.py",
+      "source_sha256": "0b4ba55d395a7a3b3c3e8cd81a6afef2707d2b0c45be82403ab86cbdd1e3950b",
+      "source_bytes": 25330
+    },
+    {
+      "source": "agents/skills-tier2/ansys-lsdyna/scripts/run_drop_test_demo.py",
+      "destination": "agents/skills/structural-mechanics/ansys-lsdyna/scripts/run_drop_test_demo.py",
+      "source_sha256": "185cabb33f161f5248d284e7cccd26272d22a054274c52054fbc4126c563731b",
+      "source_bytes": 16888
+    },
+    {
+      "source": "agents/skills-tier2/ansys-lsdyna/scripts/__pycache__/apply_lsdyna_mesh.cpython-314.pyc",
+      "destination": "agents/skills/structural-mechanics/ansys-lsdyna/scripts/__pycache__/apply_lsdyna_mesh.cpython-314.pyc",
+      "source_sha256": "0a0effdacf51515c2315a45bdf470749138b4e96e883474bd8a8462978dfea1a",
+      "source_bytes": 1237
+    },
+    {
+      "source": "agents/skills-tier2/ansys-lsdyna/scripts/__pycache__/lsdyna_drop_test_setup.cpython-314.pyc",
+      "destination": "agents/skills/structural-mechanics/ansys-lsdyna/scripts/__pycache__/lsdyna_drop_test_setup.cpython-314.pyc",
+      "source_sha256": "196fe9b2cbcbcdd1e4ad38df3824202de57693001338847b873c813e622765b9",
+      "source_bytes": 87976
+    },
+    {
+      "source": "agents/skills-tier2/ansys-lsdyna/scripts/__pycache__/lsdyna_drop_test_setup.cpython-39.pyc",
+      "destination": "agents/skills/structural-mechanics/ansys-lsdyna/scripts/__pycache__/lsdyna_drop_test_setup.cpython-39.pyc",
+      "source_sha256": "1617d8877ba5f44d732b2a8f1ecddf2eb04cd0f9da1e7b3feb122404a3a92bff",
+      "source_bytes": 42991
+    },
+    {
+      "source": "agents/skills-tier2/ansys-lsdyna/scripts/__pycache__/lsdyna_keyword_builder.cpython-314.pyc",
+      "destination": "agents/skills/structural-mechanics/ansys-lsdyna/scripts/__pycache__/lsdyna_keyword_builder.cpython-314.pyc",
+      "source_sha256": "2ef133fd5acb98798217897e95a8d8eef13c7468e68de7aa7fcb7eb4bcb5baea",
+      "source_bytes": 4120
+    },
+    {
+      "source": "agents/skills-tier2/ansys-lsdyna/scripts/__pycache__/lsdyna_section_mass_implicit.cpython-314.pyc",
+      "destination": "agents/skills/structural-mechanics/ansys-lsdyna/scripts/__pycache__/lsdyna_section_mass_implicit.cpython-314.pyc",
+      "source_sha256": "62e6bba860602eef3447feea109d53f0b33f06c2b6f026d21642e7cba92e8648",
+      "source_bytes": 15479
+    },
+    {
+      "source": "agents/skills-tier2/ansys-lsdyna/scripts/__pycache__/lsdyna_section_mass_implicit.cpython-39.pyc",
+      "destination": "agents/skills/structural-mechanics/ansys-lsdyna/scripts/__pycache__/lsdyna_section_mass_implicit.cpython-39.pyc",
+      "source_sha256": "22163bfbe0e692d5c99c36093084845981504bdf0a1142ff1547f6ba31dee11b",
+      "source_bytes": 7285
+    },
+    {
+      "source": "agents/skills-tier2/ansys-lsdyna/scripts/__pycache__/lsdyna_shock_analysis_setup.cpython-314.pyc",
+      "destination": "agents/skills/structural-mechanics/ansys-lsdyna/scripts/__pycache__/lsdyna_shock_analysis_setup.cpython-314.pyc",
+      "source_sha256": "9ed1a0ed4e1a2fc86d0d33bfb823dcb89fcc4aeebaf23b512a90aaf61d1b83e9",
+      "source_bytes": 30931
+    },
+    {
+      "source": "agents/skills-tier2/ansys-lsdyna/scripts/__pycache__/lsdyna_shock_analysis_setup.cpython-39.pyc",
+      "destination": "agents/skills/structural-mechanics/ansys-lsdyna/scripts/__pycache__/lsdyna_shock_analysis_setup.cpython-39.pyc",
+      "source_sha256": "fea1ec03e10271740bcbb53fd7a82e653b53c814611e2c5934a456d26a641198",
+      "source_bytes": 11385
+    },
+    {
+      "source": "agents/skills-tier2/ansys-lsdyna/scripts/__pycache__/run_drop_test_demo.cpython-314.pyc",
+      "destination": "agents/skills/structural-mechanics/ansys-lsdyna/scripts/__pycache__/run_drop_test_demo.cpython-314.pyc",
+      "source_sha256": "4f4877dd2de013972bc5de1920c366c82a926a2f63822603fcb6d2743708b6b2",
+      "source_bytes": 18960
+    },
+    {
+      "source": "agents/skills-tier2/ansys-lsdyna/scripts/__pycache__/run_drop_test_demo.cpython-39.pyc",
+      "destination": "agents/skills/structural-mechanics/ansys-lsdyna/scripts/__pycache__/run_drop_test_demo.cpython-39.pyc",
+      "source_sha256": "ea79a3f3acf2d496ec0bbde2266af13ef25703904a95484de914eefe6411e8df",
+      "source_bytes": 13307
+    },
+    {
+      "source": "agents/skills-tier2/ansys-lumerical/SKILL.md",
+      "destination": "agents/skills/optical-engineering/ansys-lumerical/SKILL.md",
+      "source_sha256": "f974333bc83335886bb61a6569a75842f46166f66dd75bd6dbd0a23b0d3e6277",
+      "source_bytes": 982
+    },
+    {
+      "source": "agents/skills-tier2/ansys-maxwell/SKILL.md",
+      "destination": "agents/skills/electromagnetics/ansys-maxwell/SKILL.md",
+      "source_sha256": "25ec7e6ac313707d8943c95cf797eaef8e07e291fc3adae2bd884e650d704d5a",
+      "source_bytes": 1941
+    },
+    {
+      "source": "agents/skills-tier2/ansys-maxwell/assets/README.md",
+      "destination": "agents/skills/electromagnetics/ansys-maxwell/assets/README.md",
+      "source_sha256": "a17b91730a8fb7ee8360a3d7119fdb00d37d0dd764818920835920e14fcf5cca",
+      "source_bytes": 91
+    },
+    {
+      "source": "agents/skills-tier2/ansys-maxwell/evals/evals.json",
+      "destination": "agents/skills/electromagnetics/ansys-maxwell/evals/evals.json",
+      "source_sha256": "fcac96f7e11ea6b6295f8ee216eacffe11db9474ce337d8f42a99bc6f119301d",
+      "source_bytes": 536
+    },
+    {
+      "source": "agents/skills-tier2/ansys-maxwell/references/iron_loss_calculation.md",
+      "destination": "agents/skills/electromagnetics/ansys-maxwell/references/iron_loss_calculation.md",
+      "source_sha256": "fad24d3a0a60650c1e4cd00b25c6b6abd69a9b44ada1f1675828c8f577030a53",
+      "source_bytes": 164
+    },
+    {
+      "source": "agents/skills-tier2/ansys-maxwell/references/motor_transient_setup.md",
+      "destination": "agents/skills/electromagnetics/ansys-maxwell/references/motor_transient_setup.md",
+      "source_sha256": "d8674372405a4439b861faa499c037873e45e011dc0c767c7c1136386f20d4c1",
+      "source_bytes": 242
+    },
+    {
+      "source": "agents/skills-tier2/ansys-maxwell/scripts/maxwell_setup_generator.py",
+      "destination": "agents/skills/electromagnetics/ansys-maxwell/scripts/maxwell_setup_generator.py",
+      "source_sha256": "5560837fcdac7ddd33bee453573184df17dd65141a5a1c31119a53f6a277b8dc",
+      "source_bytes": 843
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mechanical/SKILL.md",
+      "destination": "agents/skills/structural-mechanics/ansys-mechanical/SKILL.md",
+      "source_sha256": "6b5a3e64f5a6efee2d226a12d47a92e1a7bba431129a1f07b1c69f2f2d866049",
+      "source_bytes": 9869
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mechanical/assets/report_section_template.md",
+      "destination": "agents/skills/structural-mechanics/ansys-mechanical/assets/report_section_template.md",
+      "source_sha256": "57f63a5d6829701c8517274ce01ede87639fa79a047a6a152b5925c400744037",
+      "source_bytes": 3751
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mechanical/references/act_scripting_foundation.md",
+      "destination": "agents/skills/structural-mechanics/ansys-mechanical/references/act_scripting_foundation.md",
+      "source_sha256": "17ee2c527fbbfd9d84b04dbf30c1bf6f940fc556fa38a5453cc048f6ae9d551e",
+      "source_bytes": 6070
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mechanical/references/analysis_setup.md",
+      "destination": "agents/skills/structural-mechanics/ansys-mechanical/references/analysis_setup.md",
+      "source_sha256": "00d9575efa684560158f81da14e98c21d7eb25b1965699611676df540a97d661",
+      "source_bytes": 4267
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mechanical/references/boundary_conditions_and_loads.md",
+      "destination": "agents/skills/structural-mechanics/ansys-mechanical/references/boundary_conditions_and_loads.md",
+      "source_sha256": "98042dfee08d79586d963d8943757df5a2b3c57734e904f346de49011a06d864",
+      "source_bytes": 5919
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mechanical/references/connections_and_contacts.md",
+      "destination": "agents/skills/structural-mechanics/ansys-mechanical/references/connections_and_contacts.md",
+      "source_sha256": "3eaa91b8fc829976ca7c4d4483c52b342bdad203258f86691c1320daf7e29cfd",
+      "source_bytes": 5456
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mechanical/references/construction_geometry.md",
+      "destination": "agents/skills/structural-mechanics/ansys-mechanical/references/construction_geometry.md",
+      "source_sha256": "2024a3929743ae91d4eca1d820c022da67f006b6ac2d8bf226790f35182447c7",
+      "source_bytes": 2650
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mechanical/references/evidence_and_applicability.md",
+      "destination": "agents/skills/structural-mechanics/ansys-mechanical/references/evidence_and_applicability.md",
+      "source_sha256": "be5007879a29182c600e51bfe1c9f32f16ff2103afefeac3052ec529e5203820",
+      "source_bytes": 1162
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mechanical/references/failure_criteria_selection.md",
+      "destination": "agents/skills/structural-mechanics/ansys-mechanical/references/failure_criteria_selection.md",
+      "source_sha256": "36024353b2c1e669850fa84c2e70776068df6594470deb67c1be1038c67d6739",
+      "source_bytes": 6211
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mechanical/references/fatigue_analysis_standards.md",
+      "destination": "agents/skills/structural-mechanics/ansys-mechanical/references/fatigue_analysis_standards.md",
+      "source_sha256": "b9806371ec84dd88045feee2eb2114a953bf27688e5a712a01bf3fdd18226765",
+      "source_bytes": 6497
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mechanical/references/geometry_and_selections.md",
+      "destination": "agents/skills/structural-mechanics/ansys-mechanical/references/geometry_and_selections.md",
+      "source_sha256": "fd1b916224490ff6ed7bab370f0cebea9e016bf0769d38d661f7c5f214b46722",
+      "source_bytes": 4303
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mechanical/references/hyperelastic_viscoelastic_materials.md",
+      "destination": "agents/skills/structural-mechanics/ansys-mechanical/references/hyperelastic_viscoelastic_materials.md",
+      "source_sha256": "731950dcdf3fd5ec7675e186dbb1abfd88ca643ca70c5f79015a0056f2330589",
+      "source_bytes": 12151
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mechanical/references/lsdyna_via_mechanical.md",
+      "destination": "agents/skills/structural-mechanics/ansys-mechanical/references/lsdyna_via_mechanical.md",
+      "source_sha256": "59b94f7699da48529cd58205164a62d8446d7e771e8895b650a624b5f57de246",
+      "source_bytes": 5222
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mechanical/references/materials.md",
+      "destination": "agents/skills/structural-mechanics/ansys-mechanical/references/materials.md",
+      "source_sha256": "57a10a3b9b0737e2bf7b15a22df494969378ea15891fd29486a1dc8a9c788143",
+      "source_bytes": 5466
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mechanical/references/mechanical_judgment.md",
+      "destination": "agents/skills/structural-mechanics/ansys-mechanical/references/mechanical_judgment.md",
+      "source_sha256": "f4189748946d3acc85ff1271657b8721454777d6ac9787e21e53de37bc57b926",
+      "source_bytes": 9165
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mechanical/references/mesh_controls_advanced.md",
+      "destination": "agents/skills/structural-mechanics/ansys-mechanical/references/mesh_controls_advanced.md",
+      "source_sha256": "35c246ddd40b68e28b77694c05d12dd57ea36163f51430bd35ceae9458d43c0f",
+      "source_bytes": 3796
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mechanical/references/mesh.md",
+      "destination": "agents/skills/structural-mechanics/ansys-mechanical/references/mesh.md",
+      "source_sha256": "2a715286f791ca026c4405c2bac8a8c308ba76014e4dc898202ed2f45b7dba26",
+      "source_bytes": 5899
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mechanical/references/meshdata_and_elements.md",
+      "destination": "agents/skills/structural-mechanics/ansys-mechanical/references/meshdata_and_elements.md",
+      "source_sha256": "37f35d04989b679574c1e91e6db3edc69c6bdfb95fc4c78cb14e3ecd49f1ab5c",
+      "source_bytes": 1899
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mechanical/references/multiphysics_mapping.md",
+      "destination": "agents/skills/structural-mechanics/ansys-mechanical/references/multiphysics_mapping.md",
+      "source_sha256": "e0961c2120a9adbb5f17b99a6af4c309f66de9a4f499fa04b03bfe1fc2b068fb",
+      "source_bytes": 5231
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mechanical/references/official_examples.md",
+      "destination": "agents/skills/structural-mechanics/ansys-mechanical/references/official_examples.md",
+      "source_sha256": "73a43b86337d5998d6b0d899054b7b14e5099e99f4d2abc82a3232f381e4ba8b",
+      "source_bytes": 2555
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mechanical/references/results_and_postprocessing.md",
+      "destination": "agents/skills/structural-mechanics/ansys-mechanical/references/results_and_postprocessing.md",
+      "source_sha256": "d1b68b9f57c61b4a6be9d020f504c0d18aaa89b94686d3507910548b82d72e9d",
+      "source_bytes": 5664
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mechanical/references/solver_diagnostics.md",
+      "destination": "agents/skills/structural-mechanics/ansys-mechanical/references/solver_diagnostics.md",
+      "source_sha256": "e15219bf99a61b46c0b94f04f3eb4948501021a8d88bcf787922a1dde287095f",
+      "source_bytes": 7673
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mechanical/references/boundary_conditions/overview.md",
+      "destination": "agents/skills/structural-mechanics/ansys-mechanical/references/boundary_conditions/overview.md",
+      "source_sha256": "d493c7a0e997de960adfe2b9b14b202f360f444dfe7085e7fa8f6eb37e144e66",
+      "source_bytes": 6643
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mechanical/references/boundary_conditions/shock_pulse_boundary_conditions.md",
+      "destination": "agents/skills/structural-mechanics/ansys-mechanical/references/boundary_conditions/shock_pulse_boundary_conditions.md",
+      "source_sha256": "4ee989febcdf689a26602589ac628f8d18a1626fd50387d9ff8096ba00931229",
+      "source_bytes": 5826
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mechanical/references/boundary_conditions/thermal_boundary_conditions.md",
+      "destination": "agents/skills/structural-mechanics/ansys-mechanical/references/boundary_conditions/thermal_boundary_conditions.md",
+      "source_sha256": "f10eb96a4989dd8b5c2f3b9a786f5c032dd2641627efed10af8a36c12edfd9a0",
+      "source_bytes": 6361
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mechanical/references/connections/contact_verification_and_overconstraint_guard.md",
+      "destination": "agents/skills/structural-mechanics/ansys-mechanical/references/connections/contact_verification_and_overconstraint_guard.md",
+      "source_sha256": "3f2a4e0ef938bbfd260348fe2f2a13e171e2cada4127df44b87616db2dd556f2",
+      "source_bytes": 11887
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mechanical/references/connections/joint_and_remote_point_creation.md",
+      "destination": "agents/skills/structural-mechanics/ansys-mechanical/references/connections/joint_and_remote_point_creation.md",
+      "source_sha256": "da7e15519be1c1385d8927388b7997001d86f1d86a63594285f45e384c4d7e2e",
+      "source_bytes": 7214
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mechanical/references/connections/overview.md",
+      "destination": "agents/skills/structural-mechanics/ansys-mechanical/references/connections/overview.md",
+      "source_sha256": "09bbb04a640b8f42262f4bb9815e22e2e8b8c29aff8a9bf922b59feed36870d7",
+      "source_bytes": 6421
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mechanical/references/material_assignment/bom_schema_guide.md",
+      "destination": "agents/skills/structural-mechanics/ansys-mechanical/references/material_assignment/bom_schema_guide.md",
+      "source_sha256": "aee0625763223f0e880df0fd9370a7fbb4504b84d2ca4203137f983c93b694f2",
+      "source_bytes": 1494
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mechanical/references/material_assignment/overview.md",
+      "destination": "agents/skills/structural-mechanics/ansys-mechanical/references/material_assignment/overview.md",
+      "source_sha256": "2722d4000fc11a71aebdce986ad97cce451f009e8c118d923b892ad1e36553a7",
+      "source_bytes": 4164
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mechanical/references/section_assign/overview.md",
+      "destination": "agents/skills/structural-mechanics/ansys-mechanical/references/section_assign/overview.md",
+      "source_sha256": "2e809ed76a1ffda43bfa258ac97c5706d3f15014621956f53db93dfe46c5537e",
+      "source_bytes": 5618
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mechanical/references/section_assign/section_cards_explicit_lsdyna.md",
+      "destination": "agents/skills/structural-mechanics/ansys-mechanical/references/section_assign/section_cards_explicit_lsdyna.md",
+      "source_sha256": "db029eee87dbddb3976a5bca3f3060eecdcb8d442bd4582266fa10f27fd1c36f",
+      "source_bytes": 4229
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mechanical/references/section_assign/shell_thickness_implicit.md",
+      "destination": "agents/skills/structural-mechanics/ansys-mechanical/references/section_assign/shell_thickness_implicit.md",
+      "source_sha256": "1d021dd3f8ccb8096ea1ba93e8e9469f7b30e67136c4644fb42d2cfb4a391311",
+      "source_bytes": 6634
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mechanical/scripts/apply_boundary_conditions.py",
+      "destination": "agents/skills/structural-mechanics/ansys-mechanical/scripts/apply_boundary_conditions.py",
+      "source_sha256": "46c8b0d5c11934849938b6ffce4fd1f110274afb244996b3122955ea2a17ca4a",
+      "source_bytes": 9599
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mechanical/scripts/assign_section_thickness.py",
+      "destination": "agents/skills/structural-mechanics/ansys-mechanical/scripts/assign_section_thickness.py",
+      "source_sha256": "3ed6c6c2c8050cf8ca767e6cdb0a7df0e21c0aa7fce3f5a131b12de995327ab0",
+      "source_bytes": 8072
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mechanical/scripts/bonded_contact_creator.py",
+      "destination": "agents/skills/structural-mechanics/ansys-mechanical/scripts/bonded_contact_creator.py",
+      "source_sha256": "4e7770b0a0a2b6fd4d7db50eb228dd7e47aeb487e294163b65a2c03212381945",
+      "source_bytes": 8375
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mechanical/scripts/check_mesh_quality.py",
+      "destination": "agents/skills/structural-mechanics/ansys-mechanical/scripts/check_mesh_quality.py",
+      "source_sha256": "ac78adcca72d66bb627c736f3a2613d07c75672ab7c937978276d52f32fb7608",
+      "source_bytes": 5819
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mechanical/scripts/create_bonded_contacts_from_ns.py",
+      "destination": "agents/skills/structural-mechanics/ansys-mechanical/scripts/create_bonded_contacts_from_ns.py",
+      "source_sha256": "41af081287f328e2db4726013f5e9bce87b5e1c01f2992bd9c33f160fe161e5f",
+      "source_bytes": 5388
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mechanical/scripts/create_joints_from_ns.py",
+      "destination": "agents/skills/structural-mechanics/ansys-mechanical/scripts/create_joints_from_ns.py",
+      "source_sha256": "2385d79eb80f089221d62ce46dc39c9f3baaf2b064081ee26898ea5940f9c3b0",
+      "source_bytes": 7441
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mechanical/scripts/mechanical_act_setup.py",
+      "destination": "agents/skills/structural-mechanics/ansys-mechanical/scripts/mechanical_act_setup.py",
+      "source_sha256": "7b09e774a34e891afec16d9a9e38eb90cb14eb9831b5af4b20b07b11c797c9a7",
+      "source_bytes": 1321
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mechanical/scripts/mechanical_script_runner.py",
+      "destination": "agents/skills/structural-mechanics/ansys-mechanical/scripts/mechanical_script_runner.py",
+      "source_sha256": "808d3ab9c46353ec3f28ad96d033603ecda6ea1e05549b51a4b40bbda77c3cdf",
+      "source_bytes": 886
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mechanical/scripts/run_static_structural_demo.py",
+      "destination": "agents/skills/structural-mechanics/ansys-mechanical/scripts/run_static_structural_demo.py",
+      "source_sha256": "42fd2bf03372b6bc5b50f259521be9c1784ab9ce51ad2a0a3e74bc3d783e9cea",
+      "source_bytes": 9758
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mechanical/scripts/run_taylor_bar_demo.py",
+      "destination": "agents/skills/structural-mechanics/ansys-mechanical/scripts/run_taylor_bar_demo.py",
+      "source_sha256": "3f06b15e1a55f0347eb4b615a08ffd9a4e35529440e03fed019abf8c0fcc7675",
+      "source_bytes": 11312
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mechanical/scripts/__pycache__/bonded_contact_creator.cpython-314.pyc",
+      "destination": "agents/skills/structural-mechanics/ansys-mechanical/scripts/__pycache__/bonded_contact_creator.cpython-314.pyc",
+      "source_sha256": "9521945bbe14d7eb1bf5837f0650f78cdd25f0960a5eddbfef8be16763ef33b3",
+      "source_bytes": 10545
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mechanical/scripts/__pycache__/bonded_contact_creator.cpython-39.pyc",
+      "destination": "agents/skills/structural-mechanics/ansys-mechanical/scripts/__pycache__/bonded_contact_creator.cpython-39.pyc",
+      "source_sha256": "a27a7248caf9d622232b8e2d323a278b5b5e1e935b9bcc254fd0d1e2ca13878f",
+      "source_bytes": 5096
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mechanical/scripts/__pycache__/check_mesh_quality.cpython-314.pyc",
+      "destination": "agents/skills/structural-mechanics/ansys-mechanical/scripts/__pycache__/check_mesh_quality.cpython-314.pyc",
+      "source_sha256": "845a883656ec6df64e9d94524a230f84e4887097598401cd629cf4c1e900918e",
+      "source_bytes": 5320
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mechanical/scripts/__pycache__/check_mesh_quality.cpython-39.pyc",
+      "destination": "agents/skills/structural-mechanics/ansys-mechanical/scripts/__pycache__/check_mesh_quality.cpython-39.pyc",
+      "source_sha256": "41a75fad8cb5fae7047af1f480b858e49fd2fa00f007ad5f2a96c7efb85966e6",
+      "source_bytes": 3617
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mechanical/scripts/__pycache__/mechanical_act_setup.cpython-314.pyc",
+      "destination": "agents/skills/structural-mechanics/ansys-mechanical/scripts/__pycache__/mechanical_act_setup.cpython-314.pyc",
+      "source_sha256": "03a65ec587f09482d10889a14f7546e01ab0526dceb414e02988c97ac015fd80",
+      "source_bytes": 1058
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mechanical/scripts/__pycache__/mechanical_act_setup.cpython-39.pyc",
+      "destination": "agents/skills/structural-mechanics/ansys-mechanical/scripts/__pycache__/mechanical_act_setup.cpython-39.pyc",
+      "source_sha256": "7cecf1e07d91648bb01d6bb818055f1e9411478e662890b74883414264adb0fa",
+      "source_bytes": 847
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mechanical/scripts/__pycache__/mechanical_script_runner.cpython-314.pyc",
+      "destination": "agents/skills/structural-mechanics/ansys-mechanical/scripts/__pycache__/mechanical_script_runner.cpython-314.pyc",
+      "source_sha256": "5eeaae9d4197ad9cece1dd94f64940605759e66457748446eb5b9751bc3c0ba5",
+      "source_bytes": 1568
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mechanical/scripts/__pycache__/mechanical_script_runner.cpython-39.pyc",
+      "destination": "agents/skills/structural-mechanics/ansys-mechanical/scripts/__pycache__/mechanical_script_runner.cpython-39.pyc",
+      "source_sha256": "adb762dbd4492b7e2a64f1fc19fa81f0d65933a936e2987a71ca760bc7289791",
+      "source_bytes": 1012
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mechanical/scripts/__pycache__/rm_joint_creator.cpython-314.pyc",
+      "destination": "agents/skills/structural-mechanics/ansys-mechanical/scripts/__pycache__/rm_joint_creator.cpython-314.pyc",
+      "source_sha256": "a998a8526b0b0fe6c3dba80bbd148f3d9cdab87007efe821e2c779e7884cc924",
+      "source_bytes": 16928
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mechanical/scripts/__pycache__/run_static_structural_demo.cpython-314.pyc",
+      "destination": "agents/skills/structural-mechanics/ansys-mechanical/scripts/__pycache__/run_static_structural_demo.cpython-314.pyc",
+      "source_sha256": "11aa97402f4c42daa6f8c78df8da3679c091d794dfe3d77c759cd34e3b443975",
+      "source_bytes": 12732
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mechanical/scripts/__pycache__/run_static_structural_demo.cpython-39.pyc",
+      "destination": "agents/skills/structural-mechanics/ansys-mechanical/scripts/__pycache__/run_static_structural_demo.cpython-39.pyc",
+      "source_sha256": "5d644815d801cfd8aa3b24f723a233e29a092aeadbfa5f67a365bb2dd7d22796",
+      "source_bytes": 6468
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mechanical/scripts/__pycache__/run_taylor_bar_demo.cpython-314.pyc",
+      "destination": "agents/skills/structural-mechanics/ansys-mechanical/scripts/__pycache__/run_taylor_bar_demo.cpython-314.pyc",
+      "source_sha256": "6dd942a4b0e7910c38f074cf255787d766fe73406b5b877cf502d348f3411b85",
+      "source_bytes": 12465
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mechanical/scripts/__pycache__/run_taylor_bar_demo.cpython-39.pyc",
+      "destination": "agents/skills/structural-mechanics/ansys-mechanical/scripts/__pycache__/run_taylor_bar_demo.cpython-39.pyc",
+      "source_sha256": "97bf700b714b8f26f8cbbde4df6dc7016b1be6fd2b3d750db8db7485aa407ae4",
+      "source_bytes": 8367
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mesh/SKILL.md",
+      "destination": "agents/skills/geometry-meshing/ansys-mesh/SKILL.md",
+      "source_sha256": "5028d92182cab7d73890923675687dd815855195f987d7946f980629b7ec5df0",
+      "source_bytes": 8274
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mesh/evals/evals.json",
+      "destination": "agents/skills/geometry-meshing/ansys-mesh/evals/evals.json",
+      "source_sha256": "f094c4e542a88a964c68876a078c3715130ffd57a07f85c13493a19647e089f1",
+      "source_bytes": 1751
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mesh/references/advanced_controls_gui_operations.md",
+      "destination": "agents/skills/geometry-meshing/ansys-mesh/references/advanced_controls_gui_operations.md",
+      "source_sha256": "1e6ebfebfcbfd721ca335530da0ba61f1565ff341588db5732bb3ffdfd776525",
+      "source_bytes": 9123
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mesh/references/cfl_tuning_and_group_batching.md",
+      "destination": "agents/skills/geometry-meshing/ansys-mesh/references/cfl_tuning_and_group_batching.md",
+      "source_sha256": "22a7d78eb40f87784127b31308049662f3c1f9214d2233d3b313d1c484614f8b",
+      "source_bytes": 9519
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mesh/references/chassis_mesh_decision_matrix.md",
+      "destination": "agents/skills/geometry-meshing/ansys-mesh/references/chassis_mesh_decision_matrix.md",
+      "source_sha256": "ba2dea9d7d48dd03485c499c91e2d619e86a283c78d3931a2da67c21c561e2db",
+      "source_bytes": 4724
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mesh/references/local_controls_and_washers.md",
+      "destination": "agents/skills/geometry-meshing/ansys-mesh/references/local_controls_and_washers.md",
+      "source_sha256": "a87c02f4e04c297e0665c5a8745c750fd01131ff3533469031faf566a6580875",
+      "source_bytes": 5409
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mesh/references/mesh_convergence_verification.md",
+      "destination": "agents/skills/geometry-meshing/ansys-mesh/references/mesh_convergence_verification.md",
+      "source_sha256": "8c91092702a47eb1a1f90a23d269b0a5a28016a0839c78ab8a8cbabfbc956313",
+      "source_bytes": 6582
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mesh/references/mesh_methods_and_geometry_healing.md",
+      "destination": "agents/skills/geometry-meshing/ansys-mesh/references/mesh_methods_and_geometry_healing.md",
+      "source_sha256": "115fb99ccaa6e8f62269ad097e4618f2dad4c59fb729932bbea845f8d7cb86ce",
+      "source_bytes": 6485
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mesh/references/metrics_and_quality_standards.md",
+      "destination": "agents/skills/geometry-meshing/ansys-mesh/references/metrics_and_quality_standards.md",
+      "source_sha256": "100b78810cd6941e337a85b8091ed44ff83b8403fe822f90a67c2eef87ce8b6f",
+      "source_bytes": 11189
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mesh/references/sizing_strategy_and_quality_workflow.md",
+      "destination": "agents/skills/geometry-meshing/ansys-mesh/references/sizing_strategy_and_quality_workflow.md",
+      "source_sha256": "4ac0f64f98877a1a6c96e0e3174ef2353a55a2e9a93c7beee21942ca83c965a8",
+      "source_bytes": 5947
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mesh/scripts/auto_mesh_by_classification.py",
+      "destination": "agents/skills/geometry-meshing/ansys-mesh/scripts/auto_mesh_by_classification.py",
+      "source_sha256": "90f4597d96d9490bad0554dabf5966cd1d41f8add6d27e3227f3cfa2901850c5",
+      "source_bytes": 39458
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mesh/scripts/auto_mesh_generator.py",
+      "destination": "agents/skills/geometry-meshing/ansys-mesh/scripts/auto_mesh_generator.py",
+      "source_sha256": "609f4fec2e6ac200365a9f42d1e8d36b99f6de37cec7677246dfe634b087741a",
+      "source_bytes": 8603
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mesh/scripts/cfl_mesh_tuner_fast.py",
+      "destination": "agents/skills/geometry-meshing/ansys-mesh/scripts/cfl_mesh_tuner_fast.py",
+      "source_sha256": "cec1fcc1f7bdb7faa016758ea3d88124add735321d7c1e0ae320748bd375a45b",
+      "source_bytes": 12724
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mesh/scripts/chassis_mesh_gatekeeper.py",
+      "destination": "agents/skills/geometry-meshing/ansys-mesh/scripts/chassis_mesh_gatekeeper.py",
+      "source_sha256": "2b342da06cc50579727ebe617d432e8628e1a7366cdea09ad67bac22ddebd9a7",
+      "source_bytes": 15704
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mesh/scripts/check_mesh_quality.py",
+      "destination": "agents/skills/geometry-meshing/ansys-mesh/scripts/check_mesh_quality.py",
+      "source_sha256": "9d2238dd0df1b5af2fb976316793f159337f4f1391757733544f643dc9404fa4",
+      "source_bytes": 8149
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mesh/scripts/goto_mesh_controls.py",
+      "destination": "agents/skills/geometry-meshing/ansys-mesh/scripts/goto_mesh_controls.py",
+      "source_sha256": "74c53f3cb34845ff8b03bbbd8d177120669b006cb8dd50b03ac23e12eeed4ce3",
+      "source_bytes": 10718
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mesh/scripts/mesh_interference_check.py",
+      "destination": "agents/skills/geometry-meshing/ansys-mesh/scripts/mesh_interference_check.py",
+      "source_sha256": "6628e65bf95086ca83b7ea62bcf4959208fb08c3ca5c0da6922d971126cc2a1f",
+      "source_bytes": 22728
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mesh/scripts/mesh_tuner_batch.py",
+      "destination": "agents/skills/geometry-meshing/ansys-mesh/scripts/mesh_tuner_batch.py",
+      "source_sha256": "a5c8eac4a9f155ecc815c7c1f8224936648f9b39da81ca90a23e05e69c0b4a8b",
+      "source_bytes": 39449
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mesh/scripts/__pycache__/auto_mesh_by_classification.cpython-314.pyc",
+      "destination": "agents/skills/geometry-meshing/ansys-mesh/scripts/__pycache__/auto_mesh_by_classification.cpython-314.pyc",
+      "source_sha256": "34b18f9fabaa6328c96d3f72b1180fde31abdc4f49ecac908d5ebd7d74b6d65e",
+      "source_bytes": 41929
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mesh/scripts/__pycache__/auto_mesh_by_classification.cpython-39.pyc",
+      "destination": "agents/skills/geometry-meshing/ansys-mesh/scripts/__pycache__/auto_mesh_by_classification.cpython-39.pyc",
+      "source_sha256": "c7bcff0b4dde29cee54429c175bded2f8509d8873dc955a1bc66fb0c1acdf540",
+      "source_bytes": 18017
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mesh/scripts/__pycache__/auto_mesh_generator.cpython-314.pyc",
+      "destination": "agents/skills/geometry-meshing/ansys-mesh/scripts/__pycache__/auto_mesh_generator.cpython-314.pyc",
+      "source_sha256": "9db30f04908c11d62e287806a2a58d4b30d4e8beb284362fd987a80791d474f5",
+      "source_bytes": 10544
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mesh/scripts/__pycache__/auto_mesh_generator.cpython-39.pyc",
+      "destination": "agents/skills/geometry-meshing/ansys-mesh/scripts/__pycache__/auto_mesh_generator.cpython-39.pyc",
+      "source_sha256": "44e2e5178cbd551b6a40fb1656917b15216b52e1d265d5fcac83808f5487142e",
+      "source_bytes": 5359
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mesh/scripts/__pycache__/cfl_mesh_tuner_fast.cpython-314.pyc",
+      "destination": "agents/skills/geometry-meshing/ansys-mesh/scripts/__pycache__/cfl_mesh_tuner_fast.cpython-314.pyc",
+      "source_sha256": "857c1b4f95097d48c8ce500720ac4e55f2ed66f46824e8d63161feafb0fc8603",
+      "source_bytes": 16927
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mesh/scripts/__pycache__/cfl_mesh_tuner_fast.cpython-39.pyc",
+      "destination": "agents/skills/geometry-meshing/ansys-mesh/scripts/__pycache__/cfl_mesh_tuner_fast.cpython-39.pyc",
+      "source_sha256": "8319fdeab1b35e1944436ad9ecaa25fda0248436b4b7358f46db0f112aee3741",
+      "source_bytes": 9104
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mesh/scripts/__pycache__/chassis_mesh_gatekeeper.cpython-314.pyc",
+      "destination": "agents/skills/geometry-meshing/ansys-mesh/scripts/__pycache__/chassis_mesh_gatekeeper.cpython-314.pyc",
+      "source_sha256": "d59e2755f9fa5ef4ce994916120c47c30909a71bb52d826000e224456b7eb9df",
+      "source_bytes": 16537
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mesh/scripts/__pycache__/check_mesh_quality.cpython-314.pyc",
+      "destination": "agents/skills/geometry-meshing/ansys-mesh/scripts/__pycache__/check_mesh_quality.cpython-314.pyc",
+      "source_sha256": "0d48fb8cf10fea0c584a40770668b1f4792d1d9d771b2d88988df27f69bb7228",
+      "source_bytes": 11128
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mesh/scripts/__pycache__/check_mesh_quality.cpython-39.pyc",
+      "destination": "agents/skills/geometry-meshing/ansys-mesh/scripts/__pycache__/check_mesh_quality.cpython-39.pyc",
+      "source_sha256": "cc643220490e42f71071f4e4fa7c0d9d560c4e2f95ef00dfd3124256a489274c",
+      "source_bytes": 6057
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mesh/scripts/__pycache__/goto_mesh_controls.cpython-314.pyc",
+      "destination": "agents/skills/geometry-meshing/ansys-mesh/scripts/__pycache__/goto_mesh_controls.cpython-314.pyc",
+      "source_sha256": "8641c5d9973bc838d1e701cc4d40e49c4c3bb9849e6140f182e8e52b1ba2809b",
+      "source_bytes": 12772
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mesh/scripts/__pycache__/goto_mesh_controls.cpython-39.pyc",
+      "destination": "agents/skills/geometry-meshing/ansys-mesh/scripts/__pycache__/goto_mesh_controls.cpython-39.pyc",
+      "source_sha256": "1df7e483601c31253aca3cc68739655fd1f2c0bf4194388d2d48e1ea27b8e803",
+      "source_bytes": 4924
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mesh/scripts/__pycache__/mesh_interference_check.cpython-314.pyc",
+      "destination": "agents/skills/geometry-meshing/ansys-mesh/scripts/__pycache__/mesh_interference_check.cpython-314.pyc",
+      "source_sha256": "fabbfe8eec62d100cdaf9d2f2ba7f57d0fb8b6d96270e5b6eccd3ce73b047de1",
+      "source_bytes": 25534
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mesh/scripts/__pycache__/mesh_interference_check.cpython-39.pyc",
+      "destination": "agents/skills/geometry-meshing/ansys-mesh/scripts/__pycache__/mesh_interference_check.cpython-39.pyc",
+      "source_sha256": "8a9003e5657cf82fe6964439eeaefc65a48475b30835b3f0c976e0ddf17c0605",
+      "source_bytes": 11816
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mesh/scripts/__pycache__/mesh_tuner_batch.cpython-314.pyc",
+      "destination": "agents/skills/geometry-meshing/ansys-mesh/scripts/__pycache__/mesh_tuner_batch.cpython-314.pyc",
+      "source_sha256": "b4a0b010605b8fb8ce175f1dec200e91ca8d42062131c21480b5d2d99041ffba",
+      "source_bytes": 43843
+    },
+    {
+      "source": "agents/skills-tier2/ansys-mesh/scripts/__pycache__/mesh_tuner_batch.cpython-39.pyc",
+      "destination": "agents/skills/geometry-meshing/ansys-mesh/scripts/__pycache__/mesh_tuner_batch.cpython-39.pyc",
+      "source_sha256": "d5b472ab9660c6bcd4063c48de0ee03e4d632f272018a42ca340713aedf489c9",
+      "source_bytes": 21145
+    },
+    {
+      "source": "agents/skills-tier2/ansys-motion/SKILL.md",
+      "destination": "agents/skills/multibody-particles/ansys-motion/SKILL.md",
+      "source_sha256": "3e8eb33377f1376a605be674aa08513ae8270696e5f0a1a8b00b54a1418a8e95",
+      "source_bytes": 1920
+    },
+    {
+      "source": "agents/skills-tier2/ansys-motion/assets/README.md",
+      "destination": "agents/skills/multibody-particles/ansys-motion/assets/README.md",
+      "source_sha256": "fd64b51faba22b2d87050a845221227d7aba3c059aa70f44e2251014c45e4624",
+      "source_bytes": 90
+    },
+    {
+      "source": "agents/skills-tier2/ansys-motion/evals/evals.json",
+      "destination": "agents/skills/multibody-particles/ansys-motion/evals/evals.json",
+      "source_sha256": "7ecfbf792d38cdfc25d6ac6daf0ab58831d3b8eabe594fb4b08a8c0f1bc8903f",
+      "source_bytes": 581
+    },
+    {
+      "source": "agents/skills-tier2/ansys-motion/references/flexible_body_formulations.md",
+      "destination": "agents/skills/multibody-particles/ansys-motion/references/flexible_body_formulations.md",
+      "source_sha256": "933c6f9629b984802ed7cc2b1041ec6703f1806668eb5252c7d1c7c5af3ab595",
+      "source_bytes": 241
+    },
+    {
+      "source": "agents/skills-tier2/ansys-motion/references/gear_contact_mechanisms.md",
+      "destination": "agents/skills/multibody-particles/ansys-motion/references/gear_contact_mechanisms.md",
+      "source_sha256": "0c864fe58cc368eaca85c3ac1140906b89593f3b5e1967e66390c34767055eba",
+      "source_bytes": 141
+    },
+    {
+      "source": "agents/skills-tier2/ansys-motion/scripts/motion_joint_builder.py",
+      "destination": "agents/skills/multibody-particles/ansys-motion/scripts/motion_joint_builder.py",
+      "source_sha256": "6dc45bc7bdc9bf62e3938747731a6239594c6d01c01bed7b3570307d17987d80",
+      "source_bytes": 892
+    },
+    {
+      "source": "agents/skills-tier2/ansys-motorcad/SKILL.md",
+      "destination": "agents/skills/electromagnetics/ansys-motorcad/SKILL.md",
+      "source_sha256": "09651a4964b5bc9a3b4d713f307699fe5adc8be52439d67388a9e00ff330f0de",
+      "source_bytes": 1933
+    },
+    {
+      "source": "agents/skills-tier2/ansys-motorcad/assets/README.md",
+      "destination": "agents/skills/electromagnetics/ansys-motorcad/assets/README.md",
+      "source_sha256": "e4cc0e5f712ffed64bf63b34c3914c94c3e6b52916b8e540022f7f5200203410",
+      "source_bytes": 92
+    },
+    {
+      "source": "agents/skills-tier2/ansys-motorcad/evals/evals.json",
+      "destination": "agents/skills/electromagnetics/ansys-motorcad/evals/evals.json",
+      "source_sha256": "8a5195edcccb15b6c0775e8c9153fb5102ad6e0d37af5a2c10fcc2a351465dca",
+      "source_bytes": 552
+    },
+    {
+      "source": "agents/skills-tier2/ansys-motorcad/references/efficiency_map_generation.md",
+      "destination": "agents/skills/electromagnetics/ansys-motorcad/references/efficiency_map_generation.md",
+      "source_sha256": "e39431fb1ad0b57df64d3240c62d1d5662eed16a2db4c865f3355c64a26aa49a",
+      "source_bytes": 163
+    },
+    {
+      "source": "agents/skills-tier2/ansys-motorcad/references/lptn_thermal_modeling.md",
+      "destination": "agents/skills/electromagnetics/ansys-motorcad/references/lptn_thermal_modeling.md",
+      "source_sha256": "e8065c06b329d4e96ade5ae1d0099123b00bd4111cf7fc2860b7d53137659c7c",
+      "source_bytes": 149
+    },
+    {
+      "source": "agents/skills-tier2/ansys-motorcad/scripts/motorcad_duty_cycle_eval.py",
+      "destination": "agents/skills/electromagnetics/ansys-motorcad/scripts/motorcad_duty_cycle_eval.py",
+      "source_sha256": "b93451af46326d6a56cf2171dcfd0de780464a1af9e3b91c9d24fb0179985d65",
+      "source_bytes": 820
+    },
+    {
+      "source": "agents/skills-tier2/ansys-optislang/SKILL.md",
+      "destination": "agents/skills/systems-coupling/ansys-optislang/SKILL.md",
+      "source_sha256": "5d9b7f0f9d1088c4067b70f09c8194c6118a1bc7564c851255a3c428a3cda349",
+      "source_bytes": 4682
+    },
+    {
+      "source": "agents/skills-tier2/ansys-optislang/references/doe_sampling.md",
+      "destination": "agents/skills/systems-coupling/ansys-optislang/references/doe_sampling.md",
+      "source_sha256": "94aa489e098e4a6ee3ee00d7685ec93d0bfd8b41cdf46738753102d8db434635",
+      "source_bytes": 2778
+    },
+    {
+      "source": "agents/skills-tier2/ansys-optislang/references/mop_metamodel.md",
+      "destination": "agents/skills/systems-coupling/ansys-optislang/references/mop_metamodel.md",
+      "source_sha256": "af8d1179c40349365cc795c26658fc3345a64e9bf1ca453a0bd833c8c21dd5a8",
+      "source_bytes": 5780
+    },
+    {
+      "source": "agents/skills-tier2/ansys-optislang/references/official_examples.md",
+      "destination": "agents/skills/systems-coupling/ansys-optislang/references/official_examples.md",
+      "source_sha256": "b4ef1c4aa04b5b7b0475ac3f26a92a635818272405f844018f2c54099a572f01",
+      "source_bytes": 2379
+    },
+    {
+      "source": "agents/skills-tier2/ansys-optislang/references/optimization_algorithms.md",
+      "destination": "agents/skills/systems-coupling/ansys-optislang/references/optimization_algorithms.md",
+      "source_sha256": "42a012421ad505429159e1287634cdec6f47a264525aa3ac40d0b5a2fe951504",
+      "source_bytes": 2387
+    },
+    {
+      "source": "agents/skills-tier2/ansys-optislang/references/optislang_judgment.md",
+      "destination": "agents/skills/systems-coupling/ansys-optislang/references/optislang_judgment.md",
+      "source_sha256": "7c88fffde76e3e5c66839e03143430e113afe2cd7c6acc23212457e575c3505a",
+      "source_bytes": 1823
+    },
+    {
+      "source": "agents/skills-tier2/ansys-optislang/references/sensitivity_matrix.md",
+      "destination": "agents/skills/systems-coupling/ansys-optislang/references/sensitivity_matrix.md",
+      "source_sha256": "dac7e54f40aa4c934a71bffbaa9b7443ddd71204d204ddfdc04d5d4c30658af2",
+      "source_bytes": 2388
+    },
+    {
+      "source": "agents/skills-tier2/ansys-optislang/references/parametric_study/dx_to_optislang.md",
+      "destination": "agents/skills/systems-coupling/ansys-optislang/references/parametric_study/dx_to_optislang.md",
+      "source_sha256": "73ebbcb8ddb869cc483f52e1bac9fbc9924e4b9dec69f2b2bde3d46f748b4b3e",
+      "source_bytes": 2010
+    },
+    {
+      "source": "agents/skills-tier2/ansys-optislang/references/parametric_study/overview.md",
+      "destination": "agents/skills/systems-coupling/ansys-optislang/references/parametric_study/overview.md",
+      "source_sha256": "d02e1197edb0fa1465653e4f6bb5a38c7d18e8fcb65139887d27072cce9c30a0",
+      "source_bytes": 2500
+    },
+    {
+      "source": "agents/skills-tier2/ansys-optislang/scripts/setup_mop_workflow_demo.py",
+      "destination": "agents/skills/systems-coupling/ansys-optislang/scripts/setup_mop_workflow_demo.py",
+      "source_sha256": "db9bdc565a2fccad4b445235af207046ce64455c87c55dcb245ff008352d7e93",
+      "source_bytes": 15680
+    },
+    {
+      "source": "agents/skills-tier2/ansys-optislang/scripts/workbench_dx_optislang_bridge.py",
+      "destination": "agents/skills/systems-coupling/ansys-optislang/scripts/workbench_dx_optislang_bridge.py",
+      "source_sha256": "0a6f6274c23c546d31050be77d5958837692bf0bf76d68280e176ca8b59e1454",
+      "source_bytes": 3008
+    },
+    {
+      "source": "agents/skills-tier2/ansys-optislang/scripts/__pycache__/optislang_mcp_runner.cpython-314.pyc",
+      "destination": "agents/skills/systems-coupling/ansys-optislang/scripts/__pycache__/optislang_mcp_runner.cpython-314.pyc",
+      "source_sha256": "a25c6d7bd96eec04d34808c27eeea18c729f9effa4ad228368d88642feb45edd",
+      "source_bytes": 859
+    },
+    {
+      "source": "agents/skills-tier2/ansys-optislang/scripts/__pycache__/optislang_parametric_system.cpython-314.pyc",
+      "destination": "agents/skills/systems-coupling/ansys-optislang/scripts/__pycache__/optislang_parametric_system.cpython-314.pyc",
+      "source_sha256": "12115d24782bb3d66f238703c3dce8f4d34a253461c64648977b9f20a754ec85",
+      "source_bytes": 1188
+    },
+    {
+      "source": "agents/skills-tier2/ansys-optislang/scripts/__pycache__/setup_mop_workflow_demo.cpython-314.pyc",
+      "destination": "agents/skills/systems-coupling/ansys-optislang/scripts/__pycache__/setup_mop_workflow_demo.cpython-314.pyc",
+      "source_sha256": "ea479d5b064728708562c916627207322b42826ab5b1a99c7e50bb431e207eea",
+      "source_bytes": 19952
+    },
+    {
+      "source": "agents/skills-tier2/ansys-optislang/scripts/__pycache__/setup_mop_workflow_demo.cpython-39.pyc",
+      "destination": "agents/skills/systems-coupling/ansys-optislang/scripts/__pycache__/setup_mop_workflow_demo.cpython-39.pyc",
+      "source_sha256": "6add92e3b830289de2ece90709a61dd9b917d686642d9a522157316944fae3bf",
+      "source_bytes": 13024
+    },
+    {
+      "source": "agents/skills-tier2/ansys-polyflow-icing/SKILL.md",
+      "destination": "agents/skills/fluids-cfd/ansys-polyflow-icing/SKILL.md",
+      "source_sha256": "047e5ab3acdf79e37a203669898d6d66dc4d2aff957df13b37b54632c72b3f99",
+      "source_bytes": 1932
+    },
+    {
+      "source": "agents/skills-tier2/ansys-polyflow-icing/assets/README.md",
+      "destination": "agents/skills/fluids-cfd/ansys-polyflow-icing/assets/README.md",
+      "source_sha256": "30902efa8f58001879b794b71d8b12fcadbd6e48cab9a0c4c856d04276f5bb03",
+      "source_bytes": 98
+    },
+    {
+      "source": "agents/skills-tier2/ansys-polyflow-icing/evals/evals.json",
+      "destination": "agents/skills/fluids-cfd/ansys-polyflow-icing/evals/evals.json",
+      "source_sha256": "2f3b14e5b7adc929b60c194ac9538b07d510a94d407dfbb5af9e2e3fc85dddaf",
+      "source_bytes": 485
+    },
+    {
+      "source": "agents/skills-tier2/ansys-polyflow-icing/references/icing_physics_setup.md",
+      "destination": "agents/skills/fluids-cfd/ansys-polyflow-icing/references/icing_physics_setup.md",
+      "source_sha256": "af74c1bf2cfca42ea3fd185b78990adecd37da7bcb365ea15250b7c465242502",
+      "source_bytes": 160
+    },
+    {
+      "source": "agents/skills-tier2/ansys-polyflow-icing/references/viscoelastic_models.md",
+      "destination": "agents/skills/fluids-cfd/ansys-polyflow-icing/references/viscoelastic_models.md",
+      "source_sha256": "599893687b8a0494b816f67a31c0e0be5d726f5ff1262fe91bcc69f55b82e083",
+      "source_bytes": 156
+    },
+    {
+      "source": "agents/skills-tier2/ansys-polyflow-icing/scripts/icing_grid_importer.py",
+      "destination": "agents/skills/fluids-cfd/ansys-polyflow-icing/scripts/icing_grid_importer.py",
+      "source_sha256": "88082cf912a75f8d3f4cccc01e560bdeda0e7f689cb6f0409d59ce0f441a83d9",
+      "source_bytes": 810
+    },
+    {
+      "source": "agents/skills-tier2/ansys-q3d-siwave/SKILL.md",
+      "destination": "agents/skills/electromagnetics/ansys-q3d-siwave/SKILL.md",
+      "source_sha256": "87d18d02e0f215dbab07114e02221943acdd466d3327551777822cc909b691e2",
+      "source_bytes": 1908
+    },
+    {
+      "source": "agents/skills-tier2/ansys-q3d-siwave/assets/README.md",
+      "destination": "agents/skills/electromagnetics/ansys-q3d-siwave/assets/README.md",
+      "source_sha256": "f6ba2d5acacd90d86f97e5fc0d9f9afa8c2f127dab46d58fcb05db65308c61d5",
+      "source_bytes": 94
+    },
+    {
+      "source": "agents/skills-tier2/ansys-q3d-siwave/evals/evals.json",
+      "destination": "agents/skills/electromagnetics/ansys-q3d-siwave/evals/evals.json",
+      "source_sha256": "1a4e0d4886cd4caf409287a13e1fe8b3b538287ce46fc5fd4aaed7517b6ae60f",
+      "source_bytes": 575
+    },
+    {
+      "source": "agents/skills-tier2/ansys-q3d-siwave/references/rlcg_extraction_rules.md",
+      "destination": "agents/skills/electromagnetics/ansys-q3d-siwave/references/rlcg_extraction_rules.md",
+      "source_sha256": "95bbbd8bdd612b18bb9f669ee331e7be54f5e6e148797af1d06e1598ced98b07",
+      "source_bytes": 189
+    },
+    {
+      "source": "agents/skills-tier2/ansys-q3d-siwave/references/siwave_pi_ir_drop.md",
+      "destination": "agents/skills/electromagnetics/ansys-q3d-siwave/references/siwave_pi_ir_drop.md",
+      "source_sha256": "74bd185607d7ecae00c1ca462938313272c90f84803f4de090853d0aeaf7ed4b",
+      "source_bytes": 195
+    },
+    {
+      "source": "agents/skills-tier2/ansys-q3d-siwave/scripts/ecad_import_validator.py",
+      "destination": "agents/skills/electromagnetics/ansys-q3d-siwave/scripts/ecad_import_validator.py",
+      "source_sha256": "9dc4ea010c8b4927970f519c7a0990fda38f56a0bdb2241aff1c413c9fc87845",
+      "source_bytes": 771
+    },
+    {
+      "source": "agents/skills-tier2/ansys-random-vibration/SKILL.md",
+      "destination": "agents/skills/structural-mechanics/ansys-random-vibration/SKILL.md",
+      "source_sha256": "291bb1008ff31bc5bfd4b922484dd017e730f59b428e1b8f6d0a8f0a584defde",
+      "source_bytes": 2082
+    },
+    {
+      "source": "agents/skills-tier2/ansys-rocky-dem/SKILL.md",
+      "destination": "agents/skills/multibody-particles/ansys-rocky-dem/SKILL.md",
+      "source_sha256": "2aaacb93d5062a9e8ef7facc4078f877915b3162b7389fb85d30c4206e37d45d",
+      "source_bytes": 1954
+    },
+    {
+      "source": "agents/skills-tier2/ansys-rocky-dem/assets/README.md",
+      "destination": "agents/skills/multibody-particles/ansys-rocky-dem/assets/README.md",
+      "source_sha256": "0c1d3a029005c70d363306912da775142709fd53fc1c218983d59e8ee3f1f293",
+      "source_bytes": 93
+    },
+    {
+      "source": "agents/skills-tier2/ansys-rocky-dem/evals/evals.json",
+      "destination": "agents/skills/multibody-particles/ansys-rocky-dem/evals/evals.json",
+      "source_sha256": "bb77fdfeba9860815522a38f35349b4b5bd1d2d83b7c291b64e2ca122f8446ba",
+      "source_bytes": 565
+    },
+    {
+      "source": "agents/skills-tier2/ansys-rocky-dem/references/cfd_dem_coupling_guide.md",
+      "destination": "agents/skills/multibody-particles/ansys-rocky-dem/references/cfd_dem_coupling_guide.md",
+      "source_sha256": "3e3ef3afa9e2a4d5ef6d8653cce998e85104c7df0546f683bb2e258111977d9b",
+      "source_bytes": 189
+    },
+    {
+      "source": "agents/skills-tier2/ansys-rocky-dem/references/particle_shape_definition.md",
+      "destination": "agents/skills/multibody-particles/ansys-rocky-dem/references/particle_shape_definition.md",
+      "source_sha256": "25756d609f1d12e963fad0e35a500c3c0a229161c7d954a89c771e2a589733af",
+      "source_bytes": 193
+    },
+    {
+      "source": "agents/skills-tier2/ansys-rocky-dem/scripts/rocky_particle_injector.py",
+      "destination": "agents/skills/multibody-particles/ansys-rocky-dem/scripts/rocky_particle_injector.py",
+      "source_sha256": "709c7d7ba3e79636369e2c9a8bf6bd85196a0824d1e78f6366c1da341b6775a6",
+      "source_bytes": 819
+    },
+    {
+      "source": "agents/skills-tier2/ansys-sherlock/SKILL.md",
+      "destination": "agents/skills/materials-reliability/ansys-sherlock/SKILL.md",
+      "source_sha256": "d1ba77154b3ab1a2c31a0e6f7534b4448b32b48f7989ecb244aca23e76f0827b",
+      "source_bytes": 1528
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/SKILL.md",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/SKILL.md",
+      "source_sha256": "45468f337e4f822a93bf1aa427fc077bf340de89139ec0826d89c9b003817fc7",
+      "source_bytes": 4883
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/references/design_and_bodies.md",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/references/design_and_bodies.md",
+      "source_sha256": "9809b97e7954de4c3414a3a1f90c7386b10d7f7b4d3919ee2a92f27704b5e2d9",
+      "source_bytes": 1268
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/references/import_export.md",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/references/import_export.md",
+      "source_sha256": "0e36aba50a6e220f17ea6d58bffe424dbc992cd39fd31df50137a0973aa95e7c",
+      "source_bytes": 2980
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/references/modeling.md",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/references/modeling.md",
+      "source_sha256": "22e2fdf818df5f2701577d3b64020886c1649bbba2e0c5d956a07af8da26389c",
+      "source_bytes": 1863
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/references/native_commands.md",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/references/native_commands.md",
+      "source_sha256": "b494f9a82b4860fd7f867f31a9dd8971f1a1b158c879f51d2be6d3e4ee860b3e",
+      "source_bytes": 4089
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/references/native_helpers_and_transaction.md",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/references/native_helpers_and_transaction.md",
+      "source_sha256": "732e6c883ead26ac8d22a5866710e8d7007fa02ca069552b431e20d9fd80b699",
+      "source_bytes": 3289
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/references/native_selection.md",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/references/native_selection.md",
+      "source_sha256": "0350f212b9a51f4a46f5e34a22a8f9fdf603859786c84dc2ca6eda8f3210f756",
+      "source_bytes": 2862
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/references/native_session_and_versions.md",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/references/native_session_and_versions.md",
+      "source_sha256": "f37cb0df4082fb361f39c2a5b53fd51ef65fd96b8a6a5857dee2db3b350bf128",
+      "source_bytes": 5683
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/references/native_sketch_and_geometry.md",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/references/native_sketch_and_geometry.md",
+      "source_sha256": "1c39374a90c6fa6b5037e4f72f05c07c24a39ff79db0c55025fdd97f4d923737",
+      "source_bytes": 3148
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/references/session.md",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/references/session.md",
+      "source_sha256": "75286fc3e4864d679b581114a3b6a9ccd36d775f3e23f4040ec20489b88c014a",
+      "source_bytes": 1824
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/references/sketching.md",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/references/sketching.md",
+      "source_sha256": "0e8ec6f8002b9c65535bdf09c8dbb62b94f01b64198add0bc8c2626716c1b1bc",
+      "source_bytes": 1478
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/references/classify_group/classification_dimensions.md",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/references/classify_group/classification_dimensions.md",
+      "source_sha256": "040a962d2a715e288bd730f93f4bf499868b8ddac2d038dd29d27cd14a8bc64e",
+      "source_bytes": 4205
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/references/classify_group/overview.md",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/references/classify_group/overview.md",
+      "source_sha256": "b170704760eed1948d8f63c2f62cd1474e1b1725ae42aa18169d3555f27407c0",
+      "source_bytes": 6075
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/references/classify_group/pairing_strategy.md",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/references/classify_group/pairing_strategy.md",
+      "source_sha256": "9b62d1a11f1d8a7cf06065d3a865432bef56d33721331a7726b505ad8c5d64b4",
+      "source_bytes": 5325
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/references/component_library/case-notes.md",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/references/component_library/case-notes.md",
+      "source_sha256": "f0d6835406117bd246d5b13fae0088b2e33d2425b1b6ddd5b4d274e4b65e8d15",
+      "source_bytes": 3656
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/references/component_library/godzilla-script-migration.md",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/references/component_library/godzilla-script-migration.md",
+      "source_sha256": "cce70850c9db2c56aa6704e182175843077f4d0245f759ad7894469431c0ce02",
+      "source_bytes": 2933
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/references/component_library/overview.md",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/references/component_library/overview.md",
+      "source_sha256": "66dff3d7499270d9b3f6bd06ce06052ad042688909a2b644da50d3e558e0092d",
+      "source_bytes": 5207
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/references/component_library/session-and-export.md",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/references/component_library/session-and-export.md",
+      "source_sha256": "c215bbf2089c02da22f52f93214cb25c5dcd07732f5cdd02c3b9c16556e6d000",
+      "source_bytes": 5640
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/references/component_library/verification.md",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/references/component_library/verification.md",
+      "source_sha256": "1822ff7017d5ae6fc0257826cf7e10d72866c8217f310bd16d3ed163b9f20d27",
+      "source_bytes": 3392
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/references/defeature/defeature_parameters.md",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/references/defeature/defeature_parameters.md",
+      "source_sha256": "cf41b6e2a09f960c30910017acb9030a56295ca4ee34c4c7ee00bed94e1dc623",
+      "source_bytes": 2016
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/references/defeature/overview.md",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/references/defeature/overview.md",
+      "source_sha256": "ae84f0bb8229727540b0cadbb04f562c0909d6761066d9202ee78f53249eb22c",
+      "source_bytes": 4598
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/references/geometry_modeling/3d_features.md",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/references/geometry_modeling/3d_features.md",
+      "source_sha256": "321c5601dd12e386c04424f33f77a936196c6631a3e21c454d591a1959f086f1",
+      "source_bytes": 5011
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/references/geometry_modeling/booleans_enclosures.md",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/references/geometry_modeling/booleans_enclosures.md",
+      "source_sha256": "3ed1cd8b128ac7f486815443559e784aaf84a5a72a255d7ab4bd0c45e9b77a85",
+      "source_bytes": 7329
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/references/geometry_modeling/cad_diagnostics.md",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/references/geometry_modeling/cad_diagnostics.md",
+      "source_sha256": "ce815c9fef4aa7fde64fb6c37536c53dfce374b3f211d6f825a94da9c2c95b9e",
+      "source_bytes": 5544
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/references/geometry_modeling/embedded_scripts.md",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/references/geometry_modeling/embedded_scripts.md",
+      "source_sha256": "3d4aa69bc824ba065fbb11ca8be77a99e3eddc22879b38f3b436a2f5be0920be",
+      "source_bytes": 1135
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/references/geometry_modeling/named_selections.md",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/references/geometry_modeling/named_selections.md",
+      "source_sha256": "608081bba520e18d825c2f4952f82b2344a04a586aa2a426d02da9d727dde90f",
+      "source_bytes": 6114
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/references/geometry_modeling/official_examples.md",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/references/geometry_modeling/official_examples.md",
+      "source_sha256": "1bbefe7d8f3b0574d4a1c79df3d738a33c9ef6d17d4e4f8c1087e8a29b79ef78",
+      "source_bytes": 2506
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/references/geometry_modeling/overview.md",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/references/geometry_modeling/overview.md",
+      "source_sha256": "581ad178571fc8a199f6fba50a458caac774e8080975f1c35fecaec98c04b19c",
+      "source_bytes": 6524
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/references/geometry_modeling/pmdb_export_rules.md",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/references/geometry_modeling/pmdb_export_rules.md",
+      "source_sha256": "37c12c0debab27e21838e5aeffddefd91dbadcb63e957b7422c8d0b846349059",
+      "source_bytes": 5812
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/references/geometry_modeling/sketching.md",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/references/geometry_modeling/sketching.md",
+      "source_sha256": "adc73f0c2239912dc5c244593268bc7e086c91d6910654a22e56282939403fb0",
+      "source_bytes": 5516
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/references/interface_check/body_interference_detection.md",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/references/interface_check/body_interference_detection.md",
+      "source_sha256": "b2f81489907fb22e8cc4cca69dcd14f4b7cdb1428dd91ea38f81c24f81c1d1c9",
+      "source_bytes": 5916
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/references/interface_check/overview.md",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/references/interface_check/overview.md",
+      "source_sha256": "3e464c4dbd7065115f7517596e7b5a662be71d2b277635dfd78262b2f1dd76eb",
+      "source_bytes": 5706
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/references/interface_check/watertight_and_manifold_checks.md",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/references/interface_check/watertight_and_manifold_checks.md",
+      "source_sha256": "0b41e0d39748d7ca05d999ea93475cdd278687205d9d7c14264a89d007a832b8",
+      "source_bytes": 4977
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/references/midsurface/chassis_16_features_decision_matrix.md",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/references/midsurface/chassis_16_features_decision_matrix.md",
+      "source_sha256": "7ad6b590f0ef76656303b2b4c75950af87eab8cafc8dc3c2776698c239e7337d",
+      "source_bytes": 9428
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/references/midsurface/midsurface_extraction_criteria.md",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/references/midsurface/midsurface_extraction_criteria.md",
+      "source_sha256": "8724a29125e84c6359d7eff87d7f687cebd29bf9fbc67ee7822a80da30b4b850",
+      "source_bytes": 6747
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/references/midsurface/midsurface_repair_patterns.md",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/references/midsurface/midsurface_repair_patterns.md",
+      "source_sha256": "20650d02ffb8b8254ff8b6a81ef65115e8ebdf989a2c720b4d4e3e9a98b984eb",
+      "source_bytes": 7078
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/references/midsurface/overview.md",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/references/midsurface/overview.md",
+      "source_sha256": "0926ef6e90a37c4db26363f2232679e2ee5fc82f8acdc82e5097dfcc5585497f",
+      "source_bytes": 7009
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/references/modeling/3d_features.md",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/references/modeling/3d_features.md",
+      "source_sha256": "2fd96d666fa9e0b5c6823e39146ae509df5def45aee57e7196ddbeba5326abc3",
+      "source_bytes": 259
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/references/modeling/booleans_enclosures.md",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/references/modeling/booleans_enclosures.md",
+      "source_sha256": "680db6b033c6abe00063e5874cf14a8518d1d8e3bac26010933f18620851e1d6",
+      "source_bytes": 307
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/references/modeling/cad_diagnostics.md",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/references/modeling/cad_diagnostics.md",
+      "source_sha256": "88624d66dbd8c7eb4fc1bb36962d6250d24d7846d28f1f06c9dec2bf7bffe36a",
+      "source_bytes": 281
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/references/modeling/named_selections.md",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/references/modeling/named_selections.md",
+      "source_sha256": "3ad5d06dc406a27b7fca081b2faf071a8f41a373b77f220502508ce35749346c",
+      "source_bytes": 317
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/references/modeling/overview.md",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/references/modeling/overview.md",
+      "source_sha256": "e0b0ebb6af302412f0bcea7a1165a7cb259577aa130b42e5fedac9f01f35eb84",
+      "source_bytes": 7924
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/references/modeling/pmdb_export_rules.md",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/references/modeling/pmdb_export_rules.md",
+      "source_sha256": "14d53acdb8a9f9ac93958428861aba5bc73050bd233fe5cf329c4d2faac9c760",
+      "source_bytes": 295
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/references/modeling/sketching.md",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/references/modeling/sketching.md",
+      "source_sha256": "b8fc1b5ebb78e947dd2617a797b262bf892e2d2b866f575fe07215c4f56facce",
+      "source_bytes": 265
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/references/modeling/standard_part_replacement.md",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/references/modeling/standard_part_replacement.md",
+      "source_sha256": "c684207014548a457b269772de9094adc7fd33c9d8eb05b4ec8258bdb49aac93",
+      "source_bytes": 4002
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/references/named_selections/cross_product_consumption_matrix.md",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/references/named_selections/cross_product_consumption_matrix.md",
+      "source_sha256": "bdf0af2d2029591c951b928dcc986e91c829f4c5b0cdac57f77801ec0b990bcd",
+      "source_bytes": 5551
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/references/named_selections/naming_convention_reference.md",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/references/named_selections/naming_convention_reference.md",
+      "source_sha256": "ffb66578cb93e673880440944a750d034091cd6cca16a3bfde148d970f265fa8",
+      "source_bytes": 6690
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/references/named_selections/official_examples.md",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/references/named_selections/official_examples.md",
+      "source_sha256": "647c72b99f25a1e8f16aa21d1902bce5f9411d9a175df45030c646a2b58d3787",
+      "source_bytes": 1693
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/references/simplification/bga_parameters.md",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/references/simplification/bga_parameters.md",
+      "source_sha256": "b14fe6dda53f002933cd619da9593e405cadf82f0c01e21f0cd8ea9f5c37446b",
+      "source_bytes": 1037
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/references/simplification/simplify_heatsink.md",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/references/simplification/simplify_heatsink.md",
+      "source_sha256": "e03376df2e5784c9b05097eb251e012201afbfbba9096e2d964881671069d7e2",
+      "source_bytes": 5711
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/references/simplification/simplify_ram.md",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/references/simplification/simplify_ram.md",
+      "source_sha256": "43f2652f1409fb12b8fa471456c9ad342654f4a47b68f88d334b7cd5d8de1850",
+      "source_bytes": 4658
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/scripts/bga_array_creator.ironpy",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/scripts/bga_array_creator.ironpy",
+      "source_sha256": "ef0b95445b4b869923da2e0d536a3fd234bc2f432108c38d1c2239c26ae613b9",
+      "source_bytes": 8960
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/scripts/bga_ball_creator.ironpy",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/scripts/bga_ball_creator.ironpy",
+      "source_sha256": "6ba32bfc4d0edc1b3ed0b56ae5663dad1cb64786ae06593167421869769374db",
+      "source_bytes": 16794
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/scripts/check_assembly_interference.ironpy",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/scripts/check_assembly_interference.ironpy",
+      "source_sha256": "0539308c2e5ccf2f4dfffb81bc848143072422e6b21277d88158803fe8a21aa7",
+      "source_bytes": 10020
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/scripts/check_cad_defects.py",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/scripts/check_cad_defects.py",
+      "source_sha256": "a2cd08ee8628437f7479af09eff391e68501ffcb2235d2a60d9a490f4bca67bf",
+      "source_bytes": 7955
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/scripts/check_watertight_topology.py",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/scripts/check_watertight_topology.py",
+      "source_sha256": "5cde75ff89cfa9c65507d212269be3a7853eae85a8cb018bc4c07b76cadf3619",
+      "source_bytes": 9689
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/scripts/classify_and_group_engine.ironpy",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/scripts/classify_and_group_engine.ironpy",
+      "source_sha256": "fc2ba74c659e019952137d0eec246af1e746605ce294d8b40b5db75ea4132247",
+      "source_bytes": 21719
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/scripts/create_enclosure_demo.py",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/scripts/create_enclosure_demo.py",
+      "source_sha256": "13fb9b670e302c8584c05ed6c2c6c65ca49bb63d87958c8a291b10eb4df1da9e",
+      "source_bytes": 11291
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/scripts/export_active_design_step.py",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/scripts/export_active_design_step.py",
+      "source_sha256": "8ba98c0620744c04e1839d0c5d5570dd1ac62e9febe33da17e9e4f90f5e01366",
+      "source_bytes": 2947
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/scripts/inventory_components.py",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/scripts/inventory_components.py",
+      "source_sha256": "d3df3dadddfecd2a8478cab012e43e08ff2259047a1098464685fbc7f80cae3d",
+      "source_bytes": 1603
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/scripts/midsurface_extract_and_repair.ironpy",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/scripts/midsurface_extract_and_repair.ironpy",
+      "source_sha256": "605cd0e774b6ea1ef1f406f77374f0d34da3abbd3484e3108171e17b4a3b66dd",
+      "source_bytes": 17287
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/scripts/open_component_export.py",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/scripts/open_component_export.py",
+      "source_sha256": "74525d8a9bdf341080de8614885111f984b97e5a4418a69c07b46d6b11506826",
+      "source_bytes": 2673
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/scripts/run_live_script.py",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/scripts/run_live_script.py",
+      "source_sha256": "109af2e576eae7d6f85e4e86c8deb2114210137beffbb03af2bc303532da8b42",
+      "source_bytes": 2558
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/scripts/spaceclaim_geometry_builder.py",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/scripts/spaceclaim_geometry_builder.py",
+      "source_sha256": "ecb5ba21d2cbf50463575d544d1d2e5eb218a318aac6228c02fff7b62a1ad723",
+      "source_bytes": 1162
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/scripts/spaceclaim_grpc_starter.py",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/scripts/spaceclaim_grpc_starter.py",
+      "source_sha256": "864c33b9f472b190e064c7a80aed7fe27d7d730a478cdf88ac03e0a4fcc2ca00",
+      "source_bytes": 692
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/scripts/validate_ns_naming_convention.ironpy",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/scripts/validate_ns_naming_convention.ironpy",
+      "source_sha256": "43f29946349d5a0a650999a9558a425209a85c85fc320120d692b36e03d99852",
+      "source_bytes": 5491
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/scripts/__pycache__/export_active_design_step.cpython-314.pyc",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/scripts/__pycache__/export_active_design_step.cpython-314.pyc",
+      "source_sha256": "ef028af0ed560bb2280d67e6d2b1535fe3ccf7527f7b62684a203d2441d58f25",
+      "source_bytes": 4675
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/scripts/__pycache__/spaceclaim_geometry_builder.cpython-314.pyc",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/scripts/__pycache__/spaceclaim_geometry_builder.cpython-314.pyc",
+      "source_sha256": "000e23df8e36af501ccbacdc188a31b82ebf8d3d837b306a6c0103dc3cb1149c",
+      "source_bytes": 1415
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/scripts/__pycache__/spaceclaim_geometry_builder.cpython-39.pyc",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/scripts/__pycache__/spaceclaim_geometry_builder.cpython-39.pyc",
+      "source_sha256": "f3f8d171598fc0ab7994d533b6c109c149e3a99498136f31eb39a93a89453fcb",
+      "source_bytes": 1205
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/scripts/__pycache__/spaceclaim_grpc_starter.cpython-314.pyc",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/scripts/__pycache__/spaceclaim_grpc_starter.cpython-314.pyc",
+      "source_sha256": "c9a49344ab71205cb0144c549000af6c1e817d1b916cc45c6dc67e0efee7c139",
+      "source_bytes": 1229
+    },
+    {
+      "source": "agents/skills-tier2/ansys-spaceclaim/scripts/__pycache__/spaceclaim_grpc_starter.cpython-39.pyc",
+      "destination": "agents/skills/geometry-meshing/ansys-spaceclaim/scripts/__pycache__/spaceclaim_grpc_starter.cpython-39.pyc",
+      "source_sha256": "8c00dcfd178d0a3c3adef1359b0a7434d9bfc3e195dd85e84b3cc10ecb162a2d",
+      "source_bytes": 856
+    },
+    {
+      "source": "agents/skills-tier2/ansys-speos/SKILL.md",
+      "destination": "agents/skills/optical-engineering/ansys-speos/SKILL.md",
+      "source_sha256": "98f5f09cde5a04167c0bd2623642cb8778b2298bb6ba67897fa365d97974121b",
+      "source_bytes": 865
+    },
+    {
+      "source": "agents/skills-tier2/ansys-submodeling-dpf/SKILL.md",
+      "destination": "agents/skills/structural-mechanics/ansys-submodeling-dpf/SKILL.md",
+      "source_sha256": "6b3455f535ba86865d74ae36a1fa5fc5e54efb794f2fc62a75642abd3eec2733",
+      "source_bytes": 3493
+    },
+    {
+      "source": "agents/skills-tier2/ansys-submodeling-dpf/references/dpf_interpolation.md",
+      "destination": "agents/skills/structural-mechanics/ansys-submodeling-dpf/references/dpf_interpolation.md",
+      "source_sha256": "205c9655b1e00ee805838c8b2b4a09edc0b0953fa65f147b72831fd23b392578",
+      "source_bytes": 4454
+    },
+    {
+      "source": "agents/skills-tier2/ansys-submodeling-dpf/references/mapdl_pool.md",
+      "destination": "agents/skills/structural-mechanics/ansys-submodeling-dpf/references/mapdl_pool.md",
+      "source_sha256": "8e3f8338d6cf6536ac16c54b76ce1f1d62443e00fbcc19e6bcb348c4542bc17e",
+      "source_bytes": 2295
+    },
+    {
+      "source": "agents/skills-tier2/ansys-submodeling-dpf/references/official_examples.md",
+      "destination": "agents/skills/structural-mechanics/ansys-submodeling-dpf/references/official_examples.md",
+      "source_sha256": "073564388b1ce3ddd69c77e4f2fe187a9d13c0471a912a73c1d7f3c2a1cd016f",
+      "source_bytes": 2365
+    },
+    {
+      "source": "agents/skills-tier2/ansys-submodeling-dpf/references/saint_venant_validation.md",
+      "destination": "agents/skills/structural-mechanics/ansys-submodeling-dpf/references/saint_venant_validation.md",
+      "source_sha256": "041a27b51b9bf5816b5e15c13fd5c7a9939bde45d179f1d53c3a00b9e1ebdc11",
+      "source_bytes": 2463
+    },
+    {
+      "source": "agents/skills-tier2/ansys-submodeling-dpf/scripts/run_submodeling_pipeline.py",
+      "destination": "agents/skills/structural-mechanics/ansys-submodeling-dpf/scripts/run_submodeling_pipeline.py",
+      "source_sha256": "ea9259cf0f1e9aa8b49468b89a5a950cf4c0e66ccd6d0d6560609dae6ae90ec6",
+      "source_bytes": 3165
+    },
+    {
+      "source": "agents/skills-tier2/ansys-submodeling-dpf/scripts/__pycache__/run_submodeling_pipeline.cpython-314.pyc",
+      "destination": "agents/skills/structural-mechanics/ansys-submodeling-dpf/scripts/__pycache__/run_submodeling_pipeline.cpython-314.pyc",
+      "source_sha256": "ae6fbbb62417f12a2a4e6536a28c49de36254c5534f540d5a71e6d9f166ef90a",
+      "source_bytes": 5275
+    },
+    {
+      "source": "agents/skills-tier2/ansys-submodeling-dpf/scripts/__pycache__/run_submodeling_pipeline.cpython-39.pyc",
+      "destination": "agents/skills/structural-mechanics/ansys-submodeling-dpf/scripts/__pycache__/run_submodeling_pipeline.cpython-39.pyc",
+      "source_sha256": "fed8bc34d222a26cdc0b597e168b3a9502e1d9397268f4cb35892bef875cc866",
+      "source_bytes": 2647
+    },
+    {
+      "source": "agents/skills-tier2/ansys-system-coupling/SKILL.md",
+      "destination": "agents/skills/systems-coupling/ansys-system-coupling/SKILL.md",
+      "source_sha256": "73ec706a1a1293e21ad186bee5299459fd297035e7aa498fd401ac8489418f39",
+      "source_bytes": 1951
+    },
+    {
+      "source": "agents/skills-tier2/ansys-system-coupling/assets/README.md",
+      "destination": "agents/skills/systems-coupling/ansys-system-coupling/assets/README.md",
+      "source_sha256": "0ea1f0a3f67f05b29c3a00b5f3cdb54a8db98119228277f311b39597e484c62c",
+      "source_bytes": 99
+    },
+    {
+      "source": "agents/skills-tier2/ansys-system-coupling/evals/evals.json",
+      "destination": "agents/skills/systems-coupling/ansys-system-coupling/evals/evals.json",
+      "source_sha256": "a6f58560a77aeceafcbca1730a6058659d937d5017e0057096ac9eb259c19abc",
+      "source_bytes": 587
+    },
+    {
+      "source": "agents/skills-tier2/ansys-system-coupling/references/cht_thermal_transfers.md",
+      "destination": "agents/skills/systems-coupling/ansys-system-coupling/references/cht_thermal_transfers.md",
+      "source_sha256": "3b3654c4000abb1715803520bb9fac30f0eeb679ef457e7e978468550cf0f359",
+      "source_bytes": 151
+    },
+    {
+      "source": "agents/skills-tier2/ansys-system-coupling/references/fsi_mapping_convergence.md",
+      "destination": "agents/skills/systems-coupling/ansys-system-coupling/references/fsi_mapping_convergence.md",
+      "source_sha256": "92e0799642c8cc58544769f4272267c9da246de099cc1609217edb98b2586f6f",
+      "source_bytes": 209
+    },
+    {
+      "source": "agents/skills-tier2/ansys-system-coupling/scripts/syc_participant_validator.py",
+      "destination": "agents/skills/systems-coupling/ansys-system-coupling/scripts/syc_participant_validator.py",
+      "source_sha256": "c0326c6656a1f2048613967ff6b260bab38b165177e597141f97478a67805b30",
+      "source_bytes": 855
+    },
+    {
+      "source": "agents/skills-tier2/ansys-thermal-analysis/SKILL.md",
+      "destination": "agents/skills/thermal-cooling/ansys-thermal-analysis/SKILL.md",
+      "source_sha256": "7a8ad1fdc8c33cf31510728e6e7665d1e77333479bd9c290cd0f0d7dcd8c9e66",
+      "source_bytes": 1950
+    },
+    {
+      "source": "agents/skills-tier2/ansys-twin-scade/SKILL.md",
+      "destination": "agents/skills/systems-coupling/ansys-twin-scade/SKILL.md",
+      "source_sha256": "92bfb3f04f34ca8c1dc3f0f5357d4f2ed4b50f0f03ab27901d3ed542a5dc3268",
+      "source_bytes": 1956
+    },
+    {
+      "source": "agents/skills-tier2/ansys-twin-scade/assets/README.md",
+      "destination": "agents/skills/systems-coupling/ansys-twin-scade/assets/README.md",
+      "source_sha256": "a348249cf3b99522c6f7ecb5361f1a854f6cd546e3bdbc1b6a2e8ea0c8f5a540",
+      "source_bytes": 94
+    },
+    {
+      "source": "agents/skills-tier2/ansys-twin-scade/evals/evals.json",
+      "destination": "agents/skills/systems-coupling/ansys-twin-scade/evals/evals.json",
+      "source_sha256": "7014961f1da7f54d452cadbe6467be4591ae0aa7e70d803438f485b02fd23e7d",
+      "source_bytes": 565
+    },
+    {
+      "source": "agents/skills-tier2/ansys-twin-scade/references/reduced_order_modeling.md",
+      "destination": "agents/skills/systems-coupling/ansys-twin-scade/references/reduced_order_modeling.md",
+      "source_sha256": "4de5bebeafb418c6f4cfdd6e7e4d772942b156f1c2cfd744c4fe126fe9e38b00",
+      "source_bytes": 162
+    },
+    {
+      "source": "agents/skills-tier2/ansys-twin-scade/references/scade_iso26262_standards.md",
+      "destination": "agents/skills/systems-coupling/ansys-twin-scade/references/scade_iso26262_standards.md",
+      "source_sha256": "a70fd0030ed31d724426f23bfceea2764d91ccf62a230cf86b5061a650ac796a",
+      "source_bytes": 146
+    },
+    {
+      "source": "agents/skills-tier2/ansys-twin-scade/scripts/fmu_export_tester.py",
+      "destination": "agents/skills/systems-coupling/ansys-twin-scade/scripts/fmu_export_tester.py",
+      "source_sha256": "92a9681778bb4e7c00bf77abd199871e24218af6278c03a709bc55dba85884c3",
+      "source_bytes": 708
+    },
+    {
+      "source": "agents/skills-tier2/ansys-zemax/SKILL.md",
+      "destination": "agents/skills/optical-engineering/ansys-zemax/SKILL.md",
+      "source_sha256": "cddd2583757bf5251772fdd61eb753b40a46131452c5c47666754a56df9dba72",
+      "source_bytes": 1044
+    },
+    {
+      "source": "agents/skills-tier2/pcb-warpage-analysis/SKILL.md",
+      "destination": "agents/skills/materials-reliability/pcb-warpage-analysis/SKILL.md",
+      "source_sha256": "3ef822ff4a7b1763d23b9787a9e158409f2d41f37f01c58fefd7811a7ce8160b",
+      "source_bytes": 2833
+    },
+    {
+      "source": "agents/skills-tier2/pcb-warpage-analysis/assets/apdl_rom_materials_template.mac",
+      "destination": "agents/skills/materials-reliability/pcb-warpage-analysis/assets/apdl_rom_materials_template.mac",
+      "source_sha256": "f1bfa00394d699514e4bd33ec7eeb1bfd93d0eaca4fd6431f1dd1189ea9168f8",
+      "source_bytes": 3034
+    },
+    {
+      "source": "agents/skills-tier2/pcb-warpage-analysis/references/ipc_jedec_reliability_standards.md",
+      "destination": "agents/skills/materials-reliability/pcb-warpage-analysis/references/ipc_jedec_reliability_standards.md",
+      "source_sha256": "06c0a213f6aeebe3e8cd857789e5610348ca77be99e789758dd4ec72ba10b842",
+      "source_bytes": 7641
+    },
+    {
+      "source": "agents/skills-tier2/pcb-warpage-analysis/scripts/01_build_pcb_geometry.py",
+      "destination": "agents/skills/materials-reliability/pcb-warpage-analysis/scripts/01_build_pcb_geometry.py",
+      "source_sha256": "d4c7d08e4cc0746d20a2158d3ba4dd0ec0c9dc0257b832ecac5be18dcfcd2124",
+      "source_bytes": 8993
+    },
+    {
+      "source": "agents/skills-tier2/pcb-warpage-analysis/scripts/02_calculate_rom_materials.py",
+      "destination": "agents/skills/materials-reliability/pcb-warpage-analysis/scripts/02_calculate_rom_materials.py",
+      "source_sha256": "91ead6628d067f68e28222b853e4e3da70dd354555532cd2ffb6e4b62def9ef7",
+      "source_bytes": 6275
+    },
+    {
+      "source": "agents/skills-tier2/pcb-warpage-analysis/scripts/03_setup_mechanical_bc_and_solution.py",
+      "destination": "agents/skills/materials-reliability/pcb-warpage-analysis/scripts/03_setup_mechanical_bc_and_solution.py",
+      "source_sha256": "120e16fa4de66300268872304740543179967a398b282e2621becd4d09b9b826",
+      "source_bytes": 7726
+    },
+    {
+      "source": "agents/skills-tier2/pcb-warpage-analysis/scripts/run_full_warpage_workflow.py",
+      "destination": "agents/skills/materials-reliability/pcb-warpage-analysis/scripts/run_full_warpage_workflow.py",
+      "source_sha256": "1eb7e206afd3736d9f3a0fa3b2c0dcce3ed4d237eeab0bcf36d5fe6d795cbff4",
+      "source_bytes": 2209
+    },
+    {
+      "source": "agents/skills-tier2/pcb-warpage-analysis/scripts/__pycache__/01_build_pcb_geometry.cpython-314.pyc",
+      "destination": "agents/skills/materials-reliability/pcb-warpage-analysis/scripts/__pycache__/01_build_pcb_geometry.cpython-314.pyc",
+      "source_sha256": "b3a82b0fbb00c7b975bbceedbe6b75d9279ec20cd357f7af43c22c708f0f2557",
+      "source_bytes": 13005
+    },
+    {
+      "source": "agents/skills-tier2/pcb-warpage-analysis/scripts/__pycache__/01_build_pcb_geometry.cpython-39.pyc",
+      "destination": "agents/skills/materials-reliability/pcb-warpage-analysis/scripts/__pycache__/01_build_pcb_geometry.cpython-39.pyc",
+      "source_sha256": "a85af3664d5f507ef8cdf980b1bce5e63c04b1fdb9e278392295f3d42c588526",
+      "source_bytes": 7651
+    },
+    {
+      "source": "agents/skills-tier2/pcb-warpage-analysis/scripts/__pycache__/02_calculate_rom_materials.cpython-314.pyc",
+      "destination": "agents/skills/materials-reliability/pcb-warpage-analysis/scripts/__pycache__/02_calculate_rom_materials.cpython-314.pyc",
+      "source_sha256": "4021de35eacd1b26ac1db9c92f8f211c59854f229a8d820edcb89ac42b38d27e",
+      "source_bytes": 9896
+    },
+    {
+      "source": "agents/skills-tier2/pcb-warpage-analysis/scripts/__pycache__/02_calculate_rom_materials.cpython-39.pyc",
+      "destination": "agents/skills/materials-reliability/pcb-warpage-analysis/scripts/__pycache__/02_calculate_rom_materials.cpython-39.pyc",
+      "source_sha256": "3176aa4e87f020cced66498c414424fa1af31268137f7ba2aa992ee68630d55e",
+      "source_bytes": 6021
+    },
+    {
+      "source": "agents/skills-tier2/pcb-warpage-analysis/scripts/__pycache__/03_setup_mechanical_bc_and_solution.cpython-314.pyc",
+      "destination": "agents/skills/materials-reliability/pcb-warpage-analysis/scripts/__pycache__/03_setup_mechanical_bc_and_solution.cpython-314.pyc",
+      "source_sha256": "3173b031965e7688ca6164fb268b0d48a1c78d48dd5f835f2c975cd77748c3ba",
+      "source_bytes": 12409
+    },
+    {
+      "source": "agents/skills-tier2/pcb-warpage-analysis/scripts/__pycache__/03_setup_mechanical_bc_and_solution.cpython-39.pyc",
+      "destination": "agents/skills/materials-reliability/pcb-warpage-analysis/scripts/__pycache__/03_setup_mechanical_bc_and_solution.cpython-39.pyc",
+      "source_sha256": "28eb6a81a962d00b9774a510e32afa2dd0f1c2e0cf77c98d2a5171c56c887e42",
+      "source_bytes": 6063
+    },
+    {
+      "source": "agents/skills-tier2/pcb-warpage-analysis/scripts/__pycache__/run_full_warpage_workflow.cpython-314.pyc",
+      "destination": "agents/skills/materials-reliability/pcb-warpage-analysis/scripts/__pycache__/run_full_warpage_workflow.cpython-314.pyc",
+      "source_sha256": "0414a9a3beacc54e9c7201b803fd7fa3f59019396fd8814f2b08daeb805e8b23",
+      "source_bytes": 3403
+    },
+    {
+      "source": "agents/skills-tier2/pcb-warpage-analysis/scripts/__pycache__/run_full_warpage_workflow.cpython-39.pyc",
+      "destination": "agents/skills/materials-reliability/pcb-warpage-analysis/scripts/__pycache__/run_full_warpage_workflow.cpython-39.pyc",
+      "source_sha256": "5a0b2ec84e34ea9379eac84dbce577ca2602f004ac23906757203313f4801df7",
+      "source_bytes": 2127
+    },
+    {
+      "source": "agents/skills-tier2/pdf-to-md/SKILL.md",
+      "destination": "agents/skills/documentation/pdf-to-md/SKILL.md",
+      "source_sha256": "633961be44b8aaea8ee63a70bf688d1f58d2c2db9fa1460a5f9b375b8b7aafdd",
+      "source_bytes": 1490
+    },
+    {
+      "source": "agents/skills-tier2/pdf-to-md/scripts/convert.py",
+      "destination": "agents/skills/documentation/pdf-to-md/scripts/convert.py",
+      "source_sha256": "44ec3c1e261262efabcc1699a00852a31c5517d309ddd83f9908f86d0aa95035",
+      "source_bytes": 3617
+    },
+    {
+      "source": "agents/skills-tier2/pdf-to-md/scripts/__pycache__/convert.cpython-314.pyc",
+      "destination": "agents/skills/documentation/pdf-to-md/scripts/__pycache__/convert.cpython-314.pyc",
+      "source_sha256": "c78f8a3a3a672f49ef37ff3391a2656addd13d4aed1ea10423b1c55cdb6a7d9b",
+      "source_bytes": 6052
+    },
+    {
+      "source": "agents/skills-tier2/pdf-to-md/scripts/__pycache__/convert.cpython-39.pyc",
+      "destination": "agents/skills/documentation/pdf-to-md/scripts/__pycache__/convert.cpython-39.pyc",
+      "source_sha256": "4f14c6141e88d850f239533afd91d5cb7f006023a4cf73d72849606080e2cd25",
+      "source_bytes": 3428
+    },
+    {
+      "source": "agents/skills-tier2/pr-review-zh/SKILL.md",
+      "destination": "agents/skills/development/pr-review-zh/SKILL.md",
+      "source_sha256": "95fc1343c502736d9f49b509c646dc44380d69824ecbe2fab2175a38c287908c",
+      "source_bytes": 3584
+    },
+    {
+      "source": "agents/skills-tier2/pymechanical-operations/SKILL.md",
+      "destination": "agents/skills/structural-mechanics/pymechanical-operations/SKILL.md",
+      "source_sha256": "d0cc58f155ac5e9e6aafd0a5666efe1da00870a2def34333ca7ac3aa81619fe6",
+      "source_bytes": 2637
+    },
+    {
+      "source": "agents/skills-tier2/pymechanical-operations/references/grpc_connection.md",
+      "destination": "agents/skills/structural-mechanics/pymechanical-operations/references/grpc_connection.md",
+      "source_sha256": "e7ae928c6f9ca877316d7246d480e1593c18dcf483bfcf523363154c795acaa2",
+      "source_bytes": 3402
+    },
+    {
+      "source": "agents/skills-tier2/pymechanical-operations/references/official_examples.md",
+      "destination": "agents/skills/structural-mechanics/pymechanical-operations/references/official_examples.md",
+      "source_sha256": "ec8d92528b953904ff6c945dd7e9204ffebe316ed75c695299d8a61ee2d77f74",
+      "source_bytes": 1760
+    },
+    {
+      "source": "agents/skills-tier2/pymechanical-operations/references/scoping_and_mesh.md",
+      "destination": "agents/skills/structural-mechanics/pymechanical-operations/references/scoping_and_mesh.md",
+      "source_sha256": "95a12791a031671a3f92390080c1de5cd4454d06f53d2c8e7e0bde22f4a1ea25",
+      "source_bytes": 1263
+    },
+    {
+      "source": "agents/skills-tier2/pymechanical-operations/scripts/pymechanical_automesh.py",
+      "destination": "agents/skills/structural-mechanics/pymechanical-operations/scripts/pymechanical_automesh.py",
+      "source_sha256": "d97643d9036215b6fdbecd97bf6f47215a81765d9cb8876a1b4aadb49b050548",
+      "source_bytes": 2123
+    },
+    {
+      "source": "agents/skills-tier2/pymechanical-operations/scripts/pymechanical_runner.py",
+      "destination": "agents/skills/structural-mechanics/pymechanical-operations/scripts/pymechanical_runner.py",
+      "source_sha256": "78d2e0f2baa158b58d5c4bb38febf26d4162a7c7b087eae7fc02fa4b819a2ce7",
+      "source_bytes": 690
+    },
+    {
+      "source": "agents/skills-tier2/pymechanical-operations/scripts/__pycache__/pymechanical_automesh.cpython-314.pyc",
+      "destination": "agents/skills/structural-mechanics/pymechanical-operations/scripts/__pycache__/pymechanical_automesh.cpython-314.pyc",
+      "source_sha256": "4d528cbf4d939a54f6b6653911d656093d4727fc8bfb9cd190b7426ba6f78018",
+      "source_bytes": 2630
+    },
+    {
+      "source": "agents/skills-tier2/pymechanical-operations/scripts/__pycache__/pymechanical_automesh.cpython-39.pyc",
+      "destination": "agents/skills/structural-mechanics/pymechanical-operations/scripts/__pycache__/pymechanical_automesh.cpython-39.pyc",
+      "source_sha256": "d3782971b8f33a67d21d664eb2d455fde926e79651a06f18b1ed56fc5c21019e",
+      "source_bytes": 2082
+    },
+    {
+      "source": "agents/skills-tier2/pymechanical-operations/scripts/__pycache__/pymechanical_runner.cpython-314.pyc",
+      "destination": "agents/skills/structural-mechanics/pymechanical-operations/scripts/__pycache__/pymechanical_runner.cpython-314.pyc",
+      "source_sha256": "a57bb3e902eb1cf53ed964441f0346eb90babe1cb859ef17825e849e05a4c3e5",
+      "source_bytes": 1174
+    },
+    {
+      "source": "agents/skills-tier2/pymechanical-operations/scripts/__pycache__/pymechanical_runner.cpython-39.pyc",
+      "destination": "agents/skills/structural-mechanics/pymechanical-operations/scripts/__pycache__/pymechanical_runner.cpython-39.pyc",
+      "source_sha256": "9cd5ceb31e556310aeefaf2681a845b71619f0a4da2934e929cd13a227f1ed7f",
+      "source_bytes": 879
+    },
+    {
+      "source": "agents/skills-tier2/shock-analysis-workflow/SKILL.md",
+      "destination": "agents/skills/structural-mechanics/shock-analysis-workflow/SKILL.md",
+      "source_sha256": "dc39f5083875740f732dbfd85b8c6832f6c860bfbac03fec8a9194d5ac77fba9",
+      "source_bytes": 1629
+    },
+    {
+      "source": "agents/skills-tier2/shock-analysis-workflow/references/workflows/step_01_material.md",
+      "destination": "agents/skills/structural-mechanics/shock-analysis-workflow/references/workflows/step_01_material.md",
+      "source_sha256": "f153f07f5eaab0ceb18813d596fc3a946fff9218184b4abd9b5d3172679b586a",
+      "source_bytes": 9594
+    },
+    {
+      "source": "agents/skills-tier2/shock-analysis-workflow/references/workflows/step_02_contact.md",
+      "destination": "agents/skills/structural-mechanics/shock-analysis-workflow/references/workflows/step_02_contact.md",
+      "source_sha256": "aedf85a26b136d14f9573d94a491e0eb5ba233a3676d34824e1031981730a356",
+      "source_bytes": 8645
+    },
+    {
+      "source": "agents/skills-tier2/shock-analysis-workflow/references/workflows/step_03_mesh.md",
+      "destination": "agents/skills/structural-mechanics/shock-analysis-workflow/references/workflows/step_03_mesh.md",
+      "source_sha256": "8166433707560488d213d5a11d25fc694d5a5e684689d50b776582df09aa3b56",
+      "source_bytes": 7464
+    },
+    {
+      "source": "agents/skills-tier2/shock-analysis-workflow/references/workflows/step_04_connection.md",
+      "destination": "agents/skills/structural-mechanics/shock-analysis-workflow/references/workflows/step_04_connection.md",
+      "source_sha256": "196c9496a16f3d58fb529a49a8cb6354e4b152ae766307db91717cdef31ce474",
+      "source_bytes": 6687
+    },
+    {
+      "source": "agents/skills-tier2/shock-analysis-workflow/references/workflows/step_05_section.md",
+      "destination": "agents/skills/structural-mechanics/shock-analysis-workflow/references/workflows/step_05_section.md",
+      "source_sha256": "1ebf95b5c8a442e8b00c17f3ae168bce4a0b7503ffc8b1c91b3ccc02a74a2df9",
+      "source_bytes": 9674
+    },
+    {
+      "source": "agents/skills-tier2/shock-analysis-workflow/references/workflows/step_06_load.md",
+      "destination": "agents/skills/structural-mechanics/shock-analysis-workflow/references/workflows/step_06_load.md",
+      "source_sha256": "7f1f4c01ea5db7d5e5ed65a567904258ff3a27b7da6314b671ec5293367f425d",
+      "source_bytes": 7635
+    },
+    {
+      "source": "agents/skills-tier2/shock-analysis-workflow/references/workflows/step_07_solve.md",
+      "destination": "agents/skills/structural-mechanics/shock-analysis-workflow/references/workflows/step_07_solve.md",
+      "source_sha256": "9eabd7689ff2eea95a3bebdabe25ae63a5e07087c15961e2831a4c4ab4d027a8",
+      "source_bytes": 8591
+    },
+    {
+      "source": "agents/skills-tier2/shock-analysis-workflow/references/workflows/step_08_energy.md",
+      "destination": "agents/skills/structural-mechanics/shock-analysis-workflow/references/workflows/step_08_energy.md",
+      "source_sha256": "818cbf2c367b8d729c2e9c8eef13ebcace27d0a449d497da932732fcfa4d0bd3",
+      "source_bytes": 8427
+    },
+    {
+      "source": "agents/skills-tier2/shock-analysis-workflow/scripts/lsdyna_drop_setup.py",
+      "destination": "agents/skills/structural-mechanics/shock-analysis-workflow/scripts/lsdyna_drop_setup.py",
+      "source_sha256": "6fb7d6b611958e07c049c4bfafa243dcc82f7edc3e53da5d906c3e4dd5a08046",
+      "source_bytes": 345
+    },
+    {
+      "source": "agents/skills-tier2/shock-analysis-workflow/scripts/lsdyna_shock_setup.py",
+      "destination": "agents/skills/structural-mechanics/shock-analysis-workflow/scripts/lsdyna_shock_setup.py",
+      "source_sha256": "e1ab92f10c1a160fd73d689fca7c9996200d7ade8f58bcc588731b2b915e4d5c",
+      "source_bytes": 355
+    },
+    {
+      "source": "agents/skills-tier2/shock-analysis-workflow/scripts/test_session_01.py",
+      "destination": "agents/skills/structural-mechanics/shock-analysis-workflow/scripts/test_session_01.py",
+      "source_sha256": "d5784b4ad9ce5b809a2286f7ec3d58e8910e1ec8b964e31ab6576155e03b2947",
+      "source_bytes": 8647
+    },
+    {
+      "source": "agents/skills-tier2/shock-analysis-workflow/scripts/test_session_02.py",
+      "destination": "agents/skills/structural-mechanics/shock-analysis-workflow/scripts/test_session_02.py",
+      "source_sha256": "b6754afe8c4e160297fbb444b8c2181d3fe39e61de0b7346478d9bb6c88196bc",
+      "source_bytes": 4680
+    },
+    {
+      "source": "agents/skills-tier2/shock-analysis-workflow/scripts/test_session_03.py",
+      "destination": "agents/skills/structural-mechanics/shock-analysis-workflow/scripts/test_session_03.py",
+      "source_sha256": "60d13f57b18586b3b45de859ae4f5fdbe8627e932d679372a912ec172706c3da",
+      "source_bytes": 5084
+    },
+    {
+      "source": "agents/skills-tier2/shock-analysis-workflow/scripts/test_session_04.py",
+      "destination": "agents/skills/structural-mechanics/shock-analysis-workflow/scripts/test_session_04.py",
+      "source_sha256": "105cfbcd05b1c02820f4f2e352aff1ab067545ed43be39e8b185c0f21bd43b4f",
+      "source_bytes": 5072
+    },
+    {
+      "source": "agents/skills-tier2/shock-analysis-workflow/scripts/test_session_05.py",
+      "destination": "agents/skills/structural-mechanics/shock-analysis-workflow/scripts/test_session_05.py",
+      "source_sha256": "d0b94e21879274c5a9f1abb5685844fd9d87b2281e6b676eef76c48d4184ce9c",
+      "source_bytes": 4502
+    },
+    {
+      "source": "agents/skills-tier2/shock-analysis-workflow/scripts/test_session_06.py",
+      "destination": "agents/skills/structural-mechanics/shock-analysis-workflow/scripts/test_session_06.py",
+      "source_sha256": "cf9d0290623beaf37cfd4ccc32521ca3b697a51780dcfe12fc5f84b0f48a4608",
+      "source_bytes": 4763
+    },
+    {
+      "source": "agents/skills-tier2/shock-analysis-workflow/scripts/test_session_07.py",
+      "destination": "agents/skills/structural-mechanics/shock-analysis-workflow/scripts/test_session_07.py",
+      "source_sha256": "2c086b3b5a255802b54dc5a09e449dd1f2c6b7cf5e1ed6c02a983a419d28a164",
+      "source_bytes": 5176
+    },
+    {
+      "source": "agents/skills-tier2/shock-analysis-workflow/scripts/test_session_08.py",
+      "destination": "agents/skills/structural-mechanics/shock-analysis-workflow/scripts/test_session_08.py",
+      "source_sha256": "fde63c13d35b6597a3ce7bfbc5e41d94db127454f087ce29a0cac0ccfea197e8",
+      "source_bytes": 4526
+    },
+    {
+      "source": "agents/skills-tier2/shock-analysis-workflow/scripts/__pycache__/lsdyna_drop_setup.cpython-314.pyc",
+      "destination": "agents/skills/structural-mechanics/shock-analysis-workflow/scripts/__pycache__/lsdyna_drop_setup.cpython-314.pyc",
+      "source_sha256": "4950aa93f9767863bca0abf7e30137fcb11f3e13762dc3f193b74dcb007d3f73",
+      "source_bytes": 198
+    },
+    {
+      "source": "agents/skills-tier2/shock-analysis-workflow/scripts/__pycache__/lsdyna_drop_setup.cpython-39.pyc",
+      "destination": "agents/skills/structural-mechanics/shock-analysis-workflow/scripts/__pycache__/lsdyna_drop_setup.cpython-39.pyc",
+      "source_sha256": "efbd2e4d11ddc2b50cf8e0d5a8515ccb8a7b985d7f26212a69b1b4156a303231",
+      "source_bytes": 190
+    },
+    {
+      "source": "agents/skills-tier2/shock-analysis-workflow/scripts/__pycache__/lsdyna_shock_setup.cpython-314.pyc",
+      "destination": "agents/skills/structural-mechanics/shock-analysis-workflow/scripts/__pycache__/lsdyna_shock_setup.cpython-314.pyc",
+      "source_sha256": "7b4448b5e889634ae3f7006047db93c71af46ae1f73808357e12d5104447708a",
+      "source_bytes": 199
+    },
+    {
+      "source": "agents/skills-tier2/shock-analysis-workflow/scripts/__pycache__/lsdyna_shock_setup.cpython-39.pyc",
+      "destination": "agents/skills/structural-mechanics/shock-analysis-workflow/scripts/__pycache__/lsdyna_shock_setup.cpython-39.pyc",
+      "source_sha256": "e2797a92a48e9f0bdc1094d524cf8b1b3a0d4751e10c83492e7beaf80b69c173",
+      "source_bytes": 191
+    },
+    {
+      "source": "agents/skills-tier2/shock-analysis-workflow/scripts/__pycache__/test_session_01.cpython-314.pyc",
+      "destination": "agents/skills/structural-mechanics/shock-analysis-workflow/scripts/__pycache__/test_session_01.cpython-314.pyc",
+      "source_sha256": "b21f7626a1d9eb4f69ab19d10fe1fcb6ac3a70dfb22572000eff6ab428f89ec3",
+      "source_bytes": 9099
+    },
+    {
+      "source": "agents/skills-tier2/shock-analysis-workflow/scripts/__pycache__/test_session_01.cpython-39.pyc",
+      "destination": "agents/skills/structural-mechanics/shock-analysis-workflow/scripts/__pycache__/test_session_01.cpython-39.pyc",
+      "source_sha256": "2b174cf63e7dddff1e5feaecde3219609ee67a894360334721f0067dd9a945bb",
+      "source_bytes": 8602
+    },
+    {
+      "source": "agents/skills-tier2/shock-analysis-workflow/scripts/__pycache__/test_session_02.cpython-314.pyc",
+      "destination": "agents/skills/structural-mechanics/shock-analysis-workflow/scripts/__pycache__/test_session_02.cpython-314.pyc",
+      "source_sha256": "63b6c1c19983bfede8da3de1eb9abc1d7f7477ae5cd8f753bd1dfe8a9daa9812",
+      "source_bytes": 5228
+    },
+    {
+      "source": "agents/skills-tier2/shock-analysis-workflow/scripts/__pycache__/test_session_02.cpython-39.pyc",
+      "destination": "agents/skills/structural-mechanics/shock-analysis-workflow/scripts/__pycache__/test_session_02.cpython-39.pyc",
+      "source_sha256": "42629aab063e48148fdc796d31460fad0c7028d4039ab4591e2514edb7df56b2",
+      "source_bytes": 4729
+    },
+    {
+      "source": "agents/skills-tier2/shock-analysis-workflow/scripts/__pycache__/test_session_03.cpython-314.pyc",
+      "destination": "agents/skills/structural-mechanics/shock-analysis-workflow/scripts/__pycache__/test_session_03.cpython-314.pyc",
+      "source_sha256": "4c39a294cdab26e059d90aecd2449e44b8f1ee9a880e1a9f92ec9bb739258013",
+      "source_bytes": 5622
+    },
+    {
+      "source": "agents/skills-tier2/shock-analysis-workflow/scripts/__pycache__/test_session_03.cpython-39.pyc",
+      "destination": "agents/skills/structural-mechanics/shock-analysis-workflow/scripts/__pycache__/test_session_03.cpython-39.pyc",
+      "source_sha256": "e632984ba1f035ce80216cf83ee561780d14d28a653b2640b9aa368de32b9e85",
+      "source_bytes": 5123
+    },
+    {
+      "source": "agents/skills-tier2/shock-analysis-workflow/scripts/__pycache__/test_session_04.cpython-314.pyc",
+      "destination": "agents/skills/structural-mechanics/shock-analysis-workflow/scripts/__pycache__/test_session_04.cpython-314.pyc",
+      "source_sha256": "65edf7f9ea5b0fc6bc8976c7daa4b5743f0c6ddc5d1a3014b0d3e50dc2a271fd",
+      "source_bytes": 5619
+    },
+    {
+      "source": "agents/skills-tier2/shock-analysis-workflow/scripts/__pycache__/test_session_04.cpython-39.pyc",
+      "destination": "agents/skills/structural-mechanics/shock-analysis-workflow/scripts/__pycache__/test_session_04.cpython-39.pyc",
+      "source_sha256": "21f7fe716e3f73a87cb0701e5544e51d4561b8f25eb42f2af00bfe06a2900b1a",
+      "source_bytes": 5120
+    },
+    {
+      "source": "agents/skills-tier2/shock-analysis-workflow/scripts/__pycache__/test_session_05.cpython-314.pyc",
+      "destination": "agents/skills/structural-mechanics/shock-analysis-workflow/scripts/__pycache__/test_session_05.cpython-314.pyc",
+      "source_sha256": "76d77b783384681f1f00fe87e0a7db7602f5586cecad160fbaf0de487fe88c30",
+      "source_bytes": 5062
+    },
+    {
+      "source": "agents/skills-tier2/shock-analysis-workflow/scripts/__pycache__/test_session_05.cpython-39.pyc",
+      "destination": "agents/skills/structural-mechanics/shock-analysis-workflow/scripts/__pycache__/test_session_05.cpython-39.pyc",
+      "source_sha256": "d950f2e3951b19e07cd00045c0583774ac6c873269f7f6b1e150e746c32945c6",
+      "source_bytes": 4563
+    },
+    {
+      "source": "agents/skills-tier2/shock-analysis-workflow/scripts/__pycache__/test_session_06.cpython-314.pyc",
+      "destination": "agents/skills/structural-mechanics/shock-analysis-workflow/scripts/__pycache__/test_session_06.cpython-314.pyc",
+      "source_sha256": "d941af2fec72c9fa31fdc187e9c5090edff6c88f2d0567d0efe1ed367d8fa888",
+      "source_bytes": 5870
+    },
+    {
+      "source": "agents/skills-tier2/shock-analysis-workflow/scripts/__pycache__/test_session_06.cpython-39.pyc",
+      "destination": "agents/skills/structural-mechanics/shock-analysis-workflow/scripts/__pycache__/test_session_06.cpython-39.pyc",
+      "source_sha256": "add6de056505b41cbdd88b54d0d21ccf4f365bcd7d1e0629c815007073c0ea96",
+      "source_bytes": 4657
+    },
+    {
+      "source": "agents/skills-tier2/shock-analysis-workflow/scripts/__pycache__/test_session_07.cpython-314.pyc",
+      "destination": "agents/skills/structural-mechanics/shock-analysis-workflow/scripts/__pycache__/test_session_07.cpython-314.pyc",
+      "source_sha256": "a246a9afaeaaf051892a534c57dc4764c4443391e6ea0799ca77c483153f0116",
+      "source_bytes": 6505
+    },
+    {
+      "source": "agents/skills-tier2/shock-analysis-workflow/scripts/__pycache__/test_session_07.cpython-39.pyc",
+      "destination": "agents/skills/structural-mechanics/shock-analysis-workflow/scripts/__pycache__/test_session_07.cpython-39.pyc",
+      "source_sha256": "7cdd6548dd931b5dda2353ff7fa2e97e8b063e6460e2610148978442cd91f821",
+      "source_bytes": 4529
+    },
+    {
+      "source": "agents/skills-tier2/shock-analysis-workflow/scripts/__pycache__/test_session_08.cpython-314.pyc",
+      "destination": "agents/skills/structural-mechanics/shock-analysis-workflow/scripts/__pycache__/test_session_08.cpython-314.pyc",
+      "source_sha256": "a40b7127bad531c2986d2b48fb027fda4571116dc250c13ffd4887fde4efa72d",
+      "source_bytes": 5766
+    },
+    {
+      "source": "agents/skills-tier2/shock-analysis-workflow/scripts/__pycache__/test_session_08.cpython-39.pyc",
+      "destination": "agents/skills/structural-mechanics/shock-analysis-workflow/scripts/__pycache__/test_session_08.cpython-39.pyc",
+      "source_sha256": "c3a16628028c14dca199eadf13032667582657f7526d35ce0e33133ca4f25380",
+      "source_bytes": 4037
+    },
+    {
+      "source": "agents/skills/ansys-electromagnetics/SKILL.md",
+      "destination": "agents/skills/domains/ansys-electromagnetics/SKILL.md",
+      "source_sha256": "ac0cab1885ad180991ba499a67db01d7cc2dd286e13a9cc66911df44366cd311",
+      "source_bytes": 2606
+    },
+    {
+      "source": "agents/skills/ansys-electromagnetics/assets/README.md",
+      "destination": "agents/skills/domains/ansys-electromagnetics/assets/README.md",
+      "source_sha256": "d7e9902ac8b0cfb85f43b8bf7287e147ba6d9231fb8590ef04e90a62c9108ec2",
+      "source_bytes": 35
+    },
+    {
+      "source": "agents/skills/ansys-electromagnetics/evals/evals.json",
+      "destination": "agents/skills/domains/ansys-electromagnetics/evals/evals.json",
+      "source_sha256": "9b227f6f5236b0aa67a1d098fd52c0599b3624b54014ece1e280b657e0172f09",
+      "source_bytes": 535
+    },
+    {
+      "source": "agents/skills/ansys-electromagnetics/references/README.md",
+      "destination": "agents/skills/domains/ansys-electromagnetics/references/README.md",
+      "source_sha256": "aafcc4b490af6f1e42488e64f8f3bf7534de10fd6f62756a749710a4bf0c3cc2",
+      "source_bytes": 97
+    },
+    {
+      "source": "agents/skills/ansys-electromagnetics/scripts/router_validator.py",
+      "destination": "agents/skills/domains/ansys-electromagnetics/scripts/router_validator.py",
+      "source_sha256": "dc558a26c0cc0fe8f47dcbf14f45b7a90a543d190e0c6644844cb8a17e803567",
+      "source_bytes": 541
+    },
+    {
+      "source": "agents/skills/ansys-fluids-cfd/SKILL.md",
+      "destination": "agents/skills/domains/ansys-fluids-cfd/SKILL.md",
+      "source_sha256": "3ed0bfe1857628fa0f0ef30b7b2f91b65c6cab89cc940c4e7cad72f413516d64",
+      "source_bytes": 2483
+    },
+    {
+      "source": "agents/skills/ansys-fluids-cfd/assets/README.md",
+      "destination": "agents/skills/domains/ansys-fluids-cfd/assets/README.md",
+      "source_sha256": "10337e5f9a6ac4daebfb72d315bf1493b34f0361c8936d1ef44caa595fcb7618",
+      "source_bytes": 29
+    },
+    {
+      "source": "agents/skills/ansys-fluids-cfd/evals/evals.json",
+      "destination": "agents/skills/domains/ansys-fluids-cfd/evals/evals.json",
+      "source_sha256": "cb134bf3a06a3b883f2d62d0b2709ed60537db3282201f55fa750b16a20d1597",
+      "source_bytes": 520
+    },
+    {
+      "source": "agents/skills/ansys-fluids-cfd/references/README.md",
+      "destination": "agents/skills/domains/ansys-fluids-cfd/references/README.md",
+      "source_sha256": "7fef6361f68a78ce8c59c079d67ad7857311d52b0dd90ecd5a559eda590a7d70",
+      "source_bytes": 91
+    },
+    {
+      "source": "agents/skills/ansys-fluids-cfd/scripts/router_validator.py",
+      "destination": "agents/skills/domains/ansys-fluids-cfd/scripts/router_validator.py",
+      "source_sha256": "0498d02e087a7c2736f3110b5a427f8f2825a2562f4f5fa7e89fff96306da440",
+      "source_bytes": 529
+    },
+    {
+      "source": "agents/skills/ansys-geometry-meshing/SKILL.md",
+      "destination": "agents/skills/domains/ansys-geometry-meshing/SKILL.md",
+      "source_sha256": "be30d701b601e17e69d7dd98db38c566b5d7e4b0c2d03af1ac57694281ac9bda",
+      "source_bytes": 2479
+    },
+    {
+      "source": "agents/skills/ansys-geometry-meshing/assets/README.md",
+      "destination": "agents/skills/domains/ansys-geometry-meshing/assets/README.md",
+      "source_sha256": "76fca570427dfc2f8789342140f90ea89190eb28964e7ca09fbe64b1f028fd8e",
+      "source_bytes": 35
+    },
+    {
+      "source": "agents/skills/ansys-geometry-meshing/evals/evals.json",
+      "destination": "agents/skills/domains/ansys-geometry-meshing/evals/evals.json",
+      "source_sha256": "fcc48e638a0ec713b60dd13430135c9d83081ca05975b7328594444592c91b47",
+      "source_bytes": 583
+    },
+    {
+      "source": "agents/skills/ansys-geometry-meshing/references/README.md",
+      "destination": "agents/skills/domains/ansys-geometry-meshing/references/README.md",
+      "source_sha256": "733420d28b6a41fad8aa3fee3d95a019eb4602c751ee94c48ba73fa8317f08d9",
+      "source_bytes": 97
+    },
+    {
+      "source": "agents/skills/ansys-geometry-meshing/scripts/router_validator.py",
+      "destination": "agents/skills/domains/ansys-geometry-meshing/scripts/router_validator.py",
+      "source_sha256": "0df41cd8498b907fbfabf6a55f55048709653b8d13d91518d56f8c3b4ddb2783",
+      "source_bytes": 541
+    },
+    {
+      "source": "agents/skills/ansys-materials-reliability/SKILL.md",
+      "destination": "agents/skills/domains/ansys-materials-reliability/SKILL.md",
+      "source_sha256": "dab2a6c49d83553fc7c9c42089c40bb3f5f6d86ffac109d72a7a31563362be1f",
+      "source_bytes": 2393
+    },
+    {
+      "source": "agents/skills/ansys-materials-reliability/assets/README.md",
+      "destination": "agents/skills/domains/ansys-materials-reliability/assets/README.md",
+      "source_sha256": "5af069c4771968b50d2ce26000bfec59ee5d37864756f19ce3065df8889200b8",
+      "source_bytes": 40
+    },
+    {
+      "source": "agents/skills/ansys-materials-reliability/evals/evals.json",
+      "destination": "agents/skills/domains/ansys-materials-reliability/evals/evals.json",
+      "source_sha256": "c010a38e069e8a23be3b8bbaca8015741359d53d2ee6f8ee87cd9ee2fcc55099",
+      "source_bytes": 565
+    },
+    {
+      "source": "agents/skills/ansys-materials-reliability/references/README.md",
+      "destination": "agents/skills/domains/ansys-materials-reliability/references/README.md",
+      "source_sha256": "198bf6f2c38f1753c617c4906319b892f684a874d34ea19a55f8377a954df33c",
+      "source_bytes": 102
+    },
+    {
+      "source": "agents/skills/ansys-materials-reliability/scripts/router_validator.py",
+      "destination": "agents/skills/domains/ansys-materials-reliability/scripts/router_validator.py",
+      "source_sha256": "af937697008c9cb7d568d443fda5f3b5304c48fce9e213409419036adaee24f7",
+      "source_bytes": 551
+    },
+    {
+      "source": "agents/skills/ansys-mcp-foundation/SKILL.md",
+      "destination": "agents/skills/domains/ansys-mcp-foundation/SKILL.md",
+      "source_sha256": "b88955ad20b4932e1568f3c050489eb52e74da1ae4ce8c3072a9d8f007c61b4a",
+      "source_bytes": 3132
+    },
+    {
+      "source": "agents/skills/ansys-mcp-foundation/assets/README.md",
+      "destination": "agents/skills/domains/ansys-mcp-foundation/assets/README.md",
+      "source_sha256": "0ac3a313126ce26283dc84a570cbbf2c3f138afe5450afa8109ac93781ff7de9",
+      "source_bytes": 33
+    },
+    {
+      "source": "agents/skills/ansys-mcp-foundation/evals/evals.json",
+      "destination": "agents/skills/domains/ansys-mcp-foundation/evals/evals.json",
+      "source_sha256": "2ed9fa514233b4cd36d700a94fc60f19d87b3cd954937e3ed3977575c55d462e",
+      "source_bytes": 474
+    },
+    {
+      "source": "agents/skills/ansys-mcp-foundation/references/README.md",
+      "destination": "agents/skills/domains/ansys-mcp-foundation/references/README.md",
+      "source_sha256": "0d649c1afe8163e3775f9a4cf10bccf4a3406516ce5d4e6c65d488f05575b28b",
+      "source_bytes": 95
+    },
+    {
+      "source": "agents/skills/ansys-mcp-foundation/scripts/router_validator.py",
+      "destination": "agents/skills/domains/ansys-mcp-foundation/scripts/router_validator.py",
+      "source_sha256": "3c526d6847cc9b30fe2db2bda8a1170351cb83794f1458a7db9c60ac0e3083af",
+      "source_bytes": 537
+    },
+    {
+      "source": "agents/skills/ansys-multibody-particles/SKILL.md",
+      "destination": "agents/skills/domains/ansys-multibody-particles/SKILL.md",
+      "source_sha256": "a60e7dcc452953bd17184139f4bc93589cee2958f6906e08bd7f2c9b0a480512",
+      "source_bytes": 2320
+    },
+    {
+      "source": "agents/skills/ansys-multibody-particles/assets/README.md",
+      "destination": "agents/skills/domains/ansys-multibody-particles/assets/README.md",
+      "source_sha256": "ff3df1ee2027b39c445ae2950715333b73f861cf052e8e4713f54eb298c43605",
+      "source_bytes": 38
+    },
+    {
+      "source": "agents/skills/ansys-multibody-particles/evals/evals.json",
+      "destination": "agents/skills/domains/ansys-multibody-particles/evals/evals.json",
+      "source_sha256": "2d894b89aa0f940f153a0a94f607d36d08bfb60224479a43d23ef294ff306efe",
+      "source_bytes": 553
+    },
+    {
+      "source": "agents/skills/ansys-multibody-particles/references/README.md",
+      "destination": "agents/skills/domains/ansys-multibody-particles/references/README.md",
+      "source_sha256": "7898cd6cda7bb83523966d67bab77f5b9079af348cca5a7fa2fd49c76ce7d1e5",
+      "source_bytes": 100
+    },
+    {
+      "source": "agents/skills/ansys-multibody-particles/scripts/router_validator.py",
+      "destination": "agents/skills/domains/ansys-multibody-particles/scripts/router_validator.py",
+      "source_sha256": "71b43217090417e0b7e2661b72561438a211e679e375b77929139e42b36b8231",
+      "source_bytes": 547
+    },
+    {
+      "source": "agents/skills/ansys-optical-engineering/SKILL.md",
+      "destination": "agents/skills/domains/ansys-optical-engineering/SKILL.md",
+      "source_sha256": "b34ffa9977709e8d750257a3ef87e5f574e0f85bc3d33f07a309b131ca5c0577",
+      "source_bytes": 2498
+    },
+    {
+      "source": "agents/skills/ansys-optical-engineering/assets/README.md",
+      "destination": "agents/skills/domains/ansys-optical-engineering/assets/README.md",
+      "source_sha256": "ff09ee76e5a42d6a4a659b92ac3f134f3bbf3a54a4ea9301621ff5c947c57ebb",
+      "source_bytes": 38
+    },
+    {
+      "source": "agents/skills/ansys-optical-engineering/evals/evals.json",
+      "destination": "agents/skills/domains/ansys-optical-engineering/evals/evals.json",
+      "source_sha256": "1a2088d5bc6f2710b8b5cf3af7b219e869ff6699ab8bd71a63438787d1bb408a",
+      "source_bytes": 524
+    },
+    {
+      "source": "agents/skills/ansys-optical-engineering/references/README.md",
+      "destination": "agents/skills/domains/ansys-optical-engineering/references/README.md",
+      "source_sha256": "ce9fdacfd21e149f982c665b598d846117491fda0f6d14060bee563d1ae91a99",
+      "source_bytes": 100
+    },
+    {
+      "source": "agents/skills/ansys-optical-engineering/scripts/router_validator.py",
+      "destination": "agents/skills/domains/ansys-optical-engineering/scripts/router_validator.py",
+      "source_sha256": "9f215b46bb8dbbbb581e8be38e118e5a349cacdfed3f517ea7072b4bbba4949f",
+      "source_bytes": 547
+    },
+    {
+      "source": "agents/skills/ansys-structural-mechanics/SKILL.md",
+      "destination": "agents/skills/domains/ansys-structural-mechanics/SKILL.md",
+      "source_sha256": "32be40f2b2d87751c2dcb5c7a0917b4e9ef31a0e1be131a48d2172f475ae2c66",
+      "source_bytes": 2911
+    },
+    {
+      "source": "agents/skills/ansys-structural-mechanics/assets/README.md",
+      "destination": "agents/skills/domains/ansys-structural-mechanics/assets/README.md",
+      "source_sha256": "c4a82f5ccebc0e74bc1709b91436e3f415cc26b0aee0551b8e0c45d3ce7c02d2",
+      "source_bytes": 39
+    },
+    {
+      "source": "agents/skills/ansys-structural-mechanics/evals/evals.json",
+      "destination": "agents/skills/domains/ansys-structural-mechanics/evals/evals.json",
+      "source_sha256": "36a6dccfa15893fe260075e28d06f5ee05c218f2751c4be7dec247e2c0bf7746",
+      "source_bytes": 518
+    },
+    {
+      "source": "agents/skills/ansys-structural-mechanics/references/README.md",
+      "destination": "agents/skills/domains/ansys-structural-mechanics/references/README.md",
+      "source_sha256": "e07d46629134706fc7ed2e7131fe2255ad9a37a3ff26f0fd4ecc2c23698ef7f7",
+      "source_bytes": 101
+    },
+    {
+      "source": "agents/skills/ansys-structural-mechanics/scripts/router_validator.py",
+      "destination": "agents/skills/domains/ansys-structural-mechanics/scripts/router_validator.py",
+      "source_sha256": "dbf8ba887d01df0c1c7ca104ca6a48bff29d29d74100dc61c6e6f11ce6c867f5",
+      "source_bytes": 549
+    },
+    {
+      "source": "agents/skills/ansys-systems-coupling/SKILL.md",
+      "destination": "agents/skills/domains/ansys-systems-coupling/SKILL.md",
+      "source_sha256": "4252a36a1166c29463210e701b4f9922174a37b538223a38099a7a16e3604a03",
+      "source_bytes": 2481
+    },
+    {
+      "source": "agents/skills/ansys-systems-coupling/assets/README.md",
+      "destination": "agents/skills/domains/ansys-systems-coupling/assets/README.md",
+      "source_sha256": "726104baf95ce432753c3deeec55133e89a8891fb1409b2b82d8c648586a4747",
+      "source_bytes": 35
+    },
+    {
+      "source": "agents/skills/ansys-systems-coupling/evals/evals.json",
+      "destination": "agents/skills/domains/ansys-systems-coupling/evals/evals.json",
+      "source_sha256": "703c4df945025156a5d6012fb95855dfb656929c63cfd793768845b9c20ba515",
+      "source_bytes": 585
+    },
+    {
+      "source": "agents/skills/ansys-systems-coupling/references/README.md",
+      "destination": "agents/skills/domains/ansys-systems-coupling/references/README.md",
+      "source_sha256": "a8748b087a1cded7bb41d494d485532dd5a96bed7b436610f2cf1d2268f4bab0",
+      "source_bytes": 97
+    },
+    {
+      "source": "agents/skills/ansys-systems-coupling/scripts/router_validator.py",
+      "destination": "agents/skills/domains/ansys-systems-coupling/scripts/router_validator.py",
+      "source_sha256": "bce905542c31c964b1e87b73e05a8aa8bcbb55438b15118fbf4a502a0a25735f",
+      "source_bytes": 541
+    },
+    {
+      "source": "agents/skills/ansys-thermal-cooling/SKILL.md",
+      "destination": "agents/skills/domains/ansys-thermal-cooling/SKILL.md",
+      "source_sha256": "94009bb237797ae146a10a774fc172749b9919d8acbef87e7f22b5a5d79a59b5",
+      "source_bytes": 2419
+    },
+    {
+      "source": "agents/skills/ansys-thermal-cooling/assets/README.md",
+      "destination": "agents/skills/domains/ansys-thermal-cooling/assets/README.md",
+      "source_sha256": "3e60a661141d01d021238be3092880bb55d4294252adc1cf15d5350a8f800af6",
+      "source_bytes": 34
+    },
+    {
+      "source": "agents/skills/ansys-thermal-cooling/evals/evals.json",
+      "destination": "agents/skills/domains/ansys-thermal-cooling/evals/evals.json",
+      "source_sha256": "9c817178ac2e620638ca0f7d2ff0b473ef2ea2b69f1a07d02313f0e6d61e0574",
+      "source_bytes": 557
+    },
+    {
+      "source": "agents/skills/ansys-thermal-cooling/references/README.md",
+      "destination": "agents/skills/domains/ansys-thermal-cooling/references/README.md",
+      "source_sha256": "4702ffdc9959345ac2ec2ed275728f222978a80813cebd7c0b95d98ace9b48cf",
+      "source_bytes": 96
+    },
+    {
+      "source": "agents/skills/ansys-thermal-cooling/scripts/router_validator.py",
+      "destination": "agents/skills/domains/ansys-thermal-cooling/scripts/router_validator.py",
+      "source_sha256": "58e534fe55368a0d29862b2f891c2f66ac6ed78d3061e76d9212dcc4f04e6266",
+      "source_bytes": 539
+    }
+  ],
+  "hash_scope": "sha256 and bytes describe each original source file before migration; tier2 entries use the saved source manifest, domain router entries use the pre-migration Git HEAD"
+}

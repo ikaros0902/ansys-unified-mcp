@@ -259,8 +259,9 @@ def test_full_validation_on_actual_repo():
     # 所有檢查皆應完全通過
     assert report.is_passed
     assert report.total_errors == 0
-    assert report.tier1_skills_checked >= 1
-    assert report.tier2_skills_checked >= 1
+    assert report.tier1_skills_checked == 44
+    assert report.tier2_skills_checked == 0
+    assert report.total_skills_checked == 44
 
 
 def test_cli_execution_via_main():

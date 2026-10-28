@@ -4,8 +4,7 @@
 腳本名稱：validate_skills_ci.py
 功能說明：Stage 1 技能庫靜態檢查與合規門禁工具 (Skills CI & Validator)。
 
-針對專案中的技能目錄（Tier-1: agents/skills/ 與 Tier-2: agents/skills-tier2/）
-進行全方位靜態規格檢驗，確保完全符合 Stage 1 技能治理規範。
+遞迴掃描 agents/skills/ 下依模組分類的技能，執行全方位靜態規格檢驗。
 
 檢查項目包含：
   1. SKILL.md 行數檢查：本體行數嚴格 <= 150 行。
@@ -26,11 +25,9 @@
        * .agents/skills
 
 支援命令列參數：
-  --tier1-only : 僅檢查 Tier-1 技能（agents/skills/）
-  --tier2-only : 僅檢查 Tier-2 技能（agents/skills-tier2/）
+  --tier1-only / --tier2-only : 舊介面相容別名；兩者均掃描全部模組技能
   --fix-toc    : 自動為超過 300 行且缺少目錄的 references/*.md 生成並注入 TOC
-  --tier1-dir  : 自訂 Tier-1 技能目錄路徑
-  --tier2-dir  : 自訂 Tier-2 技能目錄路徑
+  --tier1-dir / --tier2-dir : 舊介面相容參數；掃描根目錄仍為 agents/skills/
   --repo-root  : 自訂 Git 專案根目錄
   --verbose    : 顯示詳細檢查資訊
 
@@ -43,6 +40,7 @@ from __future__ import annotations
 
 import argparse
 import dataclasses
+import json
 from dataclasses import dataclass, field
 import os
 from pathlib import Path
@@ -759,62 +757,31 @@ def run_full_validation(
     """執行全量技能 CI 靜態檢查"""
     report = ValidationReport()
 
-    t1_dir = tier1_dir or (repo_root / "agents" / "skills")
-    t2_dir = tier2_dir or (repo_root / "agents" / "skills-tier2")
-
-    # 1. 決定要檢查的 Tier 目錄
-    check_t1 = not tier2_only
-    check_t2 = not tier1_only
+    skill_root = repo_root / "agents" / "skills"
+    # 舊 tier 參數只保留呼叫相容；技能只依 agents/skills/ 下的模組路徑分類。
+    check_skills = True
 
     # 2. 執行 .gitignore 檢查（全域性門禁）
     git_violations = check_gitignore_rules(repo_root)
     report.global_violations.extend(git_violations)
 
-    # 3. 掃描 Tier-1 技能
-    if check_t1:
-        if not t1_dir.exists():
+    if check_skills:
+        if not skill_root.exists():
             report.global_violations.append(
                 SkillViolation(
                     category="Directory Audit",
-                    skill_name="[Tier-1]",
-                    file_path=t1_dir,
-                    message=f"Tier-1 技能目錄不存在: {t1_dir}",
+                    skill_name="[Skills]",
+                    file_path=skill_root,
+                    message=f"技能目錄不存在: {skill_root}",
                     severity="ERROR",
                 )
             )
         else:
-            t1_skill_dirs = [
-                d for d in sorted(t1_dir.iterdir())
-                if d.is_dir() and not d.name.startswith(".")
-            ]
-            report.tier1_skills_checked = len(t1_skill_dirs)
-            for s_dir in t1_skill_dirs:
-                res = validate_single_skill(s_dir, tier="Tier-1", fix_toc=fix_toc)
-                report.results.append(res)
-                report.repaired_actions.extend(res.repaired_actions)
-
-    # 4. 掃描 Tier-2 技能
-    if check_t2:
-        if not t2_dir.exists():
-            # 若為 tier2-only 則報錯；若為全量且目錄尚未建立則視為警告或錯誤
-            severity = "ERROR" if tier2_only else "WARNING"
-            report.global_violations.append(
-                SkillViolation(
-                    category="Directory Audit",
-                    skill_name="[Tier-2]",
-                    file_path=t2_dir,
-                    message=f"Tier-2 技能目錄不存在: {t2_dir}",
-                    severity=severity,
-                )
-            )
-        else:
-            t2_skill_dirs = [
-                d for d in sorted(t2_dir.iterdir())
-                if d.is_dir() and not d.name.startswith(".")
-            ]
-            report.tier2_skills_checked = len(t2_skill_dirs)
-            for s_dir in t2_skill_dirs:
-                res = validate_single_skill(s_dir, tier="Tier-2", fix_toc=fix_toc)
+            skill_dirs = sorted({p.parent for p in skill_root.rglob("SKILL.md") if not any(part.startswith(".") for part in p.parts)})
+            report.tier1_skills_checked = len(skill_dirs)
+            report.tier2_skills_checked = 0
+            for skill_dir in skill_dirs:
+                res = validate_single_skill(skill_dir, tier="Module", fix_toc=fix_toc)
                 report.results.append(res)
                 report.repaired_actions.extend(res.repaired_actions)
 
@@ -860,9 +827,7 @@ def print_cli_summary(report: ValidationReport, verbose: bool = False) -> None:
             print(f"  - [{r.tier}] {r.skill_name:<36} : {status}")
 
     print("\n" + "-" * 70)
-    print(f"  檢查統計: Tier-1 技能數 = {report.tier1_skills_checked} (預期基準: 10)")
-    print(f"            Tier-2 技能數 = {report.tier2_skills_checked} (預期基準: 30)")
-    print(f"            總檢查技能數 = {report.total_skills_checked}")
+    print(f"  檢查統計: 技能數 = {report.total_skills_checked}")
     print(f"            錯誤 (ERROR)   = {report.total_errors}")
     print(f"            警告 (WARNING) = {report.total_warnings}")
     print("-" * 70)
@@ -885,12 +850,12 @@ def build_arg_parser() -> argparse.ArgumentParser:
     tier_group.add_argument(
         "--tier1-only",
         action="store_true",
-        help="僅對 Tier-1 技能（agents/skills/）進行靜態 CI 檢查",
+        help="舊介面相容別名；仍掃描全部模組技能",
     )
     tier_group.add_argument(
         "--tier2-only",
         action="store_true",
-        help="僅對 Tier-2 技能（agents/skills-tier2/）進行靜態 CI 檢查",
+        help="舊介面相容別名；仍掃描全部模組技能",
     )
 
     parser.add_argument(
@@ -903,13 +868,13 @@ def build_arg_parser() -> argparse.ArgumentParser:
         "--tier1-dir",
         type=Path,
         default=None,
-        help="覆蓋預設之 Tier-1 技能目錄路徑",
+        help="舊介面相容參數；技能根目錄仍為 agents/skills/",
     )
     parser.add_argument(
         "--tier2-dir",
         type=Path,
         default=None,
-        help="覆蓋預設之 Tier-2 技能目錄路徑",
+        help="舊介面相容參數；技能根目錄仍為 agents/skills/",
     )
     parser.add_argument(
         "--repo-root",

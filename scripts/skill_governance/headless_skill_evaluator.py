@@ -253,7 +253,7 @@ def parse_skill_markdown(skill_md_path: Path) -> SkillMetadata:
 def find_skill_directory(skill_target: str | Path, repo_root: Path | None = None) -> Path:
     """
     智能解析技能目錄位置：
-    支援直接傳入目錄、SKILL.md 路徑或純名稱（搜尋 agents/skills, agents/skills-tier2 等）。
+    支援直接傳入目錄、SKILL.md 路徑或純名稱（技能集中於 agents/skills/；舊 Tier-2 路徑會映射到新位置）。
     """
     path_obj = Path(skill_target)
     if path_obj.is_file() and path_obj.name == "SKILL.md":
@@ -264,19 +264,36 @@ def find_skill_directory(skill_target: str | Path, repo_root: Path | None = None
     if repo_root is None:
         repo_root = Path(__file__).resolve().parents[2]
 
+    skill_root = repo_root / "agents" / "skills"
+    legacy_root = repo_root / "agents" / "skills-tier2"
+    requested_path = path_obj if path_obj.is_absolute() else repo_root / path_obj
+    try:
+        legacy_relative = requested_path.resolve().relative_to(legacy_root.resolve())
+    except ValueError:
+        legacy_relative = None
+    if legacy_relative is not None:
+        migrated = skill_root / legacy_relative
+        if migrated.is_file() and migrated.name == "SKILL.md":
+            return migrated.parent
+        if migrated.is_dir() and (migrated / "SKILL.md").is_file():
+            return migrated
+
     candidate_roots = [
-        repo_root / "agents" / "skills",
-        repo_root / "agents" / "skills-tier2",
+        skill_root,
         repo_root / ".kiro" / "skills",
         repo_root / ".agents" / "skills",
         repo_root / ".cline" / "skills",
     ]
 
-    skill_name = str(skill_target).strip("/\\")
+    skill_name = legacy_relative.parts[0] if legacy_relative else Path(str(skill_target).strip("/\\\\")).name
     for root in candidate_roots:
         target = root / skill_name
         if target.is_dir() and (target / "SKILL.md").is_file():
             return target
+        if root.is_dir():
+            matches = [path.parent for path in root.rglob("SKILL.md") if path.parent.name == skill_name]
+            if len(matches) == 1:
+                return matches[0]
 
     raise FileNotFoundError(f"無法在專案候選目錄中定位技能：'{skill_target}'")
 

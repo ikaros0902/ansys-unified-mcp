@@ -10,21 +10,24 @@
 
 ## 領域來源與能力矩陣
 
-| 優先級／領域 | 本機來源（實際核對路徑／版本） | skill 路由 | MCP 支援邊界／證據狀態 |
+本機 ANSYS 文件根目錄以 `ANSYS_DOCS_ROOT` 指定。下列路徑相對於該根目錄；套件快照位於 repo 的 `docs/api_inventory/`。這些來源標記只代表已記錄的材料，不代表版本、授權或 runtime 已驗證。
+
+| 優先級／領域 | 文件與 API 來源 | 現行技能路徑 | MCP 支援邊界／證據狀態 |
 |---|---|---|---|
-| P1 Mechanical | `D:\ansys-docs-local\Documentation_md\Ansys_Mechanical_Users_Guide.md`（2026 R1）；`Ansys_Scripting_in_Mechanical_Guide.md`（2026 R1）；專案 `docs/api_inventory/`（主要為 v251 快照） | `ansys-mechanical`、`ansys-mechanical-connections`、`ansys-material-assignment` | 依現有 controller/session 能力判定；API 名稱存在不代表參數簽名或真機行為已驗證。跨版結果須各自記錄。 |
-| P1 Mesh | Mechanical User's Guide、Mechanical Scripting Guide（2026 R1）；專案 `agents/skills/ansys-mesh/references/` | `ansys-mesh` | 指標須記錄定義、單元/分析和求解器適用性；品質指標不可無條件作通用阻斷門檻。 |
-| P1 SpaceClaim | `D:\ansys-docs-local\Documentation_md\SpaceClaim_Documentation.md`（2026 R1，API 章）；`D:\Ikaros\ACT_Test\3.documents\SpaceClaim\`（v251/v252/v261 名稱副本） | `ansys-spaceclaim` 及 defeature/modeling/interface-check | 三版同名指南曾核對到相同內容 hash，不能視為三版獨立驗證。匯出需重開實際交換檔並檢查功能面、孔、局部邊界、單位。 |
-| P1 LS-DYNA | `D:\ansys-docs-local\Documentation_md\LS-DYNA_Users_Guide.md`（2026 R1）；`LS-DYNA_Implicit_Analysis_Guide.md`（2026 R1，§12.1）；`D:\Ikaros\ACT_Test\3.documents\LS-DYNA_Keyword_and_Theory_Manuals.md`（索引/下載入口，非完整 keyword volumes） | `ansys-lsdyna` | Mechanical 整合、PyDYNA/keyword deck 與 solver 版本須分開；按指定案例讀回輸入、終止狀態、能量與結果。DT2MS 語義按版本手冊核實。 |
-| P1 LS-PrePost | `D:\ansys-docs-local\Documentation_md\Ansys_LS-PrePost_Users_Guide.md`（2026 R1，§8.5.4 Random Vibration） | `ansys-ls-prepost` | Python/DataCenter、SCL、cfile 是不同宿主/介面；確認結果 state、part/node/element、座標系、欄位與單位。 |
-| P1 Random Vibration | Mechanical User's Guide（2026 R1，Random Vibration §5.6.6，印刷頁約 556）；Mechanical Scripting Guide（2026 R1，範例印刷頁約 402） | `ansys-random-vibration` → Mechanical + DPF | 文件示例以 Workbench 建立 Modal/Random Vibration 系統後操作；MCP 未因此取得獨立 connector。PSD、阻尼、模態充分性及 RMS 必須對應目標設定。 |
-| P2 Thermal | Mechanical User's Guide、Scripting Guide（2026 R1）；專案 `docs/api_inventory/`（v251 為主） | `ansys-thermal-analysis`、`pcb-warpage-analysis` | 穩態/暫態熱、熱應力與耦合映射分開。公式估值標 `estimated`；只有 solver 狀態、日誌與輸出相符才標 `solver_result`。 |
-| P2 optiSLang | 專案既有 `agents/skills/ansys-optislang/references/official_examples.md`、`docs/api_inventory/`；執行時 API 需按安裝 SDK/release 核對 | `ansys-optislang`、`ansys-parametric-study` | DoE 樣本數、TSI、CoP、VIF 門檻屬案例/模型選擇依據，不是通用硬門檻。失敗點不得填零參與最佳解排序。 |
-| P2 Sherlock | `D:\Ikaros\ACT_Test\3.documents\Sherlock\api_reference\sherlock-apis-2026-r1`（2026 R1） | `ansys-sherlock` | 文件/API 路由與 PCB 可靠度模型知識；目前沒有宣稱 MCP Sherlock connector 或真機求解支援。 |
-| P2 Icepak | `D:\Ikaros\ACT_Test\3.documents\AnsysEM\manuals_and_training\IcepakScriptingGuide.pdf`（手冊版本需由 PDF 內文/封面再確認）；同目錄 Icepak training/tutorial | `ansys-icepak` | 目前 driver 為能力骨架，不得將產生腳本/CSV 宣稱為溫度場或已求解結果；新 connector 待後續工作。 |
-| P3 Speos / Illumination | `D:\Ikaros\ACT_Test\3.documents\AnsysEM\` 中 Speos 文件；已核對的 client API 標記 2026 R1 SP03 | `ansys-speos`、`ansys-optical-engineering` | Speos client/RPC/NX API 路徑需按目標宿主與版本分流；沒有本 MCP 產品 controller。 |
-| P3 Zemax | `D:\Ikaros\ACT_Test\3.documents\Zemax\` ZOS-API 文件（2026 R1）；ZOSPy 為獨立包/介面 | `ansys-zemax`、`ansys-optical-engineering` | 區分 OpticStudio 序列/非序列、ZOS-API 主控/附掛、原生介面/ZOSPy；沒有 MCP connector。 |
-| P3 Lumerical | `D:\Ikaros\ACT_Test\3.documents\Lumerical\` lumapi 與 scripting language 文件（版本依文件 metadata） | `ansys-lumerical`、`ansys-optical-engineering` | FDTD/MODE/INTERCONNECT solver 與 source/monitor/mesh 結果分流；沒有 MCP connector。 |
+| P1 Mechanical | `Documentation_md/Ansys_Mechanical_Users_Guide.md`、`Ansys_Scripting_in_Mechanical_Guide.md`；repo 的 Mechanical v251 快照 | [Mechanical](../../agents/skills/structural-mechanics/ansys-mechanical/SKILL.md)、[PyMechanical](../../agents/skills/structural-mechanics/pymechanical-operations/SKILL.md) | 依現有 controller/session 能力判定；API 名稱不證明參數簽名或真機行為。產品與 SDK 版本分開記錄。 |
+| P1 Mesh | `Documentation_md/Ansys_Mechanical_Users_Guide.md`、`Ansys_Scripting_in_Mechanical_Guide.md` | [Mesh](../../agents/skills/geometry-meshing/ansys-mesh/SKILL.md)、[Geometry router](../../agents/skills/domains/ansys-geometry-meshing/SKILL.md) | 指標須註明定義、單元、分析與求解器適用性；不把局部品質指標當成通用阻斷門檻。 |
+| P1 SpaceClaim | `Documentation_md/SpaceClaim_Documentation.md`；repo 的 SpaceClaim v251 快照與 REA 證據 | [SpaceClaim](../../agents/skills/geometry-meshing/ansys-spaceclaim/SKILL.md)、[Geometry router](../../agents/skills/domains/ansys-geometry-meshing/SKILL.md) | v251 snapshot-only overload 不代表官方支援簽名；交換檔仍需檢查幾何、單位與特徵。 |
+| P1 LS-DYNA | `Documentation_md/LS-DYNA_Users_Guide.md`、`LS-DYNA_Implicit_Analysis_Guide.md`；來源清冊記錄 Keyword and Theory Manuals 取得入口 | [LS-DYNA](../../agents/skills/structural-mechanics/ansys-lsdyna/SKILL.md)、[Shock workflow](../../agents/skills/structural-mechanics/shock-analysis-workflow/SKILL.md) | Keyword deck、Mechanical 整合與 PyDYNA 是不同介面；取得入口不等於完整手冊卷冊。 |
+| P1 LS-PrePost | `Documentation_md/Ansys_LS-PrePost_Users_Guide.md` | [LS-PrePost](../../agents/skills/structural-mechanics/ansys-ls-prepost/SKILL.md) | Python/DataCenter、SCL 與 cfile 是不同介面；結果需標示 state、實體、座標系、欄位與單位。 |
+| P1 Random Vibration | `Documentation_md/Ansys_Mechanical_Users_Guide.md`、`Ansys_Scripting_in_Mechanical_Guide.md` | [Random vibration](../../agents/skills/structural-mechanics/ansys-random-vibration/SKILL.md)、[Mechanical](../../agents/skills/structural-mechanics/ansys-mechanical/SKILL.md) | PSD、阻尼、模態充分性及 RMS 必須對應目標設定；文件範例不建立獨立 MCP connector。 |
+| P2 Thermal／PCB | Mechanical User's Guide、Scripting Guide；repo 的 Mechanical API 快照 | [Thermal analysis](../../agents/skills/thermal-cooling/ansys-thermal-analysis/SKILL.md)、[PCB warpage](../../agents/skills/materials-reliability/pcb-warpage-analysis/SKILL.md) | 穩態／暫態熱、熱應力與耦合映射分開；估算結果需標記，不得當成 solver result。 |
+| P2 optiSLang | repo 的 optiSLang API 快照與技能 references；執行 API 依安裝 SDK/release 確認 | [optiSLang](../../agents/skills/systems-coupling/ansys-optislang/SKILL.md) | DoE 樣本數、TSI、CoP、VIF 門檻依案例判定，不是通用硬門檻。失敗點不得填零參與最佳解排序。 |
+| P2 Sherlock | 來源清冊記錄的 v261 Sherlock API reference；版本依來源 metadata 確認 | [Sherlock](../../agents/skills/materials-reliability/ansys-sherlock/SKILL.md) | 目前提供文件與 PCB 可靠度工作流知識；不宣稱 MCP Sherlock connector 或求解支援。 |
+| P2 Icepak | `ANSYS_DOCS_ROOT` 下的 Icepak scripting guide 與 training/tutorial；文件版本待核 | [Icepak](../../agents/skills/thermal-cooling/ansys-icepak/SKILL.md)、[Thermal router](../../agents/skills/domains/ansys-thermal-cooling/SKILL.md) | driver 是能力骨架；產生腳本或 CSV 不等於溫度場或已求解結果。 |
+| P3 Speos／Illumination | `ANSYS_DOCS_ROOT` 下的 Speos 文件；client API 版本按文件 metadata 記錄 | [Speos](../../agents/skills/optical-engineering/ansys-speos/SKILL.md)、[Optical router](../../agents/skills/domains/ansys-optical-engineering/SKILL.md) | Speos client/RPC/NX API 依宿主與版本分流；目前沒有 MCP 產品 controller。 |
+| P3 Zemax | `ANSYS_DOCS_ROOT` 下的 ZOS-API 文件；ZOSPy 是獨立套件／介面 | [Zemax](../../agents/skills/optical-engineering/ansys-zemax/SKILL.md)、[Optical router](../../agents/skills/domains/ansys-optical-engineering/SKILL.md) | 區分 OpticStudio 序列／非序列、ZOS-API 主控／附掛及 ZOSPy；不宣稱 MCP connector。 |
+| P3 Lumerical | `ANSYS_DOCS_ROOT` 下的 lumapi 與 scripting language 文件；版本依文件 metadata 記錄 | [Lumerical](../../agents/skills/optical-engineering/ansys-lumerical/SKILL.md)、[Optical router](../../agents/skills/domains/ansys-optical-engineering/SKILL.md) | FDTD、MODE、INTERCONNECT 各自依 source、monitor、mesh 與結果型態分流；不宣稱 MCP connector。 |
+
 
 ## 版本與證據聲明
 

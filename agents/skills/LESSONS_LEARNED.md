@@ -13,7 +13,7 @@
 - BOM、元件／body 名稱及 GUI 外形互相補強；未命中命名不能擴大成幾何不存在。未確認分類或未通過驗證的檔案不列正式素材。
 - 擷取素材、簡化存檔、執行期讀檔取代是不同階段。現場參數化重建不等於已保存幾何的查表資料庫。
 
-操作流程與案例證據見 [元件擷取與查表建庫技能](ansys-spaceclaim-component-library/SKILL.md)。
+操作流程與案例證據見 [元件擷取與查表建庫技能](geometry-meshing/ansys-spaceclaim/references/component_library/overview.md)。
 
 ## 2026-10-14：Skill 結構補齊與閉環驗收
 

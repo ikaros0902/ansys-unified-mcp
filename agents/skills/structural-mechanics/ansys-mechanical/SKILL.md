@@ -1,0 +1,109 @@
+---
+name: ansys-mechanical
+description: ANSYS Mechanical 結構剛強度、模態與熱-結構耦合分析主控手冊。涵蓋 ACT 腳本、非線性接觸、網格前檢與奇異點判定。當需要進行靜態結構強度剛度校核、固有頻率模態分析或熱應力序列耦合、需透過 ACT / PyMechanical 腳本配置非線性接觸、網格控制與大變形求解、或需排查求解器主元錯誤 (Pivot Error)、殘差發散或聖維南應力奇異點時使用；需在 Mechanical ACT 環境或透過 PyMechanical 連線執行。觸發關鍵字 (繁中/En): Mechanical分析, 靜態結構, 模態分析, 熱應力分析, PyMechanical, ACT腳本。
+---
+
+# ANSYS Mechanical 結構與熱分析主控手冊
+
+本技能提供標準化 ANSYS Mechanical ACT 自動化分析框架，整合靜態強度、模態振動與熱-結構耦合三大標準流程，並嚴格落實網格品質預檢、力學收斂診斷與工程判斷力評估。
+
+---
+
+## 一、核心物件進入點 (Entry Handles)
+
+在 Mechanical ACT 腳本環境中，預設全域物件 handle 如下：
+
+```python
+ExtAPI.Application.ActiveUnitSystem = MechanicalUnitSystem.StandardMKS
+Model       = DataModel.Project.Model       # 頂層幾何與模型核心
+Mesh        = Model.Mesh                    # 網格控制核心
+Connections = Model.Connections             # 接觸與連接群組
+Analysis    = Model.Analyses[0]             # 當前活動分析系統 (如 Static Structural)
+Settings    = Analysis.Children[0]          # 求解分析設定 (Analysis Settings)
+Solution    = Analysis.Solution             # 求解與後處理結果核心
+```
+
+---
+
+## 二、三大標準工作模式 SOP
+
+```mermaid
+flowchart LR
+    A[1. 幾何與材料] --> B[2. 網格劃分與前檢]
+    B --> C[3. 接觸與邊界載荷]
+    C --> D[4. 求解器參數配置]
+    D --> E[5. 求解與收斂診斷]
+    E --> F[6. 後處理與判斷力校核]
+```
+
+### 1. 靜態結構分析 SOP (Static Structural)
+1. **單位與材料**：設定系統單位制（MKS/NMM），匯入 XML 工程材料庫並指定至主體（Body）。
+2. **網格劃分與前檢**：依幾何、單元與分析類型檢查網格品質；品質指標須使用該求解器與單元適用的定義，並追蹤最差單元位置及所影響的關注量。網格警示值可作調查門檻，不能脫離分析與單元定義當成通用求解阻斷值。
+3. **接觸與連接**：定義裝配體接觸對（Contact Regions），指定接觸公式（Augmented Lagrange）與穿透控制。
+4. **邊界與載荷**：施加固定約束（Fixed）、位移（Displacement）及載荷（Force/Pressure），**嚴格防範剛體位移**。
+5. **求解控制**：配置大變形開關（Large Deflection）、載荷步與自動副步（Auto Time Stepping）。
+6. **求解與後處**：執行求解，提取位移、等效應力（von-Mises）及安全係數，並導出白底結果雲圖。
+7. **判斷力校核**：檢驗應力集中處是否為數值奇異點（聖維南原理檢驗與節點未平均斷差比對）。
+
+### 2. 模態分析 SOP (Modal Analysis)
+1. **幾何與材料**：確認材料密度（Density）、彈性模數（Young's Modulus）與泊松比已完整定義。
+2. **網格控制**：薄壁件確保厚度方向至少 3 層單元或採用薄殼單元，避免剪切自鎖高估固有頻率。
+3. **邊界設置**：定義無約束自由態（前 6 階為 0 Hz 剛體模態）或實際工況約束態（Fixed/Displacement）。
+4. **求解器設定**：配置模態提取演算法（Block Lanczos）與提取階數（通常為前 6 ~ 20 階）。
+5. **求解與提取**：執行求解，提取各階固有頻率（Natural Frequencies）與相應總變形振型雲圖。
+
+### 3. 熱應力序列耦合 SOP (Thermal-Stress Coupling)
+1. **熱分析求解**：在熱分析系統中施加溫度、熱流率或對流換熱係數（HTC），完成溫度場求解。
+2. **結構環境配置**：建立靜態結構分析系統，共享幾何與材料模型（必須包含熱膨脹係數 CTE）。
+3. **體溫度導入**：在結構分析建立 `Imported Body Temperature`，載入熱分析對應時間步之溫度場。
+4. **無應力參考溫度**：指定結構無應力參考環境溫度（Environment Temperature，通常為 20°C 或 22°C）。
+5. **力學約束與求解**：設定結構支撐以約束剛體運動且容許熱脹冷縮；執行非線性應力求解。
+
+---
+
+## 三、模組路由表 (Module Router)
+
+執行各分析步驟時，請查閱 `references/` 目錄專精手冊：
+
+| 分析階段 / 核心問題 | 推薦專精子手冊 | 核心內容要點 |
+|---|---|---|
+| ACT API 存在性與簽名查證 | `api_search(query, product="mechanical")` / `api_validate_script(code, product="mechanical")` | 撰寫 ACT 腳本前先查證類別/成員是否存在，避免幻覺 API；查手冊細節改用 `search_ansys_docs` |
+| 材料導入與批次映射 | [`references/materials.md`](references/materials.md) | XML 材料庫匯入、EngineeringData、溫變非線性屬性指派 |
+| 超彈性/黏彈性材料模型選型 | [`references/hyperelastic_viscoelastic_materials.md`](references/hyperelastic_viscoelastic_materials.md) | Mooney-Rivlin/Yeoh/Ogden 選型決策表、Drucker 穩定性檢查、Prony series、WLF/TN 時溫等效 |
+| 網格尺寸、方法與品質檢驗 | [`references/mesh.md`](references/mesh.md) | Sizing、Method、網格品質量化評估標準 (Skewness/Orthogonal) |
+| 接觸對建立、穿透與震盪 | [`references/connections_and_contacts.md`](references/connections_and_contacts.md) | 接觸對公式、法向剛度、Pinball 範圍、穩定化阻尼 |
+| 約束條件、載荷施加與螺栓 | [`references/boundary_conditions_and_loads.md`](references/boundary_conditions_and_loads.md) | 固定約束、位移自由度、壓力、螺栓預緊三步載荷法 |
+| 載荷步、大變形與求解器控制 | [`references/analysis_setup.md`](references/analysis_setup.md) | Large Deflection、自動副步細分、Newton-Raphson 控制 |
+| 結果評估、雲圖導出與 DPF | [`references/results_and_postprocessing.md`](references/results_and_postprocessing.md) | 應力/變形提取、Graphics.ExportImage、DPF 高速場讀取 |
+| 收斂曲線診斷、無關性、奇異點、安全因子選取 | [`references/mechanical_judgment.md`](references/mechanical_judgment.md) | 力殘差收斂判讀、GCI 無關性指標、聖維南原理判定、安全因子範圍建議 |
+| 失效準則選用（延性/脆性/複合材料） | [`references/failure_criteria_selection.md`](references/failure_criteria_selection.md) | von Mises/Tresca/Max Principal Stress 決定表、Composite Failure Tool 四準則比較 |
+| 疲勞分析標準流程 | [`references/fatigue_analysis_standards.md`](references/fatigue_analysis_standards.md) | S-N 曲線、Goodman/Soderberg/Gerber 平均應力修正、Miner's Rule 累積損傷 |
+| 多物理場耦合、CFD 負載映射與過渡 | [`references/multiphysics_mapping.md`](references/multiphysics_mapping.md) | 熱-結構弱耦合、Fluent 壓力/HTC 映射、聖維南平滑準則 |
+| 求解報錯（主元錯誤、不收斂）自愈 | [`references/solver_diagnostics.md`](references/solver_diagnostics.md) | Pivot Error、Convergence Failure 自愈對策表 |
+
+示範腳本推薦：
+- [`scripts/run_static_structural_demo.py`](scripts/run_static_structural_demo.py)：標準靜態剛強度與模態分析 ACT 示範。
+- [`scripts/run_taylor_bar_demo.py`](scripts/run_taylor_bar_demo.py)：泰勒桿高速衝擊大變形、OFHC 銅動態降伏推算與沙漏能診斷。
+- [`scripts/check_mesh_quality.py`](scripts/check_mesh_quality.py)：網格歪斜度與正交品質自動化預檢。
+
+輸出模板：
+- [`assets/report_section_template.md`](assets/report_section_template.md)：靜態結構/模態/熱應力分析報告段落骨架，含網格摘要、邊界條件、結果摘要（最大應力/位移、安全係數）與收斂狀態佔位符，供 generate_report 類工具套用。
+
+---
+
+## 四、絕不能做清單 (Don'ts)
+
+> [!CAUTION]
+> 1. **網格錯誤與不佳指標分開處理**：負體積、反轉或求解器明確拒絕的元素屬阻斷問題；品質指標達警示值時，先定位元素、確認量測定義與分析類型，再評估影響。不要把 Fluent 指標或單一專案警示值當成 Mechanical 通用失效門檻。
+> 2. **薄壁建模方法需依物理問題選擇**：考慮殼／實體單元、階次、厚度方向解析度、剪切鎖定與局部應力梯度。至少三層或指定 element type 僅是待驗證的建模建議，不是所有幾何和載荷都成立的硬規則；以厚度收斂與適用單元理論作決策。
+> 3. **約束要消除非物理剛體模態並符合實際支承**：不要求所有結構固定六個自由度；須根據真實支承、接觸與分析類型檢查剛體模態、約束反力與荷載平衡。Weak Springs 或 Inertia Relief 僅在其物理假設成立時採用。
+
+工程判斷與品質指標分類、來源及校核方式見 [`references/evidence_and_applicability.md`](references/evidence_and_applicability.md)。隨機振動另見 [`ansys-random-vibration`](../ansys-random-vibration/SKILL.md)。
+
+## 官方範例路由
+
+需重現官方輸入與輸出驗收時，讀取 [references/official_examples.md](references/official_examples.md)；依該文件分開檢查啟動、模型修改與求解授權。
+
+## 內嵌腳本來源
+
+執行 material_assignment_engine、rm_joint_creator、defeature、imprint_contacts、midsurface 或 rm_group 前，讀取 [宿主腳本唯一來源](../../geometry-meshing/ansys-spaceclaim/references/geometry_modeling/embedded_scripts.md)。products 為唯一來源，技能內歷史副本不作執行入口；由 CPython／MCP 讀原文送宿主。

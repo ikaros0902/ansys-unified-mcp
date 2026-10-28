@@ -145,6 +145,25 @@ class TestFrontmatterAndDiscovery:
         found_from_md = find_skill_directory(mock_skill_dir / "SKILL.md")
         assert found_from_md == mock_skill_dir
 
+    def test_find_skill_directory_from_legacy_tier2_path(self, tmp_path: Path):
+        legacy_skill = tmp_path / "agents" / "skills-tier2" / "demo-skill"
+        current_skill = tmp_path / "agents" / "skills" / "demo-skill"
+        current_skill.mkdir(parents=True)
+        (current_skill / "SKILL.md").write_text("---\nname: demo-skill\ndescription: demo\n---\n", encoding="utf-8")
+
+        found = find_skill_directory(legacy_skill, repo_root=tmp_path)
+
+        assert found == current_skill
+
+
+    def test_find_nested_skill_from_legacy_tier2_markdown_path(self, tmp_path: Path):
+        current_skill = tmp_path / "agents" / "skills" / "fluids-cfd" / "demo-skill"
+        current_skill.mkdir(parents=True)
+        (current_skill / "SKILL.md").write_text("---\nname: demo-skill\ndescription: demo\n---\n", encoding="utf-8")
+        legacy_markdown = tmp_path / "agents" / "skills-tier2" / "demo-skill" / "SKILL.md"
+
+        assert find_skill_directory(legacy_markdown, repo_root=tmp_path) == current_skill
+
     def test_find_skill_directory_nonexistent_raises(self):
         with pytest.raises(FileNotFoundError, match="無法在專案候選目錄中定位技能"):
             find_skill_directory("completely-non-existent-skill-xyz")
