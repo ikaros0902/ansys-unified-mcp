@@ -123,6 +123,8 @@ SOURCES = {
     "sherlock_core": DOCS_DIR / "sherlock_core_api.json",
     "rocky": DOCS_DIR / "rocky_api.json",
     "cfx": DOCS_DIR / "cfx_api.json",
+    "speos": DOCS_DIR / "speos_api.json",
+    "speos_protocol": DOCS_DIR / "speos_protocol_api.json",
     "siwave_libironpythoncmd_rea": DOCS_DIR / "siwave_libironpythoncmd_rea_api.json",
     "hfss_addin_rea": DOCS_DIR / "hfss_addin_rea_api.json",
     "apip_wrapper_native": DOCS_DIR / "apip_wrapper_native_exports_api.json",
@@ -158,6 +160,8 @@ INTERFACES = {
     "sherlock_core": "PyAnsys Sherlock SDK 2.1.4 static AST declarations",
     "rocky": "PyAnsys Rocky SDK 0.6.2 static AST declarations",
     "cfx": "PyAnsys CFX SDK 0.3.0; metadata requires licensed local CFX and states 2025 R2 SP3+; direct AST only, dynamic flobject/TUI omitted",
+    "speos": "PyAnsys Speos SDK 0.9.2 client; support/version examples conflict in package metadata",
+    "speos_protocol": "PyAnsys Speos gRPC/protobuf schema from ansys-api-speos 0.16.3",
     "workbench_protocol": "Workbench gRPC protocol schema from ansys-api-workbench 0.4.0",
     "mechanical_protocol": "Mechanical gRPC protocol schema from ansys-api-mechanical 0.1.4",
     "geometry_protocol": "Geometry gRPC protocol schema from ansys-api-geometry 0.4.92",
@@ -275,7 +279,7 @@ def source_metadata(product: str, path: Path) -> dict:
     if product == "optislang":
         sdk_version = version
         version = "unknown (product release not recorded)"
-    elif product in {"mapdl", "dpf", "fluent", "primemesh", "sound", "pydyna", "mechanical_core", "geometry_core", "optislang_core", "workbench", "sherlock_core", "rocky", "cfx", "workbench_protocol", "mechanical_protocol", "geometry_protocol", "fluent_protocol", "mapdl_protocol", "primemesh_protocol", "discovery_protocol", "dbu_protocol", "result_explorer_protocol", "platform_instance_management_protocol", "filetransfer_protocol"}:
+    elif product in {"mapdl", "dpf", "fluent", "primemesh", "sound", "pydyna", "mechanical_core", "geometry_core", "optislang_core", "workbench", "sherlock_core", "rocky", "cfx", "speos", "speos_protocol", "workbench_protocol", "mechanical_protocol", "geometry_protocol", "fluent_protocol", "mapdl_protocol", "primemesh_protocol", "discovery_protocol", "dbu_protocol", "result_explorer_protocol", "platform_instance_management_protocol", "filetransfer_protocol"}:
         sdk_version = str(data.get("sdk_version", ""))
         version = "unknown (product release not recorded)"
     sources = data.get("sources")

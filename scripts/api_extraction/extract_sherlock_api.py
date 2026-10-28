@@ -38,8 +38,27 @@ SDK_TARGETS = {
             "represented by this direct AST snapshot."
         ),
         "include_distribution_metadata": True,
+        "support_statement_marker": "PyCFX supports CFX ",
     },
-
+    "speos": {
+        "package": "ansys-speos-core",
+        "version": "0.9.2",
+        "package_root": Path("ansys/speos/core"),
+        "module_root": "ansys.speos.core",
+        "interface": "PyAnsys Speos SDK 0.9.2 direct AST declarations",
+        "scope_note": (
+            "This snapshot covers the Python client source only. The package metadata README "
+            "shows conflicting product-version examples (2025.1, Docker tag 261, and local "
+            "AWP_ROOT251 paths), so it does not establish product compatibility. The RPC "
+            "schema is provided by a separate ansys-api-speos package."
+        ),
+        "include_distribution_metadata": True,
+        "metadata_evidence_markers": (
+            "product version 2025.1",
+            "ghcr.io/ansys/speos-rpc:261",
+            "%AWP_ROOT251%",
+        ),
+    },
 }
 
 
@@ -116,6 +135,7 @@ def extract_python_sdk_api(target: str) -> dict[str, Any]:
         "total_functions": 0,
     }
     sdk_files = []
+    metadata_evidence = []
     support_evidence = None
     for source in source_files:
         source_path = source.as_posix()
@@ -172,21 +192,32 @@ def extract_python_sdk_api(target: str) -> dict[str, Any]:
         metadata_hash = _digest(metadata_path)
         sdk_files.append({"path": metadata_path.as_posix(), "sha256": metadata_hash})
         metadata_text = distribution.read_text("METADATA") or ""
-        support_statement = next(
-            (
-                line.strip()
-                for line in metadata_text.splitlines()
-                if "PyCFX supports CFX " in line.strip()
-            ),
-            None,
-        )
-        if not support_statement:
-            raise RuntimeError(f"No PyCFX product support statement found in {metadata_path}")
-        support_evidence = {
-            "statement": support_statement,
-            "source_path": metadata_path.as_posix(),
-            "sha256": metadata_hash,
-        }
+        for marker in config.get("metadata_evidence_markers", ()):
+            statement = next(
+                (line.strip() for line in metadata_text.splitlines() if marker in line),
+                None,
+            )
+            if not statement:
+                raise RuntimeError(f"No metadata evidence matching {marker!r} for {package}")
+            metadata_evidence.append({
+                "marker": marker,
+                "statement": statement,
+                "source_path": metadata_path.as_posix(),
+                "sha256": metadata_hash,
+            })
+        support_marker = config.get("support_statement_marker")
+        if support_marker:
+            statement = next(
+                (line.strip() for line in metadata_text.splitlines() if support_marker in line),
+                None,
+            )
+            if not statement:
+                raise RuntimeError(f"No metadata support statement matching {support_marker!r}")
+            support_evidence = {
+                "statement": statement,
+                "source_path": metadata_path.as_posix(),
+                "sha256": metadata_hash,
+            }
 
     if not any(totals[key] for key in ("total_classes", "total_methods", "total_functions")):
         raise RuntimeError(f"The {package} SDK source contains no direct public declarations")
@@ -202,6 +233,7 @@ def extract_python_sdk_api(target: str) -> dict[str, Any]:
             support_evidence["statement"] if support_evidence else "Not established by this snapshot."
         ),
         "support_evidence": support_evidence,
+        "metadata_evidence": metadata_evidence,
         "scope": (
             f"Static AST extraction of direct declarations under {module_root}. "
             "Includes classes, methods, properties, and functions whose names do not start "
@@ -240,6 +272,10 @@ def extract_rocky_api() -> dict[str, Any]:
 
 def extract_cfx_api() -> dict[str, Any]:
     return extract_python_sdk_api("cfx")
+
+
+def extract_speos_api() -> dict[str, Any]:
+    return extract_python_sdk_api("speos")
 
 
 if __name__ == "__main__":

@@ -2916,8 +2916,8 @@
         }
       ],
       "folder": "Speos",
-      "has_direct_snapshot": false,
-      "mapping_status": "product_component_evidence_only",
+      "has_direct_snapshot": true,
+      "mapping_status": "direct_product_id",
       "overview_url": "https://developer.synopsys.com/docs/speos.md",
       "product": "speos",
       "rea_evidence": {
@@ -2926,8 +2926,33 @@
         "version": "v251"
       },
       "sdk_package": "ansys-speos-core",
-      "snapshot_status": "no_direct_snapshot",
-      "snapshots": []
+      "snapshot_status": "direct_snapshot",
+      "snapshots": [
+        {
+          "sha256": "d9391b330bb6c3d92331b45fff163432bff9bd5d1d08a61cff6eb808a91ffb25",
+          "snapshot_path": "docs/api_inventory/speos_api.json",
+          "snapshot_version": "unknown",
+          "statistics": {
+            "total_modules": 48,
+            "total_classes": 197,
+            "total_methods": 417,
+            "total_properties": 246,
+            "total_functions": 29
+          }
+        },
+        {
+          "sha256": "24b97627b0019e1c10422a4aa3ba95f5683fb0fca73b4a1a9d0df90afa492226",
+          "snapshot_path": "docs/api_inventory/speos_protocol_api.json",
+          "snapshot_version": "unknown",
+          "statistics": {
+            "total_modules": 33,
+            "total_classes": 372,
+            "total_methods": 163,
+            "total_properties": 697,
+            "total_functions": 0
+          }
+        }
+      ]
     },
     {
       "documentation_coverage": [

@@ -130,7 +130,7 @@ REA_EVIDENCE = {
 }
 API_SUFFIX = "_api.json"
 # PyDyna is a distinct SDK under the manifest's existing LS-DYNA product ID.
-SNAPSHOT_PRODUCT_ALIASES = {"pydyna": "lsdyna", "mechanical_core": "mechanical", "geometry_core": "geometry", "optislang_core": "optislang", "workbench_protocol": "workbench", "mechanical_protocol": "mechanical", "geometry_protocol": "geometry", "fluent_protocol": "fluent", "mapdl_protocol": "mapdl", "primemesh_protocol": "primemesh", "discovery_protocol": "discovery"}
+SNAPSHOT_PRODUCT_ALIASES = {"pydyna": "lsdyna", "mechanical_core": "mechanical", "geometry_core": "geometry", "optislang_core": "optislang", "workbench_protocol": "workbench", "mechanical_protocol": "mechanical", "geometry_protocol": "geometry", "fluent_protocol": "fluent", "mapdl_protocol": "mapdl", "primemesh_protocol": "primemesh", "discovery_protocol": "discovery", "speos_protocol": "speos"}
 SHARED_INTERFACES = {"ls_prepost"}
 
 

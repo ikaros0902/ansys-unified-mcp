@@ -1,6 +1,6 @@
 # ANSYS 產品 API 來源與缺口索引
 
-本索引依目前 coverage 清冊列出的 57 個產品 ID，彙整直接 API 快照、已映射 REA 組件證據和來源缺口。28 份 API／SDK／protocol 快照中，24 份映射至 15 個產品 ID；APIKB 另索引 55 個 REA 靜態候選來源鍵和 33 份 native export 清冊，逐來源細節見 [API Catalog](./API_CATALOG.md)及[REA source index](./curated/rea/index.md)。
+本索引依目前 coverage 清冊列出的 57 個產品 ID，彙整直接 API 快照、已映射 REA 組件證據和來源缺口。30 份 API／SDK／protocol 快照中，26 份映射至 16 個產品 ID；APIKB 另索引 55 個 REA 靜態候選來源鍵和 33 份 native export 清冊，逐來源細節見 [API Catalog](./API_CATALOG.md)及[REA source index](./curated/rea/index.md)。
 
 ## 證據狀態
 
@@ -63,7 +63,7 @@
 | `SIwave` (`siwave`) | REA 組件證據 | — | [Ansys.Ansoft.SIwave.LibIronPythonCmd.dll](./REA_EVIDENCE.md)（v251） | 有名稱與型別可辨識的 managed metadata 候選；官方 API 對照及支援狀態未確認。 (`product_component_evidence_only`) |
 | `Sound` (`sound`) | 直接快照 | [sound_api.json](./sound_api.json)（unknown；類別 2、方法 13、屬性 6、函式 0） | — | 清冊以產品 ID 對應來源；快照僅涵蓋所列版本與範圍。 (`direct_product_id`) |
 | `SpaceClaim` (`spaceclaim`) | 直接快照 | [spaceclaim_api.json](./spaceclaim_api.json)（2025 R1 (v251)；類別 0、方法 2845、屬性 1551、函式 0） | [SpaceClaim.Api.V251.dll; SpaceClaim.Api.V251.Scripting.dll](./REA_EVIDENCE.md)（v251） | 清冊以產品 ID 對應來源；快照僅涵蓋所列版本與範圍。 (`direct_product_id`) |
-| `Speos` (`speos`) | REA 組件證據 | — | [Optical Products/Speos/bin/ApipWrapper.dll](./REA_EVIDENCE.md)（v251） | 已記錄相關組件證據；產品歸屬或官方 API 對照仍待處理。 (`product_component_evidence_only`) |
+| `Speos` (`speos`) | PyAnsys SDK 與 gRPC/protobuf snapshots，加上 REA 組件證據 | [speos_api.json](./speos_api.json)（ansys-speos-core 0.9.2；48 modules、197 classes、417 methods、246 properties、29 functions）<br>[speos_protocol_api.json](./speos_protocol_api.json)（ansys-api-speos 0.16.3；33 modules、372 classes、163 methods、697 properties） | [Optical Products/Speos/bin/ApipWrapper.dll](./REA_EVIDENCE.md)（v251） | 套件 metadata 例子同時出現 product version 2025.1、Docker image tag 261 與 AWP_ROOT251 本機路徑，版本線索不一致，產品相容性未知。SDK AST 與 protocol schema 均未經宿主驗證。 (`direct_product_id`) |
 | `System_Coupling` (`system_coupling`) | REA 組件證據 | — | [SysC.AnsRpc.Wrapper.dll; SysC.SystemCouplingParticipant.dll（native PE exports）](./REA_EVIDENCE.md)（v251） | 已記錄 native export 候選；產品公開 API 映射、協定、簽名及 runtime 仍未確認。 (`product_component_evidence_only`) |
 | `Thermal_Desktop` (`thermal_desktop`) | 待來源／映射 | — | — | v251 managed inventory 未找到名稱明確指向 Thermal Desktop 的組件；仍需產品安裝樹或官方介面來源。 (`not_assessed`) |
 | `TurboGrid` (`turbogrid`) | 待來源／映射 | — | — | 尚未完成來源、版本或 API owner 盤點。 (`not_assessed`) |

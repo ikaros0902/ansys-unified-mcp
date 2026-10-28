@@ -66,20 +66,25 @@ def render(snapshot_path: Path) -> tuple[str, dict[str, Any]]:
     digest = hashlib.sha256(raw).hexdigest()
     source_key = snapshot_path.stem.removesuffix("_api")
     support_evidence = snapshot.get("support_evidence")
+    metadata_evidence = snapshot.get("metadata_evidence", [])
     disclaimer = (
-        "This page records a package metadata statement above. It does not independently verify host compatibility or runtime behavior."
-        if support_evidence
+        "This page records package metadata evidence above. It does not establish product compatibility or runtime behavior."
+        if support_evidence or metadata_evidence
         else "This page describes the captured SDK snapshot. It does not confirm ANSYS product support, server compatibility, or runtime behavior."
     )
-    support_note = (
-        [
+    support_note = []
+    if support_evidence:
+        support_note.extend([
             f"- Product support statement: {snapshot['product_support_statement']}",
             f"- Support evidence: `{support_evidence['source_path']}` (SHA-256: `{support_evidence['sha256']}`)",
-            "",
-        ]
-        if support_evidence
-        else []
-    )
+        ])
+    for evidence in metadata_evidence:
+        support_note.extend([
+            f"- Package metadata evidence: {evidence['statement']}",
+            f"- Metadata source: `{evidence['source_path']}` (SHA-256: `{evidence['sha256']}`)",
+        ])
+    if support_note:
+        support_note.append("")
     lines = [
         f"# {package} {version} API dictionary",
         "",

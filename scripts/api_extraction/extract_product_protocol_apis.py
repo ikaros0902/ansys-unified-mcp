@@ -24,6 +24,7 @@ PRODUCT_APIS = {
     "result_explorer": ("ansys-api-result-explorer", "0.1.1"),
     "platform_instance_management": ("ansys-api-platform-instancemanagement", "1.2.0"),
     "filetransfer": ("ansys-api-tools-filetransfer", "0.2.0"),
+    "speos": ("ansys-api-speos", "0.16.3"),
 }
 FIELD_TYPES = {
     1: "double", 2: "float", 3: "int64", 4: "uint64", 5: "int32", 6: "fixed64",
