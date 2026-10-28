@@ -58,43 +58,46 @@ def main():
     print("=" * 60)
     start_total = time.time()
 
+    from extract_sherlock_api import extract_sherlock_api
+
     extraction_steps = (
         (
             "SpaceClaim",
-            "[1/16] 萃取 SpaceClaim API (SpaceClaim.Api.V251.Scripting.dll)...",
+            "[1/17] 萃取 SpaceClaim API (SpaceClaim.Api.V251.Scripting.dll)...",
             extract_spaceclaim,
         ),
         (
             "Mechanical",
-            "[2/16] 萃取 Mechanical ACT & DataModel API (ansys-mechanical-stubs)...",
+            "[2/17] 萃取 Mechanical ACT & DataModel API (ansys-mechanical-stubs)...",
             extract_mechanical,
         ),
         (
             "optiSLang",
-            "[3/16] 萃取 optiSLang API (ansys.optislang.core & scripting)...",
+            "[3/17] 萃取 optiSLang API (ansys.optislang.core & scripting)...",
             extract_optislang,
         ),
         (
             "PyOptiSLang core",
-            "[4/16] 萃取 PyOptiSLang 1.6.0 Optislang client API...",
+            "[4/17] 萃取 PyOptiSLang 1.6.0 Optislang client API...",
             extract_optislang_core_api,
         ),
         (
             "LS-DYNA",
-            "[5/16] 萃取 LS-DYNA & LS-PrePost API (Python, SCL, Keywords)...",
+            "[5/17] 萃取 LS-DYNA & LS-PrePost API (Python, SCL, Keywords)...",
             extract_lsdyna,
         ),
-        ("PyMAPDL", "[6/16] 萃取 PyMAPDL 文件覆蓋的 Python API...", extract_mapdl_api),
-        ("PyDPF-Core", "[7/16] 萃取 PyDPF-Core 0.16.1 核心資料類別...", extract_dpf_api),
-        ("PyFluent", "[8/16] 萃取 PyFluent 0.42.1 launcher API...", extract_fluent_api),
-        ("PyPrimeMesh", "[9/16] 萃取 PyPrimeMesh 0.10.5 Client API...", extract_primemesh_api),
-        ("PyAnsys Sound", "[10/16] 萃取 PyAnsys Sound 0.3.0 SoundComposer 與 Track...", extract_sound_api),
-        ("PyDyna", "[11/16] 萃取 PyDyna 0.12.1 Deck API...", extract_pydyna_api),
-        ("PyMechanical", "[12/16] 萃取 PyMechanical 0.13.2 client API...", extract_mechanical_core_api),
-        ("PyAnsys Geometry", "[13/16] 萃取 PyAnsys Geometry 0.17.1 Modeler API...", extract_geometry_core_api),
-        ("PyWorkbench", "[14/16] 萃取 PyWorkbench 0.14.0 public module exports...", extract_workbench_api),
-        ("Workbench protocol", "[15/16] 萃取 ansys-api-workbench 0.4.0 gRPC schema...", extract_workbench_protocol_api),
-        ("PyAnsys product protocols", "[16/16] 萃取 Mechanical/Geometry/Fluent/MAPDL/PrimeMesh/Discovery schemas...", extract_product_protocol_apis),
+        ("PyMAPDL", "[6/17] 萃取 PyMAPDL 文件覆蓋的 Python API...", extract_mapdl_api),
+        ("PyDPF-Core", "[7/17] 萃取 PyDPF-Core 0.16.1 核心資料類別...", extract_dpf_api),
+        ("PyFluent", "[8/17] 萃取 PyFluent 0.42.1 launcher API...", extract_fluent_api),
+        ("PyPrimeMesh", "[9/17] 萃取 PyPrimeMesh 0.10.5 Client API...", extract_primemesh_api),
+        ("PyAnsys Sound", "[10/17] 萃取 PyAnsys Sound 0.3.0 SoundComposer 與 Track...", extract_sound_api),
+        ("PyDyna", "[11/17] 萃取 PyDyna 0.12.1 Deck API...", extract_pydyna_api),
+        ("PyMechanical", "[12/17] 萃取 PyMechanical 0.13.2 client API...", extract_mechanical_core_api),
+        ("PyAnsys Geometry", "[13/17] 萃取 PyAnsys Geometry 0.17.1 Modeler API...", extract_geometry_core_api),
+        ("PyWorkbench", "[14/17] 萃取 PyWorkbench 0.14.0 public module exports...", extract_workbench_api),
+        ("Workbench protocol", "[15/17] 萃取 ansys-api-workbench 0.4.0 gRPC schema...", extract_workbench_protocol_api),
+        ("PyAnsys product protocols", "[16/17] 萃取 Mechanical/Geometry/Fluent/MAPDL/PrimeMesh/Discovery schemas...", extract_product_protocol_apis),
+        ("PyAnsys Sherlock", "[17/17] 靜態擷取 Sherlock SDK 2.1.4 原始碼...", extract_sherlock_api),
     )
     for name, message, extractor in extraction_steps:
         print(f"\n{message}")
@@ -117,7 +120,7 @@ def main():
     render_rea_source_index()
     render_sdk_dictionaries()
 
-    print("\n[17/17] 建置 API 知識層 SQLite 索引庫 (api_kb.sqlite)...")
+    print("\n[18/18] 建置 API 知識層 SQLite 索引庫 (api_kb.sqlite)...")
     t0 = time.time()
     try:
         from ansys_unified_mcp.analytics.apikb.build import build_database

@@ -2540,8 +2540,8 @@
         }
       ],
       "folder": "Sherlock",
-      "has_direct_snapshot": false,
-      "mapping_status": "product_component_evidence_only",
+      "has_direct_snapshot": true,
+      "mapping_status": "direct_product_id",
       "overview_url": "https://developer.synopsys.com/docs/sherlock.md",
       "product": "sherlock",
       "rea_evidence": {
@@ -2550,8 +2550,21 @@
         "version": "v251"
       },
       "sdk_package": "ansys-sherlock-core",
-      "snapshot_status": "no_direct_snapshot",
-      "snapshots": []
+      "snapshot_status": "direct_snapshot",
+      "snapshots": [
+        {
+          "snapshot_path": "docs/api_inventory/sherlock_core_api.json",
+          "statistics": {
+            "total_modules": 25,
+            "total_classes": 208,
+            "total_methods": 241,
+            "total_properties": 0,
+            "total_functions": 19
+          },
+          "sha256": "aefc088d27351620c8bb505f830c640ad7d0b60b6f3e114e54afe8ca409905f2",
+          "snapshot_version": "unknown"
+        }
+      ]
     },
     {
       "documentation_coverage": [

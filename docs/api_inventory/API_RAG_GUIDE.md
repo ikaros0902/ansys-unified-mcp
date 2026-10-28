@@ -14,6 +14,7 @@
 ## Workbench and product protocol routing
 
 - Query the Python SDK snapshot with `api_search(query="launch_workbench", product="workbench")`.
+- Query the Sherlock SDK snapshot with `api_search(query="<member name>", product="sherlock_core")`; its package version is 2.1.4, while the ANSYS product release and host behavior remain unverified.
 - Query the Workbench gRPC protocol with `api_search(query="RunScript", product="workbench_protocol")`.
 - Query other mapped protocol sources with `mechanical_protocol`, `geometry_protocol`, `fluent_protocol`, `mapdl_protocol`, `primemesh_protocol`, or `discovery_protocol` as the `product` value.
 - Query an unclassified source only by its own key, such as `dbu_protocol` or `result_explorer_protocol`. Do not map it to a product without evidence.
@@ -72,4 +73,4 @@ REA metadata 可包含非公開成員。`public_status` 和 `validation_status` 
 - [REA managed snapshot source index](./curated/rea/index.md)
 - [API 快照目錄](./API_CATALOG.md)
 
-Mechanical 與 SpaceClaim 有整理型 API 使用字典。Workbench SDK 與其他有版本標記的 Python SDK 快照另有摘要及人讀字典；11 份 protocol snapshot 另有逐 RPC／欄位字典。這些字典由 snapshot 產生，尚未逐項對照官方文件，也不代表宿主 API。APIKB 的來源鍵數不等於產品數，也不等於完整公開 API。57 個 manifest 產品 ID 的來源、版本、介面和缺口請以覆蓋清冊為準。
+Mechanical 與 SpaceClaim 有整理型 API 使用字典。Workbench SDK 與其他有版本標記的 Python SDK 快照另有摘要及人讀字典；11 份版本化 Python SDK 字典，以及 11 份 protocol snapshot 另有逐 RPC／欄位字典。這些字典由 snapshot 產生，尚未逐項對照官方文件，也不代表宿主 API。APIKB 的來源鍵數不等於產品數，也不等於完整公開 API。57 個 manifest 產品 ID 的來源、版本、介面和缺口請以覆蓋清冊為準。

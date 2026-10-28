@@ -58,7 +58,7 @@
 | `SAF` (`saf`) | 待來源／映射 | — | — | 尚未完成來源、版本或 API owner 盤點。 (`not_assessed`) |
 | `SCADE` (`scade`) | 待來源／映射 | — | — | 尚未完成來源、版本或 API owner 盤點。 (`not_assessed`) |
 | `Scade_One` (`scade_one`) | 待來源／映射 | — | — | 尚未完成來源、版本或 API owner 盤點。 (`not_assessed`) |
-| `Sherlock` (`sherlock`) | REA 組件證據 | — | [Ans.Sherlock.Addin.dll](./REA_EVIDENCE.md)（v251） | 已記錄相關組件證據；產品歸屬或官方 API 對照仍待處理。 (`product_component_evidence_only`) |
+| `Sherlock` (`sherlock`) | PyAnsys SDK 快照與 REA 組件證據 | [sherlock_core_api.json](./sherlock_core_api.json)（ansys-sherlock-core 2.1.4；25 modules、208 classes、241 methods、19 functions） | [Ans.Sherlock.Addin.dll](./REA_EVIDENCE.md)（v251） | SDK package version 不代表 Sherlock product release；公開支援狀態、官方 API 對照及宿主行為未確認。 (`direct_product_id`) |
 | `SimAI` (`simai`) | 待來源／映射 | — | — | 尚未完成來源、版本或 API owner 盤點。 (`not_assessed`) |
 | `SIwave` (`siwave`) | REA 組件證據 | — | [Ansys.Ansoft.SIwave.LibIronPythonCmd.dll](./REA_EVIDENCE.md)（v251） | 有名稱與型別可辨識的 managed metadata 候選；官方 API 對照及支援狀態未確認。 (`product_component_evidence_only`) |
 | `Sound` (`sound`) | 直接快照 | [sound_api.json](./sound_api.json)（unknown；類別 2、方法 13、屬性 6、函式 0） | — | 清冊以產品 ID 對應來源；快照僅涵蓋所列版本與範圍。 (`direct_product_id`) |

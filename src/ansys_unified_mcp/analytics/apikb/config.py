@@ -120,6 +120,7 @@ SOURCES = {
     "meshing_addin_rea": DOCS_DIR / "meshing_addin_rea_api.json",
     "polyflow_addin_rea": DOCS_DIR / "polyflow_addin_rea_api.json",
     "sherlock_addin_rea": DOCS_DIR / "sherlock_addin_rea_api.json",
+    "sherlock_core": DOCS_DIR / "sherlock_core_api.json",
     "siwave_libironpythoncmd_rea": DOCS_DIR / "siwave_libironpythoncmd_rea_api.json",
     "hfss_addin_rea": DOCS_DIR / "hfss_addin_rea_api.json",
     "apip_wrapper_native": DOCS_DIR / "apip_wrapper_native_exports_api.json",
@@ -152,6 +153,7 @@ INTERFACES = {
     "mechanical_core": "PyMechanical 0.13.2 Mechanical client and launch/connect functions",
     "geometry_core": "PyAnsys Geometry 0.17.1 Modeler and launch_modeler",
     "workbench": "PyWorkbench ansys-workbench-core 0.14.0 direct module exports",
+    "sherlock_core": "PyAnsys Sherlock SDK 2.1.4 static AST declarations",
     "workbench_protocol": "Workbench gRPC protocol schema from ansys-api-workbench 0.4.0",
     "mechanical_protocol": "Mechanical gRPC protocol schema from ansys-api-mechanical 0.1.4",
     "geometry_protocol": "Geometry gRPC protocol schema from ansys-api-geometry 0.4.92",
@@ -269,7 +271,7 @@ def source_metadata(product: str, path: Path) -> dict:
     if product == "optislang":
         sdk_version = version
         version = "unknown (product release not recorded)"
-    elif product in {"mapdl", "dpf", "fluent", "primemesh", "sound", "pydyna", "mechanical_core", "geometry_core", "optislang_core", "workbench", "workbench_protocol", "mechanical_protocol", "geometry_protocol", "fluent_protocol", "mapdl_protocol", "primemesh_protocol", "discovery_protocol", "dbu_protocol", "result_explorer_protocol", "platform_instance_management_protocol", "filetransfer_protocol"}:
+    elif product in {"mapdl", "dpf", "fluent", "primemesh", "sound", "pydyna", "mechanical_core", "geometry_core", "optislang_core", "workbench", "sherlock_core", "workbench_protocol", "mechanical_protocol", "geometry_protocol", "fluent_protocol", "mapdl_protocol", "primemesh_protocol", "discovery_protocol", "dbu_protocol", "result_explorer_protocol", "platform_instance_management_protocol", "filetransfer_protocol"}:
         sdk_version = str(data.get("sdk_version", ""))
         version = "unknown (product release not recorded)"
     sources = data.get("sources")
