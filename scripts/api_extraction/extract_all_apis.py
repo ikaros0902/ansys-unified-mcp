@@ -489,6 +489,24 @@ def build_rea_metadata_snapshots() -> list[Path]:
             "Remote Solve Manager JobManagement v251 REA metadata; product mapping and support status unverified",
         ),
         (
+            "Ans.EngineeringData.DataProvider.json",
+            "engineeringdata_dataprovider_rea_api.json",
+            "engineeringdata_dataprovider_rea",
+            "Engineering Data DataProvider v251 REA metadata; support status unverified",
+        ),
+        (
+            "Ans.DesignModeler.Core.json",
+            "designmodeler_core_rea_api.json",
+            "designmodeler_core_rea",
+            "DesignModeler Core v251 REA metadata; support status unverified",
+        ),
+        (
+            "Ans.MaterialDesigner.Core.json",
+            "materialdesigner_core_rea_api.json",
+            "materialdesigner_core_rea",
+            "Material Designer Core v251 REA metadata; support status unverified",
+        ),
+        (
             "ACP.Core.json",
             "acp_core_rea_api.json",
             "acp_core_rea",

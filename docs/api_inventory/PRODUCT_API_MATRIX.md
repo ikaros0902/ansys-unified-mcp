@@ -1,6 +1,6 @@
 # ANSYS 產品 API 來源與缺口索引
 
-本索引依目前 coverage 清冊列出的 57 個產品 ID，彙整直接 API 快照、已映射 REA 組件證據和來源缺口。21 份直接 API／SDK／protocol 快照分布於 12 個產品 ID；APIKB 另索引 46 個 REA 靜態候選來源鍵和 33 份 native export 清冊，逐來源細節見 [API Catalog](./API_CATALOG.md)及[REA source index](./curated/rea/index.md)。
+本索引依目前 coverage 清冊列出的 57 個產品 ID，彙整直接 API 快照、已映射 REA 組件證據和來源缺口。21 份直接 API／SDK／protocol 快照分布於 12 個產品 ID；APIKB 另索引 50 個 REA 靜態候選來源鍵和 33 份 native export 清冊，逐來源細節見 [API Catalog](./API_CATALOG.md)及[REA source index](./curated/rea/index.md)。
 
 ## 證據狀態
 
@@ -70,6 +70,16 @@
 | `TwinAI` (`twinai`) | 待來源／映射 | — | — | 尚未完成來源、版本或 API owner 盤點。 (`not_assessed`) |
 | `Workbench` (`workbench`) | 直接快照 | [workbench_api.json](./workbench_api.json)（ansys-workbench-core 0.14.0）；[workbench_protocol_api.json](./workbench_protocol_api.json)（ansys-api-workbench 0.4.0） | — | Python SDK 與 transport protocol 分開記錄；未核對官方支援狀態或伺服器相容性。 (`direct_product_id`) |
 | `Zemax` (`zemax`) | REA 組件證據 | — | [Zemax OpticStudio/ZOSAPI.dll; Zemax OpticStudio/ZOSAPI_Interfaces.dll](./REA_EVIDENCE.md)（v251） | 已記錄相關組件證據；產品歸屬或官方 API 對照仍待處理。 (`product_component_evidence_only`) |
+
+## 尚未映射或支援狀態未確認的 v251 元件候選
+
+下列 REA source keys 已納入 APIKB，但目前僅依靜態組件 metadata 建立候選索引，尚未確認公開 API、產品支援狀態或宿主行為。它們不計入產品 coverage mapping。
+
+| 元件候選 | 安裝相對路徑 | APIKB source key | 證據 |
+| --- | --- | --- | --- |
+| Engineering Data DataProvider | `Addins/EngineeringData/bin/Win64/Ans.EngineeringData.DataProvider.dll` | `engineeringdata_dataprovider_rea` | [REA evidence](./REA_EVIDENCE.md) |
+| DesignModeler Core | `Addins/DesignModeler/bin/Win64/Ans.DesignModeler.Core.dll` | `designmodeler_core_rea` | [REA evidence](./REA_EVIDENCE.md) |
+| Material Designer Core | `Addins/MaterialDesigner/bin/Win64/Ans.MaterialDesigner.Core.dll` | `materialdesigner_core_rea` | [REA evidence](./REA_EVIDENCE.md) |
 
 ## 版本與缺口處理
 

@@ -1,6 +1,6 @@
 # REA v251 managed candidate index
 
-This index covers 47 captured REA JSON snapshots. Together, they contain 12,539 class records and 96,806 MethodDef rows.
+This index covers 50 captured REA JSON snapshots. Together, they contain 13,091 class records and 102,411 MethodDef rows.
 
 > These are static metadata rows. They can include non-public members. They do not establish product ownership, public API status, vendor support, or runtime behavior.
 > Use [the product matrix](../../PRODUCT_API_MATRIX.md) for current product mapping and gaps. Use APIKB for member-level search.
@@ -21,6 +21,7 @@ This index covers 47 captured REA JSON snapshots. Together, they contain 12,539 
 | `autodyn_rea` | `Ans.AUTODYN.DataModel.dll` | 1 | 24 | 242 | [JSON](../../autodyn_rea_api.json) |
 | `cfx_addin_rea` | `Ans.CFX.CFXCore.dll` | 12 | 240 | 2505 | [JSON](../../cfx_addin_rea_api.json) |
 | `designer_addin_rea` | `Ans.Ansoft.DesignerAddinPlugin.dll` | 1 | 2 | 11 | [JSON](../../designer_addin_rea_api.json) |
+| `designmodeler_core_rea` | `Ans.DesignModeler.Core.dll` | 14 | 262 | 3154 | [JSON](../../designmodeler_core_rea_api.json) |
 | `designxplorer_rea` | `Ans.DesignXplorer.PublicAPIs.dll` | 5 | 33 | 228 | [JSON](../../designxplorer_rea_api.json) |
 | `discovery_collaboration_rea` | `Ansys.Collaboration.Api.dll` | 9 | 287 | 1202 | [JSON](../../discovery_collaboration_rea_api.json) |
 | `discovery_gateway_rea` | `Ansys.Gateway.Api.dll` | 5 | 12 | 37 | [JSON](../../discovery_gateway_rea_api.json) |
@@ -29,6 +30,7 @@ This index covers 47 captured REA JSON snapshots. Together, they contain 12,539 
 | `discovery_physics_rea` | `Ansys.Physics.Api.dll` | 5 | 29 | 106 | [JSON](../../discovery_physics_rea_api.json) |
 | `discovery_project_rea` | `Ansys.Project.Api.dll` | 6 | 101 | 424 | [JSON](../../discovery_project_rea_api.json) |
 | `discovery_results_rea` | `Ansys.Results.Api.dll` | 5 | 47 | 179 | [JSON](../../discovery_results_rea_api.json) |
+| `engineeringdata_dataprovider_rea` | `Ans.EngineeringData.DataProvider.dll` | 5 | 132 | 656 | [JSON](../../engineeringdata_dataprovider_rea_api.json) |
 | `engineeringdata_rea` | `Ans.EngineeringData.DataModel.dll` | 2 | 39 | 400 | [JSON](../../engineeringdata_rea_api.json) |
 | `fluent_addin_rea` | `Ans.Fluent.dll` | 11 | 482 | 7652 | [JSON](../../fluent_addin_rea_api.json) |
 | `granta_mi_rea` | `Ansys.Apip.Client.dll` | 1 | 6 | 80 | [JSON](../../granta_mi_rea_api.json) |
@@ -36,6 +38,7 @@ This index covers 47 captured REA JSON snapshots. Together, they contain 12,539 
 | `icepak_addin_rea` | `Ans.Icepak.Core.dll` | 13 | 115 | 1588 | [JSON](../../icepak_addin_rea_api.json) |
 | `icepak_ansoft_addin_rea` | `Ans.Ansoft.IcepakAddinPlugin.dll` | 1 | 2 | 8 | [JSON](../../icepak_ansoft_addin_rea_api.json) |
 | `lsdyna_interfaces_rea` | `Ansys.ACTLSDYNA.Interfaces.dll` | 2 | 8 | 69 | [JSON](../../lsdyna_interfaces_rea_api.json) |
+| `materialdesigner_core_rea` | `Ans.MaterialDesigner.Core.dll` | 7 | 158 | 1795 | [JSON](../../materialdesigner_core_rea_api.json) |
 | `materialdesigner_rea` | `Ans.MaterialDesigner.Wrapper.dll` | 2 | 6 | 115 | [JSON](../../materialdesigner_rea_api.json) |
 | `maxwell_addin_rea` | `Ans.Ansoft.MaxwellAddinPlugin.dll` | 1 | 2 | 10 | [JSON](../../maxwell_addin_rea_api.json) |
 | `mechanical_ansoft_addin_rea` | `Ans.Ansoft.MechanicalAddinPlugin.dll` | 1 | 2 | 8 | [JSON](../../mechanical_ansoft_addin_rea_api.json) |
@@ -71,6 +74,7 @@ This index covers 47 captured REA JSON snapshots. Together, they contain 12,539 
 - `autodyn_rea` — SHA-256 `0c195c4280cedd228ad73a9e9d4045d62b59fb40f8af83a4bddfd94753edb332`; MVID `004cc603-63cb-4596-89cb-01a69d88104a`; REA Evidence ID `ev_e5c123fc75d8a76417149215e78644377568b4f2b2ce3cd03751aaa646fcbca1`.
 - `cfx_addin_rea` — SHA-256 `421e31ab499d1993a2520e353ef8e9871e0c0cd512fc25fd09905b50c440e34b`; MVID `d6f7081c-c12c-42ad-8bae-4e97bfce78ed`; REA Evidence ID `ev_5b1ce8ca5541a66590512c80cd6dfc5142c90644d4980e9657a5a1362a3645fb`.
 - `designer_addin_rea` — SHA-256 `708e64d83d00d61a6393bdb74e60d16845823aa51f5a2305b3546f5e77e499bd`; MVID `d98d2791-9eed-4056-8216-8306c265a2ef`; REA Evidence ID `ev_2baa62f029b5e7df3d5cfa621c825be6fcd299ef0e2eac2beb35c59e1a672faf`.
+- `designmodeler_core_rea` — SHA-256 `529f43adade70f4421b9c96a6bfc1313b9db49211888ba520bdde63f16d4dd77`; MVID `a0404468-95ea-4324-809a-04656e9d68f1`; REA Evidence ID `ev_ce24c0a533792b786d6faef83b0da98acaa7ccfcda22c41f4f69d094ccf1e71d`.
 - `designxplorer_rea` — SHA-256 `f2249c1ce824597444e993c793277a180528ab90d4b9bdb741ae57ef358df922`; MVID `4170aeef-388a-44da-8fe5-9e697afb2804`; REA Evidence ID `ev_7a554cb4ca6b1e91dc29f4f01197b5f24e80bb29921fcd779397d306749240b2`.
 - `discovery_collaboration_rea` — SHA-256 `142cccb682c7613869c5d06608ac3eeacc7a399e6aec765b7a340b6ae55f8e73`; MVID `67a75d04-de69-47e2-87a2-f5ed8fa94675`; REA Evidence ID `ev_6fe465b848c1f6827927bf9b5bb92777ab303716dc29a457e2180bffc804b0dd`.
 - `discovery_gateway_rea` — SHA-256 `657f9d5039b7e062db4dd9ad67bd00c70c8993cb713d500b206c29e5a637df66`; MVID `7e3b230d-887e-4505-961c-7ed3b15ed99b`; REA Evidence ID `ev_ceae69ecf15fa25826bd151860dedf794c40b5e56d333f4cb9746e7726ae8811`.
@@ -79,6 +83,7 @@ This index covers 47 captured REA JSON snapshots. Together, they contain 12,539 
 - `discovery_physics_rea` — SHA-256 `78a04ae7973d17009717a6309e5bea1622150d53d1bd7d264722fd6f6b038073`; MVID `a70177e6-22c2-41ee-a624-cd75c6e8ad26`; REA Evidence ID `ev_45ae02a8e01148fa98245a65bc5aae66d940768bc92a17650f174171ff80b62f`.
 - `discovery_project_rea` — SHA-256 `4133e9316e39598cf7c6a97d16f9ae3311dafb75df340639cd85e552fc6c0f4e`; MVID `df2caded-b668-421a-891c-0460478c235b`; REA Evidence ID `ev_870242a1ba1e12f08f34fa1746952d2d0b2a1106f85f4b51cb0ec3206cde5547`.
 - `discovery_results_rea` — SHA-256 `d3cb87be1e292d34705bb1576fa88dbdf9233302c686db6934c700456f0c2130`; MVID `c2a737c4-9a82-4055-ad29-8c6630d7b77f`; REA Evidence ID `ev_92d1ae539084d2abb885782a8baa61c1435b1cc6305ae915a97810d027b6eeaa`.
+- `engineeringdata_dataprovider_rea` — SHA-256 `cbae2258b6327e5dc994de9b020f70a65e85fc68a0e0cd26d2a8724ecf92ce0c`; MVID `c57653b0-0095-42d5-bc53-c2970c851960`; REA Evidence ID `ev_dad7dde37936090012a21f02522336e8c78fda0fddc79995498fa9db05c0fd8d`.
 - `engineeringdata_rea` — SHA-256 `70bb92bb6c7ea1178ae6377f9992f4685886ac23b9ca40ce0ec93bd39d426251`; MVID `d7a87bd8-cc9e-4f1c-8ace-6ee800628160`; REA Evidence ID `ev_e803ac2182f6d6bf3de1eee1a3894ac1a34bede584709260cdcc71f1e9357a85`.
 - `fluent_addin_rea` — SHA-256 `e1742d642bab37ebe26aa147ac4aa4d5a034b26c534da7e963ec18bd9e4f96b4`; MVID `30798882-87b3-442f-b9bc-a784f287950d`; REA Evidence ID `ev_02ab1aa25aa1b97e07ea9d7c4e93cb4cf3c944605d9fe985435f53ed187a85df`.
 - `granta_mi_rea` — SHA-256 `b243db8f5e75ef0453ead5dfd58bce686d66ee6f1130f19c02128ac7c537bda1`; MVID `ee7ecc0b-0c05-4fc5-8b71-9267041dd4dd`; REA Evidence ID `ev_e5c44ef9e3b4ac8cb4335e0a6adca6bd8a91f8a82649c9a2b518c2a40a3d0ebf`.
@@ -86,6 +91,7 @@ This index covers 47 captured REA JSON snapshots. Together, they contain 12,539 
 - `icepak_addin_rea` — SHA-256 `1e5c4b058a6ec33ff077fe8633605e8157b632aeaa90dc7d84621895163b8bc8`; MVID `80d97523-9c84-4df1-91f3-b19a1096471a`; REA Evidence ID `ev_1ee942b070e6c88dcac9cc4ab08276757e9db998faae78901d874e63e25443e2`.
 - `icepak_ansoft_addin_rea` — SHA-256 `d06fcf8943e6234ecda588a082923f86481cde3097a0244c98c12840f8b8d85f`; MVID `9fb03e80-474f-4a22-af14-c593e4c6288f`; REA Evidence ID `ev_e685e48aa242f42fefccc4bc30ffdc2899a1af2ce4bb606ccb7425f12f53f2ba`.
 - `lsdyna_interfaces_rea` — SHA-256 `01e7d0a3f0bb56668665fb3ad90f198666373a40a7c56166701069f4c3fd8120`; MVID `68001726-0e3b-4c1c-b1eb-4afd5b70bdce`; REA Evidence ID `ev_45f58ec39e3b6e09ff1773639f0d10b2d10e8f2dd0c57124a88fa669e4a2e1c7`.
+- `materialdesigner_core_rea` — SHA-256 `a9e371f29e4c098051d5f7075cccb7443b4c2b4379a1afb7e7ae6325c61411fb`; MVID `a6567385-f577-475e-a064-fad0904e9d46`; REA Evidence ID `ev_3dd24dc5735513eb1490058119e58038d13cc0be38dbf1773888184e442d91a9`.
 - `materialdesigner_rea` — SHA-256 `bdb3b0c299de464e5da87a55675591145aed96838a06bf8090044d3920d7f6a9`; MVID `05fb2510-d57d-4c25-9dae-7daf611b2922`; REA Evidence ID `ev_f6ed1ef74be4bbbc4e2d77699e7e83217f1502359489dff1d6d0672c6d207c4c`.
 - `maxwell_addin_rea` — SHA-256 `01d40fa16190805089990a102541ca3c786ed45ea2374b4d3d16e7fe4a89fa37`; MVID `53e45b29-27d4-49bf-9b41-0c5b7a8896ab`; REA Evidence ID `ev_de29863d9004012d5c0aa7113d6107c674d56460d1c881e4cfacc6338166b24f`.
 - `mechanical_ansoft_addin_rea` — SHA-256 `ce022de4b1ecd8ce5a3064548c777739d50608f249e53d741329209998bb1f91`; MVID `cf2ef528-f65d-4e08-bb98-ef82ab0badc2`; REA Evidence ID `ev_f5467182c9d66994d899e33c2304861032bf7af4712757942573aeb3afb41e6d`.

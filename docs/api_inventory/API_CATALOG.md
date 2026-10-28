@@ -2,7 +2,7 @@
 
 本目錄整理 25 份 API、SDK 與 protocol 快照。其中 21 份映射到 12 個產品 ID，另 4 份協定 schema 尚未映射。快照涵蓋 Mechanical、SpaceClaim、LS-DYNA、optiSLang、PyMechanical、PyAnsys Geometry、PyOptiSLang Core、PyMAPDL、PyDPF-Core、PyFluent、PyPrimeMesh、PyAnsys Sound、PyDyna、PyWorkbench，以及 Mechanical、Geometry、Fluent、MAPDL、PrimeMesh、Discovery 和 Workbench 的 gRPC protocol。Mechanical、SpaceClaim、LS-DYNA 的組件快照對應 ANSYS 2025 R1 (`v251`)。Python SDK 快照記錄各自的套件版本，不代表 ANSYS 產品 release。
 
-這 25 份產品、SDK 與 protocol 快照是目前整理的 API 擷取範圍，不代表涵蓋所有 ANSYS 產品、版本或公開介面。文件來源清冊列出的產品與 SDK 也不代表其 API 已擷取。APIKB 目前設定 105 個來源鍵：二十五份 API／SDK／protocol 快照、四十七份 REA 靜態候選快照及三十三份 native PE export 快照。coverage 清冊仍按 57 個 manifest 產品 ID 統計，並明列 `pydyna`→`lsdyna`、`mechanical_core`→`mechanical`、`geometry_core`→`geometry`、`optislang_core`→`optislang`、`workbench_protocol`→`workbench`、`mechanical_protocol`→`mechanical`、`geometry_protocol`→`geometry`、`fluent_protocol`→`fluent`、`mapdl_protocol`→`mapdl`、`primemesh_protocol`→`primemesh`、`discovery_protocol`→`discovery` 十一個 snapshot alias。REA 與 native 候選鍵不等於新產品 ID，也不代表官方支援 API。47 份 managed snapshot 的來源鍵、組件 hash、MVID 與 Evidence ID 見[REA managed source index](./curated/rea/index.md)。Mechanical Interfaces、Mechanical DataModel 與 ACT Core 已列入 `mechanical`／`act` 組件證據，Granta MI 對應 `granta_mi`。Discovery 目錄的七組件以 `discovery` 記錄；Maxwell、Q3D 與 Icepak Ansoft add-in 各自列為產品候選；Zemax OpticStudio 的 `ZOSAPI.dll` 與 `ZOSAPI_Interfaces.dll` 已獨立索引；Designer、Mechanical、Simplorer Ansoft add-in 仍待產品映射。安裝路徑不代表官方支援狀態。SpaceClaim Core API 使用獨立 `spaceclaim_core_rea` 來源鍵並對應既有 SpaceClaim 產品；ACT Interfaces、LS-DYNA ACT Interfaces、AnsysEM CoreDotNet、Ansys Additive、API Server、Material Designer、TurboSystem、Units、Vista TF 和 RSM JobManagement 候選鍵仍未映射或未逐項確認。
+這 25 份產品、SDK 與 protocol 快照是目前整理的 API 擷取範圍，不代表涵蓋所有 ANSYS 產品、版本或公開介面。文件來源清冊列出的產品與 SDK 也不代表其 API 已擷取。APIKB 目前設定 108 個來源鍵：二十五份 API／SDK／protocol 快照、五十份 REA 靜態候選快照及三十三份 native PE export 快照。coverage 清冊仍按 57 個 manifest 產品 ID 統計，並明列 `pydyna`→`lsdyna`、`mechanical_core`→`mechanical`、`geometry_core`→`geometry`、`optislang_core`→`optislang`、`workbench_protocol`→`workbench`、`mechanical_protocol`→`mechanical`、`geometry_protocol`→`geometry`、`fluent_protocol`→`fluent`、`mapdl_protocol`→`mapdl`、`primemesh_protocol`→`primemesh`、`discovery_protocol`→`discovery` 十一個 snapshot alias。REA 與 native 候選鍵不等於新產品 ID，也不代表官方支援 API。50 份 managed snapshot 的來源鍵、組件 hash、MVID 與 Evidence ID 見[REA managed source index](./curated/rea/index.md)。Mechanical Interfaces、Mechanical DataModel 與 ACT Core 已列入 `mechanical`／`act` 組件證據，Granta MI 對應 `granta_mi`。Discovery 目錄的七組件以 `discovery` 記錄；Maxwell、Q3D 與 Icepak Ansoft add-in 各自列為產品候選；Zemax OpticStudio 的 `ZOSAPI.dll` 與 `ZOSAPI_Interfaces.dll` 已獨立索引；Designer、Mechanical、Simplorer Ansoft add-in 仍待產品映射。安裝路徑不代表官方支援狀態。SpaceClaim Core API 使用獨立 `spaceclaim_core_rea` 來源鍵並對應既有 SpaceClaim 產品；ACT Interfaces、LS-DYNA ACT Interfaces、AnsysEM CoreDotNet、Ansys Additive、API Server、Engineering Data DataProvider、DesignModeler Core、Material Designer、TurboSystem、Units、Vista TF 和 RSM JobManagement 候選鍵仍未映射或未逐項確認。
 
 Workbench Python SDK 與 gRPC snapshots 分開索引。產品協定清單與未映射套件見 [PyAnsys gRPC/protobuf 協定索引](./curated/protocols/index.md)；Workbench 詳細來源見 [Python SDK 摘要](./curated/workbench/sdk_0_14_0_inventory.md)和[協定字典](./curated/workbench/protocol_0_4_0.md)。其他有版本標記的 Python SDK 快照由 [SDK 人讀字典索引](./curated/sdk/index.md)列出。這些來源尚未核對產品宿主相容性。
 
@@ -43,7 +43,7 @@ SpaceClaim 的五筆簽名來自本機 Python.NET `System.Reflection` v251 snaps
 
 REA 查詢結果另外提供 `public_status`、`validation_status`、組件 SHA-256 與 REA Evidence ID；`source.sha256` 則是 API snapshot JSON 的雜湊。型別 visibility 或方法 access flags 記為靜態 metadata；例如 `public` 表示 metadata access 標記，不代表 Ansys 對外支援。REA 結果標記 `static_metadata_only; runtime_unverified`；其他快照標記 `snapshot_only; runtime_unverified`，未分類的公開狀態標記 `not_classified`。簽名或 access metadata 不完整時，以原始 snapshot 和官方文件為準。
 
-本機 v251 Mechanical DataModel 與 Interfaces、SpaceClaim API 與 Scripting、AnsysEM CoreCOMScripting 與 CoreDotNet、ACT 共用介面與 Core、LS-DYNA ACT 介面、Additive、AUTODYN、DesignXplorer、Engineering Data、Granta MI、Material Designer、TurboSystem、Units、Vista TF、API Server Discovery/Geometry 的 REA metadata，Zemax ZOS-API 的 REA metadata，以及 DPF、CFX、System Coupling、ROM 和 AnsysEM APIP Wrapper 的 PE 格式證據見 [REA 組件證據摘要](./REA_EVIDENCE.md)。四十七份 REA 候選快照透過獨立 APIKB 來源鍵提供搜尋；結果包含非公開成員候選，部分 signature type RID 和參數名稱尚未解析。這些組件只代表可觀察到的靜態介面，不代表產品完整 API；metadata 或 export 計數不等於公開 API 數量。
+本機 v251 Mechanical DataModel 與 Interfaces、SpaceClaim API 與 Scripting、AnsysEM CoreCOMScripting 與 CoreDotNet、ACT 共用介面與 Core、LS-DYNA ACT 介面、Additive、AUTODYN、DesignXplorer、Engineering Data、Granta MI、Material Designer、TurboSystem、Units、Vista TF、API Server Discovery/Geometry 的 REA metadata，Zemax ZOS-API 的 REA metadata，以及 DPF、CFX、System Coupling、ROM 和 AnsysEM APIP Wrapper 的 PE 格式證據見 [REA 組件證據摘要](./REA_EVIDENCE.md)。五十份 REA 候選快照透過獨立 APIKB 來源鍵提供搜尋；結果包含非公開成員候選，部分 signature type RID 和參數名稱尚未解析。這些組件只代表可觀察到的靜態介面，不代表產品完整 API；metadata 或 export 計數不等於公開 API 數量。
 
 2026-10-28 又分析 CFX v251 `Ans.CFX.CadApi.dll` 與 `Ans.CFX.Acmo.dll`。REA 確認兩個 PE 均沒有可讀取的 CLI metadata；另以 `llvm-readobj 19.1.5 --coff-exports` 擷取 43 與 17 個 export 名稱，沒有可解碼的函式簽名。兩個候選快照已加入來源設定並納入 APIKB；建置後 symbol 與 FTS entry 各增加 60。元件雜湊、REA Evidence ID 與限制見 [REA 組件證據摘要](./REA_EVIDENCE.md)。
 
@@ -59,6 +59,8 @@ DPF v251 `Ans.Dpf.MechanicalResults.dll` 的 REA CLI metadata 亦為 `absent`。
 | AUTODYN DataModel | `autodyn_rea` | [autodyn_rea_api.json](./autodyn_rea_api.json) | 24 | 242 |
 | DesignXplorer PublicAPIs | `designxplorer_rea` | [designxplorer_rea_api.json](./designxplorer_rea_api.json) | 33 | 228 |
 | Engineering Data DataModel | `engineeringdata_rea` | [engineeringdata_rea_api.json](./engineeringdata_rea_api.json) | 37 | 400 |
+| Engineering Data DataProvider candidate | `engineeringdata_dataprovider_rea` | [engineeringdata_dataprovider_rea_api.json](./engineeringdata_dataprovider_rea_api.json) | 132 | 656 |
+| DesignModeler Core candidate | `designmodeler_core_rea` | [designmodeler_core_rea_api.json](./designmodeler_core_rea_api.json) | 262 | 3,154 |
 | Mechanical Interfaces | `mechanical_interfaces_rea` | [mechanical_interfaces_rea_api.json](./mechanical_interfaces_rea_api.json) | 36 | 187 |
 | Mechanical DataModel | `mechanical_datamodel_rea` | [mechanical_datamodel_rea_api.json](./mechanical_datamodel_rea_api.json) | 1,019 | 813 |
 | Discovery Collaboration API | `discovery_collaboration_rea` | [discovery_collaboration_rea_api.json](./discovery_collaboration_rea_api.json) | 287 | 1,202 |
@@ -74,6 +76,7 @@ DPF v251 `Ans.Dpf.MechanicalResults.dll` 的 REA CLI metadata 亦為 `absent`。
 | Icepak Ansoft add-in | `icepak_ansoft_addin_rea` | [icepak_ansoft_addin_rea_api.json](./icepak_ansoft_addin_rea_api.json) | 2 | 8 |
 | Granta MI API client | `granta_mi_rea` | [granta_mi_rea_api.json](./granta_mi_rea_api.json) | 6 | 80 |
 | Material Designer wrapper | `materialdesigner_rea` | [materialdesigner_rea_api.json](./materialdesigner_rea_api.json) | 6 | 115 |
+| Material Designer Core candidate | `materialdesigner_core_rea` | [materialdesigner_core_rea_api.json](./materialdesigner_core_rea_api.json) | 158 | 1,795 |
 | TurboSystem CCD interface | `turbosystem_ccd_rea` | [turbosystem_ccd_rea_api.json](./turbosystem_ccd_rea_api.json) | 1 | 243 |
 | TurboSystem CCM interface | `turbosystem_ccm_rea` | [turbosystem_ccm_rea_api.json](./turbosystem_ccm_rea_api.json) | 1 | 76 |
 | Units DataModel | `units_rea` | [units_rea_api.json](./units_rea_api.json) | 13 | 63 |
@@ -98,7 +101,7 @@ DPF v251 `Ans.Dpf.MechanicalResults.dll` 的 REA CLI metadata 亦為 `absent`。
 | SIwave IronPython command library | `siwave_libironpythoncmd_rea` | [siwave_libironpythoncmd_rea_api.json](./siwave_libironpythoncmd_rea_api.json) | 96 | 710 |
 | Ansoft HFSS add-in | `hfss_addin_rea` | [hfss_addin_rea_api.json](./hfss_addin_rea_api.json) | 2 | 8 |
 
-這四十七份快照目前涵蓋 12,539 個 snapshot class 與 96,806 個 MethodDef 列。它們保留 private、internal 與 special-name 成員；類別文件記錄型別 visibility，方法文件記錄 access flags。部分簽名使用 `class:<rid>`，且沒有參數名稱。REA 輸出中的同名 TypeDef 以 metadata token 區分，避免不同 declaring type 的方法被合併。新增 add-in、Motion、ACP、AQWA RemoteItf 與 SIwave 候選均來自 v251 安裝樹；它們描述靜態實作候選，並非官方支援 API。AQWA、CFX、Fluent、Icepak、Polyflow、Sherlock、ACP、Motion 與 SIwave 的組件位置提供產品關聯證據；Meshing 與 HFSS 維持獨立候選鍵，不推定為 PrimeMesh 或完整 Electronics Desktop API。所有候選仍需官方文件簽名對照與支援狀態審查。
+這五十份快照目前涵蓋 13,091 個 snapshot class 與 102,411 個 MethodDef 列。它們保留 private、internal 與 special-name 成員；類別文件記錄型別 visibility，方法文件記錄 access flags。部分簽名使用 `class:<rid>`，且沒有參數名稱。REA 輸出中的同名 TypeDef 以 metadata token 區分，避免不同 declaring type 的方法被合併。新增 add-in、Motion、ACP、AQWA RemoteItf 與 SIwave 候選均來自 v251 安裝樹；它們描述靜態實作候選，並非官方支援 API。AQWA、CFX、Fluent、Icepak、Polyflow、Sherlock、ACP、Motion 與 SIwave 的組件位置提供產品關聯證據；Meshing 與 HFSS 維持獨立候選鍵，不推定為 PrimeMesh 或完整 Electronics Desktop API。所有候選仍需官方文件簽名對照與支援狀態審查。
 
 ## Native PE export candidates (v251)
 
