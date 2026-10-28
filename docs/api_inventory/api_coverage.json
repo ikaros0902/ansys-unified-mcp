@@ -2319,14 +2319,27 @@
         }
       ],
       "folder": "Rocky",
-      "has_direct_snapshot": false,
-      "mapping_status": "not_assessed",
+      "has_direct_snapshot": true,
+      "mapping_status": "direct_product_id",
       "overview_url": "https://developer.synopsys.com/docs/rocky.md",
       "product": "rocky",
       "rea_evidence": {},
       "sdk_package": "ansys-rocky-core",
-      "snapshot_status": "no_direct_snapshot",
-      "snapshots": []
+      "snapshot_status": "direct_snapshot",
+      "snapshots": [
+        {
+          "statistics": {
+            "total_modules": 8,
+            "total_classes": 11,
+            "total_methods": 5,
+            "total_properties": 1,
+            "total_functions": 16
+          },
+          "sha256": "649e3fe2463c4975067c726ae26076b2a42f4fb5a5207fbcca454eb5ef27e343",
+          "snapshot_version": "unknown",
+          "snapshot_path": "docs/api_inventory/rocky_api.json"
+        }
+      ]
     },
     {
       "documentation_coverage": [
@@ -2553,7 +2566,6 @@
       "snapshot_status": "direct_snapshot",
       "snapshots": [
         {
-          "snapshot_path": "docs/api_inventory/sherlock_core_api.json",
           "statistics": {
             "total_modules": 25,
             "total_classes": 208,
@@ -2561,8 +2573,9 @@
             "total_properties": 0,
             "total_functions": 19
           },
-          "sha256": "aefc088d27351620c8bb505f830c640ad7d0b60b6f3e114e54afe8ca409905f2",
-          "snapshot_version": "unknown"
+          "sha256": "f41fa8dbc23296253ae0080347aa769b9aa8067ab10fdc804ade13236e1122c3",
+          "snapshot_version": "unknown",
+          "snapshot_path": "docs/api_inventory/sherlock_core_api.json"
         }
       ]
     },

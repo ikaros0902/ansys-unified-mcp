@@ -1,6 +1,6 @@
 # ANSYS 產品 API 來源與缺口索引
 
-本索引依目前 coverage 清冊列出的 57 個產品 ID，彙整直接 API 快照、已映射 REA 組件證據和來源缺口。21 份直接 API／SDK／protocol 快照分布於 12 個產品 ID；APIKB 另索引 55 個 REA 靜態候選來源鍵和 33 份 native export 清冊，逐來源細節見 [API Catalog](./API_CATALOG.md)及[REA source index](./curated/rea/index.md)。
+本索引依目前 coverage 清冊列出的 57 個產品 ID，彙整直接 API 快照、已映射 REA 組件證據和來源缺口。27 份 API／SDK／protocol 快照中，23 份映射至 14 個產品 ID；APIKB 另索引 55 個 REA 靜態候選來源鍵和 33 份 native export 清冊，逐來源細節見 [API Catalog](./API_CATALOG.md)及[REA source index](./curated/rea/index.md)。
 
 ## 證據狀態
 
@@ -54,7 +54,7 @@
 | `Q3D` (`q3d`) | REA 組件證據 | — | [Ans.Ansoft.Q3DExtractorAddinPlugin.dll](./REA_EVIDENCE.md)（v251） | 已記錄相關組件證據；產品歸屬或官方 API 對照仍待處理。 (`product_component_evidence_only`) |
 | `Reaction_Chemkin` (`reaction_chemkin`) | 待來源／映射 | — | — | 尚未完成來源、版本或 API owner 盤點。 (`not_assessed`) |
 | `Rigid_Body_Dynamics` (`rigid_body_dynamics`) | 待來源／映射 | — | — | 尚未完成來源、版本或 API owner 盤點。 (`not_assessed`) |
-| `Rocky` (`rocky`) | 待來源／映射 | — | — | 尚未完成來源、版本或 API owner 盤點。 (`not_assessed`) |
+| `Rocky` (`rocky`) | PyAnsys SDK snapshot | [rocky_api.json](./rocky_api.json)（ansys-rocky-core 0.6.2；8 modules、11 classes、5 methods、1 property、16 functions） | — | 統計只含直接 AST 宣告且名稱不以底線開頭；SDK package 版本不代表 Rocky product release，官方支援狀態與宿主行為未確認。 (`direct_product_id`) |
 | `SAF` (`saf`) | 待來源／映射 | — | — | 尚未完成來源、版本或 API owner 盤點。 (`not_assessed`) |
 | `SCADE` (`scade`) | 待來源／映射 | — | — | 尚未完成來源、版本或 API owner 盤點。 (`not_assessed`) |
 | `Scade_One` (`scade_one`) | 待來源／映射 | — | — | 尚未完成來源、版本或 API owner 盤點。 (`not_assessed`) |
