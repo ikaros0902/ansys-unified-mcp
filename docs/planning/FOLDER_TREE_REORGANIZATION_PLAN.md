@@ -2,7 +2,7 @@
 
 ## 目前 checkpoint（2026-10-29）
 
-- 目前 Git tree 的正式資料夾只有 `agents/`、`docs/`、`scripts/`、`src/`、`tests/`；根層另有啟動器與專案設定檔。已建立本機階段提交 `af57bda`、`38ba10f`、`a5dcee9`、`8ca1079`、`c4bc61d`、`4a2de61`。工作樹目前包含五個 REA 候選來源的 APIKB 接線、字典與計畫更新；本段不代表搬移或 API 行為驗收通過。此分支含有衍生資料，不可直接推送。HEAD 與工作樹狀態以即時 Git 記錄為準，本計畫不固定 HEAD 欄位。
+- 目前 Git tree 的正式資料夾只有 `agents/`、`docs/`、`scripts/`、`src/`、`tests/`；根層另有啟動器與專案設定檔。五個 v251 REA 候選的 APIKB 接線與字典更新已提交於 `4a147cf`。ANSYS_Document HTML/PDF Markdown 與轉換清單在被忽略的本機目錄；追蹤檔工作樹目前沒有未提交變更。本段不代表搬移或 API 行為驗收通過。此分支含有衍生資料，不可直接推送。HEAD 與工作樹狀態以即時 Git 記錄為準，本計畫不固定 HEAD 欄位。
 - 目前 APIKB 來源口徑為 113 keys：25 份 API／SDK／protocol snapshots（21 份映射至 12 個產品 ID，4 份未映射）、55 份 REA managed snapshots、33 份 native export snapshots。主候選清冊有 47 份檢查結果，其中 42 份 metadata complete、5 份 absent；APIKB 快照包含這 42 份及 13 個另行分析候選（ACP、AQWA RemoteItf、Motion、SIwave、RSM JobManagement、Engineering Data Core/DataProvider、DesignModeler Core、Material Designer Core、TurboSystem AFDCore/CCDCore/CPDCore/RTDCore）。
 - 57 個產品 coverage 狀態為 12 個有直接 snapshot、19 個只有產品組件證據、25 個尚未評估、1 個未映射共用介面。這些計數描述目前清冊，不表示完整 API 覆蓋。
 - REA 候選母體仍需重算：`REA_EVIDENCE.md` 記錄 1,172 個檔名候選，而目前 managed assembly inventory 有 14,421 筆組件資料；依 `Ans.*`／`Ansys.*` 名稱規則的另一輪唯讀盤點得到 1,288 筆。篩選條件與去重口徑未對齊，不合併成單一總數。下一批先依 `relative_path` 和產品目錄篩選並保留檔案 hash，再分產品映射或列為未映射。後續候選盤點包括 ROM `Ans.Rom.dll`／`Ans.Rom.Interop.dll`、ACT add-in 組件與其他尚未映射產品目錄；尚未確認來源存在性或授權前不分析。
