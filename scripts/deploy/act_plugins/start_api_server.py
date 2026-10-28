@@ -1,6 +1,8 @@
-# SpaceClaim startup script - auto-starts the gRPC API Server (port 50051) in the background.
-# This script is auto-copied by setup.ps1 to %APPDATA%\SpaceClaim\Published Scripts\
-# Configure this script as the SpaceClaim startup macro:
+# Legacy SpaceClaim startup-macro helper for deployments configured with the old flow.
+# Current setup.ps1 registers ApiServerAddIn through
+# %ProgramData%\SpaceClaim\AddIns\ApiServerAddIn.Manifest.xml and does not copy this
+# script into %APPDATA%\SpaceClaim\Published Scripts.
+# To use this legacy helper manually, configure it as the SpaceClaim startup macro:
 #   File > SpaceClaim Options > File Options > Startup macro > point to this file
 #
 # Path resolution: does not assume ANSYS is installed at the default

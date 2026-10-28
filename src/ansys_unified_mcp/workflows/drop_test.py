@@ -20,7 +20,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 from ansys_unified_mcp.core.sentinel.daemon import get_sentinel_queue
-from ansys_unified_mcp.drivers.lsdyna_driver import LSDynaDriver
+from ansys_unified_mcp.products.dyna.driver import LSDynaDriver
 from ansys_unified_mcp.core.gatekeeper import Gatekeeper
 from ansys_unified_mcp.core.jobs.sandbox import JobSandbox
 from ansys_unified_mcp.analytics.reporting.generator import ReportGenerator

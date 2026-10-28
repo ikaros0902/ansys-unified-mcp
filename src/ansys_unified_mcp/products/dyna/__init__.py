@@ -12,8 +12,16 @@ from ansys_unified_mcp.products.dyna.facade import (
     controller,
 )
 
+def __getattr__(name: str):
+    if name == "LSDynaDriver":
+        from ansys_unified_mcp.products.dyna.driver import LSDynaDriver
+        return LSDynaDriver
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+
+
 __all__ = [
     "DynaController",
     "PRODUCT",
     "controller",
+    "LSDynaDriver",
 ]

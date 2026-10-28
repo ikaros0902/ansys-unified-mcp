@@ -75,8 +75,10 @@ def check_mechanical(live: bool):
 
 def check_lsdyna(live: bool):
     # LS-DYNA 無 gRPC；後處理靠 lasso 讀 d3plot，求解靠 solver exe/subprocess
+    from ansys_unified_mcp.core.paths import find_lsdyna_exe
+
     lasso = _has("lasso")
-    solver = _exe("ANSYS_LSDYNA") or _find_lsdyna_exe()
+    solver = find_lsdyna_exe()
     pydyna = _has("ansys.dyna.core")
     parts = [f"lasso(d3plot讀取)={'有' if lasso else '無'}",
              f"solver exe={'找到' if solver else '未找到'}",
@@ -84,27 +86,6 @@ def check_lsdyna(live: bool):
     if not lasso and not solver:
         return FAIL, "；".join(parts) + " → 後處理與求解皆缺"
     return OK, "；".join(parts)
-
-
-def _find_lsdyna_exe():
-    try:
-        from ansys_unified_mcp.config import config
-        if config.available and config.root_path:
-            bin_dir = config.root_path / "ansys" / "bin" / "winx64"
-            for name in ("LSDYNA.exe", "lsdyna_dp.exe", "lsdyna_sp.exe", "lsdyna.exe"):
-                p = bin_dir / name
-                if p.exists():
-                    return str(p)
-    except Exception:
-        pass
-    root = os.environ.get("ANSYS_ROOT")
-    if not root:
-        return None
-    for name in ("LSDYNA.exe", "lsdyna_dp.exe", "lsdyna_sp.exe", "lsdyna.exe"):
-        p = Path(root) / f"v{os.environ.get('ANSYS_VERSION', '251')}" / "ansys" / "bin" / "winx64" / name
-        if p.exists():
-            return str(p)
-    return None
 
 
 def check_spaceclaim(live: bool):
