@@ -6,6 +6,7 @@
 
 - [現況分層與程式慣例](architecture/ARCHITECTURE.md)
 - [架構與規格評估白皮書](architecture/ANSYS_UNIFIED_MCP_ARCHITECTURE_AND_SPECIFICATION_REPORT.md)
+- [PyAnsys Source Intelligence](architecture/PYANSYS_SOURCE_INTELLIGENCE.md)：記錄本機 SDK 套件、來源圖範圍與缺口。
 - [技能知識匯入計畫](planning/skills_knowledge_ingestion_plan.md)：計畫不代表已實作。
 - ANSYS API 字典、REA 組件證據及本機 RAG 資料目前保存在被 Git 忽略的 `docs/api_inventory/`；公開散布權尚未確認，因此本索引不連結這些本機檔案。
 
