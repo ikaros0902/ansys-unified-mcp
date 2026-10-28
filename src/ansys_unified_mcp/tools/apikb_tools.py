@@ -2,6 +2,7 @@
 ANSYS API 知識庫 MCP 工具層 (API Knowledge Base MCP Tools)
 提供 Agent 快速檢索 API 符號、獲取成員定義、尋找物件導航鏈、以及腳本 API 靜態校驗功能。
 """
+
 from __future__ import annotations
 from typing import Optional
 
@@ -10,46 +11,89 @@ from ansys_unified_mcp.analytics.apikb import query as kb_query
 from ansys_unified_mcp.analytics.apikb import validate as kb_validate
 from ansys_unified_mcp.analytics.apikb import federated_query as fed_query
 
-@mcp.tool(annotations={"readOnlyHint": True, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False})
+
+@mcp.tool(
+    annotations={
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    }
+)
 def api_search(query: str, product: str = "", kind: str = "", top_k: int = 8) -> dict:
-    """Search ANSYS API symbols (class, method, property, enum, keyword) across Mechanical, SpaceClaim, optiSLang, and LS-DYNA.
+    """Search symbols from indexed ANSYS API, SDK, and REA snapshots.
 
     Args:
-        query: Search term or keyword (e.g. "AddFixedSupport", "fixed support", "Midsurface", "Optislang", "CONTROL_TERMINATION").
-        product: Optional filter by product: "mechanical", "spaceclaim", "optislang", or "lsdyna".
-        kind: Optional filter by kind: "class", "method", "property", "enum", "keyword".
-        top_k: Maximum number of ranked results to return (default: 8).
+        query: API name or search term, such as "AddFixedSupport" or "DatumPlaneCreator".
+        product: Optional APIKB source key, such as "mechanical", "spaceclaim", or "act_core_rea".
+        kind: Optional symbol kind: "class", "method", "property", "enum", or "keyword".
+        top_k: Maximum number of results to return. Default is 8.
     """
     results = kb_query.search(query=query, product=product or None, kind=kind or None, top_k=top_k)
-    return _envelope({
-        "query": query,
-        "product": product or "all",
-        "count": len(results),
-        "results": results
-    })
+    return _envelope(
+        {"query": query, "product": product or "all", "count": len(results), "results": results}
+    )
 
-@mcp.tool(annotations={"readOnlyHint": True, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False})
-def api_get(fqname: str, include: str = "members,edges", limit: int = 50) -> dict:
+
+@mcp.tool(
+    annotations={
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    }
+)
+def api_get(
+    fqname: str,
+    include: str = "members,edges",
+    limit: int = 50,
+    product: Optional[str] = None,
+    release: Optional[str] = None,
+    interface: Optional[str] = None,
+) -> dict:
     """Get full definition of a specific API symbol, including its methods, properties, and connected type links.
 
     Args:
         fqname: Fully-qualified name or class name (e.g. "Ansys.ACT.Automation.Mechanical.Analysis", "Analysis", "Part").
         include: Comma-separated list of details to include: "members,edges", "members", or "edges".
         limit: Maximum number of members and edges to return (default: 50).
+        product: Optional product key, such as "optislang_core".
+        release: Optional product release recorded by the snapshot.
+        interface: Optional source interface name for selecting a specific snapshot.
     """
     include_tuple = tuple(item.strip() for item in include.split(",") if item.strip())
-    detail = kb_query.get(fqname=fqname, include=include_tuple, limit=limit)
+    detail = kb_query.get(
+        fqname=fqname,
+        include=include_tuple,
+        limit=limit,
+        product=product,
+        release=release,
+        interface=interface,
+    )
     if not detail:
-        return _envelope({
-            "found": False,
-            "error": f"Symbol '{fqname}' not found in API Knowledge Base."
-        })
-    return _envelope({
-        "found": True,
-        "symbol": detail
-    })
+        return _envelope(
+            {"found": False, "error": f"Symbol '{fqname}' not found in API Knowledge Base."}
+        )
+    if detail.get("ambiguous"):
+        return _envelope(
+            {
+                "found": False,
+                "ambiguous": True,
+                "candidates": detail["candidates"],
+                "error": "Specify product, release, or interface to select one API source.",
+            }
+        )
+    return _envelope({"found": True, "symbol": detail})
 
-@mcp.tool(annotations={"readOnlyHint": True, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False})
+
+@mcp.tool(
+    annotations={
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    }
+)
 def api_path(from_type: str, to_type: str, product: str = "", max_depth: int = 4) -> dict:
     """Find object-navigation paths between two API types in the Knowledge Graph (e.g. from Analysis to EquivalentStress).
 
@@ -59,15 +103,20 @@ def api_path(from_type: str, to_type: str, product: str = "", max_depth: int = 4
         product: Optional product filter.
         max_depth: Maximum navigation depth (default: 4).
     """
-    paths = kb_query.path(from_type=from_type, to_type=to_type, product=product or None, max_depth=max_depth)
-    return _envelope({
-        "from": from_type,
-        "to": to_type,
-        "paths_count": len(paths),
-        "paths": paths
-    })
+    paths = kb_query.path(
+        from_type=from_type, to_type=to_type, product=product or None, max_depth=max_depth
+    )
+    return _envelope({"from": from_type, "to": to_type, "paths_count": len(paths), "paths": paths})
 
-@mcp.tool(annotations={"readOnlyHint": True, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False})
+
+@mcp.tool(
+    annotations={
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    }
+)
 def api_validate_script(code: str, product: str) -> dict:
     """Statically validate a Python, ACT, or SpaceClaim script against the official API dictionary to catch hallucinated methods/attributes.
 
@@ -78,7 +127,15 @@ def api_validate_script(code: str, product: str) -> dict:
     report = kb_validate.validate_script(code=code, product=product)
     return _envelope(report)
 
-@mcp.tool(annotations={"readOnlyHint": True, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False})
+
+@mcp.tool(
+    annotations={
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    }
+)
 def api_federated_path(
     from_uid: int,
     to_uid: int,
@@ -102,15 +159,25 @@ def api_federated_path(
         max_hops=max_hops,
         limit=limit,
     )
-    return _envelope({
-        "from_uid": from_uid,
-        "to_uid": to_uid,
-        "max_hops": max_hops,
-        "paths_count": len(paths),
-        "paths": paths,
-    })
+    return _envelope(
+        {
+            "from_uid": from_uid,
+            "to_uid": to_uid,
+            "max_hops": max_hops,
+            "paths_count": len(paths),
+            "paths": paths,
+        }
+    )
 
-@mcp.tool(annotations={"readOnlyHint": True, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False})
+
+@mcp.tool(
+    annotations={
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    }
+)
 def api_federated_search(
     query: str,
     domain: str = "",
@@ -134,15 +201,25 @@ def api_federated_search(
         level=level,
         top_k=top_k,
     )
-    return _envelope({
-        "query": query,
-        "domain": domain or "all",
-        "level": level,
-        "count": len(hits),
-        "results": hits,
-    })
+    return _envelope(
+        {
+            "query": query,
+            "domain": domain or "all",
+            "level": level,
+            "count": len(hits),
+            "results": hits,
+        }
+    )
 
-@mcp.tool(annotations={"readOnlyHint": True, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False})
+
+@mcp.tool(
+    annotations={
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    }
+)
 def api_cross_bridge(
     coupling_type: str = "",
     source_domain: str = "",
@@ -163,8 +240,10 @@ def api_cross_bridge(
         target_domain=target_domain or None,
         variable_name=variable_name or None,
     )
-    return _envelope({
-        "coupling_type": coupling_type or "all",
-        "count": len(bridges),
-        "bridges": bridges,
-    })
+    return _envelope(
+        {
+            "coupling_type": coupling_type or "all",
+            "count": len(bridges),
+            "bridges": bridges,
+        }
+    )

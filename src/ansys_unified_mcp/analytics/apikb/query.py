@@ -4,6 +4,8 @@ ANSYS API 知識庫查詢引擎 (Query Engine)
 """
 import re
 import sqlite3
+from functools import lru_cache
+from pathlib import Path
 from typing import Optional, Any
 from collections import deque
 
@@ -11,12 +13,66 @@ from ansys_unified_mcp.analytics.apikb import config as cfg
 from ansys_unified_mcp.analytics.apikb.build import build_database
 from ansys_unified_mcp.analytics.apikb.build import _schema_is_current
 
-def _get_connection() -> sqlite3.Connection:
+def _source_fingerprint() -> tuple[tuple[str, str, int, int, str], ...]:
+    # shortcut: 等長覆寫並還原 mtime 會繞過此指紋；若要支援該流程，改用來源清單 hash。
+    return tuple(
+        (
+            product,
+            path.as_posix(),
+            stat.st_mtime_ns,
+            stat.st_size,
+            cfg.INTERFACES.get(product, "unknown"),
+        )
+        for product, path in cfg.source_snapshots()
+        for stat in (path.stat(),)
+    )
+
+
+@lru_cache(maxsize=4)
+def _source_metadata(fingerprint: tuple[tuple[str, str, int, int, str], ...]) -> tuple[dict, ...]:
+    return tuple(cfg.source_metadata(product, Path(path)) for product, path, _, _, _ in fingerprint)
+
+
+def _sources_are_current() -> bool:
     if not _schema_is_current(cfg.DB_PATH):
+        return False
+    source_keys = ("product", "release", "interface", "source_path", "sdk_version", "sha256", "artifact_sha256", "rea_evidence_id")
+    expected = {
+        tuple(source[key] for key in source_keys)
+        for source in _source_metadata(_source_fingerprint())
+    }
+    try:
+        conn = sqlite3.connect(str(cfg.DB_PATH))
+        try:
+            actual = set(
+                conn.execute(
+                    "SELECT product, release, interface, source_path, sdk_version, sha256, "
+                    "artifact_sha256, rea_evidence_id FROM api_sources"
+                ).fetchall()
+            )
+        finally:
+            conn.close()
+    except sqlite3.Error:
+        return False
+    return actual == expected
+
+
+def _get_connection() -> sqlite3.Connection:
+    if not _sources_are_current():
         build_database(force=True)
     conn = sqlite3.connect(str(cfg.DB_PATH))
     conn.row_factory = sqlite3.Row
     return conn
+
+def _api_status(interface: str, doc: str) -> tuple[str, str]:
+    if "REA" in interface.upper():
+        match = re.search(r"\baccess=([A-Za-z-]+)", doc)
+        if not match:
+            match = re.search(r"\bvisibility=([A-Za-z-]+)", doc)
+        public_status = match.group(1).lower() if match else "not_recorded"
+        return public_status, "static_metadata_only; runtime_unverified"
+    return "not_classified", "snapshot_only; runtime_unverified"
+
 
 def search(
     query: str,
@@ -48,7 +104,7 @@ def search(
     base_sql = """
         SELECT f.item_type, f.ref_id, f.product, f.fqname, f.name, f.signature, f.doc,
                f.release, f.interface, a.source_path, a.sha256, a.sdk_version,
-               bm25(search_fts) as rank
+               a.artifact_sha256, a.rea_evidence_id, bm25(search_fts) as rank
         FROM search_fts AS f
         LEFT JOIN api_sources AS a ON a.id = CAST(f.source_id AS INTEGER)
         WHERE search_fts MATCH ?
@@ -92,6 +148,7 @@ def search(
         doc_snippet = (r["doc"] or "").strip().replace("\n", " ")
         if len(doc_snippet) > 160:
             doc_snippet = doc_snippet[:157] + "..."
+        public_status, validation_status = _api_status(r["interface"], r["doc"] or "")
 
         results.append({
             "item_type": r["item_type"],
@@ -100,12 +157,16 @@ def search(
             "name": r["name"],
             "signature": r["signature"] or "",
             "doc": doc_snippet,
+            "public_status": public_status,
+            "validation_status": validation_status,
             "score": round(-float(r["rank"]), 3),
             "release": r["release"],
             "interface": r["interface"],
             "source": {
                 "path": r["source_path"], "sha256": r["sha256"],
                 "sdk_version": r["sdk_version"],
+                "artifact_sha256": r["artifact_sha256"],
+                "rea_evidence_id": r["rea_evidence_id"],
             },
         })
 
@@ -164,12 +225,15 @@ def get(
         "doc": row["doc"] or "",
         "release": row["release"],
         "interface": row["interface"],
+        "public_status": _api_status(row["interface"], row["doc"] or "")[0],
+        "validation_status": _api_status(row["interface"], row["doc"] or "")[1],
         "members": [],
         "edges_out": [],
         "edges_in": []
     }
     source = cur.execute(
-        "SELECT source_path, sha256, sdk_version FROM api_sources WHERE id = ?",
+        "SELECT source_path, sha256, sdk_version, artifact_sha256, rea_evidence_id "
+        "FROM api_sources WHERE id = ?",
         (row["source_id"],),
     ).fetchone()
     symbol_info["source"] = dict(source) if source else {}
@@ -184,13 +248,17 @@ def get(
             LIMIT ?
         """, (sym_id, limit))
         for m in cur.fetchall():
+            member_doc = (m["doc"] or "").strip()
+            public_status, validation_status = _api_status(row["interface"], member_doc)
             symbol_info["members"].append({
                 "kind": m["kind"],
                 "name": m["name"],
                 "signature": m["signature"] or "",
                 "return_type": m["return_type"] or "",
                 "is_inherited": bool(m["is_inherited"]),
-                "doc": (m["doc"] or "").strip()
+                "doc": member_doc,
+                "public_status": public_status,
+                "validation_status": validation_status
             })
 
     if "edges" in include:

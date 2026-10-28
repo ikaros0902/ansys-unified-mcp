@@ -18,7 +18,9 @@ def list_ansys_docs() -> dict:
 
 
 @mcp.tool(annotations={"readOnlyHint": True, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False})
-def search_ansys_docs(query: str, doc: str = "", top_k: int = 5, scope: str = "api") -> dict:
+def search_ansys_docs(query: str, doc: str = "", top_k: int = 5, scope: str = "api",
+                      product: str = "", release: str = "", category: str = "",
+                      sdk_version: str = "") -> dict:
     """Keyword-search the ANSYS docs; returns ranked snippets with source and chunk_id.
 
     Args:
@@ -26,13 +28,20 @@ def search_ansys_docs(query: str, doc: str = "", top_k: int = 5, scope: str = "a
             substring). Chinese queries need >= 3 characters and only match
             Chinese text present in the docs.
         doc: Optional document name (from list_ansys_docs) to restrict the search.
+        product: Optional exact product identifier, such as "fluent".
+        release: Optional exact product release recorded in the catalog, such as "v251".
+        category: Optional document category, such as "api_reference" or "tutorial".
+        sdk_version: Optional exact SDK version; separate from the product release.
         top_k: Maximum number of results to return.
         scope: "api" (default) searches only the crisp API reference/scripting
             docs, then transparently widens to everything if nothing matches;
             "all" searches every indexed doc (guides and tutorials included).
             The returned "scope" field reports which scope produced the results.
     """
-    return _envelope(docs_index.search(query, doc=doc or None, top_k=top_k, scope=scope))
+    return _envelope(docs_index.search(
+        query, doc=doc or None, top_k=top_k, scope=scope, product=product or None,
+        release=release or None, category=category or None, sdk_version=sdk_version or None,
+    ))
 
 
 @mcp.tool(annotations={"readOnlyHint": True, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False})
@@ -49,5 +58,5 @@ def get_ansys_doc_chunk(doc: str, chunk_id: int, context: int = 0) -> dict:
 
 @mcp.tool(annotations={"readOnlyHint": False, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False})
 def rebuild_ansys_docs_index() -> dict:
-    """Rebuild the cleaned copies and the FTS5 search index from Documentation_md."""
+    """Rebuild the FTS5 index from curated documents, the product catalog, and extra roots."""
     return _envelope(docs_index.build_index())

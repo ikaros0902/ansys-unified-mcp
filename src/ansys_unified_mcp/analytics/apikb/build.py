@@ -1,7 +1,8 @@
 """
 ANSYS API 知識庫建置管線 (Build Pipeline)
-解析四大模組 JSON，執行去重正規化、推導型別導航邊 (Edges) 並建立 SQLite FTS5 索引。
+解析各 API 快照 JSON，執行去重正規化、推導型別導航邊 (Edges) 並建立 SQLite FTS5 索引。
 """
+
 import re
 import json
 import sqlite3
@@ -9,10 +10,12 @@ import hashlib
 import os
 import tempfile
 from datetime import datetime, timezone
+from contextlib import closing
 from pathlib import Path
 from typing import Optional, Any
 
 from ansys_unified_mcp.analytics.apikb import config as cfg
+
 
 def split_camel_case(s: str) -> str:
     """將 CamelCase 或 snake_case 拆分為空格分隔的小寫詞"""
@@ -24,6 +27,7 @@ def split_camel_case(s: str) -> str:
     s = re.sub(r"([a-z0-9])([A-Z])", r"\1 \2", s)
     s = re.sub(r"([A-Z]+)([A-Z][a-z0-9])", r"\1 \2", s)
     return s.lower().strip()
+
 
 def clean_type_name(raw: str) -> str:
     """提取乾淨的型別簡稱或類別名稱"""
@@ -39,46 +43,83 @@ def clean_type_name(raw: str) -> str:
 
 
 def _schema_is_current(path: Path) -> bool:
-    """檢查資料庫版本欄位，舊快照在安全替換前保留可讀。"""
+    """確認資料庫結構與索引演算法版本。"""
     if not path.is_file():
         return False
     try:
-        con = sqlite3.connect(str(path))
-        symbol_cols = {row[1] for row in con.execute("PRAGMA table_info(symbols)")}
-        fts_cols = {row[1] for row in con.execute("PRAGMA table_info(search_fts)")}
-        con.close()
+        with closing(sqlite3.connect(str(path))) as con:
+            symbol_cols = {row[1] for row in con.execute("PRAGMA table_info(symbols)")}
+            fts_cols = {row[1] for row in con.execute("PRAGMA table_info(search_fts)")}
+            source_cols = {row[1] for row in con.execute("PRAGMA table_info(api_sources)")}
+            meta_cols = {row[1] for row in con.execute("PRAGMA table_info(api_kb_meta)")}
+            if "value" not in meta_cols:
+                return False
+            index_version = con.execute(
+                "SELECT value FROM api_kb_meta WHERE key = 'index_version'"
+            ).fetchone()
     except sqlite3.Error:
         return False
-    return {"release", "interface", "source_id"} <= symbol_cols and {
-        "release", "interface", "source_id"
-    } <= fts_cols
+    return (
+        {"release", "interface", "source_id"} <= symbol_cols
+        and {"release", "interface", "source_id"} <= fts_cols
+        and {"artifact_sha256", "rea_evidence_id"} <= source_cols
+        and index_version == (cfg.APIKB_INDEX_VERSION,)
+    )
 
 
 def _ensure_previous_sources_available(current_sources: list[tuple[str, Path]]) -> None:
-    """避免某版 API 快照暫時缺失時，用其他版本覆蓋既有知識庫。"""
+    """避免來源快照移除或缺失時，以不完整來源覆蓋既有知識庫。"""
     if not cfg.DB_PATH.is_file():
         return
     try:
-        conn = sqlite3.connect(str(cfg.DB_PATH))
-        tables = {row[0] for row in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")}
-        if "api_sources" not in tables:
-            conn.close()
-            return
-        previous_paths = {
-            Path(row[0]).resolve()
-            for row in conn.execute("SELECT DISTINCT source_path FROM api_sources")
-            if row[0]
-        }
-        conn.close()
+        with closing(sqlite3.connect(str(cfg.DB_PATH))) as conn:
+            tables = {
+                row[0] for row in conn.execute("SELECT name FROM sqlite_master WHERE type='table'")
+            }
+            if "api_sources" not in tables:
+                return
+            columns = {
+                row[1] for row in conn.execute("PRAGMA table_info(api_sources)")
+            }
+            identity_columns = {"product", "release", "sha256"}
+            if identity_columns.issubset(columns):
+                previous_sources = conn.execute(
+                    "SELECT source_path, product, release, sha256 FROM api_sources"
+                ).fetchall()
+            else:
+                previous_sources = [
+                    (row[0], "", "", "")
+                    for row in conn.execute("SELECT source_path FROM api_sources")
+                ]
     except sqlite3.Error:
         return
+
     current_paths = {path.resolve() for _, path in current_sources}
-    missing = sorted(str(path) for path in previous_paths if not path.is_file() or path not in current_paths)
+    current_identities = {
+        (product, metadata["release"], metadata["sha256"])
+        for product, path in current_sources
+        if path.is_file()
+        for metadata in (cfg.source_metadata(product, path),)
+    }
+    missing = []
+    for source_path, product, release, sha256 in previous_sources:
+        if not source_path:
+            continue
+        path = Path(source_path)
+        if not path.is_absolute():
+            path = cfg.REPO_ROOT / path
+        if path.resolve() in current_paths:
+            continue
+        if product and (product, release, sha256) in current_identities:
+            continue
+        missing.append(str(path.resolve()))
+
     if missing:
         raise RuntimeError(
             "既有 API 來源快照暫時不可用；保留現有資料庫，不以不完整來源重建。"
-            f" missing_sources={missing}"
+            f" missing_sources={sorted(missing)}"
         )
+
 
 def build_database(force: bool = False) -> dict:
     """建置或重建 API 知識庫 SQLite 資料庫"""
@@ -108,6 +149,10 @@ def build_database(force: bool = False) -> dict:
     # 執行 Schema 定義
     with open(cfg.SCHEMA_PATH, "r", encoding="utf-8") as f:
         conn.executescript(f.read())
+    conn.execute(
+        "INSERT OR REPLACE INTO api_kb_meta (key, value) VALUES ('index_version', ?)",
+        (cfg.APIKB_INDEX_VERSION,),
+    )
 
     cur = conn.cursor()
 
@@ -119,11 +164,23 @@ def build_database(force: bool = False) -> dict:
         source["ingested_at"] = datetime.now(timezone.utc).isoformat()
         cur.execute(
             "INSERT INTO api_sources "
-            "(product, release, interface, source_path, sdk_version, sha256, ingested_at) "
-            "VALUES (?, ?, ?, ?, ?, ?, ?)",
-            tuple(source[key] for key in (
-                "product", "release", "interface", "source_path", "sdk_version", "sha256", "ingested_at"
-            )),
+            "(product, release, interface, source_path, sdk_version, sha256, "
+            "artifact_sha256, rea_evidence_id, ingested_at) "
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            tuple(
+                source[key]
+                for key in (
+                    "product",
+                    "release",
+                    "interface",
+                    "source_path",
+                    "sdk_version",
+                    "sha256",
+                    "artifact_sha256",
+                    "rea_evidence_id",
+                    "ingested_at",
+                )
+            ),
         )
         source_records.append((product, source_path, source, cur.lastrowid))
 
@@ -143,8 +200,8 @@ def build_database(force: bool = False) -> dict:
     # members_map: sig_hash -> member_id
     members_map = {}
     member_counts = {}  # member_id -> count of classes using it
-    pending_symbol_members = [] # (symbol_id, member_id, is_inherited)
-    pending_edges = []          # (src_symbol_id, target_type_str, rel, via_member_id)
+    pending_symbol_members = []  # (symbol_id, member_id, is_inherited)
+    pending_edges = []  # (src_symbol_id, target_type_str, rel, via_member_id)
 
     for product, source_path, source_info, source_id in source_records:
         before_symbol_id = cur.execute("SELECT COALESCE(MAX(id), 0) FROM symbols").fetchone()[0]
@@ -162,7 +219,7 @@ def build_database(force: bool = False) -> dict:
                     doc = cls_info.get("doc", "")
                     cur.execute(
                         "INSERT INTO symbols (product, kind, fqname, name, doc) VALUES (?, ?, ?, ?, ?)",
-                        ("mechanical", "class", fqname, cls_name, doc)
+                        ("mechanical", "class", fqname, cls_name, doc),
                     )
                     sym_id = cur.lastrowid
                     symbols_map[fqname] = sym_id
@@ -172,16 +229,20 @@ def build_database(force: bool = False) -> dict:
                     # 處理 Methods
                     for m in cls_info.get("methods", []):
                         m_name = m["name"]
-                        params = ", ".join(f"{p['name']}: {p['type']}" for p in m.get("parameters", []))
+                        params = ", ".join(
+                            f"{p['name']}: {p['type']}" for p in m.get("parameters", [])
+                        )
                         sig = f"({params}) -> {m.get('return_type', '')}"
                         ret_type = m.get("return_type", "")
                         m_doc = m.get("doc", "")
-                        sig_hash = hashlib.sha256(f"{source_id}:method:{m_name}:{sig}:{ret_type}".encode()).hexdigest()[:16]
+                        sig_hash = hashlib.sha256(
+                            f"{source_id}:method:{m_name}:{sig}:{ret_type}".encode()
+                        ).hexdigest()[:16]
 
                         if sig_hash not in members_map:
                             cur.execute(
                                 "INSERT INTO members (sig_hash, kind, name, signature, return_type, doc) VALUES (?, ?, ?, ?, ?, ?)",
-                                (sig_hash, "method", m_name, sig, ret_type, m_doc)
+                                (sig_hash, "method", m_name, sig, ret_type, m_doc),
                             )
                             mem_id = cur.lastrowid
                             members_map[sig_hash] = mem_id
@@ -201,12 +262,14 @@ def build_database(force: bool = False) -> dict:
                         p_type = p.get("type", "")
                         p_doc = p.get("doc", "")
                         sig = f": {p_type}"
-                        sig_hash = hashlib.sha256(f"{source_id}:property:{p_name}:{sig}:{p_type}".encode()).hexdigest()[:16]
+                        sig_hash = hashlib.sha256(
+                            f"{source_id}:property:{p_name}:{sig}:{p_type}".encode()
+                        ).hexdigest()[:16]
 
                         if sig_hash not in members_map:
                             cur.execute(
                                 "INSERT INTO members (sig_hash, kind, name, signature, return_type, doc) VALUES (?, ?, ?, ?, ?, ?)",
-                                (sig_hash, "property", p_name, sig, p_type, p_doc)
+                                (sig_hash, "property", p_name, sig, p_type, p_doc),
                             )
                             mem_id = cur.lastrowid
                             members_map[sig_hash] = mem_id
@@ -233,7 +296,7 @@ def build_database(force: bool = False) -> dict:
                 kind = "interface" if cls_info.get("is_interface") else "class"
                 cur.execute(
                     "INSERT INTO symbols (product, kind, fqname, name, doc) VALUES (?, ?, ?, ?, ?)",
-                    ("spaceclaim", kind, fqname, name, "")
+                    ("spaceclaim", kind, fqname, name, ""),
                 )
                 sym_id = cur.lastrowid
                 symbols_map[fqname] = sym_id
@@ -245,12 +308,14 @@ def build_database(force: bool = False) -> dict:
                     params = ", ".join(f"{p['name']}: {p['type']}" for p in m.get("parameters", []))
                     sig = f"({params}) -> {m.get('return_type', '')}"
                     ret_type = m.get("return_type", "")
-                    sig_hash = hashlib.sha256(f"{source_id}:method:{m_name}:{sig}:{ret_type}".encode()).hexdigest()[:16]
+                    sig_hash = hashlib.sha256(
+                        f"{source_id}:method:{m_name}:{sig}:{ret_type}".encode()
+                    ).hexdigest()[:16]
 
                     if sig_hash not in members_map:
                         cur.execute(
                             "INSERT INTO members (sig_hash, kind, name, signature, return_type, doc) VALUES (?, ?, ?, ?, ?, ?)",
-                            (sig_hash, "method", m_name, sig, ret_type, "")
+                            (sig_hash, "method", m_name, sig, ret_type, ""),
                         )
                         mem_id = cur.lastrowid
                         members_map[sig_hash] = mem_id
@@ -268,12 +333,14 @@ def build_database(force: bool = False) -> dict:
                     p_name = p["name"]
                     p_type = p.get("property_type", "")
                     sig = f": {p_type}"
-                    sig_hash = hashlib.sha256(f"{source_id}:property:{p_name}:{sig}:{p_type}".encode()).hexdigest()[:16]
+                    sig_hash = hashlib.sha256(
+                        f"{source_id}:property:{p_name}:{sig}:{p_type}".encode()
+                    ).hexdigest()[:16]
 
                     if sig_hash not in members_map:
                         cur.execute(
                             "INSERT INTO members (sig_hash, kind, name, signature, return_type, doc) VALUES (?, ?, ?, ?, ?, ?)",
-                            (sig_hash, "property", p_name, sig, p_type, "")
+                            (sig_hash, "property", p_name, sig, p_type, ""),
                         )
                         mem_id = cur.lastrowid
                         members_map[sig_hash] = mem_id
@@ -293,7 +360,7 @@ def build_database(force: bool = False) -> dict:
                 doc = "Values: " + ", ".join(enum_info.get("values", []))
                 cur.execute(
                     "INSERT INTO symbols (product, kind, fqname, name, doc) VALUES (?, ?, ?, ?, ?)",
-                    ("spaceclaim", "enum", fqname, name, doc)
+                    ("spaceclaim", "enum", fqname, name, doc),
                 )
                 sym_id = cur.lastrowid
                 symbols_map[fqname] = sym_id
@@ -303,18 +370,20 @@ def build_database(force: bool = False) -> dict:
         # -------------------------------------------------------------
         # 3. 處理 optiSLang API
         # -------------------------------------------------------------
-        osl_src = source_path if product == "optislang" else Path("__missing__")
-        if osl_src.exists():
-            with open(osl_src, "r", encoding="utf-8") as f:
-                osl_data = json.load(f)
+        python_src = source_path if product in {"optislang", "optislang_core", "mapdl", "dpf", "fluent", "primemesh", "sound", "pydyna", "mechanical_core", "geometry_core", "workbench", "workbench_protocol", "mechanical_protocol", "geometry_protocol", "fluent_protocol", "mapdl_protocol", "primemesh_protocol", "discovery_protocol", "dbu_protocol", "result_explorer_protocol", "platform_instance_management_protocol", "filetransfer_protocol", "dbu_protocol", "result_explorer_protocol", "platform_instance_management_protocol", "filetransfer_protocol", "autodyn_rea", "designxplorer_rea", "engineeringdata_rea", "mechanical_interfaces_rea", "mechanical_datamodel_rea", "discovery_collaboration_rea", "discovery_gateway_rea", "discovery_geometry_rea", "discovery_onscale_rea", "discovery_physics_rea", "discovery_project_rea", "discovery_results_rea", "maxwell_addin_rea", "q3d_addin_rea", "icepak_ansoft_addin_rea", "granta_mi_rea", "materialdesigner_rea", "turbosystem_ccd_rea", "turbosystem_ccm_rea", "units_rea", "vista_tf_rea", "act_core_rea", "api_discovery_rea", "api_geometry_rea", "act_interfaces_rea", "lsdyna_interfaces_rea", "ansysem_coredotnet_rea", "additive_rea", "spaceclaim_core_rea", "aqwa_addin_rea", "cfx_addin_rea", "fluent_addin_rea", "icepak_addin_rea", "meshing_addin_rea", "polyflow_addin_rea", "sherlock_addin_rea", "hfss_addin_rea", "zemax_zosapi_rea", "zemax_zosapi_interfaces_rea", "designer_addin_rea", "mechanical_ansoft_addin_rea", "simplorer_addin_rea", "apip_wrapper_native", "rom_api_native", "system_coupling_rpc_native", "system_coupling_participant_native", "speos_apip_wrapper_native", "cfx_cadapi_native", "cfx_acmo_native", "dpf_mechanicalresults_native", "dpf_engineeringdata_native", "dpf_abaqus_native", "dpf_cgns_native", "dpf_compression_native", "dpf_femutils_native", "dpf_flowdiagram_native", "dpf_grpc_native", "dpf_hdf5_native", "dpf_livepost_native", "dpf_lsdynahgp_native", "dpf_math_native", "dpf_mechanical_native", "dpf_native_native", "dpf_pythonpluginwrapper_native", "dpf_rbd_native", "dpf_vtk_native", "dpf_autodyn_native", "dpf_cff_native", "dpf_multiphysicsmapper_native", "dpf_prime_native", "dpf_datamodel_native", "dpf_systemcouplingmapping_native", "lumerical_interopapi_native", "lumerical_interopapi_remote_native", "lumerical_lumapi_native"} else Path("__missing__")
+        if python_src.exists():
+            with open(python_src, "r", encoding="utf-8") as f:
+                python_data = json.load(f)
 
-            for mod_name, mod_info in osl_data.get("modules", {}).items():
+            for mod_name, mod_info in python_data.get("modules", {}).items():
                 for cls_name, cls_info in mod_info.get("classes", {}).items():
                     fqname = f"{mod_name}.{cls_name}"
                     doc = cls_info.get("doc", "")
+                    if product.endswith("_rea") and cls_info.get("visibility"):
+                        doc = f"{doc}\nREA type; visibility={cls_info['visibility']}; static metadata only; support unverified."
                     cur.execute(
                         "INSERT INTO symbols (product, kind, fqname, name, doc) VALUES (?, ?, ?, ?, ?)",
-                        ("optislang", "class", fqname, cls_name, doc)
+                        (product, "class", fqname, cls_name, doc),
                     )
                     sym_id = cur.lastrowid
                     symbols_map[fqname] = sym_id
@@ -325,12 +394,14 @@ def build_database(force: bool = False) -> dict:
                         m_name = m["name"]
                         sig = m.get("signature", "")
                         m_doc = m.get("doc", "")
-                        sig_hash = hashlib.sha256(f"{source_id}:method:{m_name}:{sig}".encode()).hexdigest()[:16]
+                        sig_hash = hashlib.sha256(
+                            f"{source_id}:method:{fqname + ':' if product.endswith('_rea') or product in {'dpf', 'sound', 'pydyna', 'mechanical_core', 'geometry_core', 'optislang_core', 'workbench', 'workbench_protocol', 'mechanical_protocol', 'geometry_protocol', 'fluent_protocol', 'mapdl_protocol', 'primemesh_protocol', 'discovery_protocol', 'dbu_protocol', 'result_explorer_protocol', 'platform_instance_management_protocol', 'filetransfer_protocol'} else ''}{m_name}:{sig}".encode()
+                        ).hexdigest()[:16]
 
                         if sig_hash not in members_map:
                             cur.execute(
                                 "INSERT INTO members (sig_hash, kind, name, signature, return_type, doc) VALUES (?, ?, ?, ?, ?, ?)",
-                                (sig_hash, "method", m_name, sig, "", m_doc)
+                                (sig_hash, "method", m_name, sig, "", m_doc),
                             )
                             mem_id = cur.lastrowid
                             members_map[sig_hash] = mem_id
@@ -342,6 +413,31 @@ def build_database(force: bool = False) -> dict:
                         member_counts[mem_id] += 1
                         pending_symbol_members.append((sym_id, mem_id, m_name))
 
+                    if product in {"mapdl", "dpf", "primemesh", "sound", "pydyna", "mechanical_core", "geometry_core", "optislang_core", "workbench", "workbench_protocol", "mechanical_protocol", "geometry_protocol", "fluent_protocol", "mapdl_protocol", "primemesh_protocol", "discovery_protocol", "dbu_protocol", "result_explorer_protocol", "platform_instance_management_protocol", "filetransfer_protocol"}:
+                        for prop in cls_info.get("properties", []):
+                            p_name = prop["name"]
+                            p_type = prop.get("type", "")
+                            p_doc = prop.get("doc", "")
+                            sig = f": {p_type}"
+                            sig_hash = hashlib.sha256(
+                                f"{source_id}:property:{fqname + ':' if product in {'dpf', 'sound', 'pydyna', 'mechanical_core', 'geometry_core', 'optislang_core', 'workbench', 'workbench_protocol', 'mechanical_protocol', 'geometry_protocol', 'fluent_protocol', 'mapdl_protocol', 'primemesh_protocol', 'discovery_protocol', 'dbu_protocol', 'result_explorer_protocol', 'platform_instance_management_protocol', 'filetransfer_protocol'} else ''}{p_name}:{sig}:{p_type}".encode()
+                            ).hexdigest()[:16]
+                            if sig_hash not in members_map:
+                                cur.execute(
+                                    "INSERT INTO members (sig_hash, kind, name, signature, return_type, doc) VALUES (?, ?, ?, ?, ?, ?)",
+                                    (sig_hash, "property", p_name, sig, p_type, p_doc),
+                                )
+                                mem_id = cur.lastrowid
+                                members_map[sig_hash] = mem_id
+                                member_counts[mem_id] = 0
+                                stats["unique_members"] += 1
+                            else:
+                                mem_id = members_map[sig_hash]
+                            member_counts[mem_id] += 1
+                            pending_symbol_members.append((sym_id, mem_id, p_name))
+                            if p_type:
+                                pending_edges.append((sym_id, p_type, "prop_type", mem_id))
+
                 for fn in mod_info.get("functions", []):
                     fn_name = fn["name"]
                     fqname = f"{mod_name}.{fn_name}"
@@ -349,7 +445,7 @@ def build_database(force: bool = False) -> dict:
                     doc = fn.get("doc", "")
                     cur.execute(
                         "INSERT INTO symbols (product, kind, fqname, name, doc) VALUES (?, ?, ?, ?, ?)",
-                        ("optislang", "module_function", fqname, fn_name, f"{sig}\n{doc}")
+                        (product, "module_function", fqname, fn_name, f"{sig}\n{doc}"),
                     )
                     sym_id = cur.lastrowid
                     symbols_map[fqname] = sym_id
@@ -365,12 +461,14 @@ def build_database(force: bool = False) -> dict:
                 dyna_data = json.load(f)
 
             # LSPP Python
-            lspp_py = dyna_data.get("components", {}).get("ls_prepost_python", {}).get("modules", {})
+            lspp_py = (
+                dyna_data.get("components", {}).get("ls_prepost_python", {}).get("modules", {})
+            )
             for mod_name, mod_info in lspp_py.items():
                 fqname = f"LsPrePost.{mod_name}"
                 cur.execute(
                     "INSERT INTO symbols (product, kind, fqname, name, doc) VALUES (?, ?, ?, ?, ?)",
-                    ("lsdyna", "class", fqname, mod_name, mod_info.get("description", ""))
+                    ("lsdyna", "class", fqname, mod_name, mod_info.get("description", "")),
                 )
                 sym_id = cur.lastrowid
                 symbols_map[fqname] = sym_id
@@ -381,12 +479,14 @@ def build_database(force: bool = False) -> dict:
                     fn_name = fn["name"]
                     sig = fn.get("signature", "")
                     doc = fn.get("description", "")
-                    sig_hash = hashlib.sha256(f"{source_id}:function:{fn_name}:{sig}".encode()).hexdigest()[:16]
+                    sig_hash = hashlib.sha256(
+                        f"{source_id}:function:{fn_name}:{sig}".encode()
+                    ).hexdigest()[:16]
 
                     if sig_hash not in members_map:
                         cur.execute(
                             "INSERT INTO members (sig_hash, kind, name, signature, return_type, doc) VALUES (?, ?, ?, ?, ?, ?)",
-                            (sig_hash, "method", fn_name, sig, "", doc)
+                            (sig_hash, "method", fn_name, sig, "", doc),
                         )
                         mem_id = cur.lastrowid
                         members_map[sig_hash] = mem_id
@@ -399,7 +499,9 @@ def build_database(force: bool = False) -> dict:
                     pending_symbol_members.append((sym_id, mem_id, fn_name))
 
             # Keywords
-            kw_cats = dyna_data.get("components", {}).get("ls_dyna_keywords", {}).get("categories", {})
+            kw_cats = (
+                dyna_data.get("components", {}).get("ls_dyna_keywords", {}).get("categories", {})
+            )
             for cat_name, cards in kw_cats.items():
                 for card in cards:
                     card_name = card["card"]
@@ -407,7 +509,7 @@ def build_database(force: bool = False) -> dict:
                     fqname = f"LS-DYNA.{cat_name}.{card_name}"
                     cur.execute(
                         "INSERT INTO symbols (product, kind, fqname, name, doc) VALUES (?, ?, ?, ?, ?)",
-                        ("lsdyna", "keyword", fqname, card_name, purpose)
+                        ("lsdyna", "keyword", fqname, card_name, purpose),
                     )
                     sym_id = cur.lastrowid
                     symbols_map[fqname] = sym_id
@@ -416,7 +518,13 @@ def build_database(force: bool = False) -> dict:
 
         cur.execute(
             "UPDATE symbols SET release = ?, interface = ?, source_id = ? WHERE id > ? AND product = ?",
-            (source_info["release"], source_info["interface"], source_id, before_symbol_id, product),
+            (
+                source_info["release"],
+                source_info["interface"],
+                source_id,
+                before_symbol_id,
+                product,
+            ),
         )
 
     # -------------------------------------------------------------
@@ -430,9 +538,9 @@ def build_database(force: bool = False) -> dict:
 
     cur.executemany(
         "INSERT OR IGNORE INTO symbol_members (symbol_id, member_id, is_inherited) VALUES (?, ?, ?)",
-        sm_rows
+        sm_rows,
     )
-    stats["symbol_members"] = len(sm_rows)
+    stats["symbol_members"] = cur.execute("SELECT COUNT(*) FROM symbol_members").fetchone()[0]
 
     # -------------------------------------------------------------
     # 6. 推導並批次寫入型別導航邊 (Edges)
@@ -445,10 +553,12 @@ def build_database(force: bool = False) -> dict:
                 "SELECT source_id FROM symbols WHERE id = ?", (src_sym_id,)
             ).fetchone()[0]
             dst_sym_ids = [
-                dst_id for dst_id in name_to_symbol_ids[target_name]
-                if cur.execute(
-                    "SELECT source_id FROM symbols WHERE id = ?", (dst_id,)
-                ).fetchone()[0] == src_source_id
+                dst_id
+                for dst_id in name_to_symbol_ids[target_name]
+                if cur.execute("SELECT source_id FROM symbols WHERE id = ?", (dst_id,)).fetchone()[
+                    0
+                ]
+                == src_source_id
             ]
             for dst_id in dst_sym_ids:
                 if dst_id != src_sym_id:
@@ -456,7 +566,7 @@ def build_database(force: bool = False) -> dict:
 
     cur.executemany(
         "INSERT INTO edges (src_symbol_id, dst_symbol_id, rel, via_member_id) VALUES (?, ?, ?, ?)",
-        edge_rows
+        edge_rows,
     )
     stats["edges"] = len(edge_rows)
 
@@ -464,9 +574,7 @@ def build_database(force: bool = False) -> dict:
     # 7. 構建 FTS5 全文檢索索引 (search_fts)
     # -------------------------------------------------------------
     # A. 索引所有 Symbols
-    cur.execute(
-        "SELECT id, product, fqname, name, doc, release, interface, source_id FROM symbols"
-    )
+    cur.execute("SELECT id, product, fqname, name, doc, release, interface, source_id FROM symbols")
     sym_rows = cur.fetchall()
     fts_sym_data = []
     for s_id, prod, fq, nm, dc, release, interface, source_id in sym_rows:
@@ -479,7 +587,7 @@ def build_database(force: bool = False) -> dict:
         "INSERT INTO search_fts "
         "(item_type, ref_id, product, fqname, name, name_split, signature, doc, release, interface, source_id) "
         "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-        fts_sym_data
+        fts_sym_data,
     )
 
     # B. 索引重要 Members (過濾掉純繼承的雜訊)
@@ -497,14 +605,26 @@ def build_database(force: bool = False) -> dict:
     for m_id, prod, fq, nm, sig, dc, release, interface, source_id in mem_rows:
         nm_split = split_camel_case(nm)
         fts_mem_data.append(
-            ("member", m_id, prod, fq, nm, nm_split, sig or "", dc or "", release, interface, source_id)
+            (
+                "member",
+                m_id,
+                prod,
+                fq,
+                nm,
+                nm_split,
+                sig or "",
+                dc or "",
+                release,
+                interface,
+                source_id,
+            )
         )
 
     cur.executemany(
         "INSERT INTO search_fts "
         "(item_type, ref_id, product, fqname, name, name_split, signature, doc, release, interface, source_id) "
         "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-        fts_mem_data
+        fts_mem_data,
     )
 
     stats["fts_entries"] = len(fts_sym_data) + len(fts_mem_data)
@@ -515,7 +635,9 @@ def build_database(force: bool = False) -> dict:
     if not source_records or stats["symbols"] == 0 or stats["fts_entries"] == 0:
         conn.close()
         temp_path.unlink(missing_ok=True)
-        raise RuntimeError("API KB promote blocked: no valid source snapshot or indexed symbols/FTS entries")
+        raise RuntimeError(
+            "API KB promote blocked: no valid source snapshot or indexed symbols/FTS entries"
+        )
     if integrity != "ok" or fk_errors:
         conn.close()
         temp_path.unlink(missing_ok=True)
@@ -525,11 +647,8 @@ def build_database(force: bool = False) -> dict:
     conn.close()
     os.replace(temp_path, cfg.DB_PATH)
 
-    return {
-        "status": "success",
-        "path": str(cfg.DB_PATH),
-        "statistics": stats
-    }
+    return {"status": "success", "path": str(cfg.DB_PATH), "statistics": stats}
+
 
 if __name__ == "__main__":
     res = build_database(force=True)

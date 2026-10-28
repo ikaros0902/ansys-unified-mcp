@@ -21,8 +21,15 @@ CREATE TABLE IF NOT EXISTS api_sources (
     source_path TEXT NOT NULL,
     sdk_version TEXT NOT NULL DEFAULT '',
     sha256 TEXT NOT NULL,
+    artifact_sha256 TEXT NOT NULL DEFAULT '',
+    rea_evidence_id TEXT NOT NULL DEFAULT '',
     ingested_at TEXT NOT NULL,
     UNIQUE(product, release, interface, source_path)
+);
+
+CREATE TABLE IF NOT EXISTS api_kb_meta (
+    key TEXT PRIMARY KEY,
+    value TEXT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS members (
