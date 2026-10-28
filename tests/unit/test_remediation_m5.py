@@ -17,10 +17,10 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 
 # 加入相關模組路徑
 _skills_dir = (REPO_ROOT / "agents" / "skills") if (REPO_ROOT / "agents" / "skills").is_dir() else ((REPO_ROOT / "skills") if (REPO_ROOT / "skills").is_dir() else (REPO_ROOT / "SKILLs"))
-sys.path.insert(0, str(_skills_dir / "ansys-fluent" / "scripts"))
-sys.path.insert(0, str(_skills_dir / "ansys-lsdyna" / "scripts"))
-sys.path.insert(0, str(_skills_dir / "ansys-optislang" / "scripts"))
-sys.path.insert(0, str(_skills_dir / "ansys-mechanical" / "scripts"))
+sys.path.insert(0, str(_skills_dir / "fluids-cfd" / "ansys-fluent" / "scripts"))
+sys.path.insert(0, str(_skills_dir / "structural-mechanics" / "ansys-lsdyna" / "scripts"))
+sys.path.insert(0, str(_skills_dir / "systems-coupling" / "ansys-optislang" / "scripts"))
+sys.path.insert(0, str(_skills_dir / "structural-mechanics" / "ansys-mechanical" / "scripts"))
 
 import check_fluent_mesh
 import run_drop_test_demo
@@ -127,7 +127,7 @@ class TestRemediationM5(unittest.TestCase):
 
     def test_action_item_5_shock_prevention_sop(self):
         """Action Item 5: 手冊增補升階數值激波防禦 SOP"""
-        diag_file = _skills_dir / "ansys-fluent" / "references" / "fluent_diagnostics.md"
+        diag_file = _skills_dir / "fluids-cfd" / "ansys-fluent" / "references" / "fluent_diagnostics.md"
         self.assertTrue(diag_file.exists())
         with open(diag_file, "r", encoding="utf-8") as f:
             content = f.read()

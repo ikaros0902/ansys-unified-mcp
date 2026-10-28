@@ -7,7 +7,7 @@ from pathlib import Path
 import json
 import pytest
 
-from evaluations.run_mcp_evaluation import (
+from tests.evaluations.run_mcp_evaluation import (
     load_evaluation_xml,
     compare_scalar,
     run_evaluation,
@@ -16,11 +16,11 @@ from evaluations.run_mcp_evaluation import (
 )
 
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent
-EVAL_XML = REPO_ROOT / "evaluations" / "ansys_mcp_eval.xml"
+EVAL_XML = REPO_ROOT / "tests" / "evaluations" / "ansys_mcp_eval.xml"
 
 
 def test_eval_xml_exists_and_parses():
-    """驗證 evaluations/ansys_mcp_eval.xml 檔案存在且可成功解析"""
+    """驗證 tests/evaluations/ansys_mcp_eval.xml 檔案存在且可成功解析"""
     assert EVAL_XML.exists(), f"找不到評估 XML 檔: {EVAL_XML}"
     suite_name, items = load_evaluation_xml(EVAL_XML)
     assert suite_name == "ansys_mcp_eval"

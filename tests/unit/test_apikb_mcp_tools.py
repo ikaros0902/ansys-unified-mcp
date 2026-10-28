@@ -4,6 +4,7 @@ API 知識庫 MCP 工具層調用測試
 import pytest
 pytest.importorskip("fastmcp", reason="FastMCP requires Python >= 3.10 environment")
 
+from ansys_unified_mcp.tools import apikb_tools
 from ansys_unified_mcp.tools.apikb_tools import (
     api_search,
     api_get,
@@ -27,6 +28,39 @@ def test_api_get_tool():
     assert res["ok"] is True
     assert res["found"] is True
     assert "symbol" in res
+
+
+def test_api_get_tool_selects_optislang_core_snapshot():
+    res = api_get(
+        "ansys.optislang.core.optislang.Optislang",
+        include="members",
+        product="optislang_core",
+        interface="PyOptiSLang 1.6.0 Optislang client",
+    )
+
+    assert res["ok"] is True
+    assert res["found"] is True
+    assert res["symbol"]["product"] == "optislang_core"
+    assert res["symbol"]["source"]["sdk_version"] == "1.6.0"
+
+
+def test_api_get_tool_reports_ambiguous_source_candidates(monkeypatch):
+    candidates = [
+        {"product": "optislang", "release": "unknown", "interface": "PyOptiSLang and scripting API"},
+        {"product": "optislang_core", "release": "unknown", "interface": "PyOptiSLang 1.6.0 Optislang client"},
+    ]
+    monkeypatch.setattr(
+        apikb_tools.kb_query,
+        "get",
+        lambda **kwargs: {"ambiguous": True, "candidates": candidates},
+    )
+
+    res = api_get("ansys.optislang.core.optislang.Optislang")
+
+    assert res["ok"] is False
+    assert res["found"] is False
+    assert res["ambiguous"] is True
+    assert res["candidates"] == candidates
 
 
 def test_api_path_tool():
