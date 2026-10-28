@@ -7,19 +7,19 @@
 - 實作者與必要的獨立 reviewer 分開；小任務直接完成。容量不足時分批，不以自審充當必要獨立驗收。
 - 重用既有技能及工具，不安裝重複工作模式；不得自行發訊息、建立排程或求解。
 
-按任務讀取，不全量載入：
+依任務查閱以下現有文件，不必全量載入：
 
 | 情境 | 來源 |
 | --- | --- |
-| 行為、安全、語言 | [行為](rules/00-behavior.md)、[安全](rules/01-safety.md) |
-| 複雜工作、驗收、失敗自愈 | [工程驗證](rules/10-loop-engineering.md)、[證據工作流](rules/12-evidence-workflows.md) |
-| 選技能、規格／票、長任務 | [技能路由](rules/60-workflow-routing.md) |
-| MCP／hooks／工具與載入差異 | [執行環境](rules/15-runtime-tools.md) |
-| 子代理與模型 | [調度](rules/40-workflow-model-tiers.md)、agents/*.toml |
-| 重大架構分歧 | [按需探索](rules/20-adhd.md) |
-| 技能更新、寫作、Kiro | [技能演化](rules/11-skill-evolution.md)、[寫作](rules/30-writing-style.md)、[Kiro](rules/50-kiro-cli-dispatch.md) |
+| 行為、安全、語言 | 本檔及[公開發佈檢查](docs/maintenance/PUBLICATION_REVIEW.md) |
+| 複雜工作、階段與驗收 | [專案重構計畫](docs/planning/FOLDER_TREE_REORGANIZATION_PLAN.md) |
+| 技能分類與發現 | [技能庫索引](agents/skills/README.md) |
+| MCP、部署與工具範圍 | [部署手冊](docs/deployment/DEPLOYMENT_SOP.md)、[工具範圍設定](docs/deployment/MCP_TOOL_SCOPING_GUIDE.md) |
+| 程式架構與來源圖 | [架構導覽](docs/architecture/ARCHITECTURE.md)、[PyAnsys Source Intelligence](docs/architecture/PYANSYS_SOURCE_INTELLIGENCE.md) |
+| Remote Worker 與 Debug Loop | [安全設計](docs/architecture/REMOTE_WORKER_AND_DEBUG_SAFETY.md) |
+| 跨代理交接 | [Agent Handoff 範本](docs/maintenance/AGENT_HANDOFF_TEMPLATE.md) |
 
-rules 是按需文件；連結本身不代表全部常駐。skills/ 是技能資源，agents/*.toml 才是原生角色設定。MCP 以當次工具與唯讀探測為準，設定存在不等於已連通。
+skills/ 是技能資源。MCP 以當次工具與唯讀探測為準，設定存在不等於已連通。
 
 <!-- CODEGRAPH_START -->
 ## CodeGraph

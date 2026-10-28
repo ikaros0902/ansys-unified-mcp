@@ -2,7 +2,7 @@
 
 ## 目前 checkpoint（2026-10-29）
 
-- 目前 Git tree 的正式資料夾只有 `agents/`、`docs/`、`scripts/`、`src/`、`tests/`；根層另有啟動器與專案設定檔。五個 v251 REA 候選的 APIKB 接線與字典更新已提交於 `4a147cf`。ANSYS_Document HTML/PDF Markdown 與轉換清單在被忽略的本機目錄；追蹤檔工作樹目前沒有未提交變更。本段不代表搬移或 API 行為驗收通過。此分支含有衍生資料，不可直接推送。HEAD 與工作樹狀態以即時 Git 記錄為準，本計畫不固定 HEAD 欄位。
+- 目前 Git tree 的正式資料夾只有 `agents/`、`docs/`、`scripts/`、`src/`、`tests/`；根層另有啟動器與專案設定檔。Stage 2 的五個 v251 REA 候選批次及 Stage 1/3 的 PyAnsys 來源盤點已提交於本機分支。Stage 4–6 有安全設計文件與交接範本；這些文件不代表遠端 worker、debug loop 或跨機傳輸已實作。ANSYS_Document HTML/PDF Markdown 與轉換清單留在被忽略的本機目錄。此分支含有衍生資料，不可直接推送。HEAD 與工作樹狀態以即時 Git 記錄為準，本計畫不固定 HEAD 欄位。
 - 目前 APIKB 來源口徑為 113 keys：25 份 API／SDK／protocol snapshots（21 份映射至 12 個產品 ID，4 份未映射）、55 份 REA managed snapshots、33 份 native export snapshots。主候選清冊有 47 份檢查結果，其中 42 份 metadata complete、5 份 absent；APIKB 快照包含這 42 份及 13 個另行分析候選（ACP、AQWA RemoteItf、Motion、SIwave、RSM JobManagement、Engineering Data Core/DataProvider、DesignModeler Core、Material Designer Core、TurboSystem AFDCore/CCDCore/CPDCore/RTDCore）。
 - 57 個產品 coverage 狀態為 12 個有直接 snapshot、19 個只有產品組件證據、25 個尚未評估、1 個未映射共用介面。這些計數描述目前清冊，不表示完整 API 覆蓋。
 - REA 候選母體仍需重算：`REA_EVIDENCE.md` 記錄 1,172 個檔名候選，而目前 managed assembly inventory 有 14,421 筆組件資料；依 `Ans.*`／`Ansys.*` 名稱規則的另一輪唯讀盤點得到 1,288 筆。篩選條件與去重口徑未對齊，不合併成單一總數。下一批先依 `relative_path` 和產品目錄篩選並保留檔案 hash，再分產品映射或列為未映射。後續候選盤點包括 ROM `Ans.Rom.dll`／`Ans.Rom.Interop.dll`、ACT add-in 組件與其他尚未映射產品目錄；尚未確認來源存在性或授權前不分析。
@@ -20,17 +20,17 @@
 | **Stage 1 — Minimum Toolchain** | 建立並記錄 Git 分支/階段提交、MCP 工具連線狀態、Serena、CodeGraph/codebase-memory、文件與 APIKB/RAG 的知識格式及來源追溯欄位。 | 僅記錄當次可觀察的連線與工具能力；設定檔存在不當作服務已連通。此階段不要求跑測試。 | 部分完成；Serena、CodeGraph 與 codebase-memory 工具在本次工作中有回應。CodeGraph 已於 2026-10-29 全量重建（469 files、7,633 nodes、17,271 edges）。codebase-memory 索引停留於 2026-10-21、watch 關閉，且目前未提供重建工具；不以舊圖宣稱新鮮。MCP 服務端求解器連線未測。 |
 | **Stage 2 — ANSYS 2025 R1 API Inventory** | 以 Mechanical、ACT、MAPDL、LS-DYNA 為優先建立版本化 API 來源矩陣、公開文件與 SDK 字典、REA 靜態候選索引、缺口列表及可追溯 AI RAG；整理 ANSYS_Document 全部內容，按產品/主題/章節編目，將 PDF 與 HTML 轉成 Markdown，原件保留。 | 來源要記錄版本、相對路徑、雜湊、公開狀態與分析狀態；疑似受授權限制的原件與衍生 Markdown 均本機保存。沒有來源時標缺口，不推定 API 完整。 | 進行中；APIKB 有 25 個 API/SDK/protocol、55 個 REA、33 個 native source keys。ANSYS_Document 已按產品目錄編目；424,158 個 HTML 中 400,904 個沿用既有 Markdown、23,253 個新增轉換、1 個無法擷取正文；269 個 PDF 中 268 個有 Markdown、1 個掃描型 PDF 未 OCR。轉換清單與原件保留在被忽略的本機 `ANSYS_Document/_catalog/`。API 來源逐產品核對與代表性 RAG 查詢未完成。 |
 | **Stage 3 — PyAnsys Source Intelligence** | 對 PyAnsys repos 建立套件/模組/符號/相依圖、上游來源與版本對照，並以 CodeGraph、Serena、codebase-memory 等交叉記錄查詢方式和覆蓋範圍。 | 以目前 checkout 的來源和 lock/package metadata 為準；索引只供導覽，不替代原始程式碼。 | 部分完成；本 repo CodeGraph 已重建。本機 `.venv` 有 49 個 `ansys-*`/`pyaedt` distributions，25 個產品 SDK 套件名中 15 個已安裝，已記錄 142 條套件相依邊；10 個版本化 SDK 字典已存在。未確認上游 PyAnsys 原始碼 checkout，跨 repo 模組/符號圖仍缺。詳見 [PyAnsys Source Intelligence](../architecture/PYANSYS_SOURCE_INTELLIGENCE.md)。 |
-| **Stage 4 — Distributed Test Environment** | 設計 Remote ANSYS Worker 的隔離、授權、版本固定、工作目錄/輸入輸出界線、逾時/取消、日誌與證據回傳流程。 | 本階段只寫威脅/資料流與安全設計；未取得遠端主機、Ansys 授權與使用者明確執行許可前，不連線、不執行 ANSYS、不建立 worker。 | 未完成；可先做設計，runtime 與測試延後。 |
-| **Stage 5 — Autonomous Debug Loop** | 定義受限制的診斷→最小修復→diff 審查→回歸測試→Evidence 更新流程，含可寫入路徑、命令 allowlist、停止條件與人工接手點。 | 不允許無界命令/檔案寫入、求解或自動提交；尚未完成授權與隔離前，只能文件化流程，不啟動自動除錯或測試。 | 未完成；需等 Stage 4 安全邊界成形。 |
-| **Stage 6 — Cross-Agent Handoff** | 定義並記錄跨代理、跨電腦與不同模型可接續的任務包格式，保存來源、hash、版本、決策、未完成項與可重建命令。 | 先用不含 ANSYS 衍生材料的樣例驗證交接格式；跨機/跨模型傳輸須先確認資料可分享與接收端權限。 | 未完成；目前有階段計畫與本機 checkpoint，未做跨機 handoff。 |
+| **Stage 4 — Distributed Test Environment** | 設計 Remote ANSYS Worker 的隔離、授權、版本固定、工作目錄/輸入輸出界線、逾時/取消、日誌與證據回傳流程。 | 本階段只寫威脅/資料流與安全設計；未取得遠端主機、Ansys 授權與使用者明確執行許可前，不連線、不執行 ANSYS、不建立 worker。 | 設計文件完成；現有 VenvSupervisor 是本機 IPC，Workbench mTLS 是服務 client，兩者都不是通用 Remote Worker。未建置或連線。 |
+| **Stage 5 — Autonomous Debug Loop** | 定義受限制的診斷→最小修復→diff 審查→回歸測試→Evidence 更新流程，含可寫入路徑、命令 allowlist、停止條件與人工接手點。 | 不允許無界命令/檔案寫入、求解或自動提交；尚未完成授權與隔離前，只能文件化流程，不啟動自動除錯或測試。 | 設計文件完成；定義人工批准、隔離修改、有限重試、停止條件與證據限制。未啟動自動修復或回歸測試。 |
+| **Stage 6 — Cross-Agent Handoff** | 定義並記錄跨代理、跨電腦與不同模型可接續的任務包格式，保存來源、hash、版本、決策、未完成項與可重建命令。 | 先用不含 ANSYS 衍生材料的樣例驗證交接格式；跨機/跨模型傳輸須先確認資料可分享與接收端權限。 | 範本及不含 ANSYS 內容的虛構範例已建立；未執行跨機/跨模型傳輸，外部分享仍需資料授權。詳見 [Agent Handoff Template](../maintenance/AGENT_HANDOFF_TEMPLATE.md)。 |
 | **Stage 7 — Authorized REA Research** | 僅對明確授權的目標，以 REA 做靜態 metadata/PE 分析；另將需宿主、除錯器或 runtime 的研究列為獨立授權工作。 | 每個目標都需可證明的使用權與研究授權；不載入/執行目標程式、不做 runtime research，除非取得相應授權。公開權未明時所有結果只留本機。 | 部分完成：使用者授權本機 v251 靜態 REA 盤點；目前 55 份 REA snapshots。此授權不代表公開散布權或 ANSYS runtime 許可。 |
-| **Stage 8 — Ecosystem Expansion** | 依來源可得性擴展到其他 ANSYS 產品與 PyAnsys 套件；每批新增版本化來源、字典、映射與明確缺口。 | 按產品與版本分批；只有取得的來源才納入，不用相似名稱推定產品歸屬或 API 支援。 | 持續進行；候選與尚未分析產品列在 API coverage/REA evidence，尚未達全產品覆蓋。 |
+| **Stage 8 — Ecosystem Expansion** | 依來源可得性擴展到其他 ANSYS 產品與 PyAnsys 套件；每批新增版本化來源、字典、映射與明確缺口。 | 按產品與版本分批；只有取得的來源才納入，不用相似名稱推定產品歸屬或 API 支援。 | 持續進行；候選與尚未分析產品列在 API coverage/REA evidence，尚未達全產品覆蓋。下一個建議切片為已安裝的 `ansys-sherlock-core 2.1.4`，目前沒有 SDK member snapshot；來源、版本與擷取方式仍待確認。 |
 
 ### 階段執行順序與提交界線
 
 - Stage 0 與 Stage 1 的文件盤點可並行；Stage 2 的目錄整理、官方文件分類、API/RAG 擴充可並行處理。
 - 每個可獨立審閱的階段以本機 Git commit 保存；使用者已授權階段 commit。此工作分支含 ANSYS 衍生 API/REA/SDK 資料，不可直接 push；公開散布權未確認前不建立含該等資料的遠端分支或 PR。
-- Stage 4–6 目前只做安全設計與交接格式，不啟動 Remote Worker、ANSYS、Debug loop、跨機傳輸或測試。
+- Stage 4–6 已完成文件設計與 handoff 範本；不啟動 Remote Worker、ANSYS、Debug loop、跨機傳輸或測試，直到另外取得明確授權。
 - tests/ 保留能檢查套件入口、技能發現、資源路徑與資料保護的實際測試；依使用者要求暫不執行，也不以測試數量作目標。若項目只重複低價值快照或沒有穩定行為斷言，再於後續審查中判斷是否保留。
 - ANSYS_Document 轉換按來源相對路徑/產品/主題編章，PDF/HTML 輸出 .md 與來源清單；原件不刪除。轉換內容是否可公開尚未核定，因此產物留本機並排除於 GitHub 發布。
 

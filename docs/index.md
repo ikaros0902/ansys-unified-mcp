@@ -7,6 +7,7 @@
 - [現況分層與程式慣例](architecture/ARCHITECTURE.md)
 - [架構與規格評估白皮書](architecture/ANSYS_UNIFIED_MCP_ARCHITECTURE_AND_SPECIFICATION_REPORT.md)
 - [PyAnsys Source Intelligence](architecture/PYANSYS_SOURCE_INTELLIGENCE.md)：記錄本機 SDK 套件、來源圖範圍與缺口。
+- [Remote Worker 與 Debug 安全邊界](architecture/REMOTE_WORKER_AND_DEBUG_SAFETY.md)：Stage 4/5 設計文件，尚未啟動遠端執行。
 - [技能知識匯入計畫](planning/skills_knowledge_ingestion_plan.md)：計畫不代表已實作。
 - ANSYS API 字典、REA 組件證據及本機 RAG 資料目前保存在被 Git 忽略的 `docs/api_inventory/`；公開散布權尚未確認，因此本索引不連結這些本機檔案。
 
@@ -37,6 +38,7 @@
 - [Session 經驗與排障](maintenance/session_learnings_and_troubleshooting.md)
 - [ANSYS 來源盤點](maintenance/ANSYS_SOURCE_INVENTORY.md)
 - [外部來源採用記錄](maintenance/EXTERNAL_SOURCE_ADOPTION.md)
+- [Agent handoff 範本](maintenance/AGENT_HANDOFF_TEMPLATE.md)：不含 ANSYS 衍生內容的可重用任務交接格式。
 - [領域來源與能力邊界](skills/DOMAIN_SOURCE_AND_SUPPORT.md)
 - 本機 ANSYS 官方文件庫位於 `ANSYS_Document/INDEX.md`；文件原件不納入版本庫。
 - [模組技能庫](../agents/skills/README.md)：技能依 ANSYS 模組分類，並以 `SKILL.md` 作為入口。
