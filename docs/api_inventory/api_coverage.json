@@ -693,11 +693,11 @@
           "snapshot_path": "docs/api_inventory/cfx_api.json",
           "snapshot_version": "unknown",
           "statistics": {
-            "total_modules": 47,
             "total_classes": 93,
+            "total_functions": 60,
             "total_methods": 149,
-            "total_properties": 21,
-            "total_functions": 60
+            "total_modules": 47,
+            "total_properties": 21
           }
         }
       ]
@@ -1839,14 +1839,27 @@
         }
       ],
       "folder": "MotorCAD",
-      "has_direct_snapshot": false,
-      "mapping_status": "not_assessed",
+      "has_direct_snapshot": true,
+      "mapping_status": "direct_product_id",
       "overview_url": "",
       "product": "motorcad",
       "rea_evidence": {},
       "sdk_package": "ansys-motorcad-core",
-      "snapshot_status": "no_direct_snapshot",
-      "snapshots": []
+      "snapshot_status": "direct_snapshot",
+      "snapshots": [
+        {
+          "sha256": "f3373e36534905909b0c100476ce2ea141bd41be0e756e4bb7b24889727e170a",
+          "snapshot_path": "docs/api_inventory/motorcad_api.json",
+          "snapshot_version": "unknown",
+          "statistics": {
+            "total_classes": 26,
+            "total_functions": 17,
+            "total_methods": 72,
+            "total_modules": 29,
+            "total_properties": 63
+          }
+        }
+      ]
     },
     {
       "documentation_coverage": [
@@ -2173,14 +2186,27 @@
         }
       ],
       "folder": "Reaction_Chemkin",
-      "has_direct_snapshot": false,
-      "mapping_status": "not_assessed",
+      "has_direct_snapshot": true,
+      "mapping_status": "direct_product_id",
       "overview_url": "",
       "product": "reaction_chemkin",
       "rea_evidence": {},
-      "sdk_package": null,
-      "snapshot_status": "no_direct_snapshot",
-      "snapshots": []
+      "sdk_package": "ansys-chemkin-core",
+      "snapshot_status": "direct_snapshot",
+      "snapshots": [
+        {
+          "sha256": "b5285b9f306c794b736dac70572bd7f8709435b6c10f247509c2ccad50ab1166",
+          "snapshot_path": "docs/api_inventory/reaction_chemkin_api.json",
+          "snapshot_version": "unknown",
+          "statistics": {
+            "total_classes": 56,
+            "total_functions": 60,
+            "total_methods": 505,
+            "total_modules": 30,
+            "total_properties": 173
+          }
+        }
+      ]
     },
     {
       "documentation_coverage": [
@@ -2341,16 +2367,16 @@
       "snapshot_status": "direct_snapshot",
       "snapshots": [
         {
-          "statistics": {
-            "total_modules": 8,
-            "total_classes": 11,
-            "total_methods": 5,
-            "total_properties": 1,
-            "total_functions": 16
-          },
           "sha256": "649e3fe2463c4975067c726ae26076b2a42f4fb5a5207fbcca454eb5ef27e343",
+          "snapshot_path": "docs/api_inventory/rocky_api.json",
           "snapshot_version": "unknown",
-          "snapshot_path": "docs/api_inventory/rocky_api.json"
+          "statistics": {
+            "total_classes": 11,
+            "total_functions": 16,
+            "total_methods": 5,
+            "total_modules": 8,
+            "total_properties": 1
+          }
         }
       ]
     },
@@ -2579,16 +2605,16 @@
       "snapshot_status": "direct_snapshot",
       "snapshots": [
         {
-          "statistics": {
-            "total_modules": 25,
-            "total_classes": 208,
-            "total_methods": 241,
-            "total_properties": 0,
-            "total_functions": 19
-          },
           "sha256": "f41fa8dbc23296253ae0080347aa769b9aa8067ab10fdc804ade13236e1122c3",
+          "snapshot_path": "docs/api_inventory/sherlock_core_api.json",
           "snapshot_version": "unknown",
-          "snapshot_path": "docs/api_inventory/sherlock_core_api.json"
+          "statistics": {
+            "total_classes": 208,
+            "total_functions": 19,
+            "total_methods": 241,
+            "total_modules": 25,
+            "total_properties": 0
+          }
         }
       ]
     },
@@ -2933,11 +2959,11 @@
           "snapshot_path": "docs/api_inventory/speos_api.json",
           "snapshot_version": "unknown",
           "statistics": {
-            "total_modules": 48,
             "total_classes": 197,
+            "total_functions": 29,
             "total_methods": 417,
-            "total_properties": 246,
-            "total_functions": 29
+            "total_modules": 48,
+            "total_properties": 246
           }
         },
         {
@@ -2945,11 +2971,11 @@
           "snapshot_path": "docs/api_inventory/speos_protocol_api.json",
           "snapshot_version": "unknown",
           "statistics": {
-            "total_modules": 33,
             "total_classes": 372,
+            "total_functions": 0,
             "total_methods": 163,
-            "total_properties": 697,
-            "total_functions": 0
+            "total_modules": 33,
+            "total_properties": 697
           }
         }
       ]
@@ -3024,8 +3050,8 @@
         }
       ],
       "folder": "System_Coupling",
-      "has_direct_snapshot": false,
-      "mapping_status": "product_component_evidence_only",
+      "has_direct_snapshot": true,
+      "mapping_status": "direct_product_id",
       "overview_url": "https://developer.synopsys.com/docs/system-coupling.md",
       "product": "system_coupling",
       "rea_evidence": {
@@ -3034,8 +3060,26 @@
         "version": "v251"
       },
       "sdk_package": "ansys-systemcoupling-core",
-      "snapshot_status": "no_direct_snapshot",
-      "snapshots": []
+      "snapshot_status": "direct_snapshot",
+      "snapshots": [
+        {
+          "rea_evidence": {
+            "component": "SysC.AnsRpc.Wrapper.dll; SysC.SystemCouplingParticipant.dll (native PE exports)",
+            "path": "docs/api_inventory/REA_EVIDENCE.md",
+            "version": "v251"
+          },
+          "sha256": "e9664ab5df5e9b5a0e66f1c9aac7308c642024f247a2e93f306d81802c743d83",
+          "snapshot_path": "docs/api_inventory/system_coupling_api.json",
+          "snapshot_version": "v251",
+          "statistics": {
+            "total_classes": 108,
+            "total_functions": 0,
+            "total_methods": 0,
+            "total_modules": 111,
+            "total_properties": 263
+          }
+        }
+      ]
     },
     {
       "documentation_coverage": [
@@ -3327,6 +3371,8 @@
       "optislang_core": "optislang",
       "primemesh_protocol": "primemesh",
       "pydyna": "lsdyna",
+      "sherlock_core": "sherlock",
+      "speos_protocol": "speos",
       "workbench_protocol": "workbench"
     },
     "unmapped_shared_interfaces": [

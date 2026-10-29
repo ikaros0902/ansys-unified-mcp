@@ -130,7 +130,7 @@ REA_EVIDENCE = {
 }
 API_SUFFIX = "_api.json"
 # PyDyna is a distinct SDK under the manifest's existing LS-DYNA product ID.
-SNAPSHOT_PRODUCT_ALIASES = {"pydyna": "lsdyna", "mechanical_core": "mechanical", "geometry_core": "geometry", "optislang_core": "optislang", "workbench_protocol": "workbench", "mechanical_protocol": "mechanical", "geometry_protocol": "geometry", "fluent_protocol": "fluent", "mapdl_protocol": "mapdl", "primemesh_protocol": "primemesh", "discovery_protocol": "discovery", "speos_protocol": "speos"}
+SNAPSHOT_PRODUCT_ALIASES = {"pydyna": "lsdyna", "mechanical_core": "mechanical", "geometry_core": "geometry", "optislang_core": "optislang", "sherlock_core": "sherlock", "workbench_protocol": "workbench", "mechanical_protocol": "mechanical", "geometry_protocol": "geometry", "fluent_protocol": "fluent", "mapdl_protocol": "mapdl", "primemesh_protocol": "primemesh", "discovery_protocol": "discovery", "speos_protocol": "speos"}
 SHARED_INTERFACES = {"ls_prepost"}
 
 
@@ -286,6 +286,12 @@ def build_report() -> dict[str, Any]:
     products = _load_products()
     snapshots = _load_snapshots()
     documentation_coverage = _load_document_coverage()
+    existing_products = {}
+    if OUTPUT_PATH.is_file():
+        _, existing_report = _load_json(OUTPUT_PATH)
+        existing_products = {
+            item["product"]: item for item in existing_report.get("products", [])
+        }
     product_ids = {item["product"] for item in products}
     unmapped_shared = sorted(
         product_id
@@ -298,11 +304,14 @@ def build_report() -> dict[str, Any]:
         product_id = product["product"]
         product_snapshots = snapshots.get(product_id, [])
         has_snapshot = bool(product_snapshots)
+        rea_evidence = REA_EVIDENCE.get(product_id)
+        if rea_evidence is None:
+            rea_evidence = existing_products.get(product_id, {}).get("rea_evidence", {})
         mapping_status = (
             "direct_product_id"
             if has_snapshot
             else "product_component_evidence_only"
-            if product_id in REA_EVIDENCE
+            if rea_evidence
             else "unmapped_shared_interface"
             if product_id in SHARED_INTERFACES
             else "not_assessed"
@@ -315,7 +324,7 @@ def build_report() -> dict[str, Any]:
                 "mapping_status": mapping_status,
                 "snapshots": product_snapshots,
                 "documentation_coverage": documentation_coverage.get(product_id, []),
-                "rea_evidence": REA_EVIDENCE.get(product_id, {}),
+                "rea_evidence": rea_evidence,
             }
         )
 

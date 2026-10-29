@@ -59,6 +59,45 @@ SDK_TARGETS = {
             "%AWP_ROOT251%",
         ),
     },
+    "system_coupling": {
+        "package": "ansys-systemcoupling-core",
+        "version": "0.13.0",
+        "product_version": "v251",
+        "package_root": Path("ansys/systemcoupling/core/adaptor/api_25_1"),
+        "module_root": "ansys.systemcoupling.core.adaptor.api_25_1",
+        "interface": "PyAnsys System Coupling SDK 0.13.0 adaptor api_25_1",
+        "include_distribution_metadata": True,
+        "scope_note": (
+            "This snapshot covers only the api_25_1 namespace. The namespace identifies a "
+            "2025 R1-targeted API surface, but it does not establish host compatibility or "
+            "runtime behavior."
+        ),
+    },
+    "reaction_chemkin": {
+        "package": "ansys-chemkin-core",
+        "version": "0.2.0",
+        "package_root": Path("ansys/chemkin/core"),
+        "module_root": "ansys.chemkin.core",
+        "interface": "PyChemkin SDK 0.2.0 direct AST declarations",
+        "include_distribution_metadata": True,
+        "scope_note": (
+            "The installed SDK version is 0.2.0. The source does not establish an ANSYS "
+            "product release, host compatibility, official API support, or runtime behavior."
+        ),
+    },
+    "motorcad": {
+        "package": "ansys-motorcad-core",
+        "version": "0.8.8",
+        "package_root": Path("ansys/motorcad/core"),
+        "module_root": "ansys.motorcad.core",
+        "interface": "PyMotorCAD SDK 0.8.8 direct AST declarations",
+        "include_distribution_metadata": True,
+        "scope_note": (
+            "This snapshot covers the installed Python client source. The ANSYS product "
+            "release is unknown; package version 0.8.8 does not establish product compatibility "
+            "or host runtime behavior."
+        ),
+    },
 }
 
 
@@ -225,7 +264,7 @@ def extract_python_sdk_api(target: str) -> dict[str, Any]:
     output_path = REPO_ROOT / "docs" / "api_inventory" / f"{target}_api.json"
     snapshot = {
         "module": module_root,
-        "version": "unknown",
+        "version": config.get("product_version", "unknown"),
         "sdk_package": package,
         "sdk_version": version,
         "interface": config["interface"],
@@ -276,6 +315,18 @@ def extract_cfx_api() -> dict[str, Any]:
 
 def extract_speos_api() -> dict[str, Any]:
     return extract_python_sdk_api("speos")
+
+
+def extract_system_coupling_api() -> dict[str, Any]:
+    return extract_python_sdk_api("system_coupling")
+
+
+def extract_reaction_chemkin_api() -> dict[str, Any]:
+    return extract_python_sdk_api("reaction_chemkin")
+
+
+def extract_motorcad_api() -> dict[str, Any]:
+    return extract_python_sdk_api("motorcad")
 
 
 if __name__ == "__main__":

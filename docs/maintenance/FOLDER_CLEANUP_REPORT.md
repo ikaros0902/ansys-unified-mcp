@@ -20,7 +20,7 @@
 - 覆蓋表有 128 個已觀察的產品／版本列；狀態仍以 `partial` 為主，不把入口或未驗證版本宣稱完整。
 - 來源清冊目前記錄 2,206 筆下載成功、34 筆受頁數上限限制、28 筆失敗、2 筆受登入／權限限制。失敗及受阻原因保留在 `ANSYS_Document/_catalog/downloads.json`。
 - ACT 官方參考包已按 2025 R1 (`v251`)、2025 R2 (`v252`) 與 2026 R1 (`v261`) 分版保存。三版 coverage 均為 partial；v251/v252 尚缺 guide 與可離線教程輸入，v261 尚缺可離線教程輸入。SpaceClaim、CFX、MAPDL 的 v251/v261 也只有部分官方手冊／參考內容，依 coverage 表列出缺口。
-- PDF 清冊目前有 268 份成功抽取、1 份失敗。唯一失敗是 Speos 的 RAL 色票 PDF 沒有可抽取正文；未執行 OCR。
+- PDF 清冊目前有 268 份成功抽取、1 份失敗。唯一失敗是 `Speos/unknown/manuals/RAL DESIGN StandardRGB (RGB).pdf`（1 頁掃描件，12,329,990 bytes，清冊 ID `ansys_c0335fbc1d4d28c0748604f1`，SHA-256 `f9e445f8e361358886b15546c8cb2ffdd3d72ba9840508d598100985d4dc9429`），沒有可抽取文字。現有環境沒有 OCR 引擎；未安裝或執行 OCR，原件保留。
 - 為避免把 28–29 MB 的 ACT `Mechanical/index.html` 目錄頁誤當文件正文，保留三個原件並標為附件；一般 API 類別頁（包含 122–147 KB 的 DataModelObject、ANSYSAnalysisSettings、IFolderDataModelObject）仍納入正文索引。
 - SpaceClaim `Developers Guide_V271.pdf` 封面實際標示 API V23 Beta（2021），不是可證實的 2027 R1；已移到 `unknown` 版本語義並與六個完全相同副本去重。
 

@@ -17,6 +17,9 @@
 - Query the Sherlock SDK snapshot with `api_search(query="<member name>", product="sherlock_core")`; its package version is 2.1.4, while the ANSYS product release and host behavior remain unverified.
 - Query the Rocky SDK snapshot with `api_search(query="<member name>", product="rocky")`; its package version is 0.6.2, while the ANSYS product release and host behavior remain unverified.
 - Query the PyAnsys Speos SDK snapshot with `api_search(query="<member name>", product="speos")` and its gRPC schema with `product="speos_protocol"`. The package README shows conflicting 2025.1, Docker tag 261, and AWP_ROOT251 examples; do not infer release support from them.
+- Query the System Coupling 2025 R1-targeted adaptor snapshot with `api_search(query="<member name>", product="system_coupling")`. It covers the `api_25_1` namespace from SDK 0.13.0; it does not establish host compatibility or runtime behavior.
+- Query the PyChemkin 0.2.0 SDK snapshot with `api_search(query="<member name>", product="reaction_chemkin")`. The ANSYS product release and host support remain unknown.
+- Query the PyMotorCAD 0.8.8 client snapshot with `api_search(query="<member name>", product="motorcad")`. The ANSYS product release and host support remain unknown.
 - Query the PyAnsys CFX snapshot with `api_search(query="<member name>", product="cfx")`; it captures direct AST declarations only. Package metadata requires a licensed local CFX installation and states support for CFX 2025 R2 SP3 and later; do not infer v251 compatibility. The dynamic flobject/TUI surface is omitted.
 - Query the Workbench gRPC protocol with `api_search(query="RunScript", product="workbench_protocol")`.
 - Query other mapped protocol sources with `mechanical_protocol`, `geometry_protocol`, `fluent_protocol`, `mapdl_protocol`, `primemesh_protocol`, or `discovery_protocol` as the `product` value.
@@ -76,4 +79,4 @@ REA metadata 可包含非公開成員。`public_status` 和 `validation_status` 
 - [REA managed snapshot source index](./curated/rea/index.md)
 - [API 快照目錄](./API_CATALOG.md)
 
-Mechanical 與 SpaceClaim 有整理型 API 使用字典。Workbench SDK 與其他有版本標記的 Python SDK 快照另有摘要及人讀字典；14 份版本化 Python SDK 字典，以及 12 份 protocol snapshot 另有逐 RPC／欄位字典。這些字典由 snapshot 產生，尚未逐項對照官方文件，也不代表宿主 API。APIKB 的來源鍵數不等於產品數，也不等於完整公開 API。57 個 manifest 產品 ID 的來源、版本、介面和缺口請以覆蓋清冊為準。
+Mechanical 與 SpaceClaim 有整理型 API 使用字典。Workbench SDK 與其他有版本標記的 Python SDK 快照另有摘要及人讀字典；17 份版本化 Python SDK 字典，以及 12 份 protocol snapshot 另有逐 RPC／欄位字典。這些字典由 snapshot 產生，尚未逐項對照官方文件，也不代表宿主 API。APIKB 的來源鍵數不等於產品數，也不等於完整公開 API。57 個 manifest 產品 ID 的來源、版本、介面和缺口請以覆蓋清冊為準。

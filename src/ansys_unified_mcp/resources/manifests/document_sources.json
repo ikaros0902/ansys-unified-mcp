@@ -157,7 +157,8 @@
     {
       "product": "reaction_chemkin",
       "folder": "Reaction_Chemkin",
-      "overview_url": ""
+      "overview_url": "",
+      "sdk_package": "ansys-chemkin-core"
     },
     {
       "product": "rigid_body_dynamics",

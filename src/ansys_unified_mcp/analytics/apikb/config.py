@@ -125,6 +125,9 @@ SOURCES = {
     "cfx": DOCS_DIR / "cfx_api.json",
     "speos": DOCS_DIR / "speos_api.json",
     "speos_protocol": DOCS_DIR / "speos_protocol_api.json",
+    "system_coupling": DOCS_DIR / "system_coupling_api.json",
+    "reaction_chemkin": DOCS_DIR / "reaction_chemkin_api.json",
+    "motorcad": DOCS_DIR / "motorcad_api.json",
     "siwave_libironpythoncmd_rea": DOCS_DIR / "siwave_libironpythoncmd_rea_api.json",
     "hfss_addin_rea": DOCS_DIR / "hfss_addin_rea_api.json",
     "apip_wrapper_native": DOCS_DIR / "apip_wrapper_native_exports_api.json",
@@ -162,6 +165,9 @@ INTERFACES = {
     "cfx": "PyAnsys CFX SDK 0.3.0; metadata requires licensed local CFX and states 2025 R2 SP3+; direct AST only, dynamic flobject/TUI omitted",
     "speos": "PyAnsys Speos SDK 0.9.2 client; support/version examples conflict in package metadata",
     "speos_protocol": "PyAnsys Speos gRPC/protobuf schema from ansys-api-speos 0.16.3",
+    "system_coupling": "PyAnsys System Coupling SDK 0.13.0 api_25_1 namespace targeting v251",
+    "reaction_chemkin": "PyChemkin SDK 0.2.0 static AST snapshot; product release unknown",
+    "motorcad": "PyMotorCAD SDK 0.8.8 static AST snapshot; product release unknown",
     "workbench_protocol": "Workbench gRPC protocol schema from ansys-api-workbench 0.4.0",
     "mechanical_protocol": "Mechanical gRPC protocol schema from ansys-api-mechanical 0.1.4",
     "geometry_protocol": "Geometry gRPC protocol schema from ansys-api-geometry 0.4.92",
@@ -279,9 +285,10 @@ def source_metadata(product: str, path: Path) -> dict:
     if product == "optislang":
         sdk_version = version
         version = "unknown (product release not recorded)"
-    elif product in {"mapdl", "dpf", "fluent", "primemesh", "sound", "pydyna", "mechanical_core", "geometry_core", "optislang_core", "workbench", "sherlock_core", "rocky", "cfx", "speos", "speos_protocol", "workbench_protocol", "mechanical_protocol", "geometry_protocol", "fluent_protocol", "mapdl_protocol", "primemesh_protocol", "discovery_protocol", "dbu_protocol", "result_explorer_protocol", "platform_instance_management_protocol", "filetransfer_protocol"}:
+    elif product in {"mapdl", "dpf", "fluent", "primemesh", "sound", "pydyna", "mechanical_core", "geometry_core", "optislang_core", "workbench", "sherlock_core", "rocky", "cfx", "speos", "speos_protocol", "system_coupling", "reaction_chemkin", "motorcad", "workbench_protocol", "mechanical_protocol", "geometry_protocol", "fluent_protocol", "mapdl_protocol", "primemesh_protocol", "discovery_protocol", "dbu_protocol", "result_explorer_protocol", "platform_instance_management_protocol", "filetransfer_protocol"}:
         sdk_version = str(data.get("sdk_version", ""))
-        version = "unknown (product release not recorded)"
+        if version == "unknown":
+            version = "unknown (product release not recorded)"
     sources = data.get("sources")
     assembly = sources.get("assembly", {}) if isinstance(sources, dict) else {}
     try:

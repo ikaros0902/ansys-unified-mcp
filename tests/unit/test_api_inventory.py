@@ -183,6 +183,46 @@ def test_api_coverage_keeps_documentation_and_api_evidence_separate():
     assert products["hfss"]["rea_evidence"]["component"] == "Ans.Ansoft.HFSSAddinPlugin.dll"
 
 
+def test_coverage_report_preserves_curated_rea_evidence(tmp_path, monkeypatch):
+    import importlib.util
+    import json
+    from pathlib import Path
+
+    module_path = Path(__file__).resolve().parents[2] / "scripts" / "api_extraction" / "build_coverage_report.py"
+    spec = importlib.util.spec_from_file_location("build_coverage_report_under_test", module_path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+
+    output_path = tmp_path / "api_coverage.json"
+    output_path.write_text(
+        json.dumps(
+            {
+                "products": [
+                    {
+                        "product": "acp",
+                        "rea_evidence": {
+                            "path": "docs/api_inventory/REA_EVIDENCE.md",
+                            "component": "ACP.dll",
+                            "version": "v251",
+                        },
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(module, "OUTPUT_PATH", output_path)
+    monkeypatch.setattr(module, "_load_products", lambda: [{"product": "acp"}])
+    monkeypatch.setattr(module, "_load_snapshots", lambda: {})
+    monkeypatch.setattr(module, "_load_document_coverage", lambda: {})
+
+    product = module.build_report()["products"][0]
+
+    assert product["mapping_status"] == "product_component_evidence_only"
+    assert product["rea_evidence"]["component"] == "ACP.dll"
+    assert module.SNAPSHOT_PRODUCT_ALIASES["sherlock_core"] == "sherlock"
+
+
 def test_api_coverage_detects_versioned_snapshots(tmp_path, monkeypatch):
     import importlib.util
 
