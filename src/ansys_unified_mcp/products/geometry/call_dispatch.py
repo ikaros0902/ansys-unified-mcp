@@ -1085,12 +1085,13 @@ async def call_tool(name: str, arguments: dict[str, Any],
             port = arguments.get("port")
             host = arguments.get("host", "localhost")
             transport_mode = arguments.get("transport_mode", "insecure")
-            # 限制內部逾時最多 8 秒，避免觸發 OpenClaw 30 秒中斷
-            raw_timeout = int(arguments.get("connect_timeout", 8))
-            connect_timeout = max(3, min(raw_timeout, 8))
+            # 解耦連線握手逾時 (connect_timeout, 預設 15s) 與 Modeler 全域 RPC 運算逾時 (rpc_timeout, 預設 180s)
+            raw_connect_timeout = int(arguments.get("connect_timeout", 15))
+            connect_timeout = max(3, min(raw_connect_timeout, 30))
+            rpc_timeout = int(arguments.get("rpc_timeout", 180))
 
-            def _grpc_ping(h, p, ping_timeout=0.4):
-                """快速確認 port 是否存活（探測 0.4s）"""
+            def _grpc_ping(h, p, ping_timeout=1.5):
+                """快速確認 port 是否存活（探測 1.5s，避免高負載時誤判斷線）"""
                 ch = grpc.insecure_channel(f"{h}:{p}")
                 try:
                     grpc.channel_ready_future(ch).result(timeout=ping_timeout)
@@ -1112,15 +1113,11 @@ async def call_tool(name: str, arguments: dict[str, Any],
                     )
                 try:
                     _modeler = await asyncio.wait_for(
-                        loop.run_in_executor(None, lambda: _make_modeler(host, port, transport_mode, connect_timeout)),
+                        loop.run_in_executor(None, lambda: _make_modeler(host, port, transport_mode, rpc_timeout)),
                         timeout=connect_timeout,
                     )
                     registry.put("geometry", str(port), _modeler)
-                    try:
-                        _current_design = _modeler.read_existing_design()
-                        result = f"已連線 SpaceClaim ({host}:{port})，綁定當前設計 '{_current_design.name}'"
-                    except Exception:
-                        result = f"已連線 SpaceClaim ({host}:{port})"
+                    result = f"已連線 SpaceClaim ({host}:{port})"
                 except Exception as e:
                     return f"❌ 連線 SpaceClaim ({host}:{port}) 失敗: {e}"
             else:
@@ -1132,16 +1129,12 @@ async def call_tool(name: str, arguments: dict[str, Any],
                         continue
                     try:
                         _modeler = await asyncio.wait_for(
-                            loop.run_in_executor(None, lambda p=scan_port: _make_modeler(host, p, transport_mode, connect_timeout)),
+                            loop.run_in_executor(None, lambda p=scan_port: _make_modeler(host, p, transport_mode, rpc_timeout)),
                             timeout=connect_timeout,
                         )
                         connected = True
                         registry.put("geometry", str(scan_port), _modeler)
-                        try:
-                            _current_design = _modeler.read_existing_design()
-                            result = f"已連線 SpaceClaim ({host}:{scan_port})，綁定當前設計 '{_current_design.name}'"
-                        except Exception:
-                            result = f"已連線 SpaceClaim ({host}:{scan_port})"
+                        result = f"已連線 SpaceClaim ({host}:{scan_port})"
                         logger.info(f"Connected to SpaceClaim on port {scan_port}")
                         break
                     except Exception as e:

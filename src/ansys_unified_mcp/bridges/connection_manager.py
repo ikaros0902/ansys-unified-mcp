@@ -89,6 +89,32 @@ class ConnectionManager:
                 return port
         return None
 
+    def cleanup_zombie_spaceclaim(self, active_port: int = 50051) -> List[int]:
+        """清理背景無視窗或無效佔用通訊埠的 SpaceClaim.exe 殭屍進程。
+
+        若進程正在監聽 active_port 則保護其存活；其餘未監聽作用埠或多重殘留進程則安全終止。
+        """
+        cleaned_pids: List[int] = []
+        try:
+            active_pid = self.find_pid_by_port(active_port)
+            procs = self.find_running_ansys_processes().get("spaceclaim", [])
+            for p in procs:
+                try:
+                    pid = p.pid
+                    if pid != active_pid:
+                        logger.info(f"發現殘留 SpaceClaim 進程 (PID: {pid})，執行清理")
+                        p.terminate()
+                        try:
+                            p.wait(timeout=2)
+                        except psutil.TimeoutExpired:
+                            p.kill()
+                        cleaned_pids.append(pid)
+                except (psutil.NoSuchProcess, psutil.AccessDenied):
+                    pass
+        except Exception as e:
+            logger.warning(f"清理 SpaceClaim 殭屍進程時發生例外: {e}")
+        return cleaned_pids
+
     def find_mechanical_instances(self) -> List[Dict[str, Any]]:
         """尋找所有運行中的 Mechanical 實例（包含 PID 與 gRPC Port）。"""
         procs = self.find_running_ansys_processes().get("mechanical", [])

@@ -37,6 +37,7 @@ class GeometryController:
         host: str = "localhost",
         transport_mode: Optional[str] = None,
         connect_timeout: int = 15,
+        rpc_timeout: int = 180,
     ) -> dict:
         """Launch or connect to SpaceClaim/Discovery via PyAnsys Geometry."""
         key = str(port) if port else DEFAULT_KEY
@@ -50,7 +51,8 @@ class GeometryController:
             return {"ok": False, "error": "ansys-geometry-core not installed."}
 
         try:
-            options = {"host": host, "timeout": connect_timeout}
+            # 使用 rpc_timeout (預設 180s) 避免複雜幾何操作時被過短的連線逾時截斷
+            options = {"host": host, "timeout": rpc_timeout}
             if port is not None:
                 if not 1 <= int(port) <= 65535:
                     raise ValueError("port must be between 1 and 65535")
