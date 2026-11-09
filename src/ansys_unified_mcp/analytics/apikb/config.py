@@ -307,7 +307,7 @@ def source_metadata(product: str, path: Path) -> dict:
         "interface": INTERFACES.get(product, "unknown"),
         "source_path": source_path,
         "sdk_version": sdk_version,
-        "sha256": hashlib.sha256(raw).hexdigest(),
+        "sha256": hashlib.sha256(raw.replace(b"\r\n", b"\n")).hexdigest(),
         "artifact_sha256": str(assembly.get("sha256", "")),
         "rea_evidence_id": str(assembly.get("rea_evidence_id", "")),
         "ingested_at": datetime.now(timezone.utc).isoformat(),

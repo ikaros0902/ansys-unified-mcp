@@ -67,7 +67,7 @@ def _fast_sources_current_check(
             rel_path = p.resolve().as_posix()
         expected_basic.add((product, interface, rel_path))
 
-    return set(rows) == expected_basic and db_mtime_ns >= max_src_mtime
+    return set(rows) == expected_basic
 
 
 @lru_cache(maxsize=4)
