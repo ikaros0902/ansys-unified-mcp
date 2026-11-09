@@ -6,13 +6,13 @@
 
 ```powershell
 python scripts/maintenance/inventory_ansys_sources.py `
-  --root ANSYS_Document `
+  --root docs/ANSYS_Document `
   --output .runtime\ansys-source-inventory.json
 ```
 
 輸出可能包含大量路徑與雜湊，屬本機衍生資料；不要將完整手冊或大型清冊提交至版本庫。重建索引仍以 `analytics/docsearch/config.py` 中明確策展的文件集合為準。
 
-產品文件庫由 `ANSYS_Document/_catalog/documents.json` 提供來源、產品版本與 SDK metadata；維護流程見 [文件庫維護](ANSYS_DOCUMENT_MAINTENANCE.md)。PDF、HTML 先建立正文視圖，只有 `body_present` 資料進入 FTS 索引。其他 Markdown 語料仍可透過 `ANSYS_DOCS_EXTRA_ROOTS` 加入（Windows 用分號分隔），再呼叫 `rebuild_ansys_docs_index`。版本須有封面或官方來源證據，不能以檔名取代查證。
+產品文件庫由 `docs/ANSYS_Document/_catalog/documents.json` 提供來源、產品版本與 SDK metadata；維護流程見 [文件庫維護](ANSYS_DOCUMENT_MAINTENANCE.md)。PDF、HTML 先建立正文視圖，只有 `body_present` 資料進入 FTS 索引。其他 Markdown 語料仍可透過 `ANSYS_DOCS_EXTRA_ROOTS` 加入（Windows 用分號分隔），再呼叫 `rebuild_ansys_docs_index`。版本須有封面或官方來源證據，不能以檔名取代查證。
 
 ## ANSYS 2025 R1 本機二進位來源盤點
 

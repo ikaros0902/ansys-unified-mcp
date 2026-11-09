@@ -2,7 +2,7 @@
 
 本手冊定義裝配體體間干涉（Body-to-Body Interference）的兩階段偵測策略：**粗篩 (Broad Phase) + 精篩 (Narrow Phase)**，目標是在 SpaceClaim 幾何階段先行抓出干涉，避免進入 Mechanical 網格劃分後才透過 `BodyInterferenceMesh` 診斷發現（成本更高）。
 
-設計思路改寫自 `D:\Ikaros\ACT_Test\ACT_to_PYAnsys\mech_interference_check.py` 的 KD-Tree 殼體干涉補充邏輯，但本技能運作於**幾何階段**（Body 層級、無網格），因此改用 Bounding Box 粗篩 + Boolean 體積精篩，而非網格元素層級的 KD-Tree 鄰近搜尋（KD-Tree 適用於已有網格節點座標的場景，幾何階段尚無網格節點可供建樹）。
+設計思路改寫自 `docs/knowledge_dictionary/ (請使用 ans_get_knowledge_dictionary 查詢)` 的 KD-Tree 殼體干涉補充邏輯，但本技能運作於**幾何階段**（Body 層級、無網格），因此改用 Bounding Box 粗篩 + Boolean 體積精篩，而非網格元素層級的 KD-Tree 鄰近搜尋（KD-Tree 適用於已有網格節點座標的場景，幾何階段尚無網格節點可供建樹）。
 
 ---
 

@@ -117,15 +117,106 @@ def api_path(from_type: str, to_type: str, product: str = "", max_depth: int = 4
         "openWorldHint": False,
     }
 )
-def api_validate_script(code: str, product: str) -> dict:
-    """Statically validate a Python, ACT, or SpaceClaim script against the official API dictionary to catch hallucinated methods/attributes.
+def api_validate_script(
+    code: str, product: str, release: str = "", interface: str = ""
+) -> dict:
+    """Statically validate a Python, ACT, or PyAnsys script against the official API dictionary.
 
     Args:
         code: Script code snippet to validate.
-        product: Target product domain: "mechanical" or "spaceclaim".
+        product: Target product domain key (e.g. "mechanical", "spaceclaim", "pyaedt", "fluent_core", "mapdl", "dpf", "rocky", "motorcad", "speos", "reaction_chemkin").
+        release: Optional exact product release filter (e.g. "v251", "v261").
+        interface: Optional specific source interface filter.
     """
-    report = kb_validate.validate_script(code=code, product=product)
+    report = kb_validate.validate_script(
+        code=code, product=product, release=release or None, interface=interface or None
+    )
     return _envelope(report)
+
+
+@mcp.tool(
+    annotations={
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    }
+)
+def ans_search_official_examples(
+    query: str = "", product: str = "", top_k: int = 5
+) -> dict:
+    """Search official PyAnsys and ANSYS verified code examples.
+
+    Args:
+        query: Keyword query for example title, purpose, or API method.
+        product: Optional product filter (e.g. "mechanical", "mapdl", "fluent", "pyaedt", "geometry").
+        top_k: Maximum number of ranked examples to return (default: 5).
+    """
+    import json
+    from pathlib import Path
+    from ansys_unified_mcp.analytics.docsearch.config import REPO_ROOT
+
+    catalog_path = (
+        REPO_ROOT
+        / "src"
+        / "ansys_unified_mcp"
+        / "resources"
+        / "manifests"
+        / "official_examples_catalog.json"
+    )
+    if not catalog_path.is_file():
+        return _envelope(
+            {
+                "ok": False,
+                "error": "Official examples catalog not found. Run scrape_pyansys_examples.py first.",
+            }
+        )
+
+    try:
+        with open(catalog_path, "r", encoding="utf-8") as f:
+            catalog: dict[str, list[dict]] = json.load(f)
+    except Exception as exc:
+        return _envelope({"ok": False, "error": f"Failed to load examples catalog: {exc}"})
+
+    results = []
+    prod_lower = product.strip().lower()
+    query_lower = query.strip().lower()
+
+    for p_key, examples in catalog.items():
+        if prod_lower and prod_lower not in p_key.lower():
+            continue
+        for ex in examples:
+            score = 0
+            if query_lower:
+                text_blob = (
+                    f"{ex.get('title', '')} {' '.join(ex.get('steps', []))} "
+                    f"{ex.get('verification', '')} {ex.get('id', '')}"
+                ).lower()
+                if query_lower in text_blob:
+                    score += 10
+                else:
+                    words = query_lower.split()
+                    matched_words = sum(1 for w in words if w in text_blob)
+                    score += matched_words * 2
+                if score == 0:
+                    continue
+            else:
+                score = 1
+
+            results.append({"product": p_key, "score": score, "example": ex})
+
+    results.sort(key=lambda x: x["score"], reverse=True)
+    top_results = results[: max(1, min(top_k, 20))]
+
+    return _envelope(
+        {
+            "ok": True,
+            "query": query,
+            "product": product or "all",
+            "count": len(top_results),
+            "results": top_results,
+        }
+    )
 
 
 @mcp.tool(

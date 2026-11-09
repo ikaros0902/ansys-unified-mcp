@@ -23,7 +23,7 @@ import zipfile
 from bs4 import BeautifulSoup
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_ROOT = REPO_ROOT / "ANSYS_Document"
+DEFAULT_ROOT = REPO_ROOT / "docs" / "ANSYS_Document"
 DEFAULT_SOURCES = REPO_ROOT / "src" / "ansys_unified_mcp" / "resources" / "manifests" / "document_sources.json"
 PDF_PYTHON = Path.home() / ".cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe"
 HEADERS = {"User-Agent": "ANSYS-document-library/1.0 (+local archival; no solver execution)"}
@@ -97,7 +97,7 @@ def official_url(url: str) -> bool:
     host = (parsed.hostname or "").lower()
     return parsed.scheme == "https" and (
         host == "docs.pyansys.com" or host.endswith(".docs.pyansys.com")
-        or host in {"storage.ansys.com", "ansyshelp.ansys.com", "developer.synopsys.com"}
+        or host in {"storage.ansys.com", "ansyshelp.ansys.com", "developer.ansys.com", "developer.synopsys.com"}
         or (host in {"github.com", "raw.githubusercontent.com"} and parsed.path.startswith("/ansys/"))
     )
 
@@ -106,6 +106,19 @@ def fetch(url: str, max_bytes: int = 250_000_000) -> tuple[bytes, str]:
     url = normalize_url(url)
     if not official_url(url):
         raise ValueError(f"非允許的官方來源: {url}")
+    # 優先嘗試以 scrapling.fetchers.Fetcher 抓取
+    try:
+        from scrapling.fetchers import Fetcher
+        _f = Fetcher()
+        resp = _f.get(url, timeout=35)
+        if resp and getattr(resp, "status", 200) == 200:
+            final_url = getattr(resp, "url", url)
+            if official_url(final_url):
+                raw = resp.body if hasattr(resp, "body") else (resp.text.encode("utf-8") if hasattr(resp, "text") else b"")
+                if raw and len(raw) <= max_bytes:
+                    return raw, final_url
+    except Exception:
+        pass
     request = urllib.request.Request(url, headers=HEADERS)
     last_error = None
     for _ in range(2):
@@ -167,7 +180,9 @@ def source_header(text: str) -> str:
 def quality(text: str) -> str:
     if not text.strip():
         return "empty"
-    if any(token in text for token in (".. toctree::", ".. automodule::", ".. autoclass::", "{%", "{{")):
+    outside_code = re.sub(r"(?ms)^[ \t]{0,3}(`{3,}|~{3,})[^\n]*\n.*?^[ \t]{0,3}\1[ \t]*$", "", text)
+    jinja_control = re.search(r"\{%[-+]?\s*(?:for|if|elif|else|set|block|macro|include|extends|endfor|endif|endblock|endmacro|endwith|endfilter|raw|endraw|filter|call|with|autoescape|endautoescape|trans|pluralize|import|from|do)\b", outside_code)
+    if any(token in outside_code for token in (".. toctree::", ".. automodule::", ".. autoclass::")) or jinja_control:
         return "template"
     if len(text.strip()) < 100:
         return "stub"
@@ -323,7 +338,7 @@ def cached_sdk_page(product: dict, root: Path, url: str, old_records: dict) -> t
     return fetch(url, 15_000_000)
 
 
-def synchronize_sdk(product: dict, root: Path, old_records: dict, max_pages: int) -> list[dict]:
+def synchronize_sdk(product: dict, root: Path, old_records: dict, max_pages: int, max_examples: int = 15) -> list[dict]:
     base_url = product["sdk_url"]
     records = []
     queue = deque([(base_url, "guide", False)])
@@ -349,7 +364,7 @@ def synchronize_sdk(product: dict, root: Path, old_records: dict, max_pages: int
                 sdk_version, version_source = sdk_metadata(soup, final_url)
             if category == "tutorial" and not url.rstrip("/").endswith(("index.html", "examples")):
                 example_count += 1
-                if example_count > 3:
+                if example_count > max_examples:
                     continue
             slug = hashlib.sha256(url.encode()).hexdigest()[:12] + "-" + (Path(urllib.parse.urlsplit(url).path).stem or "index")
             directory = f"{product['folder']}/sdk/{product['sdk_package']}/{sdk_version}/{category}"
@@ -373,7 +388,7 @@ def synchronize_sdk(product: dict, root: Path, old_records: dict, max_pages: int
                     continue
                 linked_category = section_category(link)
                 if linked_category and link.endswith((".html", "/")) and link not in seen:
-                    if linked_category != "tutorial" or example_count < 3:
+                    if linked_category != "tutorial" or example_count < max_examples:
                         queue.append((link, linked_category, True))
                 if category == "tutorial" and is_core and "/_downloads/" in link and link.lower().endswith((".py", ".ipynb", ".csv", ".json", ".dat", ".txt", ".pmdb", ".cas.h5", ".dat.h5", ".msh", ".msh.h5", ".stp", ".step", ".scdoc", ".agdb", ".wbpz", ".rst", ".bdf", ".cdb", ".k")):
                     attached, _ = fetch(link, 25_000_000)
@@ -389,18 +404,26 @@ def synchronize_sdk(product: dict, root: Path, old_records: dict, max_pages: int
 
 
 def synchronize_portal(product: dict, root: Path, max_pages: int) -> list[dict]:
-    """只追官方產品入口明列的版本連結，不依年份拼湊網址。"""
+    """只追官方產品入口明列的版本連結，並保存佇列以便分批續抓。"""
     url = product.get("overview_url", "")
     if not url:
         return []
+    state_path = root / "_catalog" / f"portal_crawl_{product['product']}.json"
+    state = load_json(state_path, {})
+    if state.get("start_url") == url:
+        queue = deque(state.get("queue", []))
+        seen = set(state.get("seen", []))
+    else:
+        queue = deque([url])
+        seen = set()
     records = []
-    queue = deque([url])
-    seen = set()
-    while queue and len(seen) < max_pages:
+    processed = 0
+    while queue and processed < max_pages:
         current = queue.popleft()
         if current in seen:
             continue
         seen.add(current)
+        processed += 1
         try:
             raw, final_url = fetch(current, 15_000_000)
             if raw.lstrip().startswith((b"<", b"<!")):
@@ -422,19 +445,26 @@ def synchronize_portal(product: dict, root: Path, max_pages: int) -> list[dict]:
                     continue
                 linked_release = normalize_release(link)
                 if link.rstrip("/").endswith("previous") or (linked_release != "unknown" and int(linked_release[1:]) >= 251):
-                    queue.append(link)
+                    if link not in seen:
+                        queue.append(link)
         except (OSError, ValueError, http.client.InvalidURL, urllib.error.URLError) as exc:
             records.append({"source_url": current, "product": product["product"], "status": "blocked" if isinstance(exc, urllib.error.HTTPError) and exc.code in {401, 403} else "failed", "error": str(exc)})
+    atomic_json(state_path, {"start_url": url, "seen": sorted(seen), "queue": list(dict.fromkeys(queue))})
     if queue:
-        records.append({"product": product["product"], "status": "partial", "reason": "官方版本連結仍有待抓項目", "remaining_discovered_urls": len(queue)})
+        records.append({"product": product["product"], "status": "partial", "reason": "官方版本連結佇列已保存，後續可續抓", "remaining_discovered_urls": len(queue), "phase": "portal"})
     return records
 
 
-def extract_pdf_text(root: Path, limit: int = 0, python: Path = PDF_PYTHON) -> dict:
+def extract_pdf_text(root: Path, limit: int = 0, python: Path = PDF_PYTHON,
+                     selected_paths: list[str] | None = None) -> dict:
     """使用既有 PDF runtime 擷取並保留頁碼；PDFium 不跨執行緒共用。"""
     if not python.is_file():
         raise FileNotFoundError("PDF runtime 不存在；請以 --pdf-python 指向既有 PDF runtime")
-    paths = sorted(root.rglob("*.pdf"))
+    paths = sorted(root.rglob("*.pdf")) if selected_paths is None else sorted({
+        safe_path(root, relative) for relative in selected_paths
+    })
+    if any(path.suffix.lower() != ".pdf" or not path.is_file() for path in paths):
+        raise ValueError("指定的 PDF 路徑不存在或不是 PDF")
     if limit:
         paths = paths[:limit]
     report_path = root / "_catalog" / ".pdf-extraction-result.json"
@@ -483,6 +513,33 @@ Path(data["report_path"]).write_text(json.dumps({"records":rows},ensure_ascii=Fa
         raise RuntimeError("PDF runtime 未回傳擷取結果清冊")
     report = load_json(report_path, {"records": []})
     report_path.unlink(missing_ok=True)
+    for row in report["records"]:
+        if row.get("status") != "extracted":
+            continue
+        pdf = safe_path(root, row["path"])
+        cached = safe_path(root, row["text_path"])
+        markdown = safe_path(root, Path(row["path"]).with_suffix(".md").as_posix())
+        cached_hash = digest_file(cached)
+        if not markdown.exists():
+            fd, temporary_name = tempfile.mkstemp(prefix=f".{markdown.name}.", suffix=".tmp", dir=markdown.parent)
+            os.close(fd)
+            temporary = Path(temporary_name)
+            try:
+                shutil.copyfile(cached, temporary)
+                os.replace(temporary, markdown)
+            except Exception:
+                temporary.unlink(missing_ok=True)
+                raise
+            markdown_status = "created_from_cache"
+        elif markdown.is_file() and digest_file(markdown) == cached_hash:
+            markdown_status = "existing_matches_cache"
+        else:
+            markdown_status = "existing_different_preserved"
+        markdown_relative = markdown.relative_to(root.resolve()).as_posix()
+        row["markdown_path"] = markdown_relative
+        row["markdown_status"] = markdown_status
+        if markdown_status != "existing_different_preserved":
+            row["text_path"] = markdown_relative
     previous = load_json(root / "_catalog/pdf_extraction.json", {"records": []})
     changed = {row["path"] for row in report["records"]}
     report["records"] = [row for row in previous["records"] if row["path"] not in changed] + report["records"]
@@ -490,18 +547,22 @@ Path(data["report_path"]).write_text(json.dumps({"records":rows},ensure_ascii=Fa
     return report
 
 
-def synchronize(root: Path, sources: dict, products: set[str], max_pages: int, workers: int) -> dict:
+def synchronize(root: Path, sources: dict, products: set[str], max_pages: int, workers: int, max_examples: int = 15) -> dict:
     state_path = root / "_catalog/downloads.json"
     result = load_json(state_path, {"schema_version": 1, "records": []})
     old_records = {row["source_url"]: row for row in result["records"] if row.get("path")}
 
-    def persist(rows: list[dict], phase: str) -> None:
+    def persist(rows: list[dict], phase: str, product_name: str | None = None) -> None:
         # 每個產品完成即存檔，後續來源失敗不能抹去已下載證據。
         for row in rows:
             row["phase"] = phase
         replaced = {row["source_url"] for row in rows if row.get("source_url")}
         downloaded_urls = {row["source_url"] for row in rows if row.get("source_url") and row["status"] == "downloaded"}
         progress = {(row.get("product"), phase) for row in rows if not row.get("source_url")}
+        if product_name:
+            progress.add((product_name, phase))
+            if phase == "portal":
+                progress.add((product_name, None))
         kept = [row for row in result["records"] if (row.get("source_url") not in replaced or (row["status"] == "downloaded" and row.get("source_url") not in downloaded_urls)) and (row.get("source_url") or (row.get("product"), row.get("phase")) not in progress)]
         result.update(schema_version=1, updated_at=datetime.now(timezone.utc).isoformat(), records=kept + rows)
         atomic_json(state_path, result)
@@ -510,14 +571,14 @@ def synchronize(root: Path, sources: dict, products: set[str], max_pages: int, w
     for phase, field in (("sdk", "sdk_url"), ("portal", "overview_url")):
         selected = [p for p in sources["products"] if p.get(field) and (not products or p["product"] in products)]
         with ThreadPoolExecutor(max_workers=workers) as pool:
-            pending = {pool.submit(synchronize_sdk, product, root, old_records.copy(), max_pages) if phase == "sdk" else pool.submit(synchronize_portal, product, root, max_pages): product for product in selected}
+            pending = {pool.submit(synchronize_sdk, product, root, old_records.copy(), max_pages, max_examples) if phase == "sdk" else pool.submit(synchronize_portal, product, root, max_pages): product for product in selected}
             for future in as_completed(pending):
                 product = pending[future]
                 try:
                     rows = future.result()
                 except Exception as exc:
                     rows = [{"product": product["product"], "source_url": product[field], "status": "failed", "error": f"{type(exc).__name__}: {exc}"}]
-                persist(rows, phase)
+                persist(rows, phase, product["product"])
                 print(f"{phase.upper()} {product['product']}: {dict(Counter(row['status'] for row in rows))}", flush=True)
     for source in sources.get("downloads", []):
         if products and source["product"] not in products:
@@ -534,6 +595,10 @@ def synchronize(root: Path, sources: dict, products: set[str], max_pages: int, w
                     raise ValueError("ZIP 下載回應不是 ZIP")
                 path = save_file(root, source["path"], raw)
             row = {**source, "source_url": source["url"], "path": path.relative_to(root).as_posix(), "sha256": digest_file(path), "status": "downloaded"}
+            if path.suffix.lower() in {".html", ".htm", ".xhtml"}:
+                markdown = path.with_suffix(".md")
+                if markdown.is_file() and markdown.stat().st_size:
+                    row["text_path"] = markdown.relative_to(root).as_posix()
             if path.suffix.lower() == ".zip":
                 row["extracted_root"] = (path.parent / path.stem).relative_to(root).as_posix()
                 row["extracted_files"] = safe_extract(path, path.parent / path.stem)
@@ -545,7 +610,7 @@ def synchronize(root: Path, sources: dict, products: set[str], max_pages: int, w
     return result
 
 
-def make_catalog(root: Path, sources: dict) -> dict:
+def make_catalog(root: Path, sources: dict, selected_products: set[str] | None = None) -> dict:
     downloads = load_json(root / "_catalog/downloads.json", {"records": []})
     downloaded = {row["path"]: row for row in downloads["records"] if row.get("path") and row.get("status") == "downloaded"}
     rendered_paths = {row["text_path"] for row in downloaded.values() if row.get("text_path")}
@@ -556,10 +621,14 @@ def make_catalog(root: Path, sources: dict) -> dict:
     moves = relocations if isinstance(relocations, list) else relocations.get("moves", [])
     relocated = {row["new_path"]: row for row in moves}
     records = []
-    seen_ids = set()
+    if selected_products is not None:
+        previous = load_json(root / "_catalog/documents.json", {"documents": []})
+        records = [row for row in previous.get("documents", []) if row.get("product") not in selected_products]
+    seen_ids = {row["id"] for row in records if row.get("id")}
+    selected_folders = {folder for folder, product in folders.items() if selected_products and product in selected_products}
     source_paths = []
     for current, directories, filenames in os.walk(root):
-        directories[:] = [name for name in directories if name != "_catalog"]
+        directories[:] = [name for name in directories if name != "_catalog" and (selected_products is None or Path(current) != root or name.lower() in selected_folders)]
         source_paths.extend(Path(current) / name for name in filenames)
     for index, path in enumerate(sorted(source_paths), 1):
         if index % 10_000 == 0:
@@ -580,6 +649,8 @@ def make_catalog(root: Path, sources: dict) -> dict:
         text = path.read_text(encoding="utf-8", errors="replace") if suffix in {".md", ".markdown"} else ""
         source = original.get("source_url") or source_header(text)
         product = original.get("product") or folders.get(path.relative_to(root).parts[0].lower(), "general")
+        if path.relative_to(root).parts[0].lower() == "optislang" and path.stem.lower().startswith("lsopt_"):
+            product = "general"  # LS-OPT 手冊不是 optiSLang 文件，避免產品篩選混入錯誤語料。
         release = original.get("release") or normalize_release(source) or "unknown"
         if release == "unknown":
             release = next((value for part in path.relative_to(root).parts[:-1]
@@ -697,25 +768,34 @@ def main(argv=None) -> int:
     parser.add_argument("--product", action="append", default=[])
     parser.add_argument("--max-pages", type=int, default=30, help="每 SDK 本輪最多核心頁數，超額列 partial")
     parser.add_argument("--workers", type=int, default=4)
+    parser.add_argument("--max-examples", type=int, default=15, help="每項產品最多下載範例數 (預設: 15)")
     parser.add_argument("--extract-pdf", action="store_true", help="catalog 前擷取 PDF，使用既有 PDF runtime")
     parser.add_argument("--pdf-limit", type=int, default=0, help="本輪 PDF 擷取上限；0 為全部")
+    parser.add_argument("--pdf-path", action="append", default=[], help="指定相對於文件根目錄的 PDF；可重複指定")
     parser.add_argument("--pdf-python", type=Path, default=PDF_PYTHON)
     args = parser.parse_args(argv)
     root = args.root.resolve()
     sources = load_json(args.sources, {})
     if not sources.get("products") or args.max_pages < 1 or not 1 <= args.workers <= 8:
         parser.error("來源清單、max-pages 或 workers 無效")
+    known_products = {p["product"] for p in sources["products"]}
+    if set(args.product) - known_products:
+        parser.error("--product 必須使用來源清單中的產品名稱")
+    if args.pdf_path and not args.extract_pdf:
+        parser.error("--pdf-path 須搭配 --extract-pdf")
+    if args.pdf_path and args.pdf_limit:
+        parser.error("--pdf-path 與 --pdf-limit 不可同時使用")
     if not args.apply:
         print(json.dumps({"dry_run": True, "command": args.command, "root": str(root), "products": args.product or [p["product"] for p in sources["products"]]}, ensure_ascii=False))
         return 0
     root.mkdir(parents=True, exist_ok=True)
     if args.command == "sync":
-        result = synchronize(root, sources, set(args.product), args.max_pages, args.workers)
+        result = synchronize(root, sources, set(args.product), args.max_pages, args.workers, args.max_examples)
         print(json.dumps(dict(Counter(r["status"] for r in result["records"])), ensure_ascii=False))
         return 1 if any(r["status"] in {"failed", "blocked"} for r in result["records"]) else 0
     if args.extract_pdf:
-        extract_pdf_text(root, args.pdf_limit, args.pdf_python)
-    catalog = make_catalog(root, sources) if args.command == "catalog" else load_json(root / "_catalog/documents.json", {})
+        extract_pdf_text(root, args.pdf_limit, args.pdf_python, args.pdf_path or None)
+    catalog = make_catalog(root, sources, set(args.product) or None) if args.command == "catalog" else load_json(root / "_catalog/documents.json", {})
     if not catalog.get("documents"):
         raise ValueError("沒有有效清冊；拒絕生成空覆蓋表")
     result = write_coverage(root, sources, catalog)

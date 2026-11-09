@@ -15,7 +15,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 MANIFEST_PATH = REPO_ROOT / "src" / "ansys_unified_mcp" / "resources" / "manifests" / "document_sources.json"
 API_DIR = REPO_ROOT / "docs" / "api_inventory"
 OUTPUT_PATH = API_DIR / "api_coverage.json"
-DOCUMENT_COVERAGE_PATH = REPO_ROOT / "ANSYS_Document" / "_catalog" / "coverage.json"
+DOCUMENT_COVERAGE_PATH = REPO_ROOT / "docs" / "ANSYS_Document" / "_catalog" / "coverage.json"
 REA_EVIDENCE = {
     "mechanical": {
         "path": "docs/api_inventory/REA_EVIDENCE.md",
@@ -332,7 +332,7 @@ def build_report() -> dict[str, Any]:
         "schema_version": 3,
         "sources": {
             "api_snapshots": "docs/api_inventory/",
-            "documentation_coverage": "ANSYS_Document/_catalog/coverage.json",
+            "documentation_coverage": "docs/ANSYS_Document/_catalog/coverage.json",
             "rea_evidence": "docs/api_inventory/REA_EVIDENCE.md",
         },
         "scope": {

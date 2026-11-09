@@ -20,6 +20,8 @@
 - Query the System Coupling 2025 R1-targeted adaptor snapshot with `api_search(query="<member name>", product="system_coupling")`. It covers the `api_25_1` namespace from SDK 0.13.0; it does not establish host compatibility or runtime behavior.
 - Query the PyChemkin 0.2.0 SDK snapshot with `api_search(query="<member name>", product="reaction_chemkin")`. The ANSYS product release and host support remain unknown.
 - Query the PyMotorCAD 0.8.8 client snapshot with `api_search(query="<member name>", product="motorcad")`. The ANSYS product release and host support remain unknown.
+- Query the unmapped PyTwin 0.13.0 SDK source with `api_search(query="<member name>", product="pytwin")`. Its ANSYS product mapping and release remain unknown; do not treat it as TwinAI without evidence.
+- Query the unmapped PyAEDT 1.9.0 SDK source with `api_search(query="<member name>", product="pyaedt")`. This snapshot covers direct declarations under `ansys.aedt`; its AEDT product mapping, release, and host support remain unknown.
 - Query the PyAnsys CFX snapshot with `api_search(query="<member name>", product="cfx")`; it captures direct AST declarations only. Package metadata requires a licensed local CFX installation and states support for CFX 2025 R2 SP3 and later; do not infer v251 compatibility. The dynamic flobject/TUI surface is omitted.
 - Query the Workbench gRPC protocol with `api_search(query="RunScript", product="workbench_protocol")`.
 - Query other mapped protocol sources with `mechanical_protocol`, `geometry_protocol`, `fluent_protocol`, `mapdl_protocol`, `primemesh_protocol`, or `discovery_protocol` as the `product` value.
@@ -79,4 +81,10 @@ REA metadata 可包含非公開成員。`public_status` 和 `validation_status` 
 - [REA managed snapshot source index](./curated/rea/index.md)
 - [API 快照目錄](./API_CATALOG.md)
 
-Mechanical 與 SpaceClaim 有整理型 API 使用字典。Workbench SDK 與其他有版本標記的 Python SDK 快照另有摘要及人讀字典；17 份版本化 Python SDK 字典，以及 12 份 protocol snapshot 另有逐 RPC／欄位字典。這些字典由 snapshot 產生，尚未逐項對照官方文件，也不代表宿主 API。APIKB 的來源鍵數不等於產品數，也不等於完整公開 API。57 個 manifest 產品 ID 的來源、版本、介面和缺口請以覆蓋清冊為準。
+Mechanical 與 SpaceClaim 有整理型 API 使用字典。Workbench SDK 與其他有版本標記的 Python SDK 快照另有摘要及人讀字典；19 份版本化 Python SDK 字典，以及 12 份 protocol snapshot 另有逐 RPC／欄位字典。這些字典由 snapshot 產生，尚未逐項對照官方文件，也不代表宿主 API。APIKB 的來源鍵數不等於產品數，也不等於完整公開 API。57 個 manifest 產品 ID 的來源、版本、介面和缺口請以覆蓋清冊為準。
+
+## 納入本機 API 字典頁
+
+`ANSYS_Document` 的本機字典頁按產品／版本存放於 `api_reference/`，並由 `_catalog/documents.json` 提供來源路徑、SHA-256、產品、版本和類別。新增或搬移頁面後，先執行文件維護流程中的 catalog 產生步驟更新此清冊，再呼叫 `rebuild_ansys_docs_index` 重建本機 SQLite FTS 索引。單獨重建 SQLite 不會掃描或更新文件清冊；清冊未更新的頁面不會進入索引。
+
+查詢這些頁面時，使用 `scope="api"` 並依證據篩選 `product`、`release`、`category="api_reference"`。讀回 chunk 後，仍要記錄其文件名稱、chunk ID、來源版本及頁面內原件 SHA-256。文件庫是本機受限來源；RAG 索引命中不代表內容可公開散布，也不代表 runtime 驗證。

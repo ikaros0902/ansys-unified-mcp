@@ -69,7 +69,7 @@ _catalog_cache: dict = {}
 
 
 def _catalog_documents() -> list[dict]:
-    root = (cfg.REPO_ROOT / "ANSYS_Document").resolve()
+    root = (cfg.DOCS_ROOT / "ANSYS_Document").resolve()
     manifest = root / "_catalog" / "documents.json"
     if not manifest.is_file():
         return []
@@ -89,6 +89,8 @@ def _catalog_documents() -> list[dict]:
                 or not re.fullmatch(r"[0-9a-f]{64}", item["sha256"])):
             raise ValueError("文件清冊 ID、雜湊或欄位型別無效；保留現有索引。")
         seen.add(item["id"])
+        if item["id"] == "ansys_b5063da81b499621e083373c":
+            item = {**item, "product": "general"}
         if item["quality"] != "body_present":
             continue
         paths = {}
@@ -108,7 +110,7 @@ def _catalog_documents() -> list[dict]:
 
 
 def _catalog_fingerprint(force: bool = False, documents: list[dict] | None = None) -> str:
-    manifest = cfg.REPO_ROOT / "ANSYS_Document" / "_catalog" / "documents.json"
+    manifest = cfg.DOCS_ROOT / "ANSYS_Document" / "_catalog" / "documents.json"
     try:
         stat = manifest.stat()
         key = (str(manifest.resolve()), stat.st_mtime_ns, stat.st_size)
@@ -144,7 +146,7 @@ def _needs_rebuild() -> bool:
             str(root.resolve()) for root in cfg.EXTRA_SOURCE_DIRS
         ):
             return True
-        manifest = cfg.REPO_ROOT / "ANSYS_Document" / "_catalog" / "documents.json"
+        manifest = cfg.DOCS_ROOT / "ANSYS_Document" / "_catalog" / "documents.json"
         stat = manifest.stat() if manifest.is_file() else None
         manifest_stat = f"{stat.st_mtime_ns}:{stat.st_size}" if stat else ""
         if state.get("catalog_manifest_stat", "") != manifest_stat:
@@ -242,6 +244,10 @@ def build_index() -> dict:
                     lower_path = md_file.as_posix().lower()
                     if "fluent" in lower_path or "mixing_elbow" in lower_path:
                         product = "fluent"
+                    elif "aqwa" in lower_path:
+                        product = "aqwa"
+                    elif "polyflow-icing" in lower_path:
+                        product = "fensap_ice" if "icing_physics_setup" in lower_path else "polyflow"
                     elif "dpf" in lower_path or "submodeling" in lower_path:
                         product = "dpf"
                     elif "spaceclaim" in lower_path:
@@ -250,7 +256,9 @@ def build_index() -> dict:
                         product = "geometry"
                     elif "mechanical" in lower_path:
                         product = "mechanical"
-                    elif "lsdyna" in lower_path or "ls-dyna" in lower_path or "ls-prepost" in lower_path:
+                    elif "ls-prepost" in lower_path:
+                        product = "ls-prepost"
+                    elif "lsdyna" in lower_path or "ls-dyna" in lower_path:
                         product = "lsdyna"
                     elif "optislang" in lower_path:
                         product = "optislang"
@@ -305,6 +313,9 @@ def build_index() -> dict:
                     summary.append({"name": str(root), "status": "source_missing"})
                     continue
                 for md_file in root.rglob("*.md"):
+                    low_p = md_file.as_posix().lower()
+                    if any(bad in low_p for bad in ("transaction_", "rollback_", "backup", "passes", "docs-views-")):
+                        continue
                     try:
                         resolved = md_file.resolve()
                         relative = resolved.relative_to(root.resolve()).as_posix()
@@ -320,11 +331,18 @@ def build_index() -> dict:
                     processed_names.add(rel_name)
                     lower = relative.lower()
                     product = next((value for key, value in (
-                        ("mechanical", "mechanical"), ("ls-dyna", "lsdyna"), ("lsdyna", "lsdyna"),
+                        ("workbench", "workbench"), ("scade_one", "scade_one"), ("scade", "scade"), ("minerva", "minerva"), ("simai", "simai"), ("act.md", "act"),
+                        ("ansys_id_portal", "ansys_id_portal"), ("ansys_id_sso", "ansys_id_sso"), ("ansysem", "ansysem"), ("circuit", "circuit"), ("emit", "emit"), ("lsopt", "lsopt"), ("aqwa", "aqwa"), ("additive", "additive"), ("fensap_ice", "fensap_ice"), ("edupack", "edupack"), ("polyflow", "polyflow"), ("ls-prepost", "ls-prepost"), ("error_catalog", "error_catalog"), ("icem_cfd", "icem_cfd"),
+                        ("installation_and_licensing", "installation_and_licensing"), ("pyansys", "pyansys"), ("reaction_chemkin", "reaction_chemkin"), ("saf", "saf"),
+                        ("mechanical", "mechanical"), ("geometry.md", "geometry"), ("ls-dyna", "lsdyna"), ("lsdyna", "lsdyna"),
+                        ("avxcelerate", "avxcelerate"), ("cff", "cff"), ("discovery", "discovery"), ("twinai", "twinai"),
+                        ("rigid_body_dynamics", "rigid_body_dynamics"), ("adr", "adr"), ("turbogrid", "turbogrid"),
+                        ("hfss", "hfss"), ("maxwell", "maxwell"), ("q3d", "q3d"), ("siwave", "siwave"),
+                        ("dpf", "dpf"), ("cfx", "cfx"), ("mapdl", "mapdl"), ("motorcad", "motorcad"), ("rocky", "rocky"), ("sound", "sound"),
                         ("ls-prepost", "ls-prepost"), ("spaceclaim", "spaceclaim"),
                         ("icepak", "icepak"), ("sherlock", "sherlock"), ("speos", "speos"),
                         ("zemax", "zemax"), ("lumerical", "lumerical"), ("fluent", "fluent"),
-                        ("optislang", "optislang"), ("thermal", "thermal"),
+                        ("optislang", "optislang"), ("motion", "motion"), ("ensight", "ensight"), ("system_coupling", "system_coupling"), ("thermal_desktop", "thermal_desktop"), ("acp", "acp"), ("primemesh", "primemesh"), ("aedt", "aedt"), ("modelcenter", "modelcenter"), ("granta_mi", "granta_mi"), ("thermal", "thermal"),
                     ) if key in lower), "general")
                     category = (
                         "tutorial" if "tutorial" in lower or "example" in lower else
@@ -332,6 +350,7 @@ def build_index() -> dict:
                         "guide"
                     )
                     parts = _chunk_text(raw_text, cfg.CHUNK_SIZE, cfg.CHUNK_OVERLAP)
+                    release = "unknown" if root.name.lower() == "knowledge_dictionary" else _release_hint(raw_text)
                     con.executemany(
                         "INSERT INTO chunks(doc, ord, heading, body) VALUES (?, ?, ?, ?)",
                         [(rel_name, i, _heading_of(part), part) for i, part in enumerate(parts)],
@@ -339,7 +358,7 @@ def build_index() -> dict:
                     con.execute(
                         "INSERT INTO docs_meta (name,title,category,product,chunk_count,chars,source_path,release,content_hash,quality) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                         (rel_name, Path(relative).stem, category, product, len(parts), len(raw_text),
-                         str(resolved), _release_hint(raw_text), hashlib.sha256(raw_text.encode("utf-8")).hexdigest(),
+                         str(resolved), release, hashlib.sha256(raw_text.encode("utf-8")).hexdigest(),
                          _quality(raw_text)),
                     )
                     summary.append({"name": rel_name, "status": "indexed", "chunks": len(parts), "chars": len(raw_text)})
@@ -384,9 +403,21 @@ def build_index() -> dict:
                     summary.append({"name": name, "status": "quality_rejected"})
                     continue
                 chunks, chars = content_stats[content_key]
+                product = item["product"]
+                # 這些文件的正文產品與清冊目錄分類不符，使用已核對的產品標籤。
+                if item["path"] == "Discovery/unknown/manuals/Developers Guide_V232.pdf":
+                    product = "spaceclaim"
+                elif item["path"] == "TwinAI/unknown/manuals/UsersGuide_1.62.pdf":
+                    product = "general"
+                elif item["path"].startswith("Circuit/"):
+                    product = "circuit"
+                elif item["path"].startswith("EMIT/"):
+                    product = "emit"
+                elif item["path"].startswith("optiSLang/unknown/manuals/lsopt_2026R1_"):
+                    product = "lsopt"
                 con.execute(
                     "INSERT INTO docs_meta VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                    (name, item["title"], item["category"], item["product"], chunks,
+                    (name, item["title"], item["category"], product, chunks,
                      chars, str(item["_source"]), item["release"], source_hash,
                      "body_present", item["source_url"], item["sdk_package"], item["sdk_version"], content_key),
                 )
@@ -495,6 +526,9 @@ def build_index() -> dict:
 
         os.replace(temp_path, cfg.INDEX_PATH)
         installed = True
+        for old_views in cfg.CLEAN_DIR.glob("docs-views-*"):
+            if old_views.resolve() != views_dir.resolve() and old_views.is_dir():
+                shutil.rmtree(old_views, ignore_errors=True)
 
         return {
             "ok": True,
@@ -509,12 +543,12 @@ def build_index() -> dict:
             "views_path": str(views_dir),
         }
     finally:
-        if not installed:
-            if temp_path:
-                Path(temp_path).unlink(missing_ok=True)
+        if temp_path and not installed:
+            Path(temp_path).unlink(missing_ok=True)
+        if views_dir and not installed and views_dir.exists():
             if not views_dir.resolve().is_relative_to(cfg.CLEAN_DIR.resolve()):
                 raise RuntimeError("暫存文字路徑越界；拒絕清理。")
-            shutil.rmtree(views_dir)
+            shutil.rmtree(views_dir, ignore_errors=True)
 
 
 def _release_hint(text: str) -> str:
@@ -527,7 +561,9 @@ def _quality(text: str) -> str:
         return "empty"
     if len(text) < 12000 and re.search(r"download|not available|contents only", text[:4000], re.I):
         return "stub_or_download_page"
-    if "{{" in text or "{%" in text:
+    outside_code = re.sub(r"(?ms)^[ \t]{0,3}(`{3,}|~{3,})[^\n]*\n.*?^[ \t]{0,3}\1[ \t]*$", "", text)
+    jinja_control = re.search(r"\{%[-+]?\s*(?:for|if|elif|else|set|block|macro|include|extends|endfor|endif|endblock|endmacro|endwith|endfilter|raw|endraw|filter|call|with|autoescape|endautoescape|trans|pluralize|import|from|do)\b", outside_code)
+    if jinja_control:
         return "template"
     return "body_present"
 
@@ -679,15 +715,72 @@ def get_chunk(doc: str, chunk_id: int, context: int = 0) -> dict:
     }
 
 
-def list_docs() -> dict:
+def list_docs(product: str = "", category: str = "", query: str = "",
+              limit: int = 50, offset: int = 0, summary_only: bool = False) -> dict:
     ensure_index()
     con = _connect()
     try:
-        rows = con.execute(
-            "SELECT name, title, category, product, release, source_path, content_hash, quality, "
-            "source_url, sdk_package, sdk_version, chunk_count AS chunks, chars "
-            "FROM docs_meta ORDER BY name"
-        ).fetchall()
+        # If summary_only is requested and no specific filters are applied, return aggregated overview
+        if summary_only and not product and not category and not query:
+            total_docs = con.execute("SELECT COUNT(*) FROM docs_meta").fetchone()[0]
+            total_chunks = con.execute("SELECT SUM(chunk_count) FROM docs_meta").fetchone()[0] or 0
+            product_rows = con.execute(
+                "SELECT product, COUNT(*) AS doc_count, SUM(chunk_count) AS chunk_count "
+                "FROM docs_meta GROUP BY product ORDER BY doc_count DESC"
+            ).fetchall()
+            category_rows = con.execute(
+                "SELECT category, COUNT(*) AS doc_count "
+                "FROM docs_meta GROUP BY category ORDER BY doc_count DESC"
+            ).fetchall()
+            return {
+                "ok": True,
+                "summary_only": True,
+                "total_docs": total_docs,
+                "total_chunks": total_chunks,
+                "product_summary": [dict(r) for r in product_rows],
+                "category_summary": [dict(r) for r in category_rows],
+                "hint": "Specify product, category, query, or pass summary_only=False to retrieve individual document items.",
+            }
+
+        clauses = []
+        params = []
+        if product:
+            clauses.append("LOWER(product) = LOWER(?)")
+            params.append(product)
+        if category:
+            clauses.append("LOWER(category) = LOWER(?)")
+            params.append(category)
+        if query:
+            clauses.append("(LOWER(name) LIKE LOWER(?) OR LOWER(title) LIKE LOWER(?))")
+            params.append(f"%{query}%")
+            params.append(f"%{query}%")
+
+        where_clause = f"WHERE {' AND '.join(clauses)}" if clauses else ""
+
+        count_sql = f"SELECT COUNT(*) FROM docs_meta {where_clause}"
+        total_matches = con.execute(count_sql, params).fetchone()[0]
+
+        safe_limit = max(1, min(limit, 200))
+        safe_offset = max(0, offset)
+
+        data_sql = (
+            f"SELECT name, title, category, product, release, source_path, content_hash, quality, "
+            f"source_url, sdk_package, sdk_version, chunk_count AS chunks, chars "
+            f"FROM docs_meta {where_clause} ORDER BY name LIMIT ? OFFSET ?"
+        )
+        data_params = list(params) + [safe_limit, safe_offset]
+        rows = con.execute(data_sql, data_params).fetchall()
+        docs = [dict(r) for r in rows]
+
+        return {
+            "ok": True,
+            "summary_only": False,
+            "total_matches": total_matches,
+            "limit": safe_limit,
+            "offset": safe_offset,
+            "has_more": (safe_offset + len(docs)) < total_matches,
+            "count": len(docs),
+            "docs": docs,
+        }
     finally:
         con.close()
-    return {"ok": True, "docs": [dict(r) for r in rows]}

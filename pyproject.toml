@@ -19,7 +19,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-documentation = ["beautifulsoup4>=4.13,<5"]
+documentation = ["beautifulsoup4>=4.13,<5", "scrapling>=0.5.1"]
 mechanical = ["ansys-mechanical-core"]
 fluent = ["ansys-fluent-core"]
 geometry = ["ansys-geometry-core"]
@@ -88,6 +88,8 @@ extend-exclude = [
     "Documentation",
     "Documentation_md",
     "Documentation_clean",
+    "docs/ANSYS_Document",
+    "docs/Documentation_clean",
     "runs",
     "jobs",
     "scratch",

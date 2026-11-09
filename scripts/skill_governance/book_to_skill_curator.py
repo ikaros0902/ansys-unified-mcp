@@ -1142,7 +1142,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--input-doc",
         type=str,
         default=None,
-        help="輸入手冊文檔或目錄路徑 (例如: ANSYS_Document/Mechanical/)",
+        help="輸入手冊文檔或目錄路徑 (例如: docs/ANSYS_Document/Mechanical/)",
     )
     parser.add_argument(
         "--target-skill",

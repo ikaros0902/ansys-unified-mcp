@@ -57,10 +57,12 @@ status.json
 Documentation*/
 docs/api_inventory/
 docs_index.sqlite
-# 瀏覽器未完成下載之暫存檔
+# 瀏覽器未完成下載之暫存檔與大型安裝媒體封存檔
 *.下載
 *.crdownload
 *.part
+*.iso
+*.7z
 
 # CodeGraph index & Serena tooling cache
 .codegraph/

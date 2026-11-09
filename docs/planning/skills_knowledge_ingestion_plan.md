@@ -22,7 +22,7 @@ v2 → v3：修正 WP6 目錄佈局（`eval-*/<config>/run-*`、`new_skill`/`old
 | 來源 | 規模 | 性質 | 抽取 |
 |---|---|---|---|
 | `docs/api_inventory/` | 5 檔、25.8 MB | API 快照（v251），已編進 APIKB | 不需再抽 |
-| `Documentation_clean/api_kb.sqlite` | symbols 3,362、members 10,668、edges 35,017 | APIKB 索引 | SQL 統計 |
+| `docs/Documentation_clean/api_kb.sqlite` | symbols 3,362、members 10,668、edges 35,017 | APIKB 索引 | SQL 統計 |
 | `Ansys_Mesh_課程心得.docx` | 45 段、2,574 字、12 張圖 | 個人課程筆記（Meshing Intro 2025R2） | `.tmp_extract/mesh_docx.md` |
 | `LS-PrePost_Result_SOP.pptx` | 25 頁、16,066 字元 | GUI SOP，改寫自 LS-PrePost UG 2026R1（附頁碼） | `.tmp_extract/lspp_pptx.md` |
 | `LS-Run_Setup_Guide.pptx` | 22 頁、12,969 字元 | 訓練教材，改寫自 LS-Run UG 2025R1（附頁碼） | `.tmp_extract/lsrun_pptx.md` |

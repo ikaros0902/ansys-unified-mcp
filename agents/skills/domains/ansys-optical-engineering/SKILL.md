@@ -29,7 +29,7 @@ description: Domain router for optical design, illumination, imaging systems, an
 
 在生成或修改任何數值模擬腳本之前，**必須**優先透過 MCP 查詢底層確切 API 簽名與參數：
 - 使用 `search_ansys_docs(query='...')` 檢索該學科之官方手冊規範
-- 使用 `api_search(pattern='...')` 驗證 Python / ACT 符號之完整路徑
+- 使用 `api_search(query='...', product='speos')` 驗證 Python / ACT 符號之完整路徑
 - 嚴禁憑空猜測非公開屬性或使用已廢棄之語法
 
 ## 關鍵禁止事項 (Critical Don'ts)

@@ -14,7 +14,7 @@ from typing import Any
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DOC_DIR = (
-    REPO_ROOT / "ANSYS_Document" / "MAPDL" / "sdk" / "ansys-mapdl-core" / "0.74.1" / "api_reference"
+    REPO_ROOT / "docs" / "ANSYS_Document" / "MAPDL" / "sdk" / "ansys-mapdl-core" / "0.74.1" / "api_reference"
 )
 DOC_INDEX = DOC_DIR / "09d55e454222-mapdl.md"
 OUT_PATH = REPO_ROOT / "docs" / "api_inventory" / "mapdl_api.json"

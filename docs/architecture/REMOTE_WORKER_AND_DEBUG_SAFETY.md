@@ -40,10 +40,39 @@ Use this sequence only after the user authorizes the action and the environment 
 5. Show the diff and request review before running a test, solver, or remote command.
 6. Record each command, exit status, relevant output, and input/output digest.
 7. Stop after the approved retry limit. Escalate repeated failures, missing evidence, permission changes, or unexpected file writes.
-8. Do not create a commit unless the user explicitly authorizes it. Do not push or send results to another service without explicit authorization.
+8. Do not create, amend, rebase, or rewrite commits. The user performs all commit, push, PR, and other remote Git actions. Do not send results to another service without explicit authorization.
 
 A test result can support software behavior. It cannot prove solver physics or product-host behavior. A manifest can support file identity. It cannot replace the original command output or solver evidence.
 
 ## Current status
 
 Stages 4 and 5 have design boundaries only. No remote host was contacted. No ANSYS process, solver, test suite, or autonomous repair loop was started. Runtime isolation, cancellation, rollback, and evidence collection remain unverified.
+
+
+## Stage 4 job/evidence record (design only)
+
+This example defines fields for a future worker contract. It is not an implemented schema and does not prove that any field can be collected or trusted. Keep paths relative to an approved job root. Store identity references, not credentials or full environment data.
+
+```json
+{
+  "schema_version": "1.0",
+  "job_id": "<unique-id>",
+  "protocol_version": "<version>",
+  "request": {
+    "operation_id": "<registered-operation>",
+    "product": "<product-id>",
+    "solver_version": "<release-and-service-pack>",
+    "sdk_versions": {},
+    "inputs": [{"path": "input/model.dat", "sha256": "<digest>", "bytes": 0}]
+  },
+  "worker": {"identity_ref": "<approved-reference>", "environment_digest": "<digest>"},
+  "state": "queued",
+  "timestamps_utc": {"created": "<RFC3339>", "started": null, "finished": null},
+  "result": {"exit_code": null, "outputs": [], "logs": []},
+  "cancellation": {"requested": false, "confirmed": false},
+  "cleanup": {"state": "pending", "completed_at": null},
+  "evidence": {"manifest_sha256": null, "signature": null}
+}
+```
+
+Allowed terminal states, cancellation confirmation, signature format, host identity source, and retention rules require an approved worker and security policy. A requested cancellation is not evidence of a stopped process. A digest is not proof of trustworthy collection.

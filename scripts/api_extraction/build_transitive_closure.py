@@ -32,7 +32,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(REPO_ROOT / "src") not in sys.path:
     sys.path.insert(0, str(REPO_ROOT / "src"))
 
-DEFAULT_DB_PATH = REPO_ROOT / "Documentation_clean" / "api_kb.sqlite"
+DEFAULT_DB_PATH = REPO_ROOT / "docs" / "Documentation_clean" / "api_kb.sqlite"
 
 # 反向與循環邊黑名單 (不分大小寫)
 PRUNED_EDGE_MEMBERS = {

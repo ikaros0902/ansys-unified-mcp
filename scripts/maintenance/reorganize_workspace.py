@@ -174,7 +174,7 @@ def repair_links(root: Path, operations: list[dict]) -> int:
         directories[source.parent].add(target.parent)
     changed = 0
     issues = []
-    paths = set((root / "ANSYS_Document").rglob("*.md"))
+    paths = set((root / "docs" / "ANSYS_Document").rglob("*.md"))
     paths.update(inside(root, op["target"]) for op in operations if op["target"].endswith(".md") and op["action"] == "move")
     for path in sorted(paths):
         if "_catalog" in path.parts:
@@ -219,8 +219,8 @@ def repair_links(root: Path, operations: list[dict]) -> int:
                 shutil.copy2(path, saved)
             path.write_text(new_text, encoding="utf-8")
             changed += 1
-    if (root / "ANSYS_Document").is_dir():
-        issue_path = inside(root, "ANSYS_Document/_catalog/link_repair_issues.json")
+    if (root / "docs" / "ANSYS_Document").is_dir():
+        issue_path = inside(root, "docs/ANSYS_Document/_catalog/link_repair_issues.json")
         issue_path.parent.mkdir(parents=True, exist_ok=True)
         issue_path.write_text(json.dumps(issues, ensure_ascii=False, indent=2), encoding="utf-8")
     for op in operations:
@@ -232,7 +232,7 @@ def repair_links(root: Path, operations: list[dict]) -> int:
 
 def execute(root: Path, *, apply: bool, corpus_layout: bool, pdf_metadata: dict) -> dict:
     root = root.resolve()
-    corpus = inside(root, "ANSYS_Document")
+    corpus = inside(root, "docs/ANSYS_Document")
     backup = inside(root, ".runtime/folder-document-cleanup/originals")
     report = inside(root, ".runtime/folder-document-cleanup/relocations.json")
     if apply and report.exists():
@@ -268,7 +268,7 @@ def execute(root: Path, *, apply: bool, corpus_layout: bool, pdf_metadata: dict)
                 release = "legacy"
             if new_rel != rel:
                 old = path.relative_to(root).as_posix()
-                mapping[old] = (Path("ANSYS_Document") / new_rel).as_posix()
+                mapping[old] = (Path("docs/ANSYS_Document") / new_rel).as_posix()
                 metadata[old] = {"original_path": rel.as_posix(), "new_path": new_rel.as_posix(),
                                  "release": release, "source_url": source_url}
     for old, new in mapping.items():

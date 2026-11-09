@@ -1,0 +1,13 @@
+{
+  "tickets": [
+    {"id": "t1-inventory", "title": "建立來源和目的清冊", "depends_on": [], "acceptance": ["逐檔記錄來源、類型、大小、SHA-256、目的路徑和碰撞"]},
+    {"id": "t2-paths", "title": "確認路徑與資料保護", "depends_on": ["t1-inventory"], "acceptance": ["列出呼叫端、索引、忽略狀態、活躍資料和回復方案"]},
+    {"id": "t3-migration", "title": "搬遷文件與相關資料", "depends_on": ["t1-inventory", "t2-paths"], "acceptance": ["記錄逐批來源與目的 hash、數量、碰撞和引用處理", "更新受影響路徑與呼叫端，依序更新 catalog 和需要重建的索引"]},
+    {"id": "t4-html", "title": "轉換所有 HTML", "depends_on": ["t3-migration"], "acceptance": ["所有 HTML 成功轉換且通過品質核對，逐項記錄來源與輸出；失敗項保留並使任務未完成"]},
+    {"id": "t5-pdf", "title": "轉換所有 PDF", "depends_on": ["t3-migration"], "acceptance": ["所有 PDF 成功轉換且通過品質核對，逐項記錄來源與輸出；失敗或未擷取頁保留並使任務未完成"]},
+    {"id": "t6-dedup", "title": "移除已確認的重複 PDF", "depends_on": ["t3-migration", "t5-pdf"], "acceptance": ["每筆移除有相同內容、保留路徑、引用、備份與還原證據"]},
+    {"id": "t7-rea-inventory", "title": "建立 REA 候選母體", "depends_on": [], "acceptance": ["建立目標產品和版本狀態表，逐項記錄來源、hash、產品映射、managed 或 native 分類、工具及授權狀態"]},
+    {"id": "t8-rea", "title": "萃取可用且已授權的 REA 候選", "depends_on": ["t7-rea-inventory"], "acceptance": ["所有範圍內候選成功萃取並核對，逐項記錄來源、工具、命令及輸出；缺口使任務未完成"]},
+    {"id": "t9-review", "title": "獨立驗收與整合", "depends_on": ["t4-html", "t5-pdf", "t6-dedup", "t8-rea"], "acceptance": ["檢查搬遷、轉換、去重、REA 與受影響行為，列出失敗及未測範圍"]}
+  ]
+}

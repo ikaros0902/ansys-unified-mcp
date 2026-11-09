@@ -1,18 +1,47 @@
-# 官方 AGDB 靜態結構範例
+# 官方 Mechanical 範例指南 (Official Verified Examples)
 
-來源：[Static structural analysis](https://examples.mechanical.docs.pyansys.com/examples/00_basic/example_01_simple_structural_solve.html)；資料：[ansys/example-data](https://github.com/ansys/example-data)（MIT，保留該版本 LICENSE）；程式來源：[pymechanical-examples](https://github.com/ansys/pymechanical-examples)（MIT，核對固定版本 LICENSE）。不複製整篇範例。
+> [!NOTE]
+> 本參考手冊彙整官方 PyAnsys 與 ANSYS 權威驗證範例。
+> 提供標準化輸入檔案下載、核心腳本步驟、預期收斂驗收標準與版本資訊。
 
-## 輸入、步驟與可觀察驗收
+## 範例 1：Static structural analysis of bracket
 
-以 `ansys.mechanical.core.examples.download_file("example_01_geometry.agdb", "pymechanical", "00_basic")` 取得 AGDB。輸入包含檔案路徑／hash、具名選擇、座標系統、材料與載荷單位。連線既有 Mechanical 後上傳資料至遠端 project_directory，遠端路徑不能直接使用 CPython 本機路徑。
+- **官方文檔來源**：[Static structural analysis of bracket](https://examples.mechanical.docs.pyansys.com/examples/00_basic/example_01_simple_structural_solve.html)
+- **開源倉庫與授權**：`https://github.com/ansys/pymechanical-examples`（授權：`MIT`）
+- **幾何與輸入資源**：`example_01_geometry.agdb`
+- **下載 API 呼叫**：`ansys.mechanical.core.examples.download_file('example_01_geometry.agdb', 'pymechanical', '00_basic')`
 
-模型修改授權後，依官方範例建立 Static Structural、匯入具名選擇／座標系統、設定 MKS、網格、支承與 remote force／thermal condition；建立 Directional/Total Deformation 與反力結果。先輸出實際 NS 名稱、scoping 數量、材料、網格節點／元素數與載荷清單，缺漏即停止。不可將官方固定 children index 套用至使用者模型。
+### 核心實施步驟
 
-求解另行授權後才呼叫 `Solution.Solve(True)`。輸出 solve.out、結果檔、Directional Deformation 的 Minimum/Maximum/Average（含單位）與反力；確認求解狀態及檔案非空，再與同一輸入／版本的官方結果比較。官方公開輸出約 0.104 m 僅作該工況參考，不能當所有模型的固定驗收值，也不以「完成呼叫」取代收斂證據。
+1. 啟動 Mechanical 服務並載入模型與幾何
+2. 設定單位系統為 Standard MKS
+3. 建立 Fixed Support 支承與 1000 N 載荷
+4. 執行網格劃分並評估網格品質指標
+5. 求解並擷取 Total/Directional Deformation 與 Equivalent Stress
 
-## 取得紀錄與版本
+### 客觀驗收條件 (Verification Condition)
 
-輸入只由產品 examples/download API 或 `ansys.tools.common.example_download.download_manager` 取得；既有本機資料先核對來源，不在技能內封裝二進位。保留下載 URL、上游 commit/tag、SDK 版本、產品版本與時間；下載完成用 `Get-FileHash -Algorithm SHA256 <檔案>` 記錄每個輸入與輸出，不能以檔名取代版本。需要固定內容時將官方 URL 的 main/stable/dev 換為已核對的 commit/tag。僅下載當次需要的檔案，不下載整庫或大模型。
+- **收斂與指標驗證**：最大位移約 0.104 m，求解收斂狀態 Exit Code 0，無未拘束自由度警告。
 
-目標產品 v251／v252／v261；本次均未啟動產品、未完成跨版行為驗證。SDK 能載入與官方頁面結果不代表本機產品已驗收；先記錄可用 API／後端版本，缺少能力時明確停止。例子下載授權與 ANSYS 產品執行授權分開：啟動、模型修改、求解／DOE 各按使用者既有授權執行，閱讀本文件不授權執行它們。
+## 範例 2：Modal analysis of turbine blade
 
+- **官方文檔來源**：[Modal analysis of turbine blade](https://examples.mechanical.docs.pyansys.com/examples/01_advanced/example_02_modal_analysis.html)
+- **開源倉庫與授權**：`https://github.com/ansys/pymechanical-examples`（授權：`MIT`）
+- **幾何與輸入資源**：`blade.step`
+- **下載 API 呼叫**：`ansys.mechanical.core.examples.download_file('blade.step', 'pymechanical', '01_advanced')`
+
+### 核心實施步驟
+
+1. 建立 Modal Analysis 系統並關聯幾何
+2. 對根部面建立 Fixed Support 邊界條件
+3. 提取前 6 階固有頻率與相對應振型
+
+### 客觀驗收條件 (Verification Condition)
+
+- **收斂與指標驗證**：第一階模態頻率收斂於基準值 +-2% 範圍內。
+
+## 取得紀錄與版本控管說明
+
+1. **官方下載原則**：輸入檔案一律優先透過官方 `download_file()` API 或快取取得，嚴禁將二進位二進制檔案硬編碼塞入技能庫。
+2. **雜湊校驗**：下載之資源檔案必須以 `SHA-256` 進行完整性驗證。
+3. **授權分離**：程式碼依 MIT / Apache-2.0 授權使用，ANSYS 求解器執行需遵循本機合法商業授權；無授權環境自動降級至雙軌數值/解析基準測試。

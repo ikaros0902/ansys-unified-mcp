@@ -1,4 +1,4 @@
-﻿"""ANSYS Unified MCP 2.0 - 統一求解器驅動抽象層 (BaseSolverDriver).
+"""ANSYS Unified MCP 2.0 - 統一求解器驅動抽象層 (BaseSolverDriver).
 
 提供所有 ANSYS CAE 求解器驅動的抽象基類與生命週期合約：
 - validate_prerequisites: 驗證環境變數、求解器路徑與授權可用性
@@ -215,3 +215,58 @@ class BaseSolverDriver(ABC):
     def extract_results(self, job_dir: Path) -> Dict[str, Any]:
         """別名介面：後處理提取成果 (對齊 spec_report.md 規範)。"""
         return self.extract_artifacts(job_dir=job_dir)
+
+
+class BaseDualTrackDriver(BaseSolverDriver):
+    """Unified driver base for dual-track analytical and native batch solvers."""
+
+    def prepare_job(self, job_dir: Path, config: Dict[str, Any]) -> Path:
+        """Prepare job workspace and generate default execution script."""
+        workspace = job_dir / "workspace"
+        workspace.mkdir(parents=True, exist_ok=True)
+        sanitized_name = self.solver_name.lower().replace(" ", "_").replace("-", "_").replace("(", "").replace(")", "")
+        script_file = workspace / f"run_{sanitized_name}.py"
+        if not script_file.exists():
+            script_file.write_text("# Auto-generated execution script\n", encoding="utf-8")
+        return script_file
+
+    def build_command(
+        self,
+        input_file: Path,
+        extra_args: Optional[List[str]] = None,
+    ) -> List[str]:
+        """Build execution command line for the solver."""
+        exe = self.solver_bin or "python"
+        cmd = [exe, str(input_file)]
+        if extra_args:
+            cmd.extend(extra_args)
+        return cmd
+
+    def get_log_file_path(self, job_dir: Path) -> Path:
+        """Return solver output log file path in workspace."""
+        return job_dir / "workspace" / "solver.log"
+
+    def parse_progress(self, job_dir: Path) -> Dict[str, Any]:
+        """Parse solver execution progress and return status dictionary."""
+        log_file = self.get_log_file_path(job_dir)
+        if not log_file.exists():
+            return {
+                "progress_pct": 0.0,
+                "current_step": "QUEUED",
+                "is_converged": False,
+            }
+        return {
+            "progress_pct": 100.0,
+            "current_step": "COMPLETED",
+            "is_converged": True,
+        }
+
+    def extract_artifacts(self, job_dir: Path) -> Dict[str, Any]:
+        """Extract artifacts and return execution metrics."""
+        artifacts_dir = job_dir / "artifacts"
+        artifacts_dir.mkdir(parents=True, exist_ok=True)
+        return {
+            "status": "success",
+            "solver": self.solver_name,
+            "artifacts_dir": str(artifacts_dir),
+        }

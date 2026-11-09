@@ -16,7 +16,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 OUT_PATH = REPO_ROOT / "docs" / "api_inventory" / "optislang_core_api.json"
 DOC_HTML = (
     REPO_ROOT
-    / "ANSYS_Document"
+    / "docs" / "ANSYS_Document"
     / "optiSLang"
     / "sdk"
     / "ansys-optislang-core"

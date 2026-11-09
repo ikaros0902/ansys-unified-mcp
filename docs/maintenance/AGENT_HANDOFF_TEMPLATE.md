@@ -21,6 +21,11 @@ Use this template to transfer a task between agents or sessions. Remove fields t
 - Approved actions:
 - Actions not approved:
 - Data sharing scope:
+- Intended receiver or destination:
+- Receiver authorization and approval reference:
+- Transferred data classes and paths:
+- Transfer status: not started / sent / received / rejected:
+- Receiver receipt or digest evidence:
 
 ## Work state
 
@@ -57,3 +62,6 @@ This example uses a generic documentation task. It does not record a real transf
 - Not checked: Rendered output and remote handoff.
 - Next concrete action: Review the local diff.
 - Stop condition: Stop if the request affects files outside the named workspace.
+
+
+A filled destination or transfer status records intent and evidence only. It does not authorize a transfer. Do not send restricted data until the sender has explicit approval and the receiver confirms access and scope.

@@ -1,0 +1,14 @@
+{
+  "evals": [
+    {
+      "id": "ansys-lumerical_trigger_01",
+      "prompt": "如何使用 ansys-lumerical 進行模擬設定與 API 呼叫？",
+      "expected_route": "ansys-lumerical"
+    },
+    {
+      "id": "ansys-lumerical_trigger_02",
+      "prompt": "請提供 Ansys Lumerical 光子學與波導模擬 的官方範例與驗證基準腳本。",
+      "expected_route": "ansys-lumerical"
+    }
+  ]
+}

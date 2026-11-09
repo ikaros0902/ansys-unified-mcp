@@ -14,18 +14,39 @@ All internal comments strictly use ASCII English characters.
 from __future__ import annotations
 
 import logging
-from typing import Annotated, Optional
+from typing import Annotated, Any, Optional
 
 from pydantic import Field
 
 from ansys_unified_mcp.shared import mcp, as_envelope as _envelope
 from ansys_unified_mcp.schemas.tool_annotations import create_tool_annotations
-from ansys_unified_mcp.benchmarks.sound_acoustics_engine import (
-    DIN45692SharpnessEngine,
-    P_REF_AIR,
-    SoundPressureLevelEngine,
-    ZwickerLoudnessEngine,
-)
+
+# Standard reference sound pressure in air (20 microPascals) defined locally
+# to avoid importing heavy numpy/scipy dependencies during MCP server cold start.
+P_REF_AIR: float = 2.0e-5
+
+
+def _get_acoustics_engines() -> tuple[Any, Any, Any]:
+    """Lazily import acoustics calculation engines on first tool invocation."""
+    from ansys_unified_mcp.benchmarks.sound_acoustics_engine import (
+        DIN45692SharpnessEngine,
+        SoundPressureLevelEngine,
+        ZwickerLoudnessEngine,
+    )
+
+    return SoundPressureLevelEngine, ZwickerLoudnessEngine, DIN45692SharpnessEngine
+
+
+def __getattr__(name: str) -> Any:
+    if name in {
+        "DIN45692SharpnessEngine",
+        "SoundPressureLevelEngine",
+        "ZwickerLoudnessEngine",
+    }:
+        from ansys_unified_mcp.benchmarks import sound_acoustics_engine
+
+        return getattr(sound_acoustics_engine, name)
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
 
 logger = logging.getLogger("ansys-unified-mcp.sound_tools")
 
@@ -70,7 +91,8 @@ def sound_calculate_sound_pressure_level(
         return _envelope({"error": "Signal array must not be empty."})
 
     try:
-        res = SoundPressureLevelEngine.analyze_signal(
+        spl_engine, _, _ = _get_acoustics_engines()
+        res = spl_engine.analyze_signal(
             signal_data=signal,
             fs=sampling_rate,
             p_ref=p_ref,
@@ -131,10 +153,11 @@ def sound_calculate_zwicker_loudness(
         return _envelope({"error": "Field type must be 'free' or 'diffuse'."})
 
     try:
+        _, zwicker_engine, _ = _get_acoustics_engines()
         if frequency is not None:
             if spl_db is None:
                 return _envelope({"error": "Provide spl_db when frequency is specified."})
-            res = ZwickerLoudnessEngine.compute_pure_tone_loudness(
+            res = zwicker_engine.compute_pure_tone_loudness(
                 frequency=frequency,
                 spl_db=spl_db,
                 field_type=field_norm,
@@ -142,7 +165,7 @@ def sound_calculate_zwicker_loudness(
         elif signal is not None:
             if not signal:
                 return _envelope({"error": "Signal array must not be empty."})
-            res = ZwickerLoudnessEngine.compute_signal_loudness(
+            res = zwicker_engine.compute_signal_loudness(
                 signal_data=signal,
                 fs=sampling_rate,
                 field_type=field_norm,
@@ -205,10 +228,11 @@ def sound_calculate_sharpness(
         return _envelope({"error": "Field type must be 'free' or 'diffuse'."})
 
     try:
+        _, _, sharpness_engine = _get_acoustics_engines()
         if frequency is not None:
             if spl_db is None:
                 return _envelope({"error": "Provide spl_db when frequency is specified."})
-            res = DIN45692SharpnessEngine.compute_from_pure_tone(
+            res = sharpness_engine.compute_from_pure_tone(
                 frequency=frequency,
                 spl_db=spl_db,
                 field_type=field_norm,
@@ -216,7 +240,7 @@ def sound_calculate_sharpness(
         elif signal is not None:
             if not signal:
                 return _envelope({"error": "Signal array must not be empty."})
-            res = DIN45692SharpnessEngine.compute_from_signal(
+            res = sharpness_engine.compute_from_signal(
                 signal_data=signal,
                 fs=sampling_rate,
                 field_type=field_norm,

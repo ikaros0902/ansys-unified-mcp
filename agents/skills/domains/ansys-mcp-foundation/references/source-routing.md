@@ -5,7 +5,7 @@
 - [領域來源及支援矩陣](../../../../../docs/skills/DOMAIN_SOURCE_AND_SUPPORT.md)：產品 → 專項 Skill → 文件來源 → MCP 支援／證據狀態。
 - [本機來源清冊說明](../../../../../docs/maintenance/ANSYS_SOURCE_INVENTORY.md)：清冊欄位、品質標記、PDF 與 Markdown 索引邊界、重建方式。
 - [第三方採用紀錄](../../../../../docs/maintenance/EXTERNAL_SOURCE_ADOPTION.md)：哪些 GitHub 來源讀過、採用何種抽象設計、哪些 commit／license 尚未核實。
-- 原始文件根目錄：`D:\Ikaros\ACT_Test\3.documents` 與既有 `D:\ansys-docs-local`。路徑僅供本機查找；不要把完整目錄清單或本機私有內容複製進 Skill。
+- 原始文件根目錄：`docs/knowledge_dictionary/ (請使用 ans_get_knowledge_dictionary 查詢)` 與既有 `D:\ansys-docs-local`。路徑僅供本機查找；不要把完整目錄清單或本機私有內容複製進 Skill。
 
 ## 查證順序
 

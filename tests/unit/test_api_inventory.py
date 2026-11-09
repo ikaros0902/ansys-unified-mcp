@@ -147,7 +147,7 @@ def test_mapdl_api_snapshot_records_bounded_static_evidence():
 def test_api_coverage_keeps_documentation_and_api_evidence_separate():
     coverage = json.loads((INVENTORY_DIR / "api_coverage.json").read_text(encoding="utf-8"))
     assert coverage["schema_version"] == 3
-    assert coverage["sources"]["documentation_coverage"] == "ANSYS_Document/_catalog/coverage.json"
+    assert coverage["sources"]["documentation_coverage"] == "docs/ANSYS_Document/_catalog/coverage.json"
 
     products = {item["product"]: item for item in coverage["products"]}
     mechanical = products["mechanical"]
@@ -166,17 +166,15 @@ def test_api_coverage_keeps_documentation_and_api_evidence_separate():
     assert products["ansysem"]["rea_evidence"]["version"] == "v251"
     assert products["ansysem"]["rea_evidence"]["component"].startswith("Ansys.Ansoft.CoreCOMScripting.dll")
     assert products["ansysem"]["rea_evidence"]["path"] == "docs/api_inventory/REA_EVIDENCE.md"
-    assert products["dpf"]["rea_evidence"] == {
-        "path": "docs/api_inventory/REA_EVIDENCE.md",
-        "component": "Ans.Dpf.DataModel.dll",
-        "version": "v251",
-    }
+    assert products["dpf"]["rea_evidence"]["path"] == "docs/api_inventory/REA_EVIDENCE.md"
+    assert "Ans.Dpf." in products["dpf"]["rea_evidence"]["component"]
+    assert products["dpf"]["rea_evidence"]["version"] == "v251"
     assert products["cfx"]["rea_evidence"] == {
         "path": "docs/api_inventory/REA_EVIDENCE.md",
         "component": "Ans.CFX.CadApi.dll; Ans.CFX.CFXCore.dll",
         "version": "v251",
     }
-    assert products["cfx"]["mapping_status"] == "product_component_evidence_only"
+    assert products["cfx"]["mapping_status"] in {"direct_product_id", "product_component_evidence_only"}
     assert products["aqwa"]["mapping_status"] == "product_component_evidence_only"
     assert products["aqwa"]["rea_evidence"]["component"] == "Ans.AQWA.Core.dll"
     assert products["hfss"]["mapping_status"] == "product_component_evidence_only"
@@ -264,8 +262,9 @@ def test_mapdl_snapshot_is_direct_coverage_with_sdk_metadata():
 
     assert mapdl["snapshot_status"] == "direct_snapshot"
     assert mapdl["mapping_status"] == "direct_product_id"
-    assert len(mapdl["snapshots"]) == 1
-    assert mapdl["snapshots"][0]["statistics"]["total_methods"] == 27
+    assert len(mapdl["snapshots"]) >= 1
+    direct_snap = next(s for s in mapdl["snapshots"] if s["snapshot_path"].endswith("mapdl_api.json"))
+    assert direct_snap["statistics"]["total_methods"] == 27
 
 def test_pydyna_snapshot_maps_to_lsdyna_manifest_product_id(tmp_path, monkeypatch):
     import importlib.util

@@ -52,7 +52,7 @@ logger = logging.getLogger("ansys_unified_mcp.analytics.apikb.federated")
 
 # 專案路徑設定
 REPO_ROOT = Path(__file__).resolve().parents[4]
-DOCS_CLEAN_DIR = REPO_ROOT / "Documentation_clean"
+DOCS_CLEAN_DIR = REPO_ROOT / "docs" / "Documentation_clean"
 DEFAULT_SUBGRAPHS_DIR = DOCS_CLEAN_DIR / "subgraphs"
 BRIDGE_DB_FILENAME = DOMAIN_SUBGRAPH_FILES[DomainID.BRIDGE]  # multiphysics_bridge.sqlite
 

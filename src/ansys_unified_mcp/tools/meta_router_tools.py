@@ -62,6 +62,8 @@ DOMAIN_MODULE_MAP: dict[str, list[str]] = {
         "ansys_unified_mcp.products.mechanical.tools",
         "ansys_unified_mcp.products.dyna.tools",
         "ansys_unified_mcp.products.dpf.tools",
+        "ansys_unified_mcp.products.mapdl.tools",
+        "ansys_unified_mcp.products.sherlock.tools",
     ],
     "fluids": [
         "ansys_unified_mcp.products.fluent.tools",
@@ -75,6 +77,7 @@ DOMAIN_MODULE_MAP: dict[str, list[str]] = {
     ],
     "coupling": [
         "ansys_unified_mcp.products.workbench.tools",
+        "ansys_unified_mcp.products.systems.tools",
         "ansys_unified_mcp.tools.intent_tools",
     ],
     "optimization": [
@@ -84,13 +87,16 @@ DOMAIN_MODULE_MAP: dict[str, list[str]] = {
     "thermal": [
         "ansys_unified_mcp.products.mechanical.tools",
         "ansys_unified_mcp.products.workbench.tools",
+        "ansys_unified_mcp.products.icepak.tools",
         "ansys_unified_mcp.tools.intent_tools",
     ],
     "materials": [
         "ansys_unified_mcp.products.mechanical.tools",
+        "ansys_unified_mcp.products.granta.tools",
     ],
     "multibody": [
         "ansys_unified_mcp.products.mechanical.tools",
+        "ansys_unified_mcp.products.rocky.tools",
     ],
     "common": [
         "ansys_unified_mcp.tools.connection_tools",
@@ -102,15 +108,27 @@ DOMAIN_MODULE_MAP: dict[str, list[str]] = {
     "workflow": [
         "ansys_unified_mcp.tools.intent_tools",
     ],
-    "electromagnetics": [],
-    "optics": [],
+    "electromagnetics": [
+        "ansys_unified_mcp.products.aedt.tools",
+    ],
+    "optics": [
+        "ansys_unified_mcp.products.optics.tools",
+    ],
     "sound": [
         "ansys_unified_mcp.tools.sound_tools",
     ],
-    "aqwa": [],
-    "lumerical": [],
-    "chemkin": [],
-    "motorcad": [],
+    "aqwa": [
+        "ansys_unified_mcp.products.aqwa.tools",
+    ],
+    "lumerical": [
+        "ansys_unified_mcp.products.optics.tools",
+    ],
+    "chemkin": [
+        "ansys_unified_mcp.products.chemkin.tools",
+    ],
+    "motorcad": [
+        "ansys_unified_mcp.products.motorcad.tools",
+    ],
 }
 
 # Domain metadata catalog across 14 physics disciplines and infrastructure services
@@ -577,8 +595,8 @@ def _is_tool_in_domain(name: str, desc: str, module: str, domain: str) -> bool:
         return True
 
     if domain == "structural":
-        return any(x in m for x in ["mechanical", "dyna", "dpf"]) or any(
-            x in n for x in ["mechanical_", "dyna_", "dpf_", "structural", "modal", "stress", "deformation"]
+        return any(x in m for x in ["mechanical", "dyna", "dpf", "mapdl", "sherlock"]) or any(
+            x in n for x in ["mechanical_", "dyna_", "dpf_", "mapdl_", "sherlock_", "structural", "modal", "stress", "deformation"]
         )
 
     if domain == "fluids":
@@ -591,19 +609,19 @@ def _is_tool_in_domain(name: str, desc: str, module: str, domain: str) -> bool:
         return "workbench" in m or "workbench_" in n
 
     if domain == "coupling":
-        return "workbench" in m or any(x in n for x in ["workflow_", "link", "coupling", "system"])
+        return "workbench" in m or "systems" in m or any(x in n for x in ["workflow_", "link", "coupling", "system"])
 
     if domain == "optimization":
         return "optislang" in m or any(x in n for x in ["optislang_", "surrogate", "mop"])
 
     if domain == "thermal":
-        return "thermal" in n or "thermal" in d or "heat" in d or "temperature" in d or "warpage" in n
+        return "icepak" in m or "thermal" in n or "icepak" in n or "thermal" in d or "heat" in d or "temperature" in d or "warpage" in n
 
     if domain == "materials":
-        return "material" in n or "material" in d or "bom" in n
+        return "granta" in m or "granta" in n or "material" in n or "material" in d or "bom" in n
 
     if domain == "multibody":
-        return "joint" in n or "rigid" in n or "multibody" in d
+        return "rocky" in m or "rocky" in n or "joint" in n or "rigid" in n or "multibody" in d
 
     if domain == "common":
         return "tools." in m and "intent" not in m and "meta_router" not in m
@@ -612,7 +630,7 @@ def _is_tool_in_domain(name: str, desc: str, module: str, domain: str) -> bool:
         return "intent" in m or n.startswith("workflow_")
 
     if domain == "electromagnetics":
-        return any(x in n for x in ["hfss", "maxwell", "electromagnetic", "pyaedt"])
+        return "aedt" in m or any(x in n for x in ["aedt_", "hfss", "maxwell", "electromagnetic", "pyaedt"])
 
     if domain == "optics":
         return any(x in n for x in ["speos", "zemax", "optics", "ray"])
@@ -813,7 +831,10 @@ async def ans_call_domain_tool(domain: str, tool_name: str, arguments: Optional[
                     )
                 except ValidationError as exc:
                     elapsed_ms = round((time.perf_counter() - start_time) * 1000.0, 2)
-                    err_lines = [f"{'.'.join(str(l) for l in e.get('loc', []))}: {e.get('msg', '')}" for e in exc.errors()]
+                    err_lines = [
+                        f"{'.'.join(str(loc_part) for loc_part in e.get('loc', []))}: {e.get('msg', '')}"
+                        for e in exc.errors()
+                    ]
                     return create_error_envelope(
                         status="error",
                         error_code="VALIDATION_ERROR",
@@ -843,12 +864,14 @@ async def ans_call_domain_tool(domain: str, tool_name: str, arguments: Optional[
             execution_time_ms=elapsed_ms,
         )
 
-    # 5. Invoke target function
+    # 5. Invoke target function (offload sync functions to worker thread to avoid blocking event loop)
     try:
         if inspect.iscoroutinefunction(fn):
             raw_result = await fn(**args)
         else:
-            raw_result = fn(**args)
+            import anyio
+
+            raw_result = await anyio.to_thread.run_sync(lambda: fn(**args))
     except TypeError as exc:
         elapsed_ms = round((time.perf_counter() - start_time) * 1000.0, 2)
         return create_error_envelope(

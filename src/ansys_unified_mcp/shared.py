@@ -143,6 +143,33 @@ def get_aliases(canonical_name: str) -> list[str]:
     return list(CANONICAL_TO_ALIASES.get(canonical_name, []))
 
 
+# 攔截 mcp.tool 裝飾器，確保直接使用 @mcp.tool 註冊的所有規範工具亦完整寫入 TOOL_REGISTRY
+_orig_mcp_tool = mcp.tool
+
+
+def _registering_mcp_tool(*args: Any, **kwargs: Any) -> Any:
+    if len(args) == 1 and callable(args[0]) and not kwargs:
+        fn = args[0]
+        TOOL_REGISTRY[fn.__name__] = fn
+        return _orig_mcp_tool(fn)
+
+    explicit_name = kwargs.get("name") or (
+        args[0] if args and isinstance(args[0], str) else None
+    )
+    inner_decorator = _orig_mcp_tool(*args, **kwargs)
+
+    def _decorator(fn: Callable[..., Any]) -> Any:
+        tool_name = explicit_name or getattr(fn, "__name__", "")
+        if tool_name:
+            TOOL_REGISTRY[tool_name] = fn
+        return inner_decorator(fn)
+
+    return _decorator
+
+
+mcp.tool = _registering_mcp_tool
+
+
 def aliased_tool(
     name_or_mcp: str | FastMCP | None = None,
     alias_or_name: str | Sequence[str] | None = None,

@@ -3381,7 +3381,7 @@
   },
   "sources": {
     "api_snapshots": "docs/api_inventory/",
-    "documentation_coverage": "ANSYS_Document/_catalog/coverage.json",
+    "documentation_coverage": "docs/ANSYS_Document/_catalog/coverage.json",
     "rea_evidence": "docs/api_inventory/REA_EVIDENCE.md"
   }
 }

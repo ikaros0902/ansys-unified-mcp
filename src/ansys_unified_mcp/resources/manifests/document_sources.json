@@ -1,4 +1,4 @@
-{
+﻿{
   "schema_version": 1,
   "release_policy": "2025 R1 onward; only releases explicitly linked by the publisher. SDK versions are separate.",
   "authority_pages": [
@@ -505,6 +505,80 @@
       "url": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v261/en/pdf/Ansys_Mechanical_APDL_Command_Reference.pdf",
       "path": "MAPDL/v261/api_reference/Ansys_Mechanical_APDL_Command_Reference.pdf",
       "authority_page": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v261/en/pdf/Ansys_Mechanical_APDL_Command_Reference.pdf"
+    },
+    {
+      "product": "lsdyna",
+      "release": "v252",
+      "sdk_package": "",
+      "sdk_version": "unknown",
+      "category": "manual",
+      "title": "LS-Run User's Guide",
+      "url": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v252/en/pdf/LS-Run_Users_Guide.pdf",
+      "path": "LS-DYNA/v252/manuals/LS-Run_Users_Guide.pdf",
+      "authority_page": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v252/en/pdf/LS-Run_Users_Guide.pdf"
+    },
+    {
+      "product": "lsdyna",
+      "release": "v261",
+      "sdk_package": "",
+      "sdk_version": "unknown",
+      "category": "manual",
+      "title": "Ansys LS-PrePost User's Guide",
+      "url": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v261/en/pdf/Ansys_LS-PrePost_Users_Guide.pdf",
+      "path": "LS-DYNA/v261/manuals/Ansys_LS-PrePost_Users_Guide.pdf",
+      "authority_page": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v261/en/pdf/Ansys_LS-PrePost_Users_Guide.pdf"
+    },
+    {
+      "product": "lsdyna",
+      "release": "v251",
+      "sdk_package": "",
+      "sdk_version": "unknown",
+      "category": "manual",
+      "title": "LS-Run User's Guide",
+      "url": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v251/en/pdf/LS-Run_Users_Guide.pdf",
+      "path": "LS-DYNA/v251/manuals/LS-Run_Users_Guide.pdf",
+      "authority_page": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v251/en/pdf/LS-Run_Users_Guide.pdf"
+    },
+    {
+      "product": "lsdyna",
+      "release": "v261",
+      "sdk_package": "",
+      "sdk_version": "unknown",
+      "category": "manual",
+      "title": "LS-Run User's Guide",
+      "url": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v261/en/pdf/LS-Run_Users_Guide.pdf",
+      "path": "LS-DYNA/v261/manuals/LS-Run_Users_Guide.pdf",
+      "authority_page": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v261/en/pdf/LS-Run_Users_Guide.pdf"
+    },
+    {
+      "product": "optislang",
+      "release": "v241",
+      "sdk_package": "",
+      "sdk_version": "unknown",
+      "category": "api_reference",
+      "title": "oSP3D Script API 2024 R1",
+      "url": "https://developer.synopsys.com/docs/osp3d/index.xhtml",
+      "path": "optiSLang/v241/api_reference/oSP3D_Script_API_2024R1.html"
+    },
+    {
+      "product": "optislang",
+      "release": "unknown",
+      "sdk_package": "",
+      "sdk_version": "unknown",
+      "category": "guide",
+      "title": "Ansys optiSLang for developers",
+      "url": "https://developer.synopsys.com/docs/optislang.md",
+      "path": "optiSLang/unknown/guide/395028135e6b-optislang.md"
+    },
+    {
+      "product": "optislang",
+      "release": "2026 R1 SP03",
+      "sdk_package": "",
+      "sdk_version": "unknown",
+      "category": "api_reference",
+      "title": "optiSLang Python API 2026 R1 SP03",
+      "url": "https://developer.synopsys.com/docs/optislang-python-api-2026-r1-sp03/index.md",
+      "path": "optiSLang/v261/api_reference/61b42e274ce4-index.md"
     }
   ]
 }

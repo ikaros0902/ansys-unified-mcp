@@ -1,0 +1,14 @@
+{
+  "evals": [
+    {
+      "id": "ansys-thermal-analysis_trigger_01",
+      "prompt": "如何使用 ansys-thermal-analysis 進行模擬設定與 API 呼叫？",
+      "expected_route": "ansys-thermal-analysis"
+    },
+    {
+      "id": "ansys-thermal-analysis_trigger_02",
+      "prompt": "請提供 Ansys 穩態與暫態熱分析工程指南 的官方範例與驗證基準腳本。",
+      "expected_route": "ansys-thermal-analysis"
+    }
+  ]
+}

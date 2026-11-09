@@ -28,18 +28,68 @@ def _source_fingerprint() -> tuple[tuple[str, str, int, int, str], ...]:
     )
 
 
+_DEFAULT_DB_PATH = cfg.DB_PATH
+_DEFAULT_DOCS_DIR = cfg.DOCS_DIR
+
+
+@lru_cache(maxsize=4)
+def _fast_sources_current_check(
+    db_path_str: str,
+    db_mtime_ns: int,
+    fingerprint: tuple[tuple[str, str, int, int, str], ...],
+) -> bool:
+    if not _schema_is_current(Path(db_path_str)):
+        return False
+    try:
+        conn = sqlite3.connect(db_path_str)
+        try:
+            rows = conn.execute(
+                "SELECT product, interface, source_path FROM api_sources"
+            ).fetchall()
+        finally:
+            conn.close()
+    except sqlite3.Error:
+        return False
+
+    if len(rows) != len(fingerprint):
+        return False
+
+    repo_root_resolved = cfg.REPO_ROOT.resolve()
+    expected_basic = set()
+    max_src_mtime = 0
+    for product, path_str, mtime_ns, _, interface in fingerprint:
+        if mtime_ns > max_src_mtime:
+            max_src_mtime = mtime_ns
+        p = Path(path_str)
+        try:
+            rel_path = p.resolve().relative_to(repo_root_resolved).as_posix()
+        except ValueError:
+            rel_path = p.resolve().as_posix()
+        expected_basic.add((product, interface, rel_path))
+
+    return set(rows) == expected_basic and db_mtime_ns >= max_src_mtime
+
+
 @lru_cache(maxsize=4)
 def _source_metadata(fingerprint: tuple[tuple[str, str, int, int, str], ...]) -> tuple[dict, ...]:
     return tuple(cfg.source_metadata(product, Path(path)) for product, path, _, _, _ in fingerprint)
 
 
 def _sources_are_current() -> bool:
+    fp = _source_fingerprint()
+    if cfg.DB_PATH == _DEFAULT_DB_PATH and cfg.DOCS_DIR == _DEFAULT_DOCS_DIR:
+        try:
+            db_mtime_ns = cfg.DB_PATH.stat().st_mtime_ns
+            if _fast_sources_current_check(str(cfg.DB_PATH), db_mtime_ns, fp):
+                return True
+        except OSError:
+            pass
     if not _schema_is_current(cfg.DB_PATH):
         return False
     source_keys = ("product", "release", "interface", "source_path", "sdk_version", "sha256", "artifact_sha256", "rea_evidence_id")
     expected = {
         tuple(source[key] for key in source_keys)
-        for source in _source_metadata(_source_fingerprint())
+        for source in _source_metadata(fp)
     }
     try:
         conn = sqlite3.connect(str(cfg.DB_PATH))

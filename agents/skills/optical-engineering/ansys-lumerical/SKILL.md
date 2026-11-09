@@ -1,14 +1,21 @@
 ---
 name: ansys-lumerical
-description: Route Ansys Lumerical Python and scripting work to the installed product and solver documentation. Use for FDTD, MODE, and Lumerical optical simulations; this skill does not provide a live MCP connector.
+description: Ansys Lumerical FDTD and MODE wave optics simulation and Lumapi automation.
 ---
 
-# Ansys Lumerical 光子模擬
+# Ansys Lumerical 光子學與波導模擬
 
-先識別 FDTD、MODE、INTERCONNECT 或其他 solver、產品版本、GUI／batch 宿主及 `lumapi` Python／腳本介面。使用產品目標版本的 `lumapi` 文件與範例，不因能匯入 Python 模組便視為 solver 可連線。
+本技能指導工程師與 Agent 執行 Ansys Lumerical 光子學與波導模擬 之標準化模擬工作流。遵循雙軌架構，支援商業求解器連線與離線數值基準驗收。
 
-修改模型前先保存可回復副本。逐項核對 geometry／mesh order、材料及色散資料、source、monitor、邊界條件、solver region、頻率／波長與單位。執行後讀回實際 monitor 資料與 solver 狀態；將網格／時間步長收斂與插值設定納入比較。
+## 核心工作流規範
 
-目前本 MCP 無 Lumerical controller。文件來源與版本限制見 [領域來源矩陣](../../../../docs/skills/DOMAIN_SOURCE_AND_SUPPORT.md)。
+1. **API 查詢與校驗**：使用 `api_search(query='...', product='lumerical')` 搜尋符號，調用 `api_validate_script` 進行靜態檢查。
+2. **知識字典檢索**：呼叫 `ans_get_knowledge_dictionary(product='lumerical')` 查閱最新版本規範與限制。
+3. **官方範例對齊**：檢閱 **official_examples.md** 與調用 `ans_search_official_examples` 獲取權威流程。
+4. **客觀驗收條件**：執行 `scripts/verify_lumerical_baseline.py` 確認數值基準完全吻合（Exit Code 0）。
 
+## 參考文檔與雙軌腳本
 
+- 詳細技術指南：[api_and_workflows.md](references/api_and_workflows.md)
+- 官方範例庫：**official_examples.md**
+- 數值基準腳本：`scripts/verify_lumerical_baseline.py`

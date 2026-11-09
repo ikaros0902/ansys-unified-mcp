@@ -1,6 +1,6 @@
 # ANSYS 產品 API 來源與缺口索引
 
-本索引依目前 coverage 清冊列出的 57 個產品 ID，彙整直接 API 快照、已映射 REA 組件證據和來源缺口。33 份 API／SDK／protocol 快照中，29 份映射至 19 個產品 ID；APIKB 另索引 55 個 REA 靜態候選來源鍵和 33 份 native export 清冊，逐來源細節見 [API Catalog](./API_CATALOG.md)及[REA source index](./curated/rea/index.md)。
+本索引依目前 coverage 清冊列出的 57 個產品 ID，彙整直接 API 快照、已映射 REA 組件證據和來源缺口。35 份 API／SDK／protocol 快照中，29 份映射至 19 個產品 ID；APIKB 另索引 55 個 REA 靜態候選來源鍵和 33 份 native export 清冊，逐來源細節見 [API Catalog](./API_CATALOG.md)及[REA source index](./curated/rea/index.md)。PyTwin 與 PyAEDT SDK 快照暫未映射到 manifest 產品 ID，詳見 API Catalog。
 
 ## 證據狀態
 

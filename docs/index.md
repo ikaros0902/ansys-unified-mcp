@@ -40,7 +40,8 @@
 - [外部來源採用記錄](maintenance/EXTERNAL_SOURCE_ADOPTION.md)
 - [Agent handoff 範本](maintenance/AGENT_HANDOFF_TEMPLATE.md)：不含 ANSYS 衍生內容的可重用任務交接格式。
 - [領域來源與能力邊界](skills/DOMAIN_SOURCE_AND_SUPPORT.md)
-- 本機 ANSYS 官方文件庫位於 `ANSYS_Document/INDEX.md`；文件原件不納入版本庫。
+- [ANSYS 主題知識字典](knowledge_dictionary/README.md)：繁中主題整理、來源／網址清冊及 PDF／HTML 轉換狀態。
+- 本機 ANSYS 官方文件庫位於 `docs/ANSYS_Document/INDEX.md`；文件原件不納入版本庫。
 - [模組技能庫](../agents/skills/README.md)：技能依 ANSYS 模組分類，並以 `SKILL.md` 作為入口。
 
 ## 歷史資料

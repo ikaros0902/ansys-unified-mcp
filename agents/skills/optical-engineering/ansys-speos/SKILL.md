@@ -1,14 +1,21 @@
 ---
 name: ansys-speos
-description: Check Ansys Speos client, RPC, and illumination API workflows against the installed Speos product release. Use for Speos illumination and optical simulation; no live MCP connector is provided.
+description: Ansys Speos optical ray tracing illumination simulation and photometric analysis.
 ---
 
-# Ansys Speos 與 Illumination
+# Ansys Speos 光學照明與光度學模擬
 
-先辨識 Speos 版本與實際宿主（Speos client API、RPC、NX library 或 Lab automation），再讀相符 API 範例；不同宿主不得假設型別可互換。
+本技能指導工程師與 Agent 執行 Ansys Speos 光學照明與光度學模擬 之標準化模擬工作流。遵循雙軌架構，支援商業求解器連線與離線數值基準驗收。
 
-核對光源光譜、材料、幾何／面向、偵測器、波長範圍及光線追跡設定。結果須附單位、量測區域與 solver 狀態。若 ray tracing 有隨機性，保留 seed 和 ray 數並以重複性評估差異，不以單次彩色圖判斷改善。
+## 核心工作流規範
 
-目前本 MCP 無 Speos controller。查閱來源及版本標記見 [領域來源矩陣](../../../../docs/skills/DOMAIN_SOURCE_AND_SUPPORT.md)。
+1. **API 查詢與校驗**：使用 `api_search(query='...', product='speos')` 搜尋符號，調用 `api_validate_script` 進行靜態檢查。
+2. **知識字典檢索**：呼叫 `ans_get_knowledge_dictionary(product='speos')` 查閱最新版本規範與限制。
+3. **官方範例對齊**：檢閱 **official_examples.md** 與調用 `ans_search_official_examples` 獲取權威流程。
+4. **客觀驗收條件**：執行 `scripts/verify_speos_baseline.py` 確認數值基準完全吻合（Exit Code 0）。
 
+## 參考文檔與雙軌腳本
 
+- 詳細技術指南：[api_and_workflows.md](references/api_and_workflows.md)
+- 官方範例庫：**official_examples.md**
+- 數值基準腳本：`scripts/verify_speos_baseline.py`

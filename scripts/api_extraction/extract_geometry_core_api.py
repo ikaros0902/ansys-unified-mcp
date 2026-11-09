@@ -14,7 +14,7 @@ from typing import Any
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 OUT_PATH = REPO_ROOT / "docs" / "api_inventory" / "geometry_core_api.json"
-DOC_DIR = REPO_ROOT / "ANSYS_Document" / "Geometry" / "sdk" / "ansys-geometry-core" / "0.18.2" / "api_reference"
+DOC_DIR = REPO_ROOT / "docs" / "ANSYS_Document" / "Geometry" / "sdk" / "ansys-geometry-core" / "0.18.2" / "api_reference"
 DOC_MARKDOWN = DOC_DIR / "d3ab5ac63cc0-Modeler.md"
 DOC_HTML = DOC_DIR / "d3ab5ac63cc0-Modeler.html"
 SDK_VERSION = "0.17.1"

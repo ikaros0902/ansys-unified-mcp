@@ -37,16 +37,16 @@ load_dotenv(REPO_ROOT / ".env")
 
 # ANSYS 官方文件語料受版權保護且體積龐大（約 680 MB），不適合納入版控，
 # 故允許用環境變數 ANSYS_DOCS_ROOT 把語料根目錄指向 repo 外部路徑。
-# 未設定或設為空字串時退回 REPO_ROOT，維持既有行為不破壞。
+# 未設定或設為空字串時退回 REPO_ROOT / "docs"。
 _DOCS_ROOT_ENV = os.environ.get("ANSYS_DOCS_ROOT", "").strip()
-DOCS_ROOT = Path(_DOCS_ROOT_ENV) if _DOCS_ROOT_ENV else REPO_ROOT
+DOCS_ROOT = Path(_DOCS_ROOT_ENV) if _DOCS_ROOT_ENV else REPO_ROOT / "docs"
 
 SOURCE_DIR = DOCS_ROOT / "Documentation_md"
 CLEAN_DIR = DOCS_ROOT / "Documentation_clean"
 INDEX_PATH = CLEAN_DIR / "docs_index.sqlite"
 # 其他文件語料根目錄以環境設定加入，使用作業系統路徑分隔符；只將已轉成
 # Markdown 的文件建立全文索引，原始 PDF/HTML 則由來源清冊追蹤。
-EXTRA_SOURCE_DIRS = [
+EXTRA_SOURCE_DIRS = [DOCS_ROOT / "knowledge_dictionary"] + [
     Path(item.strip())
     for item in os.environ.get("ANSYS_DOCS_EXTRA_ROOTS", "").split(os.pathsep)
     if item.strip()
@@ -59,8 +59,8 @@ CHUNK_OVERLAP = 180
 
 # Recognized products.
 PRODUCTS = (
-    "mechanical", "lsdyna", "ls-prepost", "optislang", "spaceclaim", "geometry",
-    "fluent", "dpf", "workbench", "pcb_warpage", "error_catalog", "general"
+    "mechanical", "lsdyna", "ls-prepost", "mapdl", "motorcad", "optislang", "acp", "primemesh", "cfx", "sherlock", "speos", "zemax", "rocky", "sound", "aedt", "modelcenter", "spaceclaim", "geometry", "granta_mi", "lumerical", "icepak", "avxcelerate", "cff", "discovery", "twinai", "scade_one", "rigid_body_dynamics", "adr", "turbogrid", "hfss", "maxwell", "q3d", "siwave", "minerva", "scade", "simai", "ansys_id_portal", "ansys_id_sso", "ansysem", "icem_cfd", "installation_and_licensing", "pyansys", "reaction_chemkin", "saf", "act", "thermal",
+    "fluent", "dpf", "workbench", "pcb_warpage", "error_catalog", "circuit", "emit", "lsopt", "aqwa", "additive", "fensap_ice", "edupack", "polyflow", "general"
 )
 
 # Recognized categories.

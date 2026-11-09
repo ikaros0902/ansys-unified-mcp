@@ -98,6 +98,32 @@ SDK_TARGETS = {
             "or host runtime behavior."
         ),
     },
+    "pytwin": {
+        "package": "pytwin",
+        "version": "0.13.0",
+        "package_root": Path("pytwin"),
+        "module_root": "pytwin",
+        "interface": "PyTwin SDK 0.13.0 direct AST declarations",
+        "include_distribution_metadata": True,
+        "scope_note": (
+            "The package describes clients for TWIN models exported from Twin Builder. This "
+            "does not establish a manifest product mapping or an ANSYS product release; "
+            "product identity, host support, and runtime behavior remain unknown."
+        ),
+    },
+    "pyaedt": {
+        "package": "pyaedt",
+        "version": "1.9.0",
+        "package_root": Path("ansys/aedt"),
+        "module_root": "ansys.aedt",
+        "interface": "PyAEDT SDK 1.9.0 direct AST declarations",
+        "include_distribution_metadata": True,
+        "scope_note": (
+            "This snapshot covers direct declarations in Python files owned by the PyAEDT "
+            "distribution under ansys.aedt. It does not establish an AEDT product release, "
+            "a manifest product mapping, or host runtime support."
+        ),
+    },
 }
 
 
@@ -327,6 +353,14 @@ def extract_reaction_chemkin_api() -> dict[str, Any]:
 
 def extract_motorcad_api() -> dict[str, Any]:
     return extract_python_sdk_api("motorcad")
+
+
+def extract_pytwin_api() -> dict[str, Any]:
+    return extract_python_sdk_api("pytwin")
+
+
+def extract_pyaedt_api() -> dict[str, Any]:
+    return extract_python_sdk_api("pyaedt")
 
 
 if __name__ == "__main__":

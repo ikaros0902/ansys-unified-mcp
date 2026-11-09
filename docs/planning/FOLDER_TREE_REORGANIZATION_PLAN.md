@@ -3,11 +3,11 @@
 ## 目前 checkpoint（2026-10-29）
 
 - 目前 Git tree 的正式資料夾只有 `agents/`、`docs/`、`scripts/`、`src/`、`tests/`；根層另有啟動器與專案設定檔。Stage 2 的五個 v251 REA 候選批次及 Stage 1/3 的 PyAnsys 來源盤點已提交於本機分支。Stage 4–6 有安全設計文件與交接範本；這些文件不代表遠端 worker、debug loop 或跨機傳輸已實作。ANSYS_Document HTML/PDF Markdown 與轉換清單留在被忽略的本機目錄。此分支含有衍生資料，不可直接推送。HEAD 與工作樹狀態以即時 Git 記錄為準，本計畫不固定 HEAD 欄位。
-- 目前 APIKB 來源口徑為 121 keys：33 份 API／SDK／protocol snapshots（29 份映射至 19 個產品 ID，4 份未映射）、55 份 REA managed snapshots、33 份 native export snapshots。最近一次索引建置記錄 33,600 symbols、125,612 unique members、208,212 symbol-members、40,203 edges、157,795 FTS entries；未做查詢驗收。主候選清冊有 47 份檢查結果，其中 42 份 metadata complete、5 份 absent；APIKB 快照包含這 42 份及 13 個另行分析候選（ACP、AQWA RemoteItf、Motion、SIwave、RSM JobManagement、Engineering Data Core/DataProvider、DesignModeler Core、Material Designer Core、TurboSystem AFDCore/CCDCore/CPDCore/RTDCore）。
+- 目前 APIKB 來源口徑為 123 keys：35 份 API／SDK／protocol snapshots（29 份映射至 19 個產品 ID，6 份未映射）、55 份 REA managed snapshots、33 份 native export snapshots。最近一次索引建置記錄 34,642 symbols、130,975 unique members、213,575 symbol-members、40,406 edges、164,199 FTS entries；未做查詢驗收。主候選清冊有 47 份檢查結果，其中 42 份 metadata complete、5 份 absent；APIKB 快照包含這 42 份及 13 個另行分析候選（ACP、AQWA RemoteItf、Motion、SIwave、RSM JobManagement、Engineering Data Core/DataProvider、DesignModeler Core、Material Designer Core、TurboSystem AFDCore/CCDCore/CPDCore/RTDCore）。
 - 57 個產品 coverage 狀態為 19 個有直接 snapshot、13 個只有產品組件證據、24 個尚未評估、1 個未映射共用介面。這些計數描述目前清冊，不表示完整 API 覆蓋。Sherlock 與 Rocky SDK 快照按套件對應產品 ID；兩產品 release 與官方支援狀態未核實。CFX SDK 0.3.0 的 distribution METADATA 要求本機授權 CFX 安裝並聲明支援 CFX 2025 R2 SP3 以上，不證明 v251 相容性。Speos README 同列 2025.1、Docker tag 261 與 AWP_ROOT251 範例，版本線索衝突，產品相容性未知。
 - REA 候選母體仍需重算：`REA_EVIDENCE.md` 記錄 1,172 個檔名候選，而目前 managed assembly inventory 有 14,421 筆組件資料；依 `Ans.*`／`Ansys.*` 名稱規則的另一輪唯讀盤點得到 1,288 筆。篩選條件與去重口徑未對齊，不合併成單一總數。下一批先依 `relative_path` 和產品目錄篩選並保留檔案 hash，再分產品映射或列為未映射。後續候選盤點包括 ROM `Ans.Rom.dll`／`Ans.Rom.Interop.dll`、ACT add-in 組件與其他尚未映射產品目錄；尚未確認來源存在性或授權前不分析。
 - 使用者要求目錄與 API/RAG 工作並行，暫不做驗證。Ansys 衍生資料的公開散布權限尚未確認，因此 REA/SDK 原件、快照、字典及其索引留在本機；已追蹤檔案不會因 `.gitignore` 而自動排除。唯讀 Git 歷史盤點顯示目前分支祖先含大量 API/REA/SDK 衍生資料：`9d9aad3` 對 `docs/api_inventory/` 有 120 個路徑變更，`82557c7` 也加入大量 API JSON。`38ba10f` 又更新本機衍生索引。因此目前分支不得直接 push。`origin/master` 已有 5 個 API inventory 檔，不改寫其歷史。公開交付需另從 `origin/master` 建立乾淨分支，逐檔重建可分享的目錄差異；不可整筆 cherry-pick 混有文件、程式及刪除的搬移 commits。
-- 歷史上已建立多筆本機階段提交，最新階段記錄見 Git 歷史。本任務中使用者已明確授權主代理逐階段建立本機 commit；這項任務授權僅限本地提交。公開散布權尚未確認，因此不推送含 ANSYS 衍生資料的分支；若後續取得許可，仍須先建立乾淨分支並逐檔審查。
+- 歷史上已建立多筆本機階段提交，最新階段記錄見 Git 歷史。本任務的後續規則要求主代理與子代理不得自行提交；使用者須親自執行 commit。公開散布權尚未確認，因此不推送含 ANSYS 衍生資料的分支；若後續取得許可，仍須先建立乾淨分支並逐檔審查。
 - 本 checkpoint 只核對 Git tree、狀態輸出及現有文件記載；沒有執行測試、驗證器、API/RAG 查詢或 ANSYS 求解。
 
 ## 分階段執行計畫（2026-10-29）
@@ -17,19 +17,19 @@
 | 階段 | 目的與交付物 | 進入條件與停止門檻 | 目前狀態 |
 | --- | --- | --- | --- |
 | **Stage 0 — Feasibility & Permission Review** | 記錄本機 ANSYS/SDK/REA 工具、可用版本、目標產品清單、資料來源、授權/散布限制與風險；建立可做、需授權、不可公開三類邊界。 | 分清使用者對本機靜態研究的授權、Ansys 條款對衍生物的限制、及 GitHub 發布權；未確認公開散布權前不推送 API/REA/SDK/手冊衍生資料。 | 初步完成；公開散布權仍不明，已限制所有衍生成果留本機。 |
-| **Stage 1 — Minimum Toolchain** | 建立並記錄 Git 分支/階段提交、MCP 工具連線狀態、Serena、CodeGraph/codebase-memory、文件與 APIKB/RAG 的知識格式及來源追溯欄位。 | 僅記錄當次可觀察的連線與工具能力；設定檔存在不當作服務已連通。此階段不要求跑測試。 | 部分完成；Serena、CodeGraph 與 codebase-memory 工具在本次工作中有回應。CodeGraph 已於 2026-10-29 全量重建（469 files、7,633 nodes、17,271 edges）。codebase-memory 索引停留於 2026-10-21、watch 關閉，且目前未提供重建工具；不以舊圖宣稱新鮮。MCP 服務端求解器連線未測。 |
-| **Stage 2 — ANSYS 2025 R1 API Inventory** | 以 Mechanical、ACT、MAPDL、LS-DYNA 為優先建立版本化 API 來源矩陣、公開文件與 SDK 字典、REA 靜態候選索引、缺口列表及可追溯 AI RAG；整理 ANSYS_Document 全部內容，按產品/主題/章節編目，將 PDF 與 HTML 轉成 Markdown，原件保留。 | 來源要記錄版本、相對路徑、雜湊、公開狀態與分析狀態；疑似受授權限制的原件與衍生 Markdown 均本機保存。沒有來源時標缺口，不推定 API 完整。 | 進行中；APIKB 有 33 個 API/SDK/protocol、55 個 REA、33 個 native source keys。ANSYS_Document 已按產品目錄編目；424,158 個 HTML 中 400,904 個沿用既有 Markdown、23,253 個新增轉換、1 個無法擷取正文；269 個 PDF 中 268 個有 Markdown；唯一漏項是 1 頁掃描型 RAL 色票 PDF，現有環境沒有 OCR 引擎，原件保留且未安裝工具。轉換清單與原件保留在被忽略的本機 `ANSYS_Document/_catalog/`。API 來源逐產品核對與代表性 RAG 查詢未完成。 |
-| **Stage 3 — PyAnsys Source Intelligence** | 對 PyAnsys repos 建立套件/模組/符號/相依圖、上游來源與版本對照，並以 CodeGraph、Serena、codebase-memory 等交叉記錄查詢方式和覆蓋範圍。 | 以目前 checkout 的來源和 lock/package metadata 為準；索引只供導覽，不替代原始程式碼。 | 部分完成；本 repo CodeGraph 已重建。本機 `.venv` 有 49 個 `ansys-*`/`pyaedt` distributions，25 個產品 SDK 套件名中 15 個已安裝，已記錄 142 條套件相依邊；17 個版本化 SDK 字典已產生。未確認上游 PyAnsys 原始碼 checkout，跨 repo 模組/符號圖仍缺。詳見 [PyAnsys Source Intelligence](../architecture/PYANSYS_SOURCE_INTELLIGENCE.md)。 |
+| **Stage 1 — Minimum Toolchain** | 建立並記錄 Git 分支/階段提交、MCP 工具連線狀態、Serena、CodeGraph/codebase-memory、文件與 APIKB/RAG 的知識格式及來源追溯欄位。 | 僅記錄當次可觀察的連線與工具能力；設定檔存在不當作服務已連通。此階段不要求跑測試。 | 部分完成；本輪 Serena 與 CodeGraph 有回應；codebase-memory MCP 的 `index_status` 回報 Transport closed。既有索引停留於 2026-10-21、watch 關閉，且目前未提供重建工具；不以舊圖宣稱新鮮。CodeGraph 已於 2026-10-29 全量重建，並同步本輪 8 個變更檔；目前索引為 470 files、7,659 nodes、17,318 edges。MCP 服務端求解器連線未測。 |
+| **Stage 2 — ANSYS 2025 R1 API Inventory** | 以 Mechanical、ACT、MAPDL、LS-DYNA 為優先建立版本化 API 來源矩陣、公開文件與 SDK 字典、REA 靜態候選索引、缺口列表及可追溯 AI RAG；整理 ANSYS_Document 全部內容，按產品/主題/章節編目，將 PDF 與 HTML 轉成 Markdown，原件保留。 | 來源要記錄版本、相對路徑、雜湊、公開狀態與分析狀態；疑似受授權限制的原件與衍生 Markdown 均本機保存。沒有來源時標缺口，不推定 API 完整。 | 進行中；APIKB 有 35 個 API/SDK/protocol、55 個 REA、33 個 native source keys。ANSYS_Document 已按產品目錄編目；HTML 轉換清冊記錄 424,158 個來源：400,904 個沿用既有 Markdown、23,253 個轉換（其中 56 個採純文字 fallback），另有 1 個失敗項。失敗來源 `ACT/v261/archives/ansys-zip-ro3no34_/Mechanical/Reference.methode.Ansys.ACT.Automation.Mechanical.MappingValidation.RemoveParameter.html` 是 0-byte 空檔；旁邊已新增 Markdown 缺口說明，原件保留，沒有可恢復的正文。269 個 PDF 中 268 個已抽取為 Markdown；唯一未抽取正文的是 1 頁掃描型 RAL 色票 PDF，現有環境沒有可確認的本機批次 OCR；Poppler 可將 PDF 轉圖，但沒有 tesseract、ocrmypdf 或 Python OCR 套件，PowerShell WinRT OCR 類別無法解析，Windows OCR 語言功能查詢需提升權限。Snipping Tool 版本與文字擷取能力未確認。同目錄已新增標明 hash、大小及未抽取限制的 Markdown 缺口說明，原件保留且未安裝工具。轉換清單與原件保留在被忽略的本機 `ANSYS_Document/_catalog/`。已新增 `ANSYS_Document/PDF_REFERENCE_INDEX.md`，按產品／版本／類別連結 269 份 PDF 原件及抽取稿，並由 `ANSYS_Document/INDEX.md` 提供入口；尚未做語意校對。API 來源逐產品核對與代表性 RAG 查詢未完成。 |
+| **Stage 3 — PyAnsys Source Intelligence** | 對 PyAnsys repos 建立套件/模組/符號/相依圖、上游來源與版本對照，並以 CodeGraph、Serena、codebase-memory 等交叉記錄查詢方式和覆蓋範圍。 | 以目前 checkout 的來源和 lock/package metadata 為準；索引只供導覽，不替代原始程式碼。 | 部分完成；本 repo CodeGraph 已重建。Graphify 本輪重建 512 個程式檔，產生 10,160 個 nodes 與 19,307 條 edges；27 個非支援格式檔案跳過，2 個 SQL 檔因缺少 `tree_sitter_sql` 未產生節點。本機 `.venv` 有 49 個 `ansys-*`/`pyaedt` distributions，25 個產品 SDK 套件名中 15 個已安裝，已記錄 142 條套件相依邊；19 個版本化 SDK 字典已產生。未確認上游 PyAnsys 原始碼 checkout，跨 repo 模組/符號圖仍缺。詳見 [PyAnsys Source Intelligence](../architecture/PYANSYS_SOURCE_INTELLIGENCE.md)。 |
 | **Stage 4 — Distributed Test Environment** | 設計 Remote ANSYS Worker 的隔離、授權、版本固定、工作目錄/輸入輸出界線、逾時/取消、日誌與證據回傳流程。 | 本階段只寫威脅/資料流與安全設計；未取得遠端主機、Ansys 授權與使用者明確執行許可前，不連線、不執行 ANSYS、不建立 worker。 | 設計文件完成；現有 VenvSupervisor 是本機 IPC，Workbench mTLS 是服務 client，兩者都不是通用 Remote Worker。未建置或連線。 |
 | **Stage 5 — Autonomous Debug Loop** | 定義受限制的診斷→最小修復→diff 審查→回歸測試→Evidence 更新流程，含可寫入路徑、命令 allowlist、停止條件與人工接手點。 | 不允許無界命令/檔案寫入、求解或自動提交；尚未完成授權與隔離前，只能文件化流程，不啟動自動除錯或測試。 | 設計文件完成；定義人工批准、隔離修改、有限重試、停止條件與證據限制。未啟動自動修復或回歸測試。 |
 | **Stage 6 — Cross-Agent Handoff** | 定義並記錄跨代理、跨電腦與不同模型可接續的任務包格式，保存來源、hash、版本、決策、未完成項與可重建命令。 | 先用不含 ANSYS 衍生材料的樣例驗證交接格式；跨機/跨模型傳輸須先確認資料可分享與接收端權限。 | 範本及不含 ANSYS 內容的虛構範例已建立；未執行跨機/跨模型傳輸，外部分享仍需資料授權。詳見 [Agent Handoff Template](../maintenance/AGENT_HANDOFF_TEMPLATE.md)。 |
-| **Stage 7 — Authorized REA Research** | 僅對明確授權的目標，以 REA 做靜態 metadata/PE 分析；另將需宿主、除錯器或 runtime 的研究列為獨立授權工作。 | 每個目標都需可證明的使用權與研究授權；不載入/執行目標程式、不做 runtime research，除非取得相應授權。公開權未明時所有結果只留本機。 | 部分完成：使用者授權本機 v251 靜態 REA 盤點；目前 55 份 REA snapshots。此授權不代表公開散布權或 ANSYS runtime 許可。 |
-| **Stage 8 — Ecosystem Expansion** | 依來源可得性擴展到其他 ANSYS 產品與 PyAnsys 套件；每批新增版本化來源、字典、映射與明確缺口。 | 按產品與版本分批；只有取得的來源才納入，不用相似名稱推定產品歸屬或 API 支援。 | 持續進行；候選與尚未分析產品列在 API coverage/REA evidence，尚未達全產品覆蓋。已新增 Sherlock 2.1.4、Rocky 0.6.2、CFX 0.3.0、Speos 0.9.2 SDK snapshots 與 Speos 0.16.3 protocol schema，並新增 System Coupling SDK 0.13.0 的 v251 adaptor namespace、PyChemkin 0.2.0、PyMotorCAD 0.8.8 SDK snapshots；已產生人讀字典。PyChemkin 與 MotorCAD 產品版次未知。產品 release、官方支援狀態、官方 API 對照及宿主行為仍未確認；CFX package metadata 僅證明 PyCFX 支援 CFX 2025 R2 SP3 以上。 |
+| **Stage 7 — Authorized REA Research** | 僅對明確授權的目標，以 REA 做靜態 metadata/PE 分析；另將需宿主、除錯器或 runtime 的研究列為獨立授權工作。 | 每個目標都需可證明的使用權與研究授權；不載入/執行目標程式、不做 runtime research，除非取得相應授權。公開權未明時所有結果只留本機。 | 部分完成：使用者授權本機 v251 靜態 REA 盤點；APIKB 有 55 份既有 REA snapshots。歷史 `REA_EVIDENCE.md` 記錄 CLI 6.0.0，但本輪工具清單沒有 REA MCP；本機 `rea.cmd` 指向 `rea-agents` coding CLI，不能用來分析二進位。候選 assembly 清冊只提供重複的相對路徑與大小，缺少實際安裝根目錄和 hash，因此 ROM、LS-DYNA ACT extension 與 ACT adaptor 新分析待可用 REA 工具及明確目標檔。此授權不代表公開散布權或 ANSYS runtime 許可。 |
+| **Stage 8 — Ecosystem Expansion** | 依來源可得性擴展到其他 ANSYS 產品與 PyAnsys 套件；每批新增版本化來源、字典、映射與明確缺口。 | 按產品與版本分批；只有取得的來源才納入，不用相似名稱推定產品歸屬或 API 支援。 | 持續進行；候選與尚未分析產品列在 API coverage/REA evidence，尚未達全產品覆蓋。已新增 Sherlock 2.1.4、Rocky 0.6.2、CFX 0.3.0、Speos 0.9.2 SDK snapshots 與 Speos 0.16.3 protocol schema，並新增 System Coupling SDK 0.13.0 的 v251 adaptor namespace、PyChemkin 0.2.0、PyMotorCAD 0.8.8、PyTwin 0.13.0 與 PyAEDT 1.9.0 SDK snapshots；已產生人讀字典。PyChemkin、MotorCAD 產品版次未知；PyTwin 與 PyAEDT 的產品映射及版次未知。產品 release、官方支援狀態、官方 API 對照及宿主行為仍未確認；CFX package metadata 僅證明 PyCFX 支援 CFX 2025 R2 SP3 以上。 |
 
 ### 階段執行順序與提交界線
 
 - Stage 0 與 Stage 1 的文件盤點可並行；Stage 2 的目錄整理、官方文件分類、API/RAG 擴充可並行處理。
-- 變更按階段整理成可獨立審閱的差異；本任務明確授權主代理建立本機階段 commit。此工作分支含 ANSYS 衍生 API/REA/SDK 資料，不可直接推送；公開散布權未確認前不建立含該等資料的遠端分支或 PR。
+- 變更按階段整理成可獨立審閱的差異；根目錄 `AGENTS.md` 規定由使用者親自執行 commit。先前 Codex commit 嘗試遭自動審查拒絕；不以替代方式繞過，變更留在工作樹供使用者審閱。此工作分支含 ANSYS 衍生 API/REA/SDK 資料，不可直接推送；公開散布權未確認前不建立含該等資料的遠端分支或 PR。
 - Stage 4–6 已完成文件設計與 handoff 範本；不啟動 Remote Worker、ANSYS、Debug loop、跨機傳輸或測試，直到另外取得明確授權。
 - tests/ 保留能檢查套件入口、技能發現、資源路徑與資料保護的實際測試；依使用者要求暫不執行，也不以測試數量作目標。若項目只重複低價值快照或沒有穩定行為斷言，再於後續審查中判斷是否保留。
 - ANSYS_Document 轉換按來源相對路徑/產品/主題編章，PDF/HTML 輸出 .md 與來源清單；原件不刪除。轉換內容是否可公開尚未核定，因此產物留本機並排除於 GitHub 發布。
@@ -88,7 +88,7 @@ GitHub 的正式根目錄目標為 `agents/`、`docs/`、`scripts/`、`src/`、`
 
 1. 目錄與技能整理、API 來源盤點及字典/RAG 工作並行推進。以 `api_coverage.json` 作逐產品狀態來源。現有 schema 已記錄 product、snapshots、REA evidence、SDK package、mapping status 與 documentation coverage；後續需補來源版本、證據狀態、限制及下一步欄位。這些是待擴充欄位，不代表現有資料已齊全。沒有來源時需記錄已查範圍和具體阻礙。
 2. 完成人讀字典與 AI 檢索文件。API/RAG 條目需連回可追溯來源，區分官方文件、SDK、managed metadata、native exports 與 protocol schema；不把靜態候選描述為完整或受支援 API。
-3. 使用者已明確授權逐階段 commit，並在所有目標完成後 push。每次提交只納入已完成且確認可分享的檔案；REA/SDK/Ansys 衍生資料在權限未確認前留本機。已追蹤資料需從提交範圍明確排除，不能只依賴 ignore 規則。
+3. 本計畫原要求逐階段 commit 及最終 push；依目前 `AGENTS.md`，commit 與 push 均由使用者親自執行。每次提交只納入已完成且確認可分享的檔案；REA/SDK/Ansys 衍生資料在權限未確認前留本機。已追蹤資料需從提交範圍明確排除，不能只依賴 ignore 規則。
 4. 驗證目前暫緩。未執行測試、驗證器、代表性 API/RAG 查詢、搬移雜湊核對或宿主求解；不可把歷史測試紀錄當作本輪驗收。
 
 目錄收尾：根目錄過時的 `INSTALL_SOP.md` 已移除，由 `docs/deployment/DEPLOYMENT_SOP.md` 作為安裝與操作入口。技能連結工具已歸入 `scripts/skill_governance/`，`setup_skill_links.py` 保存唯一實作，`setup_skill_junctions.py` 保留舊命令列相容入口。README 與文件索引已指向現行部署手冊，README 的目錄與套件說明已更新以移除過時的 `drivers/sim_impl.py` 描述。`mcp_server.py` 仍留根目錄，供既有客戶端相容啟動。
@@ -110,7 +110,7 @@ API 文件切片已擴展至已安裝的 ANSYS 2025 R1 樹。`.audit/repo-restru
 - `evaluations/` 已併入 `tests/evaluations/`；執行期 manifests 已併入 `src/ansys_unified_mcp/resources/manifests/`；技能治理工具已歸入 `scripts/skill_governance/`。根目錄遷移表見[根目錄搬移清單](../maintenance/ROOT_REORGANIZATION_MAP.json)。
 - ANSYS 文件歸位、重複副本處理、備份和當時的雜湊結果記錄於[資料夾清理報告](../maintenance/FOLDER_CLEANUP_REPORT.md)。官方文件原件及完整 REA JSON 保留於本機忽略資料夾，不納入 GitHub 結構。
 - 歷史基線：前兩個 sessions 記錄 API 覆蓋清冊 schema 3、57 個產品 ID、13 份產品／SDK API snapshot，以及 SDK 快照、版本標記和 APIKB 接線。這不是現況統計。最新來源鍵與 REA 數量見本文件「目前 checkpoint」；ACT Interfaces、LS-DYNA ACT Interfaces、AnsysEM CoreDotNet、Ansys Additive 等仍須依官方資料確認產品映射及支援狀態。
-- 歷史 APIKB checkpoint：較早紀錄曾有 59 個來源鍵，之後又記錄 100 個來源鍵；兩者均已過時。現況以「目前 checkpoint」列出的 118 個來源鍵為準。最新 REA 範圍另記於 [REA 證據摘要](../api_inventory/REA_EVIDENCE.md)。靜態 metadata、native exports 和 protocol schema 不證明官方支援狀態或宿主行為。APIKB 的歷史 build 統計只作時間點記錄，不作本輪驗收依據。
+- 歷史 APIKB checkpoint：較早紀錄曾有 59、100、118、119 個來源鍵；這些數字均已過時。現況以「目前 checkpoint」列出的 123 個來源鍵為準。最新 REA 範圍另記於 [REA 證據摘要](../api_inventory/REA_EVIDENCE.md)。靜態 metadata、native exports 和 protocol schema 不證明官方支援狀態或宿主行為。APIKB 的歷史 build 統計只作時間點記錄，不作本輪驗收依據。
 - 技能 evaluator 的舊 tier 相容路徑已修正為從舊路徑辨識技能名稱，再於巢狀模組目錄唯一解析；legacy Markdown 路徑回歸測試通過。獨立複查確認 44 個技能、14 個模組、兩份搬移對照的來源雜湊／檔案數與目的路徑相符，正式根目錄為五個目錄。此複查是靜態目錄／對照審查，未執行 ANSYS。
 - 先前 session 曾記錄 APIKB build、APIKB MCP tools 及技能 evaluator discovery 各 7 項定向測試通過。這些是歷史結果，本輪沒有重跑，也不代表 ANSYS host runtime 或完整產品 API 覆蓋。
 - 前兩個 sessions 留有目錄、技能、APIKB、文件索引及套件封裝等既有檢查紀錄。個別結果與限制應以 checkpoint 和相關報告為準；本輪沒有重跑。
@@ -119,14 +119,14 @@ API 文件切片已擴展至已安裝的 ANSYS 2025 R1 樹。`.audit/repo-restru
 
 - 五個正式根目錄、技能分類、評測與 manifests 搬移、引用修正及 44 個技能掃描已完成。`verify_directory_topology.py` 通過；wheel 建置成功，拆包後可載入 permission manifest（5 類）與 DAMG（73 節點）。Windows 暫存目錄 ACL 阻止 pip `--target` 安裝，因此未驗證乾淨環境 pip 安裝。
 - 技能驗證 44 個通過；技能完整性 90 項通過；鏡像同步 dry-run 為 370/370 檔案雜湊相同。API inventory/APIKB 測試 31 項、文件同步 34 項、phase-4/evaluation 22 項、M5 remediation 5 項及技能驗證 3 項曾分組通過。
-- 人讀導覽為 `docs/api_inventory/API_CATALOG.md`；新增 Mechanical 與 SpaceClaim v251 條目頁，並清楚區分官方文件確認與 snapshot-only 簽名。AI 檢索沿用 APIKB 查詢簽名與來源，docsearch 查詢官方文件。字典頁目前未納入 docsearch 索引。API 覆蓋清冊列 57 個產品 ID，33 份 API／SDK／protocol snapshot（29 份映射至 19 個產品 ID，4 份未映射）。產品 ID、文件版本、SDK snapshot 和 REA 組件是不同證據層，不能互相替代。官方文件、SDK、REA 與版本覆蓋尚未逐產品完整核實。
+- 人讀導覽為 `docs/api_inventory/API_CATALOG.md`；新增 Mechanical 與 SpaceClaim v251 條目頁，並清楚區分官方文件確認與 snapshot-only 簽名。AI 檢索沿用 APIKB 查詢簽名與來源，docsearch 查詢官方文件。字典頁目前未納入 docsearch 索引。API 覆蓋清冊列 57 個產品 ID，35 份 API／SDK／protocol snapshot（29 份映射至 19 個產品 ID，6 份未映射）。產品 ID、文件版本、SDK snapshot 和 REA 組件是不同證據層，不能互相替代。官方文件、SDK、REA 與版本覆蓋尚未逐產品完整核實。
 - 已記錄 22,987 個文件歸位操作、45,984 個來源／目的雜湊比對且 0 不一致；16 份確認重複的文件副本移除，清理報告與本機可回復備份索引保留於 `docs/maintenance/FOLDER_CLEANUP_REPORT.md` 及被忽略的 `.runtime/folder-document-cleanup/`。
 
 ## 尚未完成
 
 1. **目錄收尾**：五個正式根目錄和現行目的路徑已整理。搬移對照目前保存來源 hash、大小和使用端；待補目的檔 hash、完整語意去重和獨立搬移審查。已做文字層級的目前路徑引用盤點並修正評測報告的舊絕對路徑；連結目標是否可用尚未驗證。依使用者要求，暫不執行測試或驗證器。
-2. **API 來源盤點**：`api_coverage.json` 列 57 個產品 ID。APIKB 索引 119 個來源鍵：31 份 API／SDK／protocol 快照（27 份映射至 17 個產品 ID、4 份協定來源未映射）、55 份 REA 靜態候選及 33 份 native export 快照。人讀[產品 API 來源與缺口索引](../api_inventory/PRODUCT_API_MATRIX.md)列出來源與缺口。仍需逐產品核對 2025 R1 起可取得的官方文件、SDK、REA 和版本；不可將候選證據標成完整或受支援 API。
-3. **人讀字典與 AI RAG**：Mechanical／SpaceClaim v251 有整理型 API 使用字典；Workbench SDK 有來源摘要；17 份有版本標記的 Python SDK snapshots 已產生模組／成員字典；12 份 protocol snapshots 已產生逐 RPC、message 與 field 的人讀索引，enum 成員未包含在原始 snapshot。55 份 managed REA snapshot 另有 source key、組件身分與 metadata 計數索引，完整 member 檢索仍使用 APIKB。Mechanical `AddFixedSupport()` 有官方文件呼叫形式佐證，回傳型別仍來自 snapshot；SpaceClaim 五個 `DatumPlaneCreator.Create` overload 仍是反射 snapshot，尚未逐項比對官方 CHM。APIKB 已依目前來源重建，但代表性 API 查詢驗收、官方文件交叉核對與 docsearch 索引切換狀態仍待確認。其他產品的來源差異、版本追溯和官方文件對照須分批擴充。
+2. **API 來源盤點**：`api_coverage.json` 列 57 個產品 ID。最新 checkpoint 為 123 個來源鍵：35 份 API／SDK／protocol 快照（29 份映射至 19 個產品 ID、6 份未映射）、55 份 REA 靜態候選及 33 份 native export 快照。人讀[產品 API 來源與缺口索引](../api_inventory/PRODUCT_API_MATRIX.md)列出來源與缺口。仍需逐產品核對 2025 R1 起可取得的官方文件、SDK、REA 和版本；不可將候選證據標成完整或受支援 API。
+3. **人讀字典與 AI RAG**：Mechanical／SpaceClaim v251 有整理型 API 使用字典；Workbench SDK 有來源摘要；19 份有版本標記的 Python SDK snapshots 已產生模組／成員字典；12 份 protocol snapshots 已產生逐 RPC、message 與 field 的人讀索引，enum 成員未包含在原始 snapshot。55 份 managed REA snapshot 另有 source key、組件身分與 metadata 計數索引，完整 member 檢索仍使用 APIKB。Mechanical `AddFixedSupport()` 有官方文件呼叫形式佐證，回傳型別仍來自 snapshot；SpaceClaim 五個 `DatumPlaneCreator.Create` overload 仍是反射 snapshot，尚未逐項比對官方 CHM。APIKB 已依目前來源重建，但代表性 API 查詢驗收、官方文件交叉核對與 docsearch 索引切換狀態仍待確認。其他產品的來源差異、版本追溯和官方文件對照須分批擴充。
 4. **獨立審查與驗收**：資源佔位清理曾經過獨立 reviewer；完整根目錄搬移與本輪路徑修正尚未完成獨立審查。使用者要求先不做驗證，因此定向測試、連結目標檢查、搬移目的檔 hash 對照及代表性 API/RAG 查詢均待後續安排。APIKB 重建已作為資料產生步驟完成，但不代表查詢行為已驗收。既有測試結果只保留為歷史證據。
 5. **公開發布**：使用者表示沒有或不確定公開散布許可。Ansys 軟體、組件與文件的適用條款須按實際授權判斷；在取得授權或書面許可前，REA/SDK 快照、衍生字典及其來源索引留在本機，不提交或 push 這些資料。純目錄文件及不含衍生內容的工具程式，需逐檔確認後才可納入階段提交。已追蹤的 API 清冊與證據文件仍須排除在公開變更之外。完整風險記錄見[公開發佈檢查](../maintenance/PUBLICATION_REVIEW.md)。
 
@@ -139,3 +139,23 @@ API 文件切片已擴展至已安裝的 ANSYS 2025 R1 樹。`.audit/repo-restru
 
 
 
+
+
+## 2026-10-29 延續紀錄
+
+- 新增本機 ACT v261 Wizard API 人讀摘要 [`ACT_WIZARD_API_DICTIONARY.md`](../../ANSYS_Document/ACT/v261/api_reference/ACT_WIZARD_API_DICTIONARY.md)，並由 ACT 產品索引連結。條目依 ACT API Reference Guide Part 2 的 `IWizard`、`IWizardStep` 與 `IExtensionManager` 官方文件整理，保留印刷頁碼及簽名。來源標示專有／機密；摘要留在被忽略的本機文件樹，不納入 GitHub。此摘要是 2026 R1/v261 證據，不代表 2025 R1/v251；沒有 REA 成員核對或 ACT host 行為驗證。
+- 本輪依使用者要求未執行測試、驗證器、API/RAG 查詢、REA、ANSYS 或遠端工作。公開散布權仍未知。根目錄 `AGENTS.md` 指示所有 commit 由使用者親自執行，因此本輪未建立 commit 或 push。
+- Stage 4–6 文件補充：在 Remote Worker 安全文件加入 design-only job/evidence record 範例與欄位限制；在 handoff template 加入 receiver/destination、核准、傳輸狀態及收件證據欄位。同步把 Debug Loop 文件中的 commit 規則改為遵守根目錄 AGENTS.md，由使用者親自執行所有 Git 寫入操作。未建立遠端 worker、debug loop 或實際 handoff。
+- 新增本機 Mechanical v261 `Analysis.AddFixedSupport()`／`FixedSupport` 文件摘要，並由產品索引連結；與 v251 snapshot 證據分開記錄，沒有推定版本相容性。來源為官方 v261 Mechanical Scripting Interface Markdown，未做 host、REA 或物理驗證，衍生頁留在本機文件庫。
+
+- 目錄續查發現根層 `Documentation_clean/` 目前被 `.gitignore` 的 `Documentation*/` 規則忽略，`git ls-files` 沒有追蹤其內容，但本機仍有多個大型 SQLite 索引及 docs view/subgraph 暫存資料。保留這些執行期/快取資料，沒有刪除或移動；先前記載 `api_kb.sqlite` 搬移不代表該根層資料夾已清空。五個 Git 正式目錄不受此本機忽略資料影響。
+- 新增本機 MAPDL v251 `F` 節點力命令字典，記錄語法、標籤、使用限制及印刷頁／PDF page marker 的差異；由 MAPDL 產品索引連結。來源 PDF 標示專有／機密，衍生摘要不加入 GitHub；未執行 MAPDL/APDL 或物理驗證。
+- LS-DYNA 文件盤點確認目前產品索引只有 `unknown` 版資料；本機手冊目錄為 R16 三卷，沒有已確認的 v251 API 文件。新增本機缺口頁，防止把 R16 關鍵字或語法當作 2025 R1 證據；原件保留，未執行 LS-DYNA/REA。
+- 在本機 `ANSYS_Document/INDEX.md` 新增 API 字典與版本缺口總入口，連結 Mechanical/ACT/MAPDL/SpaceClaim 字典及 LS-DYNA v251 缺口，並標明這是代表性切片、非全 API 清單。官方衍生頁仍限本機；未執行索引查詢或連結驗證。
+- 新增本機 ACT v251 Wizard `property.OnButtonClick` callback 字典；來源明示按鈕點擊事件，但簽名欄位保留模板佔位符。與 v261 .NET 介面字典分開，保留版本與缺口，不推定完整 API。
+- 新增 Q3D v261 Reporter `ExportToFile` 本機字典，列明支援副檔名、回傳值與 `ExportReport` 相容性說明；SHA-256 追溯至 Q3D Extractor Scripting Guide。由於原件含專有／機密聲明，僅留本機，且不將 v261 支援回推為 v251。
+- 新增 CFX v261 User CEL Fortran 入口字典，摘要 ABI 形狀、固定 NRET 與變動 NLOC 限制，並保留官方來源 SHA-256 和印刷頁碼。此為 CFX Solver User CEL 介面，不是 PyCFX API；未編譯/執行，摘要僅留本機。
+
+- 為符合 docsearch 預設 `api_reference` 範圍，將新建的人讀字典頁移入各產品版本下的 `api_reference/`，並同步改產品索引、總索引及來源相對連結。尚未重建 `_catalog/documents.json` 或 docsearch SQLite 索引，因此不能宣稱新頁已可由 MCP 搜尋。
+- 在 API/RAG 指南補上本機字典頁索引流程：先產生 `ANSYS_Document/_catalog/documents.json`，再重建 docsearch SQLite；區分 catalog 更新與查詢驗收，並要求按 product/release/category 回查來源。該指南沒有觸發查詢或驗證。
+- Stage 3 checkpoint 更新：來源 intelligence 文件列出 19 份現存版本化 SDK 字典；Graphify 目前 `graph.json` 記錄 10,159 nodes、19,303 links、manifest 887 paths。`GRAPH_REPORT.md` 是 2026-10-26 的 8,745/16,102 舊值，計畫先前另有 10,160/19,307 不同口徑；不合併為同一統計。上游 PyAnsys source checkout 與跨 repo 圖譜仍缺。

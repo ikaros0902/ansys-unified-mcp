@@ -1,6 +1,6 @@
 # 幾何分類維度定義 (Classification Dimensions Reference)
 
-本手冊定義 `classify_and_group_engine.ironpy` 使用的幾何特徵分類維度，邏輯改寫自 `D:\Ikaros\ACT_Test\SC_RM\SC_RM_grp_creation\SC_RM_grp_creation.py` 的 `FindCircles` / `ConvertEdgesByShape` 判準。
+本手冊定義 `classify_and_group_engine.ironpy` 使用的幾何特徵分類維度，邏輯改寫自 `docs/knowledge_dictionary/ (請使用 ans_get_knowledge_dictionary 查詢)` 的 `FindCircles` / `ConvertEdgesByShape` 判準。
 
 ---
 

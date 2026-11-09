@@ -27,7 +27,7 @@ description: ANSYS Motor-CAD motor design suite. Covers electromagnetic (EMag), 
 
 在生成或修改任何程式碼之前，**必須**優先透過 MCP 查詢底層確切 API 簽名與參數：
 - 使用 `search_ansys_docs(query='...')` 檢索官方手冊規範
-- 使用 `api_search(pattern='...')` 驗證 PyAnsys / IronPython 符號完整路徑
+- 使用 `api_search(query='...', product='motorcad')` 驗證 PyAnsys / IronPython 符號完整路徑
 - 嚴禁憑空猜測非公開屬性或廢棄語法
 
 ## 關鍵禁止事項 (Critical Don'ts)

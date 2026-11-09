@@ -1,0 +1,950 @@
+{
+  "mechanical": [
+    {
+      "id": "mech_01_static_structural",
+      "title": "Static structural analysis of bracket",
+      "doc_url": "https://examples.mechanical.docs.pyansys.com/examples/00_basic/example_01_simple_structural_solve.html",
+      "repo_url": "https://github.com/ansys/pymechanical-examples",
+      "license": "MIT",
+      "geometry_file": "example_01_geometry.agdb",
+      "download_call": "ansys.mechanical.core.examples.download_file('example_01_geometry.agdb', 'pymechanical', '00_basic')",
+      "steps": [
+        "啟動 Mechanical 服務並載入模型與幾何",
+        "設定單位系統為 Standard MKS",
+        "建立 Fixed Support 支承與 1000 N 載荷",
+        "執行網格劃分並評估網格品質指標",
+        "求解並擷取 Total/Directional Deformation 與 Equivalent Stress"
+      ],
+      "verification": "最大位移約 0.104 m，求解收斂狀態 Exit Code 0，無未拘束自由度警告。"
+    },
+    {
+      "id": "mech_02_modal_analysis",
+      "title": "Modal analysis of turbine blade",
+      "doc_url": "https://examples.mechanical.docs.pyansys.com/examples/01_advanced/example_02_modal_analysis.html",
+      "repo_url": "https://github.com/ansys/pymechanical-examples",
+      "license": "MIT",
+      "geometry_file": "blade.step",
+      "download_call": "ansys.mechanical.core.examples.download_file('blade.step', 'pymechanical', '01_advanced')",
+      "steps": [
+        "建立 Modal Analysis 系統並關聯幾何",
+        "對根部面建立 Fixed Support 邊界條件",
+        "提取前 6 階固有頻率與相對應振型"
+      ],
+      "verification": "第一階模態頻率收斂於基準值 +-2% 範圍內。"
+    }
+  ],
+  "mapdl": [
+    {
+      "id": "mapdl_01_cantilever_beam",
+      "title": "Cantilever beam with end load",
+      "doc_url": "https://mapdl.docs.pyansys.com/version/stable/examples/technology_showcase/example_01_cantilever.html",
+      "repo_url": "https://github.com/ansys/pymapdl",
+      "license": "MIT",
+      "geometry_file": "None (Parametric APDL)",
+      "download_call": "None",
+      "steps": [
+        "使用 launch_mapdl() 初始化 MAPDL gRPC 連線",
+        "使用 /PREP7 定義 BEAM188 元素與斷面特性",
+        "施加根部全拘束 D, 1, ALL 與自由端集中力 F, 2, FY, -1000",
+        "呼叫 /SOLU 與 SOLVE 求解",
+        "透過 /POST1 與 mapdl.post_processing 提取樑端撓度"
+      ],
+      "verification": "樑端撓度與材料力學解析解 PL^3/(3EI) 相符（相對誤差 < 0.5%）。"
+    },
+    {
+      "id": "mapdl_02_modal_shaft",
+      "title": "Shaft vibration modal extraction",
+      "doc_url": "https://mapdl.docs.pyansys.com/version/stable/examples/modal_analysis.html",
+      "repo_url": "https://github.com/ansys/pymapdl",
+      "license": "MIT",
+      "geometry_file": "None",
+      "download_call": "None",
+      "steps": [
+        "設定 MODOPT, LANB, 10 進行 Block Lanczos 特徵值求解",
+        "定義兩端簡支拘束並執行求解",
+        "透過 mapdl.modal_analysis 讀取固有頻率列表"
+      ],
+      "verification": "前三階固有頻率與理論解析解吻合。"
+    }
+  ],
+  "fluent": [
+    {
+      "id": "fluent_01_mixing_elbow",
+      "title": "Mixing elbow turbulent flow and temperature mixing",
+      "doc_url": "https://fluent.docs.pyansys.com/version/stable/examples/00_fluent/mixing_elbow.html",
+      "repo_url": "https://github.com/ansys/pyfluent",
+      "license": "MIT",
+      "geometry_file": "mixing_elbow.cas.h5",
+      "download_call": "ansys.fluent.core.examples.download_file('mixing_elbow.cas.h5', 'pyfluent/mixing_elbow')",
+      "steps": [
+        "啟動 Fluent Solver session: launch_fluent(precision='double', processor_count=4)",
+        "讀取 Case 檔案: solver.file.read_case(file_name=cas_path)",
+        "啟用 Realizable k-epsilon 紊流模型與能量方程式",
+        "設定主入口冷水流速 0.4 m/s (293 K) 與支管熱水流速 1.2 m/s (313 K)",
+        "初始化 (Standard / Hybrid) 並迭代求解 150 步",
+        "提取出口混合溫度與壓力降監視器"
+      ],
+      "verification": "連續方程式與能量方程式殘差均下降至 1e-4 以下，出口均勻溫度吻合質量加權平均守恆。"
+    }
+  ],
+  "cfx": [
+    {
+      "id": "cfx_01_static_mixer",
+      "title": "Static mixer simulation and CCL physics setup",
+      "doc_url": "https://cfx.docs.pyansys.com/version/stable/examples/static_mixer.html",
+      "repo_url": "https://github.com/ansys/pycfx",
+      "license": "MIT",
+      "geometry_file": "StaticMixer.def",
+      "download_call": "ansys.cfx.core.examples.download_file('StaticMixer.def')",
+      "steps": [
+        "啟動 PyCFX session 並載入 CCL 設定樹",
+        "檢視 Active items 與 PreProcessing physics updates 邊界",
+        "指派流體材料 Water 與入口質量流量",
+        "寫入 CFX-Solver 輸入檔並啟動求解"
+      ],
+      "verification": "RMS 殘差降至 1e-4，質量流量出入守恆誤差 < 0.1%。"
+    }
+  ],
+  "chemkin": [
+    {
+      "id": "chemkin_01_autoignition_delay",
+      "title": "Constant volume 0D reactor autoignition delay calculation",
+      "doc_url": "https://chemkin.docs.pyansys.com/version/stable/examples/0d_reactor_ignition.html",
+      "repo_url": "https://github.com/ansys/ansys-chemkin-core",
+      "license": "MIT",
+      "geometry_file": "gri30.chem.inp, gri30.therm.dat",
+      "download_call": "ansys.chemkin.core.examples.download_file('gri30.chem.inp')",
+      "steps": [
+        "載入 Arrhenius 機制文件與熱力學參數表",
+        "建立封閉定容絕熱反應器 (Closed 0D Homogeneous Batch Reactor)",
+        "給定初溫 T0 = 1200 K, P0 = 1 atm, 當量比 phi = 1.0 (CH4/Air)",
+        "積分時間歷程直到溫度陡升點 (dT/dt 最大值)"
+      ],
+      "verification": "點火延遲時間 (Ignition Delay) 與 GRI-Mech 3.0 標準基準解偏差 < 1.0%。"
+    }
+  ],
+  "hfss": [
+    {
+      "id": "hfss_01_coaxial_coupler",
+      "title": "Coaxial coupler S-parameter extraction",
+      "doc_url": "https://aedt.docs.pyansys.com/version/stable/examples/00-EDB/HFSS_3D_Layout.html",
+      "repo_url": "https://github.com/ansys/pyaedt",
+      "license": "MIT",
+      "geometry_file": "coaxial.aedt",
+      "download_call": "pyaedt.examples.download_file('coaxial.aedt')",
+      "steps": [
+        "使用 Hfss(specified_version='2026.1') 初始化 Desktop session",
+        "設定 Wave Port 激勵與輻射邊界條件",
+        "建立 1 GHz ~ 10 GHz 的頻率掃描 (Frequency Sweep)",
+        "執行求解 AnalyzeAll()",
+        "繪製 S11 與 S21 散射參數曲線並確認能量守恆"
+      ],
+      "verification": "S11 曲線在共振頻點具備預期回波損耗（<-20 dB）。"
+    }
+  ],
+  "maxwell": [
+    {
+      "id": "maxwell_01_motor_torque",
+      "title": "2D PMSM transient motor torque analysis",
+      "doc_url": "https://aedt.docs.pyansys.com/version/stable/examples/02-Maxwell/Maxwell2D_Transient.html",
+      "repo_url": "https://github.com/ansys/pyaedt",
+      "license": "MIT",
+      "geometry_file": "pmsm_2d.aedt",
+      "download_call": "pyaedt.examples.download_file('pmsm_2d.aedt')",
+      "steps": [
+        "使用 Maxwell2d() 載入永磁同步馬達幾何",
+        "指定旋轉運動邊界 (Band) 與三相正弦激勵電流",
+        "求解暫態電磁場並提取 Moving1.Torque 曲線"
+      ],
+      "verification": "平均轉矩與齒槽轉矩波紋符合設計規格。"
+    }
+  ],
+  "motorcad": [
+    {
+      "id": "motorcad_01_efficiency_map",
+      "title": "Electric motor efficiency map and loss calculation",
+      "doc_url": "https://motorcad.docs.pyansys.com/version/stable/examples/efficiency_map.html",
+      "repo_url": "https://github.com/ansys/pymotorcad",
+      "license": "MIT",
+      "geometry_file": "e8_traction_motor.mot",
+      "download_call": "pymotorcad.examples.download_file('e8_traction_motor.mot')",
+      "steps": [
+        "使用 MotorCAD() 連線本機 Motor-CAD 實例",
+        "載入預設 traction motor 模型",
+        "設定轉速-轉矩工況矩陣與溫度上限",
+        "執行 Lab 模組產生全域效率圖 (Efficiency Map)"
+      ],
+      "verification": "最高效率點達 96% 以上，峰值轉矩與最高轉速邊界清晰。"
+    }
+  ],
+  "q3d_siwave": [
+    {
+      "id": "q3d_01_busbar_rlcg",
+      "title": "Power busbar RLCG parasitic extraction",
+      "doc_url": "https://aedt.docs.pyansys.com/version/stable/examples/03-Q3D/Q3D_Busbar.html",
+      "repo_url": "https://github.com/ansys/pyaedt",
+      "license": "MIT",
+      "geometry_file": "busbar.aedt",
+      "download_call": "pyaedt.examples.download_file('busbar.aedt')",
+      "steps": [
+        "使用 Q3d() 初始化 AEDT 專案",
+        "指定導體源與匯 (Source / Sink) 端點",
+        "求解 DC/AC 電阻、自感與互感矩陣"
+      ],
+      "verification": "提取之寄生電感與解析估算值偏差 < 3%。"
+    }
+  ],
+  "sherlock": [
+    {
+      "id": "sherlock_01_pcb_vibration",
+      "title": "PCB random vibration fatigue life prediction",
+      "doc_url": "https://sherlock.docs.pyansys.com/version/stable/examples/pcb_vibe.html",
+      "repo_url": "https://github.com/ansys/pysherlock",
+      "license": "MIT",
+      "geometry_file": "DemoBoard.odb",
+      "download_call": "pysherlock.examples.download_file('DemoBoard.odb')",
+      "steps": [
+        "透過 gRPC 連線 PySherlock: SherlockClient()",
+        "匯入 ODB++ 印刷電路板設計檔案",
+        "建立 Random Vibration 分析並指定 PSD 振動譜",
+        "執行 Analysis.run_analysis() 並讀取各元件疲勞壽命"
+      ],
+      "verification": "計算各 BGA/QFP 焊點之累積損傷度與預估 MTTF。"
+    }
+  ],
+  "icepak": [
+    {
+      "id": "icepak_01_chassis_cooling",
+      "title": "Electronic enclosure forced air cooling",
+      "doc_url": "https://aedt.docs.pyansys.com/version/stable/examples/04-Icepak/Icepak_Enclosure.html",
+      "repo_url": "https://github.com/ansys/pyaedt",
+      "license": "MIT",
+      "geometry_file": "enclosure.aedt",
+      "download_call": "pyaedt.examples.download_file('enclosure.aedt')",
+      "steps": [
+        "使用 Icepak() 建立機殼熱流模型",
+        "指定風扇進氣流量曲線與發熱晶片熱耗 (50 W)",
+        "生成非結構化網格並求解熱傳導-對流耦合場",
+        "擷取晶片表面最高溫度與風阻壓力降"
+      ],
+      "verification": "晶片最高溫度低於散熱限制 (85 degC)，能量殘差收斂。"
+    }
+  ],
+  "spaceclaim": [
+    {
+      "id": "scdm_01_defeaturing",
+      "title": "CAD defeaturing and mid-surface extraction",
+      "doc_url": "https://geometry.docs.pyansys.com/version/stable/examples/01_cad_defeaturing.html",
+      "repo_url": "https://github.com/ansys/pyansys-geometry",
+      "license": "MIT",
+      "geometry_file": "bracket_with_holes.scdoc",
+      "download_call": "ansys.geometry.core.examples.download_file('bracket_with_holes.scdoc')",
+      "steps": [
+        "使用 Modeler 連線 SpaceClaim / Geometry 引擎",
+        "搜尋模型中小於指定半徑之圓角 (Round) 與細小通孔",
+        "呼叫 Defeature 與 Midsurface 工具將薄壁實體抽取為中面",
+        "輸出清潔幾何供網格生成"
+      ],
+      "verification": "特徵簡化後幾何拓撲無重疊面或未結合邊界 (Watertight)。"
+    }
+  ],
+  "discovery": [
+    {
+      "id": "discovery_01_live_flow",
+      "title": "Interactive generative design and live flow exploration",
+      "doc_url": "https://discovery.docs.pyansys.com/version/stable/examples/interactive_flow.html",
+      "repo_url": "https://github.com/ansys/discovery-examples",
+      "license": "MIT",
+      "geometry_file": "manifold.dsco",
+      "download_call": "None",
+      "steps": [
+        "透過 Discovery gRPC protocol 初始化 Document 容器與 Window 載入",
+        "建立幾何幾何拓撲並指定入口流速",
+        "啟動 GPU Live Physics 即時求解並監測壓力流場分佈"
+      ],
+      "verification": "即時物理場收斂並回傳即時速度向量流線。"
+    }
+  ],
+  "speos": [
+    {
+      "id": "speos_01_lightguide_illumination",
+      "title": "Automotive lightguide luminance and color simulation",
+      "doc_url": "https://speos.docs.pyansys.com/version/stable/examples/lightguide.html",
+      "repo_url": "https://github.com/ansys/pyspeos",
+      "license": "MIT",
+      "geometry_file": "lightguide.speos",
+      "download_call": "pyspeos.examples.download_file('lightguide.speos')",
+      "steps": [
+        "連線 PySpeos 服務並載入光學表面材質 (Optical Surface)",
+        "建立 LED 點光源光譜與光線追跡感測器 (Photometric Sensor)",
+        "發射 5,000,000 條光線進行直接蒙地卡羅追跡",
+        "輸出輝度圖 (Luminance Map) 與照度均勻性數據"
+      ],
+      "verification": "出光面均勻度高於 80%，總透光效率與實驗標定相符。"
+    }
+  ],
+  "zemax": [
+    {
+      "id": "zemax_01_doublet_optimization",
+      "title": "Achromatic doublet lens optimization via ZOS-API",
+      "doc_url": "https://zemax.docs.pyansys.com/version/stable/examples/achromatic_doublet.html",
+      "repo_url": "https://github.com/ansys/pyzos",
+      "license": "MIT",
+      "geometry_file": "Doublet.zos",
+      "download_call": "None",
+      "steps": [
+        "透過 ZOS-API 連線 OpticStudio session",
+        "建立透鏡曲率、厚度與玻璃材質變數",
+        "定義光斑尺寸 (RMS Spot Size) 評價函數 (Merit Function)",
+        "執行局部優化 (Local Optimization - DLS)"
+      ],
+      "verification": "幾何光斑尺寸縮減至繞射極限 (Airy Disk) 附近。"
+    }
+  ],
+  "lumerical": [
+    {
+      "id": "lumerical_01_waveguide_fdtd",
+      "title": "Silicon photonic rib waveguide TE/TM mode solve and FDTD",
+      "doc_url": "https://optics.ansys.com/hc/en-us/articles/waveguide_fdtd",
+      "repo_url": "https://github.com/ansys/pylumerical",
+      "license": "Commercial / Example license",
+      "geometry_file": "rib_waveguide.fsp",
+      "download_call": "None",
+      "steps": [
+        "透過 Lumapi 初始化 FDTD session: lumapi.FDTD()",
+        "定義矽基板 (Si) 與二氧化矽 (SiO2) 幾何結構與折射率模型",
+        "設定 MODE 求解器計算基本 TE 與 TM 模態有效折射率 (neff)",
+        "設定 PML 吸收邊界條件並執行 3D FDTD 傳輸損耗求解"
+      ],
+      "verification": "基模有效折射率 neff 計算誤差 < 0.001，穿透率守恆。"
+    }
+  ],
+  "workbench": [
+    {
+      "id": "wb_01_parametric_study",
+      "title": "Automated design point update and multi-system coupling journal",
+      "doc_url": "https://workbench.docs.pyansys.com/version/stable/examples/parametric_journal.html",
+      "repo_url": "https://github.com/ansys/ansys-workbench-core",
+      "license": "MIT",
+      "geometry_file": "demo_project.wbpz",
+      "download_call": "None",
+      "steps": [
+        "啟動 Workbench headless journal: RunScript(script_file)",
+        "連線 Analysis System (Thermal + Static Structural)",
+        "批次更新 5 個 Design Points (幾何長度與載荷大小)",
+        "匯出 DesignPoint status 與輸出參數 CSV 報告"
+      ],
+      "verification": "所有 Design Points 求解狀態標記為 UpToDate，CSV 數值導出完整。"
+    }
+  ],
+  "system_coupling": [
+    {
+      "id": "sysc_01_fsi_oscillating_plate",
+      "title": "Fluid-Structure Interaction (FSI) with Fluent and Mechanical",
+      "doc_url": "https://systemcoupling.docs.pyansys.com/version/stable/examples/oscillating_plate.html",
+      "repo_url": "https://github.com/ansys/pysystem-coupling",
+      "license": "MIT",
+      "geometry_file": "fsi_plate.scp",
+      "download_call": "pysystemcoupling.examples.download_file('fsi_plate.scp')",
+      "steps": [
+        "啟動 System Coupling 伺服器並加入 Fluent 與 Mechanical participants",
+        "建立流固耦合介面 (Fluid-Solid Interface) 變數映射 (Force & Displacement)",
+        "設定雙向交替耦合時間步長 (Two-way implicit coupling)",
+        "求解並監控平板頂端位移震盪阻尼衰減歷程"
+      ],
+      "verification": "流體力與固體位移在每個時間步內達到雙向收斂，位移週期與文獻相符。"
+    }
+  ],
+  "optislang": [
+    {
+      "id": "opti_01_mop_surrogate",
+      "title": "Metamodel of Optimal Prognosis (MOP) and sensitivity analysis",
+      "doc_url": "https://optislang.docs.pyansys.com/version/stable/examples/mop_generation.html",
+      "repo_url": "https://github.com/ansys/pyoptislang",
+      "license": "MIT",
+      "geometry_file": "oscillator_project.opf",
+      "download_call": "pyoptislang.examples.download_file('oscillator_project.opf')",
+      "steps": [
+        "透過 PyOptiSLang 連線 optiSLang 伺服器",
+        "建立參數空間並使用 Latin Hypercube Sampling (LHS) 抽樣 50 組樣本",
+        "評估黑盒模型響應並自動建構 MOP 代理模型",
+        "提取 Coefficient of Prognosis (CoP) 與總效應敏感度指標"
+      ],
+      "verification": "最優代理模型 CoP > 95%，主要敏感變數排序清晰客觀。"
+    }
+  ],
+  "simai": [
+    {
+      "id": "simai_01_aerodynamic_surrogate",
+      "title": "Vehicle aerodynamic drag surrogate evaluation via PySimAI",
+      "doc_url": "https://simai.docs.pyansys.com/version/stable/examples/aerodynamics.html",
+      "repo_url": "https://github.com/ansys/pysimai",
+      "license": "MIT",
+      "geometry_file": "car_surface.stl",
+      "download_call": "None",
+      "steps": [
+        "初始化 PySimAI Client 並認證 API 金鑰",
+        "上傳 STL 表面幾何並進行 GeomAI MER 品質檢查",
+        "呼叫訓練完畢之空氣動力學預測模型",
+        "非同步等待預測完成並下載表面壓力與阻力係數 Cd"
+      ],
+      "verification": "推論耗時 < 1 秒，阻力係數與 3D 完整 CFD 誤差在工程容許範圍內。"
+    }
+  ],
+  "ensight_adr": [
+    {
+      "id": "adr_01_nexus_report",
+      "title": "Automated simulation reporting and 3D web viewer generation",
+      "doc_url": "https://dynamicreporting.docs.pyansys.com/version/stable/examples/create_report.html",
+      "repo_url": "https://github.com/ansys/ansys-dynamicreporting-core",
+      "license": "MIT",
+      "geometry_file": "simulation_result.case",
+      "download_call": "None",
+      "steps": [
+        "啟動 PyDynamicReporting 本地服務實例",
+        "匯入 EnSight 3D 幾何場景並擷取互動式 SCDOC/AVZ 3D 視圖",
+        "組合包含表格、圖表與 3D 物件之 Nexus HTML 報告",
+        "發布互動式網頁報告供工程團隊審查"
+      ],
+      "verification": "報告包含完整可交互 3D Viewer 與數值統計摘要，無資源缺漏。"
+    }
+  ],
+  "dpf": [
+    {
+      "product": "dpf",
+      "title": "Examples",
+      "source": "docs/ANSYS_Document/dpf/v261/guide/1a28e1e4fee9-examples.md",
+      "url": "https://docs.pyansys.com/dpf",
+      "downloads": [],
+      "summary": "---\nsource_url: https://developer.synopsys.com/docs/dpf-cpp-client-library-2026-r1/examples.md\n---\n\nTable of contents\n# Examples\nLast update: 25.03.2026\nThis section gathers DPF examples for the C++ API.\nThe following examples are available:\n[AveragingTest.cpp](https://developer.synopsys.com/docs/dp"
+    },
+    {
+      "product": "dpf",
+      "title": "index",
+      "source": "docs/ANSYS_Document/dpf/v261/guides_and_tutorials/dpf-framework-2026-r1/index.md",
+      "url": "https://docs.pyansys.com/dpf",
+      "downloads": [],
+      "summary": "---\nsource_url: https://developer.synopsys.com/docs/dpf-framework-2026-r1/index.md\ncrawled_at: 2026-10-21 16:16:49\n---\n\n    \n\n ## On this page\n\n  \n\n \n\n # Introduction\n\n Last update: 31.07.2026 \n\nThis documentation provides a comprehensive guide of the DPF framework as well as all DPF operators avail"
+    },
+    {
+      "product": "dpf",
+      "title": "index",
+      "source": "docs/ANSYS_Document/dpf/v261/guides_and_tutorials/dpf-mechanical-2026-r1/index.md",
+      "url": "https://docs.pyansys.com/dpf",
+      "downloads": [],
+      "summary": "---\nsource_url: https://developer.synopsys.com/docs/dpf-mechanical-2026-r1/index.md\ncrawled_at: 2026-10-21 16:18:12\n---\n\n    \n\n ## On this page\n\n  \n\n \n\n # Introduction\n\n Last update: 18.06.2026 \n\nThis documentation describes how to use the Data Processing Framework (DPF) in Ansys Mechanical.\n\nThe An"
+    },
+    {
+      "product": "dpf",
+      "title": "index",
+      "source": "docs/ANSYS_Document/dpf/v261/guides_and_tutorials/dpf-onboarding-2026-r1/index.md",
+      "url": "https://docs.pyansys.com/dpf",
+      "downloads": [],
+      "summary": "---\nsource_url: https://developer.synopsys.com/docs/dpf-onboarding-2026-r1/index.md\ncrawled_at: 2026-10-21 16:18:23\n---\n\n    \n\n ## On this page\n\n  \n\n \n\n # Introduction\n\n Last update: 03.06.2026 \n\n**DPF onboarding** is for anyone new to the Data Processing Framework (DPF). It provides the foundationa"
+    },
+    {
+      "product": "dpf",
+      "title": "Example data array (conceptual)",
+      "source": "docs/ANSYS_Document/dpf/v261/guides_and_tutorials/dpf-onboarding-2026-r1/dpf-data-fundamentals/how-data-is-represented-in-dpf.md",
+      "url": "https://docs.pyansys.com/dpf",
+      "downloads": [],
+      "summary": "---\nsource_url: https://developer.synopsys.com/docs/dpf-onboarding-2026-r1/dpf-data-fundamentals/how-data-is-represented-in-dpf.md\ncrawled_at: 2026-10-21 16:18:24\n---\n\n    \n\n ## On this page\n\n  \n\n \n\n # How is data represented in DPF\n\n Last update: 03.06.2026 \n\nBefore exploring where data comes from"
+    }
+  ],
+  "acp": [
+    {
+      "product": "acp",
+      "title": "ACP Module Overview",
+      "source": "docs/ANSYS_Document/acp/unknown/guides_and_tutorials/OVERVIEW.md",
+      "url": "https://docs.pyansys.com/acp",
+      "downloads": [],
+      "summary": "# ACP Module Overview\n> Source: `https://developer.synopsys.com/docs/acp.md`\n\n##  [Ansys Composite PrepPost (ACP) for developers](/docs/acp) \n\n## Overview\n\nAnsys Composite PrepPost™ (ACP) software is the Ansys preprocessor for layered composite structures, allowing you to define and visualize comple"
+    },
+    {
+      "product": "acp",
+      "title": "acp tutorial 附件文字：ansys_140e6aafd122b7a1856ea8de",
+      "source": "docs/ANSYS_Document/acp/supplemental/tutorial/ansys_140e6aafd122b7a1856ea8de/acp.md",
+      "url": "https://docs.pyansys.com/acp",
+      "downloads": [],
+      "summary": "# acp tutorial 附件文字：ansys_140e6aafd122b7a1856ea8de\n\n本檔保留範例原始文字供閱讀及檢索；未執行。Notebook 只擷取 Markdown 與 code cell，不含 outputs、圖片或其他附件；產品版本未知。\n\n- [原始附件](../../../../../ANSYS_Document/ACP/sdk/ansys-acp-core/0.4.1/tutorial/inputs/001-materials.ipynb)\n- 來源清冊：`sources.csv#ansys_140e6aafd122b7a1856ea8de`\n- 原始檔 SH"
+    },
+    {
+      "product": "acp",
+      "title": "acp tutorial 附件文字：ansys_365473535d0dde2c42024e96",
+      "source": "docs/ANSYS_Document/acp/supplemental/tutorial/ansys_365473535d0dde2c42024e96/acp.md",
+      "url": "https://docs.pyansys.com/acp",
+      "downloads": [],
+      "summary": "# acp tutorial 附件文字：ansys_365473535d0dde2c42024e96\n\n本檔保留範例原始文字供閱讀及檢索；未執行。Notebook 只擷取 Markdown 與 code cell，不含 outputs、圖片或其他附件；產品版本未知。\n\n- [原始附件](../../../../../ANSYS_Document/ACP/sdk/ansys-acp-core/0.4.1/tutorial/inputs/001-materials.py)\n- 來源清冊：`sources.csv#ansys_365473535d0dde2c42024e96`\n- 原始檔 SHA-2"
+    },
+    {
+      "product": "acp",
+      "title": "acp tutorial 附件文字：ansys_8b4b11044a90d50bf1a1b739",
+      "source": "docs/ANSYS_Document/acp/supplemental/tutorial/ansys_8b4b11044a90d50bf1a1b739/acp.md",
+      "url": "https://docs.pyansys.com/acp",
+      "downloads": [],
+      "summary": "# acp tutorial 附件文字：ansys_8b4b11044a90d50bf1a1b739\n\n本檔保留範例原始文字供閱讀及檢索；未執行。Notebook 只擷取 Markdown 與 code cell，不含 outputs、圖片或其他附件；產品版本未知。\n\n- [原始附件](../../../../../ANSYS_Document/ACP/sdk/ansys-acp-core/0.4.1/tutorial/inputs/002-rosettes-ply-directions.py)\n- 來源清冊：`sources.csv#ansys_8b4b11044a90d50bf1a1b73"
+    },
+    {
+      "product": "acp",
+      "title": "acp tutorial 附件文字：ansys_95186a74e74d94e6c9bcba7b",
+      "source": "docs/ANSYS_Document/acp/supplemental/tutorial/ansys_95186a74e74d94e6c9bcba7b/acp.md",
+      "url": "https://docs.pyansys.com/acp",
+      "downloads": [],
+      "summary": "# acp tutorial 附件文字：ansys_95186a74e74d94e6c9bcba7b\n\n本檔保留範例原始文字供閱讀及檢索；未執行。Notebook 只擷取 Markdown 與 code cell，不含 outputs、圖片或其他附件；產品版本未知。\n\n- [原始附件](../../../../../ANSYS_Document/ACP/sdk/ansys-acp-core/0.4.1/tutorial/inputs/002-rosettes-ply-directions.ipynb)\n- 來源清冊：`sources.csv#ansys_95186a74e74d94e6c9bc"
+    }
+  ],
+  "motion": [
+    {
+      "product": "motion",
+      "title": "Chart",
+      "source": "docs/ANSYS_Document/motion/v261/api_reference/05783f3bdcd5-example_chart_for_operation_api.md",
+      "url": "https://docs.pyansys.com/motion",
+      "downloads": [],
+      "summary": "---\nsource_url: https://developer.synopsys.com/docs/motion-standalone-postprocessor-c-sharp-library-2026-r1/example_chart_for_operation_api.md\n---\n\nTable of contents\n# Chart\nLast update: 09.03.2026\nThe following sample code illustrates how to create a simple example.\nThe examples provided below can"
+    },
+    {
+      "product": "motion",
+      "title": "Analysis",
+      "source": "docs/ANSYS_Document/motion/v261/api_reference/2ffc48f804e1-example_analysis_for_operation_api.md",
+      "url": "https://docs.pyansys.com/motion",
+      "downloads": [],
+      "summary": "---\nsource_url: https://developer.synopsys.com/docs/motion-standalone-postprocessor-c-sharp-library-2026-r1/example_analysis_for_operation_api.md\n---\n\nTable of contents\n# Analysis\nLast update: 09.03.2026\nThe following sample code illustrates how to create a simple example.\nThe examples provided belo"
+    },
+    {
+      "product": "motion",
+      "title": "Example",
+      "source": "docs/ANSYS_Document/motion/v261/api_reference/404da06fe154-example_view_for_operation_api.md",
+      "url": "https://docs.pyansys.com/motion",
+      "downloads": [],
+      "summary": "---\nsource_url: https://developer.synopsys.com/docs/motion-standalone-postprocessor-c-sharp-library-2026-r1/example_view_for_operation_api.md\n---\n\nTable of contents\n# Example\nLast update: 09.03.2026\nThis example covers topics related to views.\nThe examples provided below can be found within the 'Ins"
+    },
+    {
+      "product": "motion",
+      "title": "Example",
+      "source": "docs/ANSYS_Document/motion/v261/api_reference/88468f605e80-example_Import_for_operation_api.md",
+      "url": "https://docs.pyansys.com/motion",
+      "downloads": [],
+      "summary": "---\nsource_url: https://developer.synopsys.com/docs/motion-standalone-postprocessor-c-sharp-library-2026-r1/example_Import_for_operation_api.md\n---\n\nTable of contents\n# Example\nLast update: 09.03.2026\nThe following sample code illustrates how to create a simple example.\nThe examples provided below c"
+    },
+    {
+      "product": "motion",
+      "title": "Example",
+      "source": "docs/ANSYS_Document/motion/v261/api_reference/c7b57dfcefeb-example_export_for_operation_api.md",
+      "url": "https://docs.pyansys.com/motion",
+      "downloads": [],
+      "summary": "---\nsource_url: https://developer.synopsys.com/docs/motion-standalone-postprocessor-c-sharp-library-2026-r1/example_export_for_operation_api.md\n---\n\nTable of contents\n# Example\nLast update: 09.03.2026\nThe following sample code illustrates how to create a simple example.\nThe examples provided below c"
+    }
+  ],
+  "rocky": [
+    {
+      "product": "rocky",
+      "title": "Sample output:",
+      "source": "docs/ANSYS_Document/rocky/v261/guides_and_tutorials/rocky-prepost-scripting-2026-r1/about-grid-functions.md",
+      "url": "https://docs.pyansys.com/rocky",
+      "downloads": [],
+      "summary": "---\nsource_url: https://developer.synopsys.com/docs/rocky-prepost-scripting-2026-r1/about-grid-functions.md\ncrawled_at: 2026-10-21 16:36:51\n---\n\n    \n\n ## On this page\n\n  \n\n \n\n # About Grid Functions / Properties\n\n Last update: 23.02.2026 \n\nRocky’s PrePost Scripting provides Grid Functions or Proper"
+    },
+    {
+      "product": "rocky",
+      "title": "basic-usage",
+      "source": "docs/ANSYS_Document/rocky/v261/guides_and_tutorials/rocky-prepost-scripting-2026-r1/basic-usage.md",
+      "url": "https://docs.pyansys.com/rocky",
+      "downloads": [],
+      "summary": "---\nsource_url: https://developer.synopsys.com/docs/rocky-prepost-scripting-2026-r1/basic-usage.md\ncrawled_at: 2026-10-21 16:36:55\n---\n\n    \n\n ## On this page\n\n  \n\n \n\n # Introduction\n\n Last update: 13.05.2026 \n\nRocky’s PrePost Scripting provides lower-level access to Rocky’s data structures and simu"
+    },
+    {
+      "product": "rocky",
+      "title": "changelog",
+      "source": "docs/ANSYS_Document/rocky/v261/guides_and_tutorials/rocky-prepost-scripting-2026-r1/changelog.md",
+      "url": "https://docs.pyansys.com/rocky",
+      "downloads": [],
+      "summary": "---\nsource_url: https://developer.synopsys.com/docs/rocky-prepost-scripting-2026-r1/changelog.md\ncrawled_at: 2026-10-21 16:36:44\n---\n\n    \n\n ## On this page\n\n  \n\n \n\n # Release notes for 2026 R1\n\n Last update: 23.02.2026 \n\n<a id=\"added\"></a>\n\n## Added\n\n<a id=\"new-methods\"></a>\n\n### New Methods\n\n- [`R"
+    },
+    {
+      "product": "rocky",
+      "title": "prepost-scripting-reference",
+      "source": "docs/ANSYS_Document/rocky/v261/guides_and_tutorials/rocky-prepost-scripting-2026-r1/prepost-scripting-reference.md",
+      "url": "https://docs.pyansys.com/rocky",
+      "downloads": [],
+      "summary": "---\nsource_url: https://developer.synopsys.com/docs/rocky-prepost-scripting-2026-r1/prepost-scripting-reference.md\ncrawled_at: 2026-10-21 16:36:58\n---\n\n    \n\n ## On this page\n\n  \n\n \n\n # Class Reference\n\n Last update: 23.02.2026 \n\nThese are the classes and methods available to the user when executing"
+    },
+    {
+      "product": "rocky",
+      "title": "RA3DWindow",
+      "source": "docs/ANSYS_Document/rocky/v261/guides_and_tutorials/rocky-prepost-scripting-2026-r1/RA3DWindow.md",
+      "url": "https://docs.pyansys.com/rocky",
+      "downloads": [],
+      "summary": "---\nsource_url: https://developer.synopsys.com/docs/rocky-prepost-scripting-2026-r1/RA3DWindow.md\ncrawled_at: 2026-10-21 16:36:55\n---\n\n    \n\n ## On this page\n\n  \n\n \n\n # RA3DWindow\n\n Last update: 23.02.2026 \n\n<a id=\"generated.RA3DWindow\"></a>\n\n### *class* RA3DWindow\n\n3D window API.\n\n**Methods:**\n\nNam"
+    }
+  ],
+  "sound": [
+    {
+      "product": "sound",
+      "title": "Sound Module Overview",
+      "source": "docs/ANSYS_Document/sound/unknown/guides_and_tutorials/OVERVIEW.md",
+      "url": "https://docs.pyansys.com/sound",
+      "downloads": [],
+      "summary": "# Sound Module Overview\n> Source: `https://developer.synopsys.com/docs/sound.md`\n\n##  [Ansys Sound for developers](/docs/sound) \n\n## Overview\n\nAnsys Sound™ post-processing sound design software allow engineers to analyze and optimize their product noise using desired sound quality criteria and liste"
+    },
+    {
+      "product": "sound",
+      "title": "Sound 官方網站文字：Create a Sound Composer project — PyAnsys Sound",
+      "source": "docs/ANSYS_Document/sound/supplemental/tutorial/0ae74fbdc7c2e15c/sound.md",
+      "url": "https://docs.pyansys.com/sound",
+      "downloads": [],
+      "summary": "# Sound 官方網站文字：Create a Sound Composer project — PyAnsys Sound\n\n- source_url: https://sound.docs.pyansys.com/version/stable/examples/gallery_examples/011_sound_composer_create_project.html\n- 來源 ID：`sound_web_0ae74fbdc7c2e15c_52026e3b018a`\n- 擷取時間：2026-11-04T06:27:12.361438+00:00\n- 原始 HTML bytes SHA-2"
+    },
+    {
+      "product": "sound",
+      "title": "Sound 官方網站文字：Predict listening test ratings — PyAnsys Sound",
+      "source": "docs/ANSYS_Document/sound/supplemental/tutorial/25abe8d3cf6d15ce/sound.md",
+      "url": "https://docs.pyansys.com/sound",
+      "downloads": [],
+      "summary": "# Sound 官方網站文字：Predict listening test ratings — PyAnsys Sound\n\n- source_url: https://sound.docs.pyansys.com/version/stable/examples/gallery_examples/012_predict_listening_test_ratings.html\n- 來源 ID：`sound_web_25abe8d3cf6d15ce_0c38d8b9e43d`\n- 擷取時間：2026-11-04T06:27:12.470610+00:00\n- 原始 HTML bytes SHA-2"
+    },
+    {
+      "product": "sound",
+      "title": "Sound 官方網站文字：Isolate orders — PyAnsys Sound",
+      "source": "docs/ANSYS_Document/sound/supplemental/tutorial/402a2577ab3db082/sound.md",
+      "url": "https://docs.pyansys.com/sound",
+      "downloads": [],
+      "summary": "# Sound 官方網站文字：Isolate orders — PyAnsys Sound\n\n- source_url: https://sound.docs.pyansys.com/version/stable/examples/gallery_examples/004_isolate_orders.html\n- 來源 ID：`sound_web_402a2577ab3db082_74bf69eaf5ab`\n- 擷取時間：2026-11-04T06:27:11.279675+00:00\n- 原始 HTML bytes SHA-256：`74bf69eaf5abefc37727dd130d2c"
+    },
+    {
+      "product": "sound",
+      "title": "Sound 官方網站文字：Extract tonal, transient, and noise components (Xtract) — PyAnsys Sound",
+      "source": "docs/ANSYS_Document/sound/supplemental/tutorial/5eaff25da03560ef/sound.md",
+      "url": "https://docs.pyansys.com/sound",
+      "downloads": [],
+      "summary": "# Sound 官方網站文字：Extract tonal, transient, and noise components (Xtract) — PyAnsys Sound\n\n- source_url: https://sound.docs.pyansys.com/version/stable/examples/gallery_examples/005_xtract_feature.html\n- 來源 ID：`sound_web_5eaff25da03560ef_723d71454aa7`\n- 擷取時間：2026-11-04T06:27:11.525608+00:00\n- 原始 HTML by"
+    }
+  ],
+  "turbogrid": [
+    {
+      "product": "turbogrid",
+      "title": "Multi blade row meshing example[#](#multi-blade-row-meshing-example \"Link to this heading\")",
+      "source": "docs/ANSYS_Document/turbogrid/supplemental/crawled/78df11a1e9ac-mbr_sweep_example.md",
+      "url": "https://docs.pyansys.com/turbogrid",
+      "downloads": [],
+      "summary": "---\nsource_url: https://turbogrid.docs.pyansys.com/version/stable/examples/mbr_sweep_example.html\ntitle: Multi blade row meshing example — PyTurboGrid 0.9.4 documentation\n---\n\n* [PyAnsys](https://docs.pyansys.com/)\n* [Examples](index.html)\n* Multi blade row meshing example\n\nNote\n\n[Go to the end](#sp"
+    },
+    {
+      "product": "turbogrid",
+      "title": "Multi blade row meshing example[#](#multi-blade-row-meshing-example \"Link to this heading\")",
+      "source": "docs/ANSYS_Document/turbogrid/supplemental/crawled/9aea51a2ed24-multi_blade_row_batch_example.md",
+      "url": "https://docs.pyansys.com/turbogrid",
+      "downloads": [],
+      "summary": "---\nsource_url: https://turbogrid.docs.pyansys.com/version/stable/examples/multi_blade_row_batch_example.html\ntitle: Multi blade row meshing example — PyTurboGrid 0.9.4 documentation\n---\n\n* [PyAnsys](https://docs.pyansys.com/)\n* [Examples](index.html)\n* Multi blade row meshing example\n\nNote\n\n[Go to"
+    },
+    {
+      "product": "turbogrid",
+      "title": "PyTurboGrid tutorial 附件文字：ansys_0f221ff88b61c79b703d08e3",
+      "source": "docs/ANSYS_Document/turbogrid/supplemental/tutorial/ansys_0f221ff88b61c79b703d08e3/turbogrid.md",
+      "url": "https://docs.pyansys.com/turbogrid",
+      "downloads": [],
+      "summary": "# PyTurboGrid tutorial 附件文字：ansys_0f221ff88b61c79b703d08e3\n\n本檔保留範例原始文字供閱讀及檢索；未執行。Notebook 只擷取 Markdown 與 code cell，不含 outputs、圖片或其他附件；產品版本未知。\n\n- [原始附件](../../../../../ANSYS_Document/TurboGrid/sdk/ansys-turbogrid-core/0.9.4/tutorial/inputs/basic_read_inf_rotor37.py)\n- 來源清冊：`sources.csv#ansys_0f221ff8"
+    },
+    {
+      "product": "turbogrid",
+      "title": "PyTurboGrid tutorial 附件文字：ansys_10fe5c536b46b3b2934e0530",
+      "source": "docs/ANSYS_Document/turbogrid/supplemental/tutorial/ansys_10fe5c536b46b3b2934e0530/turbogrid.md",
+      "url": "https://docs.pyansys.com/turbogrid",
+      "downloads": [],
+      "summary": "# PyTurboGrid tutorial 附件文字：ansys_10fe5c536b46b3b2934e0530\n\n本檔保留範例原始文字供閱讀及檢索；未執行。Notebook 只擷取 Markdown 與 code cell，不含 outputs、圖片或其他附件；產品版本未知。\n\n- [原始附件](../../../../../ANSYS_Document/TurboGrid/sdk/ansys-turbogrid-core/0.9.4/tutorial/inputs/mbr_from_tginit_example.py)\n- 來源清冊：`sources.csv#ansys_10fe5c5"
+    },
+    {
+      "product": "turbogrid",
+      "title": "PyTurboGrid tutorial 附件文字：ansys_213e2c51b26c7b9e5680e1b8",
+      "source": "docs/ANSYS_Document/turbogrid/supplemental/tutorial/ansys_213e2c51b26c7b9e5680e1b8/turbogrid.md",
+      "url": "https://docs.pyansys.com/turbogrid",
+      "downloads": [],
+      "summary": "# PyTurboGrid tutorial 附件文字：ansys_213e2c51b26c7b9e5680e1b8\n\n本檔保留範例原始文字供閱讀及檢索；未執行。Notebook 只擷取 Markdown 與 code cell，不含 outputs、圖片或其他附件；產品版本未知。\n\n- [原始附件](../../../../../ANSYS_Document/TurboGrid/sdk/ansys-turbogrid-core/0.9.4/tutorial/inputs/basic_read_inf_rotor37.ipynb)\n- 來源清冊：`sources.csv#ansys_213e2"
+    }
+  ],
+  "thermal_desktop": [
+    {
+      "product": "thermal_desktop",
+      "title": "changelog",
+      "source": "docs/ANSYS_Document/thermal_desktop/v261/guides_and_tutorials/opentd-2026-r1/changelog.md",
+      "url": "https://docs.pyansys.com/thermal_desktop",
+      "downloads": [],
+      "summary": "---\nsource_url: https://developer.synopsys.com/docs/opentd-2026-r1/changelog.md\ncrawled_at: 2026-10-21 16:39:25\n---\n\n    \n\n ## On this page\n\n  \n\n \n\n # Changelog\n\n Last update: 09.03.2026 \n\n## Version 2026 R1\n\n### Notes\n\n- The .NET 4 versions of the dll's will have assembly version 26.1.4.x and will"
+    },
+    {
+      "product": "thermal_desktop",
+      "title": "index",
+      "source": "docs/ANSYS_Document/thermal_desktop/v261/guides_and_tutorials/opentd-2026-r1/index.md",
+      "url": "https://docs.pyansys.com/thermal_desktop",
+      "downloads": [],
+      "summary": "---\nsource_url: https://developer.synopsys.com/docs/opentd-2026-r1/index.md\ncrawled_at: 2026-10-21 16:39:24\n---\n\n    \n\n ## On this page\n\n  \n\n \n\n # Introduction\n\n Last update: 09.03.2026 \n\nThe Ansys OpenTD application programming interface (API) enables automation of numerous tasks typically handled"
+    },
+    {
+      "product": "thermal_desktop",
+      "title": "appendix-A-using-opentd-with-MATLAB",
+      "source": "docs/ANSYS_Document/thermal_desktop/v261/guides_and_tutorials/opentd-2026-r1/getting-started/appendix-A-using-opentd-with-MATLAB.md",
+      "url": "https://docs.pyansys.com/thermal_desktop",
+      "downloads": [],
+      "summary": "---\nsource_url: https://developer.synopsys.com/docs/opentd-2026-r1/getting-started/appendix-A-using-opentd-with-MATLAB.md\ncrawled_at: 2026-10-21 16:39:24\n---\n\n    \n\n ## On this page\n\n  \n\n \n\n # Appendix A: Using OpenTD with MATLAB\n\n Last update: 09.03.2026 \n\nWhile it is not feasible for us to maintai"
+    },
+    {
+      "product": "thermal_desktop",
+      "title": "CRTech",
+      "source": "docs/ANSYS_Document/thermal_desktop/v261/guides_and_tutorials/opentd-2026-r1/getting-started/appendix-B-using-opentd-with-python.md",
+      "url": "https://docs.pyansys.com/thermal_desktop",
+      "downloads": [],
+      "summary": "---\nsource_url: https://developer.synopsys.com/docs/opentd-2026-r1/getting-started/appendix-B-using-opentd-with-python.md\ncrawled_at: 2026-10-21 16:39:24\n---\n\n    \n\n ## On this page\n\n  \n\n \n\n # Appendix B: Using OpenTD with Python\n\n Last update: 09.03.2026 \n\nWhile it is not feasible for us to maintai"
+    },
+    {
+      "product": "thermal_desktop",
+      "title": "appendix-C-using-opentd-with-powershell",
+      "source": "docs/ANSYS_Document/thermal_desktop/v261/guides_and_tutorials/opentd-2026-r1/getting-started/appendix-C-using-opentd-with-powershell.md",
+      "url": "https://docs.pyansys.com/thermal_desktop",
+      "downloads": [],
+      "summary": "---\nsource_url: https://developer.synopsys.com/docs/opentd-2026-r1/getting-started/appendix-C-using-opentd-with-powershell.md\ncrawled_at: 2026-10-21 16:39:24\n---\n\n    \n\n ## On this page\n\n  \n\n \n\n # Appendix C: Using OpenTD with PowerShell\n\n Last update: 09.03.2026 \n\nWindows PowerShell can be used to"
+    }
+  ],
+  "primemesh": [
+    {
+      "product": "primemesh",
+      "title": "ansys.meshing.prime.examples.download_block_model_fmd",
+      "source": "docs/ANSYS_Document/primemesh/v261/api_reference/prime-mesh-python-client-library-2026-r1-sp01/api/_autosummary/ansys.meshing.prime.examples.download_block_model_fmd.md",
+      "url": "https://docs.pyansys.com/primemesh",
+      "downloads": [],
+      "summary": "---\nsource_url: https://developer.synopsys.com/docs/prime-mesh-python-client-library-2026-r1-sp01/api/_autosummary/ansys.meshing.prime.examples.download_block_model_fmd.md\ncrawled_at: 2026-10-21 16:34:27\n---\n\n    \n\n ## On this page\n\n  \n\n \n\n # download\\_block\\_model\\_fmd\n\n Last update: 29.04.2026 \n\n<"
+    },
+    {
+      "product": "primemesh",
+      "title": "ansys.meshing.prime.examples.download_block_model_pmdat",
+      "source": "docs/ANSYS_Document/primemesh/v261/api_reference/prime-mesh-python-client-library-2026-r1-sp01/api/_autosummary/ansys.meshing.prime.examples.download_block_model_pmdat.md",
+      "url": "https://docs.pyansys.com/primemesh",
+      "downloads": [],
+      "summary": "---\nsource_url: https://developer.synopsys.com/docs/prime-mesh-python-client-library-2026-r1-sp01/api/_autosummary/ansys.meshing.prime.examples.download_block_model_pmdat.md\ncrawled_at: 2026-10-21 16:35:10\n---\n\n    \n\n ## On this page\n\n  \n\n \n\n # download\\_block\\_model\\_pmdat\n\n Last update: 29.04.2026"
+    },
+    {
+      "product": "primemesh",
+      "title": "ansys.meshing.prime.examples.download_block_model_scdoc",
+      "source": "docs/ANSYS_Document/primemesh/v261/api_reference/prime-mesh-python-client-library-2026-r1-sp01/api/_autosummary/ansys.meshing.prime.examples.download_block_model_scdoc.md",
+      "url": "https://docs.pyansys.com/primemesh",
+      "downloads": [],
+      "summary": "---\nsource_url: https://developer.synopsys.com/docs/prime-mesh-python-client-library-2026-r1-sp01/api/_autosummary/ansys.meshing.prime.examples.download_block_model_scdoc.md\ncrawled_at: 2026-10-21 16:32:54\n---\n\n    \n\n ## On this page\n\n  \n\n \n\n # download\\_block\\_model\\_scdoc\n\n Last update: 29.04.2026"
+    },
+    {
+      "product": "primemesh",
+      "title": "ansys.meshing.prime.examples.download_bracket_dsco",
+      "source": "docs/ANSYS_Document/primemesh/v261/api_reference/prime-mesh-python-client-library-2026-r1-sp01/api/_autosummary/ansys.meshing.prime.examples.download_bracket_dsco.md",
+      "url": "https://docs.pyansys.com/primemesh",
+      "downloads": [],
+      "summary": "---\nsource_url: https://developer.synopsys.com/docs/prime-mesh-python-client-library-2026-r1-sp01/api/_autosummary/ansys.meshing.prime.examples.download_bracket_dsco.md\ncrawled_at: 2026-10-21 16:35:28\n---\n\n    \n\n ## On this page\n\n  \n\n \n\n # download\\_bracket\\_dsco\n\n Last update: 29.04.2026 \n\n<a id=\"a"
+    },
+    {
+      "product": "primemesh",
+      "title": "ansys.meshing.prime.examples.download_bracket_fmd",
+      "source": "docs/ANSYS_Document/primemesh/v261/api_reference/prime-mesh-python-client-library-2026-r1-sp01/api/_autosummary/ansys.meshing.prime.examples.download_bracket_fmd.md",
+      "url": "https://docs.pyansys.com/primemesh",
+      "downloads": [],
+      "summary": "---\nsource_url: https://developer.synopsys.com/docs/prime-mesh-python-client-library-2026-r1-sp01/api/_autosummary/ansys.meshing.prime.examples.download_bracket_fmd.md\ncrawled_at: 2026-10-21 16:35:48\n---\n\n    \n\n ## On this page\n\n  \n\n \n\n # download\\_bracket\\_fmd\n\n Last update: 29.04.2026 \n\n<a id=\"ans"
+    }
+  ],
+  "twinai": [
+    {
+      "product": "twinai",
+      "title": "TwinAI 官方網站文字：Static structural analysis and optimization using 3D field ROM — PyTwin",
+      "source": "docs/ANSYS_Document/twinai/supplemental/tutorial/02584487cb002dc7/twinai.md",
+      "url": "https://docs.pyansys.com/twinai",
+      "downloads": [],
+      "summary": "# TwinAI 官方網站文字：Static structural analysis and optimization using 3D field ROM — PyTwin\n\n- source_url: https://twin.docs.pyansys.com/version/stable/examples/02-tbrom_examples/06-TBROM_FEA_static_structural_optimization.html\n- 擷取時間：2026-11-04T05:12:19.014185+00:00\n- 原始HTML bytes SHA-256：`999f7b622f8c"
+    },
+    {
+      "product": "twinai",
+      "title": "TwinAI 官方網站文字：Twin evaluation of a scalar dynamic ROM — PyTwin",
+      "source": "docs/ANSYS_Document/twinai/supplemental/tutorial/1fe1332969d4e896/twinai.md",
+      "url": "https://docs.pyansys.com/twinai",
+      "downloads": [],
+      "summary": "# TwinAI 官方網站文字：Twin evaluation of a scalar dynamic ROM — PyTwin\n\n- source_url: https://twin.docs.pyansys.com/version/stable/examples/01-twin_examples/03-scalarDROM.html\n- 擷取時間：2026-11-04T05:12:17.669874+00:00\n- 原始HTML bytes SHA-256：`a5088aee83714740c56e11c49a2d06400cc57846ba307dcc08ca496020264a1a`"
+    },
+    {
+      "product": "twinai",
+      "title": "TwinAI 官方網站文字：Twin evaluation of a 3D field ROM and data transfer to FEA model inputs — PyTwin",
+      "source": "docs/ANSYS_Document/twinai/supplemental/tutorial/2863027b7bb061a2/twinai.md",
+      "url": "https://docs.pyansys.com/twinai",
+      "downloads": [],
+      "summary": "# TwinAI 官方網站文字：Twin evaluation of a 3D field ROM and data transfer to FEA model inputs — PyTwin\n\n- source_url: https://twin.docs.pyansys.com/version/stable/examples/02-tbrom_examples/01-TBROM_dataTransfer_pyMAPDL.html\n- 擷取時間：2026-11-04T05:12:18.158034+00:00\n- 原始HTML bytes SHA-256：`7628a6c0fa35a12e5"
+    },
+    {
+      "product": "twinai",
+      "title": "TwinAI 官方網站文字：3D field ROM example with CFD mesh based visualization — PyTwin",
+      "source": "docs/ANSYS_Document/twinai/supplemental/tutorial/5d95d71e7f8731ac/twinai.md",
+      "url": "https://docs.pyansys.com/twinai",
+      "downloads": [],
+      "summary": "# TwinAI 官方網站文字：3D field ROM example with CFD mesh based visualization — PyTwin\n\n- source_url: https://twin.docs.pyansys.com/version/stable/examples/02-tbrom_examples/04-TBROM_CFD_mesh_based_visualization.html\n- 擷取時間：2026-11-04T05:12:18.656600+00:00\n- 原始HTML bytes SHA-256：`00e556173588ca5f2aad5e4b9e"
+    },
+    {
+      "product": "twinai",
+      "title": "TwinAI 官方網站文字：Parametric twin evaluation of a response surface ROM — PyTwin",
+      "source": "docs/ANSYS_Document/twinai/supplemental/tutorial/821e2f39d9474450/twinai.md",
+      "url": "https://docs.pyansys.com/twinai",
+      "downloads": [],
+      "summary": "# TwinAI 官方網站文字：Parametric twin evaluation of a response surface ROM — PyTwin\n\n- source_url: https://twin.docs.pyansys.com/version/stable/examples/01-twin_examples/02-heatExchangerRS.html\n- 擷取時間：2026-11-04T05:12:17.659294+00:00\n- 原始HTML bytes SHA-256：`47b13dea6393aa7de68a4dc798f5b6e37aadd23a964efe23"
+    }
+  ],
+  "scade": [
+    {
+      "product": "scade",
+      "title": "SCADE Module Overview",
+      "source": "docs/ANSYS_Document/scade/unknown/guides_and_tutorials/OVERVIEW.md",
+      "url": "https://docs.pyansys.com/scade",
+      "downloads": [],
+      "summary": "# SCADE Module Overview\n> Source: `https://developer.synopsys.com/docs/scade.md`\n\n##  [Ansys SCADE for developers](/docs/scade) \n\n## Overview\n\nAnsys SCADE® embedded software product collection provides a development and simulation environment with a built-in certified automatic code generator to acc"
+    },
+    {
+      "product": "scade",
+      "title": "SCADE Module Overview",
+      "source": "docs/ANSYS_Document/SCADE/unknown/guides_and_tutorials/OVERVIEW.md",
+      "url": "https://docs.pyansys.com/scade",
+      "downloads": [],
+      "summary": "# SCADE Module Overview\n> Source: `https://developer.synopsys.com/docs/scade.md`\n\n##  [Ansys SCADE for developers](/docs/scade) \n\n## Overview\n\nAnsys SCADE® embedded software product collection provides a development and simulation environment with a built-in certified automatic code generator to acc"
+    },
+    {
+      "product": "scade",
+      "title": "SCADE Module Overview",
+      "source": "docs/ANSYS_Document/Scade/unknown/guides_and_tutorials/OVERVIEW.md",
+      "url": "https://docs.pyansys.com/scade",
+      "downloads": [],
+      "summary": "# SCADE Module Overview\n> Source: `https://developer.synopsys.com/docs/scade.md`\n\n##  [Ansys SCADE for developers](/docs/scade) \n\n## Overview\n\nAnsys SCADE® embedded software product collection provides a development and simulation environment with a built-in certified automatic code generator to acc"
+    },
+    {
+      "product": "scade",
+      "title": "SCADE Module Overview",
+      "source": "docs/ANSYS_Document/scade/unknown/guides_and_tutorials/OVERVIEW.md",
+      "url": "https://docs.pyansys.com/scade",
+      "downloads": [],
+      "summary": "# SCADE Module Overview\n> Source: `https://developer.synopsys.com/docs/scade.md`\n\n##  [Ansys SCADE for developers](/docs/scade) \n\n## Overview\n\nAnsys SCADE® embedded software product collection provides a development and simulation environment with a built-in certified automatic code generator to acc"
+    }
+  ],
+  "scade_one": [
+    {
+      "product": "scade_one",
+      "title": "changelog",
+      "source": "docs/ANSYS_Document/scade_one/v261/guides_and_tutorials/scade-one-standard-libraries-2026-r1/changelog.md",
+      "url": "https://docs.pyansys.com/scade_one",
+      "downloads": [],
+      "summary": "---\nsource_url: https://developer.synopsys.com/docs/scade-one-standard-libraries-2026-r1/changelog.md\ncrawled_at: 2026-10-21 16:37:23\n---\n\n    \n\n ## On this page\n\n  \n\n \n\n # Changelog\n\n Last update: 09.03.2026 \n\n## 2026 R1\n\n- No changes in this release."
+    },
+    {
+      "product": "scade_one",
+      "title": "index",
+      "source": "docs/ANSYS_Document/scade_one/v261/guides_and_tutorials/scade-one-standard-libraries-2026-r1/index.md",
+      "url": "https://docs.pyansys.com/scade_one",
+      "downloads": [],
+      "summary": "---\nsource_url: https://developer.synopsys.com/docs/scade-one-standard-libraries-2026-r1/index.md\ncrawled_at: 2026-10-21 16:37:11\n---\n\n    \n\n ## On this page\n\n  \n\n \n\n # Libraries \n\n Last update: 09.03.2026 \n\nScade One provides a set of libraries that can be used for model design for simulation and d"
+    },
+    {
+      "product": "scade_one",
+      "title": "bitfield",
+      "source": "docs/ANSYS_Document/scade_one/v261/guides_and_tutorials/scade-one-standard-libraries-2026-r1/libraries/bitfield/bitfield.md",
+      "url": "https://docs.pyansys.com/scade_one",
+      "downloads": [],
+      "summary": "---\nsource_url: https://developer.synopsys.com/docs/scade-one-standard-libraries-2026-r1/libraries/bitfield/bitfield.md\ncrawled_at: 2026-10-21 16:37:22\n---\n\n    \n\n ## On this page\n\n  \n\n \n\n # Bitfield\n\n Last update: 09.03.2026 \n\nThe BitField library provides a set of operations on arrays of bits or i"
+    },
+    {
+      "product": "scade_one",
+      "title": "bitfield__bitsmask",
+      "source": "docs/ANSYS_Document/scade_one/v261/guides_and_tutorials/scade-one-standard-libraries-2026-r1/libraries/bitfield/bitfield__bitsmask.md",
+      "url": "https://docs.pyansys.com/scade_one",
+      "downloads": [],
+      "summary": "---\nsource_url: https://developer.synopsys.com/docs/scade-one-standard-libraries-2026-r1/libraries/bitfield/bitfield__bitsmask.md\ncrawled_at: 2026-10-21 16:37:17\n---\n\n    \n\n ## On this page\n\n  \n\n \n\n # BitsMask\n\n Last update: 09.03.2026 \n\nReturns a mask of a number of bits at the given position.\n\n##"
+    },
+    {
+      "product": "scade_one",
+      "title": "bitfield__clrbit",
+      "source": "docs/ANSYS_Document/scade_one/v261/guides_and_tutorials/scade-one-standard-libraries-2026-r1/libraries/bitfield/bitfield__clrbit.md",
+      "url": "https://docs.pyansys.com/scade_one",
+      "downloads": [],
+      "summary": "---\nsource_url: https://developer.synopsys.com/docs/scade-one-standard-libraries-2026-r1/libraries/bitfield/bitfield__clrbit.md\ncrawled_at: 2026-10-21 16:37:24\n---\n\n    \n\n ## On this page\n\n  \n\n \n\n # ClrBit\n\n Last update: 09.03.2026 \n\nReturns the input with the bit set to 0 at the given position.\n\n##"
+    }
+  ],
+  "ensight": [
+    {
+      "product": "ensight",
+      "title": "changelog",
+      "source": "docs/ANSYS_Document/ensight/v261/guides_and_tutorials/dynamic-visualization-store-2026-r1/changelog.md",
+      "url": "https://docs.pyansys.com/ensight",
+      "downloads": [],
+      "summary": "---\nsource_url: https://developer.synopsys.com/docs/dynamic-visualization-store-2026-r1/changelog.md\ncrawled_at: 2026-10-21 16:18:33\n---\n\n    \n\n ## On this page\n\n  \n\n \n\n # Changelog\n\n Last update: 09.03.2026 \n\n<a id=\"dvs__changelog\"></a>\n\n<a id=\"dvs__changelog_1Whats-new-in-2026R1\"></a>\n\n## What's n"
+    },
+    {
+      "product": "ensight",
+      "title": "index",
+      "source": "docs/ANSYS_Document/ensight/v261/guides_and_tutorials/dynamic-visualization-store-2026-r1/index.md",
+      "url": "https://docs.pyansys.com/ensight",
+      "downloads": [],
+      "summary": "---\nsource_url: https://developer.synopsys.com/docs/dynamic-visualization-store-2026-r1/index.md\ncrawled_at: 2026-10-21 16:18:31\n---\n\n    \n\n ## On this page\n\n  \n\n \n\n # Introduction\n\n Last update: 09.03.2026 \n\n<a id=\"dvs__main\"></a>\n\nAPI for high-performance postprocessing visualization.\n\nThe Dynamic"
+    },
+    {
+      "product": "ensight",
+      "title": "changelog",
+      "source": "docs/ANSYS_Document/ensight/v261/guides_and_tutorials/ensight-grpc-interface-2026-r1/changelog.md",
+      "url": "https://docs.pyansys.com/ensight",
+      "downloads": [],
+      "summary": "---\nsource_url: https://developer.synopsys.com/docs/ensight-grpc-interface-2026-r1/changelog.md\ncrawled_at: 2026-10-21 16:18:36\n---\n\n    \n\n ## On this page\n\n  \n\n \n\n # Changelog\n\n Last update: 09.03.2026 \n\n## 2026 R1\n\n- No changes in this release."
+    },
+    {
+      "product": "ensight",
+      "title": "index",
+      "source": "docs/ANSYS_Document/ensight/v261/guides_and_tutorials/ensight-grpc-interface-2026-r1/index.md",
+      "url": "https://docs.pyansys.com/ensight",
+      "downloads": [],
+      "summary": "---\nsource_url: https://developer.synopsys.com/docs/ensight-grpc-interface-2026-r1/index.md\ncrawled_at: 2026-10-21 16:18:36\n---\n\n    \n\n ## On this page\n\n  \n\n \n\n # EnSight gRPC interface\n\n Last update: 09.03.2026 \n\nThe gRPC server API exposed by the EnSight client.\n\nThe EnSight client supports a gRPC"
+    },
+    {
+      "product": "ensight",
+      "title": "changelog",
+      "source": "docs/ANSYS_Document/ensight/v261/guides_and_tutorials/gltfwriter-interface-2026-r1/changelog.md",
+      "url": "https://docs.pyansys.com/ensight",
+      "downloads": [],
+      "summary": "---\nsource_url: https://developer.synopsys.com/docs/gltfwriter-interface-2026-r1/changelog.md\ncrawled_at: 2026-10-21 16:18:40\n---\n\n    \n\n ## On this page\n\n  \n\n \n\n # Changelog\n\n Last update: 09.03.2026 \n\n## 2026 R1\n\n- No changes in this release."
+    }
+  ],
+  "adr": [
+    {
+      "product": "adr",
+      "title": "changelog",
+      "source": "docs/ANSYS_Document/adr/v261/guides_and_tutorials/adr-3d-viewer-web-component-2026-r1/changelog.md",
+      "url": "https://docs.pyansys.com/adr",
+      "downloads": [],
+      "summary": "---\nsource_url: https://developer.synopsys.com/docs/adr-3d-viewer-web-component-2026-r1/changelog.md\ncrawled_at: 2026-10-21 16:18:28\n---\n\n    \n\n ## On this page\n\n  \n\n \n\n # Changelog\n\n Last update: 17.04.2026 \n\n## Version 2026 R1\n\n- No changes in this release."
+    },
+    {
+      "product": "adr",
+      "title": "events",
+      "source": "docs/ANSYS_Document/adr/v261/guides_and_tutorials/adr-3d-viewer-web-component-2026-r1/events.md",
+      "url": "https://docs.pyansys.com/adr",
+      "downloads": [],
+      "summary": "---\nsource_url: https://developer.synopsys.com/docs/adr-3d-viewer-web-component-2026-r1/events.md\ncrawled_at: 2026-10-21 16:18:28\n---\n\n    \n\n ## On this page\n\n  \n\n \n\n # Events\n\n Last update: 17.04.2026 \n\nThe component is designed to communicate intrinsic status changes via custom JavaScript events."
+    },
+    {
+      "product": "adr",
+      "title": "getting-started",
+      "source": "docs/ANSYS_Document/adr/v261/guides_and_tutorials/adr-3d-viewer-web-component-2026-r1/getting-started.md",
+      "url": "https://docs.pyansys.com/adr",
+      "downloads": [],
+      "summary": "---\nsource_url: https://developer.synopsys.com/docs/adr-3d-viewer-web-component-2026-r1/getting-started.md\ncrawled_at: 2026-10-21 16:18:28\n---\n\n    \n\n ## On this page\n\n  \n\n \n\n # Getting started\n\n Last update: 17.04.2026 \n\n## Instantiation\n\nA simple example of using the component in a web page:\n\n```h"
+    },
+    {
+      "product": "adr",
+      "title": "index",
+      "source": "docs/ANSYS_Document/adr/v261/guides_and_tutorials/adr-3d-viewer-web-component-2026-r1/index.md",
+      "url": "https://docs.pyansys.com/adr",
+      "downloads": [],
+      "summary": "---\nsource_url: https://developer.synopsys.com/docs/adr-3d-viewer-web-component-2026-r1/index.md\ncrawled_at: 2026-10-21 16:18:28\n---\n\n    \n\n ## On this page\n\n  \n\n \n\n # Introduction\n\n Last update: 17.04.2026 \n\nThe Ansys ADR 3D Viewer Web Component is a web component capable of rendering 3D geometry i"
+    },
+    {
+      "product": "adr",
+      "title": "methods",
+      "source": "docs/ANSYS_Document/adr/v261/guides_and_tutorials/adr-3d-viewer-web-component-2026-r1/methods.md",
+      "url": "https://docs.pyansys.com/adr",
+      "downloads": [],
+      "summary": "---\nsource_url: https://developer.synopsys.com/docs/adr-3d-viewer-web-component-2026-r1/methods.md\ncrawled_at: 2026-10-21 16:18:28\n---\n\n    \n\n ## On this page\n\n  \n\n \n\n # Methods\n\n Last update: 17.04.2026 \n\nThere are several methods calls that can be made on the  element. In practice, code similar to"
+    }
+  ]
+}

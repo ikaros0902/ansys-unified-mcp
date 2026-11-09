@@ -47,7 +47,7 @@ DataModel.GetObjectsByType(DataModelObjectCategory.Body)          # Body / Named
 DataModel.GetObjectsByName("Initial Conditions")                  # by name -> list
 DataModel.GetObjectById(objId)
 Model.GetChildren(DataModelObjectCategory.NamedSelection, True)   # recursive children of a category
-Model.GetChildren[Ansys.ACT.Automation.Mechanical.NamedSelection](True)  # typed variant
+Model.GetChildren**Ansys.ACT.Automation.Mechanical.NamedSelection**  # typed variant
 ```
 
 Handles: `Model.Geometry`, `Model.Mesh`, `Model.Connections`, `Model.Materials`,

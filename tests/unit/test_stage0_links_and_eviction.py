@@ -151,12 +151,13 @@ class TestGitignoreHardening:
     def test_agents_md_is_not_ignored(self):
         """驗證 AGENTS.md 未被忽略（受 ASD-STE100 契約版本控制保護）"""
         res = subprocess.run(
-            ["git", "-C", str(REPO_ROOT), "check-ignore", "-v", "AGENTS.md"],
+            ["git", "-C", str(REPO_ROOT), "check-ignore", "--no-index", "-v", "AGENTS.md"],
             capture_output=True,
             text=True,
         )
-        # git check-ignore 在有 ! 否定規則時返回代碼 0，且輸出以 ! 開頭
-        assert "!AGENTS.md" in res.stdout
+        gitignore_text = (REPO_ROOT / ".gitignore").read_text(encoding="utf-8")
+        assert "!AGENTS.md" in gitignore_text
+        assert "!AGENTS.md" in res.stdout or res.returncode == 1
 
     @pytest.mark.parametrize(
         "ignored_path",

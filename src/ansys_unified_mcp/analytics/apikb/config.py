@@ -13,7 +13,7 @@ DOCS_DIR = REPO_ROOT / "docs" / "api_inventory"
 SCHEMA_PATH = Path(__file__).resolve().parent / "schema.sql"
 
 # SQLite 資料庫存放路徑 (與 docsearch 一致存於 Documentation_clean)
-DB_DIR = REPO_ROOT / "Documentation_clean"
+DB_DIR = REPO_ROOT / "docs" / "Documentation_clean"
 DB_PATH = DB_DIR / "api_kb.sqlite"
 
 # 來源 JSON 檔案清單
@@ -128,6 +128,8 @@ SOURCES = {
     "system_coupling": DOCS_DIR / "system_coupling_api.json",
     "reaction_chemkin": DOCS_DIR / "reaction_chemkin_api.json",
     "motorcad": DOCS_DIR / "motorcad_api.json",
+    "pytwin": DOCS_DIR / "pytwin_api.json",
+    "pyaedt": DOCS_DIR / "pyaedt_api.json",
     "siwave_libironpythoncmd_rea": DOCS_DIR / "siwave_libironpythoncmd_rea_api.json",
     "hfss_addin_rea": DOCS_DIR / "hfss_addin_rea_api.json",
     "apip_wrapper_native": DOCS_DIR / "apip_wrapper_native_exports_api.json",
@@ -168,6 +170,8 @@ INTERFACES = {
     "system_coupling": "PyAnsys System Coupling SDK 0.13.0 api_25_1 namespace targeting v251",
     "reaction_chemkin": "PyChemkin SDK 0.2.0 static AST snapshot; product release unknown",
     "motorcad": "PyMotorCAD SDK 0.8.8 static AST snapshot; product release unknown",
+    "pytwin": "PyTwin SDK 0.13.0 static AST snapshot; product mapping and release unknown",
+    "pyaedt": "PyAEDT SDK 1.9.0 static AST snapshot; product mapping and release unknown",
     "workbench_protocol": "Workbench gRPC protocol schema from ansys-api-workbench 0.4.0",
     "mechanical_protocol": "Mechanical gRPC protocol schema from ansys-api-mechanical 0.1.4",
     "geometry_protocol": "Geometry gRPC protocol schema from ansys-api-geometry 0.4.92",
@@ -258,9 +262,11 @@ INTERFACES = {
 
 def source_snapshots() -> list[tuple[str, Path]]:
     """回傳既有來源及同產品額外快照；保留 SOURCES 的舊字典介面。"""
+    versioned_files = sorted(DOCS_DIR.glob("*_api_v*.json")) if DOCS_DIR.is_dir() else []
     snapshots = []
     for product, primary in SOURCES.items():
-        candidates = [primary, *sorted(DOCS_DIR.glob(f"{product}_api_v*.json"))]
+        prefix = f"{product}_api_v"
+        candidates = [primary, *(p for p in versioned_files if p.name.startswith(prefix))]
         seen = set()
         for candidate in candidates:
             if candidate.is_file() and candidate.resolve() not in seen:
@@ -285,7 +291,7 @@ def source_metadata(product: str, path: Path) -> dict:
     if product == "optislang":
         sdk_version = version
         version = "unknown (product release not recorded)"
-    elif product in {"mapdl", "dpf", "fluent", "primemesh", "sound", "pydyna", "mechanical_core", "geometry_core", "optislang_core", "workbench", "sherlock_core", "rocky", "cfx", "speos", "speos_protocol", "system_coupling", "reaction_chemkin", "motorcad", "workbench_protocol", "mechanical_protocol", "geometry_protocol", "fluent_protocol", "mapdl_protocol", "primemesh_protocol", "discovery_protocol", "dbu_protocol", "result_explorer_protocol", "platform_instance_management_protocol", "filetransfer_protocol"}:
+    elif product in {"mapdl", "dpf", "fluent", "primemesh", "sound", "pydyna", "mechanical_core", "geometry_core", "optislang_core", "workbench", "sherlock_core", "rocky", "cfx", "speos", "speos_protocol", "system_coupling", "reaction_chemkin", "motorcad", "pytwin", "pyaedt", "workbench_protocol", "mechanical_protocol", "geometry_protocol", "fluent_protocol", "mapdl_protocol", "primemesh_protocol", "discovery_protocol", "dbu_protocol", "result_explorer_protocol", "platform_instance_management_protocol", "filetransfer_protocol"}:
         sdk_version = str(data.get("sdk_version", ""))
         if version == "unknown":
             version = "unknown (product release not recorded)"

@@ -13,7 +13,7 @@ from pathlib import Path
 from typing import Any
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-DOC_DIR = REPO_ROOT / "ANSYS_Document" / "LS-DYNA" / "sdk" / "ansys-dyna-core" / "0.12.1" / "api_reference"
+DOC_DIR = REPO_ROOT / "docs" / "ANSYS_Document" / "LS-DYNA" / "sdk" / "ansys-dyna-core" / "0.12.1" / "api_reference"
 DOC_MARKDOWN = DOC_DIR / "899655182e59-index.md"
 DOC_HTML = DOC_DIR / "899655182e59-index.html"
 OUT_PATH = REPO_ROOT / "docs" / "api_inventory" / "pydyna_api.json"

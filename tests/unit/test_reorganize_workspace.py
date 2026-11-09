@@ -19,7 +19,7 @@ def test_paths_and_release_evidence(tmp_path):
 
 
 def test_migration_preserves_backup_and_refuses_collision(tmp_path):
-    (tmp_path / "ANSYS_Document").mkdir()
+    (tmp_path / "docs" / "ANSYS_Document").mkdir(parents=True)
     source = tmp_path / "docs/ARCHITECTURE.md"
     source.parent.mkdir()
     source.write_text("original", encoding="utf-8")
@@ -37,7 +37,7 @@ def test_migration_preserves_backup_and_refuses_collision(tmp_path):
 
 
 def test_named_duplicate_with_different_bytes_is_never_removed(tmp_path):
-    root = tmp_path / "ANSYS_Document"
+    root = tmp_path / "docs" / "ANSYS_Document"
     a = root / "AnsysEM/manuals_and_training/UsersGuide_1.62.pdf"
     b = root / "TwinAI/manuals/UsersGuide_1.62.pdf"
     for p, text in [(a, b"ABC"), (b, b"XYZ")]:
@@ -49,7 +49,7 @@ def test_named_duplicate_with_different_bytes_is_never_removed(tmp_path):
 
 
 def test_links_repair_is_repeatable_and_protects_later_edits(tmp_path):
-    root = tmp_path / "ANSYS_Document"
+    root = tmp_path / "docs" / "ANSYS_Document"
     target = root / "Product/v251/guide/a.md"
     target.parent.mkdir(parents=True)
     target.write_text("[B](../api/b.md)", encoding="utf-8")
@@ -72,4 +72,4 @@ def test_non_utf8_manual_is_preserved_and_reported(tmp_path):
     path.write_bytes(b"legacy\xa1")
     assert repair_links(tmp_path, []) == 0
     assert path.read_bytes() == b"legacy\xa1"
-    assert "encoding_not_utf8" in (tmp_path / "ANSYS_Document/_catalog/link_repair_issues.json").read_text()
+    assert "encoding_not_utf8" in (tmp_path / "docs/ANSYS_Document/_catalog/link_repair_issues.json").read_text()

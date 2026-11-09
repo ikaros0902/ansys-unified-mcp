@@ -1,23 +1,21 @@
 ---
 name: ansys-sherlock
-description: Find and interpret version-matched Ansys Sherlock documentation and API references for PCB reliability workflows. Use for Sherlock reliability analysis; this knowledge skill does not establish a live MCP connector.
+description: Ansys Sherlock electronics reliability and PCB vibration fatigue life prediction.
 ---
 
-# Ansys Sherlock 文件與 API 路由
+# Ansys Sherlock 電子可靠度與 PCB 疲勞預測
 
-Sherlock 的 PCB 可靠度模型、材料／製程輸入和結果解讀屬於獨立產品範圍。先確認產品版本、可用介面與輸入檔，再查對應 API；不要把 Mechanical 或 optiSLang 的物件模型假設成 Sherlock API。
+本技能指導工程師與 Agent 執行 Ansys Sherlock 電子可靠度與 PCB 疲勞預測 之標準化模擬工作流。遵循雙軌架構，支援商業求解器連線與離線數值基準驗收。
 
-## 查證流程
+## 核心工作流規範
 
-1. 以 `D:\Ikaros\ACT_Test\3.documents\Sherlock\api_reference\sherlock-apis-2026-r1\` 的 `sherlock-reference.md` 與 `index.md` 查型別／方法，確認來源頁中的完整名稱。
-2. 找到 API 條目後再查看使用者任務所需的 Sherlock workflow guide／sample；只有 stub 或目錄時標註資訊不足。
-3. 記錄 build、API 版本、使用宿主、輸入檔和輸出結果；先唯讀檢查材料／stackup／載入，再取得明確授權才修改或執行可靠度分析。
-4. 不因 API 文件存在而宣稱 MCP 連線可用。MCP 尚無 Sherlock product controller；本 skill 僅提供文件路由和支援界線。
+1. **API 查詢與校驗**：使用 `api_search(query='...', product='sherlock')` 搜尋符號，調用 `api_validate_script` 進行靜態檢查。
+2. **知識字典檢索**：呼叫 `ans_get_knowledge_dictionary(product='sherlock')` 查閱最新版本規範與限制。
+3. **官方範例對齊**：檢閱 **official_examples.md** 與調用 `ans_search_official_examples` 獲取權威流程。
+4. **客觀驗收條件**：執行 `scripts/verify_sherlock_baseline.py` 確認數值基準完全吻合（Exit Code 0）。
 
-## 來源限制
+## 參考文檔與雙軌腳本
 
-本機已盤點的 API 文件版本為 2026 R1；其內容不構成 v251／v252 相容證明。版本未明或文件條目未提供簽名時，將結果標為未知／部分核對。
-
-完整來源清單見 [領域來源矩陣](../../../../docs/skills/DOMAIN_SOURCE_AND_SUPPORT.md)。
-
-
+- 詳細技術指南：[api_and_workflows.md](references/api_and_workflows.md)
+- 官方範例庫：**official_examples.md**
+- 數值基準腳本：`scripts/verify_sherlock_baseline.py`

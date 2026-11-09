@@ -19,7 +19,7 @@
 
 ### 1. `skill-creator` 的 `assets/` 定義範圍很窄，勿無差別套用
 
-官方 `skill-creator`（`D:\Ikaros\skill-creator\SKILL.md`）定義 `assets/` 僅限「會被輸出產物直接引用的靜態素材（模板、圖示、字型）」，不是每個 skill 的標配第四層目錄。遇到「補齊標準結構」類需求時，先查官方規範的實際定義範圍，再逐一判斷每個 skill 是否真有「固定輸出格式」的需求，不要見到三層結構就機械套用成四層。
+官方 `skill-creator`（`docs/knowledge_dictionary/ (請使用 ans_get_knowledge_dictionary 查詢)`）定義 `assets/` 僅限「會被輸出產物直接引用的靜態素材（模板、圖示、字型）」，不是每個 skill 的標配第四層目錄。遇到「補齊標準結構」類需求時，先查官方規範的實際定義範圍，再逐一判斷每個 skill 是否真有「固定輸出格式」的需求，不要見到三層結構就機械套用成四層。
 
 **判斷標準（三條同時成立才該放）**：
 1. 該 skill 確有「生成具體產出物」的職責。

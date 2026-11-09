@@ -1,23 +1,21 @@
 ---
 name: ansys-icepak
-description: Route and review Ansys Icepak electronics-cooling workflows against Icepak-specific guides and scripting APIs. Use for Icepak thermal models; current MCP execution support is limited and does not imply a validated solver connector.
+description: Ansys Icepak electronics thermal management and CFD airflow simulation.
 ---
 
-# Ansys Icepak 產品路由
+# Ansys Icepak 電子散熱與熱流模擬
 
-Icepak 電子冷卻模型不是 Mechanical Thermal analysis 的別名。核對幾何、功耗、流體區域、材料、風扇、熱接觸、外部邊界、網格及 energy balance 時，依 Icepak 產品版本與介面查閱專屬手冊。
+本技能指導工程師與 Agent 執行 Ansys Icepak 電子散熱與熱流模擬 之標準化模擬工作流。遵循雙軌架構，支援商業求解器連線與離線數值基準驗收。
 
-## 查證流程
+## 核心工作流規範
 
-1. 從 `D:\Ikaros\ACT_Test\3.documents\AnsysEM\manuals_and_training\` 讀取版本相符的 Icepak Scripting Guide；GUI 設定使用 Getting Started 範例對照。
-2. 區分 standalone Icepak 腳本、AEDT／PyAEDT 路線與 Workbench Mechanical Thermal 流程，僅採用目標環境已提供並可核實的介面。
-3. 求解前讀回熱源功率、風扇／進出口邊界、材料、網格和既有求解器設定；不得把僅產生 `.py`、日誌或 CSV 的骨架當成真實求解。
-4. 執行前確認目標 solver 路徑、版本、license 及輸入模型。結果需包含真實 solver 狀態、log 及溫度／熱流等 solver output。
+1. **API 查詢與校驗**：使用 `api_search(query='...', product='icepak')` 搜尋符號，調用 `api_validate_script` 進行靜態檢查。
+2. **知識字典檢索**：呼叫 `ans_get_knowledge_dictionary(product='icepak')` 查閱最新版本規範與限制。
+3. **官方範例對齊**：檢閱 **official_examples.md** 與調用 `ans_search_official_examples` 獲取權威流程。
+4. **客觀驗收條件**：執行 `scripts/verify_icepak_baseline.py` 確認數值基準完全吻合（Exit Code 0）。
 
-## 支援狀態
+## 參考文檔與雙軌腳本
 
-本 MCP 目前只有 Icepak batch driver 骨架，並無經三版驗證的 Icepak connector。此 skill 供官方文件查證與支援狀態路由；禁止將骨架輸出宣告為已解算溫度場。
-
-來源路徑與版本待核清單見 [領域來源矩陣](../../../../docs/skills/DOMAIN_SOURCE_AND_SUPPORT.md)。
-
-
+- 詳細技術指南：[api_and_workflows.md](references/api_and_workflows.md)
+- 官方範例庫：**official_examples.md**
+- 數值基準腳本：`scripts/verify_icepak_baseline.py`

@@ -524,3 +524,64 @@ REA checked three DLLs in the Lumerical API folders. Each result reported absent
 | lumapi.dll | $env:AWP_ROOT251/Lumerical/api/tcl/lumapi.dll | 66,048 | 21602ad00cf7d082f63aa556d5c5cd91426896ded742c457528749982b23a232 | ev_e3112b17f775292e9901d1c5657dfe76cc7dab67d6ed6eb4da74aa1cc011d91e | 1 | lumerical_lumapi_native |
 
 The two Python interop DLLs export the same 19 names. The Tcl DLL exports Lumapi_Init. API support, signatures, and runtime behavior remain unverified.
+
+## REA 6.0.0 installed-tree sweep (v251, 2026-10-29)
+
+本節記錄本機 v251 安裝樹的新增 REA 靜態檢查。候選來自安裝目錄清冊，並按 SHA-256 去重。REA 未載入或執行 DLL。
+
+- ANSYS 命名 DLL 清冊有 1,479 個不同 SHA-256；58 個 hash 已有既存 REA 證據。本次對另外 1,421 個 hash 執行 `inspect-managed-members --format json`。結果全部有輸出、Evidence ID，且來源 SHA 與 REA subject hash 相符，metadata 均為 `complete`。逐檔 manifest 和完整輸出保存在被忽略的 `.runtime/rea-audit-20261029/`。
+- TurboGrid/TwinAI 候選清冊涵蓋 621 個路徑、576 個不同 hash。既有掃描及本次剩餘 472 筆清單合計涵蓋這 576 個 hash。剩餘清單中 2 筆 metadata 為 `complete`，470 筆為 `absent`。獨立 reviewer 逐筆重算來源 SHA，並核對 REA subject/artifact digest、Evidence ID、metadata status、輸出及空 stderr；472 筆全部相符。證據位於 `.runtime/rea-audit-20261029/batch-installed-gap-remaining/`。
+- 另外 91 個 installed API 候選與 7 個 TwinAI ROM 候選也保存了 REA 結果，metadata 均為 `absent`。`absent` 只表示沒有 managed CLI metadata，不代表沒有 native API。
+
+此掃描只涵蓋本機 v251 安裝樹中的候選檔，不涵蓋未安裝的產品或所有 ANSYS 版本。metadata `complete` 不表示成員是公開、受支援或完整的產品 API。native export、官方支援狀態、產品映射和 runtime 行為未由本批驗證。掃描不包含 ANSYS 求解。
+
+
+### REA additional installed-product candidates (v251, 2026-10-29)
+
+A further batch checked 376 unique DLL paths from the installed `v251` product folders `scdm`, `aisol`, `Framework`, `optiSLang`, `Optical Products`, `commonfiles`, `Motion`, `Electronics`, `Zemax OpticStudio`, and `fluent`. The source paths and hashes are recorded in the ignored `.runtime/rea-audit-20261029/batch-other-products/manifest.jsonl`.
+
+All 376 source hashes match the REA subject hashes. All records have an Evidence ID and report managed metadata `complete`. One first-pass JSON parse failed. Its JSONL retry completed with status `complete`, matched the source hash, and returned an Evidence ID. A separate read-only audit rehashed all 376 source files and confirmed that all expected output files exist.
+
+This batch adds managed metadata snapshots for installed assemblies. It does not establish that every assembly is a public API, or that every ANSYS module and release is installed. Uninstalled product folders, native exports, official API support, and runtime behavior remain outside this evidence.
+
+### REA 2025 R1 installation-media candidate sweep (2026-10-29)
+
+七份本機 ANSYS 2025 R1 ISO 以唯讀方式列出並解開 235 個內含 7z 套件；沒有執行安裝程式。payload 清冊共有 31,467 個 DLL 路徑。依 ANSYS／產品命名前綴篩出 3,345 個候選路徑、2,966 個唯一 SHA-256；其中 2,676 個 hash 已有可對應的 REA 證據，本輪對新增的 290 個 hash 執行 `inspect-managed-members`。這是依檔名的候選範圍，不代表全部 DLL 或所有產品版本。
+
+- 290/290 輸出均有 Evidence ID，REA subject SHA-256 與來源相符；169 筆狀態為 `complete`，121 筆為 `absent`，0 筆失敗。`absent` 表示沒有 REA 可抽取的 managed CLI metadata。
+- 獨立唯讀 reviewer 重算 354 個來源／別名路徑的 SHA-256，並驗證 290 個輸出 JSON、manifest 與 summary；全部相符，無錯誤。
+- 逐檔記錄與完整 REA JSON 位於被忽略的 `.runtime/rea-audit-20261029/iso-media-packages/rea-media-candidates/`；候選清冊位於同層的 `media-product-candidates.json` 與 `media-product-candidates-new.json`。
+
+合併已安裝 v251 與 2025 R1 媒體候選後，按產品命名前綴定義的候選路徑均有既有或本輪 REA 證據；未對其餘約 28,122 個未命中前綴的媒體 DLL 做 REA。此 heuristic 不足以宣稱涵蓋所有 ANSYS 元件或全部產品／版本；後續若要求字面上的全 DLL 範圍，須先界定第三方 runtime、重複版本及非 API DLL 的納入規則，再估算輸出量。REA 只讀 PE/managed metadata，未載入或執行 DLL、未驗證 native API、官方支援性或 runtime 行為，也未執行 ANSYS 求解。
+
+### REA 2025 R1 全媒體 DLL 萃取（2026-10-29）
+
+七份本機 ANSYS 2025 R1 ISO 的 235 個 7z 套件已唯讀解包。另將 DISK1 的 2 個散置 DLL 與 `WINX64.TGZ` 的 4 個 Tcl runtime DLL 納入清冊。清冊共有 31,512 個 DLL 路徑、20,030 個唯一 SHA-256，來源檔案總計 62,008,295,190 bytes。沒有執行安裝程式。
+
+- 既有 REA 證據覆蓋 3,456 個唯一 hash。本次對其餘 16,574 個 hash 執行 `inspect-managed-members`。彙總狀態為 9,094 `complete`、10,913 `absent`、13 `malformed`、10 筆解析失敗，沒有未映射 hash。
+- 16,564 筆新增輸出具有可核對的 subject digest 與 Evidence ID。另 10 筆輸出失敗，批次 manifest 記為 `subject digest mismatch`；逐檔錯誤內容指出 `truncated PE data-directory table`，沒有有效 subject digest。對這 10 個來源再執行 `inspect-artifact`，10 筆均回傳相同 PE 結構錯誤，沒有補得 artifact evidence。來源檔案仍在清冊中，並列於逐檔 manifest。
+- 6 個散置 DLL 的 REA 均正常結束，狀態為 `absent`。其來源 SHA-256、REA subject SHA-256 與 Evidence ID 均相符。
+- 獨立 reviewer 逐筆解析 16,568 個主輸出，核對 16,568 筆 manifest 與 27,175 個來源／別名路徑。有效輸出的 Evidence ID、subject digest、狀態均相符；10 筆失敗均指向來源並回報相同解析錯誤。全媒體 CSV 的 31,512 個來源均存在，新增 6 路徑的 hash、大小和 REA 結果相符。
+- payload REA manifest 含 16,568 筆；兩份散置 DLL 與四份 Tcl DLL 的逐檔 manifest 分存於 `loose-dlls/rea-manifest.json`、`tcl-runtime-dlls/rea-manifest.json`。清冊為 `all-media-dll-inventory.csv`，彙總為 `all-media-dll-global-summary.json`。完整輸出保存在同層 `all-dll-rea/` 及各 supplementary `rea/` 資料夾。這些 `.runtime` 檔案由 Git 忽略。
+- `all-dll-rea/outputs/` 另有 2 個未被 manifest 引用的 JSONL 殘留及 12 個零位元組 `.txt`。兩個 JSONL 記錄含 `$ieee$` 檔名的 ENOENT；對應 manifest 主結果仍是有效 `absent` 證據，來源檔存在。這些殘留未計入失敗數，且未清除。
+
+此掃描覆蓋七份已提供 ISO 中清點到的 DLL 路徑與唯一 hash，不代表其他 ANSYS 版本或未提供的產品媒體。`absent` 只表示沒有 managed CLI metadata；`malformed` 與 10 筆 PE 解析失敗仍須視為未能完整解析。結果不證明組件屬公開或受支援 API。REA 未載入或執行 DLL，未驗證 native API、產品支援狀態或 runtime 行為，也未執行 ANSYS 求解。本機 v251 安裝樹的全 DLL 對照見下節。
+
+### REA v251 安裝樹全 DLL 對照（2026-10-29）
+
+對 `C:\Program Files\ANSYS Inc\v251` 全樹盤點 DLL，清冊有 29,969 個路徑、18,907 個唯一 SHA-256，來源大小總和 55,598,911,966 bytes。獨立 reviewer 逐一重算 29,969 個來源檔，缺檔、大小不符及 hash 不符均為 0。18,906 個 hash 已對應 2025 R1 媒體 REA 證據，其中 10 個 hash 的 REA 解析失敗。安裝樹狀態合計為 8,682 `complete`、10,202 `absent`、13 `malformed`、10 個 hash 解析失敗（涵蓋 15 個安裝路徑）。剩下 1 個唯一 hash 出現在 7 個 `netapi32.dll` 路徑；REA `inspect-managed-members` 正常結束，回報 `absent`，subject SHA-256 及 Evidence ID 有效。因此此安裝樹的 hash 對照數為 18,907/18,907，無未映射 hash。
+
+- 清冊及彙總位於被忽略的 `.runtime/rea-audit-20261029/installed-v251-all-dll-inventory.csv` 與 `installed-v251-all-dll-summary.json`。
+- 新增 `netapi32.dll` REA JSON 與逐檔清單位於 `.runtime/rea-audit-20261029/installed-v251-all-dll-rea/`。
+- 這是依 SHA-256 對照 REA 結果，不代表 18,907 個檔案都各自有 managed metadata。10 個媒體 PE 解析失敗仍未成功抽取 managed metadata；其餘 `absent` 結果也不排除 native API。
+- 10 個失敗 hash 對應 `EOSIZE.dll`、`EosprintApiInternal.dll`、`Galvocon.dll`、`GalvoDll.dll`、`Partman.dll`，位於 `Additive/additiveserver/EOS/EosApi/`、`AddPrint/resources/app.asar.unpacked/binaries/build-file-processor/` 與 `scdm/Addins/AdditivePrep/bin/core/`。這些 hash 涵蓋 15 個 v251 安裝路徑；REA 的 managed-member 與 artifact 檢查都回報 PE data-directory table 截斷。LLVM 19.1.5 `llvm-readobj --file-headers` 對 10 個不同 hash 均以非零結束，訊息為 `The end of the file was unexpectedly encountered`。
+
+#### 10 個 PE 標頭錯誤檔的衍生副本檢查
+
+為診斷上述解析失敗，對 10 個原始 DLL 各建立一份 `.runtime/rea-audit-20261029/iso-media-packages/rea-repaired-copies/inputs/` 副本。唯讀 PE 檢查確認這些檔案都是 PE32+、optional header 為 240 bytes；`NumberOfRvaAndSizes` 欄位是超出 16 項目錄容量的無效值，而第 15 項 CLR directory 的 RVA 與 size 均為 0。只在副本把該欄位設為 16，再以 REA `inspect-managed-members` 解析；10/10 命令成功，全部回報 `absent`，其 Evidence ID 與 subject hash 均對應「修復後副本」的雜湊。
+
+這些衍生 Evidence 可支持「已檢查的目錄表沒有 CLR metadata directory」；它們不是原始 DLL 的同雜湊 Evidence。原始 10 個 hash 仍記為 PE 解析失敗，不能改列成有原始 hash 的 REA `absent` 證據，也不能據此排除 native API。原始來源 hash、衍生副本 hash、改動欄位及 REA 結果列於被忽略的 `.runtime/rea-audit-20261029/iso-media-packages/rea-repaired-copies/manifest.json`；原始 PE 診斷列於 `failed-llvm-pe-headers/summary.json`。
+
+獨立 reviewer 重算 10 組原始與副本的檔案大小及 hash，並逐位元組確認每個副本只改動該 4-byte 欄位；REA 輸出、Evidence ID 與副本 hash 全部相符。部分原始路徑列在不同 payload 副本，但對應內容 hash 與大小相同。
+
+這項對照涵蓋本機 v251 安裝樹，不代表其他安裝、版本或未提供媒體中的所有產品。REA 未載入或執行 DLL，未檢查 native exports、官方支援性或 runtime 行為，也未執行 ANSYS 求解。

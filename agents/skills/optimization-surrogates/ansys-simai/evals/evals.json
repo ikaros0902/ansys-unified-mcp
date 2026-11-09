@@ -1,0 +1,14 @@
+{
+  "evals": [
+    {
+      "id": "ansys-simai_trigger_01",
+      "prompt": "如何使用 ansys-simai 進行模擬與 API 腳本編寫？",
+      "expected_route": "ansys-simai"
+    },
+    {
+      "id": "ansys-simai_trigger_02",
+      "prompt": "請提供 Ansys SimAI 物理人工智慧代理模型 的工作流與基準腳本。",
+      "expected_route": "ansys-simai"
+    }
+  ]
+}

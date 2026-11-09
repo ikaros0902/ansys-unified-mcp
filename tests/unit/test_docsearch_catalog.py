@@ -14,11 +14,12 @@ from ansys_unified_mcp.analytics.docsearch import config, index
 @pytest.fixture
 def library(tmp_path: Path, monkeypatch):
     root = tmp_path / "repo"
-    corpus = root / "ANSYS_Document"
+    corpus = root / "docs" / "ANSYS_Document"
     catalog = corpus / "_catalog" / "documents.json"
     catalog.parent.mkdir(parents=True)
     clean = tmp_path / "clean"
     monkeypatch.setattr(config, "REPO_ROOT", root)
+    monkeypatch.setattr(config, "DOCS_ROOT", root / "docs")
     monkeypatch.setattr(config, "SOURCE_DIR", root / "Documentation_md")
     monkeypatch.setattr(config, "CLEAN_DIR", clean)
     monkeypatch.setattr(config, "INDEX_PATH", clean / "docs_index.sqlite")
@@ -69,7 +70,7 @@ def test_catalog_only_bootstrap_filters_and_chunk_readback(library):
 
 def test_nested_spaceclaim_skill_is_searchable_by_its_product(library):
     corpus, _, _ = library
-    root = corpus.parent
+    root = config.REPO_ROOT
     api_dir = config.SOURCE_DIR
     api_dir.mkdir(parents=True)
     (api_dir / "bootstrap.md").write_text("# Bootstrap API\nBootstrapToken\n", encoding="utf-8")
@@ -175,6 +176,17 @@ def test_quality_rejects_stubs_templates_and_pdf_without_text(library):
     write_catalog(catalog, [valid, stub, template, raw])
     index.build_index()
     assert [hit["doc"] for hit in index.search("BeamSupport")["results"]] == ["valid"]
+
+
+def test_quality_does_not_reject_template_tokens_inside_fenced_code():
+    text = "```python\nvalue = f\"{{width}}\"\n" + "# valid source line\n" * 12 + "```"
+    assert index._quality(text) == "body_present"
+
+
+def test_quality_keeps_math_braces_and_rejects_jinja_control():
+    text = "Matrix notation {{a,b},{c,d}} and {{domain}}. " * 8
+    assert index._quality(text) == "body_present"
+    assert index._quality("{% for page in pages %}\n" + "template " * 30) == "template"
 
 
 def test_catalog_text_view_replaces_invalid_utf8_without_changing_source_hash(library):

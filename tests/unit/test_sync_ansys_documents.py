@@ -145,6 +145,7 @@ def test_changed_cached_publisher_file_is_fetched_again(tmp_path, monkeypatch):
 def test_non_official_source_is_rejected():
     assert sync.official_url("https://fluent.docs.pyansys.com/version/stable/")
     assert sync.official_url("https://raw.githubusercontent.com/ansys/pyfluent/main/example.py")
+    assert sync.official_url("https://developer.ansys.com/docs/mechanical-scripting-interface-2025/index.md")
     assert not sync.official_url("https://docs.pyansys.com.attacker.example/")
     assert not sync.official_url("https://github.com/other/pyfluent")
     assert not sync.official_url("http://fluent.docs.pyansys.com/")
@@ -169,6 +170,17 @@ def test_login_page_and_unexpanded_templates_do_not_count_as_body():
     with pytest.raises(ValueError):
         sync.html_text(b"<html><title>Sign in</title><form>login</form></html>", "https://ansyshelp.ansys.com/")
     assert sync.quality(".. toctree::\n" + "template " * 30) == "template"
+
+
+def test_template_like_code_inside_fence_remains_body():
+    text = "```python\nvalue = f\"{{width}}\"\n" + "# valid source line\n" * 12 + "```"
+    assert sync.quality(text) == "body_present"
+
+
+def test_math_placeholders_remain_body_but_jinja_control_is_template():
+    text = "Matrix notation {{a,b},{c,d}} and {{domain}}. " * 8
+    assert sync.quality(text) == "body_present"
+    assert sync.quality("{% for page in pages %}\n" + "template " * 30) == "template"
 
 
 def test_revised_download_keeps_original_bytes(tmp_path):
@@ -235,10 +247,24 @@ def test_sdk_version_comes_from_publisher_options_not_stable(monkeypatch):
     assert "documentation_options.js" in source
 
 
-def test_pdf_subprocess_program_is_valid_python(tmp_path, monkeypatch):
+def test_pdf_extraction_writes_sidecar_and_preserves_existing_markdown(tmp_path, monkeypatch):
     import sys
     import json
+    import hashlib
     from types import SimpleNamespace
+
+    created_pdf = tmp_path / "SpaceClaim/v261/manuals/Guide.pdf"
+    existing_pdf = tmp_path / "Mechanical/v261/manuals/Guide.pdf"
+    skipped_pdf = tmp_path / "SpaceClaim/v251/manuals/Other.pdf"
+    created_pdf.parent.mkdir(parents=True)
+    existing_pdf.parent.mkdir(parents=True)
+    skipped_pdf.parent.mkdir(parents=True)
+    created_pdf.write_bytes(b"created pdf")
+    existing_pdf.write_bytes(b"existing pdf")
+    skipped_pdf.write_bytes(b"must not be processed")
+    existing_markdown = existing_pdf.with_suffix(".md")
+    existing_markdown.write_text("Existing user markdown; preserve this file.", encoding="utf-8")
+    extracted = "<!-- page 1 -->\n" + "Extracted page text. " * 20
 
     def run(command, **kwargs):
         compile(command[2], "pdf-extraction", "exec")
@@ -246,12 +272,46 @@ def test_pdf_subprocess_program_is_valid_python(tmp_path, monkeypatch):
         payload = json.loads(kwargs["input"])
         report_path = Path(payload["report_path"])
         report_path.parent.mkdir(parents=True, exist_ok=True)
-        report_path.write_text('{"records": []}', encoding="utf-8")
+        rows = []
+        for value in payload["paths"]:
+            pdf = Path(value)
+            digest = hashlib.sha256(pdf.read_bytes()).hexdigest()
+            cache_relative = f"_catalog/pdf_text_v2/{digest}.md"
+            cache = Path(payload["root"]) / cache_relative
+            cache.parent.mkdir(parents=True, exist_ok=True)
+            cache.write_text(extracted, encoding="utf-8")
+            rows.append({
+                "path": pdf.relative_to(payload["root"]).as_posix(),
+                "sha256": digest,
+                "text_path": cache_relative,
+                "status": "extracted",
+            })
+        report_path.write_text(json.dumps({"records": rows}), encoding="utf-8")
         return SimpleNamespace(returncode=0)
 
     monkeypatch.setattr(sync.subprocess, "run", run)
-    result = sync.extract_pdf_text(tmp_path, python=Path(sys.executable))
-    assert result == {"records": []}
+    result = sync.extract_pdf_text(
+        tmp_path,
+        python=Path(sys.executable),
+        selected_paths=[
+            "SpaceClaim/v261/manuals/Guide.pdf",
+            "Mechanical/v261/manuals/Guide.pdf",
+        ],
+    )
+    rows = {row["path"]: row for row in result["records"]}
+    created_rel = "SpaceClaim/v261/manuals/Guide.pdf"
+    existing_rel = "Mechanical/v261/manuals/Guide.pdf"
+    created_row = rows[created_rel]
+    existing_row = rows[existing_rel]
+    assert created_row["markdown_status"] == "created_from_cache"
+    assert created_row["text_path"] == created_row["markdown_path"] == created_rel[:-4] + ".md"
+    assert (created_pdf.with_suffix(".md")).read_text(encoding="utf-8") == extracted
+    assert existing_row["markdown_status"] == "existing_different_preserved"
+    assert existing_row["text_path"].startswith("_catalog/pdf_text_v2/")
+    assert existing_row["markdown_path"] == existing_rel[:-4] + ".md"
+    assert existing_markdown.read_text(encoding="utf-8") == "Existing user markdown; preserve this file."
+    assert "SpaceClaim/v251/manuals/Other.pdf" not in rows
+    assert not skipped_pdf.with_suffix(".md").exists()
     assert not (tmp_path / "_catalog" / ".pdf-extraction-result.json").exists()
 
 
@@ -466,3 +526,24 @@ def test_catalog_does_not_infer_release_from_filename_only(tmp_path):
     path.write_bytes(b"%PDF-unverified local guide")
     catalog = sync.make_catalog(root, {"products": [{"product": "spaceclaim", "folder": "SpaceClaim"}]})
     assert catalog["documents"][0]["release"] == "unknown"
+
+
+def test_catalog_does_not_classify_lsopt_manual_as_optislang(tmp_path):
+    root = tmp_path / "docs"
+    pdf = root / "optiSLang/unknown/manuals/lsopt_2026R1_manual.pdf"
+    pdf.parent.mkdir(parents=True)
+    pdf.write_bytes(b"%PDF-LS-OPT")
+    text_path = root / "_catalog/pdf_text_v2/lsopt_manual.md"
+    text_path.parent.mkdir(parents=True)
+    text_path.write_text("# LS-OPT 2026 R1\n" + "LS-OPT manual text. " * 20, encoding="utf-8")
+    sync.atomic_json(root / "_catalog/pdf_extraction.json", {"records": [{
+        "path": pdf.relative_to(root).as_posix(),
+        "sha256": sync.digest_file(pdf),
+        "text_path": text_path.relative_to(root).as_posix(),
+        "status": "extracted",
+    }]})
+
+    catalog = sync.make_catalog(root, {"products": [{"product": "optislang", "folder": "optiSLang"}]})
+
+    assert catalog["documents"][0]["product"] == "general"
+    assert catalog["documents"][0]["quality"] == "body_present"
