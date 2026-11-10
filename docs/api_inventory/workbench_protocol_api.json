@@ -8,11 +8,11 @@
   "sources": {
     "sdk_files": [
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/workbench/v0/workbench_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/workbench/v0/workbench_pb2.py",
         "sha256": "2521410f419f523367f9b03186ced108cc6228da14b7acf0057c539f6408b952"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/workbench/v0/workbench_pb2_grpc.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/workbench/v0/workbench_pb2_grpc.py",
         "sha256": "430bebb508894b6d901492ff001f28fd09ef56518a4aeb4d3426da205387d028"
       }
     ]

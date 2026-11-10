@@ -43,11 +43,8 @@ python -m venv .venv
 # 3. 升級基礎打包工具
 python -m pip install --upgrade pip setuptools wheel
 
-# 4. 安裝專案核心與 PyAnsys 官方套件
-pip install fastmcp ansys-mechanical-core ansys-fluent-core ansys-geometry-core ansys-optislang-core python-dotenv pydantic rich psutil
-
-# 5. 以可編輯模式安裝本專案（使模組直接支援全域 import）
-pip install -e .
+# 4. 安裝專案核心與 PyAnsys 官方套件（推薦安裝標準互動核心）
+pip install -e ".[standard]"
 ```
 
 ---
@@ -160,8 +157,8 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
 .\.venv\Scripts\python.exe -c "import sys, asyncio; sys.path.insert(0, 'src'); import ansys_unified_mcp.__main__; from ansys_unified_mcp.shared import mcp; tools = asyncio.run(mcp.list_tools()); print(f'載入成功！共註冊 {len(tools)} 個工具。')"
 ```
 * **預期結果**：
-  * **預設精簡模式 (Tool Pruning)**：輸出 `載入成功！共註冊 124 個工具。`（自動過濾 50+ 個過時別名，大幅精簡 LLM 上下文）。
-  * **完整別名模式**：若環境變數 `$env:ANSYS_MCP_EXPOSE_ALIASES="1"`，則輸出 `共註冊 176 個工具。`。
+  * **預設精簡模式 (Canonical Tools)**：輸出約 `載入成功！共註冊 216 個工具。`（自動過濾歷史別名，精簡 LLM 上下文）。
+  * **完整別名模式**：若環境變數 `$env:ANSYS_MCP_EXPOSE_ALIASES="1"`，則輸出 `共註冊 279 個工具。`。
 
 ---
 
@@ -220,9 +217,9 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope Process
 * **現象**：舊版 ANSYS 登錄檔位於 `HKLM:\SOFTWARE\ANSYS, Inc.\v202`，系統變數為 `AWP_ROOT202`。
 * **解法**：專案 `setup.ps1` 與 `config.py` 已實裝 5 重自動檢測機制（`.env` -> 系統變數 `AWP_ROOT*` -> 登錄檔 -> 檔案目錄），只需在 `.env` 確認 `ANSYS_VERSION=202` 與 `ANSYS_ROOT`，系統即可無縫辨識舊版執行檔。
 
-### Q6: 關卡 1 執行只顯示「124 個工具」，為什麼不是 174 個？
-* **現象**：`mcp.list_tools()` 預設輸出 124 個工具。
-* **說明**：此為正常安全特性。專案預設啟動了工具裁剪（Tool Pruning），封裝了 50 個重複的歷史別名，僅暴露 124 個標準核心工具（Canonical Primitives），避免浪費 LLM Context Window。若需要完整歷史別名，在環境變數加入 `ANSYS_MCP_EXPOSE_ALIASES=1` 即可見全部 176 個工具。
+### Q6: 關卡 1 執行只顯示約 216 個工具，為什麼不是 279 個？
+* **現象**：`mcp.list_tools()` 預設輸出約 216 個工具。
+* **說明**：此為正常安全特性。專案預設啟動了工具裁剪（Tool Pruning），封裝了 63 個重複的歷史別名，僅暴露規範核心工具（Canonical Primitives），避免浪費 LLM Context Window。若需要完整歷史別名，在環境變數加入 `ANSYS_MCP_EXPOSE_ALIASES=1` 即可見全部約 279 個工具。
 
 ### Q7: 執行 `setup.ps1` 出現 `WARNING: ApiServer DLL not found... Skipping SpaceClaim gRPC config`？
 * **現象**：在 ANSYS 2020 R2 等舊版中，找不到 `Presentation.ApiServerAddIn.dll`。

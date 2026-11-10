@@ -32,6 +32,7 @@ from ansys_unified_mcp.bridges.workbench_filequeue import (
     _format_bridge_result, _wait_for_log_marker, __version__
 )
 from ansys_unified_mcp.bridges.transport import send_command as _send_command
+from ansys_unified_mcp.tools.connection_tools import check_ansys_installation
 
 @mcp.resource("ansys-workbench://status")
 def workbench_status_resource() -> str:
@@ -49,31 +50,6 @@ def installation_resource() -> str:
     import json
     result = check_ansys_installation()
     return json.dumps(result, indent=2, ensure_ascii=False)
-
-
-@mcp.tool()
-def check_ansys_installation() -> dict:
-    """Check configured Workbench, Mechanical, MAPDL, and bridge paths."""
-    data = {
-        "version": __version__,
-        "runwb2": str(RUNWB2),
-        "runwb2_exists": RUNWB2.exists(),
-        "mechanical": str(MECHANICAL),
-        "mechanical_exists": MECHANICAL.exists(),
-        "mapdl": str(MAPDL),
-        "mapdl_exists": MAPDL.exists(),
-        "fluent": str(FLUENT),
-        "fluent_exists": FLUENT.exists(),
-        "cfx_solve": str(CFX_SOLVE),
-        "cfx_solve_exists": CFX_SOLVE.exists(),
-        "cfx_pre": str(CFX_PRE),
-        "cfx_pre_exists": CFX_PRE.exists(),
-        "bridge_journal": str(BRIDGE_JOURNAL),
-        "bridge_journal_exists": BRIDGE_JOURNAL.exists(),
-        "mcp_home": str(MCP_HOME),
-        "server_root": str(SERVER_ROOT),
-    }
-    return _envelope(data)
 
 
 @mcp.tool()

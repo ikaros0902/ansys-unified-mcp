@@ -8,7 +8,7 @@
   "sources": {
     "sdk_files": [
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
         "sha256": "ad62c763ccbf934bea9bba57b5036f2e42e1ae94bcfedb45a5406e6d317b7e3d"
       }
     ],
@@ -41,127 +41,127 @@
               "name": "dispose",
               "signature": "(self) -> None",
               "doc": "Close all local threads and unregister listeners.\n\nRaises\n------\nOslCommunicationError\n    Raised when an error occurs while communicating with the server.\nOslCommandError\n    Raised when a command or query fails.\nTimeoutError\n    Raised when the timeout float value expires.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
             },
             {
               "name": "get_osl_server",
               "signature": "(self) -> Optional[OslServer]",
               "doc": "Get the currently used instance of the OslServer.\n\nThis instance can be used to directly communicate with optiSLang using\nthe optiSLang server API.\n\nReturns\n-------\nOptional[OslServer]\n    OptiSLang server object.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
             },
             {
               "name": "get_osl_version_string",
               "signature": "(self) -> str",
               "doc": "Get the optiSLang version in use as a string.\n\nReturns\n-------\nstr\n    optiSLang version.\n\nRaises\n------\nOslCommunicationError\n    Raised when an error occurs while communicating with the server.\nOslCommandError\n    Raised when a command or query fails.\nTimeoutError\n    Raised when the timeout float value expires.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
             },
             {
               "name": "get_osl_version",
               "signature": "(self) -> OslVersion",
               "doc": "Get the optiSLang version in use as a tuple.\n\nReturns\n-------\nOslVersion\n    optiSLang version as typing.NamedTuple containing\n    major, minor, maintenance and revision versions.\n\nRaises\n------\nOslCommunicationError\n    Raised when an error occurs while communicating with the server.\nOslCommandError\n    Raised when a command or query fails.\nRuntimeError\n    Raised when parsing version numbers from string fails.\nTimeoutError\n    Raised when the timeout float value expires.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
             },
             {
               "name": "get_timeout",
               "signature": "(self) -> Optional[float]",
               "doc": "Get the timeout value for executing commands.\n\nReturns\n-------\ntimeout: Optional[float]\n    Timeout in seconds to perform commands. This value must be greater\n    than zero or ``None``. The default is ``None``. Another function\n    raises a timeout exception if the timeout value has elapsed before\n    an operation has completed. If the timeout is ``None``, functions\n    wait until they're finished, and no timeout exception is raised.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
             },
             {
               "name": "get_working_dir",
               "signature": "(self) -> Optional[Path]",
               "doc": "Get the path to the optiSLang project's working directory.\n\nReturns\n-------\nOptional[pathlib.Path]\n    Path to the optiSLang project's working directory. If no project is loaded\n    in optiSLang, ``None`` is returned.\n\nRaises\n------\nOslCommunicationError\n    Raised when an error occurs while communicating with the server.\nOslCommandError\n    Raised when a command or query fails.\nTimeoutError\n    Raised when the timeout float value expires.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
             },
             {
               "name": "new",
               "signature": "(self) -> None",
               "doc": "Create and open a new project.\n\nRaises\n------\nOslCommunicationError\n    Raised when an error occurs while communicating with the server.\nOslCommandError\n    Raised when a command or query fails.\nTimeoutError\n    Raised when the timeout float value expires.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
             },
             {
               "name": "open",
               "signature": "(self, file_path: Union[str, Path], force: bool=True, restore: bool=False, reset: bool=False, project_properties_file: Optional[str]=None) -> None",
               "doc": "Open a project.\n\nParameters\n----------\nfile_path : Union[str, pathlib.Path]\n    Path to the optiSLang project file to open.\nforce : bool, optional\n    Whether to force opening of the project even if non-critical errors occur.\n    Non-critical errors include:\n\n    - Timestamp of the (auto) save point is newer than the project timestamp.\n    - Project (file) is incomplete.\n\nrestore : bool, optional\n    Whether to restore the project from the last (auto) save point (if present).\nreset : bool, optional\n    Whether to reset the project after loading it.\nproject_properties_file : Optional[str], optional\n    Project properties file to import, by default ``None``.\n\nRaises\n------\nOslCommunicationError\n    Raised when an error occurs while communicating with the server.\nOslCommandError\n    Raised when a command or query fails.\nTimeoutError\n    Raised when the timeout float value expires.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
             },
             {
               "name": "reset",
               "signature": "(self) -> None",
               "doc": "Reset the project.\n\nRaises\n------\nOslCommunicationError\n    Raised when an error occurs while communicating with the server.\nOslCommandError\n    Raised when a command or query fails.\nTimeoutError\n    Raised when the timeout float value expires.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
             },
             {
               "name": "run_python_script",
               "signature": "(self, script: str, args: Union[Sequence[object], None]=None) -> Tuple[str, str]",
               "doc": "Load a Python script in a project context and run it.\n\nParameters\n----------\nscript : str\n    Python commands to execute on the server.\nargs : Sequence[object], None, optional\n    Sequence of arguments used in the Python script. The default\n    is ``None``.\n\nReturns\n-------\nTuple[str, str]\n    STDOUT and STDERR from the executed Python script.\n\nRaises\n------\nOslCommunicationError\n    Raised when an error occurs while communicating with the server.\nOslCommandError\n    Raised when a command or query fails.\nTimeoutError\n    Raised when the timeout float value expires.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
             },
             {
               "name": "run_python_file",
               "signature": "(self, file_path: Union[str, Path], args: Union[Sequence[object], None]=None) -> Tuple[str, str]",
               "doc": "Read a Python script from a file, load it in a project context, and run it.\n\nParameters\n----------\nfile_path : Union[str, pathlib.Path]\n    Path to the Python script file with the content to execute on the server.\nargs : Sequence[object], None, optional\n    Sequence of arguments to use in the Python script. The default is ``None``.\n\nReturns\n-------\nTuple[str, str]\n    STDOUT and STDERR from the executed Python script.\n\nRaises\n------\nFileNotFoundError\n    Raised when the specified Python script file does not exist.\nOslCommunicationError\n    Raised when an error occurs while communicating with the server.\nOslCommandError\n    Raised when a command or query fails.\nTimeoutError\n    Raised when the timeout float value expires.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
             },
             {
               "name": "save",
               "signature": "(self) -> None",
               "doc": "Save changes to the project data and settings.\n\nRaises\n------\nOslCommunicationError\n    Raised when an error occurs while communicating with the server.\nOslCommandError\n    Raised when a command or query fails.\nTimeoutError\n    Raised when the timeout float value expires.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
             },
             {
               "name": "save_as",
               "signature": "(self, file_path: Union[str, Path], force: bool=True, restore: bool=False, reset: bool=False) -> None",
               "doc": "Save and open the project at a new location.\n\nParameters\n----------\nfile_path : Union[str, pathlib.Path]\n    Path for saving the new project file to.\nforce : bool, optional\n    Whether to force opening of the project even if non-critical errors occur.\n    Non-critical errors include:\n\n    - Timestamp of the (auto) save point is newer than the project timestamp.\n    - Project (file) is incomplete.\n\nrestore : bool, optional\n    Whether to restore the project from the last (auto) save point (if present).\nreset : bool, optional\n    Whether to reset the project after loading it.\n\nRaises\n------\nOslCommunicationError\n    Raised when an error occurs while communicating with the server.\nOslCommandError\n    Raised when a command or query fails.\nTimeoutError\n    Raised when the timeout float value expires.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
             },
             {
               "name": "save_copy",
               "signature": "(self, file_path: Union[str, Path]) -> None",
               "doc": "Save a copy of the project to a specified location..\n\nParameters\n----------\nfile_path : Union[str, pathlib.Path]\n    Path for saving the copy of the project file to.\n\nRaises\n------\nOslCommunicationError\n    Raised when an error occurs while communicating with the server.\nOslCommandError\n    Raised when a command or query fails.\nTimeoutError\n    Raised when the timeout float value expires.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
             },
             {
               "name": "set_timeout",
               "signature": "(self, timeout: Optional[float]=None) -> None",
               "doc": "Set the timeout value for the executing commands.\n\nParameters\n----------\ntimeout: Optional[float]\n    Timeout in seconds to perform commands. This value must be greater\n    than zero or ``None``. The default is ``None``. Another function\n    raises a timeout exception if the timeout value has elapsed before\n    an operation has completed. If the timeout is ``None``, functions\n    wait until they're finished, and no timeout exception is raised.\n\nRaises\n------\nValueError\n    Raised when the timeout value is less than or equal to 0.\nTypeError\n    Raised when the timeout is not type of ``float`` or ``None``.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
             },
             {
               "name": "shutdown",
               "signature": "(self, force: bool=False) -> None",
               "doc": "Shut down the optiSLang server.\n\nThis method stops the server from listening for incoming connections, discards\npending requests, and shuts down the server. In batch mode, the project runs\nuntil execution finishes and then optiSLang is shut down.\n\nParameters\n----------\nforce : bool, optional\n    Whether to forcibly shut down a local optiSLang server. The default is\n    ``False``. In all cases, an attempt is made to\n    shut down the optiSLang server in the proper way. However, if the\n    ``force`` parameter is ``True``, after a while, the process is forcibly\n    shut down without an exception being raised.\n\nRaises\n------\nOslCommunicationError\n    Raised when the ``force`` parameter is ``False`` and an error occurs\n    while communicating with the server.\nOslCommandError\n    Raised when the ``force`` parameter is ``False`` and the command or query fails.\nTimeoutError\n    Raised when the ``force`` parameter is ``False`` and the timeout float value expires.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
             },
             {
               "name": "start",
               "signature": "(self, wait_for_started: bool=True, wait_for_finished: bool=True) -> None",
               "doc": "Start project execution.\n\nParameters\n----------\nwait_for_started : bool, optional\n    Whether this function call should wait for optiSLang to start\n    the command execution. The default is ``True``, in which case the\n    function call does not continue on to the next line of the Python\n    script after the command is successfully sent to optiSLang but\n    rater waits for execution of the flow inside optiSLang to start.\nwait_for_finished : bool, optional\n    Whether this function call should wait for optiSLang to finish\n    the command execution. The default is ``True``, in which case the\n    function call does not continue on to the next line of the Python\n    script after the command is successfully sent to optiSLang but\n    rather waits for execution of the flow inside optiSLang to finish.\n    This implicitly interprets ``wait_for_started`` as True.\n\nRaises\n------\nOslCommunicationError\n    Raised when an error occurs while communicating with the server.\nOslCommandError\n    Raised when a command or query fails.\nTimeoutError\n    Raised when the timeout float value expires.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
             },
             {
               "name": "stop",
               "signature": "(self, wait_for_finished: bool=True) -> None",
               "doc": "Stop project execution.\n\nParameters\n----------\nwait_for_finished : bool, optional\n    Whether this function call should wait for optiSLang to finish\n    the command execution. The default is ``True``, in which case the\n    function call does not continue on to the next line of the Python\n    script after the command is successfully sent to optiSLang but\n    rather waits for execution of the flow inside optiSLang to finish.\n\nRaises\n------\nOslCommunicationError\n    Raised when an error occurs while communicating with the server.\nOslCommandError\n    Raised when a command or query fails.\nTimeoutError\n    Raised when the timeout float value expires.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
             }
           ],
           "properties": [
@@ -169,64 +169,64 @@
               "name": "application",
               "type": "Application",
               "doc": "Instance of the ``Application`` class.\n\nReturns\n-------\nApplication\n    Instance of ``Application`` class for operating with project.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
             },
             {
               "name": "has_active_project",
               "type": "bool",
               "doc": "Whether a project is loaded.\n\nReturns\n-------\nbool\n    ``True`` if a project is loaded, ``False`` otherwise.\n\nRaises\n------\nOslCommunicationError\n    Raised when an error occurs while communicating with the server.\nOslCommandError\n    Raised when a command or query fails.\nTimeoutError\n    Raised when the timeout float value expires.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
             },
             {
               "name": "log",
               "type": "Logger",
               "doc": "Instance logger.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
             },
             {
               "name": "name",
               "type": "str",
               "doc": "Unique ID of the optiSLang instance.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
             },
             {
               "name": "osl_server",
               "type": "OslServer",
               "doc": "Get the currently used instance of the OslServer.\n\nThis instance can be used to directly communicate with optiSLang using\nthe optiSLang server API.\n\nReturns\n-------\nOptional[OslServer]\n    OptiSLang server object.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
             },
             {
               "name": "osl_version",
               "type": "OslVersion",
               "doc": "Version of used optiSLang.\n\nReturns\n-------\nOslVersion\n    optiSLang version as typing.NamedTuple containing\n    major, minor, maintenance and revision versions.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
             },
             {
               "name": "osl_version_string",
               "type": "str",
               "doc": "Version of used optiSLang.\n\nReturns\n-------\nstr\n    optiSLang version.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
             },
             {
               "name": "project",
               "type": "Optional[Project]",
               "doc": "Instance of the ``Project`` class.\n\nReturns\n-------\nOptional[Project]\n    Loaded project. If no project is loaded, ``None`` is returned.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
             },
             {
               "name": "timeout",
               "type": "Optional[float]",
               "doc": "Get the timeout value for executing commands.\n\nReturns\n-------\ntimeout: Optional[float]\n    Timeout in seconds to perform commands. This value must be greater\n    than zero or ``None``. The default is ``None``. Another function\n    raises a timeout exception if the timeout value has elapsed before\n    an operation has completed. If the timeout is ``None``, functions\n    wait until they're finished, and no timeout exception is raised.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
             }
           ]
         }

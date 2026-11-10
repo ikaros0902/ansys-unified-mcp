@@ -8,19 +8,19 @@
   "sources": {
     "sdk_files": [
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/mapdl/v0/ansys_kernel_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/mapdl/v0/ansys_kernel_pb2.py",
         "sha256": "af83e7c4a56dd3c36857159142fffbb20447408f8fcc75982af84a956da4bd36"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/mapdl/v0/C_StreamGrpc_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/mapdl/v0/C_StreamGrpc_pb2.py",
         "sha256": "f023194a9ee231348f17154015d2cd0f44892fdf82e8237c41ae3d9d30cc034b"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/mapdl/v0/mapdl_db_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/mapdl/v0/mapdl_db_pb2.py",
         "sha256": "6fa1943ab6b1441514e858d4f386bc55c145a68b5a463e7decfad03202b66bef"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/mapdl/v0/mapdl_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/mapdl/v0/mapdl_pb2.py",
         "sha256": "63448deb96006259adfc87fb03d3c9a8fabe1eb2444a65d6553cb75e7be57e54"
       }
     ]

@@ -8,7 +8,7 @@
   "sources": {
     "sdk_files": [
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/platform/instancemanagement/v1/product_instance_manager_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/platform/instancemanagement/v1/product_instance_manager_pb2.py",
         "sha256": "1f98756a59b6035eaecca8b61183e0f97a94b03576b119315925759fd83dc93f"
       }
     ]

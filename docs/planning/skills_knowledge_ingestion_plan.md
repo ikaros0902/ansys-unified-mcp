@@ -257,7 +257,7 @@ Q 與 WP1+WP2 修改範圍不重疊，平行執行。同一錯誤自愈上限 3 
 - `lsdyna_drop_test_setup.py` 與 `lsdyna_drop_setup.py`（SHA 5C2FD23A…）、`lsdyna_shock_analysis_setup.py` 與 `lsdyna_shock_setup.py`（SHA 0B4BA55D…）內容相同，應各保留一份並改用路由。
 - `check_mesh_quality.py` 在 `ansys-mesh`（9E9B79F5…）與 `ansys-mechanical`（63A49399…）版本不同，需比對後合併。
 - `ansys-geometry-modeling` 與 `ansys-spaceclaim-modeling` 有 6 份同名 references。
-- `scripts/extract_{lsdyna,mechanical,optislang,spaceclaim}_api.py` 輸出路徑寫死 `F:\Ming_python\...`。
+- `scripts/extract_{lsdyna,mechanical,optislang,spaceclaim}_api.py` 輸出路徑寫死 `<WORKSPACE_ROOT>/...`。
 - APIKB 中 LS-PrePost 只有 2 個符號，可評估把 `lsppscripting` 抽成符號。
 - `dyna_sense_switch` 工具、SMP/MPP 與 MPI 選擇、叢集提交。
 - `quality_worksheet_to_named_selection` 腳本（需先確認 Mechanical 有可讀取 Worksheet 失敗元素的 API）。

@@ -105,7 +105,7 @@ flowchart TD
 | `ansys_933615912214fb1ea1827a6b` | Toolkits | `Getting Started with Icepak - Toolkits.pdf` (.md) | 電子封裝巨集、EDA 電氣走線銅皮比率匯入與自動散熱工具箱 |
 
 #### 手冊章節與規格出處 (Manual & Doc Citations)
-- **手冊來源**：`sources.csv` 中所有 15 筆 Icepak 文件清單；對應實體檔案位於 `F:\Ming_python\ansys-unified-mcp\docs\ANSYS_Document\Icepak\v261\manuals\`。
+- **手冊來源**：`sources.csv` 中所有 15 筆 Icepak 文件清單；對應實體檔案位於 `<REPO_ROOT>\docs\ANSYS_Document\Icepak\v261\manuals\`。
 - **引用範例**：
   - *IcepakFEAScriptingGuide.pdf*：物理頁碼 Page 957–958 (`AssignTemperature`)、Page 959–960 (`AssignThermalCondition`)。
   - *Icepak Getting Started Guide.pdf*：物理頁碼 Page 19–42（Graphics Card 初始求解）、Chapter 5（局部網格細化）。

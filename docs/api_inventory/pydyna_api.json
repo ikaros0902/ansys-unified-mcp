@@ -20,7 +20,7 @@
     ],
     "sdk_files": [
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
         "sha256": "acfd74a79bc9a3b7fa9474f91aac7e16fcabb689c72a53dbe9f3f3cd23fb722e"
       }
     ]
@@ -37,134 +37,134 @@
               "name": "clear",
               "signature": "(self)",
               "doc": "Clear all keywords from the deck.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
             },
             {
               "name": "register_import_handler",
               "signature": "(self, import_handler: ImportHandler) -> None",
               "doc": "Registers an ImportHandler object",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
             },
             {
               "name": "append",
               "signature": "(self, keyword: Union[KeywordBase, str], check=False) -> None",
               "doc": "Add a keyword to the collection.\n\nParameters\n----------\nkeyword : Union[KeywordBase, EncryptedKeyword, str]\n    Keyword. The keyword can be ``KeywordBase``, ``EncryptedKeyword``,\n    or a string.\ncheck : bool, optional\n    The default is ``False``.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
             },
             {
               "name": "remove",
               "signature": "(self, index: int | list[int]) -> None",
               "doc": "Remove a keyword from the collection by index.\n\nParameters\n----------\nindex : int or list of int, mandatory",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
             },
             {
               "name": "extend",
               "signature": "(self, kwlist: list) -> None",
               "doc": "Add a list of keywords to the deck.\n\nParameters\n----------\nkwlist : list\n    List of keywords.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
             },
             {
               "name": "expand",
               "signature": "(self, cwd=None, recurse=True, strict=False)",
               "doc": "Get a new deck that is flattened copy of `self`.\n\nA flattened deck is one where the ``*INCLUDE`` keywords are replaced\nby the contents of the file that is included.\n\nParameters\n----------\ncwd : str, optional\n    Working directory used to resolve include filenames.\n    Defaults to the current working directory.\nrecurse : bool, optional\n    If True, ``*INCLUDE`` keywords within included decks\n    are expanded recursively. Default is True.\nstrict : bool, optional\n    If True, raise errors when keyword parsing fails for any reason\n    (undefined parameters, invalid field values, malformed data, etc.).\n    If False (default), keywords that fail to parse are retained as raw\n    strings and a warning is emitted. Default is False for backward\n    compatibility.\n    TODO: Consider making strict=True the default in a future version.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
             },
             {
               "name": "dumps",
               "signature": "(self) -> str",
               "doc": "Get the keyword file representation of all keywords as a string.\n\nReturns\n-------\nstr\n    Keyword file representation of all keywords as a string.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
             },
             {
               "name": "write",
               "signature": "(self, buf: typing.Optional[typing.TextIO]=None, format: typing.Optional[format_type]=None, validate: bool=False, retain_parameters: bool=False)",
               "doc": "Write the card in the dyna keyword format.\n\nParameters\n----------\nbuf : optional\n    Buffer to write to. The default is ``None``,\n    in which case the output is returned as a string.\nformat : optional\n    Format to write in. The default is ``None``.\nvalidate : bool, optional\n    If True, validate the deck before writing. The default is False.\n    Validation uses registered validators and raises ValidationError if errors are found.\nretain_parameters : bool, optional\n    If True, write original parameter references (e.g., &myvar) instead of\n    substituted values for fields that were read from parameters. If False,\n    the parameters must be defined. Default is False.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
             },
             {
               "name": "loads",
               "signature": "(self, value: str, context: typing.Optional[ImportContext]=None) -> 'ansys.dyna.keywords.lib.deck_loader.DeckLoaderResult'",
               "doc": "Load all keywords from the keyword file as a string.\n\nWhen adding all keywords from the file, this method\noverwrites the title and user comment, if any.\n\nParameters\n----------\nvalue : str\ncontext: ImportContext\n    the context",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
             },
             {
               "name": "get_kwds_by_type",
               "signature": "(self, str_type: str) -> typing.Iterator[KeywordBase]",
               "doc": "Get all keywords for a given type.\n\nParameters\n----------\nstr_type : str\n    Keyword type.\n\nReturns\n-------\ntyping.Iterator[KeywordBase]\n\nExamples\n--------\nGet all ``*SECTION_*`` keywords in the deck.\n\n>>>deck.get_kwds_by_type(\"SECTION\")",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
             },
             {
               "name": "get_kwds_by_full_type",
               "signature": "(self, str_type: str, str_subtype: str) -> typing.Iterator[KeywordBase]",
               "doc": "Get all keywords for a given full type.\n\nParameters\n----------\nstr_type : str\n    Keyword type.\nstr_subtype : str\n    Keyword subtype or prefix of subtype. Matches keywords where the subkeyword\n    starts with this value.\n\nReturns\n-------\ntyping.Iterator[KeywordBase]\n\nExamples\n--------\nGet all ``*SECTION_SHELL`` keyword instances in the deck.\n\n>>>deck.get_kwds_by_full_type(\"SECTION\", \"SHELL\")\n\nGet all ``*SET_NODE*`` keyword instances (matches NODE, NODE_LIST, NODE_LIST_TITLE, etc).\n\n>>>deck.get_kwds_by_full_type(\"SET\", \"NODE\")",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
             },
             {
               "name": "get_section_by_id",
               "signature": "(self, id: int) -> typing.Optional[KeywordBase]",
               "doc": "Get the SECTION keyword in the collection for a given section ID.\n\nParameters\n----------\nid : int\n    Section ID.\n\nReturns\n-------\nSECTION keyword or ``None`` if there is no SECTION keyword that matches the section ID.\n\nRaises\n------\nException\n    If multiple SECTION keywords use the given section ID.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
             },
             {
               "name": "get_set_by_id",
               "signature": "(self, id: int) -> typing.Optional[KeywordBase]",
               "doc": "Get the SET keyword in the collection for a given set ID.\n\nParameters\n----------\nid : int\n    Set ID.\n\nReturns\n-------\nSET keyword or ``None`` if there is no SET keyword that matches the set ID.\n\nRaises\n------\nException\n    If multiple SET keywords use the given set ID.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
             },
             {
               "name": "get",
               "signature": "(self, **kwargs) -> typing.List[KeywordBase]",
               "doc": "Get a list of keywords.\n\nParameters\n----------\n- *kwargs* (``dict``) --\n    Keyword arguments.\n    * *type* (``str``) --\n    The type of keyword to get. For example, \"SECTION\" returns all section keywords.\n    * *filter* (``callable``) --\n    The filter to apply to the result. Only keywords which pass the filter will be returned.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
             },
             {
               "name": "import_file",
               "signature": "(self, path: str, encoding: str='utf-8') -> 'ansys.dyna.keywords.lib.deck_loader.DeckLoaderResult'",
               "doc": "Import a keyword file.\n\nParameters\n----------\npath : str or path-like\n    Full path for the keyword file. Path-like objects (e.g. pathlib.Path)\n    are converted to string for ImportContext to avoid type errors in\n    downstream code. The original value is preserved for keyword.included_from.\nencoding: str\n    String encoding used to read the keyword file.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
             },
             {
               "name": "export_file",
               "signature": "(self, path: str, encoding='utf-8', validate: bool=False, retain_parameters: bool=False) -> None",
               "doc": "Export the keyword file to a new keyword file.\n\nParameters\n----------\npath : str\n    Full path for the new keyword file.\nencoding : str, optional\n    String encoding for the file. The default is \"utf-8\".\nvalidate : bool, optional\n    If True, validate the deck before export. The default is False.\n    Validation uses registered validators and raises ValidationError if errors are found.\nretain_parameters : bool, optional\n    If True, write original parameter references (e.g., &myvar) instead of\n    substituted values for fields that were read from parameters. Default is False.\n\nExamples\n--------\n>>> deck.export_file(\"output.k\", validate=True)  # Validate before export\n>>> deck.export_file(\"output.k\", retain_parameters=True)  # Keep parameter references",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
             },
             {
               "name": "split",
               "signature": "(self, key_func: typing.Callable[[typing.Union[KeywordBase, str, EncryptedKeyword]], typing.Any]) -> typing.Dict[typing.Any, 'Deck']",
               "doc": "Split the deck into multiple decks based on a key function.\n\nThe key function is called on each keyword and should return a value\nthat will be used to group keywords. Keywords with the same return value\nwill be placed in the same deck.\n\nParameters\n----------\nkey_func : Callable[[Union[KeywordBase, str, EncryptedKeyword]], Any]\n    A function that takes a keyword and returns a grouping key.\n\nReturns\n-------\nDict[Any, Deck]\n    A dictionary mapping keys to Deck instances.\n\nExamples\n--------\n>>> # Split by keyword type\n>>> decks_by_type = deck.split(lambda k: k.keyword if isinstance(k, KeywordBase) else \"string\")\n>>> section_deck = decks_by_type[\"SECTION\"]\n\n>>> # Split by domain using the domain mapper\n>>> from ansys.dyna.core.lib.domain_mapper import by_domain\n>>> decks_by_domain = deck.split(by_domain)\n>>> mat_deck = decks_by_domain[\"mat\"]\n\n>>> # Custom splitting logic\n>>> def by_id_range(kwd):\n...     if isinstance(kwd, KeywordBase) and hasattr(kwd, 'secid'):\n...         if kwd.secid < 100:\n...             return \"low\"\n...         else:\n...             return \"high\"\n...     return \"other\"\n>>> decks = deck.split(by_id_range)",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
             },
             {
               "name": "split_by_domain",
               "signature": "(self) -> typing.Dict[str, 'Deck']",
               "doc": "Split the deck by keyword domain (mat, section, control, etc.).\n\nThis is a convenience method that uses the domain mapper to categorize\nkeywords. For custom splitting logic, use the `split()` method directly.\n\nReturns\n-------\nDict[str, Deck]\n    A dictionary mapping domain names to Deck instances.\n\nExamples\n--------\n>>> decks = deck.split_by_domain()\n>>> mat_deck = decks[\"mat\"]\n>>> control_deck = decks[\"control\"]\n>>> section_deck = decks[\"section\"]\n\nSee Also\n--------\nsplit : Generic splitting method with custom key function.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
             },
             {
               "name": "plot",
               "signature": "(self, **args)",
               "doc": "Plot the node and element of the mesh using PyVista.\n\nAutomatically detects Jupyter notebook environments and configures\nappropriate rendering backend for display.\n\nParameters\n----------\ncwd : str, optional\n    Current working directory if the deck and include files are in\n    a separate directory.\njupyter_backend : str, optional\n    Jupyter backend to use. Options are:\n\n    - ``'static'`` - Static image (default for notebooks)\n    - ``'server'`` - Interactive with server backend\n    - ``'trame'`` - Interactive with Trame (requires pyvista[trame])\n    - ``None`` - Disable Jupyter mode, use default windowing\n    - ``'auto'`` - Automatically detect (default)\ncolor : str, optional\n    Color of the mesh.\nscalars : str, optional\n    Name of scalars to color by (e.g., 'part_ids', 'element_ids').\n**args :\n    Additional keyword arguments passed to PyVista's plot method.\n\nReturns\n-------\nDepends on backend\n    Camera position or plot object depending on the backend used.\n\nExamples\n--------\nPlot a deck in a regular Python script:\n\n>>> deck.plot()\n\nPlot with a specific working directory:\n\n>>> deck.plot(cwd='/path/to/includes')\n\nPlot in a Jupyter notebook with interactive backend:\n\n>>> deck.plot(jupyter_backend='server')\n\nColor by part IDs:\n\n>>> deck.plot(scalars='part_ids')",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
             }
           ],
           "properties": [
@@ -172,120 +172,120 @@
               "name": "transform_handler",
               "type": "TransformHandler",
               "doc": "Handles transformations for the deck.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
             },
             {
               "name": "parameters",
               "type": "ParameterSet",
               "doc": "Deck parameters.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
             },
             {
               "name": "format",
               "type": "format_type",
               "doc": "Format type of the deck.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
             },
             {
               "name": "all_keywords",
               "type": "typing.List[typing.Union[str, KeywordBase, EncryptedKeyword]]",
               "doc": "List of all keywords.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
             },
             {
               "name": "string_keywords",
               "type": "typing.List[str]",
               "doc": "List of keywords as a raw string.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
             },
             {
               "name": "encrypted_keywords",
               "type": "typing.List[str]",
               "doc": "List of keywords as a raw string.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
             },
             {
               "name": "keywords",
               "type": "KeywordCollection",
               "doc": "Get all processed keywords as a KeywordCollection.\n\nThis provides access to the fluent filtering API for all keywords\nin the deck. The collection supports indexing, iteration, and\ncomparison with lists for backward compatibility.\n\nReturns\n-------\nKeywordCollection\n    A collection of all KeywordBase instances in the deck.\n\nExamples\n--------\n>>> # Access by index (backward compatible)\n>>> first = deck.keywords[0]\n>>> # Iterate (backward compatible)\n>>> for kwd in deck.keywords:\n...     print(kwd.keyword)\n>>> # Filter with fluent API\n>>> high_id_sections = deck.keywords.where(\n...     lambda k: k.keyword == \"SECTION\" and k.secid > 100\n... )",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
             },
             {
               "name": "comment_header",
               "type": "typing.Optional[str]",
               "doc": "Comment header of the keyword database.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
             },
             {
               "name": "title",
               "type": "typing.Optional[str]",
               "doc": "Title of the keyword database.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
             },
             {
               "name": "keyword_names",
               "type": "typing.List[str]",
               "doc": "Get a list of all keyword names in the deck.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
             },
             {
               "name": "sections",
               "type": "KeywordCollection",
               "doc": "Get all SECTION_* keywords.\n\nReturns\n-------\nKeywordCollection\n    A collection of all section keywords.\n\nExamples\n--------\n>>> shells = deck.sections.by_subtype(\"SHELL\")",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
             },
             {
               "name": "materials",
               "type": "KeywordCollection",
               "doc": "Get all MAT_* keywords.\n\nReturns\n-------\nKeywordCollection\n    A collection of all material keywords.\n\nExamples\n--------\n>>> elastic_mats = deck.materials.by_subtype(\"ELASTIC\")",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
             },
             {
               "name": "elements",
               "type": "KeywordCollection",
               "doc": "Get all ELEMENT_* keywords.\n\nReturns\n-------\nKeywordCollection\n    A collection of all element keywords.\n\nExamples\n--------\n>>> solid_elements = deck.elements.by_subtype(\"SOLID\")",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
             },
             {
               "name": "nodes",
               "type": "KeywordCollection",
               "doc": "Get all NODE keywords.\n\nReturns\n-------\nKeywordCollection\n    A collection of all node keywords.\n\nExamples\n--------\n>>> all_nodes = deck.nodes.to_list()",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
             },
             {
               "name": "parts",
               "type": "KeywordCollection",
               "doc": "Get all PART* keywords.\n\nReturns\n-------\nKeywordCollection\n    A collection of all part keywords.\n\nExamples\n--------\n>>> parts = deck.parts.to_list()",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
             },
             {
               "name": "sets",
               "type": "KeywordCollection",
               "doc": "Get all SET_* keywords.\n\nReturns\n-------\nKeywordCollection\n    A collection of all set keywords.\n\nExamples\n--------\n>>> node_sets = deck.sets.by_subtype(\"NODE\")",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
             },
             {
               "name": "defines",
               "type": "KeywordCollection",
               "doc": "Get all DEFINE_* keywords.\n\nReturns\n-------\nKeywordCollection\n    A collection of all define keywords.\n\nExamples\n--------\n>>> curves = deck.defines.by_subtype(\"CURVE\")",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dyna/core/lib/deck.py"
             }
           ]
         }

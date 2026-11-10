@@ -50,6 +50,31 @@
 
 ---
 
+## 多版本與 Agent 執行防護規格 (Multi-Version & Agent Readiness Rules)
+
+### Rule M01: 多版本 ANSYS 探測與動態切換 (Multi-Version Discovery & Dynamic Switching)
+- **Given**: 宿主電腦同時安裝多個 ANSYS 版本（例如 v202, v242, v251）。
+- **When**: 呼叫 `ans_list_installed_versions()` 或 `ans_set_active_version(version)`。
+- **Then**:
+  - 系統必須列出本機所有合法版本，且 `total_installed >= 1`（若有安裝）。
+  - 切換版本時，全域 `config` 必須動態刷新路徑，`AWP_ROOT<ver>` 與 `ANSYS_VERSION` 必須與目標版本一致，無須重啟 MCP 進程。
+
+### Rule M02: ASD-STE100 提示詞合規與診斷常駐 (ASD-STE100 & Resident Diagnostics)
+- **Given**: FastMCP 伺服器啟動或套用任何 Profile（`all`, `core`, `mechanical` 等）。
+- **When**: 檢查 `shared.INSTRUCTIONS` 與工具列表。
+- **Then**:
+  - `INSTRUCTIONS` 內部必須符合 ASD-STE100 規範：無分號、單句長度 $\le 20$ 字、主動語態。
+  - 核心診斷工具（`check_ansys_installation`, `ans_list_installed_versions`, `ans_set_active_version`）必須恆可見且回傳正規扁平信封 `{"ok": True, ...}`。
+
+### Rule M03: 雙軌求解器與基準引擎透明性 (Dual-Track Transparency Discipline)
+- **Given**: 呼叫未安裝或無商業授權之多物理領域工具（如 HFSS, Maxwell, Rocky, Chemkin）。
+- **When**: 觸發 Track 2 數值基準引擎（Benchmark Numerical Engine）。
+- **Then**:
+  - 回傳信封之 `execution_mode` 必須明確標註為 `benchmark_fallback`。
+  - AI 代理嚴禁將解析基準近似解宣稱為商業 ANSYS 求解器計算結果。
+
+---
+
 ## 防呆與金絲雀破壞性驗證 (Canary Failure Guardrails)
 
 ### Rule C01: 金絲雀破壞檢驗防線 (Canary Test Enforcement)

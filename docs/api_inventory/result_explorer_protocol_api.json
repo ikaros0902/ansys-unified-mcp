@@ -8,27 +8,27 @@
   "sources": {
     "sdk_files": [
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/result_explorer/v0/app_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/result_explorer/v0/app_pb2.py",
         "sha256": "46ebb972fbed3ba7de4d175efdcd67a2baecc308e33318080ef3c6a03fa486b0"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/result_explorer/v0/base_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/result_explorer/v0/base_pb2.py",
         "sha256": "5c5e3d319aacb62bb081c3c107ba2b222db935636703f3c104ae1e61570076d5"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/result_explorer/v0/filesystem_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/result_explorer/v0/filesystem_pb2.py",
         "sha256": "3123a63971ffb87ec8a9dcebf8d21147abb31d44d522f5a0f712c2477852046d"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/result_explorer/v0/server_models_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/result_explorer/v0/server_models_pb2.py",
         "sha256": "f9a7f68ecb831b5baf47c5c514d92362ec5e9569ac2deeff5e16d14470196f86"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/result_explorer/v0/solution_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/result_explorer/v0/solution_pb2.py",
         "sha256": "a250ee4208b4d6fdddaa849262bd6e4cf9a665e2d9b2cbc436d6e12da26937c9"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/result_explorer/v0/workspace_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/result_explorer/v0/workspace_pb2.py",
         "sha256": "f0a50889ae89ad28e4891ee368ef80b979f55c4d19b59ab5f10434015b5f6ad9"
       }
     ]

@@ -2,7 +2,7 @@
   "schema_version": 1,
   "observed_at_utc": "2026-10-27T13:48:42+00:00",
   "environment": {
-    "python_executable": "F:\\Ming_python\\ansys-unified-mcp\\.venv\\Scripts\\python.exe",
+    "python_executable": "<REPO_ROOT>\\.venv\\Scripts\\python.exe",
     "python_version": "3.14.2",
     "scope": "repo .venv only; no global/system Python or product installation scan"
   },

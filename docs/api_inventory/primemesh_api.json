@@ -55,15 +55,15 @@
     ],
     "sdk_files": [
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/meshing/prime/__init__.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/meshing/prime/__init__.py",
         "sha256": "c397aba91032fd5b9017277b275fffc7b2524bc3881098cded56511d785add52"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/meshing/prime/internals/client.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/meshing/prime/internals/client.py",
         "sha256": "63e878388246195b728d676f5ec97bd37161d889586638fb8c693e072d1ef673"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/meshing/prime/internals/launcher.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/meshing/prime/internals/launcher.py",
         "sha256": "bab285b78afecd1cd0a841697380acc5c22b1117d5df9e73d2d0857ae089f09d"
       }
     ]
@@ -80,15 +80,15 @@
               "name": "run_on_server",
               "signature": "(self, recipe: str)",
               "doc": "Run a recipe on the server.\n\nParameters\n----------\nrecipe: str\n    Recipe to run. This must be a valid Python script.",
-              "sdk_source_path": "F:\\Ming_python\\ansys-unified-mcp\\.venv\\Lib\\site-packages\\ansys\\meshing\\prime\\internals\\client.py",
-              "signature_source_path": "F:\\Ming_python\\ansys-unified-mcp\\.venv\\Lib\\site-packages\\ansys\\meshing\\prime\\internals\\client.py"
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\meshing\\prime\\internals\\client.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\meshing\\prime\\internals\\client.py"
             },
             {
               "name": "exit",
               "signature": "(self)",
               "doc": "Close the connection with the server.\n\nIf the client has launched the server, this method also\nkills the server process.\n\nExamples\n--------\n>>> import ansys.meshing.prime as prime\n>>> prime_client = prime.launch_prime() # This launches a server process.\n>>> model = prime_client.model\n>>> fileio = prime.FileIO(model)\n>>> result = fileio.read_pmdat('example.pmdat', prime.FileReadParams(model=model))\n>>> print(result)\n>>> prime_client.exit() # Sever connection with server and kill the server.",
-              "sdk_source_path": "F:\\Ming_python\\ansys-unified-mcp\\.venv\\Lib\\site-packages\\ansys\\meshing\\prime\\internals\\client.py",
-              "signature_source_path": "F:\\Ming_python\\ansys-unified-mcp\\.venv\\Lib\\site-packages\\ansys\\meshing\\prime\\internals\\client.py"
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\meshing\\prime\\internals\\client.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\meshing\\prime\\internals\\client.py"
             }
           ],
           "properties": [
@@ -96,8 +96,8 @@
               "name": "model",
               "type": "",
               "doc": "Get model associated with the client.",
-              "sdk_source_path": "F:\\Ming_python\\ansys-unified-mcp\\.venv\\Lib\\site-packages\\ansys\\meshing\\prime\\internals\\client.py",
-              "signature_source_path": "F:\\Ming_python\\ansys-unified-mcp\\.venv\\Lib\\site-packages\\ansys\\meshing\\prime\\internals\\client.py"
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\meshing\\prime\\internals\\client.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\meshing\\prime\\internals\\client.py"
             }
           ]
         }
@@ -107,8 +107,8 @@
           "name": "launch_prime",
           "signature": "(prime_root: str | None = None, ip: str = '127.0.0.1', port: int = 50055, timeout: float = 20.0, connection_type: ansys.meshing.prime.internals.config.ConnectionType = <ConnectionType.GRPC_SECURE: 1>, client_certs_dir: str | None = None, server_certs_dir: str | None = None, n_procs: int | None = None, version: str | None = None, **kwargs)",
           "doc": "Launch an instance of Ansys Prime Server and get a client for it.\n\nParameters\n----------\nprime_root: Optional[str]\n    Root directory for Ansys Prime Server.\nip: str\n    IP address to start the server at. The default is ``127.0.0.1``.\nport: int\n    Port at which the server is started. The default is ``50055``.\ntimeout: float\n    Maximum time in seconds to wait for the client to connect to the server.\n    The default is ``20.0``.\nn_procs: Optional[int]\n    When running in distributed mode, the number of distributed\n    processes to spawn. The default is ``None``, in which case\n    the server is launched as the only process (normal mode). The\n    process marked as ``Node 0`` hosts the gRPC server.\nclient_certs_dir : Optional[str]\n    Directory containing client certificates for mutual TLS.\nserver_certs_dir : Optional[str]\n    Directory containing server certificates for mutual TLS.\n\nReturns\n-------\nClient\n    Instance of the client that is connected to the launched server.\n\nRaises\n------\nFileNotFoundError\n    When there is an error in file paths used to launch the server.\nConnectionError\n    When there is an error in connecting to the gRPC server.",
-          "sdk_source_path": "F:\\Ming_python\\ansys-unified-mcp\\.venv\\Lib\\site-packages\\ansys\\meshing\\prime\\internals\\launcher.py",
-          "signature_source_path": "F:\\Ming_python\\ansys-unified-mcp\\.venv\\Lib\\site-packages\\ansys\\meshing\\prime\\internals\\launcher.py"
+          "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\meshing\\prime\\internals\\launcher.py",
+          "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\meshing\\prime\\internals\\launcher.py"
         }
       ]
     }

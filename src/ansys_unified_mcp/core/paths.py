@@ -197,3 +197,32 @@ def resolve_runtime_dir() -> Path:
 
     fallback.mkdir(parents=True, exist_ok=True)
     return fallback
+
+
+def resolve_shared_registry_dir() -> Path:
+    """Resolve shared cross-process registry directory for ANSYS instances.
+
+    Ensures ACT plugins running in Mechanical/Workbench (%APPDATA%) and MCP Server
+    can share the exact same instance registry regardless of startup environment.
+
+    Order of precedence:
+    1. Explicit WORKBENCH_MCP_QUEUE_ROOT / registry.
+    2. %LOCALAPPDATA%/ansys-unified-mcp/queue/registry on Windows.
+    3. <resolve_runtime_dir()>/queue/registry.
+    """
+    env_queue = os.environ.get("WORKBENCH_MCP_QUEUE_ROOT")
+    if env_queue and env_queue.strip():
+        reg = Path(env_queue.strip()) / "registry"
+        reg.mkdir(parents=True, exist_ok=True)
+        return reg
+
+    if os.name == "nt":
+        local_app_data = os.environ.get("LOCALAPPDATA")
+        if local_app_data:
+            shared = Path(local_app_data) / "ansys-unified-mcp" / "queue" / "registry"
+            shared.mkdir(parents=True, exist_ok=True)
+            return shared
+
+    shared = resolve_runtime_dir() / "queue" / "registry"
+    shared.mkdir(parents=True, exist_ok=True)
+    return shared

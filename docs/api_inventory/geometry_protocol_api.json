@@ -8,75 +8,75 @@
   "sources": {
     "sdk_files": [
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/geometry/v0/bodies_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/geometry/v0/bodies_pb2.py",
         "sha256": "71035ddd2bae204ca61964440549d50bcc7cfc3105ad90a12553dbe9e96bbb66"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/geometry/v0/commands_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/geometry/v0/commands_pb2.py",
         "sha256": "568f2ddfd9e550dabee9f0728cf7bbfa2057a3c6d7ccc9a3f5960d68d25aae06"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/geometry/v0/components_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/geometry/v0/components_pb2.py",
         "sha256": "3e52fe82be433d863faa9064feb916bcddfe4de551ccd5fb5a7e660892cfbb25"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/geometry/v0/coordinatesystems_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/geometry/v0/coordinatesystems_pb2.py",
         "sha256": "f20f97d7133da130b3a7338eb97a56f1d50ab543b7f00c1231f857dcb89e34c1"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/geometry/v0/curves_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/geometry/v0/curves_pb2.py",
         "sha256": "ec96cde3b6509ea5bc1e37cabf9cb03e2ffda19fd3d99e475eb706cc9436d87f"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/geometry/v0/datumplanes_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/geometry/v0/datumplanes_pb2.py",
         "sha256": "e84f8e7602351c06abc13d51b7ccfca45af2dd5c73a604505fe75df72a5d8473"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/geometry/v0/edges_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/geometry/v0/edges_pb2.py",
         "sha256": "aab9214d7c0b404b6554be82cbfe2f6ff892042831f6685ff4a79b2707bebebe"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/geometry/v0/faces_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/geometry/v0/faces_pb2.py",
         "sha256": "316efb6299fbf3b7f87d6d1b5f57b8242120462539b5a279b29004a59cd6ece2"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/geometry/v0/facettools_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/geometry/v0/facettools_pb2.py",
         "sha256": "6aa2818da9686aa1bd1cec00c643680312cd8fa6dadb1c3490ad62e8227a1a92"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/geometry/v0/materials_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/geometry/v0/materials_pb2.py",
         "sha256": "6b1dbe3ec8318db009ea1e94372ec810a83776ec5fbdba2b9ac6e8689d2a9bda"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/geometry/v0/measuretools_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/geometry/v0/measuretools_pb2.py",
         "sha256": "1d6674b2c352559ac02e0972bb1121cb1987d76d45b45c251db14dd412e64327"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/geometry/v0/meshes_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/geometry/v0/meshes_pb2.py",
         "sha256": "b7b8ceb50391cb0b51482abb2200f946eecf5928946ac3f71c0aad0def60a032"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/geometry/v0/models_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/geometry/v0/models_pb2.py",
         "sha256": "6108d9cfb4dffff19b61816416adf7eb885234b207817f1188cb51dd5becbc7e"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/geometry/v0/namedselections_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/geometry/v0/namedselections_pb2.py",
         "sha256": "de99fd1dd3521dafb20dc38712df755c5504a59e9fc7fa67978fccd11593f6e7"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/geometry/v0/parts_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/geometry/v0/parts_pb2.py",
         "sha256": "725cfbef9b064f9de3ebf1c6d57dd859f01198a272b0fc5c953470a9d6cad6d8"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/geometry/v0/preparetools_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/geometry/v0/preparetools_pb2.py",
         "sha256": "60805fb599ed67dfd96aadc82fadb06590ce24a98107ff0133a236e7caf98f45"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/geometry/v0/repairtools_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/geometry/v0/repairtools_pb2.py",
         "sha256": "2e66cc7469ac345f2ef58275f65838f1e6e4f1dc09fec5cd47ca3f5feefeed86"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/geometry/v0/unsupported_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/geometry/v0/unsupported_pb2.py",
         "sha256": "3ee0ca630665d8e6f00fa484090c8de2d6f1ba325a293c32390b3a7dd090969b"
       }
     ]

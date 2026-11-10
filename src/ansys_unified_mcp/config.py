@@ -40,6 +40,7 @@ class AnsysConfig:
 def _find_ansys_registry() -> Dict[str, str]:
     """Scan the Windows registry for installed ANSYS versions."""
     versions: Dict[str, str] = {}
+    # Check HKLM:\SOFTWARE\ANSYS, Inc.\ANSYS\<ver>
     try:
         key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\ANSYS, Inc.\ANSYS")
         for i in range(100):
@@ -52,7 +53,82 @@ def _find_ansys_registry() -> Dict[str, str]:
                 break
     except EnvironmentError:
         pass
+
+    # Check HKLM:\SOFTWARE\ANSYS, Inc.\v<ver>
+    try:
+        parent_key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, r"SOFTWARE\ANSYS, Inc.")
+        for i in range(100):
+            try:
+                sub_name = winreg.EnumKey(parent_key, i)
+                if sub_name.startswith("v") and sub_name[1:].isdigit():
+                    v_key = winreg.OpenKey(parent_key, sub_name)
+                    try:
+                        inst_dir, _ = winreg.QueryValueEx(v_key, "InstallDir")
+                        versions.setdefault(sub_name[1:], inst_dir)
+                    except EnvironmentError:
+                        pass
+            except EnvironmentError:
+                break
+    except EnvironmentError:
+        pass
+
     return versions
+
+
+def discover_installed_versions() -> Dict[str, Path]:
+    """掃描本機所有已安裝之 ANSYS 版本並回傳版本號對應路徑字典 (e.g. {'251': Path('...'), '242': Path('...')})。
+
+    掃描順序：
+    1. AWP_ROOT* 系統與行程環境變數
+    2. Windows Registry (HKLM:\\SOFTWARE\\ANSYS, Inc.\\ANSYS 與 v*)
+    3. ANSYS_ROOT 目錄下所有 v* 子資料夾
+    4. 標準安裝目錄 (C:\\Program Files\\ANSYS Inc, D:\\ANSYS Inc, E:\\ANSYS Inc 等)
+    """
+    discovered: Dict[str, Path] = {}
+
+    # 1. 檢查 AWP_ROOT* 環境變數
+    for k, v in os.environ.items():
+        if k.upper().startswith("AWP_ROOT") and v:
+            ver = k[8:].strip()
+            p = Path(v)
+            if ver.isdigit() and p.is_dir():
+                discovered[ver] = p
+
+    # 2. 檢查 Windows 登錄檔
+    reg_vers = _find_ansys_registry()
+    for ver, inst_dir in reg_vers.items():
+        p = Path(inst_dir)
+        if p.is_dir():
+            discovered.setdefault(ver, p)
+
+    # 3. 檢查 ANSYS_ROOT 及其父子目錄
+    ansys_root_env = os.environ.get("ANSYS_ROOT")
+    scan_bases = []
+    if ansys_root_env:
+        ar_path = Path(ansys_root_env)
+        if ar_path.is_dir():
+            if ar_path.name.startswith("v") and ar_path.name[1:].isdigit():
+                discovered.setdefault(ar_path.name[1:], ar_path)
+            scan_bases.append(ar_path)
+            scan_bases.append(ar_path.parent)
+
+    # 4. 標準磁碟機目錄
+    for drive in ("C:", "D:", "E:"):
+        scan_bases.append(Path(rf"{drive}\Program Files\ANSYS Inc"))
+        scan_bases.append(Path(rf"{drive}\ANSYS Inc"))
+
+    for base in scan_bases:
+        if not base.is_dir():
+            continue
+        try:
+            for child in base.iterdir():
+                if child.is_dir() and child.name.startswith("v") and child.name[1:].isdigit():
+                    ver_num = child.name[1:]
+                    discovered.setdefault(ver_num, child)
+        except (PermissionError, OSError):
+            continue
+
+    return discovered
 
 
 def _child_version_dir(parent: Path, version: str) -> Optional[Path]:
@@ -179,3 +255,40 @@ def get_config() -> AnsysConfig:
 
 
 config = get_config()
+
+
+def set_active_version(version: str) -> AnsysConfig:
+    """動態切換作用中之 ANSYS 版本並原地更新全域 config 實例。
+
+    參數:
+        version: 目標版本號（例如 "242"、"251"、"252" 等）。
+
+    回傳:
+        更新後的 AnsysConfig 實例。
+    """
+    ver = str(version).strip().lstrip("v")
+    os.environ["ANSYS_VERSION"] = ver
+
+    discovered = discover_installed_versions()
+    if ver in discovered:
+        target_root = discovered[ver]
+        os.environ[f"AWP_ROOT{ver}"] = str(target_root)
+        os.environ["ANSYS_ROOT"] = str(target_root.parent)
+
+    new_cfg = get_config()
+    for field in (
+        "version",
+        "root_path",
+        "workbench_exe",
+        "mechanical_exe",
+        "fluent_exe",
+        "cfx_solve_exe",
+        "cfx_pre_exe",
+        "mapdl_exe",
+        "lsdyna_exe",
+        "spaceclaim_exe",
+        "available",
+    ):
+        setattr(config, field, getattr(new_cfg, field))
+
+    return config

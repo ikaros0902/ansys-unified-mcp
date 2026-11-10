@@ -8,7 +8,7 @@
   "sources": {
     "sdk_files": [
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/tools/filetransfer/v1/file_transfer_service_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/tools/filetransfer/v1/file_transfer_service_pb2.py",
         "sha256": "660740cb74bdde58f283145e85dd4f779dfa21c06e135f2cee8f051295a06046"
       }
     ]

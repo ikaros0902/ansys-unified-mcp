@@ -8,571 +8,571 @@
   "sources": {
     "sdk_files": [
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v0/assignments/boltassignment_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v0/assignments/boltassignment_pb2.py",
         "sha256": "635a13ca424fca0d3a158571b3e88e00679cde50986c774dfbde8ea46f292779"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v0/assignments/fan_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v0/assignments/fan_pb2.py",
         "sha256": "5b6af8ca8cb177faf973c5912b14c20857197370c3d1e8fef76dca49575c65c8"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v0/conditions/acceleration_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v0/conditions/acceleration_pb2.py",
         "sha256": "7d502a323b997b49ac71d2044f2e1bf0db3a192b90838210c723876d683e7c66"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v0/conditions/bearing_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v0/conditions/bearing_pb2.py",
         "sha256": "6ac6a7afec99c666c2f39e7d4840d0d0e7d9209005f374b7d018ba3c23591f5c"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v0/conditions/boltpreload_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v0/conditions/boltpreload_pb2.py",
         "sha256": "36a32575259399d40d02ac5a1a0a0f3dcb26a8b28193a4b5b4012e9b54bbb548"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v0/conditions/condition_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v0/conditions/condition_pb2.py",
         "sha256": "7228295667262856860e08db0e1640118407a626e83f04d7e351799e24d4aec0"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v0/conditions/convection_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v0/conditions/convection_pb2.py",
         "sha256": "df562f4d40bdb8b4bc1f679fbf05ab90d0a076f64bdaeda656554d8c4933990a"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v0/conditions/current_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v0/conditions/current_pb2.py",
         "sha256": "1d68e6e94219d9a0314e9f9bae8674d3ae8f090d8870102a45b1b10d3dfe921c"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v0/conditions/displacement_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v0/conditions/displacement_pb2.py",
         "sha256": "23a756a299d041e47f7707a29e9f58a6527b69546aca456577c0c9d2e3fe8122"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v0/conditions/flow_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v0/conditions/flow_pb2.py",
         "sha256": "a8f61c2b3f596eac52b6ccf9c4472decd2a102623de34fb8cad76e1fe210d530"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v0/conditions/fluidinitialtemperature_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v0/conditions/fluidinitialtemperature_pb2.py",
         "sha256": "2d8bbf211c1a334c80c7544fdb8240dbe4f0314fa3928071dca4e506ae3ef6ec"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v0/conditions/force_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v0/conditions/force_pb2.py",
         "sha256": "fa35aa257828ad8d3f8cb73b5d2e5d934ec1177c072e0f940d90d1fa5dc6f1ff"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v0/conditions/gravity_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v0/conditions/gravity_pb2.py",
         "sha256": "082c1b64054d694a81df77943f84b4e4c48af5de3ac8398d88b1f4c76f55ce80"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v0/conditions/heat_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v0/conditions/heat_pb2.py",
         "sha256": "edea3ccfa5c4ce23e32846d903d1203965e845e73782451fbe33ae6ffc0ee726"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v0/conditions/insulated_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v0/conditions/insulated_pb2.py",
         "sha256": "7aee3758d5f2d484728d449879d2f3e9da0dfb347229021134cf683458c03653"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v0/conditions/localfidelity_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v0/conditions/localfidelity_pb2.py",
         "sha256": "9e29e9212c6b67980114fb53d8f78800b579dc0052d01ce7b302185906c60dda"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v0/conditions/mass_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v0/conditions/mass_pb2.py",
         "sha256": "01a9297a72d329fe5f0d4369e5b9f9bb50b2c82e13c7b4a023f17cf9788a4e3f"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v0/conditions/moment_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v0/conditions/moment_pb2.py",
         "sha256": "c4803feebc6b8e6cdb0916e7b67838ae2c9fb08cbd3936dea6999fec4beb2f31"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v0/conditions/operatingpressure_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v0/conditions/operatingpressure_pb2.py",
         "sha256": "031e1c698868ea4cf8ee9d8b8dbde63caa943170958ced7155ea0a3730ea3460"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v0/conditions/porous_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v0/conditions/porous_pb2.py",
         "sha256": "78fdcd96befab9f1b974a6bf8c9a815e999a4c35b858ada84f16b3ae4e5257c5"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v0/conditions/pressure_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v0/conditions/pressure_pb2.py",
         "sha256": "c5cefc0a661a3e4c7871471b0a8d3e00f1726416314f6f1d945b7501e400446b"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v0/conditions/rotatingfluidzone_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v0/conditions/rotatingfluidzone_pb2.py",
         "sha256": "bc06f8b135d7a438245c54451a08318c43e50fd49add1211ee75b30ef0f3ccfd"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v0/conditions/solidtemperature_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v0/conditions/solidtemperature_pb2.py",
         "sha256": "05297bce67f1d254b25cb2320d27995274b3be0ddade0f416713df02da82b6f8"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v0/conditions/springpreload_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v0/conditions/springpreload_pb2.py",
         "sha256": "c34df6a041784188fffd0ee0a540c226176d220f33b65c2371afc92030063cc4"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v0/conditions/support_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v0/conditions/support_pb2.py",
         "sha256": "910d17115936680edce67246fb85e43f3a1df9ff233c37a8851e11a0adf3b75d"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v0/conditions/symmetry_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v0/conditions/symmetry_pb2.py",
         "sha256": "1b16090f0f5352c2c3c3a6d0b46839e9868f2a1a62d77a9685f456363145f1b3"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v0/conditions/velocity_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v0/conditions/velocity_pb2.py",
         "sha256": "01027b55483a8e8b0ca029e4a9687cd4c3f7d1b249465ce1da1f751b772abdf0"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v0/conditions/voltage_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v0/conditions/voltage_pb2.py",
         "sha256": "5201d3b78720c9c888b28b34c6597ea9ddea7beac31950c6ef032cb18a657621"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v0/conditions/wall_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v0/conditions/wall_pb2.py",
         "sha256": "ec77d998dbabb4e4113c318969612515fb229da96969c560bedd611a9a735f2a"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v0/connections/contact_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v0/connections/contact_pb2.py",
         "sha256": "a00add69520157a479fdd70bec338a38e8255e92e1160474f9867f35cc3fcafd"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v0/connections/contactgroup_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v0/connections/contactgroup_pb2.py",
         "sha256": "24e0dd5acc133ce7333977959d9488a9329a7090ceec2aec9b6155eff85d25d4"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v0/connections/fluidinterface_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v0/connections/fluidinterface_pb2.py",
         "sha256": "92c2c51f1210bbbcbdd0c685656b6cac887af658369436241d82f3e33a1f5637"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v0/connections/joint_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v0/connections/joint_pb2.py",
         "sha256": "cdbf2f1d044ca6e6bc48ca90e45d03fd14ae3b5cb8f573762ced4c26665ff2d5"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v0/definedvariationstable_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v0/definedvariationstable_pb2.py",
         "sha256": "d594ba94f7c4274ce816bd4fa55e07729d4b9681105c7a1100e8d5fe2a035ad3"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v0/discoverymodels_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v0/discoverymodels_pb2.py",
         "sha256": "bda43134fa45fc4b7f03e82a895475f9839849d1dfc4255d7642291c60550a90"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v0/engineeringdata/boltdata_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v0/engineeringdata/boltdata_pb2.py",
         "sha256": "cb259ffe11835d4cfa2870f1e0947b78807005c69de93ef6d1b69e6e336fa27d"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v0/engineeringdata/fandata_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v0/engineeringdata/fandata_pb2.py",
         "sha256": "0359ac1fa538b551cc48905bbfee15b689d18672152b4fed25cf853e2c42048e"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v0/historytrackparameters_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v0/historytrackparameters_pb2.py",
         "sha256": "5f118216fdf30aa2bb0f3cd39ce77c5d60fd92188e9600ef293951c873a89327"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v0/messaging_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v0/messaging_pb2.py",
         "sha256": "502cf6beee6be80757ddf815aa9d7c19aef75412ddbc3f585f4fda3d111a830e"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v0/monitors_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v0/monitors_pb2.py",
         "sha256": "60dadbb2ac75ddd992c63653b1451742d999858a2ea927c57843e783e78a5c28"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v0/results_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v0/results_pb2.py",
         "sha256": "588ecd12c557eef26460dfc1a2258c51d2a93ae870141268499ac93957640bf7"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v0/scriptparameters_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v0/scriptparameters_pb2.py",
         "sha256": "79bd15137eaf34b25abba6e249257a686175addc2e3f95a75183a6f67e0013b3"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v0/simulations_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v0/simulations_pb2.py",
         "sha256": "145ac9425b8865538a17aff028af74c2e7538b5b331ca3943eaf7988b5a449b5"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v0/solution_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v0/solution_pb2.py",
         "sha256": "46e6ba29e054e9aeffd3ce8b685e29d5ccd422b35f6ce2db0c73c1d631a628f2"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v0/units_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v0/units_pb2.py",
         "sha256": "0f457c17e2145e94607fd1003827140daaaa18af85fdd5caac8b52731a613966"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v0/unsupported_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v0/unsupported_pb2.py",
         "sha256": "884576c3aa230e3f0c3d8a1a86faa88bc7e50376605aca97b6da15845e631359"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/commands/application_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/commands/application_pb2.py",
         "sha256": "155c6832318327e8376066f895038f29bf61cfb303f87c9ceda53f9b155453f5"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/commands/communication_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/commands/communication_pb2.py",
         "sha256": "039ec264aaf148db683b1d195ebcfc56c1018da02fad03bba49a52767b787e3c"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/commands/file_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/commands/file_pb2.py",
         "sha256": "50d82d15eef539fda365f5da6bfc759b809687c0033db5f4aaac5880dc17ee1f"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/commands/historytrack_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/commands/historytrack_pb2.py",
         "sha256": "68a257ac101255cd25a29d0d89e0cc17c235214a739da7374c9be3aa04795e6d"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/commands/message_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/commands/message_pb2.py",
         "sha256": "eb8cc21bc88238f64a6b1d7eb6469a08e90d2bfd8b8d256b9a825b209ba69f48"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/commands/script_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/commands/script_pb2.py",
         "sha256": "37d2910f757013609063a0be4781fc5df8d14ab5ce4dc31a83bd5da7b5f72d7a"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/commands/unsupported_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/commands/unsupported_pb2.py",
         "sha256": "885f8dfc8af87b25baa3ad42ce8e8a6f25591e2523c08ed47d0d6c0ea6301e23"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/commands/view_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/commands/view_pb2.py",
         "sha256": "203a5dd8ddfe4ae32b2d70d52e8f5f606e3f45039241c43316cb7a7d1b443fa3"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/commonenums_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/commonenums_pb2.py",
         "sha256": "247e4221d5889ebd6b3905a526ef643336463d36a8ba600e4ddf4b352422b1f4"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/commonmessages_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/commonmessages_pb2.py",
         "sha256": "d63885db076d216acdb6009ae4edb2c99044817c056cbfe6d7ca173111df8640"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/design/constructs/coordinatesystem_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/design/constructs/coordinatesystem_pb2.py",
         "sha256": "00f1e54d8a0cc5ce74f22519616ef149673266053d7bf8a2722fd88a4e5c2e72"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/design/constructs/datumline_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/design/constructs/datumline_pb2.py",
         "sha256": "2b3aaeeef02577af015b81a7c294055674077f50277086e268fd8f5cca9333e1"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/design/constructs/datumplane_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/design/constructs/datumplane_pb2.py",
         "sha256": "3a94a1c456995ee9b1a2c30ec80d9d29f364fa70e7d4346db1cb2d234cc0eb3c"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/design/constructs/datumpoint_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/design/constructs/datumpoint_pb2.py",
         "sha256": "abf17a2bd003e9bb4cd8faa0fcb17d124dbf677de656aa63fedf5b69efa75c90"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/design/data/cadmaterial_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/design/data/cadmaterial_pb2.py",
         "sha256": "2bd0982c54c52d116397376cbb249abf3aa4f1d7a0f0c3a79dd9239be8f181d8"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/design/designdoc_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/design/designdoc_pb2.py",
         "sha256": "10cee0baaf464c5053d6cce64ca5397088cc62a3a0f95e355f09c8b959c12626"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/design/designentity_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/design/designentity_pb2.py",
         "sha256": "a1e380ee39ded5945970bc08edd06432c75d5a8214bc5de8f22e6ed45a0be5b8"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/design/designmessages_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/design/designmessages_pb2.py",
         "sha256": "3d54fdf21ffca7dae2a1a9d0581161ded13db4765932062cbd5430ee53ce34a0"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/design/extensions/beam_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/design/extensions/beam_pb2.py",
         "sha256": "2b7b9c99991f64ed4999a1e01bcbd9716a782462d528fcd7d29a915497d903c5"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/design/extensions/bolt_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/design/extensions/bolt_pb2.py",
         "sha256": "2d6cd5ca6e99c2359ff2f3506015f22cd60b89673d3118a3617943a8dc04456e"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/design/extensions/weld_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/design/extensions/weld_pb2.py",
         "sha256": "6facae97c0fbc75792b973ffaff9e020c3866e810c4a74e2ab67a97af490fbe1"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/design/geometry/body_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/design/geometry/body_pb2.py",
         "sha256": "951d83bf303425171cb356343592a28be42cdbb6151d104724cd86342fc28a4e"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/design/geometry/component_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/design/geometry/component_pb2.py",
         "sha256": "6b625de3a02e9f0a60aba0e5103e6ab1097c9e472bd67a0ef7182a16d41524e3"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/design/geometry/curve_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/design/geometry/curve_pb2.py",
         "sha256": "5b1d4a580756d87b843d32ca88cee1149c59691b2b55000a79f68934dae3d41e"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/design/geometry/edge_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/design/geometry/edge_pb2.py",
         "sha256": "a3099d8014a55fb2cf75c44208233d324b6cabfe9acd93faf7882ee605aa85db"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/design/geometry/face_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/design/geometry/face_pb2.py",
         "sha256": "03fa3b529f2e28c68686c4f51e85493c08e49842ea181cbdc6a54e1bc54a713f"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/design/geometry/mesh_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/design/geometry/mesh_pb2.py",
         "sha256": "411acafde5db3851ce3e0f362e98ce12fc79b0088e2586989d017c18fa0e8077"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/design/geometry/part_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/design/geometry/part_pb2.py",
         "sha256": "028753b2241d1396392886dc88120af23fcb01d7ffcc275d695239f8bef8a755"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/design/parameters/drivingdimension_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/design/parameters/drivingdimension_pb2.py",
         "sha256": "e14362b2ce9c0040e4e9d5e80a8827ae1f15940019544997639fc9d43434764d"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/design/parameters/historytrack_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/design/parameters/historytrack_pb2.py",
         "sha256": "e4f8274bd68aefa5a06f090adcff612f434c663a1808c036d36373a8cca0c661"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/design/parameters/script_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/design/parameters/script_pb2.py",
         "sha256": "67ff519cf75fae97684747823e2a276c6d25c4ce559f53335d5a98ea584f7c75"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/design/relationships/assemblycondition_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/design/relationships/assemblycondition_pb2.py",
         "sha256": "ab6a309c03972e6a61e2396c45db6d291c8f5892b5f4fdc54f86431a0d08fca0"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/design/relationships/pattern_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/design/relationships/pattern_pb2.py",
         "sha256": "838c1ab83a28048e0f2bd5ca49960f73a0569876799712e379378b6a846ccb5a"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/design/selections/bodyselection_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/design/selections/bodyselection_pb2.py",
         "sha256": "c918127b99940650238a66daf84d9bfb665419a873e40728559e2c5b06da64cb"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/design/selections/edgeselection_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/design/selections/edgeselection_pb2.py",
         "sha256": "c0fc55e5360c770c435bebad9787b2ffd5fc53539153e511b16d1b41a539de4f"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/design/selections/faceselection_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/design/selections/faceselection_pb2.py",
         "sha256": "5b1ef1779232d24c9d2e7c85c574e472847f230ac76c4be8d240b66c2f4a3fe2"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/design/selections/namedselection_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/design/selections/namedselection_pb2.py",
         "sha256": "79823dfdbc7227cad426b73a6225ab707104c93c25b218f8786fb4c6569b2934"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/engineeringdata/beamprofiledata_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/engineeringdata/beamprofiledata_pb2.py",
         "sha256": "f36e9021c75dd6f6caa3f5f23d18cb547528ccd5c7d0530316f6236cf3047be7"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/engineeringdata/boltdata_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/engineeringdata/boltdata_pb2.py",
         "sha256": "234dc2d3f7a9d37716fa35b30a562099d0b41371cc5551129259a6ade2101bb4"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/engineeringdata/fandata_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/engineeringdata/fandata_pb2.py",
         "sha256": "1fd4db64955117e2c9d16d984355ef80032df9e29d8472f7296169b9055fdff8"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/engineeringdata/material_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/engineeringdata/material_pb2.py",
         "sha256": "c102227dbfa11bd4ee8e5ccde87c1d3b9f9c0a6f1789036204a8e251e77b18c3"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/engineeringdata/welddata_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/engineeringdata/welddata_pb2.py",
         "sha256": "57508d942091dd99187bde416d7792e517ada3bd7f41a199dc15c27017b8c725"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/geometryenums_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/geometryenums_pb2.py",
         "sha256": "59840d483ea4c87c6679c3244f47b10749066d8ea3ab3a6e9fac4478c49f7df9"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/operations/edit_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/operations/edit_pb2.py",
         "sha256": "2dcfa6199e9582802924d292dc3b19440154657aa785ec0b3f463362f57995c8"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/operations/facet_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/operations/facet_pb2.py",
         "sha256": "44357087517e658a909fc3f7f1845d19834867aef1249797e1b71504a24a54a3"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/operations/measure_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/operations/measure_pb2.py",
         "sha256": "48e249418a9b1daebe8e0c25dfaac8bf5c7dbe56806ec93ce288300f30e50d02"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/operations/prepare_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/operations/prepare_pb2.py",
         "sha256": "b3a7dbbd3855f44fcff0867a9ce62ddd84287d40209435bd2eee1f0091139fc0"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/operations/rayfire_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/operations/rayfire_pb2.py",
         "sha256": "cd9a5cd495035ae38008ccc4050ea2b78438371c3a2adca8785190347a039909"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/operations/repair_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/operations/repair_pb2.py",
         "sha256": "6f8db18f0f4b303c718c8b07513710e675b5f53b9ff4f73feaeb69e2f76d7294"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/operations/sketch_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/operations/sketch_pb2.py",
         "sha256": "7c98421e18f49fa1210c8e2b06a649424f784ebd5ce4e6990f67c1fcee603b57"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/assignments/beamassignment_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/assignments/beamassignment_pb2.py",
         "sha256": "abf64728c2d22c8080fa161620717a27ec38dd1ee97e373a2a2f26eceefcc781"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/assignments/boltassignment_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/assignments/boltassignment_pb2.py",
         "sha256": "bc58cc9fe38d66e421cf54818fb33caeb3a4241a974dc8d97d1fcccb0539f342"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/assignments/fanassignment_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/assignments/fanassignment_pb2.py",
         "sha256": "f6c5bb08ee38c194f6700f369b4e2207a66ca86ff911e1cc9621b1a513204e59"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/assignments/filletweldassignment_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/assignments/filletweldassignment_pb2.py",
         "sha256": "63eb603aff0f7954fd29f3cfb65ae3f23526f05779d1c202612e97874a070547"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/assignments/materialassignment_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/assignments/materialassignment_pb2.py",
         "sha256": "eddf241bb19841d9939770ae23bd3189e9459e101a550aaba203cb40440f185c"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/conditions/acceleration_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/conditions/acceleration_pb2.py",
         "sha256": "fbef0e8c78dd470d59e6a9494b454d276d665053bb0e018772894c926fbf17fb"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/conditions/bearing_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/conditions/bearing_pb2.py",
         "sha256": "c502ea160683bba97542508d61a03ca96d04d5c9d57c48680890c35e2e033004"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/conditions/boltpreload_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/conditions/boltpreload_pb2.py",
         "sha256": "b4e4cc0c8a7c659f731d8a50e74a68711b21019cbeb593b94a8f1a38c6220d33"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/conditions/convection_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/conditions/convection_pb2.py",
         "sha256": "54d4f203b75a13cba9b517d790bfc7d25a5148e6bf2db18657c2fd03723fd7e1"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/conditions/current_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/conditions/current_pb2.py",
         "sha256": "f2ea687ad55985856670e2710ac7130ee66828db924327b47d6e7c5e9f360caf"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/conditions/displacement_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/conditions/displacement_pb2.py",
         "sha256": "ad6f9dd17fc09f92666935fa7de6a6b2c7c92b30715d7ea82738f6e3174fb791"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/conditions/flow_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/conditions/flow_pb2.py",
         "sha256": "3b7e565214233bd31320ac241f8cadff29b4e63ec3ad288256bb2e28fbe129eb"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/conditions/fluidinitialtemperature_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/conditions/fluidinitialtemperature_pb2.py",
         "sha256": "c8efae933ee23634f5c2303cdcb87cce2b45d122c838a90a30f03c9b8ce63499"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/conditions/force_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/conditions/force_pb2.py",
         "sha256": "9e6780642a9d78b3fa47b437b91281e6d03f5d6994a14341187fffd6a530a476"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/conditions/gravity_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/conditions/gravity_pb2.py",
         "sha256": "63af25cea9017a6a17145bb10dbf94a5e6305108f13c1d20dfe79518a4ba89c1"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/conditions/heat_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/conditions/heat_pb2.py",
         "sha256": "9d0f5f5eab2b511af5347d711e716a39bec6275a9eebdc2295de88756f22b4fa"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/conditions/insulated_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/conditions/insulated_pb2.py",
         "sha256": "ef8ec4014c7252b6483b0fc186c345d80acb5615b0b6d50d5beb8bc99e545b66"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/conditions/localfidelity_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/conditions/localfidelity_pb2.py",
         "sha256": "fd94e2974e450a5e054a6751285eb40c80ed2fc87794daaaa8d248d0565e9f31"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/conditions/mass_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/conditions/mass_pb2.py",
         "sha256": "3203a3b64355964969659f4dd172af702e8bbe6c758117f64b99afb1fbfa5637"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/conditions/moment_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/conditions/moment_pb2.py",
         "sha256": "829f35dfbb345b6c9347684f5ef3f8c89a1fbfb767b1f5720765a11c81c87e6d"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/conditions/operatingpressure_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/conditions/operatingpressure_pb2.py",
         "sha256": "72e3d5dd857cdae786e1872452f1cd1207d514904f72a166cd6eaa88f0bcc73f"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/conditions/porous_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/conditions/porous_pb2.py",
         "sha256": "8d734a31120039e9ba63c484f6c24cb0f1304d0f9b5b775e130a5ac5bcef06dd"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/conditions/pressure_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/conditions/pressure_pb2.py",
         "sha256": "9edc3e53d7c7702f8c6e811ec4893f8e5fe23a672826bd3c86a3e8fc770d1ddd"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/conditions/rotatingfluidzone_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/conditions/rotatingfluidzone_pb2.py",
         "sha256": "f716cb6c409ee838fa085e9a049e38ba197926eac7146275423b959c40b61231"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/conditions/solidtemperature_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/conditions/solidtemperature_pb2.py",
         "sha256": "40c7e9c9ddf0383637c45168ae05491c9c8cbec15e18c86a1e3f9ede9265c01e"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/conditions/springpreload_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/conditions/springpreload_pb2.py",
         "sha256": "24678d398992c0df76e20d83515bca6fc0fd8ab207f359c443f87ea1a718bdde"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/conditions/support_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/conditions/support_pb2.py",
         "sha256": "ce9ace923963580990b021db648077ff5d154632998f6246aae10715fe3793e4"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/conditions/symmetry_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/conditions/symmetry_pb2.py",
         "sha256": "6cc143724dbad5df54c05d065a2465f1c6ee892d30aa7326ceef31c52877b55a"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/conditions/velocity_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/conditions/velocity_pb2.py",
         "sha256": "44c711db7d7c763be1226cc82f67ae766307d1ec1ceabf1e774ec4946b6efbc5"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/conditions/voltage_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/conditions/voltage_pb2.py",
         "sha256": "d8cbdef4859ed4ced50f57e088c9ca8a35ea2147b8224b278db179f213a49cd7"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/conditions/wall_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/conditions/wall_pb2.py",
         "sha256": "b13cc3a38457b507dd27eba8a36a18810e2660776fc8a944b52a809e8f2704bf"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/connections/contact_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/connections/contact_pb2.py",
         "sha256": "6c0f38876ec35267a2765b466a53efa392c7784f878a510b57c134b1eaa6d86c"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/connections/contactgroup_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/connections/contactgroup_pb2.py",
         "sha256": "eb8831efe72d13c1f4ffd081a64807613f12e94e28b1991be1657fdfe1cc7d97"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/connections/fluidinterface_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/connections/fluidinterface_pb2.py",
         "sha256": "c4271ce662c39b305e45cc8cfc22999a85a7861f8967f174636b8ff7f37c8140"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/connections/joint_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/connections/joint_pb2.py",
         "sha256": "e20dec47a00a070f1d7761394081cebdd84c1076bd184f17de7ee164a5daed57"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/parameterization/definedvariation_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/parameterization/definedvariation_pb2.py",
         "sha256": "87aa428953d22342a5387592555af49376880014c8aab01d71f3eb85beaafb99"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/parameterization/parameter_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/parameterization/parameter_pb2.py",
         "sha256": "e8344c5a8887202dc8ca78c5e8667ef19ec332fa1e9da3e9297fa21a1217ffe1"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/physicsentity_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/physicsentity_pb2.py",
         "sha256": "37c08dd380032afeab378eadb3d8d7655f19af4ad30cd865ae81c7225bde9f03"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/physicsmessages_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/physicsmessages_pb2.py",
         "sha256": "7244d1a44c334c22d42eebdcd6cdd56faa6d8c0b4761c1cc99841de7c3609dfd"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/simulation/monitors_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/simulation/monitors_pb2.py",
         "sha256": "a5be82757b25c20ce657a0e07614212bb6d0602ecd4b0dd72d06a0b7c16a3e2f"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/simulation/simulations_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/simulation/simulations_pb2.py",
         "sha256": "4ced36812d29a0c5589b00a23d6f7ee6f168a2315412d026ad12934b2843d0ad"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/simulation/solutions_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/physics/simulation/solutions_pb2.py",
         "sha256": "ca9c9fd701ce272ae9918e8b5318bf5c310c946f91be636febafb31dd5926198"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/physicsenums_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/physicsenums_pb2.py",
         "sha256": "643a00fe0834b8aae7fbd0a9e3b960564c93173806e1b4eef1edd27307cbbd49"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/resultenums_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/resultenums_pb2.py",
         "sha256": "172e5cb1d295f58cec847169e8cdde1cd5d39cd9b2a26da3446d93c449465f9f"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/streaming_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/streaming_pb2.py",
         "sha256": "ba419898c1331d2cfb089ecc74efa5468320ad6070d24f3bab19736ad8148799"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/discovery/v1/unitenums_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/discovery/v1/unitenums_pb2.py",
         "sha256": "b7dd4720e0bdda4b6d03ea72415dab5c954910ae56b46a9a9e5d8b228fb0019b"
       }
     ]

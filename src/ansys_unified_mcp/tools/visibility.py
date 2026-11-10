@@ -24,6 +24,7 @@ from fastmcp.server.middleware import Middleware
 # 跨域通用工具所屬的來源模組 (一律可見，不受 workspace 篩選)。
 _COMMON_MODULES = frozenset(
     {
+        "ansys_unified_mcp.tools.connection_tools",
         "ansys_unified_mcp.tools.docs_tools",
         "ansys_unified_mcp.tools.sentinel_tools",
         "ansys_unified_mcp.tools.session_manager_tools",

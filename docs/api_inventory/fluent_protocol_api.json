@@ -8,143 +8,143 @@
   "sources": {
     "sdk_files": [
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/fluent/v0/app_utilities_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/fluent/v0/app_utilities_pb2.py",
         "sha256": "6f581d1dc5a48e872ae0f185b6690c619afb20c2d9ee8c2f05bb4f865b5c5f57"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/fluent/v0/batch_ops_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/fluent/v0/batch_ops_pb2.py",
         "sha256": "e6bb3e95c02afe65b1030959311ef655fa5ea90751451af130da54e7bca7ad25"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/fluent/v0/common_api_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/fluent/v0/common_api_pb2.py",
         "sha256": "289000adcb7d9b993a5ccf378c4eaf7bc7aeec581fafaa716bc4ed56e52d9e26"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/fluent/v0/common_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/fluent/v0/common_pb2.py",
         "sha256": "4168a24a43f9db59a411e5a11d910cde03a7173a5d6bca0cd29bd100d44e916a"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/fluent/v0/Connection_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/fluent/v0/Connection_pb2.py",
         "sha256": "f0374b299b015e50893e73c255433c284f0f9d779f881934df0c8558a3067987"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/fluent/v0/datamodel_se_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/fluent/v0/datamodel_se_pb2.py",
         "sha256": "263f859e64b09cc2d26100be275332e7f0db62df99cb5fe9bcef6aa3cccd5d6a"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/fluent/v0/datamodel_tui_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/fluent/v0/datamodel_tui_pb2.py",
         "sha256": "24fc4e4c3e1b3284ad4ea7659b360007ea78cf0d72a306b01a84f85700fd512a"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/fluent/v0/events_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/fluent/v0/events_pb2.py",
         "sha256": "864eb1e6766861d95eb1cbb9b21f587f67fca4cb89d39e05c72ae64fe68adca4"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/fluent/v0/field_data_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/fluent/v0/field_data_pb2.py",
         "sha256": "57cbb9c3a7f16c4856ec8e7dd7eade9181ca2378cf13624638622b5a306ed97a"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/fluent/v0/health_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/fluent/v0/health_pb2.py",
         "sha256": "1b3d24866ff89c36d9ccfff7cfb3e238bca9acb03a10291bfd9aa40e1996c0b9"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/fluent/v0/meshing_queries_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/fluent/v0/meshing_queries_pb2.py",
         "sha256": "38077c6226ad397a96f924e21f1be578f67442885cc81bc2df3b9facc16b62e8"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/fluent/v0/monitor_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/fluent/v0/monitor_pb2.py",
         "sha256": "3b91a7c6cd6f5c63de9171d01f486bd8d16c4b51b402a009c9ca95929df5fd03"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/fluent/v0/reduction_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/fluent/v0/reduction_pb2.py",
         "sha256": "58f8615ec6a2095f71b982efa29d7bb189578b2545c0d4fd7b4a7373eed2ac36"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/fluent/v0/scheme_eval_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/fluent/v0/scheme_eval_pb2.py",
         "sha256": "1aac30a0da4de67b0ed988e9de498ed45fbef8c1c50dbef76f02c656f83d487d"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/fluent/v0/scheme_pointer_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/fluent/v0/scheme_pointer_pb2.py",
         "sha256": "bdaa26d3153218369c0b948710b00c3967a9ee50e616bb61e7afeeee04ad1e64"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/fluent/v0/settings_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/fluent/v0/settings_pb2.py",
         "sha256": "755d6933bf830610ac325293e63182c0e0c842630bede6ad47f215670b4dcc40"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/fluent/v0/svar_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/fluent/v0/svar_pb2.py",
         "sha256": "6ed804a19b49d5a9aefe3e49e86fb223d309106647964caecadef7f105d4919e"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/fluent/v0/transcript_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/fluent/v0/transcript_pb2.py",
         "sha256": "5ea2fccd89580300b08aeadb8c2a5b6fe298dd05358f74efb74d096c2988f762"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/fluent/v0/variant_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/fluent/v0/variant_pb2.py",
         "sha256": "20225cfee62cf1797143c677d4d9a20c24b887c8dfb4bf6b9b474a3a85d1d1d9"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/fluent/v1/application_runtime_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/fluent/v1/application_runtime_pb2.py",
         "sha256": "2d52a1f8685a61fe13d4e8a1773441ec0d488860d8b1716adc0b35ff29c2c14d"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/fluent/v1/connection_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/fluent/v1/connection_pb2.py",
         "sha256": "ea021d67d20cf38ba1adf1f383ad73b1d527d7a20552ca03a2a6fb9658c114b2"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/fluent/v1/events_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/fluent/v1/events_pb2.py",
         "sha256": "152901e7d4305989b998c78096b98bf88687aff9921f1ede352b940ae21f1d8b"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/fluent/v1/field_data_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/fluent/v1/field_data_pb2.py",
         "sha256": "049a523d267e08ef7a95029e6cb55030645c2d2dc5506bfe51ebe381c420d56a"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/fluent/v1/health_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/fluent/v1/health_pb2.py",
         "sha256": "305c0ef22fe1a81cd9f23aed1586b27b0f2b9aed1e3ec992d8f3b99ddef1a75f"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/fluent/v1/monitor_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/fluent/v1/monitor_pb2.py",
         "sha256": "b5167ee781dee08aaa6327d08cfa776f559cbf3a5da883e6723924b71aa5519b"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/fluent/v1/object_model_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/fluent/v1/object_model_pb2.py",
         "sha256": "1f4ea1e0dba011420c325953dba9f83e9883799085cb2662caa5b768970a93e4"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/fluent/v1/primitives_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/fluent/v1/primitives_pb2.py",
         "sha256": "b2e664eef7f90bd2c536a8f0f0e560ca94b570740e90121730d6c8375deae189"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/fluent/v1/reduction_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/fluent/v1/reduction_pb2.py",
         "sha256": "90154232ecf9eeaa2f2d077be5ffa0d1a2d47c89ac75317e4103a8d88b9d5029"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/fluent/v1/scheme_interpreter_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/fluent/v1/scheme_interpreter_pb2.py",
         "sha256": "4d225c4c29342cb3ef41d8eee0676a51a651013f8cc7816716bf2067b53cb49c"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/fluent/v1/scheme_pointer_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/fluent/v1/scheme_pointer_pb2.py",
         "sha256": "71a4c501d46b9a74116bb891efb4a5e6c2edf88b27496fb7bf87296d6375308f"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/fluent/v1/settings_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/fluent/v1/settings_pb2.py",
         "sha256": "eba9d33b0ba11edb02cd1306dc1be52d7bdbee0daf776ffc8189a07a1a8da620"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/fluent/v1/solution_variable_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/fluent/v1/solution_variable_pb2.py",
         "sha256": "207497a1bdb4c05dd52fa8994e726ee39810bc43d92d645cb979b812a8330699"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/fluent/v1/text_interface_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/fluent/v1/text_interface_pb2.py",
         "sha256": "2cfba6c3e197ada51ebecc2d5b40d0a00d08c9479fad98d3cf381da1fa84ff91"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/fluent/v1/transcript_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/fluent/v1/transcript_pb2.py",
         "sha256": "b49434a33a79fb17a2a169ae5aeb7c9645c998be8db1a38e95663625dcc08d8f"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/fluent/v1/variant_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/fluent/v1/variant_pb2.py",
         "sha256": "cb33947fa6024cd6c6204cf4b8689314fe59c619b52697f8ae0446391036db34"
       }
     ]

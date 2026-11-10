@@ -4,12 +4,31 @@ import os
 from typing import Callable, Any, Sequence
 from fastmcp import FastMCP
 
-INSTRUCTIONS = """You are controlling ANSYS Unified MCP.
+INSTRUCTIONS = """You control the ANSYS Unified MCP server.
+Follow these rules for all operations:
 
-This server provides tools across multiple physics domains (Mechanical, Fluent, SpaceClaim, optiSLang, etc.).
-Prefer using `auto` transport for tools that support it (it will try fast socket first, then fallback to file queues).
-For live interactions, ensure the corresponding app or bridge is running before issuing commands.
-Use Sentinel tools to monitor long-running background simulations.
+1. Health Check Rule:
+Call check_ansys_installation or ans_session_diagnose before you run simulation commands.
+Make sure the solver executable is available.
+
+2. Multiple Version and Instance Rule:
+Scan active instances before you connect.
+If multiple ANSYS versions or instances exist, show the list to the user.
+Ask the user to select the target version or instance.
+Do not guess the target version.
+Use ans_set_active_version to change the active version when requested.
+
+3. Script Language Rule:
+Write all internal comments in ASCII English for scripts sent to Mechanical, SpaceClaim, or Workbench.
+Do not use non-ASCII characters in solver scripts.
+
+4. Dual-Track Indicator Rule:
+This server uses dual-track execution for unsupported or unlicensed solvers.
+When execution_mode is benchmark_fallback, state clearly that results come from the internal benchmark engine.
+Do not present benchmark approximations as official solver results.
+
+5. Scope Convergence Rule:
+Call ans_session_set_workspace to limit the visible tools for your task.
 """
 
 mcp = FastMCP("ansys-unified-mcp", instructions=INSTRUCTIONS)

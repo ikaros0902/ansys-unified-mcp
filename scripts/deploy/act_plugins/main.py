@@ -38,6 +38,9 @@ def _resolve_queue_root():
     env_dir = os.environ.get("ANSYS_WORKBENCH_QUEUE_DIR")
     if env_dir:
         return env_dir
+    local_app_data = os.environ.get("LOCALAPPDATA")
+    if local_app_data:
+        return os.path.join(local_app_data, "ansys-unified-mcp", "queue")
     return os.path.join(_PLUGIN_DIR, ".runtime", "queue")
 
 _QUEUE_ROOT = _resolve_queue_root()

@@ -7,7 +7,7 @@ name = "ansys-unified-mcp"
 version = "3.0.0"
 description = "Unified ANSYS MCP Server (Workbench, Mechanical, Fluent, SpaceClaim, OptiSLang)"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.10"
 dependencies = [
     # 釘選 fastmcp: per-session 工具可見性與 mount 行為僅對 3.4.x 系列驗證保證，
     # 跨 minor 版本 (3.5+) 可能變更 API 契約，故鎖 minor。
@@ -19,6 +19,13 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+standard = [
+    "ansys-mechanical-core",
+    "ansys-fluent-core",
+    "ansys-geometry-core",
+    "ansys-optislang-core",
+    "ansys-dpf-core>=0.10.0",
+]
 documentation = ["beautifulsoup4>=4.13,<5", "scrapling>=0.5.1"]
 mechanical = ["ansys-mechanical-core"]
 fluent = ["ansys-fluent-core"]

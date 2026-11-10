@@ -8,43 +8,43 @@
   "sources": {
     "sdk_files": [
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/dbu/v0/admin_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/dbu/v0/admin_pb2.py",
         "sha256": "82ffa812b8a50d4c4d01973bc8e74150a4fecc9a6a338acf3658e55499dc96fc"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/dbu/v0/dbuapi_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/dbu/v0/dbuapi_pb2.py",
         "sha256": "1d7a0b208dd571cdaafacfe68bfd5e4ca4a22dd45554c1f4f28943897e9a18b6"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/dbu/v0/dbuapplication_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/dbu/v0/dbuapplication_pb2.py",
         "sha256": "ac5d36ef4bf2e9217c578d35e7b17379dfbdf64f0a86252017c25c719f28eec9"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/dbu/v0/dbumodels_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/dbu/v0/dbumodels_pb2.py",
         "sha256": "ea70ffd3a088f1a3c2d2e9cb0ed4e454df59285e3967a8243b57aa1b9237c04c"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/dbu/v0/dbuwebmodels_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/dbu/v0/dbuwebmodels_pb2.py",
         "sha256": "bde726a22edd1208465e7a98a2517ad9d49b6e766be387835eb18e89c26825ed"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/dbu/v0/designs_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/dbu/v0/designs_pb2.py",
         "sha256": "2ba232304329a2c0cc2b4b4942cd3d971fb17e3c7aee8a76aa4ef2cbfd0b027f"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/dbu/v0/drivingdimensions_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/dbu/v0/drivingdimensions_pb2.py",
         "sha256": "c01a48e13a72136a8ce696d6405b4d728f290ef4b7f694c26e562df034fcd931"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/dbu/v0/sessionmanager_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/dbu/v0/sessionmanager_pb2.py",
         "sha256": "0eb4fd2eeb8bd5230a1b13741427f3407a84608aa8b064695ba968ae40ca56d5"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/dbu/v0/streaming_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/dbu/v0/streaming_pb2.py",
         "sha256": "1d05edfd31a4e8496039e121c2f4c877d2dd2604ab07d49d3dbfc4e97dcfe25c"
       },
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/dbu/v0/windows_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/dbu/v0/windows_pb2.py",
         "sha256": "0f632576615c5d0feb1bc3d2fc8aed8534fc6f83b6d3381f08c5c736e68d1b59"
       }
     ]

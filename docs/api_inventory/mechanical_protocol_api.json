@@ -8,7 +8,7 @@
   "sources": {
     "sdk_files": [
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/mechanical/v0/mechanical_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/mechanical/v0/mechanical_pb2.py",
         "sha256": "26df56ca4f9ef66d22ba2afc79fe1351d27216f2909fcc5619a1f8dd9ad1132a"
       }
     ]

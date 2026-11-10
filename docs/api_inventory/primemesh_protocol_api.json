@@ -8,7 +8,7 @@
   "sources": {
     "sdk_files": [
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/api/meshing/prime/v1/prime_pb2.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/meshing/prime/v1/prime_pb2.py",
         "sha256": "edb0b045b966ed4a87d9791671dc54d7cf2401e3d1d8347252dec0084fe01a46"
       }
     ]

@@ -8,7 +8,7 @@
   "sources": {
     "sdk_files": [
       {
-        "path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
         "sha256": "c747531861629b2dd8ef70b698108c897b58cc779d90de852a72ee9341cbee04"
       }
     ]
@@ -25,148 +25,148 @@
               "name": "set_log_level",
               "signature": "(loglevel)",
               "doc": "Set the log level.\n\nParameters\n----------\nloglevel : str, int\n    Level of logging. Options are ``\"DEBUG\"``, ``\"INFO\"``, ``\"WARNING\"``\n    and ``\"ERROR\"``.\n\nExamples\n--------\nSet the log level to the ``\"DEBUG\"`` level.\n\n# >>> mechanical.set_log_level('DEBUG')\n#\n# Set the log level to info\n#\n# >>> mechanical.set_log_level('INFO')\n#\n# Set the log level to warning\n#\n# >>> mechanical.set_log_level('WARNING')\n#\n# Set the log level to error\n#\n# >>> mechanical.set_log_level('ERROR')",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
             },
             {
               "name": "get_product_info",
               "signature": "(self)",
               "doc": "Get product information by running a script on the Mechanical gRPC server.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
             },
             {
               "name": "launch",
               "signature": "(self, cleanup_on_exit=True)",
               "doc": "Launch Mechanical in batch or UI mode.\n\nParameters\n----------\ncleanup_on_exit : bool, optional\n    Whether to exit Mechanical when Python exits. The default is ``True``.\n    When ``False``, Mechanical is not exited when the garbage for this\n    Mechanical instance is collected.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
             },
             {
               "name": "wait_till_mechanical_is_ready",
               "signature": "(self, wait_time=-1)",
               "doc": "Wait until Mechanical is ready.\n\nParameters\n----------\nwait_time : float, optional\n    Maximum allowable time in seconds for connecting to the Mechanical gRPC server.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
             },
             {
               "name": "convert_to_server_log_level",
               "signature": "(log_level)",
               "doc": "Convert the log level to the server log level.\n\nParameters\n----------\nlog_level : str\n    Level of logging. Options are ``\"DEBUG\"``, ``\"INFO\"``, ``\"WARNING\"``,\n    ``\"ERROR\"``, and ``\"CRITICAL\"``.\n\nReturns\n-------\n    Converted log level for the server.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
             },
             {
               "name": "run_python_script",
               "signature": "(self, script_block: str, enable_logging=False, log_level='WARNING', progress_interval=2000, python_api_version=-1)",
               "doc": "Run a Python script block inside Mechanical.\n\nIt returns the string value of the last executed statement. If the value cannot be\nreturned as a string, it will return an empty string.\n\nParameters\n----------\nscript_block : str\n    Script block (one or more lines) to run.\nenable_logging: bool, optional\n    Whether to enable logging. The default is ``False``.\nlog_level: str\n    Level of logging. The default is ``\"WARNING\"``. Options are ``\"DEBUG\"``,\n    ``\"INFO\"``, ``\"WARNING\"``, and ``\"ERROR\"``.\nprogress_interval: int, optional\n    Frequency in milliseconds for getting log messages from the server.\n    The default is ``2000``.\n\nReturns\n-------\nstr\n    Script result.\n\nExamples\n--------\nReturn a value from a simple calculation.\n\n>>> mechanical.run_python_script(\"2+3\")\n'5'\n\nReturn a string value from Project object.\n\n>>> mechanical.run_python_script(\"ExtAPI.DataModel.Project.ProductVersion\")\n'2025 R2'\n\nReturn an empty string, when you try to return the Project object.\n\n>>> mechanical.run_python_script(\"ExtAPI.DataModel.Project\")\n''\n\nReturn an empty string for assignments.\n\n>>> mechanical.run_python_script(\"version = ExtAPI.DataModel.Project.ProductVersion\")\n''\n\nReturn value from the last executed statement from a variable.\n\n>>> script='''\n    addition = 2 + 3\n    multiplication = 3 * 4\n    multiplication\n    '''\n>>> mechanical.run_python_script(script)\n'12'\n\nReturn value from last executed statement from a function call.\n\n>>> script='''\n    import math\n    math.pow(2,3)\n    '''\n>>> mechanical.run_python_script(script)\n'8'\n\nHandle an error scenario.\n\n>>> script = \"hello_world()\"\n>>> import grpc\n>>> try:\n        mechanical.run_python_script(script)\n    except grpc.RpcError as error:\n        print(error.details())\nname 'hello_world' is not defined",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
             },
             {
               "name": "run_python_script_from_file",
               "signature": "(self, file_path, enable_logging=False, log_level='WARNING', progress_interval=2000)",
               "doc": "Run the contents a python file inside Mechanical.\n\nIt returns the string value of the last executed statement. If the value cannot be\nreturned as a string, it will return an empty string.\n\nParameters\n----------\nfile_path :\n    Path for the Python file.\nenable_logging: bool, optional\n    Whether to enable logging. The default is ``False``.\nlog_level: str\n    Level of logging. The default is ``\"WARNING\"``. Options are ``\"DEBUG\"``,\n    ``\"INFO\"``, ``\"WARNING\"``, and ``\"ERROR\"``.\nprogress_interval: int, optional\n    Frequency in milliseconds for getting log messages from the server.\n    The default is ``2000``.\n\nReturns\n-------\nstr\n    Script result.\n\nExamples\n--------\nReturn a value from a simple calculation.\n\nContents of **simple.py** file\n\n2+3\n\n>>> mechanical.run_python_script_from_file(\"simple.py\")\n'5'\n\nReturn a value from a simple function call.\n\nContents of  **test.py** file\n\nimport math\n\nmath.pow(2,3)\n\n>>> mechanical.run_python_script_from_file(\"test.py\")\n'8'",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
             },
             {
               "name": "exit",
               "signature": "(self, force=False)",
               "doc": "Exit Mechanical.\n\nParameters\n----------\nforce : bool, optional\n    Whether to force Mechanical to exit. The default is ``False``, in which case\n    only Mechanical in UI mode asks for confirmation. This parameter overrides\n    any environment variables that may inhibit exiting Mechanical.\n\nExamples\n--------\nExit Mechanical.\n\n>>> mechanical.Exit(force=True)",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
             },
             {
               "name": "upload",
               "signature": "(self, file_name, file_location_destination=None, chunk_size=DEFAULT_FILE_CHUNK_SIZE, progress_bar=True)",
               "doc": "Upload a file to the Mechanical instance.\n\nParameters\n----------\nfile_name : str\n    Local file to upload. Only the file name is needed if the file\n    is relative to the current working directory. Otherwise, the full path\n    is needed.\nfile_location_destination : str, optional\n    File location on the Mechanical server to upload the file to. The default is\n    ``None``, in which case the project directory is used.\nchunk_size : int, optional\n    Chunk size in bytes. The default is ``1048576``.\nprogress_bar : bool, optional\n    Whether to show a progress bar using ``tqdm``. The default is ``True``.\n    A progress bar is helpful for viewing upload progress.\n\nReturns\n-------\nstr\n    Base name of the uploaded file.\n\nExamples\n--------\nUpload the ``hsec.x_t`` file  with the progress bar not shown.\n\n>>> mechanical.upload(\"hsec.x_t\", progress_bar=False)",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
             },
             {
               "name": "get_file_chunks",
               "signature": "(self, file_location, file_name, chunk_size, progress_bar)",
               "doc": "Construct the file upload request for the server.\n\nParameters\n----------\nfile_location_destination : str, optional\n    Directory where the file to upload to the server is located.\nfile_name : str\n    Name of the file to upload.\nchunk_size : int\n    Chunk size in bytes.\nprogress_bar : bool\n    Whether to show a progress bar using ``tqdm``.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
             },
             {
               "name": "list_files",
               "signature": "(self)",
               "doc": "List the files in the working directory of Mechanical.\n\nReturns\n-------\nlist[str]\n    List of file paths in the working directory of Mechanical.\n\nExamples\n--------\nList the files in the working directory.\n\n>>> files = mechanical.list_files()\n>>> for file in files:\n...     print(file)",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
             },
             {
               "name": "download",
               "signature": "(self, files, target_dir=None, chunk_size=DEFAULT_CHUNK_SIZE, progress_bar=None, recursive=False)",
               "doc": "Download files from the working directory of the Mechanical instance.\n\n It downloads them from the working directory to the target directory. It returns the list\n of local file paths for the downloaded files.\n\nParameters\n----------\nfiles : str, list[str], tuple(str)\n    One or more files on the Mechanical server to download. The files must be\n    in the same directory as the Mechanical instance. You can use the\n    :func:`Mechanical.list_files <ansys.mechanical.core.mechanical.list_files>`\n    function to list current files. Alternatively, you can specify *glob expressions* to\n    match file names. For example, you could use ``file*`` to match every file whose\n    name starts with ``file``.\ntarget_dir: str\n    Default directory to copy the downloaded files to. The default is ``None`` and\n    current working directory will be used as target directory.\nchunk_size : int, optional\n    Chunk size in bytes. The default is ``262144``. The value must be less than 4 MB.\nprogress_bar : bool, optional\n    Whether to show a progress bar using  ``tqdm``. The default is ``None``, in\n    which case a progress bar is shown. A progress bar is helpful for viewing download\n    progress.\nrecursive : bool, optional\n    Whether to use recursion when using a glob pattern search. The default is ``False``.\n\nReturns\n-------\nList[str]\n    List of local file paths.\n\nNotes\n-----\nThere are some considerations to keep in mind when using the ``download()`` method:\n\n* The glob pattern search does not search recursively in remote instances.\n* In a remote instance, it is not possible to list or download files in a\n  location other than the Mechanical working directory.\n* If you are connected to a local instance and provide a file path, downloading files\n  from a different folder is allowed but is not recommended.\n\nExamples\n--------\nDownload a single file.\n\n>>> local_file_path_list = mechanical.download(\"file.out\")\n\nDownload all files starting with ``file``.\n\n>>> local_file_path_list = mechanical.download(\"file*\")\n\nDownload every file in the Mechanical working directory.\n\n>>> local_file_path_list = mechanical.download(\"*.*\")\n\nAlternatively, the recommended method is to use the\n:func:`download_project() <ansys.mechanical.core.mechanical.Mechanical.download_project>`\nmethod to download all files.\n\n>>> local_file_path_list = mechanical.download_project()",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
             },
             {
               "name": "save_chunks_to_file",
               "signature": "(self, responses, filename, progress_bar=False, target_name='')",
               "doc": "Save chunks to a local file.\n\nParameters\n----------\nresponses :\nfilename : str\n    Name of the local file to save chunks to.\nprogress_bar : bool, optional\n    Whether to show a progress bar using  ``tqdm``. The default is ``False``.\ntarget_name : str, optional\n    Name of the target file on the server. The default is ``\"\"``. The file\n    must be in the same directory as the Mechanical instance. You can use the\n    ``mechanical.list_files()`` function to list current files.\n\nReturns\n-------\nfile_size : int\n    File size saved in bytes.  If ``0`` is returned, no file was written.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
             },
             {
               "name": "download_project",
               "signature": "(self, extensions=None, target_dir=None, progress_bar=False)",
               "doc": "Download all project files in the working directory of the Mechanical instance.\n\nIt downloads them from the working directory to the target directory. It returns the list\nof local file paths for the downloaded files.\n\nParameters\n----------\nextensions : list[str], tuple[str], optional\n    List of extensions for filtering files before downloading them. The\n    default is ``None``.\ntarget_dir : str, optional\n    Path for downloading the files to. The default is ``None``.\nprogress_bar : bool, optional\n    Whether to show a progress bar using ``tqdm``. The default is ``False``.\n    A progress bar is helpful for viewing download progress.\n\nReturns\n-------\nList[str]\n    List of local file paths.\n\nExamples\n--------\nDownload all the files in the project.\n\n>>> local_file_path_list = mechanical.download_project()",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
             },
             {
               "name": "clear",
               "signature": "(self)",
               "doc": "Clear the database.\n\nExamples\n--------\nClear the database.\n\n>>> mechanical.clear()",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
             },
             {
               "name": "log_message",
               "signature": "(self, log_level, message)",
               "doc": "Log the message using the given log level.\n\nParameters\n----------\nlog_level: str\n    Level of logging. Options are ``\"DEBUG\"``, ``\"INFO\"``, ``\"WARNING\"``,\n    and ``\"ERROR\"``.\nmessage : str\n    Message to log.\n\nExamples\n--------\nLog a debug message.\n\n>>> mechanical.log_message(\"DEBUG\", \"debug message\")\n\nLog an info message.\n\n>>> mechanical.log_message(\"INFO\", \"info message\")",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
             },
             {
               "name": "log_debug",
               "signature": "(self, message)",
               "doc": "Log the debug message.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
             },
             {
               "name": "log_info",
               "signature": "(self, message)",
               "doc": "Log the info message.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
             },
             {
               "name": "log_warning",
               "signature": "(self, message)",
               "doc": "Log the warning message.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
             },
             {
               "name": "log_error",
               "signature": "(self, message)",
               "doc": "Log the error message.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
             },
             {
               "name": "verify_valid_connection",
               "signature": "(self)",
               "doc": "Verify whether the connection to Mechanical is valid.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
             }
           ],
           "properties": [
@@ -174,64 +174,64 @@
               "name": "log",
               "type": "",
               "doc": "Log associated with the current Mechanical instance.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
             },
             {
               "name": "backend",
               "type": "str",
               "doc": "Return the backend type.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
             },
             {
               "name": "version",
               "type": "str",
               "doc": "Get the Mechanical version based on the instance.\n\nExamples\n--------\nGet the version of the connected Mechanical instance.\n\n>>> mechanical.version\n'261'",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
             },
             {
               "name": "name",
               "type": "",
               "doc": "Name (unique identifier) of the Mechanical instance.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
             },
             {
               "name": "busy",
               "type": "",
               "doc": "Return True when the Mechanical gRPC server is executing a command.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
             },
             {
               "name": "locked",
               "type": "",
               "doc": "Instance is in use within a pool.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
             },
             {
               "name": "is_alive",
               "type": "bool",
               "doc": "Whether there is an active connection to the Mechanical gRPC server.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
             },
             {
               "name": "project_directory",
               "type": "",
               "doc": "Get the project directory for the currently connected Mechanical instance.\n\nExamples\n--------\nGet the project directory of the connected Mechanical instance.\n\n>>> mechanical.project_directory\n'/tmp/ANSYS.username.1/AnsysMech3F97/Project_Mech_Files/'",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
             },
             {
               "name": "exited",
               "type": "",
               "doc": "Whether Mechanical already exited.",
-              "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
-              "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
             }
           ]
         }
@@ -241,15 +241,15 @@
           "name": "launch_mechanical",
           "signature": "(allow_input=True, exec_file=None, batch=True, loglevel='ERROR', log_file=False, log_mechanical=None, additional_switches=None, additional_envs=None, start_timeout=120, port=None, ip=None, host=None, start_instance=None, verbose_mechanical=False, clear_on_connect=False, cleanup_on_exit=True, version=None, keep_connection_alive=True, backend='mechanical', transport_mode=None, certs_dir=None, grpc_options=None, start_license=None, read_only=False) -> Mechanical",
           "doc": "Start Mechanical locally.\n\nParameters\n----------\nallow_input: bool, optional\n    Whether to allow user input when discovering the path to the Mechanical\n    executable file.\nexec_file : str, optional\n    Path for the Mechanical executable file. The default is ``None``, in which\n    case the cached location is used. If PyPIM is configured\n    and this parameter is set to ``None``, PyPIM launches Mechanical\n    using its ``version`` parameter.\nbatch : bool, optional\n    Whether to launch Mechanical in batch mode. The default is ``True``.\n    When ``False``, Mechanical launches in UI mode.\nloglevel : str, optional\n    Level of messages to print to the console.\n    Options are:\n\n    - ``\"WARNING\"``: Prints only Ansys warning messages.\n    - ``\"ERROR\"``: Prints only Ansys error messages.\n    - ``\"INFO\"``: Prints all Ansys messages.\n\n    The default is ``WARNING``.\nlog_file : bool, optional\n    Whether to copy the messages to a file named ``logs.log``, which is\n    located where the Python script is executed. The default is ``False``.\nlog_mechanical : str, optional\n    Path to the output file on the local disk to write every script\n    command to. The default is ``None``. However, you might set\n    ``\"log_mechanical='pymechanical_log.txt'\"`` to write all commands that are\n    sent to Mechanical via PyMechanical to this file. You can then use these\n    commands to run a script within Mechanical without PyMechanical.\nadditional_switches : list, optional\n    Additional switches for Mechanical. The default is ``None``.\nadditional_envs : dictionary, optional\n    Dictionary of additional environment variables to pass. The default\n    is ``None``.\nstart_timeout : float, optional\n    Maximum allowable time in seconds to connect to the Mechanical server.\n    The default is ``120``.\nport : int, optional\n    Port to launch the Mechanical gRPC server on. The default is ``None``,\n    in which case ``10000`` is used. The final port is the first\n    port available after (or including) this port. You can override the\n    default behavior of this parameter with the\n    ``PYMECHANICAL_PORT=<VALID PORT>`` environment variable.\nip : str, optional\n    IP address to use only when ``start_instance`` is ``False``. The\n    default is ``None``, in which case ``\"127.0.0.1\"`` is used. If you\n    provide an IP address, ``start_instance`` is set to ``False``.\n    A host name can be provided as an alternative to an IP address.\nhost : str, optional\n    Alias for ``ip`` parameter. Host address for the Mechanical gRPC server.\n    If both ``ip`` and ``host`` are provided, ``host`` takes precedence.\nstart_instance : bool, optional\n    Whether to launch and connect to a new Mechanical instance. The default\n    is ``None``, in which case an attempt is made to connect to an existing\n    Mechanical instance at the given ``ip`` and ``port`` parameters, which have\n    defaults of ``\"127.0.0.1\"`` and ``10000`` respectively. When ``True``,\n    a local instance of Mechanical is launched. You can override the default\n    behavior of this parameter with the ``PYMECHANICAL_START_INSTANCE=FALSE``\n    environment variable.\nverbose_mechanical : bool, optional\n    Whether to enable printing of all output when launching and running\n    a Mechanical instance. The default is ``False``. This parameter should be\n    set to ``True`` for debugging only as output can be tracked within\n    PyMechanical.\nclear_on_connect : bool, optional\n    When ``start_instance`` is ``False``, whether to clear the environment\n    when connecting to Mechanical. The default is ``False``. When ``True``,\n\n    a fresh environment is provided when you connect to Mechanical.\ncleanup_on_exit : bool, optional\n    Whether to exit Mechanical when Python exits. The default is ``True``.\n    When ``False``, Mechanical is not exited when the garbage for this Mechanical\n    instance is collected.\nversion : str, optional\n    Mechanical version to run in the three-digit format. For example, ``\"261\"``\n    for 2026 R1. The default is ``None``, in which case the server runs the\n    latest installed version. If PyPIM is configured and ``exec_file=None``,\n    PyPIM launches Mechanical using its ``version`` parameter.\nkeep_connection_alive : bool, optional\n    Whether to keep the gRPC connection alive by running a background thread\n    and making dummy calls for remote connections. The default is ``True``.\nbackend : str, optional\n    Type of RPC to use. The default is ``\"mechanical\"`` which uses grpc.\n    The other option is ``\"python\"`` which uses RPyC.\nstart_license : str, optional\n    License type to use when starting Mechanical. The default is ``None``.\n    When provided, the ``-p <license>`` argument is passed to Mechanical.\n    Common values include ``\"mech_1\"``, ``\"mech_2\"`` etc.\n    This parameter is only used when ``start_instance`` is ``True``.\nread_only : bool, optional\n    Whether to start Mechanical in read-only mode. The default is ``False``.\n\nReturns\n-------\nansys.mechanical.core.mechanical.Mechanical\n    Instance of Mechanical.\n\nNotes\n-----\nIf the environment is configured to use `PyPIM <https://pypim.docs.pyansys.com>`_\nand ``start_instance=True``, then starting the instance is delegated to PyPIM.\nIn this case, most of the preceding parameters are ignored because the server-side\nconfiguration is used.\n\nExamples\n--------\nLaunch Mechanical.\n\n>>> from ansys.mechanical.core import launch_mechanical\n>>> mech = launch_mechanical()\n\nLaunch Mechanical using a specified executable file.\n\n>>> exec_file_path = \"C:/Program Files/ANSYS Inc/v261/aisol/bin/winx64/AnsysWBU.exe\"\n>>> mech = launch_mechanical(exec_file=exec_file_path)\n\nConnect to an existing Mechanical instance at IP address ``192.168.1.30`` on port\n``50001``.\n\n>>> mech = launch_mechanical(start_instance=False, ip=\"192.168.1.30\", port=50001)\n\nLaunch Mechanical with a specific license type.\n\n>>> mech = launch_mechanical(start_license=\"mech_1\")",
-          "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
-          "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
+          "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
+          "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
         },
         {
           "name": "connect_to_mechanical",
           "signature": "(ip=None, port=None, loglevel='ERROR', log_file=False, log_mechanical=None, connect_timeout=120, clear_on_connect=False, cleanup_on_exit=False, keep_connection_alive=True, transport_mode=None, certs_dir=None, grpc_options=None) -> Mechanical",
           "doc": "Connect to an existing Mechanical server instance.\n\nParameters\n----------\nip : str, optional\n    IP address for connecting to an existing Mechanical instance. The\n    IP address defaults to ``\"127.0.0.1\"``.\nport : int, optional\n    Port to listen on for an existing Mechanical instance. The default is ``None``,\n    in which case ``10000`` is used. You can override the\n    default behavior of this parameter with the\n    ``PYMECHANICAL_PORT=<VALID PORT>`` environment variable.\nloglevel : str, optional\n    Level of messages to print to the console.\n    Options are:\n\n    - ``\"WARNING\"``: Prints only Ansys warning messages.\n    - ``\"ERROR\"``: Prints only Ansys error messages.\n    - ``\"INFO\"``: Prints all Ansys messages.\n\n    The default is ``WARNING``.\nlog_file : bool, optional\n    Whether to copy the messages to a file named ``logs.log``, which is\n    located where the Python script is executed. The default is ``False``.\nlog_mechanical : str, optional\n    Path to the output file on the local disk to write every script\n    command to. The default is ``None``. However, you might set\n    ``\"log_mechanical='pymechanical_log.txt'\"`` to write all commands that are\n    sent to Mechanical via PyMechanical to this file. You can then use these\n    commands to run a script within Mechanical without PyMechanical.\nconnect_timeout : float, optional\n    Maximum allowable time in seconds to connect to the Mechanical server.\n    The default is ``120``.\nclear_on_connect : bool, optional\n    Whether to clear the Mechanical instance when connecting. The default is ``False``.\n    When ``True``, a fresh environment is provided when you connect to Mechanical.\ncleanup_on_exit : bool, optional\n    Whether to exit Mechanical when Python exits. The default is ``False``.\n    When ``False``, Mechanical is not exited when the garbage for this Mechanical\n    instance is collected.\nkeep_connection_alive : bool, optional\n    Whether to keep the gRPC connection alive by running a background thread\n    and making dummy calls for remote connections. The default is ``True``.\ntransport_mode : string, optional\n    Use the transport mode to connect. The default is ``wnua`` on Windows\n    and ``mtls`` on Linux.\n    - ``insecure`` use the insecure mode.\n    - ``mtls`` use the mtls mode.\n    - ``wnua`` use the windows named security mode - only valid on windows.\ncerts_dir : string, optional\n    when the transport_mode is ``mtls``, the certificate directory must be specified\n    - The default is ``None``, which checks the environment variable,\n    - then defaults to ``certs``.\n    - this directory should have ``client.cert``, ``client.key`` and ``ca.cert`` files\ngrpc_options : list of tuple, optional\n    Additional gRPC channel options to pass when creating the channel.\n    For example: ``[(\"grpc.default_authority\", \"localhost\")]``.\n    See gRPC documentation for available options. The default is ``None``.\n\nReturns\n-------\nansys.mechanical.core.mechanical.Mechanical\n    Instance of Mechanical.\n\nExamples\n--------\nConnect to an existing Mechanical instance at IP address ``192.168.1.30`` on port\n``50001``..\n\n\n>>> from ansys.mechanical.core import connect_to_mechanical\n>>> pymech = connect_to_mechanical(ip=\"192.168.1.30\", port=50001)",
-          "sdk_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
-          "signature_source_path": "F:/Ming_python/ansys-unified-mcp/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
+          "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py",
+          "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/mechanical/core/mechanical.py"
         }
       ]
     }
