@@ -21,6 +21,14 @@ from ansys_unified_mcp.core.gatekeeper.rules.thermal_rules import (
     ZeroStressReferenceTemperatureRule,
 )
 from ansys_unified_mcp.core.gatekeeper.rules.unit_consistency import UnitConsistencyRule
+from ansys_unified_mcp.core.gatekeeper.rules.energy_conservation import (
+    EnergyConservationGate,
+    EnergyLeakageError,
+)
+from ansys_unified_mcp.core.gatekeeper.rules.unit_context_gate import (
+    UnitContextGate,
+    UnitPoisoningError,
+)
 from ansys_unified_mcp.core.gatekeeper.rules.vibration_rules import (
     ModalCutoffFrequencyRule,
     ModalEffectiveMassRatioRule,
@@ -56,6 +64,10 @@ __all__ = [
     "NonZeroSecantCTERule",
     "ZeroStressReferenceTemperatureRule",
     "UnitConsistencyRule",
+    "EnergyConservationGate",
+    "EnergyLeakageError",
+    "UnitContextGate",
+    "UnitPoisoningError",
     "validate_fcstd_archive",
     "parse_fcstd_metadata",
     "FailureClassEnum",

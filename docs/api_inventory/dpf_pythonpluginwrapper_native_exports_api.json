@@ -1,0 +1,41 @@
+{
+  "module": "NativeExports",
+  "version": "v251",
+  "interface": "DPF Python plugin wrapper; support status unverified",
+  "scope": "This snapshot lists PE export names from llvm-readobj. An export name does not prove API support. A signature appears only when the MSVC symbol name contains type data. The extractor does not read function bodies or run the DLL.",
+  "sources": {
+    "assembly": {
+      "path": "$env:AWP_ROOT251/dpf/bin/winx64/Ans.Dpf.PythonPluginWrapper.dll",
+      "sha256": "21c43820b22e97002a22868edcb103ff8f930035ad442cb4d539a56a317ac1c3",
+      "byte_length": 364032
+    },
+    "analysis": {
+      "tool": "llvm-readobj",
+      "version": "19.1.5",
+      "operation": "--coff-exports"
+    }
+  },
+  "modules": {
+    "NativeExports": {
+      "doc": "DPF Python plugin wrapper; support status unverified",
+      "classes": {},
+      "functions": [
+        {
+          "name": "FreePythonInterpreter",
+          "signature": "",
+          "doc": "PE export. Ordinal: 1. RVA: 0x18EF0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "LoadOperators",
+          "signature": "",
+          "doc": "PE export. Ordinal: 2. RVA: 0x18D10. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        }
+      ]
+    }
+  },
+  "statistics": {
+    "total_modules": 1,
+    "total_functions": 2,
+    "demangled_signatures": 0
+  }
+}

@@ -8,6 +8,7 @@ venv.bak/
 
 # Python 快取與編譯檔案
 __pycache__/
+.zvec-grep/
 *.py[cod]
 *$py.class
 *.so
@@ -33,20 +34,10 @@ __pycache__/
 # 執行日誌與暫存
 .runtime/
 .audit/
+dist/
 *.log
 *.txt
 !requirements.txt
-# 稽核日誌目錄（避免本機大量 audit log 納入版本控制），僅保留佔位檔。
-# 必須寫 logs/* 而非 logs/：git 無法對「已被排除的目錄」內的檔案做 !negation，
-# 寫成 logs/ 會讓 !logs/.gitkeep 失效（與既有 jobs/* 的寫法一致）。
-logs/*
-!logs/.gitkeep
-workbench_queue/*
-!workbench_queue/.gitkeep
-!workbench_queue/*/.gitkeep
-**/workbench_queue/*
-!**/workbench_queue/.gitkeep
-!**/workbench_queue/*/.gitkeep
 
 # Generated files & workbench journals
 results/
@@ -64,11 +55,14 @@ status.json
 # 用通配涵蓋 Documentation / Documentation_md / Documentation_clean 及任何改名或新增的變體，
 # 避免只列精確目錄名而漏網（語料位置可由 ANSYS_DOCS_ROOT 移出 repo）。
 Documentation*/
+docs/api_inventory/
 docs_index.sqlite
-# 瀏覽器未完成下載之暫存檔
+# 瀏覽器未完成下載之暫存檔與大型安裝媒體封存檔
 *.下載
 *.crdownload
 *.part
+*.iso
+*.7z
 
 # CodeGraph index & Serena tooling cache
 .codegraph/
@@ -84,7 +78,7 @@ artifacts/
 !.agents/teamwork/
 # Agent 行為設定規範（本機私有，不入公開版控）
 agents/steering/
-AGENTS.md
+!AGENTS.md
 .codex/
 src/**/tools/commands/
 src/**/tools/results/
@@ -101,3 +95,19 @@ src/**/tools/status.json
 
 # Package Lock
 # uv.lock 隨版本交付，固定同事與開發環境的依賴解析。
+
+# Skill-Creator 基準評測工作區與本地向量索引
+agents/skills-workspace/
+agents/skills/.zvec-grep/
+**/evals/runs/
+**/review.html
+**/benchmark.json
+
+# 跨 IDE 動態生成的技能連結目錄
+.agents/skills
+.cline/skills
+.kiro/skills
+
+# 大型未受版控文件與輸出
+ANSYS_Document/
+graphify-out/

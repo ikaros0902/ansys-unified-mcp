@@ -1,0 +1,24 @@
+[
+  {
+    "eval_id": "rocky_01",
+    "prompt": "Rocky DEM 相比傳統 DEM 軟體，在模擬非球形礦石顆粒流動時的核心優勢為何？",
+    "expected_keywords": [
+      "Polyhedral",
+      "Interlocking",
+      "Non-spherical",
+      "Multi-GPU",
+      "Wear"
+    ]
+  },
+  {
+    "eval_id": "rocky_02",
+    "prompt": "如何建立 Rocky DEM 與 Fluent 的雙向耦合以模擬流化床 (Fluidized Bed)？",
+    "expected_keywords": [
+      "Fluent",
+      "2-Way",
+      "CFD-DEM",
+      "Fluidized Bed",
+      "Drag"
+    ]
+  }
+]

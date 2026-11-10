@@ -1,0 +1,584 @@
+﻿{
+  "schema_version": 1,
+  "release_policy": "2025 R1 onward; only releases explicitly linked by the publisher. SDK versions are separate.",
+  "authority_pages": [
+    "https://storage.ansys.com/api-a/devresources.html",
+    "https://docs.pyansys.com/version/stable/projects.html"
+  ],
+  "products": [
+    {
+      "product": "acp",
+      "folder": "ACP",
+      "overview_url": "https://developer.synopsys.com/docs/acp.md",
+      "sdk_url": "https://acp.docs.pyansys.com/version/stable/",
+      "sdk_package": "ansys-acp-core"
+    },
+    {
+      "product": "act",
+      "folder": "ACT",
+      "overview_url": "https://developer.synopsys.com/docs/act.md"
+    },
+    {
+      "product": "adr",
+      "folder": "ADR",
+      "overview_url": "https://developer.synopsys.com/docs/adr.md",
+      "sdk_url": "https://dynamicreporting.docs.pyansys.com/version/stable/",
+      "sdk_package": "ansys-dynamicreporting-core"
+    },
+    {
+      "product": "ansys_id_portal",
+      "folder": "Ansys_ID_Portal",
+      "overview_url": "https://developer.synopsys.com/docs/ansys-id-portal.md"
+    },
+    {
+      "product": "ansys_id_sso",
+      "folder": "Ansys_ID_SSO",
+      "overview_url": "https://developer.synopsys.com/docs/ansys-id-sso.md"
+    },
+    {
+      "product": "ansysem",
+      "folder": "AnsysEM",
+      "overview_url": ""
+    },
+    {
+      "product": "avxcelerate",
+      "folder": "AVxcelerate",
+      "overview_url": "https://developer.synopsys.com/docs/avxcelerate.md"
+    },
+    {
+      "product": "cff",
+      "folder": "CFF",
+      "overview_url": "https://developer.synopsys.com/docs/cff.md"
+    },
+    {
+      "product": "discovery",
+      "folder": "Discovery",
+      "overview_url": "https://developer.synopsys.com/docs/discovery.md"
+    },
+    {
+      "product": "dpf",
+      "folder": "DPF",
+      "overview_url": "https://developer.synopsys.com/docs/dpf.md",
+      "sdk_url": "https://dpf.docs.pyansys.com/version/stable/",
+      "sdk_package": "ansys-dpf-core"
+    },
+    {
+      "product": "edupack",
+      "folder": "edupack",
+      "overview_url": ""
+    },
+    {
+      "product": "ensight",
+      "folder": "EnSight",
+      "overview_url": "https://developer.synopsys.com/docs/ensight.md",
+      "sdk_url": "https://ensight.docs.pyansys.com/version/stable/",
+      "sdk_package": "ansys-pyensight-core"
+    },
+    {
+      "product": "fluent",
+      "folder": "Fluent",
+      "overview_url": "https://developer.synopsys.com/docs/fluent.md",
+      "sdk_url": "https://fluent.docs.pyansys.com/version/stable/",
+      "sdk_package": "ansys-fluent-core"
+    },
+    {
+      "product": "granta_mi",
+      "folder": "Granta_MI",
+      "overview_url": "https://developer.synopsys.com/docs/granta-mi.md",
+      "sdk_url": "https://recordlists.grantami.docs.pyansys.com/version/stable/",
+      "sdk_package": "ansys-grantami-recordlists",
+      "sdk_authority_url": "https://grantami.docs.pyansys.com/version/stable/"
+    },
+    {
+      "product": "icem_cfd",
+      "folder": "ICEM_CFD",
+      "overview_url": ""
+    },
+    {
+      "product": "installation_and_licensing",
+      "folder": "Installation_and_Licensing",
+      "overview_url": ""
+    },
+    {
+      "product": "lumerical",
+      "folder": "Lumerical",
+      "overview_url": "https://developer.synopsys.com/docs/lumerical.md"
+    },
+    {
+      "product": "mechanical",
+      "folder": "Mechanical",
+      "overview_url": "https://developer.synopsys.com/docs/mechanical.md",
+      "sdk_url": "https://mechanical.docs.pyansys.com/version/stable/",
+      "sdk_package": "ansys-mechanical-core"
+    },
+    {
+      "product": "minerva",
+      "folder": "Minerva",
+      "overview_url": "https://developer.synopsys.com/docs/minerva.md"
+    },
+    {
+      "product": "modelcenter",
+      "folder": "ModelCenter",
+      "overview_url": "https://developer.synopsys.com/docs/modelcenter.md",
+      "sdk_url": "https://modelcenter.docs.pyansys.com/version/stable/",
+      "sdk_package": "ansys-modelcenter-workflow"
+    },
+    {
+      "product": "motion",
+      "folder": "Motion",
+      "overview_url": "https://developer.synopsys.com/docs/motion.md"
+    },
+    {
+      "product": "motorcad",
+      "folder": "MotorCAD",
+      "overview_url": "",
+      "sdk_url": "https://motorcad.docs.pyansys.com/version/stable/",
+      "sdk_package": "ansys-motorcad-core"
+    },
+    {
+      "product": "optislang",
+      "folder": "optiSLang",
+      "overview_url": "https://developer.synopsys.com/docs/optislang.md",
+      "sdk_url": "https://optislang.docs.pyansys.com/version/stable/",
+      "sdk_package": "ansys-optislang-core"
+    },
+    {
+      "product": "primemesh",
+      "folder": "PrimeMesh",
+      "overview_url": "https://developer.synopsys.com/docs/primemesh.md",
+      "sdk_url": "https://prime.docs.pyansys.com/version/stable/",
+      "sdk_package": "ansys-meshing-prime"
+    },
+    {
+      "product": "pyansys",
+      "folder": "PyAnsys",
+      "overview_url": "https://developer.synopsys.com/docs/pyansys.md"
+    },
+    {
+      "product": "reaction_chemkin",
+      "folder": "Reaction_Chemkin",
+      "overview_url": "",
+      "sdk_package": "ansys-chemkin-core"
+    },
+    {
+      "product": "rigid_body_dynamics",
+      "folder": "Rigid_Body_Dynamics",
+      "overview_url": "https://developer.synopsys.com/docs/rigid-body-dynamics.md"
+    },
+    {
+      "product": "rocky",
+      "folder": "Rocky",
+      "overview_url": "https://developer.synopsys.com/docs/rocky.md",
+      "sdk_url": "https://rocky.docs.pyansys.com/version/stable/",
+      "sdk_package": "ansys-rocky-core"
+    },
+    {
+      "product": "saf",
+      "folder": "SAF",
+      "overview_url": "https://developer.synopsys.com/docs/saf.md"
+    },
+    {
+      "product": "scade",
+      "folder": "SCADE",
+      "overview_url": "https://developer.synopsys.com/docs/scade.md"
+    },
+    {
+      "product": "scade_one",
+      "folder": "Scade_One",
+      "overview_url": "https://developer.synopsys.com/docs/scade-one.md",
+      "sdk_url": "https://scadeone.docs.pyansys.com/version/stable/",
+      "sdk_package": "ansys-scadeone-core"
+    },
+    {
+      "product": "sherlock",
+      "folder": "Sherlock",
+      "overview_url": "https://developer.synopsys.com/docs/sherlock.md",
+      "sdk_url": "https://sherlock.docs.pyansys.com/version/stable/",
+      "sdk_package": "ansys-sherlock-core"
+    },
+    {
+      "product": "simai",
+      "folder": "SimAI",
+      "overview_url": "https://developer.synopsys.com/docs/simai.md",
+      "sdk_url": "https://simai.docs.pyansys.com/version/stable/",
+      "sdk_package": "ansys-simai-core"
+    },
+    {
+      "product": "sound",
+      "folder": "Sound",
+      "overview_url": "https://developer.synopsys.com/docs/sound.md",
+      "sdk_url": "https://sound.docs.pyansys.com/version/stable/",
+      "sdk_package": "ansys-sound-core"
+    },
+    {
+      "product": "speos",
+      "folder": "Speos",
+      "overview_url": "https://developer.synopsys.com/docs/speos.md",
+      "sdk_url": "https://speos.docs.pyansys.com/version/stable/",
+      "sdk_package": "ansys-speos-core"
+    },
+    {
+      "product": "system_coupling",
+      "folder": "System_Coupling",
+      "overview_url": "https://developer.synopsys.com/docs/system-coupling.md",
+      "sdk_url": "https://systemcoupling.docs.pyansys.com/version/stable/",
+      "sdk_package": "ansys-systemcoupling-core"
+    },
+    {
+      "product": "thermal_desktop",
+      "folder": "Thermal_Desktop",
+      "overview_url": "https://developer.synopsys.com/docs/thermal-desktop.md"
+    },
+    {
+      "product": "twinai",
+      "folder": "TwinAI",
+      "overview_url": "",
+      "sdk_url": "https://twin.docs.pyansys.com/version/stable/",
+      "sdk_package": "pytwin"
+    },
+    {
+      "product": "zemax",
+      "folder": "Zemax",
+      "overview_url": "https://developer.synopsys.com/docs/zemax.md"
+    },
+    {
+      "product": "spaceclaim",
+      "folder": "SpaceClaim",
+      "overview_url": ""
+    },
+    {
+      "product": "geometry",
+      "folder": "Geometry",
+      "overview_url": "",
+      "sdk_url": "https://geometry.docs.pyansys.com/version/stable/",
+      "sdk_package": "ansys-geometry-core"
+    },
+    {
+      "product": "mapdl",
+      "folder": "MAPDL",
+      "overview_url": "",
+      "sdk_url": "https://mapdl.docs.pyansys.com/version/stable/",
+      "sdk_package": "ansys-mapdl-core"
+    },
+    {
+      "product": "cfx",
+      "folder": "CFX",
+      "overview_url": "",
+      "sdk_url": "https://cfx.docs.pyansys.com/version/stable/",
+      "sdk_package": "ansys-cfx-core",
+      "compatibility_note": "PyCFX supports CFX 2025 R2 SP3 and later; not v251."
+    },
+    {
+      "product": "lsdyna",
+      "folder": "LS-DYNA",
+      "overview_url": "",
+      "sdk_url": "https://dyna.docs.pyansys.com/version/stable/",
+      "sdk_package": "ansys-dyna-core"
+    },
+    {
+      "product": "ls_prepost",
+      "folder": "LS-PrePost",
+      "overview_url": ""
+    },
+    {
+      "product": "workbench",
+      "folder": "Workbench",
+      "overview_url": ""
+    },
+    {
+      "product": "hfss",
+      "folder": "HFSS",
+      "overview_url": ""
+    },
+    {
+      "product": "maxwell",
+      "folder": "Maxwell",
+      "overview_url": ""
+    },
+    {
+      "product": "icepak",
+      "folder": "Icepak",
+      "overview_url": ""
+    },
+    {
+      "product": "q3d",
+      "folder": "Q3D",
+      "overview_url": ""
+    },
+    {
+      "product": "siwave",
+      "folder": "SIwave",
+      "overview_url": ""
+    },
+    {
+      "product": "aqwa",
+      "folder": "Aqwa",
+      "overview_url": ""
+    },
+    {
+      "product": "polyflow",
+      "folder": "Polyflow",
+      "overview_url": ""
+    },
+    {
+      "product": "fensap_ice",
+      "folder": "FENSAP-ICE",
+      "overview_url": ""
+    },
+    {
+      "product": "turbogrid",
+      "folder": "TurboGrid",
+      "overview_url": "",
+      "sdk_url": "https://turbogrid.docs.pyansys.com/version/stable/",
+      "sdk_package": "ansys-turbogrid-core"
+    },
+    {
+      "product": "additive",
+      "folder": "Additive",
+      "overview_url": ""
+    },
+    {
+      "product": "aedt",
+      "folder": "AEDT",
+      "overview_url": "",
+      "sdk_url": "https://aedt.docs.pyansys.com/version/stable/",
+      "sdk_package": "ansys-aedt-core"
+    }
+  ],
+  "downloads": [
+    {
+      "product": "act",
+      "release": "v251",
+      "sdk_package": "",
+      "sdk_version": "unknown",
+      "category": "api_reference",
+      "url": "https://storage.ansys.com/api-a/v251/ACTReferenceHTML.zip",
+      "path": "ACT/v251/archives/ACTReferenceHTML.zip",
+      "authority_page": "https://storage.ansys.com/api-a/devresources.html"
+    },
+    {
+      "product": "act",
+      "release": "v251",
+      "sdk_package": "",
+      "sdk_version": "unknown",
+      "category": "tutorial",
+      "url": "https://storage.ansys.com/api-a/v251/ACTExtensionExamples.zip",
+      "path": "ACT/v251/archives/ACTExtensionExamples.zip",
+      "authority_page": "https://storage.ansys.com/api-a/devresources.html"
+    },
+    {
+      "product": "act",
+      "release": "v252",
+      "sdk_package": "",
+      "sdk_version": "unknown",
+      "category": "api_reference",
+      "url": "https://storage.ansys.com/api-a/v252/ACTReferenceHTML.zip",
+      "path": "ACT/v252/archives/ACTReferenceHTML.zip",
+      "authority_page": "https://storage.ansys.com/api-a/devresources.html"
+    },
+    {
+      "product": "act",
+      "release": "v252",
+      "sdk_package": "",
+      "sdk_version": "unknown",
+      "category": "tutorial",
+      "url": "https://storage.ansys.com/api-a/v252/ACTExtensionExamples.zip",
+      "path": "ACT/v252/archives/ACTExtensionExamples.zip",
+      "authority_page": "https://storage.ansys.com/api-a/devresources.html"
+    },
+    {
+      "product": "act",
+      "release": "v261",
+      "sdk_package": "",
+      "sdk_version": "unknown",
+      "category": "api_reference",
+      "url": "https://storage.ansys.com/api-a/v261/ACTReferenceHTML.zip",
+      "path": "ACT/v261/archives/ACTReferenceHTML.zip",
+      "authority_page": "https://storage.ansys.com/api-a/devresources.html"
+    },
+    {
+      "product": "act",
+      "release": "v261",
+      "sdk_package": "",
+      "sdk_version": "unknown",
+      "category": "tutorial",
+      "url": "https://storage.ansys.com/api-a/v261/ACTExtensionExamples.zip",
+      "path": "ACT/v261/archives/ACTExtensionExamples.zip",
+      "authority_page": "https://storage.ansys.com/api-a/devresources.html"
+    },
+    {
+      "product": "cfx",
+      "release": "v251",
+      "sdk_package": "",
+      "sdk_version": "unknown",
+      "category": "guide",
+      "url": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v251/en/pdf/Ansys_CFX-Solver_Theory_Guide.pdf",
+      "path": "CFX/v251/manuals/Ansys_CFX-Solver_Theory_Guide.pdf",
+      "authority_page": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v251/en/pdf/Ansys_CFX-Solver_Theory_Guide.pdf"
+    },
+    {
+      "product": "mapdl",
+      "release": "v251",
+      "sdk_package": "",
+      "sdk_version": "unknown",
+      "category": "guide",
+      "url": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v251/en/pdf/ANSYS_Mechanical_APDL_Operations_Guide.pdf",
+      "path": "MAPDL/v251/manuals/ANSYS_Mechanical_APDL_Operations_Guide.pdf",
+      "authority_page": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v251/en/pdf/ANSYS_Mechanical_APDL_Operations_Guide.pdf"
+    },
+    {
+      "product": "spaceclaim",
+      "release": "v251",
+      "sdk_package": "",
+      "sdk_version": "unknown",
+      "category": "manual",
+      "url": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v251/en/pdf/SpaceClaim_Documentation.pdf",
+      "path": "SpaceClaim/v251/manuals/SpaceClaim_Documentation.pdf",
+      "authority_page": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v251/en/pdf/SpaceClaim_Documentation.pdf"
+    },
+    {
+      "product": "spaceclaim",
+      "release": "v261",
+      "sdk_package": "",
+      "sdk_version": "unknown",
+      "category": "manual",
+      "url": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v261/en/pdf/SpaceClaim_Documentation.pdf",
+      "path": "SpaceClaim/v261/manuals/SpaceClaim_Documentation.pdf",
+      "authority_page": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v261/en/pdf/SpaceClaim_Documentation.pdf"
+    },
+    {
+      "product": "cfx",
+      "release": "v251",
+      "sdk_package": "",
+      "sdk_version": "unknown",
+      "category": "guide",
+      "url": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v251/en/pdf/Ansys_CFX-Solver_Modeling_Guide.pdf",
+      "path": "CFX/v251/manuals/Ansys_CFX-Solver_Modeling_Guide.pdf",
+      "authority_page": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v251/en/pdf/Ansys_CFX-Solver_Modeling_Guide.pdf"
+    },
+    {
+      "product": "cfx",
+      "release": "v261",
+      "sdk_package": "",
+      "sdk_version": "unknown",
+      "category": "guide",
+      "url": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v261/en/pdf/Ansys_CFX-Solver_Theory_Guide.pdf",
+      "path": "CFX/v261/manuals/Ansys_CFX-Solver_Theory_Guide.pdf",
+      "authority_page": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v261/en/pdf/Ansys_CFX-Solver_Theory_Guide.pdf"
+    },
+    {
+      "product": "cfx",
+      "release": "v261",
+      "sdk_package": "",
+      "sdk_version": "unknown",
+      "category": "guide",
+      "url": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v261/en/pdf/Ansys_CFX-Solver_Modeling_Guide.pdf",
+      "path": "CFX/v261/manuals/Ansys_CFX-Solver_Modeling_Guide.pdf",
+      "authority_page": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v261/en/pdf/Ansys_CFX-Solver_Modeling_Guide.pdf"
+    },
+    {
+      "product": "mapdl",
+      "release": "v251",
+      "sdk_package": "",
+      "sdk_version": "unknown",
+      "category": "api_reference",
+      "url": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v251/en/pdf/Ansys_Mechanical_APDL_Command_Reference.pdf",
+      "path": "MAPDL/v251/api_reference/Ansys_Mechanical_APDL_Command_Reference.pdf",
+      "authority_page": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v251/en/pdf/Ansys_Mechanical_APDL_Command_Reference.pdf"
+    },
+    {
+      "product": "mapdl",
+      "release": "v261",
+      "sdk_package": "",
+      "sdk_version": "unknown",
+      "category": "guide",
+      "url": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v261/en/pdf/ANSYS_Mechanical_APDL_Operations_Guide.pdf",
+      "path": "MAPDL/v261/manuals/ANSYS_Mechanical_APDL_Operations_Guide.pdf",
+      "authority_page": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v261/en/pdf/ANSYS_Mechanical_APDL_Operations_Guide.pdf"
+    },
+    {
+      "product": "mapdl",
+      "release": "v261",
+      "sdk_package": "",
+      "sdk_version": "unknown",
+      "category": "api_reference",
+      "url": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v261/en/pdf/Ansys_Mechanical_APDL_Command_Reference.pdf",
+      "path": "MAPDL/v261/api_reference/Ansys_Mechanical_APDL_Command_Reference.pdf",
+      "authority_page": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v261/en/pdf/Ansys_Mechanical_APDL_Command_Reference.pdf"
+    },
+    {
+      "product": "lsdyna",
+      "release": "v252",
+      "sdk_package": "",
+      "sdk_version": "unknown",
+      "category": "manual",
+      "title": "LS-Run User's Guide",
+      "url": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v252/en/pdf/LS-Run_Users_Guide.pdf",
+      "path": "LS-DYNA/v252/manuals/LS-Run_Users_Guide.pdf",
+      "authority_page": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v252/en/pdf/LS-Run_Users_Guide.pdf"
+    },
+    {
+      "product": "lsdyna",
+      "release": "v261",
+      "sdk_package": "",
+      "sdk_version": "unknown",
+      "category": "manual",
+      "title": "Ansys LS-PrePost User's Guide",
+      "url": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v261/en/pdf/Ansys_LS-PrePost_Users_Guide.pdf",
+      "path": "LS-DYNA/v261/manuals/Ansys_LS-PrePost_Users_Guide.pdf",
+      "authority_page": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v261/en/pdf/Ansys_LS-PrePost_Users_Guide.pdf"
+    },
+    {
+      "product": "lsdyna",
+      "release": "v251",
+      "sdk_package": "",
+      "sdk_version": "unknown",
+      "category": "manual",
+      "title": "LS-Run User's Guide",
+      "url": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v251/en/pdf/LS-Run_Users_Guide.pdf",
+      "path": "LS-DYNA/v251/manuals/LS-Run_Users_Guide.pdf",
+      "authority_page": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v251/en/pdf/LS-Run_Users_Guide.pdf"
+    },
+    {
+      "product": "lsdyna",
+      "release": "v261",
+      "sdk_package": "",
+      "sdk_version": "unknown",
+      "category": "manual",
+      "title": "LS-Run User's Guide",
+      "url": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v261/en/pdf/LS-Run_Users_Guide.pdf",
+      "path": "LS-DYNA/v261/manuals/LS-Run_Users_Guide.pdf",
+      "authority_page": "https://ansyshelp.ansys.com/public/Views/Secured/corp/v261/en/pdf/LS-Run_Users_Guide.pdf"
+    },
+    {
+      "product": "optislang",
+      "release": "v241",
+      "sdk_package": "",
+      "sdk_version": "unknown",
+      "category": "api_reference",
+      "title": "oSP3D Script API 2024 R1",
+      "url": "https://developer.synopsys.com/docs/osp3d/index.xhtml",
+      "path": "optiSLang/v241/api_reference/oSP3D_Script_API_2024R1.html"
+    },
+    {
+      "product": "optislang",
+      "release": "unknown",
+      "sdk_package": "",
+      "sdk_version": "unknown",
+      "category": "guide",
+      "title": "Ansys optiSLang for developers",
+      "url": "https://developer.synopsys.com/docs/optislang.md",
+      "path": "optiSLang/unknown/guide/395028135e6b-optislang.md"
+    },
+    {
+      "product": "optislang",
+      "release": "2026 R1 SP03",
+      "sdk_package": "",
+      "sdk_version": "unknown",
+      "category": "api_reference",
+      "title": "optiSLang Python API 2026 R1 SP03",
+      "url": "https://developer.synopsys.com/docs/optislang-python-api-2026-r1-sp03/index.md",
+      "path": "optiSLang/v261/api_reference/61b42e274ce4-index.md"
+    }
+  ]
+}

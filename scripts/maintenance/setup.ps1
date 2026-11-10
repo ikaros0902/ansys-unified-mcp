@@ -1,16 +1,21 @@
 # ANSYS Unified MCP Server Setup Script
+param(
+    [string]$AnsysVersion = "",
+    [ValidateSet("standard", "all", "minimal")][string]$InstallProfile = "standard"
+)
 
 $ErrorActionPreference = "Stop"
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Definition
 $RepoRoot = Split-Path -Parent (Split-Path -Parent $ScriptDir)
 
 Write-Host "==========================================" -ForegroundColor Cyan
-Write-Host "  ANSYS Unified MCP Server v2.0 Setup" -ForegroundColor Cyan
+Write-Host "  ANSYS Unified MCP Server v3.0 Setup" -ForegroundColor Cyan
 Write-Host "==========================================" -ForegroundColor Cyan
+Write-Host "Target Repository: $RepoRoot" -ForegroundColor DarkGray
 Write-Host ""
 
 # 1. Check Python
-Write-Host "[1/5] Checking Python environment..."
+Write-Host "[1/7] Checking Python environment..."
 $pythonExe = "python"
 try {
     $pythonVer = & $pythonExe --version 2>&1
@@ -21,7 +26,7 @@ try {
 }
 
 # 2. Virtualenv
-Write-Host "[2/5] Setting up virtual environment..."
+Write-Host "[2/7] Setting up virtual environment..."
 $venvDir = Join-Path $RepoRoot ".venv"
 if (-Not (Test-Path $venvDir)) {
     Write-Host "Creating virtual environment (.venv)..."
@@ -31,12 +36,22 @@ if (-Not (Test-Path $venvDir)) {
 $pipExe = Join-Path $venvDir "Scripts\pip.exe"
 $pythonVenvExe = Join-Path $venvDir "Scripts\python.exe"
 
-Write-Host "Installing dependencies..."
+Write-Host "Installing dependencies (Profile: $InstallProfile)..."
 & $pythonVenvExe -m pip install --upgrade pip setuptools wheel
-& $pipExe install -e $RepoRoot
+if ($InstallProfile -eq "minimal") {
+    & $pipExe install -e $RepoRoot
+} else {
+    try {
+        Write-Host "Installing package with extra [$InstallProfile]..."
+        & $pipExe install -e "$RepoRoot[$InstallProfile]"
+    } catch {
+        Write-Host "Warning: Optional profile '$InstallProfile' failed. Falling back to base install..." -ForegroundColor Yellow
+        & $pipExe install -e $RepoRoot
+    }
+}
 
 # 3. Detect ANSYS
-Write-Host "[3/5] Detecting ANSYS installations..."
+Write-Host "[3/7] Detecting ANSYS installations..."
 $ansysVersions = @()
 
 # Source 1: Check .env file if present
@@ -93,7 +108,7 @@ if (Test-Path $registryParent) {
 }
 
 # Source 5: Check filesystem standard locations
-foreach ($base in @("C:\Program Files\ANSYS Inc", "D:\ANSYS Inc")) {
+foreach ($base in @("C:\Program Files\ANSYS Inc", "D:\ANSYS Inc", "E:\ANSYS Inc")) {
     if (Test-Path $base) {
         Get-ChildItem -Path $base -Directory -ErrorAction SilentlyContinue | ForEach-Object {
             if ($_.Name -match "^v(\d+)$") {
@@ -107,20 +122,47 @@ foreach ($base in @("C:\Program Files\ANSYS Inc", "D:\ANSYS Inc")) {
     }
 }
 
-if ($ansysVersions.Count -eq 0) {
-    Write-Host "Warning: No ANSYS installation detected. Fallback to v251." -ForegroundColor Yellow
-    $ansysVersions += "251"
+# Sort versions numerically descending (e.g. 261, 252, 251, 242)
+$ansysVersions = $ansysVersions | Sort-Object { [int]$_ } -Descending
+
+if ($AnsysVersion -and ($AnsysVersion.TrimStart('v') -in $ansysVersions)) {
+    $primaryVersion = $AnsysVersion.TrimStart('v')
+} elseif ($ansysVersions.Count -gt 0) {
+    $primaryVersion = $ansysVersions[0]
+} else {
+    Write-Host "Warning: No ANSYS installation detected. Fallback default to v251." -ForegroundColor Yellow
+    $ansysVersions = @("251")
+    $primaryVersion = "251"
+}
+Write-Host "Primary active ANSYS release: v$primaryVersion (Total detected: $($ansysVersions -join ', '))" -ForegroundColor Cyan
+
+# 4. Generate/Update .env
+Write-Host "[4/7] Configuring environment variables (.env)..."
+$sharedQueueRoot = Join-Path $env:LOCALAPPDATA "ansys-unified-mcp\queue"
+if (-Not (Test-Path $sharedQueueRoot)) {
+    New-Item -ItemType Directory -Force -Path (Join-Path $sharedQueueRoot "registry") | Out-Null
 }
 
-# 4. Deploy ACT Plugin
-Write-Host "[4/5] Deploying ACT Plugin & Hooks..."
+if (-Not (Test-Path $envFile)) {
+    $envExample = Join-Path $RepoRoot ".env.example"
+    if (Test-Path $envExample) {
+        $envContent = Get-Content $envExample -Raw
+        $envContent = $envContent -replace "<YOUR_ANSYS_VERSION_HERE>", $primaryVersion
+        $envContent = $envContent -replace "WORKBENCH_MCP_ROOT=.*", "WORKBENCH_MCP_ROOT=$RepoRoot"
+        $envContent = $envContent -replace "WORKBENCH_MCP_QUEUE_ROOT=.*", "WORKBENCH_MCP_QUEUE_ROOT=$sharedQueueRoot"
+        Set-Content -Path $envFile -Value $envContent -Encoding UTF8
+        Write-Host "Created .env configuration with ANSYS_VERSION=v$primaryVersion" -ForegroundColor Green
+    }
+}
+
+# 5. Deploy ACT Plugin
+Write-Host "[5/7] Deploying ACT Plugin & Hooks..."
 $pluginSource = Join-Path $RepoRoot "scripts\deploy\act_plugins"
 if (-Not (Test-Path $pluginSource)) {
     $pluginSource = Join-Path $RepoRoot "deploy\act_plugins"
 }
 foreach ($ver in $ansysVersions) {
     $targetDir = "$env:APPDATA\Ansys\v$ver\ACT\extensions"
-    
     if (-Not (Test-Path $targetDir)) {
         New-Item -ItemType Directory -Force -Path $targetDir | Out-Null
     }
@@ -135,46 +177,13 @@ foreach ($ver in $ansysVersions) {
     Write-Host "Installed ACT Plugin to: $targetDir" -ForegroundColor Green
 }
 
-# 5. Generate MCP Config
-Write-Host "[5/6] Generating MCP Client Config..."
-$mcpConfigPath = Join-Path $RepoRoot "mcp_config.json"
-
-$configObject = @{
-    mcpServers = @{
-        "ansys-unified-mcp" = @{
-            command = $pythonVenvExe
-            args = @("-m", "ansys_unified_mcp.__main__")
-            env = @{
-                PYTHONUTF8 = "1"
-            }
-        }
-    }
-}
-
-$configJson = $configObject | ConvertTo-Json -Depth 5
-Set-Content -Path $mcpConfigPath -Value $configJson -Encoding UTF8
-Write-Host "Generated config file: $mcpConfigPath" -ForegroundColor Green
 # 6. Configure SpaceClaim Auto gRPC Startup
-Write-Host ""
-Write-Host "[6/6] Configuring SpaceClaim Auto gRPC Startup..." -ForegroundColor Cyan
-
-# Use the detected ANSYS versions
-if ($ansysVersions.Count -eq 0) {
-    Write-Host "ERROR: No ANSYS versions detected. Cannot configure SpaceClaim gRPC." -ForegroundColor Red
-    exit 1
-}
-
-# Use the first (or latest) detected version
-$primaryVersion = $ansysVersions[0]
+Write-Host "[6/7] Configuring SpaceClaim Auto gRPC Startup..."
 $scAddinsPath = "$env:ProgramData\SpaceClaim\AddIns"
 if (-Not (Test-Path $scAddinsPath)) {
     New-Item -ItemType Directory -Force -Path $scAddinsPath | Out-Null
 }
 
-# Resolve the actual ANSYS install root instead of assuming the default
-# "C:\Program Files\ANSYS Inc" location. Priority: AWP_ROOT<ver> env var
-# (set by the ANSYS installer itself, always correct) -> registry InstallDir
-# -> standard-location fallbacks.
 $installRoot = $null
 $awpRootVar = "AWP_ROOT$primaryVersion"
 $awpRootValue = [Environment]::GetEnvironmentVariable($awpRootVar, "Machine")
@@ -190,7 +199,7 @@ if ($awpRootValue -and (Test-Path $awpRootValue)) {
     }
 }
 if (-Not $installRoot) {
-    foreach ($base in @("C:\Program Files\ANSYS Inc", "D:\ANSYS Inc")) {
+    foreach ($base in @("C:\Program Files\ANSYS Inc", "D:\ANSYS Inc", "E:\ANSYS Inc")) {
         $candidate = Join-Path $base "v$primaryVersion"
         if (Test-Path $candidate) {
             $installRoot = $candidate
@@ -200,17 +209,14 @@ if (-Not $installRoot) {
 }
 
 if (-Not $installRoot) {
-    Write-Host "WARNING: Could not resolve ANSYS v$primaryVersion install root (checked $awpRootVar, registry, and standard locations). Skipping SpaceClaim gRPC config." -ForegroundColor Yellow
-    $assemblyPath = $null
+    Write-Host "WARNING: Could not resolve ANSYS v$primaryVersion install root. Skipping SpaceClaim gRPC config." -ForegroundColor Yellow
 } else {
     $assemblyPath = Join-Path $installRoot "Addins\ApiServer\Presentation.ApiServerAddIn.dll"
-}
-
-if (-Not $assemblyPath -or -Not (Test-Path $assemblyPath)) {
-    Write-Host "WARNING: ApiServer DLL not found at $assemblyPath. Skipping SpaceClaim gRPC config." -ForegroundColor Yellow
-} else {
-    $manifestPath = Join-Path $scAddinsPath "ApiServerAddIn.Manifest.xml"
-    $manifestContent = @"
+    if (-Not (Test-Path $assemblyPath)) {
+        Write-Host "WARNING: ApiServer DLL not found at $assemblyPath. Skipping SpaceClaim gRPC config." -ForegroundColor Yellow
+    } else {
+        $manifestPath = Join-Path $scAddinsPath "ApiServerAddIn.Manifest.xml"
+        $manifestContent = @"
 <?xml version="1.0" encoding="utf-8" ?>
 <!-- Auto-configured by ANSYS Unified MCP Server Setup for v$primaryVersion -->
 <AddIns>
@@ -221,15 +227,37 @@ if (-Not $assemblyPath -or -Not (Test-Path $assemblyPath)) {
          host="SameAppDomain"/>
 </AddIns>
 "@
-
-    Set-Content -Path $manifestPath -Value $manifestContent -Encoding UTF8
-    Write-Host "Configured SpaceClaim auto gRPC (v$primaryVersion) at: $manifestPath" -ForegroundColor Green
+        Set-Content -Path $manifestPath -Value $manifestContent -Encoding UTF8
+        Write-Host "Configured SpaceClaim auto gRPC (v$primaryVersion) at: $manifestPath" -ForegroundColor Green
+    }
 }
+
+# 7. Generate MCP Config & Run Doctor
+Write-Host "[7/7] Generating Client Config & Verifying System Health..."
+$mcpConfigPath = Join-Path $RepoRoot "mcp_config.json"
+$configObject = @{
+    mcpServers = @{
+        "ansys-unified-mcp" = @{
+            command = $pythonVenvExe
+            args = @("-m", "ansys_unified_mcp")
+            cwd = $RepoRoot
+            env = @{
+                PYTHONUTF8 = "1"
+            }
+        }
+    }
+}
+$configJson = $configObject | ConvertTo-Json -Depth 5
+Set-Content -Path $mcpConfigPath -Value $configJson -Encoding UTF8
+Write-Host "Generated client config file: $mcpConfigPath" -ForegroundColor Green
+
+Write-Host ""
+Write-Host "Running Doctor Diagnostic Check..." -ForegroundColor Cyan
+& $pythonVenvExe -m ansys_unified_mcp.tools.connection_tools
 
 Write-Host ""
 Write-Host "===========================================" -ForegroundColor Cyan
 Write-Host "Setup Completed Successfully!" -ForegroundColor Green
-Write-Host "SpaceClaim gRPC server will auto-start whenever SpaceClaim opens (on port 50051)." -ForegroundColor Green
-Write-Host "AI can connect to SpaceClaim at any time without interrupting your work!" -ForegroundColor Green
+Write-Host "Active Version: v$primaryVersion" -ForegroundColor Green
+Write-Host "Copy $mcpConfigPath into your Claude/Cursor/Antigravity configuration." -ForegroundColor Green
 Write-Host "===========================================" -ForegroundColor Cyan
-

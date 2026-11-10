@@ -6,8 +6,8 @@
 2. 偵測 ANSYS 軟體安裝版本與環境變數 (AWP_ROOT251, AWP_ROOT242 等)
 3. 測試 SpaceClaim gRPC 通訊埠 (50051) 與傳輸模式相容性
 4. 測試 Mechanical gRPC 通訊埠 (10000) 連線狀態
-5. 檢查專案必要目錄完整性 (workbench_queue, logs/errors, docs 等)
-6. 發生異常時自動產生診斷報告並存入 logs/errors/
+5. 檢查專案必要目錄完整性 (.runtime/queue, .runtime/logs/errors, docs 等)
+6. 發生異常時自動產生診斷報告並存入 .runtime/logs/errors/
 """
 
 import sys
@@ -26,7 +26,7 @@ if hasattr(sys.stdout, "reconfigure"):
         pass
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-LOGS_ERRORS_DIR = REPO_ROOT / "logs" / "errors"
+LOGS_ERRORS_DIR = REPO_ROOT / ".runtime" / "logs" / "errors"
 
 def check_python_packages() -> dict:
     required = {
@@ -73,18 +73,18 @@ def check_port_open(host: str, port: int, timeout: float = 2.0) -> bool:
 
 def check_directories() -> dict:
     required_dirs = [
-        REPO_ROOT / "workbench_queue",
-        REPO_ROOT / "logs" / "errors",
-        REPO_ROOT / "logs" / "script_audit",
-        REPO_ROOT / "docs"
+        REPO_ROOT / ".runtime" / "queue",
+        REPO_ROOT / ".runtime" / "logs" / "errors",
+        REPO_ROOT / ".runtime" / "logs" / "script_audit",
+        REPO_ROOT / "docs",
     ]
     results = {}
-    for d in required_dirs:
+    for directory in required_dirs:
         try:
-            d.mkdir(parents=True, exist_ok=True)
-            results[str(d.relative_to(REPO_ROOT))] = "PASS"
-        except Exception as e:
-            results[str(d.relative_to(REPO_ROOT))] = f"FAIL: {e}"
+            directory.mkdir(parents=True, exist_ok=True)
+            results[str(directory.relative_to(REPO_ROOT))] = "PASS"
+        except Exception as exc:
+            results[str(directory.relative_to(REPO_ROOT))] = f"FAIL: {exc}"
     return results
 
 def main():

@@ -1,0 +1,85 @@
+{
+  "module": "Ans.Ansoft.HFSSAddinPlugin.dll",
+  "version": "2025 R1 (v251)",
+  "source": "REA CLI inspect-managed-members 6.0.0",
+  "interface": "HFSS Ansoft add-in v251 REA metadata; support status unverified",
+  "scope": "This snapshot lists managed TypeDef and MethodDef rows. It can include non-public members. Type visibility flags are recorded in class docs. Some signatures contain unresolved class:<rid> values. It is not a complete or supported public API declaration.",
+  "sources": {
+    "assembly": {
+      "file": "Ans.Ansoft.HFSSAddinPlugin.dll",
+      "sha256": "0b042c5cb5a2df9a191b45e5f4b0b4201e9fab1717058a6eb80e566892f61685",
+      "bytes": 18624,
+      "mvid": "ef78f98a-e63d-4916-891e-570d2a2b7a0a",
+      "rea_evidence_id": "ev_a34a6017824741cb2271983bcbcbf47a906fbd9263ec27e1386ed005768c7a5b"
+    }
+  },
+  "modules": {
+    "Ansys.Ansoft.HFSSAddinPlugin": {
+      "doc": "Namespace from REA metadata.",
+      "classes": {
+        "HFSSProductDefinition": {
+          "name": "HFSSProductDefinition",
+          "doc": "REA TypeDef; kind=type; visibility=not-public; flags=1048576. Static metadata only. Product support status is unverified.",
+          "methods": [
+            {
+              "name": ".ctor",
+              "signature": "() -> void",
+              "doc": "REA MethodDef; access=public; flags=6278; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "ResultsFolderPath",
+              "signature": "(string) -> string",
+              "doc": "REA MethodDef; access=public; flags=198; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "AdditionalProjectOwnedFilesAndFoldersForDelete",
+              "signature": "<unresolved signature sha256=7120de6c06afa6f761b1110cde178095f77a1046da1327e7a503269998bec9d4>",
+              "doc": "REA MethodDef; access=public; flags=198; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "BuildHFSSSystem",
+              "signature": "() -> void",
+              "doc": "REA MethodDef; access=private; flags=129; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "BuildHFIESystem",
+              "signature": "() -> void",
+              "doc": "REA MethodDef; access=private; flags=129; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "CreateStandardComponents",
+              "signature": "(class:37, bool) -> void",
+              "doc": "REA MethodDef; access=private; flags=129; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            }
+          ],
+          "properties": []
+        },
+        "Plugin": {
+          "name": "Plugin",
+          "doc": "REA TypeDef; kind=type; visibility=public; flags=1048577. Static metadata only. Product support status is unverified.",
+          "methods": [
+            {
+              "name": ".ctor",
+              "signature": "() -> void",
+              "doc": "REA MethodDef; access=public; flags=6278; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "get_ProductDefinition",
+              "signature": "() -> class:61",
+              "doc": "REA MethodDef; access=public; flags=2534; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            }
+          ],
+          "properties": []
+        }
+      },
+      "functions": []
+    }
+  },
+  "statistics": {
+    "total_modules": 1,
+    "total_classes": 2,
+    "total_methods": 8,
+    "total_properties": 0,
+    "total_functions": 0
+  }
+}

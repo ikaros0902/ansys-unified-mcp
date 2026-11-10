@@ -4,12 +4,31 @@ import os
 from typing import Callable, Any, Sequence
 from fastmcp import FastMCP
 
-INSTRUCTIONS = """You are controlling ANSYS Unified MCP.
+INSTRUCTIONS = """You control the ANSYS Unified MCP server.
+Follow these rules for all operations:
 
-This server provides tools across multiple physics domains (Mechanical, Fluent, SpaceClaim, optiSLang, etc.).
-Prefer using `auto` transport for tools that support it (it will try fast socket first, then fallback to file queues).
-For live interactions, ensure the corresponding app or bridge is running before issuing commands.
-Use Sentinel tools to monitor long-running background simulations.
+1. Health Check Rule:
+Call check_ansys_installation or ans_session_diagnose before you run simulation commands.
+Make sure the solver executable is available.
+
+2. Multiple Version and Instance Rule:
+Scan active instances before you connect.
+If multiple ANSYS versions or instances exist, show the list to the user.
+Ask the user to select the target version or instance.
+Do not guess the target version.
+Use ans_set_active_version to change the active version when requested.
+
+3. Script Language Rule:
+Write all internal comments in ASCII English for scripts sent to Mechanical, SpaceClaim, or Workbench.
+Do not use non-ASCII characters in solver scripts.
+
+4. Dual-Track Indicator Rule:
+This server uses dual-track execution for unsupported or unlicensed solvers.
+When execution_mode is benchmark_fallback, state clearly that results come from the internal benchmark engine.
+Do not present benchmark approximations as official solver results.
+
+5. Scope Convergence Rule:
+Call ans_session_set_workspace to limit the visible tools for your task.
 """
 
 mcp = FastMCP("ansys-unified-mcp", instructions=INSTRUCTIONS)
@@ -141,6 +160,33 @@ def get_tool_function(name: str) -> Callable[..., Any] | None:
 def get_aliases(canonical_name: str) -> list[str]:
     """獲取指定規範工具的所有已註冊別名清單。"""
     return list(CANONICAL_TO_ALIASES.get(canonical_name, []))
+
+
+# 攔截 mcp.tool 裝飾器，確保直接使用 @mcp.tool 註冊的所有規範工具亦完整寫入 TOOL_REGISTRY
+_orig_mcp_tool = mcp.tool
+
+
+def _registering_mcp_tool(*args: Any, **kwargs: Any) -> Any:
+    if len(args) == 1 and callable(args[0]) and not kwargs:
+        fn = args[0]
+        TOOL_REGISTRY[fn.__name__] = fn
+        return _orig_mcp_tool(fn)
+
+    explicit_name = kwargs.get("name") or (
+        args[0] if args and isinstance(args[0], str) else None
+    )
+    inner_decorator = _orig_mcp_tool(*args, **kwargs)
+
+    def _decorator(fn: Callable[..., Any]) -> Any:
+        tool_name = explicit_name or getattr(fn, "__name__", "")
+        if tool_name:
+            TOOL_REGISTRY[tool_name] = fn
+        return inner_decorator(fn)
+
+    return _decorator
+
+
+mcp.tool = _registering_mcp_tool
 
 
 def aliased_tool(

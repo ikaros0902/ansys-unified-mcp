@@ -1,0 +1,124 @@
+{
+  "suite_name": "ansys_mcp_eval",
+  "xml_path": "tests/evaluations/ansys_mcp_eval.xml",
+  "timestamp": "2026-10-26T12:03:01.867595+00:00",
+  "total_questions": 10,
+  "passed_questions": 10,
+  "failed_questions": 0,
+  "pass_rate_pct": 100.0,
+  "average_latency_ms": 0.0016,
+  "total_duration_ms": 0.35,
+  "strict_mode": false,
+  "results": [
+    {
+      "id": "1",
+      "domain": "Structural",
+      "question": "In the Ansys Mechanical ACT API for 2025 R1, find the shortest navigation path from 'ExtAPI.DataModel.Project.Model.Analyses[0]' to the Newton-Raphson option property 'NewtonRaphsonOption'. How many attribute/property hops are required to reach it? Answer with a single integer only.",
+      "expected": "2",
+      "actual": "2",
+      "passed": true,
+      "match_type": "EXACT",
+      "latency_ms": 0.0041,
+      "evidence": "精確字串匹配: '2' == '2'"
+    },
+    {
+      "id": "2",
+      "domain": "Fluids",
+      "question": "In Ansys Fluent 2025 R1 TUI/Python API, what is the exact string token used to specify the Coupled pressure-velocity coupling scheme under '/solve/set/p-v-coupling'? Answer with the exact lowercase token string only.",
+      "expected": "coupled",
+      "actual": "coupled",
+      "passed": true,
+      "match_type": "EXACT",
+      "latency_ms": 0.0028,
+      "evidence": "精確字串匹配: 'coupled' == 'coupled'"
+    },
+    {
+      "id": "3",
+      "domain": "EM",
+      "question": "When creating a standard rectangular WavePort via PyAEDT in HFSS without explicit mode override, what is the default integer number of excitation modes calculated? Answer with a single integer only.",
+      "expected": "1",
+      "actual": "1",
+      "passed": true,
+      "match_type": "EXACT",
+      "latency_ms": 0.0013,
+      "evidence": "精確字串匹配: '1' == '1'"
+    },
+    {
+      "id": "4",
+      "domain": "Optics",
+      "question": "In the Ansys Zemax OpticStudio ZOS-API, what is the exact name of the interface namespace that provides access to the Lens Data Editor (LDE)? Answer with the exact namespace identifier only.",
+      "expected": "ZOSAPI.Editors.LDE",
+      "actual": "ZOSAPI.Editors.LDE",
+      "passed": true,
+      "match_type": "EXACT",
+      "latency_ms": 0.0015,
+      "evidence": "精確字串匹配: 'ZOSAPI.Editors.LDE' == 'ZOSAPI.Editors.LDE'"
+    },
+    {
+      "id": "5",
+      "domain": "Thermal",
+      "question": "In Ansys Mechanical ACT Automation API, what is the exact enumeration string value for temperature units in the standard Metric (tonne, mm, s, N, C) unit system? Answer with the exact enumeration string only.",
+      "expected": "Celsius",
+      "actual": "Celsius",
+      "passed": true,
+      "match_type": "EXACT",
+      "latency_ms": 0.0009,
+      "evidence": "精確字串匹配: 'Celsius' == 'Celsius'"
+    },
+    {
+      "id": "6",
+      "domain": "Multibody",
+      "question": "In Ansys Motion kinematic topology definitions, how many relative degrees of freedom (DOF) are permitted by a standard Cylindrical Joint? Answer with a single integer only.",
+      "expected": "2",
+      "actual": "2",
+      "passed": true,
+      "match_type": "EXACT",
+      "latency_ms": 0.0009,
+      "evidence": "精確字串匹配: '2' == '2'"
+    },
+    {
+      "id": "7",
+      "domain": "System Coupling",
+      "question": "In Ansys System Coupling (SyC), what is the standardized variable display name used to transfer thermal heat flow rate across a fluid-solid interface? Answer with the exact two-word string only.",
+      "expected": "Heat Rate",
+      "actual": "Heat Rate",
+      "passed": true,
+      "match_type": "EXACT",
+      "latency_ms": 0.001,
+      "evidence": "精確字串匹配: 'Heat Rate' == 'Heat Rate'"
+    },
+    {
+      "id": "8",
+      "domain": "Materials",
+      "question": "In Ansys Composite PrepPost (ACP), what is the standard 3D interactive quadratic failure criterion designation commonly used for orthotropic laminates? Answer with the exact hyphenated name only.",
+      "expected": "Tsai-Wu",
+      "actual": "Tsai-Wu",
+      "passed": true,
+      "match_type": "EXACT",
+      "latency_ms": 0.0007,
+      "evidence": "精確字串匹配: 'Tsai-Wu' == 'Tsai-Wu'"
+    },
+    {
+      "id": "9",
+      "domain": "Meshing",
+      "question": "In Ansys PrimeMesh Python API, what is the exact enum member name under 'CellQualityMeasure' used to evaluate element skewness? Answer with the exact uppercase member name only.",
+      "expected": "SKEWNESS",
+      "actual": "SKEWNESS",
+      "passed": true,
+      "match_type": "EXACT",
+      "latency_ms": 0.0012,
+      "evidence": "精確字串匹配: 'SKEWNESS' == 'SKEWNESS'"
+    },
+    {
+      "id": "10",
+      "domain": "Governance",
+      "question": "Under the ansys-unified-mcp DAMG state-machine protocol, which exact error_code string is returned in the error envelope when a tool is called before its upstream physics prerequisites are satisfied? Answer with the exact uppercase error_code string only.",
+      "expected": "DAMG_PRECONDITION_VIOLATION",
+      "actual": "DAMG_PRECONDITION_VIOLATION",
+      "passed": true,
+      "match_type": "EXACT",
+      "latency_ms": 0.0014,
+      "evidence": "精確字串匹配: 'DAMG_PRECONDITION_VIOLATION' == 'DAMG_PRECONDITION_VIOLATION'"
+    }
+  ]
+}

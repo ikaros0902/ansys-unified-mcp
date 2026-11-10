@@ -1,0 +1,24 @@
+[
+  {
+    "eval_id": "aqwa_01",
+    "prompt": "在 AQWA-LINE 中如何計算海上浮式風機平台的幅值響應算子 (RAO)？",
+    "expected_keywords": [
+      "AQWA",
+      "RAO",
+      "Diffraction",
+      "Radiation",
+      "Wave"
+    ]
+  },
+  {
+    "eval_id": "sound_01",
+    "prompt": "Ansys Sound 如何利用 Zwicker 響度與尖銳度指標評估車內電機高頻嘯叫噪聲？",
+    "expected_keywords": [
+      "Ansys Sound",
+      "Zwicker Loudness",
+      "Sharpness",
+      "Psychoacoustics",
+      "NVH"
+    ]
+  }
+]

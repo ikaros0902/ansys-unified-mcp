@@ -1,0 +1,24 @@
+[
+  {
+    "eval_id": "acp_01",
+    "prompt": "在 ANSYS ACP 中，Draping 布料覆蓋分析如何修正曲面成型時的局部纖維偏角？",
+    "expected_keywords": [
+      "ACP",
+      "Draping",
+      "Fiber Angle",
+      "Shear Angle",
+      "Layup"
+    ]
+  },
+  {
+    "eval_id": "acp_02",
+    "prompt": "Puck 失效準則相較 Tsai-Wu 準則在複合材料基體失效判定上有何本質優勢？",
+    "expected_keywords": [
+      "Puck",
+      "Tsai-Wu",
+      "Matrix Failure",
+      "Action Plane",
+      "Fiber"
+    ]
+  }
+]

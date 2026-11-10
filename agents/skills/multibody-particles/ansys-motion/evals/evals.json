@@ -1,0 +1,24 @@
+[
+  {
+    "eval_id": "motion_01",
+    "prompt": "ANSYS Motion 中如何使用 Craig-Bampton 模態縮減法建立柔性連桿機構？",
+    "expected_keywords": [
+      "Craig-Bampton",
+      "CMS",
+      "Flexible Body",
+      "Modal Superposition",
+      "Joint"
+    ]
+  },
+  {
+    "eval_id": "motion_02",
+    "prompt": "在進行汽車懸架機構運動學分析時，如何正確設定襯套 (Bushing) 剛度與阻尼？",
+    "expected_keywords": [
+      "Bushing",
+      "Stiffness",
+      "Damping",
+      "Suspension",
+      "Kinematics"
+    ]
+  }
+]

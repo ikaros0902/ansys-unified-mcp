@@ -1,18 +1,10 @@
 # encoding: utf-8
 """ACT entry point for Workbench MCP (slim).
 
-On load inside Mechanical (AnsysWBU), this plugin:
-- auto-starts the Mechanical gRPC server on a free port (10000+), and
-- registers the instance (pid, app name, gRPC port) into the MCP registry dir,
-
-so the MCP server can discover and connect to a running Mechanical via
-PyMechanical. The previous file-queue and socket-timer transports were removed
-during the architecture refactor (superseded by gRPC + the Workbench-journal
-bridge).
-
-Set WORKBENCH_MCP_QUEUE_ROOT (or WORKBENCH_MCP_ROOT) so the registry lands in
-the same folder the MCP server reads. If neither is set, the registry defaults
-to a folder next to this plugin.
+On load inside Mechanical (AnsysWBU), this plugin starts the gRPC server and
+registers the instance in the shared runtime registry. Set
+WORKBENCH_MCP_QUEUE_ROOT or WORKBENCH_MCP_ROOT to override the default
+<project>/.runtime/queue location.
 """
 
 from __future__ import print_function
@@ -28,18 +20,17 @@ except Exception:
 
 _PLUGIN_DIR = os.path.abspath(os.path.dirname(__file__))
 def _resolve_queue_root():
-    # This path-resolution logic duplicates core/paths.py, but the IronPython
-    # runtime cannot import that module, so it is re-implemented here.
+    # IronPython cannot import the CPython path helper.
     env_queue = os.environ.get("WORKBENCH_MCP_QUEUE_ROOT")
     if env_queue:
         return env_queue
     env_root = os.environ.get("WORKBENCH_MCP_ROOT")
     if env_root:
-        return os.path.join(env_root, "workbench_queue")
+        return os.path.join(env_root, ".runtime", "queue")
     cur = _PLUGIN_DIR
     for _ in range(5):
         if os.path.exists(os.path.join(cur, "pyproject.toml")):
-            return os.path.join(cur, "workbench_queue")
+            return os.path.join(cur, ".runtime", "queue")
         parent = os.path.dirname(cur)
         if parent == cur:
             break
@@ -47,10 +38,15 @@ def _resolve_queue_root():
     env_dir = os.environ.get("ANSYS_WORKBENCH_QUEUE_DIR")
     if env_dir:
         return env_dir
-    return os.path.join(_PLUGIN_DIR, "workbench_queue")
+    local_app_data = os.environ.get("LOCALAPPDATA")
+    if local_app_data:
+        return os.path.join(local_app_data, "ansys-unified-mcp", "queue")
+    return os.path.join(_PLUGIN_DIR, ".runtime", "queue")
 
 _QUEUE_ROOT = _resolve_queue_root()
 _PROJECT_ROOT = os.path.dirname(_QUEUE_ROOT)
+if os.path.basename(_PROJECT_ROOT) == ".runtime":
+    _PROJECT_ROOT = os.path.dirname(_PROJECT_ROOT)
 _DEBUG_LOG_FILE = os.path.join(_QUEUE_ROOT, "act_main_debug.log")
 
 

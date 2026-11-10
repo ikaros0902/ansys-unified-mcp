@@ -1,0 +1,473 @@
+{
+  "module": "Ansys.Apip.Client.dll",
+  "version": "2025 R1 (v251)",
+  "source": "REA CLI inspect-managed-members 6.0.0",
+  "interface": "Granta MI v251 REA managed metadata; support status unverified",
+  "scope": "This snapshot lists managed TypeDef and MethodDef rows. It can include non-public members. Type visibility flags are recorded in class docs. Some signatures contain unresolved class:<rid> values. It is not a complete or supported public API declaration.",
+  "sources": {
+    "assembly": {
+      "file": "Ansys.Apip.Client.dll",
+      "sha256": "b243db8f5e75ef0453ead5dfd58bce686d66ee6f1130f19c02128ac7c537bda1",
+      "bytes": 20680,
+      "mvid": "ee7ecc0b-0c05-4fc5-8b71-9267041dd4dd",
+      "rea_evidence_id": "ev_e5c44ef9e3b4ac8cb4335e0a6adca6bd8a91f8a82649c9a2b518c2a40a3d0ebf"
+    }
+  },
+  "modules": {
+    "Ansys.Apip.Client": {
+      "doc": "Namespace from REA metadata.",
+      "classes": {
+        "ApipClient": {
+          "name": "ApipClient",
+          "doc": "REA TypeDef; kind=type; visibility=public; flags=1048577. Static metadata only. Product support status is unverified.",
+          "methods": [
+            {
+              "name": ".ctor",
+              "signature": "(class:20) -> void",
+              "doc": "REA MethodDef; access=public; flags=6278; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": ".ctor",
+              "signature": "(string) -> void",
+              "doc": "REA MethodDef; access=public; flags=6278; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "AddSslCertificate",
+              "signature": "(string) -> void",
+              "doc": "REA MethodDef; access=public; flags=134; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "Start",
+              "signature": "() -> void",
+              "doc": "REA MethodDef; access=public; flags=134; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "Stop",
+              "signature": "() -> void",
+              "doc": "REA MethodDef; access=public; flags=134; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "AddData",
+              "signature": "(string, i4) -> void",
+              "doc": "REA MethodDef; access=public; flags=134; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "AddData",
+              "signature": "(string, string) -> void",
+              "doc": "REA MethodDef; access=public; flags=134; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "AddData",
+              "signature": "(string, r8) -> void",
+              "doc": "REA MethodDef; access=public; flags=134; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "AddData",
+              "signature": "(string, bool) -> void",
+              "doc": "REA MethodDef; access=public; flags=134; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "SendAll",
+              "signature": "() -> void",
+              "doc": "REA MethodDef; access=public; flags=134; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "Send",
+              "signature": "(string) -> void",
+              "doc": "REA MethodDef; access=public; flags=134; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "SetEnableDebugMode",
+              "signature": "(bool) -> void",
+              "doc": "REA MethodDef; access=public; flags=134; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "SetDebugServerUrl",
+              "signature": "(string) -> void",
+              "doc": "REA MethodDef; access=public; flags=134; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "SetDebugDumpFolderPath",
+              "signature": "(string) -> void",
+              "doc": "REA MethodDef; access=public; flags=134; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "IsServiceRunning",
+              "signature": "() -> bool",
+              "doc": "REA MethodDef; access=public; flags=134; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "GetServiceCommand",
+              "signature": "() -> string",
+              "doc": "REA MethodDef; access=public; flags=134; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "CSharp_ApipClient_CreateApipClient",
+              "signature": "(string, string, string, string, bool) -> native-int",
+              "doc": "REA MethodDef; access=private; flags=8337; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "CSharp_ApipClient_SetDebugServerUrl",
+              "signature": "(native-int, string) -> void",
+              "doc": "REA MethodDef; access=private; flags=8337; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "CSharp_ApipClient_Start",
+              "signature": "(native-int) -> void",
+              "doc": "REA MethodDef; access=private; flags=8337; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "CSharp_ApipClient_Stop",
+              "signature": "(native-int) -> void",
+              "doc": "REA MethodDef; access=private; flags=8337; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "CSharp_ApipClient_AddData_Int",
+              "signature": "(native-int, string, i4) -> void",
+              "doc": "REA MethodDef; access=private; flags=8337; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "CSharp_ApipClient_AddData_String",
+              "signature": "(native-int, string, string) -> void",
+              "doc": "REA MethodDef; access=private; flags=8337; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "CSharp_ApipClient_AddData_Double",
+              "signature": "(native-int, string, r8) -> void",
+              "doc": "REA MethodDef; access=private; flags=8337; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "CSharp_ApipClient_AddData_Bool",
+              "signature": "(native-int, string, bool) -> void",
+              "doc": "REA MethodDef; access=private; flags=8337; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "CSharp_ApipClient_SendAll",
+              "signature": "(native-int) -> void",
+              "doc": "REA MethodDef; access=private; flags=8337; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "CSharp_ApipClient_Send",
+              "signature": "(native-int, string) -> void",
+              "doc": "REA MethodDef; access=private; flags=8337; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "CSharp_ApipClient_SetDebugDumpFolderPath",
+              "signature": "(native-int, string) -> void",
+              "doc": "REA MethodDef; access=private; flags=8337; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "CSharp_ApipClient_SetEnableDebugMode",
+              "signature": "(native-int, bool) -> void",
+              "doc": "REA MethodDef; access=private; flags=8337; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "CSharp_ApipClient_IsServiceRunning",
+              "signature": "(native-int) -> bool",
+              "doc": "REA MethodDef; access=private; flags=8337; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "CSharp_ApipClient_GetServiceCommand",
+              "signature": "(native-int) -> string",
+              "doc": "REA MethodDef; access=private; flags=8337; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            }
+          ],
+          "properties": []
+        },
+        "Configuration": {
+          "name": "Configuration",
+          "doc": "REA TypeDef; kind=type; visibility=public; flags=1048577. Static metadata only. Product support status is unverified.",
+          "methods": [
+            {
+              "name": ".ctor",
+              "signature": "(class:24) -> void",
+              "doc": "REA MethodDef; access=public; flags=6278; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": ".ctor",
+              "signature": "(string) -> void",
+              "doc": "REA MethodDef; access=public; flags=6278; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "get_IsAllowedByGlobalConfiguration",
+              "signature": "() -> bool",
+              "doc": "REA MethodDef; access=public; flags=2182; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "get_IsAllowedInRegion",
+              "signature": "() -> bool",
+              "doc": "REA MethodDef; access=public; flags=2182; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "get_IsEnabledByUser",
+              "signature": "() -> bool",
+              "doc": "REA MethodDef; access=public; flags=2182; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "SaveUserSetting",
+              "signature": "(bool) -> void",
+              "doc": "REA MethodDef; access=public; flags=134; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "get_HasUserConfiguration",
+              "signature": "() -> bool",
+              "doc": "REA MethodDef; access=public; flags=2182; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "GetAnalyticsServerUrl",
+              "signature": "() -> string",
+              "doc": "REA MethodDef; access=public; flags=134; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "CSharp_ApipConfiguration_CreateApipConfiguration",
+              "signature": "(string, string, string) -> native-int",
+              "doc": "REA MethodDef; access=private; flags=8337; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "CSharp_ApipConfiguration_CreateApipConfigurationFromVersion",
+              "signature": "(string) -> native-int",
+              "doc": "REA MethodDef; access=private; flags=8337; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "CSharp_ApipConfiguration_IsAllowedByGlobalConfiguration",
+              "signature": "(native-int) -> bool",
+              "doc": "REA MethodDef; access=private; flags=8337; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "CSharp_ApipConfiguration_IsAllowedInRegion",
+              "signature": "(native-int) -> bool",
+              "doc": "REA MethodDef; access=private; flags=8337; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "CSharp_ApipConfiguration_IsEnabledByUser",
+              "signature": "(native-int) -> bool",
+              "doc": "REA MethodDef; access=private; flags=8337; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "CSharp_ApipConfiguration_SaveUserSetting",
+              "signature": "(native-int, bool) -> void",
+              "doc": "REA MethodDef; access=private; flags=8337; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "CSharp_ApipConfiguration_HasUserConfiguration",
+              "signature": "(native-int) -> bool",
+              "doc": "REA MethodDef; access=private; flags=8337; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "CSharp_ApipConfiguration_GetAnalyticsServerUrl",
+              "signature": "(native-int) -> string",
+              "doc": "REA MethodDef; access=private; flags=8337; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            }
+          ],
+          "properties": []
+        },
+        "CustomStringMarshaler": {
+          "name": "CustomStringMarshaler",
+          "doc": "REA TypeDef; kind=type; visibility=not-public; flags=1048576. Static metadata only. Product support status is unverified.",
+          "methods": [
+            {
+              "name": "GetInstance",
+              "signature": "(string) -> class:33",
+              "doc": "REA MethodDef; access=public; flags=150; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "CleanUpNativeData",
+              "signature": "(native-int) -> void",
+              "doc": "REA MethodDef; access=public; flags=486; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "MarshalNativeToManaged",
+              "signature": "(native-int) -> object",
+              "doc": "REA MethodDef; access=public; flags=486; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "CleanUpManagedData",
+              "signature": "(object) -> void",
+              "doc": "REA MethodDef; access=public; flags=486; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "GetNativeDataSize",
+              "signature": "() -> i4",
+              "doc": "REA MethodDef; access=public; flags=486; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "MarshalManagedToNative",
+              "signature": "(object) -> native-int",
+              "doc": "REA MethodDef; access=public; flags=486; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "deleteNativeString",
+              "signature": "(native-int) -> void",
+              "doc": "REA MethodDef; access=private; flags=145; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "CSharp_ApipHelper_DeleteString",
+              "signature": "(native-int) -> void",
+              "doc": "REA MethodDef; access=private; flags=8337; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": ".ctor",
+              "signature": "() -> void",
+              "doc": "REA MethodDef; access=public; flags=6278; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            }
+          ],
+          "properties": []
+        },
+        "IApipClientInfo": {
+          "name": "IApipClientInfo",
+          "doc": "REA TypeDef; kind=interface; visibility=public; flags=161. Static metadata only. Product support status is unverified.",
+          "methods": [
+            {
+              "name": "get_ApplicationName",
+              "signature": "() -> string",
+              "doc": "REA MethodDef; access=public; flags=3526; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "get_ApplicationVersion",
+              "signature": "() -> string",
+              "doc": "REA MethodDef; access=public; flags=3526; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "get_ApplicationGuid",
+              "signature": "() -> string",
+              "doc": "REA MethodDef; access=public; flags=3526; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "get_AnalyticsServerUrl",
+              "signature": "() -> string",
+              "doc": "REA MethodDef; access=public; flags=3526; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "get_UseSsl",
+              "signature": "() -> bool",
+              "doc": "REA MethodDef; access=public; flags=3526; static=False; special_name=True. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            }
+          ],
+          "properties": []
+        },
+        "IConfigurationFilesProvider": {
+          "name": "IConfigurationFilesProvider",
+          "doc": "REA TypeDef; kind=interface; visibility=public; flags=161. Static metadata only. Product support status is unverified.",
+          "methods": [
+            {
+              "name": "GetGlobalConfigurationFilePath",
+              "signature": "() -> string",
+              "doc": "REA MethodDef; access=public; flags=1478; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "GetRegionConfigurationFilePath",
+              "signature": "() -> string",
+              "doc": "REA MethodDef; access=public; flags=1478; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "GetUserConfigurationFilePath",
+              "signature": "() -> string",
+              "doc": "REA MethodDef; access=public; flags=1478; static=False; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            }
+          ],
+          "properties": []
+        },
+        "Utilities": {
+          "name": "Utilities",
+          "doc": "REA TypeDef; kind=type; visibility=public; flags=1048961. Static metadata only. Product support status is unverified.",
+          "methods": [
+            {
+              "name": "IsUserOnAnsysNetwork",
+              "signature": "() -> bool",
+              "doc": "REA MethodDef; access=public; flags=150; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "GetGeoID",
+              "signature": "() -> i8",
+              "doc": "REA MethodDef; access=public; flags=150; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "GetTimezone",
+              "signature": "() -> string",
+              "doc": "REA MethodDef; access=public; flags=150; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "GetGraphicsCardName",
+              "signature": "() -> string",
+              "doc": "REA MethodDef; access=public; flags=150; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "GetTotalPhysicalMemoryInGB",
+              "signature": "() -> r8",
+              "doc": "REA MethodDef; access=public; flags=150; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "GetProcessorName",
+              "signature": "() -> string",
+              "doc": "REA MethodDef; access=public; flags=150; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "GetOperatingSystemName",
+              "signature": "() -> string",
+              "doc": "REA MethodDef; access=public; flags=150; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "GetIso3CountryCode",
+              "signature": "() -> string",
+              "doc": "REA MethodDef; access=public; flags=150; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "CSharp_ApipHelper_IsUserOnANSYSNetwork",
+              "signature": "() -> bool",
+              "doc": "REA MethodDef; access=private; flags=8337; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "CSharp_ApipHelper_GetGeoID",
+              "signature": "() -> i8",
+              "doc": "REA MethodDef; access=private; flags=8337; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "CSharp_ApipHelper_GetTimezone",
+              "signature": "() -> string",
+              "doc": "REA MethodDef; access=private; flags=8337; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "CSharp_ApipHelper_GetGraphicsCardName",
+              "signature": "() -> string",
+              "doc": "REA MethodDef; access=private; flags=8337; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "CSharp_ApipHelper_GetTotalPhysicalMemory",
+              "signature": "() -> u8",
+              "doc": "REA MethodDef; access=private; flags=8337; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "CSharp_ApipHelper_GetNumberOfProcessorPhysicalCores",
+              "signature": "() -> u4",
+              "doc": "REA MethodDef; access=private; flags=8337; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "CSharp_ApipHelper_GetProcessorName",
+              "signature": "() -> string",
+              "doc": "REA MethodDef; access=private; flags=8337; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "CSharp_ApipHelper_GetOperatingSystemName",
+              "signature": "() -> string",
+              "doc": "REA MethodDef; access=private; flags=8337; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            },
+            {
+              "name": "CSharp_ApipHelper_GetIso3CountryCode",
+              "signature": "() -> string",
+              "doc": "REA MethodDef; access=private; flags=8337; static=True; special_name=False. Parameter names and some class type references are unresolved. Static metadata only. Product support status is unverified."
+            }
+          ],
+          "properties": []
+        }
+      },
+      "functions": []
+    }
+  },
+  "statistics": {
+    "total_modules": 1,
+    "total_classes": 6,
+    "total_methods": 80,
+    "total_properties": 0,
+    "total_functions": 0
+  }
+}

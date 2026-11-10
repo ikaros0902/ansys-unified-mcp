@@ -1,0 +1,23 @@
+[
+  {
+    "eval_id": "cfd_01",
+    "prompt": "如何使用 Fluent 計算車輛外氣動阻力係數 (Cd) 並監控收斂？",
+    "expected_keywords": [
+      "ansys-fluent",
+      "Drag Coefficient",
+      "Cd",
+      "SST k-omega",
+      "Residuals"
+    ]
+  },
+  {
+    "eval_id": "cfd_02",
+    "prompt": "離心葉輪轉子-定子交界面的滑移網格與凍結轉子模型如何選取？",
+    "expected_keywords": [
+      "ansys-cfx",
+      "Frozen Rotor",
+      "Stage",
+      "Transient Rotor-Stator"
+    ]
+  }
+]

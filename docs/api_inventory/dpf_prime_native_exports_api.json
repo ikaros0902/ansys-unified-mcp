@@ -1,0 +1,1931 @@
+{
+  "module": "NativeExports",
+  "version": "v251",
+  "interface": "DPF Prime plugin; support status unverified",
+  "scope": "This snapshot lists PE export names from llvm-readobj. An export name does not prove API support. A signature appears only when the MSVC symbol name contains type data. The extractor does not read function bodies or run the DLL.",
+  "sources": {
+    "assembly": {
+      "path": "$env:AWP_ROOT251/dpf/plugins/dpf_prime/Ans.Dpf.Prime.dll",
+      "sha256": "d754b75c6c6620e5110a48a332ec8912e4ad2591a806b4cb9045aa4494727d63",
+      "byte_length": 98174144
+    },
+    "analysis": {
+      "tool": "llvm-readobj",
+      "version": "19.1.5",
+      "operation": "--coff-exports"
+    }
+  },
+  "modules": {
+    "NativeExports": {
+      "doc": "DPF Prime plugin; support status unverified",
+      "classes": {},
+      "functions": [
+        {
+          "name": "LoadOperators",
+          "signature": "",
+          "doc": "PE export. Ordinal: 1. RVA: 0x3FEE2D0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Bl_Poly_cell_enhanced_ortho_quality_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 2. RVA: 0x3FA50D0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Bl_Poly_cell_enhanced_ortho_quality_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 3. RVA: 0x3FA7FA0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Bl_Poly_cell_enhanced_ortho_quality_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 4. RVA: 0x3FAA370. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Bl_Poly_cell_enhanced_ortho_quality_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 5. RVA: 0x3FACA30. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Bl_Poly_cell_ortho_quality_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 6. RVA: 0x3F85DB0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Bl_Poly_cell_ortho_quality_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 7. RVA: 0x3F872F0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Bl_Poly_cell_ortho_quality_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 8. RVA: 0x3F84D80. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Bl_Poly_cell_ortho_quality_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 9. RVA: 0x3F86D80. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Bl_Poly_cell_orthoskew_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 10. RVA: 0x3F85DB0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Bl_Poly_cell_orthoskew_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 11. RVA: 0x3F872F0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Bl_Poly_cell_orthoskew_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 12. RVA: 0x3F84D80. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Bl_Poly_cell_orthoskew_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 13. RVA: 0x3F86D80. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Bl_hexa_enhanced_ortho_quality_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 14. RVA: 0x3FB1B70. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Bl_hexa_enhanced_ortho_quality_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 15. RVA: 0x3FB4570. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Bl_hexa_enhanced_ortho_quality_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 16. RVA: 0x3FB2C10. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Bl_hexa_enhanced_ortho_quality_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 17. RVA: 0x3FB3D10. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Bl_hexa_squish2_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 18. RVA: 0x3F33510. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Bl_hexa_squish2_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 19. RVA: 0x3F35360. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Bl_hexa_squish2_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 20. RVA: 0x3F316C0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Bl_hexa_squish2_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 21. RVA: 0x3F36610. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Bl_wedge_enhanced_ortho_quality_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 22. RVA: 0x3FAE570. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Bl_wedge_enhanced_ortho_quality_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 23. RVA: 0x3FAF800. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Bl_wedge_enhanced_ortho_quality_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 24. RVA: 0x3FB0890. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Bl_wedge_enhanced_ortho_quality_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 25. RVA: 0x3FB0030. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Bl_wedge_squish2_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 26. RVA: 0x3F39920. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Bl_wedge_squish2_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 27. RVA: 0x3F3B8E0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Bl_wedge_squish2_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 28. RVA: 0x3F37980. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Bl_wedge_squish2_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 29. RVA: 0x3F3CB90. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Compute_sliver_size",
+          "signature": "",
+          "doc": "PE export. Ordinal: 30. RVA: 0x3EDC750. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Edge_centroid_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 31. RVA: 0x3EDC7D0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Edge_centroid_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 32. RVA: 0x3EDC830. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Edge_size_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 33. RVA: 0x3EDC880. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Edge_size_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 34. RVA: 0x3EDC8C0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Hexa_centroid_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 35. RVA: 0x3EE42C0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Hexa_centroid_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 36. RVA: 0x3EE3F70. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Hexa_centroid_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 37. RVA: 0x3EE3270. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Hexa_centroid_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 38. RVA: 0x3EE3000. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Hexa_edge_ratio_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 39. RVA: 0x3FCBEF0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Hexa_edge_ratio_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 40. RVA: 0x3FCC000. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Hexa_enhanced_ortho_quality_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 41. RVA: 0x3F91B90. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Hexa_enhanced_ortho_quality_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 42. RVA: 0x3F93090. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Hexa_enhanced_ortho_quality_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 43. RVA: 0x3F93D00. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Hexa_enhanced_ortho_quality_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 44. RVA: 0x3F95260. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Hexa_fluent_aspect_ratio_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 45. RVA: 0x3F59350. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Hexa_fluent_aspect_ratio_p1",
+          "signature": "",
+          "doc": "PE export. Ordinal: 46. RVA: 0x3F53D90. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Hexa_fluent_aspect_ratio_p2",
+          "signature": "",
+          "doc": "PE export. Ordinal: 47. RVA: 0x3F56590. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Hexa_fluent_aspect_ratio_p3",
+          "signature": "",
+          "doc": "PE export. Ordinal: 48. RVA: 0x3F584B0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Hexa_fluent_aspect_ratio_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 49. RVA: 0x3F5B500. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Hexa_fluent_aspect_ratio_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 50. RVA: 0x3F5A2B0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Hexa_fluent_aspect_ratio_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 51. RVA: 0x3F5B1C0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Hexa_icemcfd_quality_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 52. RVA: 0x3F67F80. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Hexa_icemcfd_quality_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 53. RVA: 0x3F69D60. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Hexa_inv_orthogonality_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 54. RVA: 0x3F770A0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Hexa_inv_orthogonality_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 55. RVA: 0x3F77EC0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Hexa_inv_orthogonality_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 56. RVA: 0x3F76500. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Hexa_inv_orthogonality_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 57. RVA: 0x3F77BE0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Hexa_modified_centroid_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 58. RVA: 0x3F54940. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Hexa_modified_centroid_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 59. RVA: 0x3FC30C0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Hexa_modified_centroid_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 60. RVA: 0x3FC1480. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Hexa_modified_centroid_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 61. RVA: 0x3FC4720. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Hexa_normalized_angle_deviation_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 62. RVA: 0x3F48020. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Hexa_normalized_angle_deviation_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 63. RVA: 0x3F48FD0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Hexa_ortho_quality_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 64. RVA: 0x3F770A0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Hexa_ortho_quality_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 65. RVA: 0x3F77EC0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Hexa_ortho_quality_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 66. RVA: 0x3F76500. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Hexa_ortho_quality_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 67. RVA: 0x3F77BE0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Hexa_orthogonality_angle_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 68. RVA: 0x3FD0780. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Hexa_orthogonality_angle_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 69. RVA: 0x3FD1870. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Hexa_orthogonality_angle_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 70. RVA: 0x3FCF710. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Hexa_orthogonality_angle_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 71. RVA: 0x3FD1D20. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Hexa_orthoskew_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 72. RVA: 0x3F770A0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Hexa_orthoskew_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 73. RVA: 0x3F77EC0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Hexa_orthoskew_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 74. RVA: 0x3F76500. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Hexa_orthoskew_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 75. RVA: 0x3F77BE0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Hexa_shape_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 76. RVA: 0x3F02460. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Hexa_shape_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 77. RVA: 0x3F04350. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Hexa_shape_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 78. RVA: 0x3F03420. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Hexa_shape_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 79. RVA: 0x3F04930. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Hexa_size_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 80. RVA: 0x3EEDAD0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Hexa_size_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 81. RVA: 0x3EEFA00. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Hexa_size_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 82. RVA: 0x3EEE8B0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Hexa_size_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 83. RVA: 0x3EEF550. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Hexa_squish2_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 84. RVA: 0x3F1CDF0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Hexa_squish2_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 85. RVA: 0x3F1E5C0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Hexa_squish2_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 86. RVA: 0x3F1FDC0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Hexa_squish2_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 87. RVA: 0x3F1F1A0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Hexa_squish_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 88. RVA: 0x3EF3C10. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Hexa_squish_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 89. RVA: 0x3EF4CF0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Hexa_squish_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 90. RVA: 0x3EF2E00. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Hexa_squish_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 91. RVA: 0x3EF4A90. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Hexa_warp_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 92. RVA: 0x3F0F270. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Hexa_warp_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 93. RVA: 0x3F0E3F0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Hexa_warp_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 94. RVA: 0x3F10240. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Hexa_warp_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 95. RVA: 0x3F0EB20. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Initialize_Env",
+          "signature": "",
+          "doc": "PE export. Ordinal: 96. RVA: 0x3FDA8F0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_bl_cell_squish2_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 97. RVA: 0x3F440C0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_bl_cell_squish2_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 98. RVA: 0x3F3DEF0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_bl_cell_squish2_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 99. RVA: 0x3F418A0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_bl_cell_squish2_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 100. RVA: 0x3F3FED0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_cell_centroid_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 101. RVA: 0x3EE1D80. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_cell_centroid_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 102. RVA: 0x3EE2CB0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_cell_centroid_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 103. RVA: 0x3EE0C60. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_cell_centroid_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 104. RVA: 0x3EE1B10. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_cell_enhanced_ortho_quality_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 105. RVA: 0x3FA1F90. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_cell_enhanced_ortho_quality_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 106. RVA: 0x3FA3D70. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_cell_enhanced_ortho_quality_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 107. RVA: 0x3F9EFE0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_cell_enhanced_ortho_quality_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 108. RVA: 0x3FA0D30. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_cell_fluent_aspect_ratio_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 109. RVA: 0x3F5B820. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_cell_fluent_aspect_ratio_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 110. RVA: 0x3F5DD80. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_cell_fluent_aspect_ratio_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 111. RVA: 0x3F5C9A0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_cell_fluent_aspect_ratio_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 112. RVA: 0x3F5DA50. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_cell_inv_orthogonality_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 113. RVA: 0x3F83A60. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_cell_inv_orthogonality_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 114. RVA: 0x3F847A0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_cell_inv_orthogonality_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 115. RVA: 0x3F82CC0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_cell_inv_orthogonality_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 116. RVA: 0x3F84A80. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_cell_modified_centroid_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 117. RVA: 0x3FC68C0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_cell_modified_centroid_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 118. RVA: 0x3FC5890. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_cell_modified_centroid_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 119. RVA: 0x3FC9C90. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_cell_modified_centroid_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 120. RVA: 0x3FC8900. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_cell_ortho_quality_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 121. RVA: 0x3F83A60. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_cell_ortho_quality_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 122. RVA: 0x3F847A0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_cell_ortho_quality_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 123. RVA: 0x3F82CC0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_cell_ortho_quality_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 124. RVA: 0x3F84A80. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_cell_orthoskew_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 125. RVA: 0x3F83A60. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_cell_orthoskew_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 126. RVA: 0x3F847A0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_cell_orthoskew_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 127. RVA: 0x3F82CC0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_cell_orthoskew_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 128. RVA: 0x3F84A80. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_cell_shape_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 129. RVA: 0x3F0AAB0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_cell_shape_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 130. RVA: 0x3F0D4F0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_cell_shape_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 131. RVA: 0x3F0C000. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_cell_shape_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 132. RVA: 0x3F0DC60. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_cell_size_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 133. RVA: 0x3EEFE70. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_cell_size_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 134. RVA: 0x3EF17E0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_cell_size_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 135. RVA: 0x3EF0A90. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_cell_size_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 136. RVA: 0x3EF1740. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_cell_squish2_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 137. RVA: 0x3F2F550. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_cell_squish2_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 138. RVA: 0x3F2D080. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_cell_squish2_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 139. RVA: 0x3F2B0C0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_cell_squish2_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 140. RVA: 0x3F2E360. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_cell_squish_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 141. RVA: 0x3EFADC0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_cell_squish_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 142. RVA: 0x3EF99C0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_cell_squish_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 143. RVA: 0x3EF9DD0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_cell_squish_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 144. RVA: 0x3EF9BC0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_cell_warp_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 145. RVA: 0x3F17BE0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_cell_warp_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 146. RVA: 0x3F1AC80. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_cell_warp_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 147. RVA: 0x3F190A0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_cell_warp_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 148. RVA: 0x3F1A270. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_edge_ratio_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 149. RVA: 0x3F70360. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_edge_ratio_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 150. RVA: 0x3F70480. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_face_area_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 151. RVA: 0x3EEA090. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_face_area_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 152. RVA: 0x3EE9F30. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_face_aspect_ratio_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 153. RVA: 0x3F6F340. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_face_aspect_ratio_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 154. RVA: 0x3F6FF50. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_face_centroid_iterative_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 155. RVA: 0x3EE0250. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_face_centroid_iterative_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 156. RVA: 0x3EDFA00. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_face_centroid_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 157. RVA: 0x3EDE000. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_face_centroid_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 158. RVA: 0x3EDD8B0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_face_orthoskew_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 159. RVA: 0x3F748F0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_face_orthoskew_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 160. RVA: 0x3F756A0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_face_size_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 161. RVA: 0x3F72AF0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_face_size_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 162. RVA: 0x3F72C80. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_face_warp_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 163. RVA: 0x3EFEEC0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_face_warp_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 164. RVA: 0x3F008E0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_face_warp_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 165. RVA: 0x3EFE0D0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Poly_face_warp_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 166. RVA: 0x3F000D0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Pyra_centroid_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 167. RVA: 0x3EE6180. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Pyra_centroid_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 168. RVA: 0x3EE7220. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Pyra_centroid_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 169. RVA: 0x3EE5030. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Pyra_centroid_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 170. RVA: 0x3EE3000. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Pyra_edge_ratio_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 171. RVA: 0x3FCC350. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Pyra_edge_ratio_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 172. RVA: 0x3FCC460. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Pyra_enhanced_ortho_quality_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 173. RVA: 0x3F9A530. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Pyra_enhanced_ortho_quality_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 174. RVA: 0x3F9BDA0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Pyra_enhanced_ortho_quality_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 175. RVA: 0x3F9CA20. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Pyra_enhanced_ortho_quality_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 176. RVA: 0x3F9E310. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Pyra_fluent_aspect_ratio_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 177. RVA: 0x3F5F380. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Pyra_fluent_aspect_ratio_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 178. RVA: 0x3F60700. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Pyra_fluent_aspect_ratio_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 179. RVA: 0x3F5E0A0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Pyra_fluent_aspect_ratio_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 180. RVA: 0x3F60A20. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Pyra_icemcfd_quality_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 181. RVA: 0x3F6BBB0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Pyra_icemcfd_quality_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 182. RVA: 0x3F6D580. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Pyra_inv_orthogoality_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 183. RVA: 0x3FD9380. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Pyra_inv_orthogoality_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 184. RVA: 0x3FD8350. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Pyra_inv_orthogoality_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 185. RVA: 0x3FDA330. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Pyra_inv_orthogonality_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 186. RVA: 0x3FDA610. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Pyra_modified_centroid_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 187. RVA: 0x3FB4D30. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Pyra_modified_centroid_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 188. RVA: 0x3FB8A10. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Pyra_modified_centroid_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 189. RVA: 0x3FB6AE0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Pyra_modified_centroid_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 190. RVA: 0x3FBA070. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Pyra_normalized_angle_deviation_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 191. RVA: 0x3F4B810. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Pyra_normalized_angle_deviation_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 192. RVA: 0x3F49FF0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Pyra_ortho_quality_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 193. RVA: 0x3F7C720. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Pyra_ortho_quality_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 194. RVA: 0x3F80010. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Pyra_ortho_quality_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 195. RVA: 0x3F7A2C0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Pyra_ortho_quality_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 196. RVA: 0x3F7EA00. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Pyra_orthogonality_angle_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 197. RVA: 0x3FD64E0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Pyra_orthogonality_angle_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 198. RVA: 0x3FD7A00. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Pyra_orthogonality_angle_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 199. RVA: 0x3FD5020. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Pyra_orthogonality_angle_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 200. RVA: 0x3FD7EB0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Pyra_orthoskew_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 201. RVA: 0x3F7C720. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Pyra_orthoskew_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 202. RVA: 0x3F80010. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Pyra_orthoskew_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 203. RVA: 0x3F7A2C0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Pyra_orthoskew_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 204. RVA: 0x3F7EA00. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Pyra_shape_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 205. RVA: 0x3F07C90. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Pyra_shape_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 206. RVA: 0x3F09F90. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Pyra_shape_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 207. RVA: 0x3F08E60. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Pyra_shape_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 208. RVA: 0x3F0A570. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Pyra_size_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 209. RVA: 0x3EEA3B0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Pyra_size_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 210. RVA: 0x3EEB9B0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Pyra_size_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 211. RVA: 0x3EEAD40. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Pyra_size_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 212. RVA: 0x3EEB630. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Pyra_squish2_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 213. RVA: 0x3F29540. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Pyra_squish2_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 214. RVA: 0x3F28960. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Pyra_squish2_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 215. RVA: 0x3F26E20. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Pyra_squish2_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 216. RVA: 0x3F26200. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Pyra_squish_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 217. RVA: 0x3EF86F0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Pyra_squish_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 218. RVA: 0x3EF7230. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Pyra_squish_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 219. RVA: 0x3EF7480. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Pyra_squish_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 220. RVA: 0x3EF6FD0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Pyra_warp_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 221. RVA: 0x3F15340. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Pyra_warp_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 222. RVA: 0x3F144C0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Pyra_warp_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 223. RVA: 0x3F16730. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Pyra_warp_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 224. RVA: 0x3F14BF0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Quad_area_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 225. RVA: 0x3EE9D20. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Quad_area_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 226. RVA: 0x3EE9B70. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Quad_aspect_ratio_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 227. RVA: 0x3F6F1A0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Quad_aspect_ratio_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 228. RVA: 0x3F6FD70. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Quad_centroid_iterative_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 229. RVA: 0x3EDF180. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Quad_centroid_iterative_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 230. RVA: 0x3EDE930. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Quad_centroid_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 231. RVA: 0x3EDD130. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Quad_centroid_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 232. RVA: 0x3EDC9E0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Quad_edge_ratio_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 233. RVA: 0x3F6F1A0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Quad_edge_ratio_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 234. RVA: 0x3F6FD70. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Quad_normal_angle_deviation_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 235. RVA: 0x3F70840. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Quad_normal_angle_deviation_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 236. RVA: 0x3F71370. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Quad_orthoskew_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 237. RVA: 0x3F73520. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Quad_orthoskew_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 238. RVA: 0x3F73ED0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Quad_shape_ratio_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 239. RVA: 0x3F70840. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Quad_shape_ratio_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 240. RVA: 0x3F71370. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Quad_size_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 241. RVA: 0x3F726A0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Quad_size_ratio_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 242. RVA: 0x3F70840. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Quad_size_ratio_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 243. RVA: 0x3F71370. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Quad_size_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 244. RVA: 0x3F728D0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Quad_warp_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 245. RVA: 0x3EFCAB0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Quad_warp_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 246. RVA: 0x3EFDBC0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Quad_warp_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 247. RVA: 0x3EFBE20. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Quad_warp_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 248. RVA: 0x3EFD6C0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tetra_aspect_ratio_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 249. RVA: 0x3FCCBC0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tetra_aspect_ratio_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 250. RVA: 0x3FCD690. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tetra_centroid_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 251. RVA: 0x3EE9800. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tetra_centroid_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 252. RVA: 0x3EE9790. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tetra_edge_ratio_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 253. RVA: 0x3FCBCC0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tetra_edge_ratio_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 254. RVA: 0x3FCBDD0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tetra_enhanced_ortho_quality_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 255. RVA: 0x3F81E60. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tetra_enhanced_ortho_quality_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 256. RVA: 0x3F815B0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tetra_fluent_aspect_ratio_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 257. RVA: 0x3F63610. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tetra_fluent_aspect_ratio_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 258. RVA: 0x3F64810. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tetra_fluent_aspect_ratio_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 259. RVA: 0x3F63F50. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tetra_fluent_aspect_ratio_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 260. RVA: 0x3F64B30. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tetra_icemcfd_quality_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 261. RVA: 0x3F64E70. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tetra_icemcfd_quality_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 262. RVA: 0x3F651F0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tetra_inv_orthogoality_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 263. RVA: 0x3F815B0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tetra_inv_orthogonality_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 264. RVA: 0x3F81E60. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tetra_inv_orthogonality_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 265. RVA: 0x3F829E0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tetra_inv_orthogonality_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 266. RVA: 0x3F82700. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tetra_modified_centroid_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 267. RVA: 0x3EE9800. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tetra_modified_centroid_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 268. RVA: 0x3EE9800. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tetra_modified_centroid_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 269. RVA: 0x3EE9790. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tetra_modified_centroid_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 270. RVA: 0x3EE9790. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tetra_normalized_angle_deviation_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 271. RVA: 0x3F46E60. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tetra_normalized_angle_deviation_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 272. RVA: 0x3F47730. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tetra_normalized_shape_ratio_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 273. RVA: 0x3F537B0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tetra_normalized_shape_ratio_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 274. RVA: 0x3F53AB0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tetra_normalized_size_ratio_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 275. RVA: 0x3F50CE0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tetra_normalized_size_ratio_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 276. RVA: 0x3F53310. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tetra_ortho_quality_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 277. RVA: 0x3F900D0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tetra_ortho_quality_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 278. RVA: 0x3F91470. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tetra_ortho_quality_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 279. RVA: 0x3F8F480. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tetra_ortho_quality_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 280. RVA: 0x3F90D70. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tetra_orthogonality_angle_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 281. RVA: 0x3FCE7A0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tetra_orthogonality_angle_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 282. RVA: 0x3FCF260. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tetra_orthogonality_angle_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 283. RVA: 0x3FCE160. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tetra_orthogonality_angle_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 284. RVA: 0x3FCEDC0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tetra_orthoskew_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 285. RVA: 0x3F81E60. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tetra_orthoskew_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 286. RVA: 0x3F829E0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tetra_orthoskew_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 287. RVA: 0x3F815B0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tetra_orthoskew_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 288. RVA: 0x3F82700. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tetra_shape_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 289. RVA: 0x3F01290. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tetra_shape_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 290. RVA: 0x3F020A0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tetra_shape_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 291. RVA: 0x3F017B0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tetra_shape_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 292. RVA: 0x3F01CF0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tetra_size_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 293. RVA: 0x3EEA1F0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tetra_size_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 294. RVA: 0x3EEA2E0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tetra_squish2_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 295. RVA: 0x3F1C260. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tetra_squish2_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 296. RVA: 0x3EF2300. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tetra_squish2_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 297. RVA: 0x3F1B7D0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tetra_squish2_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 298. RVA: 0x3EF20A0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tetra_squish_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 299. RVA: 0x3EF2550. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tetra_squish_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 300. RVA: 0x3EF2300. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tetra_squish_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 301. RVA: 0x3EF1880. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tetra_squish_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 302. RVA: 0x3EF20A0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tri_edge_ratio_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 303. RVA: 0x3F70080. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tri_edge_ratio_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 304. RVA: 0x3F701D0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tria_area_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 305. RVA: 0x3EE99E0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tria_area_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 306. RVA: 0x3EE98A0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tria_aspect_ratio_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 307. RVA: 0x3F6F460. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tria_aspect_ratio_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 308. RVA: 0x3F6F910. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tria_centroid_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 309. RVA: 0x3EDC960. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tria_centroid_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 310. RVA: 0x3EDC900. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tria_in_radius_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 311. RVA: 0x3F6F050. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tria_in_radius_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 312. RVA: 0x3F6EF10. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tria_normal_angle_deviation_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 313. RVA: 0x3F705B0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tria_normal_angle_deviation_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 314. RVA: 0x3F710D0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tria_orthoskew_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 315. RVA: 0x3F72E30. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tria_orthoskew_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 316. RVA: 0x3F731A0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tria_shape_ratio_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 317. RVA: 0x3F76180. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tria_shape_ratio_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 318. RVA: 0x3F76340. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tria_size_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 319. RVA: 0x3F72360. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tria_size_ratio_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 320. RVA: 0x3F71FC0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tria_size_ratio_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 321. RVA: 0x3F71C30. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Tria_size_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 322. RVA: 0x3F72500. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Wedge_centroid_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 323. RVA: 0x3EE8620. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Wedge_centroid_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 324. RVA: 0x3EE9440. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Wedge_centroid_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 325. RVA: 0x3EE7570. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Wedge_centroid_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 326. RVA: 0x3EE83B0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Wedge_edge_ratio_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 327. RVA: 0x3FCC120. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Wedge_edge_ratio_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 328. RVA: 0x3FCC230. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Wedge_enhanced_ortho_quality_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 329. RVA: 0x3F95F30. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Wedge_enhanced_ortho_quality_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 330. RVA: 0x3F97570. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Wedge_enhanced_ortho_quality_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 331. RVA: 0x3F981F0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Wedge_enhanced_ortho_quality_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 332. RVA: 0x3F99880. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Wedge_fluent_aspect_ratio_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 333. RVA: 0x3F624B0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Wedge_fluent_aspect_ratio_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 334. RVA: 0x3F60D60. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Wedge_fluent_aspect_ratio_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 335. RVA: 0x3F613C0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Wedge_fluent_aspect_ratio_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 336. RVA: 0x3F61080. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Wedge_icemcfd_quality_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 337. RVA: 0x3F66700. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Wedge_icemcfd_quality_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 338. RVA: 0x3F654E0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Wedge_inv_orthogoality_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 339. RVA: 0x3F78F60. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Wedge_inv_orthogoality_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 340. RVA: 0x3F79FE0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Wedge_inv_orthogoality_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 341. RVA: 0x3F781A0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Wedge_inv_orthogoality_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 342. RVA: 0x3F79D00. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Wedge_modified_centroid_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 343. RVA: 0x3FBF6D0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Wedge_modified_centroid_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 344. RVA: 0x3FBC350. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Wedge_modified_centroid_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 345. RVA: 0x3FBD9B0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Wedge_modified_centroid_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 346. RVA: 0x3FBB1E0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Wedge_normalized_angle_deviation_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 347. RVA: 0x3F4D050. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Wedge_normalized_angle_deviation_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 348. RVA: 0x3F4EEA0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Wedge_ortho_quality_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 349. RVA: 0x3F8D050. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Wedge_ortho_quality_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 350. RVA: 0x3F8B6C0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Wedge_ortho_quality_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 351. RVA: 0x3F87840. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Wedge_ortho_quality_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 352. RVA: 0x3F89CD0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Wedge_orthogonality_angle_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 353. RVA: 0x3FD33F0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Wedge_orthogonality_angle_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 354. RVA: 0x3FD4B70. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Wedge_orthogonality_angle_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 355. RVA: 0x3FD21C0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Wedge_orthogonality_angle_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 356. RVA: 0x3FD46D0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Wedge_orthoskew_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 357. RVA: 0x3F78F60. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Wedge_orthoskew_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 358. RVA: 0x3F79FE0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Wedge_orthoskew_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 359. RVA: 0x3F781A0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Wedge_orthoskew_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 360. RVA: 0x3F79D00. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Wedge_shape_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 361. RVA: 0x3F05FA0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Wedge_shape_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 362. RVA: 0x3F076B0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Wedge_shape_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 363. RVA: 0x3F04E70. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Wedge_shape_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 364. RVA: 0x3F07170. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Wedge_size_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 365. RVA: 0x3EEBD40. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Wedge_size_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 366. RVA: 0x3EED6E0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Wedge_size_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 367. RVA: 0x3EEC880. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Wedge_size_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 368. RVA: 0x3EED310. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Wedge_squish2_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 369. RVA: 0x3F248A0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Wedge_squish2_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 370. RVA: 0x3F22250. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Wedge_squish2_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 371. RVA: 0x3F22FD0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Wedge_squish2_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 372. RVA: 0x3F21540. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Wedge_squish_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 373. RVA: 0x3EF5F40. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Wedge_squish_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 374. RVA: 0x3EF7230. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Wedge_squish_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 375. RVA: 0x3EF4F40. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Wedge_squish_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 376. RVA: 0x3EF6FD0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Wedge_warp_p",
+          "signature": "",
+          "doc": "PE export. Ordinal: 377. RVA: 0x3F120E0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Wedge_warp_pcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 378. RVA: 0x3F11260. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Wedge_warp_v",
+          "signature": "",
+          "doc": "PE export. Ordinal: 379. RVA: 0x3F132B0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "MM_Wedge_warp_vcache",
+          "signature": "",
+          "doc": "PE export. Ordinal: 380. RVA: 0x3F11990. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        }
+      ]
+    }
+  },
+  "statistics": {
+    "total_modules": 1,
+    "total_functions": 380,
+    "demangled_signatures": 0
+  }
+}

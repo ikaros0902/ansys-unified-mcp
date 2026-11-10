@@ -1,0 +1,50 @@
+{
+  "module": "ansys.fluent.core.launcher.launcher",
+  "version": "unknown",
+  "sdk_package": "ansys-fluent-core",
+  "sdk_version": "0.42.1",
+  "interface": "PyFluent 0.42.1 launcher functions",
+  "scope": "範圍限於本機 0.42.1 SDK 中的 connect_to_fluent 與 launch_fluent。本機同步文件目錄中的 launcher HTML 標示 0.40.3，不作為 0.42.1 版本證據。擷取只讀取函式 docstring、簽章與來源 hash，不呼叫函式、不啟動 Fluent 或建立連線。",
+  "sources": {
+    "sdk_files": [
+      {
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/fluent/core/__init__.py",
+        "sha256": "2975d98ff1e126a5bcd820422c612e7b38fb3b5d7bed6fe0180aaaa8f1c0b082"
+      },
+      {
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/fluent/core/launcher/launcher.py",
+        "sha256": "309f221f96ee4a43bf0d49a5894b025ca11e415afba5ab797a90719cceb2c65a"
+      },
+      {
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/fluent/core/utils/deprecate.py",
+        "sha256": "65151c4f4d1ab5e88467b54f4ea3624e8780989fd3f31ed52bee3289e3c07b45"
+      }
+    ]
+  },
+  "modules": {
+    "ansys.fluent.core.launcher.launcher": {
+      "doc": "Provides a module for launching Fluent.\n\nThis module supports both starting Fluent locally and connecting to a remote instance\nwith gRPC.",
+      "classes": {},
+      "functions": [
+        {
+          "name": "connect_to_fluent",
+          "signature": "(*, ip: str | None = None, port: int | None = None, address: str | None = None, cleanup_on_exit: bool = False, start_transcript: bool = True, server_info_file_name: str | None = None, password: str | None = None, allow_remote_host: bool = False, certificates_folder: str | None = None, insecure_mode: bool = False, start_watchdog: bool | None = None, file_transfer_service: Any | None = None) -> ansys.fluent.core.session_meshing.Meshing | ansys.fluent.core.session_pure_meshing.PureMeshing | ansys.fluent.core.session_solver.Solver | ansys.fluent.core.session_solver_icing.SolverIcing | ansys.fluent.core.session_solver_aero.SolverAero",
+          "doc": "Connect to an existing Fluent server instance.\n\nParameters\n----------\nip : str, optional\n    IP address for connecting to an existing Fluent instance. The\n    IP address defaults to ``\"127.0.0.1\"``. You can also use the environment\n    variable ``PYFLUENT_FLUENT_IP=<ip>`` to set this parameter.\n    The explicit value of ``ip`` takes precedence over ``PYFLUENT_FLUENT_IP=<ip>``.\nport : int, optional\n    Port to listen on for an existing Fluent instance. You can use the\n    environment variable ``PYFLUENT_FLUENT_PORT=<port>`` to set a default\n    value. The explicit value of ``port`` takes precedence over\n    ``PYFLUENT_FLUENT_PORT=<port>``.\naddress : str, optional\n    Address for connecting to an existing Fluent instance. The address\n    can be a TCP address of the form ``<ip>:<port>`` or a Unix domain\n    socket of the form ``unix:/<path>``. The default is ``None``.\ncleanup_on_exit : bool, optional\n    Whether to shut down the connected Fluent session when PyFluent is\n    exited, or the ``exit()`` method is called on the session instance,\n    or if the session instance becomes unreferenced. The default is ``False``.\nstart_transcript : bool, optional\n    Whether to start streaming the Fluent transcript in the client. The\n    default is ``True``. You can stop and start the streaming of the\n    Fluent transcript subsequently via the method calls, ``transcript.start()``\n    and ``transcript.stop()`` on the session object.\nserver_info_file_name: str\n    Path to server-info file written out by Fluent server. The default is\n    ``None``. PyFluent uses the connection information in the file to\n    connect to a running Fluent session.\npassword : str, optional\n    Password to connect to existing Fluent instance.\nallow_remote_host : bool, optional\n    Whether to allow connecting to a remote Fluent instance.\ncertificates_folder : str, optional\n    Path to the folder containing TLS certificates for Fluent's gRPC server.\ninsecure_mode : bool, optional\n    If True, Fluent's gRPC server will be connected in insecure mode without TLS.\n    This mode is not recommended. For more details on the implications\n    and usage of insecure mode, refer to the Fluent documentation.\nstart_watchdog: bool, optional\n    When ``cleanup_on_exit`` is True, ``start_watchdog`` defaults to True,\n    which means an independent watchdog process is run to ensure\n    that any local Fluent connections are properly closed (or terminated if frozen) when Python process ends.\nfile_transfer_service : optional\n    File transfer service. Uploads/downloads files to/from the server.\n\nReturns\n-------\n:obj:`~typing.Union` [:class:`Meshing<ansys.fluent.core.session_meshing.Meshing>`,     :class:`~ansys.fluent.core.session_pure_meshing.PureMeshing`,     :class:`~ansys.fluent.core.session_solver.Solver`,     :class:`~ansys.fluent.core.session_solver_icing.SolverIcing`]\n    Session object.\n\nRaises\n-------\nValueError\n    Raised when neither `certificates_folder` nor `insecure_mode` are set while `allow_remote_host` is True.\n    Raised when both `certificates_folder` and `insecure_mode` are set simultaneously.\n    Raised when `certificates_folder` is set but `allow_remote_host` is False.\n    Raised when `insecure_mode` is set but `allow_remote_host` is False.",
+          "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\fluent\\core\\launcher\\launcher.py",
+          "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\fluent\\core\\launcher\\launcher.py"
+        },
+        {
+          "name": "launch_fluent",
+          "signature": "(*, product_version: ansys.fluent.core.utils.fluent_version.FluentVersion | str | float | int | None = None, dimension: ansys.fluent.core.launcher.launch_options.Dimension | Literal[2, 3] = <Dimension.THREE: 3>, precision: ansys.fluent.core.launcher.launch_options.Precision | Literal['single', 'double'] = <Precision.DOUBLE: 'double'>, processor_count: int | None = None, journal_file_names: None | str | list[str] = None, start_timeout: int | None = None, additional_arguments: str = '', env: dict[str, Any] | None = None, start_container: bool | None = None, container_dict: dict[str, Any] | None = None, dry_run: bool = False, cleanup_on_exit: bool = True, start_transcript: bool = True, ui_mode: ansys.fluent.core.launcher.launch_options.UIMode | str | None = None, graphics_driver: ansys.fluent.core.launcher.launch_options.FluentWindowsGraphicsDriver | ansys.fluent.core.launcher.launch_options.FluentLinuxGraphicsDriver | str | None = None, case_file_name: 'PathType | None' = None, case_data_file_name: 'PathType | None' = None, lightweight_mode: bool | None = None, mode: ansys.fluent.core.launcher.launch_options.FluentMode | str = <FluentMode.SOLVER: 'solver'>, py: bool | None = None, gpu: bool | list[int] | None = None, cwd: 'PathType | None' = None, fluent_path: 'PathType | None' = None, topy: str | list[Any] | None = None, start_watchdog: bool | None = None, scheduler_options: ansys.fluent.core.launcher.launcher.SlurmSchedulerOptions | None = None, file_transfer_service: Any | None = None, use_docker_compose: bool = False, use_podman_compose: bool = False, certificates_folder: str | None = None, insecure_mode: bool = False) -> ansys.fluent.core.session_meshing.Meshing | ansys.fluent.core.session_pure_meshing.PureMeshing | ansys.fluent.core.session_solver.Solver | ansys.fluent.core.session_solver_icing.SolverIcing | ansys.fluent.core.session_solver_aero.SolverAero | ansys.fluent.core.launcher.slurm_launcher.SlurmFuture | dict[str, Any] | tuple[str, str]",
+          "doc": "Launch Fluent locally in server mode or connect to a running Fluent server\ninstance.\n\nReturns\n-------\n:obj:`~typing.Union` [:class:`Meshing<ansys.fluent.core.session_meshing.Meshing>`,     :class:`~ansys.fluent.core.session_pure_meshing.PureMeshing`,     :class:`~ansys.fluent.core.session_solver.Solver`,     :class:`~ansys.fluent.core.session_solver_icing.SolverIcing`, tuple[str, str] | dict[str, Any]]\n    Session object or configuration ``dict[str, Any]`` if ``dry_run = True`` for docker or a tuple of\n    (fluent executable path, startup arguments) if ``dry_run = True`` for standalone launch.\n\nRaises\n------\nUnexpectedKeywordArgument\n    If an unexpected keyword argument is provided.\nValueError\n    If both ``use_docker_compose`` and ``use_podman_compose`` are set to ``True``.\n\nNotes\n-----\nJob scheduler environments such as SLURM, LSF, PBS, etc. allocates resources / compute nodes.\nThe allocated machines and core counts are queried from the scheduler environment and\npassed to Fluent.",
+          "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\fluent\\core\\utils\\deprecate.py",
+          "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\fluent\\core\\launcher\\launcher.py"
+        }
+      ]
+    }
+  },
+  "statistics": {
+    "total_modules": 1,
+    "total_functions": 2
+  }
+}

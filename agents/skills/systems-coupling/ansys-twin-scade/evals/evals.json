@@ -1,0 +1,24 @@
+[
+  {
+    "eval_id": "twin_01",
+    "prompt": "如何將 3D Fluent 散熱模擬生成動態降階模型 (Dynamic ROM) 並導入 Twin Builder？",
+    "expected_keywords": [
+      "ROM",
+      "Twin Builder",
+      "SVD",
+      "Fluent",
+      "FMU"
+    ]
+  },
+  {
+    "eval_id": "scade_01",
+    "prompt": "SCADE Suite 如何保證自動生成的嵌入式控制代碼滿足 ISO 26262 ASIL D 要求？",
+    "expected_keywords": [
+      "SCADE",
+      "ISO 26262",
+      "ASIL D",
+      "Qualifiable Code Generator",
+      "DO-178C"
+    ]
+  }
+]

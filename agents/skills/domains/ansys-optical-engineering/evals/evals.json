@@ -1,0 +1,24 @@
+[
+  {
+    "eval_id": "opt_01",
+    "prompt": "如何利用 Zemax OpticStudio 設計多透鏡手機鏡頭並評估 MTF 調製傳遞函數？",
+    "expected_keywords": [
+      "ansys-zemax",
+      "ZOS-API",
+      "MTF",
+      "Sequential",
+      "Spot Diagram"
+    ]
+  },
+  {
+    "eval_id": "opt_02",
+    "prompt": "在 Speos 中如何評估車載抬頭顯示器 (HUD) 的重影與日間輝度？",
+    "expected_keywords": [
+      "ansys-speos",
+      "HUD",
+      "Luminance",
+      "Ghost Image",
+      "BSDF"
+    ]
+  }
+]

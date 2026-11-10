@@ -1,0 +1,244 @@
+{
+  "module": "ansys.optislang.core.optislang",
+  "version": "unknown",
+  "sdk_package": "ansys-optislang-core",
+  "sdk_version": "1.6.0",
+  "interface": "PyOptiSLang 1.6.0 Optislang client",
+  "scope": "範圍限於 Optislang 直接宣告的公開方法與屬性；以 AST 靜態讀取 SDK 1.6.0 原始碼，不匯入套件、不建立 client、不啟動或連線 optiSLang。",
+  "sources": {
+    "sdk_files": [
+      {
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
+        "sha256": "ad62c763ccbf934bea9bba57b5036f2e42e1ae94bcfedb45a5406e6d317b7e3d"
+      }
+    ],
+    "excluded_api_references": [
+      {
+        "version": "1.7.0",
+        "reason": "本機 API reference 為 1.7.0，與 SDK 1.6.0 不同版，僅列為排除證據。",
+        "files": [
+          {
+            "path": "ANSYS_Document/optiSLang/sdk/ansys-optislang-core/1.7.0/api_reference/96168993a608-ansys.optislang.core.optislang.Optislang.md",
+            "sha256": "a146dd6fb579cbc63951d1b7212eaf928666ddae79a38638e823504664704567"
+          },
+          {
+            "path": "ANSYS_Document/optiSLang/sdk/ansys-optislang-core/1.7.0/api_reference/96168993a608-ansys.optislang.core.optislang.Optislang.html",
+            "sha256": "1504d5208ac508cb3e50039435ac4385f371c57af38ff7c7c9445feceaeb23d2"
+          }
+        ]
+      }
+    ]
+  },
+  "modules": {
+    "ansys.optislang.core.optislang": {
+      "doc": "Contains Optislang class, which provides the Python API for the optiSLang app.",
+      "classes": {
+        "Optislang": {
+          "name": "Optislang",
+          "doc": "Connects to the optiSLang app and provides an API to control it.\n\nFor remote connection, it is assumed that optiSLang is already running\non a remote (or local) host as a server. In this case, the host and port\nmust be specified. Parameters related to the execution of the new optiSLang\nserver are ignored.\n\nTo run optiSLang locally, both the ``host`` and ``port`` parameters must\nbe ``None``, which are their defaults. Other parameters can be optionally\nspecified.\n\nParameters\n----------\nlocal_server_id: Optional[str], optional\n    Local domain server ID on which optiSLang is running as a local server.\n    The default is ``None``.\nhost : Optional[str], optional\n    IPv4/v6 address on which optiSLang is running as a remote\n    server. The default is ``None``.\nport : Optional[int], optional\n    Port on which optiSLang is running as a remote server. The default is ``None``.\nexecutable : Optional[Union[str, pathlib.Path]], optional\n    Path to the optiSLang executable file to execute on a the local host.\n    The default is ``None``. This parameter is ignored when ``host``\n    and ``port`` parameters are specified.\nproject_path : Optional[Union[str, pathlib.Path]], optional\n    Path to the optiSLang project file that a new local optiSLang server\n    is to use. The default is ``None``. This parameter is ignored\n    when ``host`` and ``port`` parameters are specified. Here is how\n    this parameter is used:\n\n    - If the project file exists, it is opened.\n    - If the project file does not exist, a project is created in the specified path.\n    - If the path is ``None``, a new project is created in the temporary directory.\n\nbatch : bool, optional\n    Determines whether to start optiSLang server in batch mode. Defaults to ``True``.\n\n    .. note:: Cannot be used in combination with service mode.\n\n    .. note:: Parameters marked as \"Only supported in batch mode\"\n        are ignored when ``batch=False``.\n\nservice: bool, optional\n    Determines whether to start optiSLang server in service mode. If ``True``,\n    ``batch`` argument is set to ``False``. Defaults to ``False``.\n\n    .. note:: Cannot be used in combination with batch mode.\n\ncommunication_channel : CommunicationChannel, optional\n    Defines the communication channel to be used for the optiSLang server.\n    If not specified, local domain communication channel is used.\n    Defaults to ``CommunicationChannel.LOCAL_DOMAIN``.\n\n    .. warning:: If set to ``CommunicationChannel.TCP``, insecure communication mode without TLS\n        is used. This mode allows remote communication but is not recommended.\n        For more details on the implications and usage of insecure mode,\n        refer to the optiSLang documentation.\n\nserver_address : Optional[str], optional\n    In case an optiSLang server is to be started, this defines the address\n    of the optiSLang server. If not specified, optiSLang listens on\n    local host only. Defaults to ``None``.\nport_range : Optional[Tuple[int, int]], optional\n    In case an optiSLang server is to be started, this restricts the port range\n    for the optiSLang server. If not specified, optiSLang is allowed to\n    listen on any port. Defaults to ``None``.\nno_run : Optional[bool], optional\n    Determines whether not to run the specified project when started in batch mode.\n    Defaults to ``None``.\n\n    .. note:: Only supported in batch mode.\n\nno_save : bool, optional\n    Whether to save the specified project after all other actions are completed.\n    The default is ``False``. This parameter is ignored when ``host`` and\n    ``port`` parameters are specified.\n\n    .. note:: Only supported in batch mode.\n\nforce : bool, optional\n    Determines whether to force opening/processing specified project when started in batch mode\n    even if issues occur.\n    Defaults to ``True``.\n\n    .. note:: Only supported in batch mode.\n\nreset : bool, optional\n    Determines whether to reset specified project after load.\n    Defaults to ``False``.\n\n    .. note:: Only supported in batch mode.\n\nauto_relocate : bool, optional\n    Determines whether to automatically relocate missing file paths.\n    Defaults to ``False``.\n\n    .. note:: Only supported in batch mode.\n\nlistener_id : Optional[str], optional\n    Specific unique ID for the TCP listener. Defaults to ``None``.\nmulti_listener : Iterable[Tuple[str, int, Optional[str]]], optional\n    Multiple remote listeners (plain TCP/IP based) to be registered at optiSLang server.\n    Each listener is a combination of host, port and (optionally) listener ID.\n    Defaults to ``None``.\nlisteners_refresh_interval : int, optional\n    Refresh interval for TCP listeners in seconds. Defaults to 10 s.\nlisteners_default_timeout : Optional[int], optional\n    Default timeout for TCP listeners in milliseconds. Defaults to ``None`` which results in\n    optiSLang using the default timeout value of 60000 milliseconds.\nini_timeout : float, optional\n    Time in seconds to connect to the optiSLang server. The default is ``60``.\nname : Optional[str], optional\n    ID of the optiSLang instance. Defaults to ``None``.\npassword : Optional[str], optional\n    Server password. The default is ``None``. This parameter is used when\n    communication with the server requires that the request contain a password.\n    Defaults to ``None``.\nloglevel : Optional[str], optional\n    Logging level. The options are:\n\n    - ``CRITICAL``: Log errors that are fatal for the app.\n    - ``ERROR``: Log errors that are fatal for some operation, but not for the app.\n    - ``WARNING``: Log some oddities or potential problems.\n    - ``INFO``: Log some useful information that the program works as expected.\n    - ``DEBUG``: Log all information for use in debugging.\n\n    Defaults to ``None``.\n\nlog_process_stdout : bool, optional\n    Determines whether the process stdout should be logged. Defaults to ``False``.\nlog_process_stderr : bool, optional\n    Determines whether the process stderr should be logged. Defaults to ``False``.\nshutdown_on_finished: bool, optional\n    Whether to shut down when execution is finished and no listeners are registered.\n    The default is ``True``. This parameter is ignored when ``host`` and\n    ``port`` parameters are specified.\n\n    .. note:: Only supported in batch mode.\n\nenv_vars : Optional[Mapping[str, str]], optional\n    Additional environmental variables (key and value) for the optiSLang server process.\n    Defaults to ``None``.\nimport_project_properties_file : Optional[Union[str, pathlib.Path]], optional\n    Optional path to a project properties file to import. Defaults to ``None``.\nexport_project_properties_file : Optional[Union[str, pathlib.Path]], optional\n    Optional path to a project properties file to export. Defaults to ``None``.\n\n    .. note:: Only supported in batch mode.\n\nimport_placeholders_file : Optional[Union[str, pathlib.Path]], optional\n    Optional path to a placeholders file to import. Defaults to ``None``.\nexport_placeholders_file : Optional[Union[str, pathlib.Path]], optional\n    Optional path to a placeholders file to export. Defaults to ``None``.\n\n    .. note:: Only supported in batch mode.\n\noutput_file : Optional[Union[str, pathlib.Path]], optional\n    Optional path to an output file for writing project run results to. Defaults to ``None``.\n\n    .. note:: Only supported in batch mode.\n\ndump_project_state : Optional[Union[str, pathlib.Path]], optional\n    Optional path to a project state dump file to export. If a relative path is provided,\n    it is considered to be relative to the project working directory. Defaults to ``None``.\n\n    .. note:: Only supported in batch mode.\n\nopx_project_definition_file : Optional[Union[str, pathlib.Path]], optional\n    Optional path to an OPX project definition file. Defaults to ``None``.\n\n    .. note:: Only supported in batch mode.\n\nadditional_args : Optional[Iterable[str]], optional\n    Additional command line arguments used for execution of the optiSLang server process.\n    Defaults to ``None``.\n\nRaises\n------\nRuntimeError\n    Raised when the connection to the optiSLang server cannot be established\n    before the specified timeout.\nOslServerStartError\n    Raised when optiSLang server process failed to start\nOslServerLicensingError\n    Raised when optiSLang server process failed to start due to licensing issues\n\nExamples\n--------\nStart and connect to the local optiSLang server, get the version of optiSLang\nin use, print the version, and shut down the server.\n\n>>> from ansys.optislang.core import Optislang\n>>> osl = Optislang()\n>>> osl_version = osl.osl_version_string\n>>> print(osl_version)\n>>> osl.dispose()",
+          "methods": [
+            {
+              "name": "dispose",
+              "signature": "(self) -> None",
+              "doc": "Close all local threads and unregister listeners.\n\nRaises\n------\nOslCommunicationError\n    Raised when an error occurs while communicating with the server.\nOslCommandError\n    Raised when a command or query fails.\nTimeoutError\n    Raised when the timeout float value expires.",
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
+            },
+            {
+              "name": "get_osl_server",
+              "signature": "(self) -> Optional[OslServer]",
+              "doc": "Get the currently used instance of the OslServer.\n\nThis instance can be used to directly communicate with optiSLang using\nthe optiSLang server API.\n\nReturns\n-------\nOptional[OslServer]\n    OptiSLang server object.",
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
+            },
+            {
+              "name": "get_osl_version_string",
+              "signature": "(self) -> str",
+              "doc": "Get the optiSLang version in use as a string.\n\nReturns\n-------\nstr\n    optiSLang version.\n\nRaises\n------\nOslCommunicationError\n    Raised when an error occurs while communicating with the server.\nOslCommandError\n    Raised when a command or query fails.\nTimeoutError\n    Raised when the timeout float value expires.",
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
+            },
+            {
+              "name": "get_osl_version",
+              "signature": "(self) -> OslVersion",
+              "doc": "Get the optiSLang version in use as a tuple.\n\nReturns\n-------\nOslVersion\n    optiSLang version as typing.NamedTuple containing\n    major, minor, maintenance and revision versions.\n\nRaises\n------\nOslCommunicationError\n    Raised when an error occurs while communicating with the server.\nOslCommandError\n    Raised when a command or query fails.\nRuntimeError\n    Raised when parsing version numbers from string fails.\nTimeoutError\n    Raised when the timeout float value expires.",
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
+            },
+            {
+              "name": "get_timeout",
+              "signature": "(self) -> Optional[float]",
+              "doc": "Get the timeout value for executing commands.\n\nReturns\n-------\ntimeout: Optional[float]\n    Timeout in seconds to perform commands. This value must be greater\n    than zero or ``None``. The default is ``None``. Another function\n    raises a timeout exception if the timeout value has elapsed before\n    an operation has completed. If the timeout is ``None``, functions\n    wait until they're finished, and no timeout exception is raised.",
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
+            },
+            {
+              "name": "get_working_dir",
+              "signature": "(self) -> Optional[Path]",
+              "doc": "Get the path to the optiSLang project's working directory.\n\nReturns\n-------\nOptional[pathlib.Path]\n    Path to the optiSLang project's working directory. If no project is loaded\n    in optiSLang, ``None`` is returned.\n\nRaises\n------\nOslCommunicationError\n    Raised when an error occurs while communicating with the server.\nOslCommandError\n    Raised when a command or query fails.\nTimeoutError\n    Raised when the timeout float value expires.",
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
+            },
+            {
+              "name": "new",
+              "signature": "(self) -> None",
+              "doc": "Create and open a new project.\n\nRaises\n------\nOslCommunicationError\n    Raised when an error occurs while communicating with the server.\nOslCommandError\n    Raised when a command or query fails.\nTimeoutError\n    Raised when the timeout float value expires.",
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
+            },
+            {
+              "name": "open",
+              "signature": "(self, file_path: Union[str, Path], force: bool=True, restore: bool=False, reset: bool=False, project_properties_file: Optional[str]=None) -> None",
+              "doc": "Open a project.\n\nParameters\n----------\nfile_path : Union[str, pathlib.Path]\n    Path to the optiSLang project file to open.\nforce : bool, optional\n    Whether to force opening of the project even if non-critical errors occur.\n    Non-critical errors include:\n\n    - Timestamp of the (auto) save point is newer than the project timestamp.\n    - Project (file) is incomplete.\n\nrestore : bool, optional\n    Whether to restore the project from the last (auto) save point (if present).\nreset : bool, optional\n    Whether to reset the project after loading it.\nproject_properties_file : Optional[str], optional\n    Project properties file to import, by default ``None``.\n\nRaises\n------\nOslCommunicationError\n    Raised when an error occurs while communicating with the server.\nOslCommandError\n    Raised when a command or query fails.\nTimeoutError\n    Raised when the timeout float value expires.",
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
+            },
+            {
+              "name": "reset",
+              "signature": "(self) -> None",
+              "doc": "Reset the project.\n\nRaises\n------\nOslCommunicationError\n    Raised when an error occurs while communicating with the server.\nOslCommandError\n    Raised when a command or query fails.\nTimeoutError\n    Raised when the timeout float value expires.",
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
+            },
+            {
+              "name": "run_python_script",
+              "signature": "(self, script: str, args: Union[Sequence[object], None]=None) -> Tuple[str, str]",
+              "doc": "Load a Python script in a project context and run it.\n\nParameters\n----------\nscript : str\n    Python commands to execute on the server.\nargs : Sequence[object], None, optional\n    Sequence of arguments used in the Python script. The default\n    is ``None``.\n\nReturns\n-------\nTuple[str, str]\n    STDOUT and STDERR from the executed Python script.\n\nRaises\n------\nOslCommunicationError\n    Raised when an error occurs while communicating with the server.\nOslCommandError\n    Raised when a command or query fails.\nTimeoutError\n    Raised when the timeout float value expires.",
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
+            },
+            {
+              "name": "run_python_file",
+              "signature": "(self, file_path: Union[str, Path], args: Union[Sequence[object], None]=None) -> Tuple[str, str]",
+              "doc": "Read a Python script from a file, load it in a project context, and run it.\n\nParameters\n----------\nfile_path : Union[str, pathlib.Path]\n    Path to the Python script file with the content to execute on the server.\nargs : Sequence[object], None, optional\n    Sequence of arguments to use in the Python script. The default is ``None``.\n\nReturns\n-------\nTuple[str, str]\n    STDOUT and STDERR from the executed Python script.\n\nRaises\n------\nFileNotFoundError\n    Raised when the specified Python script file does not exist.\nOslCommunicationError\n    Raised when an error occurs while communicating with the server.\nOslCommandError\n    Raised when a command or query fails.\nTimeoutError\n    Raised when the timeout float value expires.",
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
+            },
+            {
+              "name": "save",
+              "signature": "(self) -> None",
+              "doc": "Save changes to the project data and settings.\n\nRaises\n------\nOslCommunicationError\n    Raised when an error occurs while communicating with the server.\nOslCommandError\n    Raised when a command or query fails.\nTimeoutError\n    Raised when the timeout float value expires.",
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
+            },
+            {
+              "name": "save_as",
+              "signature": "(self, file_path: Union[str, Path], force: bool=True, restore: bool=False, reset: bool=False) -> None",
+              "doc": "Save and open the project at a new location.\n\nParameters\n----------\nfile_path : Union[str, pathlib.Path]\n    Path for saving the new project file to.\nforce : bool, optional\n    Whether to force opening of the project even if non-critical errors occur.\n    Non-critical errors include:\n\n    - Timestamp of the (auto) save point is newer than the project timestamp.\n    - Project (file) is incomplete.\n\nrestore : bool, optional\n    Whether to restore the project from the last (auto) save point (if present).\nreset : bool, optional\n    Whether to reset the project after loading it.\n\nRaises\n------\nOslCommunicationError\n    Raised when an error occurs while communicating with the server.\nOslCommandError\n    Raised when a command or query fails.\nTimeoutError\n    Raised when the timeout float value expires.",
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
+            },
+            {
+              "name": "save_copy",
+              "signature": "(self, file_path: Union[str, Path]) -> None",
+              "doc": "Save a copy of the project to a specified location..\n\nParameters\n----------\nfile_path : Union[str, pathlib.Path]\n    Path for saving the copy of the project file to.\n\nRaises\n------\nOslCommunicationError\n    Raised when an error occurs while communicating with the server.\nOslCommandError\n    Raised when a command or query fails.\nTimeoutError\n    Raised when the timeout float value expires.",
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
+            },
+            {
+              "name": "set_timeout",
+              "signature": "(self, timeout: Optional[float]=None) -> None",
+              "doc": "Set the timeout value for the executing commands.\n\nParameters\n----------\ntimeout: Optional[float]\n    Timeout in seconds to perform commands. This value must be greater\n    than zero or ``None``. The default is ``None``. Another function\n    raises a timeout exception if the timeout value has elapsed before\n    an operation has completed. If the timeout is ``None``, functions\n    wait until they're finished, and no timeout exception is raised.\n\nRaises\n------\nValueError\n    Raised when the timeout value is less than or equal to 0.\nTypeError\n    Raised when the timeout is not type of ``float`` or ``None``.",
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
+            },
+            {
+              "name": "shutdown",
+              "signature": "(self, force: bool=False) -> None",
+              "doc": "Shut down the optiSLang server.\n\nThis method stops the server from listening for incoming connections, discards\npending requests, and shuts down the server. In batch mode, the project runs\nuntil execution finishes and then optiSLang is shut down.\n\nParameters\n----------\nforce : bool, optional\n    Whether to forcibly shut down a local optiSLang server. The default is\n    ``False``. In all cases, an attempt is made to\n    shut down the optiSLang server in the proper way. However, if the\n    ``force`` parameter is ``True``, after a while, the process is forcibly\n    shut down without an exception being raised.\n\nRaises\n------\nOslCommunicationError\n    Raised when the ``force`` parameter is ``False`` and an error occurs\n    while communicating with the server.\nOslCommandError\n    Raised when the ``force`` parameter is ``False`` and the command or query fails.\nTimeoutError\n    Raised when the ``force`` parameter is ``False`` and the timeout float value expires.",
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
+            },
+            {
+              "name": "start",
+              "signature": "(self, wait_for_started: bool=True, wait_for_finished: bool=True) -> None",
+              "doc": "Start project execution.\n\nParameters\n----------\nwait_for_started : bool, optional\n    Whether this function call should wait for optiSLang to start\n    the command execution. The default is ``True``, in which case the\n    function call does not continue on to the next line of the Python\n    script after the command is successfully sent to optiSLang but\n    rater waits for execution of the flow inside optiSLang to start.\nwait_for_finished : bool, optional\n    Whether this function call should wait for optiSLang to finish\n    the command execution. The default is ``True``, in which case the\n    function call does not continue on to the next line of the Python\n    script after the command is successfully sent to optiSLang but\n    rather waits for execution of the flow inside optiSLang to finish.\n    This implicitly interprets ``wait_for_started`` as True.\n\nRaises\n------\nOslCommunicationError\n    Raised when an error occurs while communicating with the server.\nOslCommandError\n    Raised when a command or query fails.\nTimeoutError\n    Raised when the timeout float value expires.",
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
+            },
+            {
+              "name": "stop",
+              "signature": "(self, wait_for_finished: bool=True) -> None",
+              "doc": "Stop project execution.\n\nParameters\n----------\nwait_for_finished : bool, optional\n    Whether this function call should wait for optiSLang to finish\n    the command execution. The default is ``True``, in which case the\n    function call does not continue on to the next line of the Python\n    script after the command is successfully sent to optiSLang but\n    rather waits for execution of the flow inside optiSLang to finish.\n\nRaises\n------\nOslCommunicationError\n    Raised when an error occurs while communicating with the server.\nOslCommandError\n    Raised when a command or query fails.\nTimeoutError\n    Raised when the timeout float value expires.",
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
+            }
+          ],
+          "properties": [
+            {
+              "name": "application",
+              "type": "Application",
+              "doc": "Instance of the ``Application`` class.\n\nReturns\n-------\nApplication\n    Instance of ``Application`` class for operating with project.",
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
+            },
+            {
+              "name": "has_active_project",
+              "type": "bool",
+              "doc": "Whether a project is loaded.\n\nReturns\n-------\nbool\n    ``True`` if a project is loaded, ``False`` otherwise.\n\nRaises\n------\nOslCommunicationError\n    Raised when an error occurs while communicating with the server.\nOslCommandError\n    Raised when a command or query fails.\nTimeoutError\n    Raised when the timeout float value expires.",
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
+            },
+            {
+              "name": "log",
+              "type": "Logger",
+              "doc": "Instance logger.",
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
+            },
+            {
+              "name": "name",
+              "type": "str",
+              "doc": "Unique ID of the optiSLang instance.",
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
+            },
+            {
+              "name": "osl_server",
+              "type": "OslServer",
+              "doc": "Get the currently used instance of the OslServer.\n\nThis instance can be used to directly communicate with optiSLang using\nthe optiSLang server API.\n\nReturns\n-------\nOptional[OslServer]\n    OptiSLang server object.",
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
+            },
+            {
+              "name": "osl_version",
+              "type": "OslVersion",
+              "doc": "Version of used optiSLang.\n\nReturns\n-------\nOslVersion\n    optiSLang version as typing.NamedTuple containing\n    major, minor, maintenance and revision versions.",
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
+            },
+            {
+              "name": "osl_version_string",
+              "type": "str",
+              "doc": "Version of used optiSLang.\n\nReturns\n-------\nstr\n    optiSLang version.",
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
+            },
+            {
+              "name": "project",
+              "type": "Optional[Project]",
+              "doc": "Instance of the ``Project`` class.\n\nReturns\n-------\nOptional[Project]\n    Loaded project. If no project is loaded, ``None`` is returned.",
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
+            },
+            {
+              "name": "timeout",
+              "type": "Optional[float]",
+              "doc": "Get the timeout value for executing commands.\n\nReturns\n-------\ntimeout: Optional[float]\n    Timeout in seconds to perform commands. This value must be greater\n    than zero or ``None``. The default is ``None``. Another function\n    raises a timeout exception if the timeout value has elapsed before\n    an operation has completed. If the timeout is ``None``, functions\n    wait until they're finished, and no timeout exception is raised.",
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/optislang/core/optislang.py"
+            }
+          ]
+        }
+      },
+      "functions": []
+    }
+  },
+  "statistics": {
+    "total_modules": 1,
+    "total_classes": 1,
+    "total_methods": 18,
+    "total_properties": 9,
+    "total_functions": 0
+  }
+}

@@ -1,0 +1,990 @@
+# ==============================================================================
+# Directed Acyclic Multiphysics Graph (DAMG) Rules & Causal Topology Manifest
+# Schema Version: 1.0.0
+# Reference: Stage 2 Physics Causal State Machine & Precondition Gate
+# All comments follow ASD-STE100 and ASCII standards.
+# ==============================================================================
+
+version: "1.0.0"
+description: "Declarative causal dependency topology and dirty invalidation cascades for 9 physics disciplines"
+
+# ------------------------------------------------------------------------------
+# 1. Physics Maturity Hierarchy (Levels 0 - 7)
+# ------------------------------------------------------------------------------
+levels:
+  0:
+    name: "Context"
+    description: "Session initialization, unit systems, solver license allocation, and workspace binding"
+  1:
+    name: "Geometry"
+    description: "CAD import, defeaturing, watertight closure, fluid/solid volume enclosure, and midsurface generation"
+  2:
+    name: "Materials"
+    description: "Material constitutive property assignment, elasticity, fluid viscosity, and electromagnetic permeability"
+  3:
+    name: "Boundaries_Ports"
+    description: "Boundary condition declaration, excitation ports, surface zones, interface contacts, and kinematic supports"
+  4:
+    name: "Discretization_Mesh"
+    description: "Surface tessellation, volume/core meshing, boundary layer inflation, and adaptive mesh refinement"
+  5:
+    name: "Solver_Setup"
+    description: "Solver physics model configuration, analysis step controls, frequency sweep ranges, and convergence criteria"
+  6:
+    name: "Execution"
+    description: "Iterative or direct solver execution, time-stepping integration, and parameter sweep progression"
+  7:
+    name: "Observables"
+    description: "Derived physical observables, stress/strain tensors, flow fields, S-parameters, and telemetry logs"
+
+# ------------------------------------------------------------------------------
+# 2. Nine Multiphysics Disciplines & Causal Node Topology
+# ------------------------------------------------------------------------------
+disciplines:
+  structural_mechanics:
+    discipline_id: "structural_mechanics"
+    name: "Structural Mechanics"
+    description: "ANSYS Mechanical / MAPDL Static, Transient, Modal, and Harmonic Finite Element Analysis"
+    nodes:
+      STRUCTURAL_CONTEXT_INITIALIZED:
+        level: 0
+        name: "Structural Context Initialized"
+        description: "Workbench Mechanical session attached and engineering unit system configured."
+        prerequisites: []
+        invalidates:
+          - "STRUCTURAL_GEOMETRY_READY"
+        suggested_recovery: "Attach or initialize the Mechanical project session before workflow execution."
+
+      STRUCTURAL_GEOMETRY_READY:
+        level: 1
+        name: "Structural Geometry Ready"
+        description: "Solid or surface geometry imported, defeatured, and verified for non-manifold edges."
+        prerequisites:
+          - "STRUCTURAL_CONTEXT_INITIALIZED"
+        invalidates:
+          - "STRUCTURAL_MATERIALS_ASSIGNED"
+          - "STRUCTURAL_BOUNDARIES_APPLIED"
+          - "STRUCTURAL_MESH_GENERATED"
+          - "STRUCTURAL_SOLVER_CONFIGURED"
+          - "STRUCTURAL_SOLUTION_SOLVED"
+          - "STRUCTURAL_RESULTS_EXTRACTED"
+        suggested_recovery: "Import CAD model or generate clean solid geometry in SpaceClaim / Mechanical."
+
+      STRUCTURAL_MATERIALS_ASSIGNED:
+        level: 2
+        name: "Structural Materials Assigned"
+        description: "Engineering materials assigned to all active structural bodies from the material library."
+        prerequisites:
+          - "STRUCTURAL_GEOMETRY_READY"
+        invalidates:
+          - "STRUCTURAL_SOLVER_CONFIGURED"
+          - "STRUCTURAL_SOLUTION_SOLVED"
+          - "STRUCTURAL_RESULTS_EXTRACTED"
+        suggested_recovery: "Assign material properties (Young's modulus, Poisson's ratio, density) to structural parts."
+
+      STRUCTURAL_BOUNDARIES_APPLIED:
+        level: 3
+        name: "Structural Boundaries Applied"
+        description: "Fixed supports, frictionless constraints, pressures, and force loads applied to geometry."
+        prerequisites:
+          - "STRUCTURAL_GEOMETRY_READY"
+        invalidates:
+          - "STRUCTURAL_SOLVER_CONFIGURED"
+          - "STRUCTURAL_SOLUTION_SOLVED"
+          - "STRUCTURAL_RESULTS_EXTRACTED"
+        suggested_recovery: "Define necessary supports, boundary conditions, and loads on named selections or faces."
+
+      STRUCTURAL_MESH_GENERATED:
+        level: 4
+        name: "Structural Mesh Generated"
+        description: "Solid continuum elements generated with acceptable skewness and orthogonal quality."
+        prerequisites:
+          - "STRUCTURAL_GEOMETRY_READY"
+        invalidates:
+          - "STRUCTURAL_SOLVER_CONFIGURED"
+          - "STRUCTURAL_SOLUTION_SOLVED"
+          - "STRUCTURAL_RESULTS_EXTRACTED"
+        suggested_recovery: "Generate mesh on structural geometry with appropriate element sizing."
+
+      STRUCTURAL_SOLVER_CONFIGURED:
+        level: 5
+        name: "Structural Solver Configured"
+        description: "Analysis settings, large deflection toggles, step sub-steps, and solver equations defined."
+        prerequisites:
+          - "STRUCTURAL_MATERIALS_ASSIGNED"
+          - "STRUCTURAL_BOUNDARIES_APPLIED"
+          - "STRUCTURAL_MESH_GENERATED"
+        invalidates:
+          - "STRUCTURAL_SOLUTION_SOLVED"
+          - "STRUCTURAL_RESULTS_EXTRACTED"
+        suggested_recovery: "Configure solver analysis settings, step controls, and equation solvers."
+
+      STRUCTURAL_SOLUTION_SOLVED:
+        level: 6
+        name: "Structural Solution Solved"
+        description: "FEA solver iteration converged with equilibrium residuals below threshold."
+        prerequisites:
+          - "STRUCTURAL_SOLVER_CONFIGURED"
+        invalidates:
+          - "STRUCTURAL_RESULTS_EXTRACTED"
+        suggested_recovery: "Execute solver solve routine and verify equilibrium convergence."
+
+      STRUCTURAL_RESULTS_EXTRACTED:
+        level: 7
+        name: "Structural Results Extracted"
+        description: "Total deformation, von Mises equivalent stress, and reaction force observables extracted."
+        prerequisites:
+          - "STRUCTURAL_SOLUTION_SOLVED"
+        invalidates: []
+        suggested_recovery: "Extract post-processing deformation and stress results from the solved model."
+
+  fluid_dynamics:
+    discipline_id: "fluid_dynamics"
+    name: "Computational Fluid Dynamics"
+    description: "ANSYS Fluent / CFX Navier-Stokes Single/Multiphase Fluid Flow and Heat Transfer"
+    nodes:
+      FLUENT_CONTEXT_INITIALIZED:
+        level: 0
+        name: "Fluent Context Initialized"
+        description: "Fluent solver environment launched in 2D/3D precision mode."
+        prerequisites: []
+        invalidates:
+          - "WATERTIGHT_GEOMETRY_READY"
+        suggested_recovery: "Launch or attach Fluent solver session."
+
+      WATERTIGHT_GEOMETRY_READY:
+        level: 1
+        name: "Watertight Geometry Ready"
+        description: "CAD geometry checked for watertight enclosure and free edge anomalies."
+        prerequisites:
+          - "FLUENT_CONTEXT_INITIALIZED"
+        invalidates:
+          - "BOUNDARY_ZONES_DECLARED"
+          - "SURFACE_MESH_GENERATED"
+          - "CORE_MESH_GENERATED"
+          - "PHYSICS_MODELS_CONFIGURED"
+          - "SOLVER_ITERATIONS_CONVERGED"
+          - "FLOW_FIELD_RESULTS_EXTRACTED"
+        suggested_recovery: "Perform watertight geometry check and close open gaps in SpaceClaim or Fluent Meshing."
+
+      FLUID_MATERIALS_ASSIGNED:
+        level: 2
+        name: "Fluid Materials Assigned"
+        description: "Fluid and solid phase materials configured with thermodynamic properties."
+        prerequisites:
+          - "WATERTIGHT_GEOMETRY_READY"
+        invalidates:
+          - "PHYSICS_MODELS_CONFIGURED"
+          - "SOLVER_ITERATIONS_CONVERGED"
+          - "FLOW_FIELD_RESULTS_EXTRACTED"
+        suggested_recovery: "Specify fluid materials (density, viscosity, thermal conductivity) in solver database."
+
+      BOUNDARY_ZONES_DECLARED:
+        level: 3
+        name: "Boundary Zones Declared"
+        description: "Inlet, outlet, wall, and symmetry boundary zones named and mapped."
+        prerequisites:
+          - "WATERTIGHT_GEOMETRY_READY"
+        invalidates:
+          - "CORE_MESH_GENERATED"
+          - "PHYSICS_MODELS_CONFIGURED"
+          - "SOLVER_ITERATIONS_CONVERGED"
+          - "FLOW_FIELD_RESULTS_EXTRACTED"
+        suggested_recovery: "Declare boundary zone types (velocity-inlet, pressure-outlet, wall) on boundary patches."
+
+      SURFACE_MESH_GENERATED:
+        level: 4
+        name: "Surface Mesh Generated"
+        description: "Surface tri/quad mesh generated across boundary patches with zero self-intersections."
+        prerequisites:
+          - "WATERTIGHT_GEOMETRY_READY"
+        invalidates:
+          - "CORE_MESH_GENERATED"
+          - "SOLVER_ITERATIONS_CONVERGED"
+          - "FLOW_FIELD_RESULTS_EXTRACTED"
+        suggested_recovery: "Generate surface mesh and verify face proximity and curvature sizing."
+
+      CORE_MESH_GENERATED:
+        level: 4
+        name: "Core Mesh Generated"
+        description: "Volume polyhedra/hexcore mesh generated inside fluid domains with inflation layers."
+        prerequisites:
+          - "BOUNDARY_ZONES_DECLARED"
+          - "WATERTIGHT_GEOMETRY_READY"
+          - "SURFACE_MESH_GENERATED"
+        invalidates:
+          - "PHYSICS_MODELS_CONFIGURED"
+          - "SOLVER_ITERATIONS_CONVERGED"
+          - "FLOW_FIELD_RESULTS_EXTRACTED"
+        suggested_recovery: "Generate volume core mesh after surface mesh and boundary zones are complete."
+
+      PHYSICS_MODELS_CONFIGURED:
+        level: 5
+        name: "Physics Models Configured"
+        description: "Turbulence models (k-omega SST), energy equation, and boundary conditions assigned."
+        prerequisites:
+          - "CORE_MESH_GENERATED"
+          - "FLUID_MATERIALS_ASSIGNED"
+        invalidates:
+          - "SOLVER_ITERATIONS_CONVERGED"
+          - "FLOW_FIELD_RESULTS_EXTRACTED"
+        suggested_recovery: "Enable turbulence, energy, or species transport models and specify inlet flow values."
+
+      SOLVER_ITERATIONS_CONVERGED:
+        level: 6
+        name: "Solver Iterations Converged"
+        description: "Pressure-velocity coupled iterations converged with residuals below criterion."
+        prerequisites:
+          - "PHYSICS_MODELS_CONFIGURED"
+          - "BOUNDARY_ZONES_DECLARED"
+        invalidates:
+          - "FLOW_FIELD_RESULTS_EXTRACTED"
+        suggested_recovery: "Initialize flow field (hybrid initialization) and run solver iterations until residuals converge."
+
+      FLOW_FIELD_RESULTS_EXTRACTED:
+        level: 7
+        name: "Flow Field Results Extracted"
+        description: "Velocity profiles, pressure drops, drag/lift coefficients, and heat transfer rates saved."
+        prerequisites:
+          - "SOLVER_ITERATIONS_CONVERGED"
+        invalidates: []
+        suggested_recovery: "Query surface monitors, velocity vectors, and pressure contours from solved flow field."
+
+  high_frequency_electromagnetics:
+    discipline_id: "high_frequency_electromagnetics"
+    name: "High Frequency Electromagnetics"
+    description: "ANSYS HFSS Full-Wave Maxwell Equations, Antenna Radiation, and RF Microwave S-Parameters"
+    nodes:
+      HFSS_CONTEXT_INITIALIZED:
+        level: 0
+        name: "HFSS Context Initialized"
+        description: "HFSS EM design project created and solution type configured."
+        prerequisites: []
+        invalidates:
+          - "HFSS_GEOMETRY_READY"
+        suggested_recovery: "Create or open an HFSS design in the active project session."
+
+      HFSS_GEOMETRY_READY:
+        level: 1
+        name: "HFSS Geometry Ready"
+        description: "3D conductors, substrates, and radiating airbox bounds verified."
+        prerequisites:
+          - "HFSS_CONTEXT_INITIALIZED"
+        invalidates:
+          - "ELECTROMAGNETIC_MATERIALS_ASSIGNED"
+          - "WAVE_PORTS_EXCITATIONS_DEFINED"
+          - "ADAPTIVE_MESH_CONVERGED"
+          - "FREQUENCY_SWEEP_CONFIGURED"
+          - "FREQUENCY_SWEEP_EXECUTED"
+          - "S_PARAMETERS_RADIATION_EXTRACTED"
+        suggested_recovery: "Model radiating structure, transmission lines, and radiation boundary airbox."
+
+      ELECTROMAGNETIC_MATERIALS_ASSIGNED:
+        level: 2
+        name: "Electromagnetic Materials Assigned"
+        description: "Relative permittivity, permeability, and dielectric loss tangents assigned."
+        prerequisites:
+          - "HFSS_GEOMETRY_READY"
+        invalidates:
+          - "ADAPTIVE_MESH_CONVERGED"
+          - "FREQUENCY_SWEEP_EXECUTED"
+          - "S_PARAMETERS_RADIATION_EXTRACTED"
+        suggested_recovery: "Assign dielectric substrates (e.g. FR4, Rogers) and conductor materials (e.g. Copper, PEC)."
+
+      WAVE_PORTS_EXCITATIONS_DEFINED:
+        level: 3
+        name: "Wave Ports Excitations Defined"
+        description: "Lumped ports, wave ports, and terminal excitations defined with characteristic impedance."
+        prerequisites:
+          - "HFSS_GEOMETRY_READY"
+        invalidates:
+          - "ADAPTIVE_MESH_CONVERGED"
+          - "FREQUENCY_SWEEP_EXECUTED"
+          - "S_PARAMETERS_RADIATION_EXTRACTED"
+        suggested_recovery: "Assign wave ports or lumped ports with valid integration lines on signal traces."
+
+      ADAPTIVE_MESH_CONVERGED:
+        level: 4
+        name: "Adaptive Mesh Converged"
+        description: "Finite element adaptive mesh passes converged below delta-S target criterion."
+        prerequisites:
+          - "HFSS_GEOMETRY_READY"
+          - "ELECTROMAGNETIC_MATERIALS_ASSIGNED"
+          - "WAVE_PORTS_EXCITATIONS_DEFINED"
+        invalidates:
+          - "FREQUENCY_SWEEP_CONFIGURED"
+          - "FREQUENCY_SWEEP_EXECUTED"
+          - "S_PARAMETERS_RADIATION_EXTRACTED"
+        suggested_recovery: "Run adaptive solution pass until delta-S convergence is achieved."
+
+      FREQUENCY_SWEEP_CONFIGURED:
+        level: 5
+        name: "Frequency Sweep Configured"
+        description: "Interpolating, fast, or discrete frequency sweep range and step intervals configured."
+        prerequisites:
+          - "ADAPTIVE_MESH_CONVERGED"
+        invalidates:
+          - "FREQUENCY_SWEEP_EXECUTED"
+          - "S_PARAMETERS_RADIATION_EXTRACTED"
+        suggested_recovery: "Define frequency sweep range (start, stop, step count) for the HFSS setup."
+
+      FREQUENCY_SWEEP_EXECUTED:
+        level: 6
+        name: "Frequency Sweep Executed"
+        description: "Full frequency band electromagnetic wave propagation solution completed."
+        prerequisites:
+          - "ADAPTIVE_MESH_CONVERGED"
+          - "FREQUENCY_SWEEP_CONFIGURED"
+        invalidates:
+          - "S_PARAMETERS_RADIATION_EXTRACTED"
+        suggested_recovery: "Execute frequency sweep solver on converged adaptive mesh."
+
+      S_PARAMETERS_RADIATION_EXTRACTED:
+        level: 7
+        name: "S-Parameters and Radiation Extracted"
+        description: "S-matrix (S11, S21), VSWR, far-field gain patterns, and radiation efficiency exported."
+        prerequisites:
+          - "FREQUENCY_SWEEP_EXECUTED"
+        invalidates: []
+        suggested_recovery: "Export S-parameter network data and compute far-field antenna gain patterns."
+
+  low_frequency_electromagnetics:
+    discipline_id: "low_frequency_electromagnetics"
+    name: "Low Frequency Electromagnetics"
+    description: "ANSYS Maxwell 2D/3D Quasi-Static, Magnetostatic, Eddy Current, and Transient Electric Machines"
+    nodes:
+      MAXWELL_CONTEXT_INITIALIZED:
+        level: 0
+        name: "Maxwell Context Initialized"
+        description: "Maxwell 2D/3D design environment selected and unit system verified."
+        prerequisites: []
+        invalidates:
+          - "MAXWELL_GEOMETRY_READY"
+        suggested_recovery: "Initialize Maxwell project session and select 2D planar or 3D solution type."
+
+      MAXWELL_GEOMETRY_READY:
+        level: 1
+        name: "Maxwell Geometry Ready"
+        description: "Stator, rotor, coils, permanent magnets, and air gap domains modeled."
+        prerequisites:
+          - "MAXWELL_CONTEXT_INITIALIZED"
+        invalidates:
+          - "MAGNETIC_MATERIALS_ASSIGNED"
+          - "COIL_EXCITATIONS_DEFINED"
+          - "ELECTROMAGNETIC_MESH_GENERATED"
+          - "MAXWELL_SOLVER_CONFIGURED"
+          - "MAXWELL_SOLUTION_SOLVED"
+          - "MAGNETIC_FLUX_TORQUE_EXTRACTED"
+        suggested_recovery: "Generate or import electric machine geometry with clean rotational air gap."
+
+      MAGNETIC_MATERIALS_ASSIGNED:
+        level: 2
+        name: "Magnetic Materials Assigned"
+        description: "B-H saturation curves, core loss coefficients, and permanent magnet remanence specified."
+        prerequisites:
+          - "MAXWELL_GEOMETRY_READY"
+        invalidates:
+          - "MAXWELL_SOLVER_CONFIGURED"
+          - "MAXWELL_SOLUTION_SOLVED"
+          - "MAGNETIC_FLUX_TORQUE_EXTRACTED"
+        suggested_recovery: "Assign non-linear BH steel laminations and NdFeB magnet grades to components."
+
+      COIL_EXCITATIONS_DEFINED:
+        level: 3
+        name: "Coil Excitations Defined"
+        description: "Phase currents, voltage sources, coil turns count, and winding schemes defined."
+        prerequisites:
+          - "MAXWELL_GEOMETRY_READY"
+        invalidates:
+          - "MAXWELL_SOLVER_CONFIGURED"
+          - "MAXWELL_SOLUTION_SOLVED"
+          - "MAGNETIC_FLUX_TORQUE_EXTRACTED"
+        suggested_recovery: "Define winding phases, conductor stranded counts, and excitation current waveforms."
+
+      ELECTROMAGNETIC_MESH_GENERATED:
+        level: 4
+        name: "Electromagnetic Mesh Generated"
+        description: "Length-based or skin-depth adaptive mesh generated across magnetic poles and air gap."
+        prerequisites:
+          - "MAXWELL_GEOMETRY_READY"
+        invalidates:
+          - "MAXWELL_SOLVER_CONFIGURED"
+          - "MAXWELL_SOLUTION_SOLVED"
+          - "MAGNETIC_FLUX_TORQUE_EXTRACTED"
+        suggested_recovery: "Apply mesh operations to air gap band and conductor skin depth layers."
+
+      MAXWELL_SOLVER_CONFIGURED:
+        level: 5
+        name: "Maxwell Solver Configured"
+        description: "Transient motion setup, time step resolution, and non-linear residual tolerance defined."
+        prerequisites:
+          - "MAGNETIC_MATERIALS_ASSIGNED"
+          - "COIL_EXCITATIONS_DEFINED"
+          - "ELECTROMAGNETIC_MESH_GENERATED"
+        invalidates:
+          - "MAXWELL_SOLUTION_SOLVED"
+          - "MAGNETIC_FLUX_TORQUE_EXTRACTED"
+        suggested_recovery: "Configure motion setup (rotational speed) and time step controls in Maxwell setup."
+
+      MAXWELL_SOLUTION_SOLVED:
+        level: 6
+        name: "Maxwell Solution Solved"
+        description: "Electromagnetic field equation solution completed with rotational movement."
+        prerequisites:
+          - "MAXWELL_SOLVER_CONFIGURED"
+        invalidates:
+          - "MAGNETIC_FLUX_TORQUE_EXTRACTED"
+        suggested_recovery: "Execute Maxwell solver solve cycle until target time steps complete."
+
+      MAGNETIC_FLUX_TORQUE_EXTRACTED:
+        level: 7
+        name: "Magnetic Flux and Torque Extracted"
+        description: "Electromagnetic torque, cogging torque, flux linkage, and core loss curves extracted."
+        prerequisites:
+          - "MAXWELL_SOLUTION_SOLVED"
+        invalidates: []
+        suggested_recovery: "Extract torque vs angle, induced voltage, and iron loss telemetry curves."
+
+  thermal_analysis:
+    discipline_id: "thermal_analysis"
+    name: "Thermal Analysis"
+    description: "ANSYS Steady-State and Transient Thermal Conduction, Convection, and Radiation"
+    nodes:
+      THERMAL_CONTEXT_INITIALIZED:
+        level: 0
+        name: "Thermal Context Initialized"
+        description: "Thermal analysis system instantiated in project tree."
+        prerequisites: []
+        invalidates:
+          - "THERMAL_GEOMETRY_READY"
+        suggested_recovery: "Create or select Steady-State / Transient Thermal analysis system."
+
+      THERMAL_GEOMETRY_READY:
+        level: 1
+        name: "Thermal Geometry Ready"
+        description: "Heat dissipation solids, enclosures, and thermal interface layers configured."
+        prerequisites:
+          - "THERMAL_CONTEXT_INITIALIZED"
+        invalidates:
+          - "THERMAL_MATERIALS_ASSIGNED"
+          - "THERMAL_LOADS_BC_APPLIED"
+          - "THERMAL_MESH_GENERATED"
+          - "THERMAL_SOLVER_CONFIGURED"
+          - "THERMAL_SOLUTION_SOLVED"
+          - "TEMPERATURE_DISTRIBUTION_EXTRACTED"
+        suggested_recovery: "Prepare thermal solid geometry and interface contact surfaces."
+
+      THERMAL_MATERIALS_ASSIGNED:
+        level: 2
+        name: "Thermal Materials Assigned"
+        description: "Thermal conductivity, specific heat, and density assigned to thermal bodies."
+        prerequisites:
+          - "THERMAL_GEOMETRY_READY"
+        invalidates:
+          - "THERMAL_SOLVER_CONFIGURED"
+          - "THERMAL_SOLUTION_SOLVED"
+          - "TEMPERATURE_DISTRIBUTION_EXTRACTED"
+        suggested_recovery: "Assign isotropic or orthotropic thermal conductivities to parts."
+
+      THERMAL_LOADS_BC_APPLIED:
+        level: 3
+        name: "Thermal Loads and Boundaries Applied"
+        description: "Heat flux, heat generation rates, convection film coefficients, and radiation applied."
+        prerequisites:
+          - "THERMAL_GEOMETRY_READY"
+        invalidates:
+          - "THERMAL_SOLVER_CONFIGURED"
+          - "THERMAL_SOLUTION_SOLVED"
+          - "TEMPERATURE_DISTRIBUTION_EXTRACTED"
+        suggested_recovery: "Apply convection film coefficients and internal heat generation sources."
+
+      THERMAL_MESH_GENERATED:
+        level: 4
+        name: "Thermal Mesh Generated"
+        description: "Solid thermal continuum elements generated across temperature gradient zones."
+        prerequisites:
+          - "THERMAL_GEOMETRY_READY"
+        invalidates:
+          - "THERMAL_SOLVER_CONFIGURED"
+          - "THERMAL_SOLUTION_SOLVED"
+          - "TEMPERATURE_DISTRIBUTION_EXTRACTED"
+        suggested_recovery: "Generate mesh across thermal bodies with appropriate contact sizing."
+
+      THERMAL_SOLVER_CONFIGURED:
+        level: 5
+        name: "Thermal Solver Configured"
+        description: "Thermal step time controls, non-linear radiation solvers, and convergence criteria defined."
+        prerequisites:
+          - "THERMAL_MATERIALS_ASSIGNED"
+          - "THERMAL_LOADS_BC_APPLIED"
+          - "THERMAL_MESH_GENERATED"
+        invalidates:
+          - "THERMAL_SOLUTION_SOLVED"
+          - "TEMPERATURE_DISTRIBUTION_EXTRACTED"
+        suggested_recovery: "Configure steady-state iteration limits or transient time-stepping controls."
+
+      THERMAL_SOLUTION_SOLVED:
+        level: 6
+        name: "Thermal Solution Solved"
+        description: "Thermal energy conservation equation solved with heat flow balance converged."
+        prerequisites:
+          - "THERMAL_SOLVER_CONFIGURED"
+        invalidates:
+          - "TEMPERATURE_DISTRIBUTION_EXTRACTED"
+        suggested_recovery: "Execute thermal solver solution until temperature balance converges."
+
+      TEMPERATURE_DISTRIBUTION_EXTRACTED:
+        level: 7
+        name: "Temperature Distribution Extracted"
+        description: "Spatial temperature contours, maximum junction temperature, and heat flux profiles saved."
+        prerequisites:
+          - "THERMAL_SOLUTION_SOLVED"
+        invalidates: []
+        suggested_recovery: "Extract temperature distribution and heat flux results from thermal solution."
+
+  explicit_dynamics:
+    discipline_id: "explicit_dynamics"
+    name: "Explicit Dynamics"
+    description: "ANSYS LS-DYNA / Autodyn Crash, Drop-Test, Penetration, and High-Rate Transient Mechanics"
+    nodes:
+      DYNA_CONTEXT_INITIALIZED:
+        level: 0
+        name: "LS-DYNA Context Initialized"
+        description: "Explicit dynamics solver profile and unit convention (mm-ms-kg-kN) initialized."
+        prerequisites: []
+        invalidates:
+          - "DYNA_GEOMETRY_PARTS_READY"
+        suggested_recovery: "Initialize LS-DYNA simulation session and confirm consistent unit system."
+
+      DYNA_GEOMETRY_PARTS_READY:
+        level: 1
+        name: "LS-DYNA Geometry Parts Ready"
+        description: "Striker, target, chassis, and ground barrier parts defined with valid section properties."
+        prerequisites:
+          - "DYNA_CONTEXT_INITIALIZED"
+        invalidates:
+          - "EQUATION_OF_STATE_MATERIALS_ASSIGNED"
+          - "INITIAL_VELOCITY_CONTACTS_DEFINED"
+          - "EXPLICIT_MESH_GENERATED"
+          - "KEYWORD_DECK_ASSEMBLED"
+          - "EXPLICIT_SOLVE_TERMINATED_NORMAL"
+          - "TRANSIENT_ENERGY_PLASTICITY_EXTRACTED"
+        suggested_recovery: "Prepare impactor and target parts with shell or solid representations."
+
+      EQUATION_OF_STATE_MATERIALS_ASSIGNED:
+        level: 2
+        name: "Equation of State Materials Assigned"
+        description: "Plasticity (MAT_PIECEWISE_LINEAR_PLASTICITY) or shock EOS materials assigned."
+        prerequisites:
+          - "DYNA_GEOMETRY_PARTS_READY"
+        invalidates:
+          - "KEYWORD_DECK_ASSEMBLED"
+          - "EXPLICIT_SOLVE_TERMINATED_NORMAL"
+          - "TRANSIENT_ENERGY_PLASTICITY_EXTRACTED"
+        suggested_recovery: "Assign rate-dependent plastic stress-strain curves and failure strain limits."
+
+      INITIAL_VELOCITY_CONTACTS_DEFINED:
+        level: 3
+        name: "Initial Velocity and Contacts Defined"
+        description: "AUTOMATIC_SINGLE_SURFACE contact, drop velocity vector, and gravity acceleration defined."
+        prerequisites:
+          - "DYNA_GEOMETRY_PARTS_READY"
+        invalidates:
+          - "KEYWORD_DECK_ASSEMBLED"
+          - "EXPLICIT_SOLVE_TERMINATED_NORMAL"
+          - "TRANSIENT_ENERGY_PLASTICITY_EXTRACTED"
+        suggested_recovery: "Define initial drop velocity and penalty contact definitions across parts."
+
+      EXPLICIT_MESH_GENERATED:
+        level: 4
+        name: "Explicit Mesh Generated"
+        description: "Hexahedral/tetrahedral mesh generated with CFL time-step safety criteria satisfied."
+        prerequisites:
+          - "DYNA_GEOMETRY_PARTS_READY"
+        invalidates:
+          - "KEYWORD_DECK_ASSEMBLED"
+          - "EXPLICIT_SOLVE_TERMINATED_NORMAL"
+          - "TRANSIENT_ENERGY_PLASTICITY_EXTRACTED"
+        suggested_recovery: "Mesh explicit parts ensuring minimum element edge length meets stable time step limits."
+
+      KEYWORD_DECK_ASSEMBLED:
+        level: 5
+        name: "Keyword Deck Assembled"
+        description: "Structured LS-DYNA keyword deck (*KEYWORD, *CONTROL_TERMINATION, *DATABASE) generated."
+        prerequisites:
+          - "EQUATION_OF_STATE_MATERIALS_ASSIGNED"
+          - "INITIAL_VELOCITY_CONTACTS_DEFINED"
+          - "EXPLICIT_MESH_GENERATED"
+        invalidates:
+          - "EXPLICIT_SOLVE_TERMINATED_NORMAL"
+          - "TRANSIENT_ENERGY_PLASTICITY_EXTRACTED"
+        suggested_recovery: "Assemble all keyword cards into valid .k or .key deck file."
+
+      EXPLICIT_SOLVE_TERMINATED_NORMAL:
+        level: 6
+        name: "Explicit Solve Terminated Normal"
+        description: "LS-DYNA solver execution finished with 'Normal Termination' exit status code."
+        prerequisites:
+          - "KEYWORD_DECK_ASSEMBLED"
+        invalidates:
+          - "TRANSIENT_ENERGY_PLASTICITY_EXTRACTED"
+        suggested_recovery: "Execute LS-DYNA MPP/SMP solver and check log for normal termination confirmation."
+
+      TRANSIENT_ENERGY_PLASTICITY_EXTRACTED:
+        level: 7
+        name: "Transient Energy and Plasticity Extracted"
+        description: "Internal energy, kinetic energy, hourglass energy, and plastic strain histories parsed."
+        prerequisites:
+          - "EXPLICIT_SOLVE_TERMINATED_NORMAL"
+        invalidates: []
+        suggested_recovery: "Query GLSTAT, MATSUM, and d3plot states for plastic strain and energy balance."
+
+  electronics_cooling:
+    discipline_id: "electronics_cooling"
+    name: "Electronics Cooling"
+    description: "ANSYS Icepak Package, PCB, Heat Sink, Fan, and Chassis Thermal Management"
+    nodes:
+      ICEPAK_CONTEXT_INITIALIZED:
+        level: 0
+        name: "Icepak Context Initialized"
+        description: "Icepak design object created with ambient temperature and airflow directions specified."
+        prerequisites: []
+        invalidates:
+          - "CHASSIS_COMPONENTS_GEOMETRY_READY"
+        suggested_recovery: "Create Icepak system session and configure ambient boundary conditions."
+
+      CHASSIS_COMPONENTS_GEOMETRY_READY:
+        level: 1
+        name: "Chassis Components Geometry Ready"
+        description: "Cabinet enclosure, PCB ECAD trace layout, IC packages, and heatsinks assembled."
+        prerequisites:
+          - "ICEPAK_CONTEXT_INITIALIZED"
+        invalidates:
+          - "THERMAL_PACKAGES_MATERIALS_ASSIGNED"
+          - "FAN_HEATSINK_BOUNDARY_CONDITIONS_SET"
+          - "HEXA_UNSTRUCTURED_MESH_GENERATED"
+          - "CONVECTION_RADIATION_FLOW_CONFIGURED"
+          - "CONJUGATE_HEAT_TRANSFER_SOLVED"
+          - "JUNCTION_TEMPERATURES_AIRFLOW_EXTRACTED"
+        suggested_recovery: "Import ECAD or 3D chassis components and assign proper object shapes."
+
+      THERMAL_PACKAGES_MATERIALS_ASSIGNED:
+        level: 2
+        name: "Thermal Packages Materials Assigned"
+        description: "Silicon dies, copper heat spreaders, TIM thermal grease, and FR4 board materials set."
+        prerequisites:
+          - "CHASSIS_COMPONENTS_GEOMETRY_READY"
+        invalidates:
+          - "CONVECTION_RADIATION_FLOW_CONFIGURED"
+          - "CONJUGATE_HEAT_TRANSFER_SOLVED"
+          - "JUNCTION_TEMPERATURES_AIRFLOW_EXTRACTED"
+        suggested_recovery: "Assign solid materials and thermal resistance values (Theta-JC, Theta-JB) to packages."
+
+      FAN_HEATSINK_BOUNDARY_CONDITIONS_SET:
+        level: 3
+        name: "Fan and Heatsink Boundaries Set"
+        description: "Cooling fan non-linear P-Q flow curves, heat source wattage, and grill resistances applied."
+        prerequisites:
+          - "CHASSIS_COMPONENTS_GEOMETRY_READY"
+        invalidates:
+          - "HEXA_UNSTRUCTURED_MESH_GENERATED"
+          - "CONVECTION_RADIATION_FLOW_CONFIGURED"
+          - "CONJUGATE_HEAT_TRANSFER_SOLVED"
+          - "JUNCTION_TEMPERATURES_AIRFLOW_EXTRACTED"
+        suggested_recovery: "Configure fan curve data, component thermal power dissipation, and perforated vent openings."
+
+      HEXA_UNSTRUCTURED_MESH_GENERATED:
+        level: 4
+        name: "Hexa Unstructured Mesh Generated"
+        description: "Cartesian or non-conformal hex-dominant mesh generated with boundary alignment."
+        prerequisites:
+          - "CHASSIS_COMPONENTS_GEOMETRY_READY"
+          - "FAN_HEATSINK_BOUNDARY_CONDITIONS_SET"
+        invalidates:
+          - "CONVECTION_RADIATION_FLOW_CONFIGURED"
+          - "CONJUGATE_HEAT_TRANSFER_SOLVED"
+          - "JUNCTION_TEMPERATURES_AIRFLOW_EXTRACTED"
+        suggested_recovery: "Generate Icepak meshing with per-object refinement on fine fin channels."
+
+      CONVECTION_RADIATION_FLOW_CONFIGURED:
+        level: 5
+        name: "Convection and Radiation Configured"
+        description: "Coupled Navier-Stokes and thermal radiation (surface-to-surface) equations activated."
+        prerequisites:
+          - "THERMAL_PACKAGES_MATERIALS_ASSIGNED"
+          - "HEXA_UNSTRUCTURED_MESH_GENERATED"
+        invalidates:
+          - "CONJUGATE_HEAT_TRANSFER_SOLVED"
+          - "JUNCTION_TEMPERATURES_AIRFLOW_EXTRACTED"
+        suggested_recovery: "Enable flow equations, natural/forced convection, and surface emissivity properties."
+
+      CONJUGATE_HEAT_TRANSFER_SOLVED:
+        level: 6
+        name: "Conjugate Heat Transfer Solved"
+        description: "Coupled flow-thermal iterations converged with mass and energy residual compliance."
+        prerequisites:
+          - "CONVECTION_RADIATION_FLOW_CONFIGURED"
+        invalidates:
+          - "JUNCTION_TEMPERATURES_AIRFLOW_EXTRACTED"
+        suggested_recovery: "Execute Icepak solver until flow and temperature monitor points level out."
+
+      JUNCTION_TEMPERATURES_AIRFLOW_EXTRACTED:
+        level: 7
+        name: "Junction Temperatures and Airflow Extracted"
+        description: "Critical component junction temperatures, air velocity field, and pressure drop verified."
+        prerequisites:
+          - "CONJUGATE_HEAT_TRANSFER_SOLVED"
+        invalidates: []
+        suggested_recovery: "Extract package temperature summary table and check for thermal throttling limits."
+
+  optics_photonics:
+    discipline_id: "optics_photonics"
+    name: "Optics & Photonics"
+    description: "ANSYS Speos / Lumerical Ray Optics, Photometry, Waveguide FDTD, and Optical Sensors"
+    nodes:
+      OPTICS_CONTEXT_INITIALIZED:
+        level: 0
+        name: "Optics Context Initialized"
+        description: "Optical simulation context active with photometric or radiometric units chosen."
+        prerequisites: []
+        invalidates:
+          - "OPTICAL_SYSTEM_GEOMETRY_READY"
+        suggested_recovery: "Initialize Speos or Lumerical optical workspace session."
+
+      OPTICAL_SYSTEM_GEOMETRY_READY:
+        level: 1
+        name: "Optical System Geometry Ready"
+        description: "Curved optical lenses, reflectors, light guides, and aperture stops configured."
+        prerequisites:
+          - "OPTICS_CONTEXT_INITIALIZED"
+        invalidates:
+          - "REFRACTIVE_DISPERSION_MATERIALS_ASSIGNED"
+          - "SOURCES_DETECTORS_SURFACES_DEFINED"
+          - "OPTICAL_MESH_FDTD_GRID_GENERATED"
+          - "RAY_TRACE_SIMULATION_CONFIGURED"
+          - "MONTE_CARLO_RAYS_PROPAGATED"
+          - "ILLUMINANCE_PHOTONIC_TRANSMISSION_EXTRACTED"
+        suggested_recovery: "Prepare optical refractive geometry and polishing surface finish definitions."
+
+      REFRACTIVE_DISPERSION_MATERIALS_ASSIGNED:
+        level: 2
+        name: "Refractive Dispersion Materials Assigned"
+        description: "Wavelength-dependent refractive index n(lambda), Abbe number, and absorption coefficients applied."
+        prerequisites:
+          - "OPTICAL_SYSTEM_GEOMETRY_READY"
+        invalidates:
+          - "RAY_TRACE_SIMULATION_CONFIGURED"
+          - "MONTE_CARLO_RAYS_PROPAGATED"
+          - "ILLUMINANCE_PHOTONIC_TRANSMISSION_EXTRACTED"
+        suggested_recovery: "Assign optical glass materials (e.g. BK7, Polycarbonate) with spectral dispersion."
+
+      SOURCES_DETECTORS_SURFACES_DEFINED:
+        level: 3
+        name: "Sources and Detectors Defined"
+        description: "LED spectral emission ray files, luminous flux, and sensor illuminance planes set."
+        prerequisites:
+          - "OPTICAL_SYSTEM_GEOMETRY_READY"
+        invalidates:
+          - "RAY_TRACE_SIMULATION_CONFIGURED"
+          - "MONTE_CARLO_RAYS_PROPAGATED"
+          - "ILLUMINANCE_PHOTONIC_TRANSMISSION_EXTRACTED"
+        suggested_recovery: "Set up light emission sources (lumen/candela) and spatial sensor detector targets."
+
+      OPTICAL_MESH_FDTD_GRID_GENERATED:
+        level: 4
+        name: "Optical Mesh / FDTD Grid Generated"
+        description: "High-precision surface tessellation or Yee sub-wavelength spatial mesh grid resolved."
+        prerequisites:
+          - "OPTICAL_SYSTEM_GEOMETRY_READY"
+        invalidates:
+          - "RAY_TRACE_SIMULATION_CONFIGURED"
+          - "MONTE_CARLO_RAYS_PROPAGATED"
+          - "ILLUMINANCE_PHOTONIC_TRANSMISSION_EXTRACTED"
+        suggested_recovery: "Generate fine optical surface facets to prevent artificial ray scattering."
+
+      RAY_TRACE_SIMULATION_CONFIGURED:
+        level: 5
+        name: "Ray Trace Simulation Configured"
+        description: "Monte Carlo ray count, maximum reflection/refraction bounces, and ray splitting rules chosen."
+        prerequisites:
+          - "REFRACTIVE_DISPERSION_MATERIALS_ASSIGNED"
+          - "SOURCES_DETECTORS_SURFACES_DEFINED"
+          - "OPTICAL_MESH_FDTD_GRID_GENERATED"
+        invalidates:
+          - "MONTE_CARLO_RAYS_PROPAGATED"
+          - "ILLUMINANCE_PHOTONIC_TRANSMISSION_EXTRACTED"
+        suggested_recovery: "Define total ray launch count (e.g. 10M rays) and geometric bounce cutoff depth."
+
+      MONTE_CARLO_RAYS_PROPAGATED:
+        level: 6
+        name: "Monte Carlo Rays Propagated"
+        description: "Ray-tracing simulation finished with optical path propagation and detector hits recorded."
+        prerequisites:
+          - "RAY_TRACE_SIMULATION_CONFIGURED"
+        invalidates:
+          - "ILLUMINANCE_PHOTONIC_TRANSMISSION_EXTRACTED"
+        suggested_recovery: "Execute Speos ray propagation calculation to completion."
+
+      ILLUMINANCE_PHOTONIC_TRANSMISSION_EXTRACTED:
+        level: 7
+        name: "Illuminance and Transmission Extracted"
+        description: "Illuminance map (lux), chromaticity coordinates (CIE xy), and efficiency percentage exported."
+        prerequisites:
+          - "MONTE_CARLO_RAYS_PROPAGATED"
+        invalidates: []
+        suggested_recovery: "Extract illuminance false-color maps and evaluate optical efficiency."
+
+  system_optimization:
+    discipline_id: "system_optimization"
+    name: "Design Optimization & Process Integration"
+    description: "ANSYS optiSLang Multidisciplinary Optimization, DOE, Sensitivity Analysis, and Metamodeling (MOP)"
+    nodes:
+      OPTISLANG_CONTEXT_INITIALIZED:
+        level: 0
+        name: "optiSLang Context Initialized"
+        description: "optiSLang server process attached and project pipeline container created."
+        prerequisites: []
+        invalidates:
+          - "PARAMETRIC_CAD_LINKED"
+        suggested_recovery: "Connect to optiSLang daemon or create new optimization project session."
+
+      PARAMETRIC_CAD_LINKED:
+        level: 1
+        name: "Parametric CAD Linked"
+        description: "Parametric CAD models and downstream CAE solver nodes hooked into data flow graph."
+        prerequisites:
+          - "OPTISLANG_CONTEXT_INITIALIZED"
+        invalidates:
+          - "DESIGN_VARIABLES_PARAMETERS_BOUND"
+          - "RESPONSE_CRITERIA_CONSTRAINTS_DEFINED"
+          - "DESIGN_OF_EXPERIMENTS_SAMPLED"
+          - "MOP_SURROGATE_MODEL_TRAINED"
+          - "PARETO_OPTIMIZATION_CONVERGED"
+          - "OPTIMAL_DESIGN_POINTS_EXTRACTED"
+        suggested_recovery: "Link parametric geometry or simulation nodes into optiSLang workflow tree."
+
+      DESIGN_VARIABLES_PARAMETERS_BOUND:
+        level: 2
+        name: "Design Variables Bound"
+        description: "Continuous and discrete design parameters assigned lower/upper bounds and distributions."
+        prerequisites:
+          - "PARAMETRIC_CAD_LINKED"
+        invalidates:
+          - "DESIGN_OF_EXPERIMENTS_SAMPLED"
+          - "MOP_SURROGATE_MODEL_TRAINED"
+          - "PARETO_OPTIMIZATION_CONVERGED"
+          - "OPTIMAL_DESIGN_POINTS_EXTRACTED"
+        suggested_recovery: "Define design variable names, parameter types, and range boundaries."
+
+      RESPONSE_CRITERIA_CONSTRAINTS_DEFINED:
+        level: 3
+        name: "Response Criteria and Constraints Defined"
+        description: "Objective functions (minimize mass) and constraint thresholds (stress < allowable) declared."
+        prerequisites:
+          - "DESIGN_VARIABLES_PARAMETERS_BOUND"
+        invalidates:
+          - "DESIGN_OF_EXPERIMENTS_SAMPLED"
+          - "MOP_SURROGATE_MODEL_TRAINED"
+          - "PARETO_OPTIMIZATION_CONVERGED"
+          - "OPTIMAL_DESIGN_POINTS_EXTRACTED"
+        suggested_recovery: "Declare optimization objectives, constraints, and target limit states."
+
+      DESIGN_OF_EXPERIMENTS_SAMPLED:
+        level: 4
+        name: "Design of Experiments Sampled"
+        description: "Latin Hypercube Sampling or Sobol sequences generated and executed across solver nodes."
+        prerequisites:
+          - "DESIGN_VARIABLES_PARAMETERS_BOUND"
+          - "RESPONSE_CRITERIA_CONSTRAINTS_DEFINED"
+        invalidates:
+          - "MOP_SURROGATE_MODEL_TRAINED"
+          - "PARETO_OPTIMIZATION_CONVERGED"
+          - "OPTIMAL_DESIGN_POINTS_EXTRACTED"
+        suggested_recovery: "Generate DOE sample points and execute design point matrix evaluations."
+
+      MOP_SURROGATE_MODEL_TRAINED:
+        level: 5
+        name: "MOP Surrogate Model Trained"
+        description: "Metamodel of Optimal Prognosis (MOP) trained with high Coefficient of Prognosis (CoP > 0.8)."
+        prerequisites:
+          - "DESIGN_OF_EXPERIMENTS_SAMPLED"
+        invalidates:
+          - "PARETO_OPTIMIZATION_CONVERGED"
+          - "OPTIMAL_DESIGN_POINTS_EXTRACTED"
+        suggested_recovery: "Train MOP polynomial/kriging surrogate model and verify CoP quality."
+
+      PARETO_OPTIMIZATION_CONVERGED:
+        level: 6
+        name: "Pareto Optimization Converged"
+        description: "Multi-objective evolutionary algorithm (e.g. NSGA-II) converged to Pareto optimal front."
+        prerequisites:
+          - "MOP_SURROGATE_MODEL_TRAINED"
+        invalidates:
+          - "OPTIMAL_DESIGN_POINTS_EXTRACTED"
+        suggested_recovery: "Run optimization algorithm until generation criteria and Pareto front stabilize."
+
+      OPTIMAL_DESIGN_POINTS_EXTRACTED:
+        level: 7
+        name: "Optimal Design Points Extracted"
+        description: "Best compromise design points, sensitivity Pareto charts, and candidate designs exported."
+        prerequisites:
+          - "PARETO_OPTIMIZATION_CONVERGED"
+        invalidates: []
+        suggested_recovery: "Export optimal design point parameter values and sensitivity rankings."
+
+# ------------------------------------------------------------------------------
+# 3. Multiphysics Coupling Bridges (Cross-Discipline Inter-Dependencies)
+# ------------------------------------------------------------------------------
+couplings:
+  thermal_stress:
+    name: "Thermal-Stress Coupling"
+    source_node: "TEMPERATURE_DISTRIBUTION_EXTRACTED"
+    target_node: "STRUCTURAL_SOLVER_CONFIGURED"
+    description: "Thermal field maps to structural finite element model as body temperature load."
+
+  aerodynamic_fluid_structure_interaction:
+    name: "Aero-Structural FSI Coupling"
+    source_node: "FLOW_FIELD_RESULTS_EXTRACTED"
+    target_node: "STRUCTURAL_BOUNDARIES_APPLIED"
+    description: "Fluid boundary surface pressure fields map to structural face pressure loads."
+
+  joule_heating_electro_thermal:
+    name: "Joule Heating Electro-Thermal Coupling"
+    source_node: "MAGNETIC_FLUX_TORQUE_EXTRACTED"
+    target_node: "THERMAL_LOADS_BC_APPLIED"
+    description: "Electromagnetic ohmic and eddy loss densities map to thermal heat generation loads."
+
+  dielectric_heating_hf_thermal:
+    name: "Dielectric Loss HFSS-Thermal Coupling"
+    source_node: "S_PARAMETERS_RADIATION_EXTRACTED"
+    target_node: "THERMAL_LOADS_BC_APPLIED"
+    description: "RF dielectric volume loss densities map to thermal dissipation loads."
+
+# ------------------------------------------------------------------------------
+# 4. Dirty Invalidation Cascades Policy
+# ------------------------------------------------------------------------------
+dirty_invalidation_cascades:
+  upstream_triggers:
+    geometry_change:
+      description: "Modifications to CAD geometry, dimensioning, or defeaturing"
+      target_levels: [1, 2, 3, 4, 5, 6, 7]
+      cascaded_status: "DIRTY"
+      policy: "Invalidate mesh, boundary associations, setup parameters, and all solver solutions."
+
+    material_change:
+      description: "Modifications to material properties, constitutive equations, or assignments"
+      target_levels: [2, 5, 6, 7]
+      cascaded_status: "DIRTY"
+      policy: "Preserve geometry and surface mesh; invalidate physics setup, solver execution, and observables."
+
+    boundary_condition_change:
+      description: "Modifications to loads, constraints, inlet velocities, or excitation ports"
+      target_levels: [3, 5, 6, 7]
+      cascaded_status: "DIRTY"
+      policy: "Preserve geometry, materials, and mesh discretization; invalidate solver iterations and observables."
+
+    mesh_discretization_change:
+      description: "Modifications to element sizing, boundary layer inflations, or refinement zones"
+      target_levels: [4, 5, 6, 7]
+      cascaded_status: "DIRTY"
+      policy: "Preserve geometry and material assignment; invalidate solver execution and observables."

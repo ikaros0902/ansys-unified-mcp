@@ -1,0 +1,14 @@
+{
+  "evals": [
+    {
+      "id": "ansys-random-vibration_trigger_01",
+      "prompt": "如何使用 ansys-random-vibration 進行模擬設定與 API 呼叫？",
+      "expected_route": "ansys-random-vibration"
+    },
+    {
+      "id": "ansys-random-vibration_trigger_02",
+      "prompt": "請提供 隨機振動 PSD 分析與 Miles 方程評估 的官方範例與驗證基準腳本。",
+      "expected_route": "ansys-random-vibration"
+    }
+  ]
+}

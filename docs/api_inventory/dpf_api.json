@@ -1,0 +1,661 @@
+{
+  "module": "ansys.dpf.core",
+  "version": "unknown",
+  "sdk_package": "ansys-dpf-core",
+  "sdk_version": "0.16.1",
+  "interface": "PyDPF-Core 0.16.1 core data classes",
+  "scope": "範圍限於 Model、DataSources、FieldsContainer、Field、MeshedRegion 五個類別直接宣告的公開方法與屬性。不含繼承成員、動態產生的 operators、其他模組、伺服器行為及 0.16.3 文件語料。",
+  "sources": {
+    "sdk_files": [
+      {
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dpf/core/check_version.py",
+        "sha256": "6831358b27e93ae8e85b137c94c020d08fb889690b568bf084251ec090fdd820"
+      },
+      {
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dpf/core/data_sources.py",
+        "sha256": "52289d737de1d2ce63319d7cbbaf96ac84545f3edd3f82f09dd2ba143326209c"
+      },
+      {
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dpf/core/field.py",
+        "sha256": "d8eb2512c09f076e14ddd96770e3a9c06ca575e99adca2269e393c18768c78c8"
+      },
+      {
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dpf/core/fields_container.py",
+        "sha256": "3c1ce6e2f37d87950937e77fde22c520fdb6a2312a59dcb11258b197eb199dd9"
+      },
+      {
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dpf/core/meshed_region.py",
+        "sha256": "4c74bbfd0bd6258646ca383641b51db7fa7dcc89444e8d878d515eb8b9657b59"
+      },
+      {
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/dpf/core/model.py",
+        "sha256": "e9bb45a4ff3ec27f5d186c65b6c051aae7a81e5d8cbb44337066a3fc341a4d80"
+      }
+    ]
+  },
+  "modules": {
+    "ansys.dpf.core.model": {
+      "doc": "Model.\n\nModule contains the Model class to manage file result models.",
+      "classes": {
+        "Model": {
+          "name": "Model",
+          "doc": "Connects to a gRPC DPF server and allows access to a result using the DPF framework.\n\nParameters\n----------\ndata_sources : str, dpf.core.DataSources, os.PathLike\n    Accepts either a :class:`dpf.core.DataSources` instance or the path of the\n    result file to open as an os.PathLike object or a str. The default is ``None``.\nserver : server.DPFServer, optional\n    Server with the channel connected to the remote or local instance. The\n    default is ``None``, in which case an attempt is made to use the global\n    server.\n\nExamples\n--------\n>>> from ansys.dpf import core as dpf\n>>> from ansys.dpf.core import examples\n>>> transient = examples.download_transient_result()\n>>> model = dpf.Model(transient)",
+          "methods": [
+            {
+              "name": "operator",
+              "signature": "(self, name)",
+              "doc": "Operator associated with the data sources of this model.\n\nParameters\n----------\nname : str\n    Operator name, which must be valid.\n\nExamples\n--------\nCreate a displacement operator.\n\n>>> from ansys.dpf.core import Model\n>>> from ansys.dpf.core import examples\n>>> transient = examples.download_transient_result()\n>>> model = Model(transient)\n>>> disp = model.operator('U')\n\nCreate a sum operator.\n\n>>> sum = model.operator('accumulate')",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\model.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\model.py"
+            },
+            {
+              "name": "plot",
+              "signature": "(self, color='w', show_edges=True, **kwargs)",
+              "doc": "Plot the mesh of the model.\n\nParameters\n----------\ncolor : str\n    color of the mesh faces in PyVista format. The default is white with ``\"w\"``.\nshow_edges : bool\n    Whether to show the mesh edges. The default is ``True``.\n**kwargs : optional\n    Additional keyword arguments for the plotter. For additional keyword\n    arguments, see ``help(pyvista.plot)``.\n\nExamples\n--------\nPlot the model using the default options.\n\n>>> from ansys.dpf.core import Model\n>>> from ansys.dpf.core import examples\n>>> transient = examples.download_transient_result()\n>>> model = Model(transient)\n>>> model.plot()\n([], <pyvista.plotting.plotter.Plotter ...>)",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\model.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\model.py"
+            }
+          ],
+          "properties": [
+            {
+              "name": "metadata",
+              "type": "",
+              "doc": "Model metadata.\n\nIncludes:\n\n- ``data_sources``\n- ``meshed_region``\n- ``time_freq_support``\n- ``result_info``\n- ``mesh_provider``\n- ``mesh_info``\n\nReturns\n-------\nmetadata : Metadata\n\nExamples\n--------\n>>> from ansys.dpf.core import Model\n>>> from ansys.dpf.core import examples\n>>> transient = examples.download_transient_result()\n>>> model = Model(transient)\n\nGet the meshed region of the model and extract the element\nnumbers.\n\n>>> meshed_region = model.metadata.meshed_region\n>>> meshed_region.elements.scoping.ids[2]\nnp.int32(759)\n\nGet the data sources of the model.\n\n>>> ds = model.metadata.data_sources\n\nPrint the number of result sets.\n\n>>> tf = model.metadata.time_freq_support\n>>> tf.n_sets\n35\n\nGet the unit system used in the analysis.\n\n>>> rinfo = model.metadata.result_info\n>>> rinfo.unit_system\n'MKS: m, kg, N, s, V, A, degC'",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\model.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\model.py"
+            },
+            {
+              "name": "results",
+              "type": "",
+              "doc": "Available results of the model.\n\nOrganizes the results from DPF into accessible methods. All the available\nresults are dynamically created depending on the model's class:`ansys.dpf.core.result_info`.\n\nReturns\n-------\nresults: Results, CommonResults\n    Available results of the model if possible, else\n    returns common results.\n\nAttributes\n----------\nall types of results : Result\n    Result provider helper wrapping all types of provider available for a\n    given result file.\n\nExamples\n--------\n    >>> from ansys.dpf import core as dpf\n    >>> from ansys.dpf.core import examples\n    >>> model = dpf.Model(examples.find_electric_therm())\n    >>> v = model.results.electric_potential\n    >>> dissip = model.results.thermal_dissipation_energy\n\nExamples\n--------\nExtract the result object from a model.\n\n>>> from ansys.dpf import core as dpf\n>>> from ansys.dpf.core import examples\n>>> model = dpf.Model(examples.find_simple_bar())\n>>> results = model.results # printable object\n\nAccess the displacement at all times.\n\n>>> from ansys.dpf.core import Model\n>>> from ansys.dpf.core import examples\n>>> transient = examples.download_transient_result()\n>>> model = Model(transient)\n>>> displacements = model.results.displacement.on_all_time_freqs.eval()",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\model.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\model.py"
+            },
+            {
+              "name": "mesh_by_default",
+              "type": "",
+              "doc": "If true, the mesh is connected by default to operators supporting the mesh input.",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\model.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\model.py"
+            }
+          ]
+        }
+      },
+      "functions": []
+    },
+    "ansys.dpf.core.data_sources": {
+      "doc": "Data sources.",
+      "classes": {
+        "DataSources": {
+          "name": "DataSources",
+          "doc": "Manages paths to files as sources of data.\n\nUse this object to declare data inputs for DPF and define their locations.\nAn extension key (``'rst'`` for example) is used to choose which files represent\nresults files versus accessory files. You can set a result file path when\ninitializing this class.\n\n\nParameters\n----------\nresult_path:\n    Path of the result.\ndata_sources:\n    gRPC data sources message.\nserver:\n    Server with the channel connected to the remote or local instance. The\n    default is ``None``, in which case an attempt is made to use the global\n    server.\nkey:\n    Explicit key to associate to the result file given as ``result_path``.\n\nExamples\n--------\nInitialize a model from a result path.\n\n>>> from ansys.dpf import core as dpf\n>>> # Create the DataSources object with a main file path\n>>> my_data_sources = dpf.DataSources(result_path='file.rst')\n>>> # Get the path to the main result file\n>>> my_data_sources.result_files\n['file.rst']",
+          "methods": [
+            {
+              "name": "set_result_file_path",
+              "signature": "(self, filepath: 'Union[str, os.PathLike]', key: 'str' = '') -> 'None'",
+              "doc": "Set the main result file path to the data sources.\n\nParameters\n----------\nfilepath:\n    Path to the result file.\nkey:\n    Extension of the file, which is used as a key for choosing the correct\n    plugin when a result is requested by an operator.\n    Overrides the default key detection logic.\n\nExamples\n--------\nCreate a data source and set the result file path.\n\n>>> from ansys.dpf import core as dpf\n>>> # Create the DataSources object\n>>> my_data_sources = dpf.DataSources()\n>>> # Define the path where the main result file can be found\n>>> my_data_sources.set_result_file_path(filepath='/tmp/file.rst', key='rst')\n>>> # Get the path to the main result file\n>>> my_data_sources.result_files\n['...tmp...file.rst']",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\data_sources.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\data_sources.py"
+            },
+            {
+              "name": "guess_result_key",
+              "signature": "(filepath: 'Union[str, os.PathLike]') -> 'str'",
+              "doc": "Guess result key for files without a file extension.\n\nParameters\n----------\nfilepath:\n    Path to the file.\n\nReturns\n-------\nstr:\n    Extension key name.\n\nExamples\n--------\nGives the result key for the result file of the given path\n\n>>> from ansys.dpf import core as dpf\n>>> from ansys.dpf.core import examples\n>>>\n>>> # Create the DataSources object\n>>> my_data_sources = dpf.DataSources()\n>>> # Download the result files\n>>> path = examples.download_d3plot_beam()\n>>> # Define the path where the main result file can be found\n>>> my_data_sources.set_result_file_path(filepath=path[0])\n>>> # Detect the result key for the file in the given path\n>>> my_file_key = my_data_sources.guess_result_key(filepath=path[0])\n>>> print(my_file_key)\nd3plot",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\data_sources.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\data_sources.py"
+            },
+            {
+              "name": "guess_second_key",
+              "signature": "(filepath: 'Union[str, os.PathLike]') -> 'str'",
+              "doc": "For files with an h5 or cff extension, look for another extension.\n\nParameters\n----------\nfilepath:\n    Path to the file.\n\nReturns\n-------\nstr:\n    First extension key name.\n\nExamples\n--------\nFind the first extension key of a result file with multiple extensions keys.\n\n>>> from ansys.dpf import core as dpf\n>>> from ansys.dpf.core import examples\n>>>\n>>> # Download the result files\n>>> paths = examples.download_fluent_axial_comp()\n>>> # Create the DataSources object\n>>> my_data_sources = dpf.DataSources()\n>>> # Define the extension key for the file in the given path\n>>> # We see that the paths are given in a dictionary.\n>>> # So to choose the correct file you need to give as an argument:\n>>> # - the list label\n>>> # - the file index in that list\n>>> my_file_key = my_data_sources.guess_second_key(filepath=paths[\"cas\"][0])\n>>> print(my_file_key)\ncas",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\data_sources.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\data_sources.py"
+            },
+            {
+              "name": "set_domain_result_file_path",
+              "signature": "(self, path: 'Union[str, os.PathLike]', domain_id: 'int', key: 'str' = None) -> 'None'",
+              "doc": "Set a result file path for a specific domain.\n\nThis method is used to handle files created by a\ndistributed solve.\n\nParameters\n----------\npath:\n    Path to the file.\ndomain_id:\n    Domain ID for the distributed files.\nkey:\n    Key to associate to the file.\n\nExamples\n--------\nSet the main result file path to the data sources in their respective domains.\n\n>>> from ansys.dpf import core as dpf\n>>>\n>>> # Create the DataSources object\n>>> my_data_sources = dpf.DataSources()\n>>> # Define the path where the main result data can be found and specify its domain\n>>> my_data_sources.set_domain_result_file_path(path='/tmp/file0.rst', key='rst', domain_id=0)\n>>> my_data_sources.set_domain_result_file_path(path='/tmp/file1.rst', key='rst', domain_id=1)",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\data_sources.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\data_sources.py"
+            },
+            {
+              "name": "add_file_path",
+              "signature": "(self, filepath: 'Union[str, os.PathLike]', key: 'str' = '', is_domain: 'bool' = False, domain_id: 'int' = 0) -> 'None'",
+              "doc": "Add an accessory file path to the data sources.\n\nFiles not added as result files are accessory files, which contain accessory\ninformation not present in the result files.\n\nParameters\n----------\nfilepath:\n    Path of the file.\nkey:\n    Extension of the file, which is used as a key for choosing the correct\n    plugin when a result is requested by an operator.\n    Overrides the default key detection logic.\nis_domain:\n    Whether the file path is the domain path.\ndomain_id:\n    Domain ID for the distributed files.\n    For this parameter to be taken into account, ``domain_path=True`` must be set.\n\nExamples\n--------\nAdd an accessory file to the DataSources object.\n\n>>> from ansys.dpf import core as dpf\n>>>\n>>> # Create the DataSources object\n>>> my_data_sources = dpf.DataSources()\n>>> # Define the path where the main result file can be found\n>>> my_data_sources.set_result_file_path(filepath='/tmp/file.cas', key='cas')\n>>> # Add the additional result file to the DataSources object\n>>> my_data_sources.add_file_path(filepath='/tmp/ds.dat', key='dat')",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\data_sources.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\data_sources.py"
+            },
+            {
+              "name": "add_domain_file_path",
+              "signature": "(self, filepath: 'Union[str, os.PathLike]', key: 'str', domain_id: 'int') -> 'None'",
+              "doc": "Add an accessory file path to the data sources in the given domain.\n\nFiles not added as result files are accessory files, which contain accessory\ninformation not present in the result files.\n\nParameters\n----------\nfilepath:\n    Path of the file.\nkey:\n    Extension of the file, which is used as a key for choosing the correct\n    plugin when a result is requested by an operator.\ndomain_id:\n    Domain ID for the distributed files.\n\nExamples\n--------\nAdd an accessory file for a specific domain\n\n>>> from ansys.dpf import core as dpf\n>>>\n>>> # Create the DataSources object\n>>> my_data_sources = dpf.DataSources()\n>>> # Define the path where the main result data can be found and specify its domain\n>>> my_data_sources.set_domain_result_file_path(path='/tmp/ds.cas', key='cas', domain_id=1)\n>>> # Add the additional result data to the DataSources object and specify its domain\n>>> my_data_sources.add_domain_file_path(filepath='/tmp/ds.dat', key=\"dat\", domain_id=1)",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\data_sources.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\data_sources.py"
+            },
+            {
+              "name": "add_file_path_for_specified_result",
+              "signature": "(self, filepath: 'Union[str, os.PathLike]', key: 'str' = '', result_key: 'str' = '') -> 'None'",
+              "doc": "Add a file path for a specified result file key to the data sources.\n\nThis method can be used when results files with different keys (extensions) are\ncontained in the data sources. For example, a solve using two different solvers\ncould generate two different sets of files.\n\nParameters\n----------\nfilepath:\n    Path of the file.\nkey:\n    Extension of the file, which is used as a key for choosing the correct\n    plugin when a result is requested by an operator.\n    Overrides the default key detection logic.\nresult_key:\n    Extension of the results file that the specified file path belongs to.\n    The default is ``\"\"``, in which case the key is found directly.",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\data_sources.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\data_sources.py"
+            },
+            {
+              "name": "add_upstream",
+              "signature": "(self, upstream_data_sources: 'DataSources', result_key: 'str' = '') -> 'None'",
+              "doc": "Add upstream data sources to the main DataSources object.\n\nThis is used to add a set of paths creating an upstream for\nrecursive workflows.\n\nParameters\n----------\nupstream_data_sources:\n    Set of paths creating an upstream for recursive workflows.\nresult_key:\n    Extension of the result file group for the upstream data source.\n\nExamples\n--------\nAdd upstream data to the main DataSources object of an expansion analysis.\n\n>>> from ansys.dpf import core as dpf\n>>> from ansys.dpf.core import examples\n>>>\n>>> # Download the result files\n>>> paths = examples.download_msup_files_to_dict()\n>>> # Create the main DataSources object\n>>> my_data_sources = dpf.DataSources()\n>>> # Define the path where the main result data can be found\n>>> my_data_sources.set_result_file_path(filepath=paths[\"rfrq\"],  key='rfrq')\n>>>\n>>> # Create the DataSources object for the upstream data\n>>> my_data_sources_upstream = dpf.DataSources()\n>>> # Define the path where the main upstream data can be found\n>>> my_data_sources_upstream.set_result_file_path(filepath=paths[\"mode\"], key='mode')\n>>> # Add the additional upstream data to the upstream DataSources object\n>>> my_data_sources_upstream.add_file_path(filepath=paths[\"rst\"], key='rst')\n>>>\n>>> # Add the upstream DataSources to the main DataSources object\n>>> my_data_sources.add_upstream(upstream_data_sources=my_data_sources_upstream)",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\data_sources.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\data_sources.py"
+            },
+            {
+              "name": "add_upstream_for_domain",
+              "signature": "(self, upstream_data_sources: 'DataSources', domain_id: 'int') -> 'None'",
+              "doc": "Add an upstream data sources to the main DataSources object for a given domain.\n\nThis is used to add a set of path creating an upstream for\nrecursive workflows in a distributed solve.\n\nParameters\n----------\nupstream_data_sources:\n    Set of paths creating an upstream for recursive workflows.\ndomain_id:\n    Domain id for distributed files.\n\nExamples\n--------\nAdd an upstream data to the main DataSources object of an expansion distributed analysis.\n\n>>> import os\n>>>\n>>> from ansys.dpf import core as dpf\n>>> from ansys.dpf.core import examples\n>>>\n>>> # Download the result files\n>>> paths = examples.find_distributed_msup_folder()\n>>> # Create the main DataSources object\n>>> my_data_sources = dpf.DataSources()\n>>> # Define the path where the main result file can be found and specify its domain\n>>> # We use a format string here because the function used to define the path gives the path to a folder\n>>> my_data_sources.set_domain_result_file_path(path=os.path.join(paths, \"file_load_1.rfrq\"), key='rfrq', domain_id=0)\n>>> # Add the additional result file to the DataSources object and specify its domain\n>>> my_data_sources.add_domain_file_path(filepath=os.path.join(paths, \"file_load_2.rfrq\"), key='rfrq', domain_id=1)\n>>>\n>>> # Create the DataSources object for the first and second upstream files\n>>> my_data_sources_upstream_g0 = dpf.DataSources()\n>>> my_data_sources_upstream_g1 = dpf.DataSources()\n>>> # Define the path where the main upstream files can be found\n>>> my_data_sources_upstream_g0.set_result_file_path(filepath=os.path.join(paths, \"file0.mode\"), key='mode')\n>>> my_data_sources_upstream_g1.set_result_file_path(filepath=os.path.join(paths, \"file1.mode\"), key='mode')\n>>> # Add the additional upstream files to the upstream DataSources objectS\n>>> my_data_sources_upstream_g0.add_file_path(filepath=os.path.join(paths, \"file0.rst\"), key='rst')\n>>> my_data_sources_upstream_g1.add_file_path(filepath=os.path.join(paths, \"file1.rst\"), key='rst')\n>>>\n>>> # Add the upstream DataSources to the main DataSources object and specify its domain\n>>> my_data_sources.add_upstream_for_domain(upstream_data_sources=my_data_sources_upstream_g0, domain_id=0)\n>>> my_data_sources.add_upstream_for_domain(upstream_data_sources=my_data_sources_upstream_g1, domain_id=1)",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\data_sources.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\data_sources.py"
+            },
+            {
+              "name": "register_namespace",
+              "signature": "(self, result_key: 'str', namespace: 'str')",
+              "doc": "Associate a ``result_key`` to a ``namespace`` for this `DataSources`` instance.\n\nThe ``result_key`` to ``namespace`` mapping of a ``DataSources`` instance is used by\nsource operators to redirect a specific implementation of the operator.\n\nMost public source operators in the documentation are solver-independant interfaces.\nPlugins bring solver-specific implementations of these operators and record them using a\ncombination of the namespace, the file extension, and the operator name:\n``namespace::key::operator_name``.\n\nFor example, if the namespace associated to the file extension 'rst' is 'mapdl'\n(which is the case in the default mapping), the 'displacement' source operator tries calling\noperator ``mapdl::rst::displacement``.\n\nThis function is useful when creating custom operators or plugins for files with extensions\nunknown to the DPF framework, or to override the default extension to namespace association.\n\nParameters\n----------\nresult_key:\n    Extension of the file, which is used as a key for choosing the correct\n    plugin when a result is requested by an operator.\nnamespace:\n    Namespace to associate the file extension to.\n\nNotes\n-----\nAvailable with server version starting at 7.0.\n\nExamples\n--------\n>>> from ansys.dpf import core as dpf\n>>>\n>>> # Create the main DataSources object\n>>> my_data_sources = dpf.DataSources()\n>>> # Define the path where the main result data can be found\n>>> my_data_sources.set_result_file_path(filepath=r'file.extension', key='extension')\n>>> # Define the namespace for the results in the given path\n>>> my_data_sources.register_namespace(result_key='extension', namespace='namespace')",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\check_version.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\data_sources.py"
+            },
+            {
+              "name": "namespace",
+              "signature": "(self, result_key: 'str') -> 'str'",
+              "doc": "Return the namespace associated to a result_key. The namespace identifies to which operator plugin a call should be delegated to.\n\nParameters\n----------\nresult_key:\n    Extension of the file, which is used as a key for choosing the correct\n    plugin when a result is requested by an operator.",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\check_version.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\data_sources.py"
+            },
+            {
+              "name": "label_space_for_path",
+              "signature": "(self, index: 'int') -> 'LabelSpace'",
+              "doc": "Return the label space associated with the path at the given index.\n\nWhen files are added to the data sources with a domain ID (for distributed solves),\neach path is internally tagged with a label space that describes the subset of the\nmodel it covers.  This method retrieves that label space by the position of the path\nin the data sources.\n\nParameters\n----------\nindex:\n    0-based index of the path in the data sources.\n\nReturns\n-------\nLabelSpace\n    Label space associated with the path at the given index.  For domain files, this\n    contains at least the ``\"domain_id\"`` label whose value matches the domain ID\n    supplied when the path was added.  Returns an empty\n    :class:`LabelSpace <ansys.dpf.core.label_space.LabelSpace>` if no label space\n    was set for that path.\n\nExamples\n--------\nGet the label space of distributed result files added with domain IDs.\n\n>>> from ansys.dpf import core as dpf\n>>>\n>>> # Create the DataSources object\n>>> my_data_sources = dpf.DataSources()\n>>> # Add two result files covering different domains\n>>> my_data_sources.set_domain_result_file_path(path='/tmp/file0.rst', key='rst', domain_id=0)\n>>> my_data_sources.set_domain_result_file_path(path='/tmp/file1.rst', key='rst', domain_id=1)\n>>> # Retrieve the label space for the first path (domain_id=0)\n>>> label_space_0 = my_data_sources.label_space_for_path(index=0)\n>>> # Retrieve the label space for the second path (domain_id=1)\n>>> label_space_1 = my_data_sources.label_space_for_path(index=1)",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\data_sources.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\data_sources.py"
+            }
+          ],
+          "properties": [
+            {
+              "name": "result_key",
+              "type": "str",
+              "doc": "Result key used by the data sources.\n\nReturns\n-------\nstr:\n   Result key.\n\nExamples\n--------\n>>> from ansys.dpf import core as dpf\n>>>\n>>> # Create the DataSources object\n>>> my_data_sources = dpf.DataSources()\n>>> # Define the path where the main result file can be found\n>>> my_data_sources.set_result_file_path(filepath='/tmp/file.rst', key='rst')\n>>> # Get the to the main result file\n>>> my_data_sources.result_key\n'rst'",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\data_sources.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\data_sources.py"
+            },
+            {
+              "name": "result_files",
+              "type": "list[str]",
+              "doc": "List of result files contained in the data sources.\n\nReturns\n-------\nlist:\n    List of result file paths.\n\nExamples\n--------\nGet the path to the result file set using\n:func:`set_result_file_path() <ansys.dpf.core.DataSources.set_result_file_path>`.\n\n>>> from ansys.dpf import core as dpf\n>>>\n>>> # Create the DataSources object\n>>> my_data_sources = dpf.DataSources()\n>>> # Define the path where the main result file can be found\n>>> my_data_sources.set_result_file_path(filepath='/tmp/file.cas', key='cas')\n>>> # Add the additional result file to the DataSources object\n>>> my_data_sources.add_file_path(filepath='/tmp/ds.dat', key='dat')\n>>> # Get the path to the main result file\n>>> my_data_sources.result_files\n['...tmp...file.cas']\n\nIf you added an upstream result file, it is not listed in the main ``DataSources`` object. You have to\ncheck directly in the ``DataSources`` object created to define the upstream data.\n\n>>> from ansys.dpf import core as dpf\n>>>\n>>> # Create the main DataSources object with a main file path\n>>> my_data_sources = dpf.DataSources(result_path='/tmp/file.rfrq')\n>>>\n>>> # Create the DataSources object for the upstream data\n>>> my_data_sources_upstream = dpf.DataSources(result_path='/tmp/file.mode')\n>>> # Add the additional upstream data to the upstream DataSources object\n>>> my_data_sources_upstream.add_file_path(filepath='/tmp/file.rst', key='rst')\n>>>\n>>> # Add the upstream DataSources to the main DataSources object\n>>> my_data_sources.add_upstream(upstream_data_sources=my_data_sources_upstream)\n>>>\n>>> # Get the path to the main result file of the main DataSources object\n>>> my_data_sources.result_files\n['...tmp...file.rfrq']\n\nIf you are checking the DataSources object created to define the upstream data, only the first one is listed.\n\n>>> # Get the path to the upstream file of the upstream DataSources object\n>>> my_data_sources_upstream.result_files\n['...tmp...file.mode']\n\nIf you have a ``DataSources`` object with more than one domain, an empty list is returned.\n\n>>> from ansys.dpf import core as dpf\n>>>\n>>> # Create the DataSources object\n>>> my_data_sources = dpf.DataSources()\n>>> # Define the path where the main result data can be found and specify its domain\n>>> my_data_sources.set_domain_result_file_path(path='/tmp/file0.rst', key='rst', domain_id=0)\n>>> my_data_sources.set_domain_result_file_path(path='/tmp/file1.rst', key='rst', domain_id=1)\n>>>\n>>> # Get the path to the main result files of the DataSources object\n>>> my_data_sources.result_files\n[None, None]",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\data_sources.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\data_sources.py"
+            },
+            {
+              "name": "streams_container",
+              "type": "dpf.StreamsContainer",
+              "doc": "Get the streams container representation of the data sources.\n\n.. warning:: Only available with an InProcess server.\n\nReturns\n-------\nstreams_container:\n    StreamsContainer representation of the data sources.",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\data_sources.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\data_sources.py"
+            }
+          ]
+        }
+      },
+      "functions": []
+    },
+    "ansys.dpf.core.fields_container": {
+      "doc": "FieldsContainer.\n\nContains classes associated with the DPF FieldsContainer.",
+      "classes": {
+        "FieldsContainer": {
+          "name": "FieldsContainer",
+          "doc": "Represents a fields container, which contains fields belonging to a common result.\n\nA fields container is a set of fields ordered by labels and IDs. Each field\nof the fields container has an ID for each label defining the given fields\ncontainer. These IDs allow splitting the fields on any criteria.\n\nThe most common fields container has the label ``\"time\"`` with IDs\ncorresponding to time sets. The label ``\"complex\"``, which is\nused in a harmonic analysis for example, allows real parts (``id=0``)\nto be separated from imaginary parts (``id=1``).\n\nFor more information, see the `Fields container and fields\n<https://dpf.docs.pyansys.com/version/stable/user_guide/fields_container.html>`_\ndocumentation section.\n\nParameters\n----------\nfields_container : ansys.grpc.dpf.collection_message_pb2.Collection, ctypes.c_void_p,\nFieldsContainer, optional\n    Fields container created from either a collection message or by copying an existing\n    fields container. The default is \"None``.\nserver : ansys.dpf.core.server, optional\n    Server with the channel connected to the remote or local instance.\n    The default is ``None``, in which case an attempt is made to use the\n    global server.\n\nExamples\n--------\nExtract a displacement fields container from a transient result file.\n\n>>> from ansys.dpf import core as dpf\n>>> from ansys.dpf.core import examples\n>>> transient = examples.download_transient_result()\n>>> model = dpf.Model(transient)\n>>> disp = model.results.displacement()\n>>> disp.inputs.time_scoping.connect([1,5])\n>>> fields_container = disp.outputs.fields_container()\n>>> field_set_5 =fields_container.get_fields_by_time_complex_ids(5)\n>>> #print(fields_container)\n\n\nCreate a fields container from scratch.\n\n>>> from ansys.dpf import core as dpf\n>>> fc= dpf.FieldsContainer()\n>>> fc.labels =['time','complex']\n>>> for i in range(0,20): #real fields\n...     mscop = {\"time\":i+1,\"complex\":0}\n...     fc.add_field(mscop,dpf.Field(nentities=i+10))\n>>> for i in range(0,20): #imaginary fields\n...     mscop = {\"time\":i+1,\"complex\":1}\n...     fc.add_field(mscop,dpf.Field(nentities=i+10))",
+          "methods": [
+            {
+              "name": "create_subtype",
+              "signature": "(self, obj_by_copy)",
+              "doc": "Create a field subtype.",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\fields_container.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\fields_container.py"
+            },
+            {
+              "name": "get_fields_by_time_complex_ids",
+              "signature": "(self, timeid=None, complexid=None)",
+              "doc": "Retrieve fields at a requested time ID or complex ID.\n\nParameters\n----------\ntimeid : int, optional\n    Time ID or frequency ID, which is the one-based index of the\n    result set.\ncomplexid : int, optional\n    Complex ID, where ``1`` is for imaginary and ``0`` is for real.\n\nReturns\n-------\nfields : list[Field]\n    Fields corresponding to the request.\n\nExamples\n--------\nExtract the fifth time set of a transient analysis.\n\n>>> from ansys.dpf import core as dpf\n>>> from ansys.dpf.core import examples\n>>> transient = examples.download_transient_result()\n>>> model = dpf.Model(transient)\n>>> len(model.metadata.time_freq_support.time_frequencies)\n35\n>>> disp = model.results.displacement()\n>>> disp.inputs.time_scoping.connect([1,5])\n>>> fields_container = disp.outputs.fields_container()\n>>> field_set_5 =fields_container.get_fields_by_time_complex_ids(5)",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\fields_container.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\fields_container.py"
+            },
+            {
+              "name": "get_field_by_time_complex_ids",
+              "signature": "(self, timeid=None, complexid=None)",
+              "doc": "Retrieve a field at a requested time ID or complex ID.\n\nAn exception is raised if the number of fields matching the request is\ngreater than one.\n\nParameters\n----------\ntimeid : int, optional\n    Time ID or frequency ID, which is the one-based index of the\n    result set.\ncomplexid : int, optional\n    Complex ID, where ``1`` is for imaginary and ``0`` is for real.\n\nReturns\n-------\nfields : Field\n    Field corresponding to the request\n\nExamples\n--------\nExtract the fifth time set of a transient analysis.\n\n>>> from ansys.dpf import core as dpf\n>>> from ansys.dpf.core import examples\n>>> transient = examples.download_transient_result()\n>>> model = dpf.Model(transient)\n>>> len(model.metadata.time_freq_support.time_frequencies)\n35\n>>> disp = model.results.displacement()\n>>> disp.inputs.time_scoping.connect([1,5])\n>>> fields_container = disp.outputs.fields_container()\n>>> field_set_5 =fields_container.get_fields_by_time_complex_ids(5)",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\fields_container.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\fields_container.py"
+            },
+            {
+              "name": "get_fields",
+              "signature": "(self, label_space)",
+              "doc": "Retrieve the fields at a requested index or label space.\n\nParameters\n----------\nlabel_space : dict[str,int]\n    Scoping of the requested fields. For example,\n    ``{\"time\": 1, \"complex\": 0}``.\n\nReturns\n-------\nfields : list[Field]\n    Fields corresponding to the request.\n\nExamples\n--------\n>>> from ansys.dpf import core as dpf\n>>> fc= dpf.FieldsContainer()\n>>> fc.labels =['time','complex']\n>>> #real fields\n>>> for i in range(0,20):\n...     mscop = {\"time\":i+1,\"complex\":0}\n...     fc.add_field(mscop,dpf.Field(nentities=i+10))\n>>> #imaginary fields\n>>> for i in range(0,20):\n...     mscop = {\"time\":i+1,\"complex\":1}\n...     fc.add_field(mscop,dpf.Field(nentities=i+10))\n\n>>> fields = fc.get_fields({\"time\":2})\n>>> # imaginary and real fields of time 2\n>>> len(fields)\n2",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\fields_container.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\fields_container.py"
+            },
+            {
+              "name": "get_field",
+              "signature": "(self, label_space_or_index)",
+              "doc": "Retrieve the field at a requested index or label space.\n\nAn exception is raised if the number of fields matching the request is\ngreater than one.\n\nParameters\n----------\nlabel_space_or_index : dict[str,int], int\n    Scoping of the requested fields. For example,\n    ``{\"time\": 1, \"complex\": 0}`` or the index of the field.\n\nReturns\n-------\nfield : Field\n    Field corresponding to the request.\n\nExamples\n--------\n>>> from ansys.dpf import core as dpf\n>>> fc = dpf.fields_container_factory.over_time_freq_fields_container(\n...     [dpf.Field(nentities=10)]\n... )\n>>> field = fc.get_field({\"time\":1})",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\fields_container.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\fields_container.py"
+            },
+            {
+              "name": "get_field_by_time_id",
+              "signature": "(self, timeid=None)",
+              "doc": "Retrieve the complex field at a requested time.\n\nParameters\n----------\ntimeid: int, optional\n    Time ID, which is the one-based index of the result set.\n\nReturns\n-------\nfields : Field\n    Fields corresponding to the request.",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\fields_container.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\fields_container.py"
+            },
+            {
+              "name": "get_imaginary_fields",
+              "signature": "(self, timeid=None)",
+              "doc": "Retrieve the complex fields at a requested time.\n\nParameters\n----------\ntimeid: int, optional\n    Time ID, which is the one-based index of the result set.\n\nReturns\n-------\nfields : list[Field]\n    Fields corresponding to the request.",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\fields_container.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\fields_container.py"
+            },
+            {
+              "name": "get_imaginary_field",
+              "signature": "(self, timeid=None)",
+              "doc": "Retrieve the complex field at a requested time.\n\nParameters\n----------\ntimeid: int, optional\n    Time ID, which is the one-based index of the result set.\n\nReturns\n-------\nfields : Field\n    Field corresponding to the request.",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\fields_container.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\fields_container.py"
+            },
+            {
+              "name": "add_field",
+              "signature": "(self, label_space, field)",
+              "doc": "Add or update a field at a requested label space.\n\nParameters\n----------\nlabel_space : dict[str,int]\n    Label space of the requested field. For example,\n    {\"time\":1, \"complex\":0}.\nfield : Field\n    DPF field to add or update.\n\nExamples\n--------\n>>> from ansys.dpf import core as dpf\n>>> fc= dpf.FieldsContainer()\n>>> fc.labels =['time','complex']\n>>> for i in range(0,20): #real fields\n...     mscop = {\"time\":i+1,\"complex\":0}\n...     fc.add_field(mscop,dpf.Field(nentities=i+10))\n>>> for i in range(0,20): #imaginary fields\n...     mscop = {\"time\":i+1,\"complex\":1}\n...     fc.add_field(mscop,dpf.Field(nentities=i+10))",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\fields_container.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\fields_container.py"
+            },
+            {
+              "name": "add_field_by_time_id",
+              "signature": "(self, field, timeid=1)",
+              "doc": "Add or update a field at a requested time ID.\n\nParameters\n----------\nfield : Field\n    DPF field to add or update.\ntimeid: int, optional\n    Time ID for the requested time set. The default is ``1``.",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\fields_container.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\fields_container.py"
+            },
+            {
+              "name": "add_imaginary_field",
+              "signature": "(self, field, timeid=1)",
+              "doc": "Add or update an imaginary field at a requested time ID.\n\nParameters\n----------\nfield : Field\n    DPF field to add or update.\ntimeid: int, optional\n    Time ID for the requested time set. The default is ``1``.",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\fields_container.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\fields_container.py"
+            },
+            {
+              "name": "select_component",
+              "signature": "(self, index)",
+              "doc": "Select fields containing only the component index.\n\nFields can be selected only by component index as multiple fields may\ncontain a different number of components.\n\nParameters\n----------\nindex : int\n    Index of the component.\n\nReturns\n-------\nfields : FieldsContainer\n    Fields container with one component selected in each field.\n\nExamples\n--------\nSelect using a component index.\n\n>>> from ansys.dpf import core as dpf\n>>> from ansys.dpf.core import examples\n>>> transient = examples.download_transient_result()\n>>> model = dpf.Model(transient)\n>>> disp = model.results.displacement()\n>>> disp.inputs.time_scoping.connect([1,5])\n>>> fields_container = disp.outputs.fields_container()\n>>> disp_x_fields = fields_container.select_component(0)\n>>> my_field = disp_x_fields[0]",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\fields_container.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\fields_container.py"
+            },
+            {
+              "name": "deep_copy",
+              "signature": "(self, server=None)",
+              "doc": "Create a deep copy of the fields container's data (and its fields) on a given server.\n\nThis method is useful for passing data from one server instance to another.\n\nParameters\n----------\nserver : ansys.dpf.core.server, optional\n    Server with the channel connected to the remote or local instance.\n    The default is ``None``, in which case an attempt is made to use the\n    global server.\n\nReturns\n-------\nfields_container_copy : FieldsContainer\n\nExamples\n--------\n>>> from ansys.dpf import core as dpf\n>>> from ansys.dpf.core import examples\n>>> transient = examples.download_transient_result()\n>>> model = dpf.Model(transient)\n>>> disp = model.results.displacement()\n>>> disp.inputs.time_scoping.connect([1,5])\n>>> fields_container = disp.outputs.fields_container()\n>>> other_server = dpf.start_local_server(as_global=False)\n>>> deep_copy = fields_container.deep_copy(server=other_server)",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\fields_container.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\fields_container.py"
+            },
+            {
+              "name": "get_time_scoping",
+              "signature": "(self)",
+              "doc": "Retrieve the time scoping containing the time sets.\n\nReturns\n-------\nscoping: Scoping\n    Scoping containing the time set IDs available in the fields container.",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\fields_container.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\fields_container.py"
+            },
+            {
+              "name": "plot",
+              "signature": "(self, label_space: 'dict' = None, **kwargs)",
+              "doc": "Plot the fields in the FieldsContainer for the given LabelSpace.\n\nCheck the labels available for the FieldsContainer with\n:func:`~fields_container.FieldsContainer.labels`.\n\nParameters\n----------\nlabel_space:\n    A dictionary (LabelSpace) of labels of the :class:`FieldsContainer` with associated\n    values to select for plotting.\n    This is used to filter the data to plot, for example:\n    - if ``label_space={'time': 10}``: a single time step (mandatory for transient)\n    - if ``label_space={'complex': 0, 'part': 12}``: real part of complex data for a part\n    See :func:`~fields_container.FieldsContainer.get_fields`.\n    If None is given, it renders all fields available, which may not make sense.\n**kwargs:\n    For more information on accepted keyword arguments, see :func:`~field.Field.plot` and\n    :class:`~plotter.DpfPlotter`.",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\fields_container.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\fields_container.py"
+            },
+            {
+              "name": "animate",
+              "signature": "(self, save_as: 'str' = None, deform_by: 'Union[FieldsContainer, Result, Operator]' = None, scale_factor: 'Union[float, Sequence[float]]' = 1.0, shell_layer: 'shell_layers' = <shell_layers.top: 0>, **kwargs)",
+              "doc": "Create an animation based on the Fields contained in the FieldsContainer.\n\nThis method creates a movie or a gif based on the time ids of a FieldsContainer.\nFor kwargs see pyvista.Plotter.open_movie/add_text/show.\n\nParameters\n----------\nsave_as:\n    Path of file to save the animation to. Defaults to None. Can be of any format\n    supported by pyvista.Plotter.write_frame (.gif, .mp4, ...).\ndeform_by:\n    Used to deform the plotted mesh. Must return a FieldsContainer of the same length as\n    self, containing 3D vector Fields of distances.\n    Defaults to None, which takes self if possible. Set as False to force static animation.\nscale_factor : float, list, optional\n    Scale factor to apply when warping the mesh. Defaults to 1.0. Can be a list to make\n    scaling frequency-dependent.\nshell_layer:\n    Enum used to set the shell layer if the field to plot\n    contains shell elements. Defaults to top layer.\n**kwargs:\n    Additional keyword arguments for the animator.\n    Used by :func:`pyvista.Plotter` (off_screen, cpos, ...),\n    or by :func:`pyvista.Plotter.open_movie`\n    (framerate, quality, ...)",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\fields_container.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\fields_container.py"
+            }
+          ],
+          "properties": [
+            {
+              "name": "time_freq_support",
+              "type": "",
+              "doc": "Time frequency support.",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\fields_container.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\fields_container.py"
+            }
+          ]
+        }
+      },
+      "functions": []
+    },
+    "ansys.dpf.core.field": {
+      "doc": "Field.",
+      "classes": {
+        "Field": {
+          "name": "Field",
+          "doc": "Represents the main simulation data container.\n\nThis can be evaluated data from the :class:`Operator <ansys.dpf.core.Operator>` class\nor created by a factory and directly by an instance of this class.\n\nA field's data is always associated to its scoping (entities\nassociated to each value) and support (subset of the model where the\ndata is), making the field a self-describing piece of data.\n\nThe field's scoping defines the order of the data, for example: the first ID in the\n``scoping`` identifies to which entity the first ``entity data`` belongs.\n\nThe minimum requirement for a well defined field is for it to have a dimensionality\n(scalar, three components vector, six components symmetrical matrix, and so on), a location\n(\"Nodal\", \"Elemental\", \"ElementalNodal\", \"TimeFreq\"), a data vector, and a scoping with IDs.\nYou can also set the number of shell layers. If the field has one elementary data by entity\n(elementary data size equals the number of components for \"Nodal\" or \"Elemental\" field for example),\nthen the data vector can be set directly. If a more complex field is required\n(\"ElementalNodal\" field for example), the data can be set entity by entity.\n\nFor more information, see `Fields container and fields\n<https://dpf.docs.pyansys.com/version/stable/user_guide/fields_container.html>`_.\n\n\nParameters\n----------\nnentities : int, optional\n    Number of entities reserved. The default is ``0``.\nnature : :class:`ansys.dpf.core.common.natures`, optional\n    Nature of the field.\nlocation : str, optional\n    Location of the field.  Options are in :class:`locations <ansys.dpf.core.common.locations>`\n\n    - ``dpf.locations.nodal``\n    - ``dpf.locations.elemental``\n    - ``dpf.locations.elemental_nodal``\n    - ...\n\nfield : Field, ansys.grpc.dpf.field_pb2.Field, ctypes.c_void_p, optional\n    Field message generated from a gRPC stub, or returned by DPF's C clients.\nserver : :class:`ansys.dpf.core.server`, optional\n    Server with the channel connected to the remote or local instance. The\n    default is ``None``, in which case an attempt is made to use the global\n    server.\n\nExamples\n--------\nCreate a field from scratch.\n\n>>> from ansys.dpf.core import locations\n>>> from ansys.dpf import core as dpf\n>>> field_with_classic_api = dpf.Field()\n>>> field_with_classic_api.location = locations.nodal\n\nCreate a symmetrical matrix elemental field from scratch.\n\n>>> from ansys.dpf import core as dpf\n>>> num_entities = 2\n>>> my_field = dpf.Field(num_entities, dpf.natures.symmatrix, locations.elemental)\n>>> my_scoping = dpf.Scoping(location=locations.elemental, ids=[1, 2])\n>>> my_field.scoping = my_scoping\n\nAdd all the data at once.\n\n>>> from ansys.dpf import core as dpf\n>>> my_data = [1.0,1.0,1.0,0.0,0.0,0.0,1.0,1.0,1.0,0.0,0.0,0.0]\n>>> my_field.data = my_data\n\nAdd data entity by entity.\n\n>>> from ansys.dpf import core as dpf\n>>> my_elem_data = [1.0,1.0,1.0,0.0,0.0,0.0]\n>>> my_field.append(my_elem_data, scopingid=1)\n>>> my_field.append(my_elem_data, scopingid=2)\n\nCreate a nodal scalar field using the fields factory.\n\n>>> from ansys.dpf.core import fields_factory\n>>> from ansys.dpf import core as dpf\n>>> my_scalar_field = fields_factory.create_scalar_field(num_entities=2, location=locations.nodal)\n>>> my_scalar_field.data = [1.0, 3.0]\n\nExtract a displacement field from a transient result file.\n\n>>> from ansys.dpf import core as dpf\n>>> from ansys.dpf.core import examples\n>>> transient = examples.download_transient_result()\n>>> model = dpf.Model(transient)\n>>> disp = model.results.displacement()\n>>> fields_container = disp.outputs.fields_container()\n>>> field = fields_container[0]\n>>> len(field)\n11460\n>>> field.component_count\n3\n>>> field.elementary_data_count\n3820\n\nCreate a displacement field.\n\n>>> from ansys.dpf import core as dpf\n>>> import numpy as np\n>>> my_field = dpf.Field(10, dpf.natures.vector,dpf.locations.nodal)\n>>> my_field.data = np.zeros(30)\n>>> my_field.scoping.ids = range(1,11)\n\nSet data.\n\n>>> from ansys.dpf import core as dpf\n>>> from ansys.dpf.core import examples\n>>> transient = examples.download_transient_result()\n>>> model = dpf.Model(transient)\n>>> disp = model.results.displacement()\n>>> fields_container = disp.outputs.fields_container()\n>>> field = fields_container[0]\n>>> field.data[2]\nDPFArray([-0.00672665, -0.03213735,  0.00016716]...\n\nAccessing data with a custom order.\n\n>>> from ansys.dpf import core as dpf\n>>> from ansys.dpf.core import examples\n>>> transient = examples.download_transient_result()\n>>> model = dpf.Model(transient)\n>>> ids_order = [2,3]\n>>> stress = model.results.stress(mesh_scoping=dpf.Scoping(\n...     ids=ids_order, location=dpf.locations.nodal))\n>>> fields_container = stress.outputs.fields_container()\n>>> field = fields_container[0]\n>>> field.scoping.ids\nDPFArray([3, 2]...\n>>> field.data\nDPFArray([[  3755059.33333333,  -2398534.3515625 , -27519072.33333333,\n             2194748.65625   ,   8306637.58333333,   2018637.03125   ],\n          [  2796852.09375   ,   -992492.62304688,  22519752.625     ,\n            -1049027.46875   ,  10846776.1875    ,   4119072.3125    ]]...\n>>> field.get_entity_data_by_id(2)\nDPFArray([[ 2796852.09375   ,  -992492.62304688, 22519752.625     ,\n           -1049027.46875   , 10846776.1875    ,  4119072.3125    ]]...\n>>> field.get_entity_data_by_id(3)\nDPFArray([[  3755059.33333333,  -2398534.3515625 , -27519072.33333333,\n             2194748.65625   ,   8306637.58333333,   2018637.03125   ]]...",
+          "methods": [
+            {
+              "name": "as_local_field",
+              "signature": "(self)",
+              "doc": "Create a deep copy of the field that can be accessed and modified locally.\n\nThis method allows you to access and modify the local copy of the field\nwithout sending a request to the server. It should be used in a ``with``\nstatement so that the local field is released and the data is sent to\nthe server in one action. If it is not used in a ``with`` statement,\n:func:`<release_data> Field.release_data()` should be used to update the field.\n\nWarning\n-------\nIf this `as_local_field` method is not used as a context manager in a\n``with`` statement or if the method `release_data()` is not called,\nthe data will not be updated.\n\nReturns\n-------\nlocal_field : Field\n\nExamples\n--------\n>>> from ansys.dpf import core as dpf\n>>> num_entities = 3\n>>> field_to_local = dpf.fields_factory.create_3d_vector_field(num_entities, location=dpf.locations.elemental_nodal)\n>>> with field_to_local.as_local_field() as f:\n...     for i in range(1,num_entities+1):\n...         f.append([[0.1*i,0.2*i, 0.3*i],[0.1*i,0.2*i, 0.3*i]],i)\n...         f.get_entity_data(i-1),[[0.1*i,0.2*i, 0.3*i],[0.1*i,0.2*i, 0.3*i]]\n(DPFArray([[0.1, 0.2, 0.3],\n          [0.1, 0.2, 0.3]]), [[0.1, 0.2, 0.3], [0.1, 0.2, 0.3]])\n(DPFArray([[0.2, 0.4, 0.6],\n          [0.2, 0.4, 0.6]]), [[0.2, 0.4, 0.6], [0.2, 0.4, 0.6]])\n(DPFArray([[0.3, 0.6, 0.9],\n          [0.3, 0.6, 0.9]]), [[0.30000000000000004, 0.6000000000000001, 0.8999999999999999], [0.30000000000000004, 0.6000000000000001, 0.8999999999999999]])",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\field.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\field.py"
+            },
+            {
+              "name": "get_entity_data",
+              "signature": "(self, index: 'int') -> 'dpf_array.DPFArray'",
+              "doc": "Retrieve entity data by index.",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\field.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\field.py"
+            },
+            {
+              "name": "get_entity_data_by_id",
+              "signature": "(self, id: 'int') -> 'dpf_array.DPFArray'",
+              "doc": "Retrieve entity data by id.",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\field.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\field.py"
+            },
+            {
+              "name": "append",
+              "signature": "(self, data: 'float | list[float] | np.ndarray[np.float64]', scopingid: 'int')",
+              "doc": "Append data to the Field.",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\field.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\field.py"
+            },
+            {
+              "name": "to_nodal",
+              "signature": "(self)",
+              "doc": "Convert the field to one with a ``Nodal`` location.\n\nThis method is valid only when the field's current location is\n``ElementalNodal`` or ``Elemental``.\n\nReturns\n-------\nnodal_field : Field\n    with ``location=='Nodal'``.",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\field.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\field.py"
+            },
+            {
+              "name": "plot",
+              "signature": "(self, shell_layers: 'eshell_layers' = None, deform_by: 'Field | Result | Operator' = None, scale_factor: 'float' = 1.0, meshed_region: 'MeshedRegion' = None, **kwargs)",
+              "doc": "Plot the field or fields container on the mesh support if it exists.\n\nWarning\n-------\nThis method is primarily added out of convenience as plotting\ndirectly from the field can be slower than extracting the\nmeshed region and plotting the field on top of that.  It is\nmore efficient to plot with:\n\n>>> from ansys.dpf import core as dpf\n>>> from ansys.dpf.core import examples\n>>> transient = examples.download_transient_result()\n>>> model = dpf.Model(transient)\n>>> mesh = model.metadata.meshed_region\n>>> disp = model.results.displacement()\n>>> fields_container = disp.outputs.fields_container()\n>>> field = fields_container[0]\n>>> mesh.plot(field)\n(None, <pyvista.plotting.plotter.Plotter ...>)\n\nParameters\n----------\nshell_layers:\n    Enum used to set the shell layers if the model to plot\n    contains shell elements. Defaults to the top layer.\ndeform_by:\n    Used to deform the plotted mesh. Must output a 3D vector field.\nscale_factor:\n    Scaling factor to apply when warping the mesh.\nmeshed_region:\n    Mesh to plot the field on.\n**kwargs:\n    Additional keyword arguments for the plotter. For additional keyword\n    arguments, see ``help(pyvista.plot)``.",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\field.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\field.py"
+            },
+            {
+              "name": "resize",
+              "signature": "(self, nentities, datasize)",
+              "doc": "Allocate memory.\n\nParameters\n----------\nnentities : int\n    Number of IDs in the scoping.\ndatasize : int\n    Size of the data vector.",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\field.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\field.py"
+            },
+            {
+              "name": "min",
+              "signature": "(self)",
+              "doc": "Retrieve the component-wise minimum over this field.\n\nReturns\n-------\nmin : Field\n    Component-wise minimum field.",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\field.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\field.py"
+            },
+            {
+              "name": "max",
+              "signature": "(self)",
+              "doc": "Retrieve the component-wise maximum over this field.\n\nReturns\n-------\nmax : Field\n    Component-wise maximum field.",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\field.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\field.py"
+            },
+            {
+              "name": "deep_copy",
+              "signature": "(self, server=None)",
+              "doc": "Create a deep copy of the field's data on a given server.\n\nThis method can be useful for passing data from one server instance to another.\n\nParameters\n----------\nserver : :class:`ansys.dpf.core.server`, optional\n    Server with the channel connected to the remote or local instance. The\n    default is ``None``, in which case an attempt is made to use the global\n    server.\n\nReturns\n-------\nfield_copy : Field\n\nExamples\n--------\n>>> from ansys.dpf import core as dpf\n>>> from ansys.dpf.core import examples\n>>> transient = examples.download_transient_result()\n>>> model = dpf.Model(transient)\n>>> disp = model.results.displacement()\n>>> fields_container = disp.outputs.fields_container()\n>>> field = fields_container[0]\n>>> other_server = dpf.start_local_server(as_global=False)\n>>> deep_copy = field.deep_copy(server=other_server)",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\field.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\field.py"
+            }
+          ],
+          "properties": [
+            {
+              "name": "location",
+              "type": "",
+              "doc": "Field location.\n\nReturns\n-------\nstr\n    Location string, Options are in :class:`locations <ansys.dpf.core.common.locations>`.\n\nExamples\n--------\nLocation for a stress field evaluated at nodes.\n\n>>> from ansys.dpf import core as dpf\n>>> from ansys.dpf.core import examples\n>>> model = dpf.Model(examples.download_transient_result())\n>>> s_op = model.results.stress()\n>>> s_fc = s_op.outputs.fields_container()\n>>> field = s_fc[0]\n>>> field.location\n'ElementalNodal'",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\field.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\field.py"
+            },
+            {
+              "name": "component_count",
+              "type": "",
+              "doc": "Number of components.",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\field.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\field.py"
+            },
+            {
+              "name": "elementary_data_count",
+              "type": "",
+              "doc": "Number of elementary data.",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\field.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\field.py"
+            },
+            {
+              "name": "size",
+              "type": "",
+              "doc": "Size of data.",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\field.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\field.py"
+            },
+            {
+              "name": "shell_layers",
+              "type": "",
+              "doc": "Order of the shell layers.\n\nReturns\n-------\n:class:`ansys.dpf.core.common.shell_layers`",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\field.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\field.py"
+            },
+            {
+              "name": "unit",
+              "type": "",
+              "doc": "Units for the field.\n\nReturns\n-------\nstr\n   Units for the field.\n\nExamples\n--------\nUnits for a displacement field.\n\n>>> from ansys.dpf import core as dpf\n>>> my_field = dpf.Field(10, dpf.natures.vector,dpf.locations.nodal)\n>>> my_field.unit = \"m\"\n>>> my_field.unit\n'm'",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\field.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\field.py"
+            },
+            {
+              "name": "dimensionality",
+              "type": "",
+              "doc": "Dimensionality represents the shape of the elementary data contained in the field.\n\nReturns\n-------\ndimensionality : :class:`ansys.dpf.core.dimensionality.Dimensionality`\n    Nature and size of the elementary data.",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\field.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\field.py"
+            },
+            {
+              "name": "name",
+              "type": "",
+              "doc": "Name of the field.",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\field.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\field.py"
+            },
+            {
+              "name": "field_definition",
+              "type": "",
+              "doc": "Field information, including its location, unit, dimensionality, and shell layers.\n\nReturns\n-------\n:class:`ansys.dpf.core.field_definition.FieldDefinition`",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\field.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\field.py"
+            },
+            {
+              "name": "time_freq_support",
+              "type": "",
+              "doc": "Time frequency support of the field.\n\nReturns\n-------\n:class:`ansys.dpf.core.time_freq_support.TimeFreqSupport`",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\field.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\field.py"
+            },
+            {
+              "name": "meshed_region",
+              "type": "MeshedRegion",
+              "doc": "Meshed region of the field.\n\nReturn\n------\n:class:`ansys.dpf.core.meshed_region.MeshedRegion`",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\field.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\field.py"
+            }
+          ]
+        }
+      },
+      "functions": []
+    },
+    "ansys.dpf.core.meshed_region": {
+      "doc": "MeshedRegion.",
+      "classes": {
+        "MeshedRegion": {
+          "name": "MeshedRegion",
+          "doc": "Represents a mesh from DPF.\n\nParameters\n----------\nnum_nodes : int, optional\n    Number of nodes to reserve for mesh creation. The default is ``None``.\nnum_elements : int, optional\n    Number of elements to reserve for mesh creation. The default is ``None``.\nmesh : ansys.grpc.dpf.meshed_region_pb2.MeshedRegion\n    The default is ``None``.\nserver : ansys.dpf.core.server, optional\n    Server with the channel connected to the remote or local instance.\n    The default is ``None``, in which case an attempt is made to use the\n    global server.\n\nExamples\n--------\nExtract a meshed region from a model.\n\n>>> import ansys.dpf.core as dpf\n>>> from ansys.dpf.core import examples\n>>> model = dpf.Model(examples.find_static_rst())\n>>> meshed_region = model.metadata.meshed_region\n\nCreate a meshed region from scratch (line with 3 beam elements).\n\n>>> import ansys.dpf.core as dpf\n>>> meshed_region = dpf.MeshedRegion(num_nodes=4,num_elements=3)\n>>> i=0\n>>> for node in meshed_region.nodes.add_nodes(4):\n...     node.id = i+1\n...     node.coordinates = [float(i), float(i), 0.0]\n...     i=i+1\n>>> i=0\n>>> for element in meshed_region.elements.add_elements(3):\n...     element.id=i+1\n...     element.connectivity = [i, i+1]\n...     element.is_beam=True #or is_solid, is_beam, is_point\n...     i=i+1\n>>> meshed_region.elements.add_beam_element(id=4,connectivity=[3,0])",
+          "methods": [
+            {
+              "name": "property_field",
+              "signature": "(self, property_name)",
+              "doc": "Property field getter. It can be coordinates (field), element types (property field)...\n\nReturns\n-------\nfield_or_property_field : core.Field or core.PropertyField",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\meshed_region.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\meshed_region.py"
+            },
+            {
+              "name": "set_property_field",
+              "signature": "(self, property_name, value)",
+              "doc": "Property field setter. It can be coordinates (field), element types (property field)...\n\nParameters\n----------\nproperty_name : str\n    property name of the field to set\nvalue : PropertyField or Field",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\check_version.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\meshed_region.py"
+            },
+            {
+              "name": "set_coordinates_field",
+              "signature": "(*args, **kwargs)",
+              "doc": "",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\meshed_region.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\meshed_region.py"
+            },
+            {
+              "name": "named_selection",
+              "signature": "(self, named_selection: 'str', server: 'AnyServerType' = None) -> 'Scoping'",
+              "doc": "Scoping containing the list of nodes or elements in the named selection.\n\nParameters\n----------\nnamed_selection:\n    Name of the named selection.\nserver:\n    Server on which to create the scoping if different from the server of the model.\n\nReturns\n-------\nnamed_selection:\n    A scoping containing the IDs of the entities in the named selection.\n    The location depends on the type of entities targeted by the named selection.",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\meshed_region.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\meshed_region.py"
+            },
+            {
+              "name": "set_named_selection_scoping",
+              "signature": "(self, named_selection_name, scoping)",
+              "doc": "Named selection scoping setter.\n\nParameters\n----------\nnamed_selection_name : str\n    named selection name\nscoping : Scoping",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\check_version.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\meshed_region.py"
+            },
+            {
+              "name": "deform_by",
+              "signature": "(self, deform_by, scale_factor=1.0)",
+              "doc": "Deforms the mesh according to a 3D vector field and an additional scale factor.\n\nParameters\n----------\ndeform_by : Field, FieldsContainer, Result, Operator\n    Used to deform the plotted mesh. Must output a unique 3D vector field.\n    Defaults to None.\nscale_factor : float, Field, FieldsContainer, optional\n    Used to scale the mesh deformation. Defaults to 1.0. Can be a scalar Field\n    (or a FieldsContainer with only one Field) to get a spatially non-homogeneous scaling.",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\meshed_region.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\meshed_region.py"
+            },
+            {
+              "name": "plot",
+              "signature": "(self, field_or_fields_container=None, shell_layers=None, deform_by=None, scale_factor=1.0, **kwargs)",
+              "doc": "Plot the field or fields container on the mesh.\n\nParameters\n----------\nfield_or_fields_container : dpf.core.Field or dpf.core.FieldsContainer\n    Field or fields container to plot. The default is ``None``.\nshell_layers : core.shell_layers, optional\n    Enum used to set the shell layers if the model to plot contains shell elements.\ndeform_by : Field, Result, Operator, optional\n    Used to deform the plotted mesh. Must output a 3D vector field.\n    Defaults to None.\nscale_factor : float, optional\n    Scaling factor to apply when warping the mesh. Defaults to 1.0.\n**kwargs : optional\n    Additional keyword arguments for the plotter. For additional keyword\n    arguments, see ``help(pyvista.plot)``.\n\nExamples\n--------\nPlot the displacement field from an example file.\n\n>>> import ansys.dpf.core as dpf\n>>> from ansys.dpf.core import examples\n>>> model = dpf.Model(examples.find_static_rst())\n>>> disp = model.results.displacement()\n>>> field = disp.outputs.fields_container()[0]\n>>> model.metadata.meshed_region.plot(field)\n(None, <pyvista.plotting.plotter.Plotter ...>)",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\meshed_region.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\meshed_region.py"
+            },
+            {
+              "name": "deep_copy",
+              "signature": "(self, server=None)",
+              "doc": "Create a deep copy of the meshed region's data on a given server.\n\nThis method is useful for passing data from one server instance to another.\n\nParameters\n----------\nserver : ansys.dpf.core.server, optional\n    Server with the channel connected to the remote or local instance.\n    The default is ``None``, in which case an attempt is made to use the\n    global server.\n\nReturns\n-------\nmesh_copy : MeshedRegion\n\nExamples\n--------\n>>> import ansys.dpf.core as dpf\n>>> from ansys.dpf.core import examples\n>>> model = dpf.Model(examples.find_static_rst())\n>>> meshed_region = model.metadata.meshed_region\n>>> other_server = dpf.start_local_server(as_global=False)\n>>> deep_copy = meshed_region.deep_copy(server=other_server)",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\meshed_region.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\meshed_region.py"
+            },
+            {
+              "name": "field_of_properties",
+              "signature": "(self, property_name)",
+              "doc": "Return the ``Field`` or ``PropertyField`` associated to a given property of the mesh.\n\nParameters\n----------\nproperty_name : str, common.elemental_properties, common.nodal_properties\n    Name of the property.\n\nReturns\n-------\nproperties : Field, PropertyField\n\nExamples\n--------\n>>> import ansys.dpf.core as dpf\n>>> from ansys.dpf.core import examples\n>>> model = dpf.Model(examples.find_static_rst())\n>>> meshed_region = model.metadata.meshed_region\n>>> connectivity = meshed_region.field_of_properties(\n...     dpf.common.elemental_properties.connectivity)\n>>> coordinates = meshed_region.field_of_properties(dpf.common.nodal_properties.coordinates)",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\meshed_region.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\meshed_region.py"
+            },
+            {
+              "name": "is_empty",
+              "signature": "(self) -> 'bool'",
+              "doc": "Whether the mesh is empty.\n\nA mesh is considered empty when it has zero element, zero face, and zero node.",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\meshed_region.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\meshed_region.py"
+            },
+            {
+              "name": "location_data_len",
+              "signature": "(self, location: 'locations') -> 'int'",
+              "doc": "Return the data length for a given mesh location.\n\nAccepted mesh locations are nodal, elemental, faces, and elemental_nodal.\n\nParameters\n----------\nlocation:\n    The mesh location to compute data length for.\n    Can be nodal, elemental, faces, or elemental_nodal.\n\nReturns\n-------\ndata_size:\n    If location is nodal, return the number of nodes.\n    If location is elemental, return the number of elements.\n    If location is faces, return the number of faces.\n    If location is elemental nodal, return the sum of the number of nodes per element.",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\meshed_region.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\meshed_region.py"
+            },
+            {
+              "name": "get_elemental_nodal_size_list",
+              "signature": "(self) -> 'np.ndarray'",
+              "doc": "Return the array of number of nodes per element in the mesh.",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\meshed_region.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\meshed_region.py"
+            }
+          ],
+          "properties": [
+            {
+              "name": "elements",
+              "type": "",
+              "doc": "All elemental properties of the mesh, such as connectivity and element types.\n\nReturns\n-------\nelements : Elements\n    Elements belonging to the meshed region.\n\nExamples\n--------\n>>> import ansys.dpf.core as dpf\n>>> from ansys.dpf.core import examples\n>>> model = dpf.Model(examples.find_static_rst())\n>>> meshed_region = model.metadata.meshed_region\n>>> elements = meshed_region.elements\n>>> print(elements)\nDPF Elements object with 8 elements",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\meshed_region.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\meshed_region.py"
+            },
+            {
+              "name": "faces",
+              "type": "",
+              "doc": "All face properties of the mesh, such as faces_nodes_connectivity and face types.\n\nReturns\n-------\nfaces : Faces\n    Faces belonging to the meshed region.\n\nExamples\n--------\n>>> import ansys.dpf.core as dpf\n>>> from ansys.dpf.core import examples\n>>> model = dpf.Model(examples.find_static_rst())\n>>> meshed_region = model.metadata.meshed_region\n>>> faces = meshed_region.faces\n>>> print(faces)\nDPF Faces object with 0 faces",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\meshed_region.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\meshed_region.py"
+            },
+            {
+              "name": "nodes",
+              "type": "",
+              "doc": "All nodal properties of the mesh, such as node coordinates and nodal connectivity.\n\nReturns\n-------\nnodes : Nodes\n    Nodes belonging to the meshed region\n\nExamples\n--------\n>>> import ansys.dpf.core as dpf\n>>> from ansys.dpf.core import examples\n>>> model = dpf.Model(examples.find_static_rst())\n>>> meshed_region = model.metadata.meshed_region\n>>> nodes = meshed_region.nodes\n>>> nodes.n_nodes\n81",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\meshed_region.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\meshed_region.py"
+            },
+            {
+              "name": "unit",
+              "type": "",
+              "doc": "Unit of the meshed region.\n\nThis unit is the same as the unit of the coordinates of the meshed region.\n\nReturns\n-------\nunit : str",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\meshed_region.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\meshed_region.py"
+            },
+            {
+              "name": "bounding_box",
+              "type": "",
+              "doc": "Bounding box of the meshed region.\n\nReturns the minimum and maximum coordinates along each dimension (x, y, z)\nof the nodes in the meshed region as a Field.\n\nReturns\n-------\nbounding_box : Field\n    Field with overall location containing the bounding box data.\n    The field is a vector with 6 components (x_min, y_min, z_min, x_max, y_max, z_max).\n\nExamples\n--------\n>>> import ansys.dpf.core as dpf\n>>> from ansys.dpf.core import examples\n>>> model = dpf.Model(examples.find_static_rst())\n>>> meshed_region = model.metadata.meshed_region\n>>> bbox = meshed_region.bounding_box\n>>> print(bbox)\nDPF bounding_box Field\n  Location: overall\n  Unit: m\n  1 entities\n  Data: 6 components and 1 elementary data\n  IDs                   data(m)\n  ------------          ----------\n  0                     0.000000e+00   3.000000e-02   0.000000e+00   3.000000e-02   6.000000e-02   3.000000e-02",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\meshed_region.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\meshed_region.py"
+            },
+            {
+              "name": "available_property_fields",
+              "type": "",
+              "doc": "Returns a list of available property fields.\n\nReturns\n-------\navailable_property_fields : list str",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\meshed_region.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\meshed_region.py"
+            },
+            {
+              "name": "available_named_selections",
+              "type": "",
+              "doc": "List of available named selections.\n\nReturns\n-------\nnamed_selections : list str",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\meshed_region.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\meshed_region.py"
+            },
+            {
+              "name": "grid",
+              "type": "",
+              "doc": "Unstructured grid in VTK format from PyVista.\n\nReturns\n-------\npyvista.UnstructuredGrid\n    UnstructuredGrid of the mesh.\n\nExamples\n--------\n>>> import ansys.dpf.core as dpf\n>>> from ansys.dpf.core import examples\n>>> model = dpf.Model(examples.find_static_rst())\n>>> meshed_region = model.metadata.meshed_region\n>>> grid = meshed_region.grid\n\nPlot this grid directly.\n\n>>> grid.plot()\n\nExtract the surface mesh of this grid\n\n>>> mesh = grid.extract_surface()",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\meshed_region.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\dpf\\core\\meshed_region.py"
+            }
+          ]
+        }
+      },
+      "functions": []
+    }
+  },
+  "statistics": {
+    "total_modules": 5,
+    "total_classes": 5,
+    "total_methods": 52,
+    "total_properties": 26,
+    "total_functions": 0
+  }
+}

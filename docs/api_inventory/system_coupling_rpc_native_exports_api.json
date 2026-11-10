@@ -1,0 +1,211 @@
+{
+  "module": "NativeExports",
+  "version": "v251",
+  "interface": "System Coupling ANSRPC wrapper native exports; product API mapping unverified",
+  "scope": "This snapshot lists PE export names from llvm-readobj. An export name does not prove API support. A signature appears only when the MSVC symbol name contains type data. The extractor does not read function bodies or run the DLL.",
+  "sources": {
+    "assembly": {
+      "path": "$env:AWP_ROOT251/SystemCoupling/runTime/winx64/bin/SysC.AnsRpc.Wrapper.dll",
+      "sha256": "82e247497aed2bfbd47048762c0861f1ac7c43b2663d5484d15bca105c015b96",
+      "byte_length": 162496
+    },
+    "analysis": {
+      "tool": "llvm-readobj",
+      "version": "19.1.5",
+      "operation": "--coff-exports"
+    }
+  },
+  "modules": {
+    "NativeExports": {
+      "doc": "System Coupling ANSRPC wrapper native exports; product API mapping unverified",
+      "classes": {},
+      "functions": [
+        {
+          "name": "??0Client@wrap@ansrpc@@QEAA@AEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@HH@Z",
+          "signature": "public: __cdecl ansrpc::wrap::Client::Client(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const & __ptr64,int,int) __ptr64",
+          "doc": "PE export. Ordinal: 1. RVA: 0x37B0. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: __cdecl ansrpc::wrap::Client::Client(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const & __ptr64,int,int) __ptr64."
+        },
+        {
+          "name": "??0Request@wrap@ansrpc@@QEAA@$$QEAV012@@Z",
+          "signature": "public: __cdecl ansrpc::wrap::Request::Request(class ansrpc::wrap::Request && __ptr64) __ptr64",
+          "doc": "PE export. Ordinal: 2. RVA: 0x4430. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: __cdecl ansrpc::wrap::Request::Request(class ansrpc::wrap::Request && __ptr64) __ptr64."
+        },
+        {
+          "name": "??0Request@wrap@ansrpc@@QEAA@AEBV012@@Z",
+          "signature": "public: __cdecl ansrpc::wrap::Request::Request(class ansrpc::wrap::Request const & __ptr64) __ptr64",
+          "doc": "PE export. Ordinal: 3. RVA: 0x4460. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: __cdecl ansrpc::wrap::Request::Request(class ansrpc::wrap::Request const & __ptr64) __ptr64."
+        },
+        {
+          "name": "??0Request@wrap@ansrpc@@QEAA@AEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@0@Z",
+          "signature": "public: __cdecl ansrpc::wrap::Request::Request(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const & __ptr64,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const & __ptr64) __ptr64",
+          "doc": "PE export. Ordinal: 4. RVA: 0xA280. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: __cdecl ansrpc::wrap::Request::Request(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const & __ptr64,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const & __ptr64) __ptr64."
+        },
+        {
+          "name": "??0Response@wrap@ansrpc@@QEAA@$$QEAV012@@Z",
+          "signature": "public: __cdecl ansrpc::wrap::Response::Response(class ansrpc::wrap::Response && __ptr64) __ptr64",
+          "doc": "PE export. Ordinal: 5. RVA: 0x4430. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: __cdecl ansrpc::wrap::Response::Response(class ansrpc::wrap::Response && __ptr64) __ptr64."
+        },
+        {
+          "name": "??0Response@wrap@ansrpc@@QEAA@AEBV012@@Z",
+          "signature": "public: __cdecl ansrpc::wrap::Response::Response(class ansrpc::wrap::Response const & __ptr64) __ptr64",
+          "doc": "PE export. Ordinal: 6. RVA: 0x4460. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: __cdecl ansrpc::wrap::Response::Response(class ansrpc::wrap::Response const & __ptr64) __ptr64."
+        },
+        {
+          "name": "??0Response@wrap@ansrpc@@QEAA@XZ",
+          "signature": "public: __cdecl ansrpc::wrap::Response::Response(void) __ptr64",
+          "doc": "PE export. Ordinal: 7. RVA: 0xAE60. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: __cdecl ansrpc::wrap::Response::Response(void) __ptr64."
+        },
+        {
+          "name": "??0Server@wrap@ansrpc@@QEAA@$$QEAV012@@Z",
+          "signature": "public: __cdecl ansrpc::wrap::Server::Server(class ansrpc::wrap::Server && __ptr64) __ptr64",
+          "doc": "PE export. Ordinal: 8. RVA: 0xBFE0. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: __cdecl ansrpc::wrap::Server::Server(class ansrpc::wrap::Server && __ptr64) __ptr64."
+        },
+        {
+          "name": "??0Server@wrap@ansrpc@@QEAA@AEBV012@@Z",
+          "signature": "public: __cdecl ansrpc::wrap::Server::Server(class ansrpc::wrap::Server const & __ptr64) __ptr64",
+          "doc": "PE export. Ordinal: 9. RVA: 0xC050. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: __cdecl ansrpc::wrap::Server::Server(class ansrpc::wrap::Server const & __ptr64) __ptr64."
+        },
+        {
+          "name": "??0Server@wrap@ansrpc@@QEAA@H@Z",
+          "signature": "public: __cdecl ansrpc::wrap::Server::Server(int) __ptr64",
+          "doc": "PE export. Ordinal: 10. RVA: 0xC0D0. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: __cdecl ansrpc::wrap::Server::Server(int) __ptr64."
+        },
+        {
+          "name": "??0Server@wrap@ansrpc@@QEAA@XZ",
+          "signature": "public: __cdecl ansrpc::wrap::Server::Server(void) __ptr64",
+          "doc": "PE export. Ordinal: 11. RVA: 0xC2A0. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: __cdecl ansrpc::wrap::Server::Server(void) __ptr64."
+        },
+        {
+          "name": "??1Client@wrap@ansrpc@@QEAA@XZ",
+          "signature": "public: __cdecl ansrpc::wrap::Client::~Client(void) __ptr64",
+          "doc": "PE export. Ordinal: 12. RVA: 0x4740. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: __cdecl ansrpc::wrap::Client::~Client(void) __ptr64."
+        },
+        {
+          "name": "??1Request@wrap@ansrpc@@QEAA@XZ",
+          "signature": "public: __cdecl ansrpc::wrap::Request::~Request(void) __ptr64",
+          "doc": "PE export. Ordinal: 13. RVA: 0x4740. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: __cdecl ansrpc::wrap::Request::~Request(void) __ptr64."
+        },
+        {
+          "name": "??1Response@wrap@ansrpc@@QEAA@XZ",
+          "signature": "public: __cdecl ansrpc::wrap::Response::~Response(void) __ptr64",
+          "doc": "PE export. Ordinal: 14. RVA: 0x4740. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: __cdecl ansrpc::wrap::Response::~Response(void) __ptr64."
+        },
+        {
+          "name": "??1Server@wrap@ansrpc@@QEAA@XZ",
+          "signature": "public: __cdecl ansrpc::wrap::Server::~Server(void) __ptr64",
+          "doc": "PE export. Ordinal: 15. RVA: 0xC370. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: __cdecl ansrpc::wrap::Server::~Server(void) __ptr64."
+        },
+        {
+          "name": "??4Request@wrap@ansrpc@@QEAAAEAV012@$$QEAV012@@Z",
+          "signature": "public: class ansrpc::wrap::Request & __ptr64 __cdecl ansrpc::wrap::Request::operator=(class ansrpc::wrap::Request && __ptr64) __ptr64",
+          "doc": "PE export. Ordinal: 16. RVA: 0x4930. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: class ansrpc::wrap::Request & __ptr64 __cdecl ansrpc::wrap::Request::operator=(class ansrpc::wrap::Request && __ptr64) __ptr64."
+        },
+        {
+          "name": "??4Request@wrap@ansrpc@@QEAAAEAV012@AEBV012@@Z",
+          "signature": "public: class ansrpc::wrap::Request & __ptr64 __cdecl ansrpc::wrap::Request::operator=(class ansrpc::wrap::Request const & __ptr64) __ptr64",
+          "doc": "PE export. Ordinal: 17. RVA: 0x49B0. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: class ansrpc::wrap::Request & __ptr64 __cdecl ansrpc::wrap::Request::operator=(class ansrpc::wrap::Request const & __ptr64) __ptr64."
+        },
+        {
+          "name": "??4Response@wrap@ansrpc@@QEAAAEAV012@$$QEAV012@@Z",
+          "signature": "public: class ansrpc::wrap::Response & __ptr64 __cdecl ansrpc::wrap::Response::operator=(class ansrpc::wrap::Response && __ptr64) __ptr64",
+          "doc": "PE export. Ordinal: 18. RVA: 0x4930. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: class ansrpc::wrap::Response & __ptr64 __cdecl ansrpc::wrap::Response::operator=(class ansrpc::wrap::Response && __ptr64) __ptr64."
+        },
+        {
+          "name": "??4Response@wrap@ansrpc@@QEAAAEAV012@AEBV012@@Z",
+          "signature": "public: class ansrpc::wrap::Response & __ptr64 __cdecl ansrpc::wrap::Response::operator=(class ansrpc::wrap::Response const & __ptr64) __ptr64",
+          "doc": "PE export. Ordinal: 19. RVA: 0x49B0. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: class ansrpc::wrap::Response & __ptr64 __cdecl ansrpc::wrap::Response::operator=(class ansrpc::wrap::Response const & __ptr64) __ptr64."
+        },
+        {
+          "name": "??4Server@wrap@ansrpc@@QEAAAEAV012@$$QEAV012@@Z",
+          "signature": "public: class ansrpc::wrap::Server & __ptr64 __cdecl ansrpc::wrap::Server::operator=(class ansrpc::wrap::Server && __ptr64) __ptr64",
+          "doc": "PE export. Ordinal: 20. RVA: 0xC430. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: class ansrpc::wrap::Server & __ptr64 __cdecl ansrpc::wrap::Server::operator=(class ansrpc::wrap::Server && __ptr64) __ptr64."
+        },
+        {
+          "name": "??4Server@wrap@ansrpc@@QEAAAEAV012@AEBV012@@Z",
+          "signature": "public: class ansrpc::wrap::Server & __ptr64 __cdecl ansrpc::wrap::Server::operator=(class ansrpc::wrap::Server const & __ptr64) __ptr64",
+          "doc": "PE export. Ordinal: 21. RVA: 0xC550. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: class ansrpc::wrap::Server & __ptr64 __cdecl ansrpc::wrap::Server::operator=(class ansrpc::wrap::Server const & __ptr64) __ptr64."
+        },
+        {
+          "name": "?addArgString@Request@wrap@ansrpc@@QEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z",
+          "signature": "public: void __cdecl ansrpc::wrap::Request::addArgString(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const & __ptr64) __ptr64",
+          "doc": "PE export. Ordinal: 22. RVA: 0xAB50. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: void __cdecl ansrpc::wrap::Request::addArgString(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > const & __ptr64) __ptr64."
+        },
+        {
+          "name": "?getArgArrayBool@Response@wrap@ansrpc@@QEBA?AV?$vector@_NV?$allocator@_N@std@@@std@@H@Z",
+          "signature": "public: class std::vector<bool,class std::allocator<bool> > __cdecl ansrpc::wrap::Response::getArgArrayBool(int)const __ptr64",
+          "doc": "PE export. Ordinal: 23. RVA: 0xB430. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: class std::vector<bool,class std::allocator<bool> > __cdecl ansrpc::wrap::Response::getArgArrayBool(int)const __ptr64."
+        },
+        {
+          "name": "?getArgArrayDouble@Response@wrap@ansrpc@@QEBA?AV?$vector@NV?$allocator@N@std@@@std@@H@Z",
+          "signature": "public: class std::vector<double,class std::allocator<double> > __cdecl ansrpc::wrap::Response::getArgArrayDouble(int)const __ptr64",
+          "doc": "PE export. Ordinal: 24. RVA: 0xB4F0. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: class std::vector<double,class std::allocator<double> > __cdecl ansrpc::wrap::Response::getArgArrayDouble(int)const __ptr64."
+        },
+        {
+          "name": "?getArgArrayInt32@Response@wrap@ansrpc@@QEBA?AV?$vector@HV?$allocator@H@std@@@std@@H@Z",
+          "signature": "public: class std::vector<int,class std::allocator<int> > __cdecl ansrpc::wrap::Response::getArgArrayInt32(int)const __ptr64",
+          "doc": "PE export. Ordinal: 25. RVA: 0xB630. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: class std::vector<int,class std::allocator<int> > __cdecl ansrpc::wrap::Response::getArgArrayInt32(int)const __ptr64."
+        },
+        {
+          "name": "?getArgArrayInt64@Response@wrap@ansrpc@@QEBA?AV?$vector@_JV?$allocator@_J@std@@@std@@H@Z",
+          "signature": "public: class std::vector<__int64,class std::allocator<__int64> > __cdecl ansrpc::wrap::Response::getArgArrayInt64(int)const __ptr64",
+          "doc": "PE export. Ordinal: 26. RVA: 0xB790. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: class std::vector<__int64,class std::allocator<__int64> > __cdecl ansrpc::wrap::Response::getArgArrayInt64(int)const __ptr64."
+        },
+        {
+          "name": "?getArgArrayString@Response@wrap@ansrpc@@QEBA?AV?$vector@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@V?$allocator@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@2@@std@@H@Z",
+          "signature": "public: class std::vector<class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >,class std::allocator<class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > > > __cdecl ansrpc::wrap::Response::getArgArrayString(int)const __ptr64",
+          "doc": "PE export. Ordinal: 27. RVA: 0xB8F0. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: class std::vector<class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> >,class std::allocator<class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > > > __cdecl ansrpc::wrap::Response::getArgArrayString(int)const __ptr64."
+        },
+        {
+          "name": "?getArgBool@Response@wrap@ansrpc@@QEBA_NH@Z",
+          "signature": "public: bool __cdecl ansrpc::wrap::Response::getArgBool(int)const __ptr64",
+          "doc": "PE export. Ordinal: 28. RVA: 0xBA60. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: bool __cdecl ansrpc::wrap::Response::getArgBool(int)const __ptr64."
+        },
+        {
+          "name": "?getArgInt32@Response@wrap@ansrpc@@QEBAHH@Z",
+          "signature": "public: int __cdecl ansrpc::wrap::Response::getArgInt32(int)const __ptr64",
+          "doc": "PE export. Ordinal: 29. RVA: 0xBB00. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: int __cdecl ansrpc::wrap::Response::getArgInt32(int)const __ptr64."
+        },
+        {
+          "name": "?getArgString@Response@wrap@ansrpc@@QEBA?AV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@H@Z",
+          "signature": "public: class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > __cdecl ansrpc::wrap::Response::getArgString(int)const __ptr64",
+          "doc": "PE export. Ordinal: 30. RVA: 0xBB90. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > __cdecl ansrpc::wrap::Response::getArgString(int)const __ptr64."
+        },
+        {
+          "name": "?getHost@Server@wrap@ansrpc@@QEBA?AV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@_N0@Z",
+          "signature": "public: class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > __cdecl ansrpc::wrap::Server::getHost(bool,bool)const __ptr64",
+          "doc": "PE export. Ordinal: 31. RVA: 0xD240. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > __cdecl ansrpc::wrap::Server::getHost(bool,bool)const __ptr64."
+        },
+        {
+          "name": "?getPort@Server@wrap@ansrpc@@QEBAHXZ",
+          "signature": "public: int __cdecl ansrpc::wrap::Server::getPort(void)const __ptr64",
+          "doc": "PE export. Ordinal: 32. RVA: 0xD2E0. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: int __cdecl ansrpc::wrap::Server::getPort(void)const __ptr64."
+        },
+        {
+          "name": "?getRequest@Request@wrap@ansrpc@@QEBAAEBV1Rpc@Ans@@XZ",
+          "signature": "public: class Ans::Rpc::Request const & __ptr64 __cdecl ansrpc::wrap::Request::getRequest(void)const __ptr64",
+          "doc": "PE export. Ordinal: 33. RVA: 0xAB80. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: class Ans::Rpc::Request const & __ptr64 __cdecl ansrpc::wrap::Request::getRequest(void)const __ptr64."
+        },
+        {
+          "name": "?getResponse@Response@wrap@ansrpc@@QEAAAEAV1Rpc@Ans@@XZ",
+          "signature": "public: class Ans::Rpc::Response & __ptr64 __cdecl ansrpc::wrap::Response::getResponse(void) __ptr64",
+          "doc": "PE export. Ordinal: 34. RVA: 0xAB80. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: class Ans::Rpc::Response & __ptr64 __cdecl ansrpc::wrap::Response::getResponse(void) __ptr64."
+        },
+        {
+          "name": "?makeRemoteCall@Client@wrap@ansrpc@@QEAAXAEAVRequest@23@AEAVResponse@23@@Z",
+          "signature": "public: void __cdecl ansrpc::wrap::Client::makeRemoteCall(class ansrpc::wrap::Request & __ptr64,class ansrpc::wrap::Response & __ptr64) __ptr64",
+          "doc": "PE export. Ordinal: 35. RVA: 0x9380. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: void __cdecl ansrpc::wrap::Client::makeRemoteCall(class ansrpc::wrap::Request & __ptr64,class ansrpc::wrap::Response & __ptr64) __ptr64."
+        },
+        {
+          "name": "?serveOneRequest@Server@wrap@ansrpc@@QEAA_NHH@Z",
+          "signature": "public: bool __cdecl ansrpc::wrap::Server::serveOneRequest(int,int) __ptr64",
+          "doc": "PE export. Ordinal: 36. RVA: 0xD2F0. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: bool __cdecl ansrpc::wrap::Server::serveOneRequest(int,int) __ptr64."
+        }
+      ]
+    }
+  },
+  "statistics": {
+    "total_modules": 1,
+    "total_functions": 36,
+    "demangled_signatures": 36
+  }
+}

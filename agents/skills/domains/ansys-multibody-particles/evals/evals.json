@@ -1,0 +1,24 @@
+[
+  {
+    "eval_id": "mbd_01",
+    "prompt": "如何使用 ANSYS Motion 建立汽車多連桿懸架機構並求解顛簸路面的衝擊反力？",
+    "expected_keywords": [
+      "ansys-motion",
+      "Joint",
+      "Bushing",
+      "Flexible Body",
+      "Suspension"
+    ]
+  },
+  {
+    "eval_id": "mbd_02",
+    "prompt": "在 Rocky DEM 中如何模擬礦石在皮帶輸送機轉運溜槽中的堆積與壁面磨損？",
+    "expected_keywords": [
+      "ansys-rocky-dem",
+      "Polyhedral",
+      "Wear",
+      "Mass Flow",
+      "Chute"
+    ]
+  }
+]

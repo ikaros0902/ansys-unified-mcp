@@ -1,0 +1,251 @@
+{
+  "module": "ansys.workbench.core",
+  "version": "unknown",
+  "sdk_package": "ansys-workbench-core",
+  "sdk_version": "0.14.0",
+  "interface": "PyWorkbench public module exports",
+  "scope": "限於兩個模組直接匯出的 Python 函式、類別及類別直接宣告的公開方法與屬性。不含繼承成員、動態介面、產品宿主行為或官方支援分類。",
+  "sources": {
+    "sdk_files": [
+      {
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/workbench/core/__init__.py",
+        "sha256": "f7f5c0f253b484342ee0e5e0e4d89ef2133015fa9ae87208852f01378c267fa6"
+      },
+      {
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/workbench/core/public_api.py",
+        "sha256": "e3dbb42978112bc067ea13d86c9fd04605b99633c0dbcf22d91fa7b482ff5096"
+      },
+      {
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/workbench/core/workbench_client.py",
+        "sha256": "8400013ebf3609b66949fd9709ad95f354ba1c81c619835bd852bd13ac983e03"
+      },
+      {
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/workbench/core/workbench_launcher.py",
+        "sha256": "1ac134bc0834283c78ebe0092ea39774cb22ced8c9070601d2a844e9b2291671"
+      }
+    ]
+  },
+  "modules": {
+    "ansys.workbench.core": {
+      "doc": "PyWorkbench Python client.",
+      "classes": {},
+      "functions": [
+        {
+          "name": "connect_workbench",
+          "signature": "(port, client_workdir=None, host=None, security='mtls')",
+          "doc": "Create a PyWorkbench client that connects to an already running Workbench server.\n\nParameters\n----------\nport : int\n    Port used by the server.\nclient_workdir : str, default: None\n    Path to a writable directory on the client computer. The default is ``None``,\n    in which case the system temp directory is used.\nhost : str, default: None\n    Server computer's name or IP address. The default is ``None`` for the local computer.\nsecurity : str among 'mtls', 'wnua', 'insecure', default: 'mtls'\n    Transport mode used for connection security. The default is `mtls`.\n\nReturns\n-------\nWorkbenchClient\n    Instance of the PyWorkbench client that is connected to the server.\n\nExamples\n--------\nConnect to a server at port 32588 on localhost and use the ``wb`` variable to hold the\nreturned client.\n\n>>> from ansys.workbench.core import connect_workbench\n>>> wb = connect_workbench(port = 32588)",
+          "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\workbench\\core\\public_api.py",
+          "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\workbench\\core\\public_api.py"
+        },
+        {
+          "name": "launch_workbench",
+          "signature": "(show_gui=True, version=None, client_workdir=None, server_workdir=None, port=-1, use_insecure_connection=False, host=None, username=None, password=None)",
+          "doc": "Launch PyWorkbench server on the local machine or a remote Windows machine.\n\nThis method launch a Workbench server on the local machine or a remote Windows machine\nand creates a PyWorkbench client that connects to the server.\n\nParameters\n----------\nshow_gui : bool, default: True\n    Weather to launch Workbench in UI mode.\nversion : str, default: None\n    Workbench version to launch. It must be a 3-digit version that is \"242\" or later.\n    If None, the latest version available will be used.\nclient_workdir : str, default: None\n    Path to a writable directory on the client computer. The default is ``None``,\n    in which case the system temp directory is used.\nserver_workdir : str, None\n    Path to a writable directory on the server computer. The default is ``None``,\n    in which case the user preference for the Workbench temporary file folder is used.\nport : int, optional\n    Port to use for the launched server. If not specified, port is auto determined.\nuse_insecure_connection : bool, default: False\n    whether to use insecure connection between the server and clients\nhost : str, None\n    Server computer's name or IP address. The default is ``None`` for launching on the\n    local computer.\nusername : str, None\n    User's login name on the server computer. The default is ``None`` for launching on\n    the local computer.\npassword : str, None\n    User's password on the server computer. The default is ``None`` for launching on\n    the local computer.\n\nReturns\n-------\nWorkbenchClient\n    Instance of the PyWorkbench client that is connected to the launched server.\n\nExamples\n--------\nLaunch a server on the local computer and use the ``wb`` variable to hold the returned client.\n\n>>> from ansys.workbench.core import launch_workbench\n>>> wb = launch_workbench()",
+          "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\workbench\\core\\public_api.py",
+          "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\workbench\\core\\public_api.py"
+        }
+      ]
+    },
+    "ansys.workbench.core.public_api": {
+      "doc": "Module for public API on PyWorkbench.",
+      "classes": {
+        "WorkbenchClient": {
+          "name": "WorkbenchClient",
+          "signature": "(local_workdir, server_host, server_port, server_security)",
+          "doc": "Functions of a PyWorkbench client.\n\nParameters\n----------\nlocal_workdir : str\n    Local working directory for the client.\nserver_host : str\n    Hostname or IP address of the server.\nserver_port : int\n    Port number of the server.\nserver_security : string\n    Security mode of the server.\n    Options are: \"insecure\", \"uds\", \"wnua\", \"mtls\"",
+          "methods": [
+            {
+              "name": "set_console_log_level",
+              "signature": "(self, log_level)",
+              "doc": "Set the log filter level for the client console.\n\nParameters\n----------\nlog_level : str, default: \"error\"\n    Level of logging. Options are \"critical\", \"debug\", \"error\", \"info\", and \"warning\".",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\workbench\\core\\workbench_client.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\workbench\\core\\workbench_client.py"
+            },
+            {
+              "name": "set_log_file",
+              "signature": "(self, log_file)",
+              "doc": "Set a local log file for the Workbench server log.\n\nCreate a local log file if one does not exist and append it to the existing log file.\n\nParameters\n----------\nlog_file : str\n    Path to a local file to use for logging.",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\workbench\\core\\workbench_client.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\workbench\\core\\workbench_client.py"
+            },
+            {
+              "name": "reset_log_file",
+              "signature": "(self)",
+              "doc": "No longer use the current log file for the Workbench server log.",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\workbench\\core\\workbench_client.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\workbench\\core\\workbench_client.py"
+            },
+            {
+              "name": "run_script_string",
+              "signature": "(self, script_string, args=None, log_level='error')",
+              "doc": "Run a script as given in the input string on the server.\n\nParameters\n----------\nscript_string : str\n    String containing the content of the script to run.\nargs : dictionary of script variable names and values\n    Variables in the script specified as $$varname%%50%% will be converted to variable\n    values or use the default value - 50 in the example.\nlog_level : str, default: \"error\"\n    Level of logging. Options are \"critical\", \"debug\", \"error\", \"info\", and \"warning\".\n\nReturns\n-------\nstr\n    Output defined in the script.\n\nExamples\n--------\nRun a Workbench script, given in a string, that returns the name of\na newly created system.\n\n>>> wb.run_script_string(r'''import json\nwb_script_result=json.dumps(GetTemplate(TemplateName=\"FLUENT\").CreateSystem().Name)\n''')",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\workbench\\core\\workbench_client.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\workbench\\core\\workbench_client.py"
+            },
+            {
+              "name": "run_script_file",
+              "signature": "(self, script_file_name, args=None, log_level='error')",
+              "doc": "Run a script file on the server.\n\nParameters\n----------\nscript_file_name : str\n    Name of the script file to run. The script file should be located in the client\n    working directory\nargs : dictionary of script variable names and values\n    Variables in the script specified as $$varname%%50%% will be converted to variable\n    values or use the default value - 50 in the example.\nlog_level : str, default: \"error\"\n    Level of logging. Options are \"critical\", \"debug\", \"error\", \"info\", and \"warning\".\n\nReturns\n-------\nstr\n    Output defined in the script.",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\workbench\\core\\workbench_client.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\workbench\\core\\workbench_client.py"
+            },
+            {
+              "name": "upload_file",
+              "signature": "(self, *file_list, show_progress=True)",
+              "doc": "Upload one or more files from the client to the server.\n\nParameters\n----------\nfile_list : list[str]\n    List of paths to the one or more local files to upload. The\n    wildcard characters \"?\" and \"*\" are supported.\nshow_progress : bool, default: True\n    Whether to show a progress bar during the upload.\n\nReturns\n-------\nlist[str]\n    Names of the uploaded files.",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\workbench\\core\\workbench_client.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\workbench\\core\\workbench_client.py"
+            },
+            {
+              "name": "upload_file_from_example_repo",
+              "signature": "(self, relative_file_path, show_progress=True)",
+              "doc": "Upload a file from the Ansys ``example-data`` repository to the server.\n\nParameters\n----------\nrelative_file_path : str\n    File path relative to the ``pyworkbench`` folder in the ``example-data`` repository.\nshow_progress : bool, default: True\n    Whether to show a progress bar during the upload.",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\workbench\\core\\workbench_client.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\workbench\\core\\workbench_client.py"
+            },
+            {
+              "name": "download_file",
+              "signature": "(self, file_name, show_progress=True, target_dir=None)",
+              "doc": "Download one or more files from the server.\n\nParameters\n----------\nfile_name : str\n    Name of the file. File must be located in the server's working directory.\n    The wildcard characters \"?\" and \"*\" are supported. A ZIP file is automatically\n    generated and downloaded when multiple files are specified.\nshow_progress : bool, default: True\n    Whether to show a progress bar during the download.\ntarget_dir : str, default: None\n    Path to a local directory to download the files to. The default is ``None``,\n    in which case the client working directory is used.\n\n\nReturns\n-------\nstr\n    Name of the downloaded file.",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\workbench\\core\\workbench_client.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\workbench\\core\\workbench_client.py"
+            },
+            {
+              "name": "download_project_archive",
+              "signature": "(self, archive_name, include_solution_result_files=True, show_progress=True)",
+              "doc": "Create and download the project archive.\n\nParameters\n----------\narchive_name : str\n    Name of the project archive to use, without the file extension.\ninclude_solution_result_files : bool, default: True\n    Whether to include solution and result files in the archive.\nshow_progress : bool, default: True\n    Whether to show a progress bar during the download.",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\workbench\\core\\workbench_client.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\workbench\\core\\workbench_client.py"
+            },
+            {
+              "name": "start_mechanical_server",
+              "signature": "(self, system_name, port=0)",
+              "doc": "Start the PyMechanical server for the given system in the Workbench project.\n\nParameters\n----------\nsystem_name : str\n    Name of the system in the Workbench project.\nport : int, default: 0\n    Port to use for mechanical server if possible\n\nReturns\n-------\nint\n    Port of the PyMechanical server to use to start the PyMechanical client.\n\nExamples\n--------\nStart a PyMechanical session for the given system.\n\n>>> from ansys.mechanical.core import connect_to_mechanical\n>>> server_port=wb.start_mechanical_server(system_name=mech_system_name)\n>>> mechanical = connect_to_mechanical(port=server_port)",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\workbench\\core\\workbench_client.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\workbench\\core\\workbench_client.py"
+            },
+            {
+              "name": "stop_mechanical_server",
+              "signature": "(self, system_name)",
+              "doc": "Stop the PyMechanical server for the given system in the Workbench project.\n\nParameters\n----------\nsystem_name : str\n    Name of the system in the Workbench project.\n\nExamples\n--------\nStop the PyMechanical session for the given system.\n\n>>> wb.stop_mechanical_server(system_name=mech_system_name)",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\workbench\\core\\workbench_client.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\workbench\\core\\workbench_client.py"
+            },
+            {
+              "name": "start_fluent_server",
+              "signature": "(self, system_name)",
+              "doc": "Start the PyFluent server for the given system in the Workbench project.\n\nParameters\n----------\nsystem_name : str\n    Name of the system in the Workbench project.\n\nReturns\n-------\nstr\n    Path to the local file containing the PyFluent server information that\n    can be used to start a PyFluent client.\n\nExamples\n--------\nStart a PyFluent session for the given system.\n\n>>> import ansys.fluent.core as pyfluent\n>>> server_info_file=wb.start_fluent_server(system_name=fluent_sys_name)\n>>> fluent=pyfluent.connect_to_fluent(server_info_file_name=server_info_file)",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\workbench\\core\\workbench_client.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\workbench\\core\\workbench_client.py"
+            },
+            {
+              "name": "stop_fluent_server",
+              "signature": "(self, system_name)",
+              "doc": "Stop the Fluent server for the given system in the Workbench project.\n\nParameters\n----------\nsystem_name : str\n    Name of the system in the Workbench project.\n\nExamples\n--------\nStop the Fluent session for the given system.\n\n>>> wb.stop_fluent_server(system_name=mech_system_name)",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\workbench\\core\\workbench_client.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\workbench\\core\\workbench_client.py"
+            },
+            {
+              "name": "start_sherlock_server",
+              "signature": "(self, system_name)",
+              "doc": "Start the PySherlock server for the given system in the Workbench project.\n\nParameters\n----------\nsystem_name : str\n    Name of the system in the Workbench project.\n\nReturns\n-------\nint\n    Port of the PySherlock server to use to start a PySherlock client.\n\nExamples\n--------\nStart a PySherlock session for the given system.\n\n>>> from ansys.sherlock.core import pysherlock\n>>> server_port=wb.start_sherlock_server(system_name=sherlock_system_name)\n>>> sherlock = pysherlock.connect_grpc_channel(port=server_port)\n>>> sherlock.common.check()",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\workbench\\core\\workbench_client.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\workbench\\core\\workbench_client.py"
+            },
+            {
+              "name": "stop_sherlock_server",
+              "signature": "(self, system_name)",
+              "doc": "Stop the Sherlock server for the given system in the Workbench project.\n\nParameters\n----------\nsystem_name : str\n    Name of the system in the Workbench project.\n\nExamples\n--------\nStop the Sherlock session for the given system.\n\n>>> wb.stop_sherlock_server(system_name=mech_system_name)",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\workbench\\core\\workbench_client.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\workbench\\core\\workbench_client.py"
+            }
+          ],
+          "properties": [
+            {
+              "name": "server_version",
+              "type": "",
+              "doc": "The Workbench version of the connected server.",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\workbench\\core\\workbench_client.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\workbench\\core\\workbench_client.py"
+            }
+          ]
+        },
+        "Launcher": {
+          "name": "Launcher",
+          "signature": "()",
+          "doc": "Launch a Workbench server on a local or remote machine.\n\nNote that launching a server on a remote Linux machine, or on a remote Windows\nmachine from a Linux machine, is not supported.\n\nRaises\n------\nException\n    If the wmi module on Windows, or the ctypes module on Linux, is not available",
+          "methods": [
+            {
+              "name": "launch",
+              "signature": "(self, version=None, show_gui=True, server_workdir=None, port_to_use=-1, use_insecure_connection=False, host=None, username=None, password=None)",
+              "doc": "Launch PyWorkbench server on the local or a remote computer.\n\nParameters\n----------\nversion : str\n    Workbench version to launch. It must be a three-digit version, such as ``242`` or later.\n    The latest version available will be used if None.\nshow_gui : bool, default: True\n    Whether to launch Workbench in UI mode.\nserver_workdir : str, default: None\n    Path to a writable directory on the server. The default is ``None``,\n    in which case the user preference for the Workbench temporary file folder is used.\nuse_insecure_connection : bool, default: False\n    whether to use insecure connection between the server and clients\nhost : str, default: None\n    Name or IP address of the server. The default is ``None``, which launches Workbench\n    on the local computer.\nusername : str, default: None\n    User's login name on the server. The default is ``None``, which launches Workbench\n    on the local computer.\npassword : str, default: None\n    User's password on the server. The default is ``None``, which launches Workbench\n    on the local computer.\n\nRaises\n------\nException\n    If the Ansys version string is invalid.\n    If the host is given but the username or password is missing.\n    If remote launching is attempted from or onto a Linux machine\n    If the wmi service on the remote Windows machine fails\n    If the Ansys installation is not found.",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\workbench\\core\\workbench_launcher.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\workbench\\core\\workbench_launcher.py"
+            },
+            {
+              "name": "exit",
+              "signature": "(self)",
+              "doc": "End the launched Workbench server.",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\workbench\\core\\workbench_launcher.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\workbench\\core\\workbench_launcher.py"
+            }
+          ],
+          "properties": []
+        },
+        "ClientWrapper": {
+          "name": "ClientWrapper",
+          "signature": "(port, client_workdir=None, host=None, security='mtls')",
+          "doc": "Provides for connecting to a Workbench server.\n\nParameters\n----------\nport : int\n    Port used by the server.\nclient_workdir : str, default: None\n    Path to a writable directory on the client computer.\nhost : str, default: None\n    Server computer's name or IP address.\nsecurity : str, default: 'mtls'\n    Transport mode used for connection security.\n    Options are: \"insecure\", \"uds\", \"wnua\", \"mtls\"",
+          "methods": [
+            {
+              "name": "exit",
+              "signature": "(self)",
+              "doc": "Disconnect from the server.",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\workbench\\core\\public_api.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\workbench\\core\\public_api.py"
+            }
+          ],
+          "properties": []
+        },
+        "LaunchWorkbench": {
+          "name": "LaunchWorkbench",
+          "signature": "(show_gui=True, version=None, client_workdir=None, server_workdir=None, port=-1, use_insecure_connection=False, host=None, username=None, password=None)",
+          "doc": "Launch a Workbench server on a local machine or a remote Windows machine.\n\nParameters\n----------\nshow_gui : bool, default: True\n    Weather to launch Workbench in UI mode.\nversion : str, default: None\n    Workbench version to launch. It must be a 3-digit version that is \"242\" or later.\nclient_workdir : str, default: None\n    Path to a writable directory on the client computer. The default is ``None``,\n    in which case the system temp directory is used.\nserver_workdir : str, None\n    Path to a writable directory on the server computer. The default is ``None``,\n    in which case the user preference for the Workbench temporary file folder is used.\nuse_insecure_connection : bool, default: False\n    whether to use insecure connection between the server and clients\nhost : str, None\n    Server computer's name or IP address. The default is ``None`` for launching on the\n    local computer.\nusername : str, None\n    User's login name on the server computer. The default is ``None`` for launching on\n    the local computer.\npassword : str, None\n    User's password on the server computer. The default is ``None`` for launching on\n    the local computer.\n\nRaises\n------\nException\n    If PyWorkbench server failed to launch.\n\nExamples\n--------\nLaunch a server on the local computer and use the ``wb`` variable to hold the returned client.\n\n>>> from ansys.workbench.core import launch_workbench\n>>> wb = launch_workbench()",
+          "methods": [
+            {
+              "name": "exit",
+              "signature": "(self)",
+              "doc": "Terminate the Workbench server and disconnect the client.",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\workbench\\core\\public_api.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\workbench\\core\\public_api.py"
+            }
+          ],
+          "properties": []
+        }
+      },
+      "functions": [
+        {
+          "name": "launch_workbench",
+          "signature": "(show_gui=True, version=None, client_workdir=None, server_workdir=None, port=-1, use_insecure_connection=False, host=None, username=None, password=None)",
+          "doc": "Launch PyWorkbench server on the local machine or a remote Windows machine.\n\nThis method launch a Workbench server on the local machine or a remote Windows machine\nand creates a PyWorkbench client that connects to the server.\n\nParameters\n----------\nshow_gui : bool, default: True\n    Weather to launch Workbench in UI mode.\nversion : str, default: None\n    Workbench version to launch. It must be a 3-digit version that is \"242\" or later.\n    If None, the latest version available will be used.\nclient_workdir : str, default: None\n    Path to a writable directory on the client computer. The default is ``None``,\n    in which case the system temp directory is used.\nserver_workdir : str, None\n    Path to a writable directory on the server computer. The default is ``None``,\n    in which case the user preference for the Workbench temporary file folder is used.\nport : int, optional\n    Port to use for the launched server. If not specified, port is auto determined.\nuse_insecure_connection : bool, default: False\n    whether to use insecure connection between the server and clients\nhost : str, None\n    Server computer's name or IP address. The default is ``None`` for launching on the\n    local computer.\nusername : str, None\n    User's login name on the server computer. The default is ``None`` for launching on\n    the local computer.\npassword : str, None\n    User's password on the server computer. The default is ``None`` for launching on\n    the local computer.\n\nReturns\n-------\nWorkbenchClient\n    Instance of the PyWorkbench client that is connected to the launched server.\n\nExamples\n--------\nLaunch a server on the local computer and use the ``wb`` variable to hold the returned client.\n\n>>> from ansys.workbench.core import launch_workbench\n>>> wb = launch_workbench()",
+          "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\workbench\\core\\public_api.py",
+          "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\workbench\\core\\public_api.py"
+        },
+        {
+          "name": "connect_workbench",
+          "signature": "(port, client_workdir=None, host=None, security='mtls')",
+          "doc": "Create a PyWorkbench client that connects to an already running Workbench server.\n\nParameters\n----------\nport : int\n    Port used by the server.\nclient_workdir : str, default: None\n    Path to a writable directory on the client computer. The default is ``None``,\n    in which case the system temp directory is used.\nhost : str, default: None\n    Server computer's name or IP address. The default is ``None`` for the local computer.\nsecurity : str among 'mtls', 'wnua', 'insecure', default: 'mtls'\n    Transport mode used for connection security. The default is `mtls`.\n\nReturns\n-------\nWorkbenchClient\n    Instance of the PyWorkbench client that is connected to the server.\n\nExamples\n--------\nConnect to a server at port 32588 on localhost and use the ``wb`` variable to hold the\nreturned client.\n\n>>> from ansys.workbench.core import connect_workbench\n>>> wb = connect_workbench(port = 32588)",
+          "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\workbench\\core\\public_api.py",
+          "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\workbench\\core\\public_api.py"
+        }
+      ]
+    }
+  },
+  "statistics": {
+    "total_modules": 2,
+    "total_classes": 4,
+    "total_methods": 19,
+    "total_properties": 1,
+    "total_functions": 4
+  }
+}

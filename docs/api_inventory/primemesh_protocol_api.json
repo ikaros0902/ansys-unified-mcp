@@ -1,0 +1,195 @@
+{
+  "module": "generated protobuf modules",
+  "version": "unknown",
+  "sdk_package": "ansys-api-meshing-prime",
+  "sdk_version": "0.2.0",
+  "interface": "primemesh gRPC protocol schema",
+  "scope": "限於套件內 protobuf message 欄位與 gRPC service RPC signatures。這是傳輸協定 schema，不是產品 scripting API 或支援狀態聲明。",
+  "sources": {
+    "sdk_files": [
+      {
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/meshing/prime/v1/prime_pb2.py",
+        "sha256": "edb0b045b966ed4a87d9791671dc54d7cf2401e3d1d8347252dec0084fe01a46"
+      }
+    ]
+  },
+  "modules": {
+    "ansys.api.meshing.prime.v1.prime_pb2": {
+      "doc": "ansys.api.meshing.prime.v1",
+      "classes": {
+        "Model": {
+          "name": "Model",
+          "doc": "Protocol message ansys.api.meshing.prime.v1.Model",
+          "methods": [],
+          "properties": [
+            {
+              "name": "object_id",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "MessageCompletionToken": {
+          "name": "MessageCompletionToken",
+          "doc": "Protocol message ansys.api.meshing.prime.v1.MessageCompletionToken",
+          "methods": [],
+          "properties": []
+        },
+        "StringJsonContent": {
+          "name": "StringJsonContent",
+          "doc": "Protocol message ansys.api.meshing.prime.v1.StringJsonContent",
+          "methods": [],
+          "properties": [
+            {
+              "name": "data",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "BinaryJsonContent": {
+          "name": "BinaryJsonContent",
+          "doc": "Protocol message ansys.api.meshing.prime.v1.BinaryJsonContent",
+          "methods": [],
+          "properties": [
+            {
+              "name": "data",
+              "type": "bytes",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "StringMessage": {
+          "name": "StringMessage",
+          "doc": "Protocol message ansys.api.meshing.prime.v1.StringMessage",
+          "methods": [],
+          "properties": [
+            {
+              "name": "model",
+              "type": "ansys.api.meshing.prime.v1.Model",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "content",
+              "type": "ansys.api.meshing.prime.v1.StringJsonContent",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "completion_token",
+              "type": "ansys.api.meshing.prime.v1.MessageCompletionToken",
+              "doc": "Protobuf field number 3; repeated=False"
+            }
+          ]
+        },
+        "BinaryMessage": {
+          "name": "BinaryMessage",
+          "doc": "Protocol message ansys.api.meshing.prime.v1.BinaryMessage",
+          "methods": [],
+          "properties": [
+            {
+              "name": "model",
+              "type": "ansys.api.meshing.prime.v1.Model",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "content",
+              "type": "ansys.api.meshing.prime.v1.BinaryJsonContent",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "completion_token",
+              "type": "ansys.api.meshing.prime.v1.MessageCompletionToken",
+              "doc": "Protobuf field number 3; repeated=False"
+            }
+          ]
+        },
+        "InitializeRequest": {
+          "name": "InitializeRequest",
+          "doc": "Protocol message ansys.api.meshing.prime.v1.InitializeRequest",
+          "methods": [],
+          "properties": []
+        },
+        "InitializeResponse": {
+          "name": "InitializeResponse",
+          "doc": "Protocol message ansys.api.meshing.prime.v1.InitializeResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "data",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "FinalizeRequest": {
+          "name": "FinalizeRequest",
+          "doc": "Protocol message ansys.api.meshing.prime.v1.FinalizeRequest",
+          "methods": [],
+          "properties": []
+        },
+        "FinalizeResponse": {
+          "name": "FinalizeResponse",
+          "doc": "Protocol message ansys.api.meshing.prime.v1.FinalizeResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "data",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "Prime": {
+          "name": "Prime",
+          "doc": "gRPC service ansys.api.meshing.prime.v1.Prime",
+          "methods": [
+            {
+              "name": "ServeJson",
+              "signature": "(ansys.api.meshing.prime.v1.StringMessage) -> ansys.api.meshing.prime.v1.StringMessage [client_streaming=True, server_streaming=True]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "GetParamDefaultJson",
+              "signature": "(ansys.api.meshing.prime.v1.StringMessage) -> ansys.api.meshing.prime.v1.StringMessage [client_streaming=True, server_streaming=True]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "RunOnServer",
+              "signature": "(ansys.api.meshing.prime.v1.StringMessage) -> ansys.api.meshing.prime.v1.StringMessage [client_streaming=True, server_streaming=True]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "ServeJsonBinary",
+              "signature": "(ansys.api.meshing.prime.v1.BinaryMessage) -> ansys.api.meshing.prime.v1.BinaryMessage [client_streaming=True, server_streaming=True]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "Initialize",
+              "signature": "(ansys.api.meshing.prime.v1.InitializeRequest) -> ansys.api.meshing.prime.v1.InitializeResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "ServerCommand",
+              "signature": "(ansys.api.meshing.prime.v1.StringMessage) -> ansys.api.meshing.prime.v1.StringMessage [client_streaming=True, server_streaming=True]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "Finalize",
+              "signature": "(ansys.api.meshing.prime.v1.FinalizeRequest) -> ansys.api.meshing.prime.v1.FinalizeResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            }
+          ],
+          "properties": []
+        }
+      },
+      "functions": []
+    }
+  },
+  "statistics": {
+    "total_modules": 1,
+    "total_classes": 11,
+    "total_methods": 7,
+    "total_properties": 11,
+    "total_functions": 0
+  }
+}

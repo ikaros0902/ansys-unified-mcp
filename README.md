@@ -1,99 +1,123 @@
-# ANSYS Unified MCP Server
+# ANSYS Unified MCP Server (v3.0)
 
-這是一個專為 AI Agent (Claude, Cursor 等) 設計的模型上下文協議 (Model Context Protocol, MCP) 伺服器，能夠讓 AI 直接連線並操控你本機的 ANSYS 軟體系列。
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![MCP](https://img.shields.io/badge/MCP-Standard-purple.svg)](https://modelcontextprotocol.io/)
 
-## 支援的 ANSYS 模組
-
-- **Workbench** (透過 File IPC 驅動)
-- **Mechanical** (透過 gRPC 驅動，ACT 外掛自動啟動)
-- **SpaceClaim** (透過 gRPC 驅動)
-- **Fluent** (透過 gRPC 驅動)
-- **OptiSLang** (透過原生 Python API 驅動)
-- **LS-DYNA** (即將支援)
-- **MAPDL** (即將支援)
+本專案是專為 AI 程式助理（如 Antigravity, Claude Desktop, Cursor, Windsurf 等）設計的模型上下文協議（Model Context Protocol, MCP）伺服器。
+安裝後，AI 能直接操作您電腦上的 ANSYS 進行幾何建模、結構力學、流體流動、電磁場、熱分析與多目標最佳化。
 
 ---
 
-## 🚀 快速安裝與標準部署 SOP (Quickstart Guide)
+## 🎯 核心功能與特色
 
-> 📖 **完整安裝與連線 SOP**：請直接閱讀根目錄 **[`INSTALL_SOP.md`](INSTALL_SOP.md)**。
-
-您不再需要手動設定 Python 環境或尋找 ANSYS 安裝路徑！我們提供了一鍵安裝腳本。
-
-1. **下載本專案**（或 `git clone`）到您的電腦上。
-2. 在專案目錄下打開 PowerShell，執行：
-   ```powershell
-   powershell -ExecutionPolicy Bypass -File scripts\maintenance\setup.ps1
-   ```
-3. 腳本會自動完成以下工作：
-   - 建立 Python 虛擬環境 (`.venv`)
-   - 安裝所有必要的相依套件 (PyAnsys 等)
-   - 自動偵測您安裝的 ANSYS 版本
-   - 自動安裝 WorkbenchMCP (ACT 外掛) 到您的 `%APPDATA%`
-   - 生成專屬的 `mcp_config.json` 供 AI 客戶端使用
-
-### 將 MCP Server 加入 Claude / Cursor
-
-安裝完成後，開啟專案目錄下的 `mcp_config.json`，將裡面的內容複製到您的 Claude Desktop 設定檔 (通常在 `%APPDATA%\Claude\claude_desktop_config.json`) 中，然後重啟 Claude 即可。
+- **多版本 ANSYS 自動偵測與執行期動態切換**：相容 ANSYS 2020 R2 (v202) 至 2025 R2 (v252) 及更高版本。單機安裝多個版本時，AI 可在同一對話中動態切換目標版本。
+- **雙軌架構（Dual-Track Architecture）**：
+  - **Track 1（商業求解器）**：本機具備授權時，由 PyAnsys 或 ACT 外掛進行完整模擬與後處理。
+  - **Track 2（數值基準引擎）**：無特定求解器授權或未安裝該模組時，系統自動啟動內建物理公式與數值積分引擎，以完全同構的 JSON 信封回傳物理指標，杜絕 AI 呼叫崩潰。
+- **背景自動偵測（Auto-Connect）**：無需手動輸入通訊埠。只要開啟 Mechanical、Workbench 或 SpaceClaim 視窗，MCP 會自動辨識進程 PID 並完成掛載。
+- **動態領域工具收斂（Dynamic Tool Routing）**：支援 `ANSYS_MCP_PROFILE` 與 `ans_session_set_workspace`，可將 216 個工具依需求收斂為單一學科，大幅降低 AI 的 Token 消耗。
 
 ---
 
-## ⚡ 自動連線機制 (Auto-Connect)
+## 🚀 三步快速安裝 (Quickstart)
 
-v2.0 導入了全新的「自動連線管理器」。
+> 📖 **詳細安裝與疑難排解**：請參閱 [標準部署手冊 (DEPLOYMENT_SOP.md)](docs/deployment/DEPLOYMENT_SOP.md)。
 
-您**不需要**在指令列打指令來啟動伺服器或設定 Port。您只要像平常一樣開啟您的 ANSYS 軟體：
-1. **Workbench**：直接開啟，背景會自動輪詢。
-2. **Mechanical**：從 Workbench 開啟，或是單獨開啟。內建的 ACT 外掛會在背景自動啟動 gRPC Server (Port 10000+)。
-3. **SpaceClaim / Fluent**：同理，只要開啟，MCP Agent 就能掃描並連上。
+### 步驟 1：下載專案代碼
+在 PowerShell 中執行：
+```powershell
+git clone https://github.com/ikaros0902/ansys-unified-mcp.git
+cd ansys-unified-mcp
+```
 
-MCP Agent 在啟動時會自動偵測正在執行的這些視窗並接管控制。
+### 步驟 2：執行一鍵部署腳本
+以一般使用者（或系統管理員）身分執行：
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts\maintenance\setup.ps1
+```
+> **腳本自動完成的項目**：
+> 1. 建立 `.venv` 獨立虛擬環境並安裝核心 PyAnsys 套件。
+> 2. 自動掃描本機已安裝的所有 ANSYS 版本（v202 至 v261）。
+> 3. 自動設定 `.env` 環境檔與 `%LOCALAPPDATA%\ansys-unified-mcp` 跨進程佇列。
+> 4. 自動向各版本 `%APPDATA%` 部署 Workbench/Mechanical ACT 外掛。
+> 5. 自動產生連線設定檔 `mcp_config.json` 並執行環境健康檢查。
 
----
+### 步驟 3：掛載至您的 AI 客戶端
+安裝完成後，複製自動產生的 `mcp_config.json` 內容至您的 AI 設定檔：
+- **Claude Desktop**：`%APPDATA%\Claude\claude_desktop_config.json`
+- **Antigravity (Google AGY)**：`%USERPROFILE%\.gemini\config\mcp_config.json`
+- **Cursor**：設定中的 `Features` -> `MCP Servers`
 
-## 開發者資訊 (Project Structure)
-
-本專案採分層架構（單向依賴）：
-- `pyproject.toml`: 專案設定與相依性。
-- `src/ansys_unified_mcp/`: 核心原始碼目錄。
-  - `config.py`: ANSYS 路徑偵測（延遲、非致命；找不到 ANSYS 不會導致 server 崩潰）。
-  - `core/paths.py`: 單一 ANSYS 執行檔/CLI 路徑解析（合併原先散落三處的偵測）。
-  - `core/sessions.py`: `SessionRegistry` — 統一管理各產品的多個連線（多實例）。
-  - `connection_manager.py`: 探測背景運作中的 ANSYS 進程與 Port。
-  - `products/`: 每個產品一個 façade，持有 session 與傳輸（如 `mechanical.py`）。
-  - `tools/`: 薄薄的 `@mcp.tool` 包裝，委派給 `products/`。
-  - `drivers/sim_impl.py`: Fluent / Geometry 的呼叫實作。
-  - `bridges/workbench_batch.py`: Workbench journal 橋接與批次啟動。
-  - `__main__.py`: MCP 伺服器進入點。
-- `examples/`: 工程實例與標竿管線。
-  - [`examples/shock_analysis/`](examples/shock_analysis/README.md): 35G 衝擊管線、材料自動指派與 LS-DYNA .k 檔生成。
-  - [`examples/geometry_cleanup/`](examples/geometry_cleanup/README.md): SpaceClaim 與 PyAnsys Geometry 幾何清理與特徵消除。
-- `docs/`: 專案文檔（參見 [文檔索引](docs/index.md)）。
-  - [`docs/architecture/`](docs/architecture/): 架構與規格評估白皮書。
-  - [`docs/planning/`](docs/planning/): 優化與里程碑計畫書。
-  - [`docs/deployment/`](docs/deployment/): 安裝與部署 SOP。
-  - [`docs/testing/`](docs/testing/): 測試基礎設施規範。
-  - [`docs/diagrams/`](docs/diagrams/): 互動式架構圖（HTML）。
-  - [`docs/archive/`](docs/archive/README.md): 歷史快照，不可作為現況依據。
-- `deploy/act_plugins/`: 安裝至 ANSYS 的精簡 ACT 外掛（自動啟動 Mechanical gRPC server 並註冊實例）。
-
-### Mechanical 連線傳輸（重構後收斂為三種）
-1. **gRPC（PyMechanical）** — 主力。可「連線現有實例」（需 ACT 外掛自動開 gRPC）或「啟動新的無頭實例」。
-2. **Workbench journal（SendCommand）** — 備援，向活著的 Mechanical/SpaceClaim 視窗送腳本，避開 gRPC 授權阻擋。
-3. **批次子行程** — `ansys-mechanical.exe` / `RunWB2 -R` 一次性無頭作業，不需外掛、不需先開實例。
-
-> 上述三種是 **Mechanical** 連線傳輸；file-queue 與 socket-timer 僅於 Mechanical 重構時移除（與上述重複、且需未必安裝的外掛），**非指整個專案**。`bridges/workbench_socket.py`（socket-timer）與 `bridges/workbench_filequeue.py`（file-queue）目前仍是 **Workbench**（`products/workbench/tools.py`）呼叫 `transport.send_command()` 時的實際傳輸層：預設 `transport="auto"` 會先試 socket，連線失敗（如 `ConnectionRefusedError`）才 fallback 到 file queue。
-
-## 疑難排解
-
-- 若安裝腳本執行時出現「執行原則 (Execution Policy)」錯誤，請先在 PowerShell 輸入 `Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass`。
-- 若連線失敗時，請確認防火牆沒有阻擋 10000~10010 (Mechanical) 與 50051 (SpaceClaim) 的本機 (localhost) 網路通訊。
+重新啟動 AI 客戶端即可開始對話！
 
 ---
 
-## 👥 多實例動態埠與引導規則
+## 📊 18 大物理領域與求解器支援矩陣
 
-為了支援在同一台電腦上同時開啟多個不同的 ANSYS 視窗（例如：同時開啟 Workbench、Mechanical、SpaceClaim 等多專案情境），v2.0 導入了動態埠與實例註冊表：
-1. **動態分配通訊埠**：各視窗啟動時會自動尋找可用的 gRPC 埠（Mechanical 自 10000 起；SpaceClaim 自 50051 起）綁定通訊，避免互相佔用衝突。
-2. **自動註冊**：啟動後會自動在 `workbench_queue/registry/` 目錄中以 PID 命名寫入資訊檔（包含 PID、進程名稱、視窗標題與分配到的埠號）。當視窗關閉時，MCP 伺服器會自動清理過期實例。
-3. **主動詢問引導**：當 AI 客戶端收到「連線 ANSYS」指令且環境中有多個實例或模組時，**AI 必須先主動以多選單或問答方式詢問使用者要連接哪一個模組**，不可擅自盲目猜測連線。
+| 領域學科 | 主要驅動方式 | Track 1 原生求解器 | Track 2 數值基準引擎演算法 |
+| :--- | :--- | :--- | :--- |
+| **結構力學 (Structural)** | gRPC / Subprocess | Mechanical, LS-DYNA, MAPDL, DPF | 梁殼彈塑性解析解、模態振型正交展開 |
+| **流體力學 (Fluids)** | PyFluent gRPC | Fluent, CFX | 0D/1D 管道壓降、熱對流經驗公式 |
+| **幾何建模 (Geometry)** | PyAnsys Geometry gRPC | SpaceClaim, Discovery | 幾何拓撲體積、投影表面積計算 |
+| **工作台流程 (Workbench)** | File IPC / Socket Timer | Workbench (RunWB2) | 專案樹節點依賴關係拓撲排序 |
+| **多目標最佳化 (Optimization)** | 原生 Python API | optiSLang | MOP (最佳預測元模型)、多項式回歸 |
+| **高頻電磁 (HFSS)** | PyAEDT / Script Runner | HFSS | 微帶天線腔體模型、回波損耗計算 |
+| **低頻電磁 (Maxwell)** | PyAEDT / Script Runner | Maxwell | 磁路歐姆定律、氣隙虛功吸力計算 |
+| **幾何與波導光學 (Optics)** | Direct API / COM | Speos, Zemax, Lumerical | ABCD 近軸光線追跡、波導特徵方程求解 |
+| **散熱分析 (Thermal)** | Mechanical / Icepak | Mechanical Thermal, Icepak | 穩態/暫態多層熱傳導與熱阻網絡模型 |
+| **離散顆粒與剛體 (Multibody)**| Rocky / Motion API | Rocky DEM, Motion | Hertz-Mindlin 彈簧阻尼接觸力學積分 |
+| **材料與可靠度 (Materials)** | Granta / Sherlock API | Granta MI, Sherlock | 溫度退化材料本構、焊點熱疲勞壽命 |
+| **聲學與心理聲學 (Sound)** | Direct Algorithm | Ansys Sound | ISO 532-1 Zwicker 心理聲學響度計算 |
+| **海洋水動力學 (Aqwa)** | Hydrodynamic Solver | Aqwa | 水線剛度矩陣、浮體垂盪衰減振盪 |
+| **化學反應動力學 (Chemkin)** | Kinetics Solver | Chemkin-Pro | 0D 等溫反應器 Arrhenius 速率積分 |
+| **電機電磁設計 (Motor-CAD)** | ActiveX / COM | Motor-CAD | PMSM 反電動勢常數與 dq 軸銅損效率 |
+
+---
+
+## 👥 多版本並存與實例動態管理
+
+### 1. 多版本切換
+若您的電腦同時安裝了多個版本的 ANSYS（例如同時裝有 2024 R2 與 2025 R1）：
+- **靜態指定**：可在 `.env` 檔案中直接設定 `ANSYS_VERSION=242`。
+- **動態切換**：在與 AI 對話中，直接輸入：
+  > 「請幫我將 ANSYS 目標版本切換至 242」
+  AI 會自動呼叫 `ans_set_active_version("242")` 工具，即時重新綁定所有求解器執行路徑。
+
+### 2. 多視窗動態掛載
+當您在同一台電腦開啟多個不同專案的 Mechanical 或 SpaceClaim 視窗時：
+- 系統會自動為各視窗分配專屬 gRPC 通訊埠（Mechanical: 10000+；SpaceClaim: 50051+）。
+- AI 在連線前會自動列出所有正在運行的實例 PID、視窗標題與埠號，並主動詢問您要連線哪一個視窗。
+
+---
+
+## 🛠️ 常見問題排查 (FAQ)
+
+### Q1: 執行 `setup.ps1` 提示腳本執行受阻？
+**原因**：Windows 預設策略限制 PowerShell 指令碼。  
+**解法**：在 PowerShell 執行：
+```powershell
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+
+### Q2: 呼叫時出現 `ansys-mechanical-core not installed`？
+**原因**：安裝時使用了 `--minimal` 模式或未安裝選用套件。  
+**解法**：手動補裝核心互動套件：
+```powershell
+.\.venv\Scripts\pip.exe install -e ".[standard]"
+```
+
+### Q3: 啟動 SpaceClaim 時 AI 連不上幾何工具？
+**原因**：SpaceClaim 外掛清單尚未載入或連接埠未開放。  
+**解法**：
+1. 確認檔案是否存在：`C:\ProgramData\SpaceClaim\AddIns\ApiServerAddIn.Manifest.xml`。
+2. 啟動 SpaceClaim，執行 `netstat -ano | findstr 50051` 確認通訊埠處於 `LISTENING` 狀態。
+
+---
+
+## 📚 相關文件與架構導覽
+
+- [安裝與部署標準手冊 (DEPLOYMENT_SOP.md)](docs/deployment/DEPLOYMENT_SOP.md)：完整環境需求、安裝步驟與驗證流程。
+- [MCP 工具範圍與 Profile 收斂指南 (MCP_TOOL_SCOPING_GUIDE.md)](docs/deployment/MCP_TOOL_SCOPING_GUIDE.md)：如何依工作流調整工具暴露範圍。
+- [系統架構與分層職責 (ARCHITECTURE.md)](docs/architecture/ARCHITECTURE.md)：控制器、驅動層、連線管理器與通訊協議規範。
+- [業務與物理規則規格書 (BUSINESS_RULES.md)](docs/testing/BUSINESS_RULES.md)：BDD 測試邊界與金絲雀驗收規則。

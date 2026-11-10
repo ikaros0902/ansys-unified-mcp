@@ -13,13 +13,13 @@
 - BOM、元件／body 名稱及 GUI 外形互相補強；未命中命名不能擴大成幾何不存在。未確認分類或未通過驗證的檔案不列正式素材。
 - 擷取素材、簡化存檔、執行期讀檔取代是不同階段。現場參數化重建不等於已保存幾何的查表資料庫。
 
-操作流程與案例證據見 [元件擷取與查表建庫技能](ansys-spaceclaim-component-library/SKILL.md)。
+操作流程與案例證據見 [元件擷取與查表建庫技能](geometry-meshing/ansys-spaceclaim/references/component_library/overview.md)。
 
 ## 2026-10-14：Skill 結構補齊與閉環驗收
 
 ### 1. `skill-creator` 的 `assets/` 定義範圍很窄，勿無差別套用
 
-官方 `skill-creator`（`D:\Ikaros\skill-creator\SKILL.md`）定義 `assets/` 僅限「會被輸出產物直接引用的靜態素材（模板、圖示、字型）」，不是每個 skill 的標配第四層目錄。遇到「補齊標準結構」類需求時，先查官方規範的實際定義範圍，再逐一判斷每個 skill 是否真有「固定輸出格式」的需求，不要見到三層結構就機械套用成四層。
+官方 `skill-creator`（`docs/knowledge_dictionary/ (請使用 ans_get_knowledge_dictionary 查詢)`）定義 `assets/` 僅限「會被輸出產物直接引用的靜態素材（模板、圖示、字型）」，不是每個 skill 的標配第四層目錄。遇到「補齊標準結構」類需求時，先查官方規範的實際定義範圍，再逐一判斷每個 skill 是否真有「固定輸出格式」的需求，不要見到三層結構就機械套用成四層。
 
 **判斷標準（三條同時成立才該放）**：
 1. 該 skill 確有「生成具體產出物」的職責。

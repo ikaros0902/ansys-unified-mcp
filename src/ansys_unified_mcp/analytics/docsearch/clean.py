@@ -3,7 +3,7 @@
 Removes the high-volume conversion noise that dilutes search quality:
 - ``<!-- page N -->`` markers
 - the per-page ANSYS/Synopsys copyright footer (2 lines, on every page)
-- lone page-number lines (arabic and roman numerals)
+- lone roman-numeral page-number lines
 - table-of-contents dot-leader lines
 - cover-page / copyright / trademark / disclaimer boilerplate
 - (lstc style) the LS-PrePost revision-history table rows
@@ -32,8 +32,7 @@ _FOOTER_LINE2 = re.compile(
     re.IGNORECASE,
 )
 
-# Lone page number: only digits, or only roman numerals (i, ii, ... xlv ...).
-_LONE_ARABIC = re.compile(r"^\s*\d{1,4}\s*$")
+# 只過濾羅馬頁碼；獨立數字可能是參數值，必須保留。
 _LONE_ROMAN = re.compile(r"^\s*[ivxlcdm]{1,7}\s*$", re.IGNORECASE)
 
 # Table-of-contents dot leaders: "... Something ......... 175"
@@ -95,7 +94,7 @@ def _drop_line(line: str, style: str) -> bool:
         return True
     if _FOOTER_LINE1.match(line) or _FOOTER_LINE2.match(line):
         return True
-    if _LONE_ARABIC.match(line) or _LONE_ROMAN.match(line):
+    if _LONE_ROMAN.match(line):
         return True
     if _TOC_LEADER.search(line) or _TOC_UNICODE_LEADER.search(line):
         return True

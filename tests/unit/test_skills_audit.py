@@ -2,7 +2,7 @@
 """
 技能生態系架構稽核納管測試。
 
-背景：`scripts/audit_architecture_compliance.py` 原本僅能手動執行，
+背景：`scripts/skill_governance/audit_architecture_compliance.py` 原本僅能手動執行，
 其 exit code 不被任何自動化關卡檢查，導致「測試全綠、稽核 FAIL」兩者互不知情。
 本測試將該稽核納入 pytest，使死鏈、SKILL.md 行數超標、簡體字違規與
 示範腳本語法錯誤等問題，能在測試階段即被客觀攔截。
@@ -16,8 +16,8 @@ from pathlib import Path
 import pytest
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-AUDIT_SCRIPT = PROJECT_ROOT / "scripts" / "maintenance" / "audit_architecture_compliance.py"
-SYNC_SCRIPT = PROJECT_ROOT / "scripts" / "maintenance" / "sync_skills_bidirectional.py"
+AUDIT_SCRIPT = PROJECT_ROOT / "scripts" / "skill_governance" / "audit_architecture_compliance.py"
+SYNC_SCRIPT = PROJECT_ROOT / "scripts" / "skill_governance" / "sync_skills_bidirectional.py"
 SKILLS_ROOT = (PROJECT_ROOT / "agents" / "skills") if (PROJECT_ROOT / "agents" / "skills").is_dir() else ((PROJECT_ROOT / "skills") if (PROJECT_ROOT / "skills").is_dir() else (PROJECT_ROOT / "SKILLs"))
 
 
@@ -63,7 +63,7 @@ def test_skill_routing_tables_have_no_dead_links():
     link_pattern = re.compile(r"\]\((?!https?://|#)([^)]+)\)")
     dead_links: list[str] = []
 
-    for skill_md in sorted(SKILLS_ROOT.glob("*/SKILL.md")):
+    for skill_md in sorted(SKILLS_ROOT.rglob("SKILL.md")):
         content = skill_md.read_text(encoding="utf-8", errors="replace")
         for rel_target in link_pattern.findall(content):
             target = rel_target.split("#", 1)[0].strip()

@@ -1,0 +1,24 @@
+[
+  {
+    "eval_id": "geo_01",
+    "prompt": "如何在 SpaceClaim 中對複雜鑄件進行幾何去特徵（去除小圓角與小孔）以準備網格劃分？",
+    "expected_keywords": [
+      "ansys-spaceclaim",
+      "Defeature",
+      "Fill",
+      "Round",
+      "Volume"
+    ]
+  },
+  {
+    "eval_id": "geo_02",
+    "prompt": "在 Ansys Meshing 中劃分流體壁面邊界層時，如何計算第一層網格高度以確保 y+ ~ 1？",
+    "expected_keywords": [
+      "ansys-mesh",
+      "Inflation",
+      "y+",
+      "First Layer Height",
+      "Boundary Layer"
+    ]
+  }
+]

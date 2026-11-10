@@ -1,0 +1,22 @@
+[
+  {
+    "eval_id": "poly_01",
+    "prompt": "聚合物模頭擠出脹大模擬中，如何收斂自由表面重劃網格？",
+    "expected_keywords": [
+      "Free Surface",
+      "Die Swell",
+      "Remeshing",
+      "Viscoelastic"
+    ]
+  },
+  {
+    "eval_id": "ice_01",
+    "prompt": "FENSAP-ICE 機翼結冰模擬中如何定義明冰 (Glaze Ice)？",
+    "expected_keywords": [
+      "Glaze Ice",
+      "Runback Water",
+      "LWC",
+      "MVD"
+    ]
+  }
+]

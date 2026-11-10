@@ -1,0 +1,219 @@
+{
+  "module": "ansys.sound.core.sound_composer",
+  "version": "unknown",
+  "sdk_package": "ansys-sound-core",
+  "sdk_version": "0.3.0",
+  "interface": "PyAnsys Sound 0.3.0 SoundComposer and Track",
+  "scope": "範圍限於 SoundComposer 與 Track 直接宣告的公開方法與屬性，不含繼承成員及其他 Sound modules。擷取只讀取 SDK 與已核對 0.3.0 的 API reference；不建立物件、不處理訊號、不呼叫 server。",
+  "sources": {
+    "api_references": [
+      {
+        "name": "sound_composer",
+        "path": "ANSYS_Document/Sound/sdk/ansys-sound-core/0.3.0/api_reference/9b45b05a8ead-sound_composer.md",
+        "url": "https://sound.docs.pyansys.com/version/stable/api/sound_composer.html",
+        "sha256": "a700d3dcab5977df0de7900462dc60b77b4c1580d64f0bb1636ff9e455682037",
+        "html_path": "ANSYS_Document/Sound/sdk/ansys-sound-core/0.3.0/api_reference/9b45b05a8ead-sound_composer.html",
+        "html_sha256": "8ca1f5fd14532f212771cde2fd6def4ec7edeedd2920fbb2527aa56915a235e5",
+        "html_version": "0.3.0"
+      },
+      {
+        "name": "SoundComposer",
+        "path": "ANSYS_Document/Sound/sdk/ansys-sound-core/0.3.0/api_reference/5c7582a9a7e5-ansys.sound.core.sound_composer.SoundComposer.md",
+        "url": "https://sound.docs.pyansys.com/version/stable/api/_autosummary/ansys.sound.core.sound_composer.SoundComposer.html",
+        "sha256": "cdaa345ef86de2a11bb8cb3ffa6fc371a70b7d6ac2e744364c7cd4ecd2d23615",
+        "html_path": "ANSYS_Document/Sound/sdk/ansys-sound-core/0.3.0/api_reference/5c7582a9a7e5-ansys.sound.core.sound_composer.SoundComposer.html",
+        "html_sha256": "b7bd8f87f7df4931b6c83c89e589f6ee6a2d84ad3d5faf6af5acb4c05112eaed",
+        "html_version": "0.3.0"
+      },
+      {
+        "name": "Track",
+        "path": "ANSYS_Document/Sound/sdk/ansys-sound-core/0.3.0/api_reference/fc1adb720f35-ansys.sound.core.sound_composer.Track.md",
+        "url": "https://sound.docs.pyansys.com/version/stable/api/_autosummary/ansys.sound.core.sound_composer.Track.html",
+        "sha256": "a782202c5d1d4feccccaa4f3e93de604a1c5cd85c954d876694864a891a20182",
+        "html_path": "ANSYS_Document/Sound/sdk/ansys-sound-core/0.3.0/api_reference/fc1adb720f35-ansys.sound.core.sound_composer.Track.html",
+        "html_sha256": "06a4f5a56c3f4492b7a48ae78699489c174a0f6e503f4e993746e3b9fe25b2ab",
+        "html_version": "0.3.0"
+      }
+    ],
+    "sdk_files": [
+      {
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/sound/core/sound_composer/sound_composer.py",
+        "sha256": "4b908c7e73d8deb95896b2c711b2f8ecdeedfaa5ca88915f2a51626cb193526a"
+      },
+      {
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/sound/core/sound_composer/track.py",
+        "sha256": "a8c6dbfe04413f1167e9a6ded28ff3552e908b0774a977b3f51df651198776e4"
+      }
+    ]
+  },
+  "modules": {
+    "ansys.sound.core.sound_composer.sound_composer": {
+      "doc": "Sound Composer project class.",
+      "classes": {
+        "SoundComposer": {
+          "name": "SoundComposer",
+          "doc": "Sound Composer project class.\n\nThis class creates a Sound Composer project. A project is made of several tracks\n(:class:`Track`), each containing a source, to generate the sound, and an optional filter, to\nmodel the transfer between the source and the receiver.\n\n.. seealso::\n    :class:`Track`\n\nExamples\n--------\nLoad a Sound Composer project created in Ansys Sound SAS, and plot the generated signal.\n\n>>> from ansys.sound.core.sound_composer import SoundComposer\n>>> sound_composer = SoundComposer(project_path=\"path/to/project.scn\")\n>>> sound_composer.process(sampling_frequency=48000.0)\n>>> sound_composer.plot()\n\n.. seealso::\n    :ref:`sound_composer_load_project`\n        Example demonstrating how to load and work with an existing Sound Composer project.\n    :ref:`sound_composer_create_project`\n        Example demonstrating how to create a Sound Composer project from scratch.",
+          "methods": [
+            {
+              "name": "add_track",
+              "signature": "(self, track: ansys.sound.core.sound_composer.track.Track)",
+              "doc": "Add a track to the project.\n\nParameters\n----------\ntrack : Track\n    Track object to add.",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\sound\\core\\sound_composer\\sound_composer.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\sound\\core\\sound_composer\\sound_composer.py"
+            },
+            {
+              "name": "load",
+              "signature": "(self, project_path: str)",
+              "doc": "Load a Sound Composer project.\n\nParameters\n----------\nproject_path : str\n    Path to the Sound Composer project file to load (.scn).",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\sound\\core\\sound_composer\\sound_composer.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\sound\\core\\sound_composer\\sound_composer.py"
+            },
+            {
+              "name": "save",
+              "signature": "(self, project_path: str)",
+              "doc": "Save the Sound Composer project.\n\nParameters\n----------\nproject_path : str\n    Path and file name (.scn) where the Sound Composer project shall be saved.",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\sound\\core\\sound_composer\\sound_composer.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\sound\\core\\sound_composer\\sound_composer.py"
+            },
+            {
+              "name": "process",
+              "signature": "(self, sampling_frequency: float = 44100.0)",
+              "doc": "Generate the signal of the current Sound Composer project.\n\nGenerates the project's signal corresponding to the sum of all the track signals.\n\nParameters\n----------\nsampling_frequency : float, default: 44100.0\n    Sampling frequency of the generated sound in Hz.",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\sound\\core\\sound_composer\\sound_composer.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\sound\\core\\sound_composer\\sound_composer.py"
+            },
+            {
+              "name": "get_output",
+              "signature": "(self) -> ansys.dpf.core.field.Field",
+              "doc": "Get the generated signal of the Sound Composer project as a DPF field.\n\nReturns\n-------\nField\n    Generated signal as a DPF field.",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\sound\\core\\sound_composer\\sound_composer.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\sound\\core\\sound_composer\\sound_composer.py"
+            },
+            {
+              "name": "get_output_as_nparray",
+              "signature": "(self) -> numpy.ndarray",
+              "doc": "Get the generated signal of the Sound Composer project as a NumPy array.\n\nReturns\n-------\nnumpy.ndarray\n    Generated signal as a NumPy array.",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\sound\\core\\sound_composer\\sound_composer.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\sound\\core\\sound_composer\\sound_composer.py"
+            },
+            {
+              "name": "plot",
+              "signature": "(self)",
+              "doc": "Plot the generated signal of the Sound Composer project.",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\sound\\core\\sound_composer\\sound_composer.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\sound\\core\\sound_composer\\sound_composer.py"
+            }
+          ],
+          "properties": [
+            {
+              "name": "tracks",
+              "type": "list[ansys.sound.core.sound_composer.track.Track]",
+              "doc": "List of tracks.\n\nList of the tracks available in this Sound Composer instance (project).\n\nEach track is a :class:`Track` object, and contains a source and a filter.",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\sound\\core\\sound_composer\\sound_composer.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\sound\\core\\sound_composer\\sound_composer.py"
+            },
+            {
+              "name": "name",
+              "type": "<class 'str'>",
+              "doc": "Name of the Sound Composer project.",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\sound\\core\\sound_composer\\sound_composer.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\sound\\core\\sound_composer\\sound_composer.py"
+            }
+          ]
+        }
+      },
+      "functions": []
+    },
+    "ansys.sound.core.sound_composer.track": {
+      "doc": "Sound Composer's track.",
+      "classes": {
+        "Track": {
+          "name": "Track",
+          "doc": "Sound Composer track class.\n\nThis class creates a track for the Sound Composer. A track is made of a source (including its\nsource control) and an optional filter (which models the transfer from source to receiver).\n\nA track allows the generation of the sound corresponding to the source, optionally filtered\nwith the associated filter.\n\n.. seealso::\n    :class:`SoundComposer`, :class:`.Filter`, :class:`SourceSpectrum`,\n    :class:`SourceBroadbandNoise`, :class:`SourceBroadbandNoiseTwoParameters`,\n    :class:`SourceHarmonics`, :class:`SourceHarmonicsTwoParameters`, :class:`SourceAudio`\n\nExamples\n--------\nCreate a track with an audio source and a filter.\n\n>>> from ansys.sound.core.sound_composer import Track\n>>> track_filter = Filter(sampling_frequency=48000.0)\n>>> track = Track(\n...     name=\"Sound Composer track\",\n...     gain=-3.0,\n...     source=my_source,\n...     filter=my_filter\n... )\n\n.. seealso::\n    :ref:`sound_composer_load_project`\n        Example demonstrating how to load and work with an existing Sound Composer project.\n    :ref:`sound_composer_create_project`\n        Example demonstrating how to create a Sound Composer project from scratch.",
+          "methods": [
+            {
+              "name": "set_from_generic_data_containers",
+              "signature": "(self, track_data: ansys.dpf.core.generic_data_container.GenericDataContainer, sampling_frequency: float = 44100.0)",
+              "doc": "Set the track data from a generic data container.\n\nThis method is meant to set the track data from a generic data container obtained when\nloading a Sound Composer project file (.scn) with the method :meth:`SoundComposer.load()`.\n\nParameters\n----------\ntrack_data : GenericDataContainer\n    Track data as a DPF generic data container.\nsampling_frequency : float, default: 44100.0\n    Sampling frequency in Hz to use in the creation of track's filter.",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\sound\\core\\sound_composer\\track.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\sound\\core\\sound_composer\\track.py"
+            },
+            {
+              "name": "get_as_generic_data_containers",
+              "signature": "(self) -> ansys.dpf.core.generic_data_container.GenericDataContainer",
+              "doc": "Get the track data as a generic data container.\n\nThis method is meant to return the track data as a generic data container, in the format\nneeded to save a Sound Composer project file (.scn) with the method\n:meth:`SoundComposer.save()`.\n\nReturns\n-------\nGenericDataContainer\n    Track data as a generic data container.",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\sound\\core\\sound_composer\\track.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\sound\\core\\sound_composer\\track.py"
+            },
+            {
+              "name": "process",
+              "signature": "(self, sampling_frequency: float = 44100.0)",
+              "doc": "Generate the signal of the track, using the source and filter currently set.\n\nParameters\n----------\nsampling_frequency : float, default: 44100.0\n    Sampling frequency of the generated sound in Hz.",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\sound\\core\\sound_composer\\track.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\sound\\core\\sound_composer\\track.py"
+            },
+            {
+              "name": "get_output",
+              "signature": "(self) -> ansys.dpf.core.field.Field",
+              "doc": "Get the generated signal of the track as a DPF field.\n\nReturns\n-------\nField\n    Generated signal as a DPF field.",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\sound\\core\\sound_composer\\track.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\sound\\core\\sound_composer\\track.py"
+            },
+            {
+              "name": "get_output_as_nparray",
+              "signature": "(self) -> numpy.ndarray",
+              "doc": "Get the generated signal of the track, as a NumPy array.\n\nReturns\n-------\nnumpy.ndarray\n    Generated signal as a NumPy array.",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\sound\\core\\sound_composer\\track.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\sound\\core\\sound_composer\\track.py"
+            },
+            {
+              "name": "plot",
+              "signature": "(self)",
+              "doc": "Plot the resulting signal.",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\sound\\core\\sound_composer\\track.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\sound\\core\\sound_composer\\track.py"
+            }
+          ],
+          "properties": [
+            {
+              "name": "name",
+              "type": "<class 'str'>",
+              "doc": "Name of the track.",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\sound\\core\\sound_composer\\track.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\sound\\core\\sound_composer\\track.py"
+            },
+            {
+              "name": "gain",
+              "type": "<class 'float'>",
+              "doc": "Track gain in dB.\n\nGain in dB to apply to the generated signal of the track.",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\sound\\core\\sound_composer\\track.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\sound\\core\\sound_composer\\track.py"
+            },
+            {
+              "name": "source",
+              "type": "ansys.sound.core.sound_composer.source_broadband_noise.SourceBroadbandNoise | ansys.sound.core.sound_composer.source_broadband_noise_two_parameters.SourceBroadbandNoiseTwoParameters | ansys.sound.core.sound_composer.source_harmonics.SourceHarmonics | ansys.sound.core.sound_composer.source_harmonics_two_parameters.SourceHarmonicsTwoParameters | ansys.sound.core.sound_composer.source_spectrum.SourceSpectrum | ansys.sound.core.sound_composer.source_audio.SourceAudio",
+              "doc": "Source object associated with the track.\n\nThe source of the track is used to generate the corresponding signal. Its type can be\neither :class:`SourceSpectrum`, :class:`SourceBroadbandNoise`,\n:class:`SourceBroadbandNoiseTwoParameters`, :class:`SourceHarmonics`,\n:class:`SourceHarmonicsTwoParameters`, or :class:`SourceAudio`.",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\sound\\core\\sound_composer\\track.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\sound\\core\\sound_composer\\track.py"
+            },
+            {
+              "name": "filter",
+              "type": "<class 'ansys.sound.core.signal_processing.filter.Filter'>",
+              "doc": "Filter object of the track.",
+              "sdk_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\sound\\core\\sound_composer\\track.py",
+              "signature_source_path": "<REPO_ROOT>\\.venv\\Lib\\site-packages\\ansys\\sound\\core\\sound_composer\\track.py"
+            }
+          ]
+        }
+      },
+      "functions": []
+    }
+  },
+  "statistics": {
+    "total_modules": 2,
+    "total_classes": 2,
+    "total_methods": 13,
+    "total_properties": 6,
+    "total_functions": 0
+  }
+}

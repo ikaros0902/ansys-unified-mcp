@@ -1,0 +1,21 @@
+[
+  {
+    "eval_id": "struct_01",
+    "prompt": "如何對伺服器機殼進行跌落衝擊分析，驗證螺絲固定點強度？",
+    "expected_keywords": [
+      "ansys-lsdyna",
+      "shock-analysis-workflow",
+      "Hourglass Energy",
+      "Von-Mises"
+    ]
+  },
+  {
+    "eval_id": "struct_02",
+    "prompt": "在 Mechanical 中計算結構固有頻率與振型時應使用何種分析系統？",
+    "expected_keywords": [
+      "ansys-mechanical",
+      "modal analysis",
+      "natural frequency"
+    ]
+  }
+]

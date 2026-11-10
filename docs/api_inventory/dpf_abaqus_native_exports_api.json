@@ -1,0 +1,56 @@
+{
+  "module": "NativeExports",
+  "version": "v251",
+  "interface": "DPF Abaqus reader; support status unverified",
+  "scope": "This snapshot lists PE export names from llvm-readobj. An export name does not prove API support. A signature appears only when the MSVC symbol name contains type data. The extractor does not read function bodies or run the DLL.",
+  "sources": {
+    "assembly": {
+      "path": "$env:AWP_ROOT251/dpf/bin/winx64/Ans.Dpf.Abaqus.dll",
+      "sha256": "801897892e7eee2fb36fbc1d8dd53c03d692d7d20817dc0752b7786d1599576c",
+      "byte_length": 1654784
+    },
+    "analysis": {
+      "tool": "llvm-readobj",
+      "version": "19.1.5",
+      "operation": "--coff-exports"
+    }
+  },
+  "modules": {
+    "NativeExports": {
+      "doc": "DPF Abaqus reader; support status unverified",
+      "classes": {},
+      "functions": [
+        {
+          "name": "?run@?$SourceNodalOperator@$02@Odb@Abaqus@dataProcessing@@UEAAXXZ",
+          "signature": "public: virtual void __cdecl dataProcessing::Abaqus::Odb::SourceNodalOperator<3>::run(void) __ptr64",
+          "doc": "PE export. Ordinal: 1. RVA: 0x3E1A0. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: virtual void __cdecl dataProcessing::Abaqus::Odb::SourceNodalOperator<3>::run(void) __ptr64."
+        },
+        {
+          "name": "?run@?$SourceNodalOperator@$0A@@Odb@Abaqus@dataProcessing@@UEAAXXZ",
+          "signature": "public: virtual void __cdecl dataProcessing::Abaqus::Odb::SourceNodalOperator<0>::run(void) __ptr64",
+          "doc": "PE export. Ordinal: 2. RVA: 0x3E760. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: virtual void __cdecl dataProcessing::Abaqus::Odb::SourceNodalOperator<0>::run(void) __ptr64."
+        },
+        {
+          "name": "?run@MeshProvider@Odb@Abaqus@dataProcessing@@UEAAXXZ",
+          "signature": "public: virtual void __cdecl dataProcessing::Abaqus::Odb::MeshProvider::run(void) __ptr64",
+          "doc": "PE export. Ordinal: 3. RVA: 0x62E10. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: virtual void __cdecl dataProcessing::Abaqus::Odb::MeshProvider::run(void) __ptr64."
+        },
+        {
+          "name": "?run@TimeSupportProvider@Odb@Abaqus@dataProcessing@@UEAAXXZ",
+          "signature": "public: virtual void __cdecl dataProcessing::Abaqus::Odb::TimeSupportProvider::run(void) __ptr64",
+          "doc": "PE export. Ordinal: 4. RVA: 0x62910. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: virtual void __cdecl dataProcessing::Abaqus::Odb::TimeSupportProvider::run(void) __ptr64."
+        },
+        {
+          "name": "LoadOperators",
+          "signature": "",
+          "doc": "PE export. Ordinal: 5. RVA: 0x3E140. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        }
+      ]
+    }
+  },
+  "statistics": {
+    "total_modules": 1,
+    "total_functions": 5,
+    "demangled_signatures": 4
+  }
+}

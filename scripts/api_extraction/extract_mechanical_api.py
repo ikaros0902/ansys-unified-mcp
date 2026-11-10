@@ -231,6 +231,13 @@ def extract_mechanical():
                 "functions": module_functions
             }
 
+    statistics = api_data["statistics"]
+    if not any(
+        statistics[key] > 0
+        for key in ("total_classes", "total_methods", "total_properties", "total_functions")
+    ):
+        raise RuntimeError("Mechanical API 擷取失敗，沒有有效 API 項目。")
+
     out_path = Path(__file__).resolve().parent.parent.parent / "docs" / "api_inventory" / "mechanical_api.json"
     out_path.parent.mkdir(parents=True, exist_ok=True)
     with open(out_path, "w", encoding="utf-8") as f:

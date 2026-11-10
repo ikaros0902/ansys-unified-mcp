@@ -1,6 +1,6 @@
 # MCP 工具收斂指引：Profile 與 Workspace
 
-本文說明如何控制 AI 單次 session 面對的 MCP 工具數量。全量工具約 155 個（`profile=all`），
+本文說明如何控制 AI 單次 session 面對的 MCP 工具數量。全量工具約 216 個（`profile=all`，含別名共 279 個），
 透過兩層機制收斂實際曝露：**啟動期 profile 路由** 與 **執行期 workspace 可見性**。
 
 ---
@@ -48,7 +48,7 @@ ans_session_set_workspace(products=["mechanical", "dpf"])
 ans_session_set_workspace(products=["geometry", "mechanical", "optislang", "workflow"])
 # optiSLang 可跨域驅動 geometry/mechanical 重算，底層 session 全共享
 
-# 清除限制，回到全集 155
+# 清除限制，回到全集約 216
 ans_session_set_workspace(products=[])
 ```
 

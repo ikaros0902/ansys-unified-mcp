@@ -1,0 +1,246 @@
+{
+  "module": "NativeExports",
+  "version": "v251",
+  "interface": "CFX CadApi native exports; support status unverified",
+  "scope": "This snapshot lists PE export names from llvm-readobj. An export name does not prove API support. A signature appears only when the MSVC symbol name contains type data. The extractor does not read function bodies or run the DLL.",
+  "sources": {
+    "assembly": {
+      "path": "$env:AWP_ROOT251/CFX/lib/winnt-amd64/Ans.CFX.CadApi.dll",
+      "sha256": "d0e3a9ccfd99e04b65f0e070c4c55514d47887ed8981c6bcf055f01f79973843",
+      "byte_length": 165056
+    },
+    "analysis": {
+      "tool": "llvm-readobj",
+      "version": "19.1.5",
+      "operation": "--coff-exports"
+    }
+  },
+  "modules": {
+    "NativeExports": {
+      "doc": "CFX CadApi native exports; support status unverified",
+      "classes": {},
+      "functions": [
+        {
+          "name": "GM_BBOX_CAD",
+          "signature": "",
+          "doc": "PE export. Ordinal: 1. RVA: 0x15970. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "GM_E_CLS_CAD",
+          "signature": "",
+          "doc": "PE export. Ordinal: 2. RVA: 0x15A60. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "GM_E_LN_CAD",
+          "signature": "",
+          "doc": "PE export. Ordinal: 3. RVA: 0x15AA0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "GM_E_PER_CAD",
+          "signature": "",
+          "doc": "PE export. Ordinal: 4. RVA: 0x15AC0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "GM_E_RNG_CAD",
+          "signature": "",
+          "doc": "PE export. Ordinal: 5. RVA: 0x15AF0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "GM_E_TOL_CAD",
+          "signature": "",
+          "doc": "PE export. Ordinal: 6. RVA: 0x15B20. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "GM_E_XYZ_CAD",
+          "signature": "",
+          "doc": "PE export. Ordinal: 7. RVA: 0x15B50. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "GM_F_AR_CAD",
+          "signature": "",
+          "doc": "PE export. Ordinal: 8. RVA: 0x15C10. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "GM_F_CLS_CAD",
+          "signature": "",
+          "doc": "PE export. Ordinal: 9. RVA: 0x15C60. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "GM_F_CRV_CAD",
+          "signature": "",
+          "doc": "PE export. Ordinal: 10. RVA: 0x15CA0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "GM_F_DAT_CAD",
+          "signature": "",
+          "doc": "PE export. Ordinal: 11. RVA: 0x15D10. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "GM_F_NML_CAD",
+          "signature": "",
+          "doc": "PE export. Ordinal: 12. RVA: 0x15D90. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "GM_F_NTESS_CAD",
+          "signature": "",
+          "doc": "PE export. Ordinal: 13. RVA: 0x15DD0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "GM_F_PER_CAD",
+          "signature": "",
+          "doc": "PE export. Ordinal: 14. RVA: 0x15E10. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "GM_F_RNG_CAD",
+          "signature": "",
+          "doc": "PE export. Ordinal: 15. RVA: 0x15E60. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "GM_F_SNG_CAD",
+          "signature": "",
+          "doc": "PE export. Ordinal: 16. RVA: 0x15EA0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "GM_F_TESS_CAD",
+          "signature": "",
+          "doc": "PE export. Ordinal: 17. RVA: 0x15ED0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "GM_F_TOL_CAD",
+          "signature": "",
+          "doc": "PE export. Ordinal: 18. RVA: 0x16050. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "GM_F_XYZ_CAD",
+          "signature": "",
+          "doc": "PE export. Ordinal: 19. RVA: 0x16080. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "GM_START_CAD",
+          "signature": "",
+          "doc": "PE export. Ordinal: 20. RVA: 0x161A0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "GM_TERMT_CAD",
+          "signature": "",
+          "doc": "PE export. Ordinal: 21. RVA: 0x16300. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "GM_TOL_CAD",
+          "signature": "",
+          "doc": "PE export. Ordinal: 22. RVA: 0x16350. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "GM_UNITS_CAD",
+          "signature": "",
+          "doc": "PE export. Ordinal: 23. RVA: 0x16390. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "GM_V_TOL_CAD",
+          "signature": "",
+          "doc": "PE export. Ordinal: 24. RVA: 0x163F0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "GM_V_XYZ_CAD",
+          "signature": "",
+          "doc": "PE export. Ordinal: 25. RVA: 0x16420. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "GM_WRITE_CAD",
+          "signature": "",
+          "doc": "PE export. Ordinal: 26. RVA: 0x16440. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "TP_BLST_CAD",
+          "signature": "",
+          "doc": "PE export. Ordinal: 27. RVA: 0x16460. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "TP_B_F_CAD",
+          "signature": "",
+          "doc": "PE export. Ordinal: 28. RVA: 0x16490. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "TP_B_NF_CAD",
+          "signature": "",
+          "doc": "PE export. Ordinal: 29. RVA: 0x164F0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "TP_E_F_CAD",
+          "signature": "",
+          "doc": "PE export. Ordinal: 30. RVA: 0x16550. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "TP_E_V_CAD",
+          "signature": "",
+          "doc": "PE export. Ordinal: 31. RVA: 0x16580. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "TP_F_E_CAD",
+          "signature": "",
+          "doc": "PE export. Ordinal: 32. RVA: 0x165B0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "TP_F_LPT_CAD",
+          "signature": "",
+          "doc": "PE export. Ordinal: 33. RVA: 0x165E0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "TP_F_NE_CAD",
+          "signature": "",
+          "doc": "PE export. Ordinal: 34. RVA: 0x16610. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "TP_F_NL_CAD",
+          "signature": "",
+          "doc": "PE export. Ordinal: 35. RVA: 0x16630. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "TP_F_PR_CAD",
+          "signature": "",
+          "doc": "PE export. Ordinal: 36. RVA: 0x16650. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "TP_LST_CAD",
+          "signature": "",
+          "doc": "PE export. Ordinal: 37. RVA: 0x16660. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "TP_NBD_CAD",
+          "signature": "",
+          "doc": "PE export. Ordinal: 38. RVA: 0x16700. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "TP_NFEV_CAD",
+          "signature": "",
+          "doc": "PE export. Ordinal: 39. RVA: 0x16740. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "TP_V_E_CAD",
+          "signature": "",
+          "doc": "PE export. Ordinal: 40. RVA: 0x167D0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "TP_V_F_CAD",
+          "signature": "",
+          "doc": "PE export. Ordinal: 41. RVA: 0x167F0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "TP_V_NE_CAD",
+          "signature": "",
+          "doc": "PE export. Ordinal: 42. RVA: 0x16810. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "TP_V_NF_CAD",
+          "signature": "",
+          "doc": "PE export. Ordinal: 43. RVA: 0x16830. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        }
+      ]
+    }
+  },
+  "statistics": {
+    "total_modules": 1,
+    "total_functions": 43,
+    "demangled_signatures": 0
+  }
+}

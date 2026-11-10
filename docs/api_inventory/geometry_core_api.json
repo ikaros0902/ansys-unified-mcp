@@ -1,0 +1,187 @@
+{
+  "module": "ansys.geometry.core.modeler",
+  "version": "unknown",
+  "sdk_package": "ansys-geometry-core",
+  "sdk_version": "0.17.1",
+  "interface": "PyAnsys Geometry 0.17.1 Modeler and launch_modeler",
+  "scope": "範圍限於 Modeler 直接宣告的公開方法、屬性與 launch_modeler。本機同步文件為 0.18.2，版次不符而排除；以 AST 靜態讀取 SDK 0.17.1 source，不匯入套件、不建立 Modeler、不連線 geometry service。",
+  "sources": {
+    "sdk_files": [
+      {
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/geometry/core/modeler.py",
+        "sha256": "262b6f7f794b9d377630705e19129af87e7d9c356c3432cd24be2ff499df5b4b"
+      },
+      {
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/geometry/core/connection/launcher.py",
+        "sha256": "075053293377ced22dccedf0d7ad68eca8cc4ab138ecba9dd696ef7d75ff535c"
+      }
+    ],
+    "excluded_api_references": [
+      {
+        "name": "Modeler",
+        "path": "ANSYS_Document/Geometry/sdk/ansys-geometry-core/0.18.2/api_reference/d3ab5ac63cc0-Modeler.md",
+        "url": "https://geometry.docs.pyansys.com/version/stable/api/ansys/geometry/core/modeler/Modeler.html",
+        "sha256": "ef936d68e77118bb85847496175f8bc7f6650ba84141c6f7009eb5376d315296",
+        "html_path": "ANSYS_Document/Geometry/sdk/ansys-geometry-core/0.18.2/api_reference/d3ab5ac63cc0-Modeler.html",
+        "html_sha256": "61daba83101ae70d2a3da37161bcc5e2f1e97d45add25a7018ae3a4e073a9163",
+        "html_version": "0.18.2",
+        "reason": "本機文件版次 0.18.2 與 SDK 0.17.1 不同，不用作 API 來源。"
+      }
+    ]
+  },
+  "modules": {
+    "ansys.geometry.core.modeler": {
+      "doc": "Provides for interacting with the Geometry service.",
+      "classes": {
+        "Modeler": {
+          "name": "Modeler",
+          "doc": "Provides for interacting with an open session of the Geometry service.\n\nParameters\n----------\nhost : str,  default: DEFAULT_HOST\n    Host where the server is running.\nport : str | int, default: DEFAULT_PORT\n    Port number where the server is running.\nchannel : ~grpc.Channel, default: None\n    gRPC channel for server communication.\nremote_instance : ansys.platform.instancemanagement.Instance, default: None\n    Corresponding remote instance when the Geometry service\n    is launched using `PyPIM <https://github.com/ansys/pypim>`_. This instance\n    is deleted when the :func:`GrpcClient.close <ansys.geometry.core.client.GrpcClient.close>`\n    method is called.\ndocker_instance : LocalDockerInstance, default: None\n    Corresponding local Docker instance when the Geometry service is launched using the\n    :func:`launch_docker_modeler<ansys.geometry.core.connection.launcher.launch_docker_modeler>`\n    method. This instance is deleted when the\n    :func:`GrpcClient.close <ansys.geometry.core.client.GrpcClient.close>`\n    method is called.\nproduct_instance : ProductInstance, default: None\n    Corresponding local product instance when the product (Discovery or SpaceClaim)\n    is launched through the ``launch_modeler_with_geometry_service()``,\n    ``launch_modeler_with_discovery()`` or the ``launch_modeler_with_spaceclaim()``\n    interface. This instance will be deleted\n    when the :func:`GrpcClient.close <ansys.geometry.core.client.GrpcClient.close >`\n    method is called.\ntimeout : Real, default: 120\n    Time in seconds for trying to achieve the connection.\nlogging_level : int, default: INFO\n    Logging level to apply to the client.\nlogging_file : str, Path, default: None\n    File to output the log to, if requested.\nproto_version : str | None, default: None\n    Protocol version to use for communication with the server. If None, v0 is used.\n    Available versions are \"v0\", \"v1\", etc.\ntransport_mode : str | None\n    Transport mode selected. Needed if ``channel`` is not provided.\n    Options are: \"insecure\", \"uds\", \"wnua\", \"mtls\".\nuds_dir : Path | str | None\n    Directory to use for Unix Domain Sockets (UDS) transport mode.\n    By default `None` and thus it will use the \"~/.conn\" folder.\nuds_id : str | None\n    Optional ID to use for the UDS socket filename.\n    By default `None` and thus it will use \"aposdas_socket.sock\".\n    Otherwise, the socket filename will be \"aposdas_socket-<uds_id>.sock\".\ncerts_dir : Path | str | None\n    Directory to use for TLS certificates.\n    By default `None` and thus search for the \"ANSYS_GRPC_CERTIFICATES\" environment variable.\n    If not found, it will use the \"certs\" folder assuming it is in the current working\n    directory.",
+          "methods": [
+            {
+              "name": "create_design",
+              "signature": "(self, name: str) -> 'Design'",
+              "doc": "Initialize a new design with the connected client.\n\nParameters\n----------\nname : str\n    Name for the new design.\n\nReturns\n-------\nDesign\n    Design object created on the server.",
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/geometry/core/modeler.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/geometry/core/modeler.py"
+            },
+            {
+              "name": "get_active_design",
+              "signature": "(self, sync_with_backend: bool=True) -> 'Design'",
+              "doc": "Get the active design on the modeler object.\n\nParameters\n----------\nsync_with_backend : bool, default: True\n    Whether to sync the active design with the remote service. If set to False,\n    the active design may be out-of-sync with the remote service. This is useful\n    when the active design is known to be up-to-date.\n\nReturns\n-------\nDesign\n    Design object already existing on the modeler.",
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/geometry/core/modeler.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/geometry/core/modeler.py"
+            },
+            {
+              "name": "read_existing_design",
+              "signature": "(self) -> 'Design'",
+              "doc": "Read the existing design on the service with the connected client.\n\nReturns\n-------\nDesign\n    Design object already existing on the server.",
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/geometry/core/modeler.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/geometry/core/modeler.py"
+            },
+            {
+              "name": "close",
+              "signature": "(self, close_design: bool=True) -> None",
+              "doc": "Access the client's close method.\n\nParameters\n----------\nclose_design : bool, default: True\n    Whether to close the design before closing the client.",
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/geometry/core/modeler.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/geometry/core/modeler.py"
+            },
+            {
+              "name": "exit",
+              "signature": "(self, close_design: bool=True) -> None",
+              "doc": "Access the client's close method.\n\nParameters\n----------\nclose_design : bool, default: True\n    Whether to close the design before closing the client.\n\nNotes\n-----\nThis method is calling the same method as\n:func:`close() <ansys.geometry.core.modeler.Modeler.close>`.",
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/geometry/core/modeler.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/geometry/core/modeler.py"
+            },
+            {
+              "name": "open_file",
+              "signature": "(self, file_path: str | Path, upload_to_server: bool=True, import_options: ImportOptions=ImportOptions(), import_options_definitions: ImportOptionsDefinitions=ImportOptionsDefinitions()) -> 'Design'",
+              "doc": "Open a file.\n\nThis method imports a design into the service. On Windows and Linux, ``.scdocx``, ``.dsco``,\n``.pmdb`` (beginning in 27.1), and reader formats are supported. Please see notes for\nsupported reader formats.\n\nIf the file is a shattered assembly with external references, the whole containing folder\nwill need to be uploaded. Ensure proper folder structure in order to prevent the uploading\nof unnecessary files.\n\nParameters\n----------\nfile_path : str, ~pathlib.Path\n    Path of the file to open. The extension of the file must be included.\nupload_to_server : bool\n    True if the service is running on a remote machine. If service is running on the local\n    machine, set to False, as there is no reason to upload the file.\nimport_options : ImportOptions\n    Import options that toggle certain features when opening a file.\n\nReturns\n-------\nDesign\n    Newly imported design.\n\nNotes\n-----\nFormat and latest supported version\n    * AutoCAD 2025\n    * CATIA V5 2025\n    * CATIA V6 2024\n    * Creo Parametric 12.4\n    * IGES 5.3\n    * Inventor 2026\n    * JT 10.10\n    * NX 2506\n    * Rhino 8\n    * Solid Edge 2025\n    * SOLIDWORKS 2025\n    * STEP AP242",
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/geometry/core/modeler.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/geometry/core/modeler.py"
+            },
+            {
+              "name": "run_script_file",
+              "signature": "(self, file_path: str | Path, script_args: dict[str, str] | None=None, import_design: bool=False, api_version: int | str | ApiVersions | None=None) -> tuple[dict[str, str], Optional['Design']]",
+              "doc": "Run a Discovery script file.\n\n.. note::\n\n    If arguments are passed to the script, they must be in the form of a dictionary.\n    On the server side, the script will receive the arguments as a dictionary of strings,\n    under the variable name ``argsDict``. For example, if the script is called with the\n    arguments ``run_discovery_script_file(..., script_args = {\"length\": \"20\"}, ...)``,\n    the script will receive the dictionary ``argsDict`` with the key-value pair\n    ``{\"length\": \"20\"}``.\n\n.. note::\n\n    If an output is expected from the script, it will be returned as a dictionary of\n    strings. The keys and values of the dictionary are the variables and their values\n    that the script returns. However, it is necessary that the script creates a\n    dictionary called ``result`` with the variables and their values that are expected\n    to be returned. For example, if the script is expected to return the number of bodies\n    in the design, the script should create a dictionary called ``result`` with the\n    key-value pair ``{\"numBodies\": numBodies}``, where ``numBodies`` is the number of\n    bodies in the design.\n\nThe implied API version of the script should match the API version of the running\nGeometry Service. DMS API versions 24.1 and later are supported. DMS is a\nWindows-based modeling service that has been containerized to ease distribution,\nexecution, and remotability operations.\n\nParameters\n----------\nfile_path : str | ~pathlib.Path\n    Path of the file. The extension of the file must be included.\nscript_args : dict[str, str], optional.\n    Arguments to pass to the script. By default, ``None``.\nimport_design : bool, optional.\n    Whether to refresh the current design from the service. When the script\n    is expected to modify the existing design, set this to ``True`` to retrieve\n    up-to-date design data. When this is set to ``False`` (default) and the\n    script modifies the current design, the design may be out-of-sync. By default,\n    ``False``.\napi_version : int | str | ApiVersions, optional\n    The scripting API version to use. For example, version 24.1 can be passed as\n    an integer 241, a string \"241\" or using the\n    ``ansys.geometry.core.connection.backend.ApiVersions`` enum class.\n    By default, ``None``. When specified, the service will attempt to run the script with\n    the specified API version. If the API version is not supported, the service will raise\n    an error. If you are using Discovery or SpaceClaim, the product will determine the API\n    version to use, so there is no need to specify this parameter.\n\nReturns\n-------\ndict[str, str]\n    Values returned from the script.\nDesign, optional\n    Up-to-date current design. This is only returned if ``import_design=True``.\n\nRaises\n------\nGeometryRuntimeError\n    If the Discovery script fails to run. Otherwise, assume that the script\n    ran successfully.\n\nNotes\n-----\n    The Ansys Geometry Service only supports scripts that are of the\n    same version as the running service. Any ``api_version`` input will\n    be ignored.",
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/geometry/core/modeler.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/geometry/core/modeler.py"
+            },
+            {
+              "name": "run_discovery_script_file",
+              "signature": "(self, file_path: str | Path, script_args: dict[str, str] | None=None, import_design: bool=False, api_version: int | str | ApiVersions | None=None) -> tuple[dict[str, str], Optional['Design']]",
+              "doc": "Run a script file.\n\nThis is a deprecated method. Use ``run_script_file()`` instead.",
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/geometry/core/modeler.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/geometry/core/modeler.py"
+            },
+            {
+              "name": "get_service_logs",
+              "signature": "(self, all_logs: bool=False, dump_to_file: bool=False, logs_folder: str | Path | None=None) -> str | dict[str, str] | Path",
+              "doc": "Get the service logs.\n\nParameters\n----------\nall_logs : bool, default: False\n    Flag indicating whether all logs should be retrieved. By default,\n    only the current logs are retrieved.\ndump_to_file : bool, default: False\n    Flag indicating whether the logs should be dumped to a file.\n    By default, the logs are not dumped to a file.\nlogs_folder : str,  Path or None, default: None\n    Name of the folder where the logs should be dumped. This parameter\n    is only used if the ``dump_to_file`` parameter is set to ``True``.\n\nReturns\n-------\nstr\n    Service logs as a string. This is returned if the ``dump_to_file`` parameter\n    is set to ``False``.\ndict[str, str]\n    Dictionary containing the logs. The keys are the logs names,\n    and the values are the logs as strings. This is returned if the ``all_logs``\n    parameter is set to ``True`` and the ``dump_to_file`` parameter\n    is set to ``False``.\nPath\n    Path to the folder containing the logs (if the ``all_logs``\n    parameter is set to ``True``) or the path to the log file (if only\n    the current logs are retrieved). The ``dump_to_file`` parameter\n    must be set to ``True``.\n\nNotes\n-----\nThis property is only available starting on Ansys release 25R1.",
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/geometry/core/modeler.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/geometry/core/modeler.py"
+            },
+            {
+              "name": "create_selection_builder",
+              "signature": "(self) -> SelectionBuilder",
+              "doc": "Create a selection builder.\n\nReturns\n-------\nSelectionBuilder\n    A selection builder object for creating custom selections.\n\nNotes\n-----\nThis method is only available starting on Ansys release 27R1.",
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/geometry/core/modeler.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/geometry/core/modeler.py"
+            }
+          ],
+          "properties": [
+            {
+              "name": "client",
+              "type": "GrpcClient",
+              "doc": "``Modeler`` instance client.",
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/geometry/core/modeler.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/geometry/core/modeler.py"
+            },
+            {
+              "name": "design",
+              "type": "'Design'",
+              "doc": "Retrieve the design within the modeler workspace.",
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/geometry/core/modeler.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/geometry/core/modeler.py"
+            },
+            {
+              "name": "repair_tools",
+              "type": "RepairTools",
+              "doc": "Access to repair tools.",
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/geometry/core/modeler.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/geometry/core/modeler.py"
+            },
+            {
+              "name": "prepare_tools",
+              "type": "PrepareTools",
+              "doc": "Access to prepare tools.",
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/geometry/core/modeler.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/geometry/core/modeler.py"
+            },
+            {
+              "name": "measurement_tools",
+              "type": "MeasurementTools",
+              "doc": "Access to measurement tools.\n\nNotes\n-----\nThis property is only available starting on Ansys release 24R2.",
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/geometry/core/modeler.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/geometry/core/modeler.py"
+            },
+            {
+              "name": "geometry_commands",
+              "type": "'GeometryCommands'",
+              "doc": "Access to geometry commands.",
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/geometry/core/modeler.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/geometry/core/modeler.py"
+            },
+            {
+              "name": "unsupported",
+              "type": "'UnsupportedCommands'",
+              "doc": "Access to unsupported commands.",
+              "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/geometry/core/modeler.py",
+              "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/geometry/core/modeler.py"
+            }
+          ]
+        }
+      },
+      "functions": []
+    },
+    "ansys.geometry.core.connection.launcher": {
+      "doc": "Module for connecting to instances of the Geometry service.",
+      "classes": {},
+      "functions": [
+        {
+          "name": "launch_modeler",
+          "signature": "(mode: str=None, **kwargs: dict | None) -> 'Modeler'",
+          "doc": "Start the ``Modeler`` interface for PyAnsys Geometry.\n\nParameters\n----------\nmode : str, default: None\n    Mode in which to launch the ``Modeler`` service. The default is ``None``,\n    in which case the method tries to determine the mode automatically. The\n    possible values are:\n\n    * ``\"pypim\"``: Launches the ``Modeler`` service remotely using the PIM API.\n    * ``\"docker\"``: Launches the ``Modeler`` service locally using Docker.\n    * ``\"geometry_service\"``: Launches the ``Modeler`` service locally using the\n      Ansys Geometry Service.\n    * ``\"spaceclaim\"``: Launches the ``Modeler`` service locally using Ansys SpaceClaim.\n    * ``\"discovery\"``: Launches the ``Modeler`` service locally using Ansys Discovery.\n\n**kwargs : dict, default: None\n    Keyword arguments for the launching methods. For allowable keyword arguments, see the\n    corresponding methods for each mode:\n\n    * For ``\"pypim\"`` mode, see the :func:`launch_remote_modeler` method.\n    * For ``\"docker\"`` mode, see the :func:`launch_docker_modeler` method.\n    * For ``\"geometry_service\"`` mode, see the\n      :func:`launch_modeler_with_geometry_service` method.\n    * For ``\"core_service\"`` mode, see the :func:`launch_modeler_with_core_service` method.\n    * For ``\"spaceclaim\"`` mode, see the :func:`launch_modeler_with_spaceclaim` method.\n    * For ``\"discovery\"`` mode, see the :func:`launch_modeler_with_discovery` method.\n\nReturns\n-------\nansys.geometry.core.modeler.Modeler\n    Pythonic interface for geometry modeling.\n\nExamples\n--------\nLaunch the Geometry service.\n\n>>> from ansys.geometry.core import launch_modeler\n>>> modeler = launch_modeler()",
+          "sdk_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/geometry/core/connection/launcher.py",
+          "signature_source_path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/geometry/core/connection/launcher.py"
+        }
+      ]
+    }
+  },
+  "statistics": {
+    "total_modules": 2,
+    "total_classes": 1,
+    "total_methods": 10,
+    "total_properties": 7,
+    "total_functions": 1
+  }
+}

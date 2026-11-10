@@ -1,0 +1,24 @@
+[
+  {
+    "eval_id": "em_01",
+    "prompt": "如何在 HFSS 中模擬 5G 毫米波微帶天線並提取反射損耗 S11？",
+    "expected_keywords": [
+      "ansys-hfss",
+      "Wave Port",
+      "S11",
+      "Adaptive Pass",
+      "Radiation Boundary"
+    ]
+  },
+  {
+    "eval_id": "em_02",
+    "prompt": "如何計算永磁同步電機 (PMSM) 在額定轉速下的齒槽轉矩與反電動勢？",
+    "expected_keywords": [
+      "ansys-maxwell",
+      "Band",
+      "Cogging Torque",
+      "Back-EMF",
+      "Transient"
+    ]
+  }
+]

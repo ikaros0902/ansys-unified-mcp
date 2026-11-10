@@ -1,0 +1,126 @@
+{
+  "module": "NativeExports",
+  "version": "v251",
+  "interface": "Lumerical remote Python interop API; support status unverified",
+  "scope": "This snapshot lists PE export names from llvm-readobj. An export name does not prove API support. A signature appears only when the MSVC symbol name contains type data. The extractor does not read function bodies or run the DLL.",
+  "sources": {
+    "assembly": {
+      "path": "$env:AWP_ROOT251/Lumerical/api/python/interopapi-remote.dll",
+      "sha256": "ea2aa1ae9ee7944121e377ada5f66f475258cffe619d702975559176bb320e82",
+      "byte_length": 418816
+    },
+    "analysis": {
+      "tool": "llvm-readobj",
+      "version": "19.1.5",
+      "operation": "--coff-exports"
+    }
+  },
+  "modules": {
+    "NativeExports": {
+      "doc": "Lumerical remote Python interop API; support status unverified",
+      "classes": {},
+      "functions": [
+        {
+          "name": "allocateComplexLumMatrix",
+          "signature": "",
+          "doc": "PE export. Ordinal: 1. RVA: 0x20ED0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "allocateLumDouble",
+          "signature": "",
+          "doc": "PE export. Ordinal: 2. RVA: 0x20F20. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "allocateLumList",
+          "signature": "",
+          "doc": "PE export. Ordinal: 3. RVA: 0x20FC0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "allocateLumMatrix",
+          "signature": "",
+          "doc": "PE export. Ordinal: 4. RVA: 0x20EB0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "allocateLumNameValuePair",
+          "signature": "",
+          "doc": "PE export. Ordinal: 5. RVA: 0x20F40. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "allocateLumString",
+          "signature": "",
+          "doc": "PE export. Ordinal: 6. RVA: 0x20F00. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "allocateLumStruct",
+          "signature": "",
+          "doc": "PE export. Ordinal: 7. RVA: 0x20F60. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "appClose",
+          "signature": "",
+          "doc": "PE export. Ordinal: 8. RVA: 0x1AD00. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "appEvalScript",
+          "signature": "",
+          "doc": "PE export. Ordinal: 9. RVA: 0x1D300. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "appFetchOutput",
+          "signature": "",
+          "doc": "PE export. Ordinal: 10. RVA: 0x1E2B0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "appGetLastError",
+          "signature": "",
+          "doc": "PE export. Ordinal: 11. RVA: 0x236C0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "appGetVar",
+          "signature": "",
+          "doc": "PE export. Ordinal: 12. RVA: 0x1B400. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "appOpen",
+          "signature": "",
+          "doc": "PE export. Ordinal: 13. RVA: 0x186C0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "appOpened",
+          "signature": "",
+          "doc": "PE export. Ordinal: 14. RVA: 0x1ACA0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "appPutVar",
+          "signature": "",
+          "doc": "PE export. Ordinal: 15. RVA: 0x1C3C0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "freeAny",
+          "signature": "",
+          "doc": "PE export. Ordinal: 16. RVA: 0x20FE0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "matrixSize",
+          "signature": "",
+          "doc": "PE export. Ordinal: 17. RVA: 0x20E90. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "memmovePackComplexLumMatrix",
+          "signature": "",
+          "doc": "PE export. Ordinal: 18. RVA: 0x21020. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "memmoveUnpackComplexLumMatrix",
+          "signature": "",
+          "doc": "PE export. Ordinal: 19. RVA: 0x21000. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        }
+      ]
+    }
+  },
+  "statistics": {
+    "total_modules": 1,
+    "total_functions": 19,
+    "demangled_signatures": 0
+  }
+}

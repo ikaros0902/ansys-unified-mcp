@@ -24,7 +24,7 @@ from typing import Any, Dict, List
 import pytest
 
 from ansys_unified_mcp.drivers.base import SolverDriverError
-from ansys_unified_mcp.drivers.icepak_driver import IcepakDriver
+from ansys_unified_mcp.products.icepak.driver import IcepakDriver
 from ansys_unified_mcp.core.jobs.models import (
     ExecutionMetadata,
     PhysicalMetrics,
@@ -51,7 +51,7 @@ class TestRepoWideHardcodedTemperatureScan:
 
     def test_icepak_driver_source_contains_no_85_4(self) -> None:
         """Ensure icepak_driver.py source has 0 occurrences of '85.4'."""
-        driver_path = SRC_ROOT / "ansys_unified_mcp" / "drivers" / "icepak_driver.py"
+        driver_path = SRC_ROOT / "ansys_unified_mcp" / "products" / "icepak" / "driver.py"
         assert driver_path.exists()
         text = driver_path.read_text(encoding="utf-8")
         assert "85.4" not in text, "icepak_driver.py must not contain '85.4' anywhere"

@@ -1,0 +1,24 @@
+[
+  {
+    "eval_id": "therm_01",
+    "prompt": "如何使用 Icepak 對伺服器 1U 機箱進行強迫風冷風道與散熱器散熱分析？",
+    "expected_keywords": [
+      "ansys-icepak",
+      "Heat Sink",
+      "Fan Curve",
+      "HTC",
+      "Junction Temperature"
+    ]
+  },
+  {
+    "eval_id": "therm_02",
+    "prompt": "在 PCB 回流焊製程中，如何預測 BGA 晶片因 CTE 錯配引發的熱翹曲？",
+    "expected_keywords": [
+      "pcb-warpage-analysis",
+      "CTE",
+      "Reflow",
+      "Warpage",
+      "Thermal Stress"
+    ]
+  }
+]

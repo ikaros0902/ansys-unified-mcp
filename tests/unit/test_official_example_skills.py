@@ -10,11 +10,15 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[2]
 SKILLS = ROOT / "agents" / "skills"
-SCRIPT = SKILLS / "ansys-fluent/scripts/run_mixing_elbow_e2e.py"
+SCRIPT = SKILLS / "fluids-cfd/ansys-fluent/scripts/run_mixing_elbow_e2e.py"
 OFFICIAL_SKILLS = (
-    "ansys-mechanical", "pymechanical-operations", "ansys-fluent",
-    "ansys-geometry-modeling", "ansys-named-selection-rm-contact",
-    "ansys-submodeling-dpf", "ansys-lsdyna", "ansys-optislang",
+    "structural-mechanics/ansys-mechanical",
+    "structural-mechanics/pymechanical-operations",
+    "fluids-cfd/ansys-fluent",
+    "geometry-meshing/ansys-spaceclaim",
+    "structural-mechanics/ansys-submodeling-dpf",
+    "structural-mechanics/ansys-lsdyna",
+    "systems-coupling/ansys-optislang",
 )
 
 
@@ -43,10 +47,15 @@ def test_import_does_not_load_product_or_create_files(monkeypatch, tmp_path):
 
 @pytest.mark.parametrize("skill", OFFICIAL_SKILLS)
 def test_official_reference_is_reachable_and_nonempty(skill):
-    reference = SKILLS / skill / "references/official_examples.md"
+    skill_root = SKILLS / skill
+    reference = next(skill_root.rglob("official_examples.md"), None)
+    assert reference is not None, f"missing official examples under {skill}"
     assert reference.is_file() and reference.stat().st_size > 0
-    assert "(references/official_examples.md)" in (SKILLS / skill / "SKILL.md").read_text(
-        encoding="utf-8")
+    references = "\n".join(
+        path.read_text(encoding="utf-8", errors="replace")
+        for path in skill_root.rglob("*.md")
+    )
+    assert "official_examples.md" in references
 
 
 @pytest.fixture

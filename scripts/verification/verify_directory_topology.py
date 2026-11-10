@@ -3,10 +3,7 @@
 """專案目錄結構拓撲客觀自動化驗證腳本。
 
 本腳本用於嚴格驗證專案目錄重構後之拓撲結構，確保滿足：
-1. 專案根目錄非隱藏資料夾嚴格為核心 7 個：['agents', 'docs', 'scripts', 'src', 'tests',
-   'Documentation_clean', 'artifacts']。後兩者為 2026-10 新增之合理運行期目錄
-   （RAG 索引快取 / 審計工作產物，均有獨立 README 說明且已納入 .gitignore 排除版控），
-   非技術債，故納入允許清單而非強制清除。
+1. 專案根目錄須包含五個正式內容目錄（agents、docs、scripts、src、tests）；本機語料及生成輸出可選存在。
 2. 舊目錄（jobs, logs, workbench_queue, skills, examples）完全不在根目錄。
 3. .runtime/ 隱藏目錄及其子目錄（.runtime/jobs, .runtime/logs, .runtime/queue）存在。
 4. .gitignore 檔案包含 .runtime/ 忽略規則。
@@ -35,7 +32,7 @@ if sys.platform == "win32":
         except Exception:
             pass
 
-# 規格定義：嚴格允許之核心非隱藏目錄（5 大工程目錄 + 2 項合理運行期目錄）
+# 規格定義：正式領域目錄必須存在；生成輸出目錄可選存在
 EXPECTED_CORE_DIRS: frozenset[str] = frozenset(
     {
         "agents",
@@ -43,14 +40,27 @@ EXPECTED_CORE_DIRS: frozenset[str] = frozenset(
         "scripts",
         "src",
         "tests",
+    }
+)
+OPTIONAL_ROOT_DIRS: frozenset[str] = frozenset(
+    {
+        "ANSYS_Document",
         "Documentation_clean",
+        "__pycache__",
         "artifacts",
+        "dist",
+        "graphify-out",
     }
 )
 
 # 規格定義：嚴格禁止存在於專案根目錄之舊資料夾
 FORBIDDEN_ROOT_DIRS: frozenset[str] = frozenset(
     {"jobs", "logs", "workbench_queue", "skills", "examples"}
+)
+
+# 程式碼樹中不應保存的歷史 runtime 目錄。
+FORBIDDEN_PACKAGE_DIRS: tuple[str, ...] = (
+    "src/ansys_unified_mcp/workbench_queue",
 )
 
 # 規格定義：.runtime 下必須存在之子目錄
@@ -153,98 +163,78 @@ def verify_directory_topology(
         result.messages.append(f"錯誤：指定之路徑不存在或非資料夾：{root}")
         return result
 
-    # 1. 檢查專案根目錄下之非隱藏資料夾清單
-    current_non_hidden_dirs: set[str] = set()
-    for child in root.iterdir():
-        if child.is_dir() and not child.name.startswith("."):
-            current_non_hidden_dirs.add(child.name)
-
+    current_non_hidden_dirs = {
+        child.name
+        for child in root.iterdir()
+        if child.is_dir() and not child.name.startswith(".")
+    }
+    allowed_root_dirs = EXPECTED_CORE_DIRS | OPTIONAL_ROOT_DIRS
     result.actual_non_hidden_dirs = sorted(current_non_hidden_dirs)
-    result.missing_core_dirs = sorted(
-        EXPECTED_CORE_DIRS - current_non_hidden_dirs
-    )
-    result.unexpected_dirs = sorted(
-        current_non_hidden_dirs - EXPECTED_CORE_DIRS
-    )
+    result.missing_core_dirs = sorted(EXPECTED_CORE_DIRS - current_non_hidden_dirs)
+    result.unexpected_dirs = sorted(current_non_hidden_dirs - allowed_root_dirs)
 
-    if current_non_hidden_dirs == EXPECTED_CORE_DIRS:
+    if not result.missing_core_dirs and not result.unexpected_dirs:
         result.core_dirs_ok = True
+        optional = sorted(current_non_hidden_dirs & OPTIONAL_ROOT_DIRS)
         result.messages.append(
-            f"[通過] 根目錄核心非隱藏資料夾嚴格為 {len(EXPECTED_CORE_DIRS)} 個："
-            f"{result.actual_non_hidden_dirs}"
+            "[通過] 五個正式目錄齊全；可選本機資料／生成目錄："
+            f"{optional}。根目錄目錄：{result.actual_non_hidden_dirs}"
         )
     else:
         result.core_dirs_ok = False
         msg_parts = []
         if result.missing_core_dirs:
-            msg_parts.append(f"缺少預期目錄：{result.missing_core_dirs}")
+            msg_parts.append(f"缺少正式目錄：{result.missing_core_dirs}")
         if result.unexpected_dirs:
-            msg_parts.append(f"存在多餘目錄：{result.unexpected_dirs}")
-        diff_str = "；".join(msg_parts) if msg_parts else "目錄集合不相符"
+            msg_parts.append(f"未分類目錄：{result.unexpected_dirs}")
+        diff_str = "；".join(msg_parts)
         result.messages.append(
-            f"[失敗] 核心資料夾不符合核心目錄規範（目前共 {len(current_non_hidden_dirs)} 個，"
-            f"預期 {len(EXPECTED_CORE_DIRS)} 個，{diff_str}）"
+            f"[失敗] 根目錄拓撲不符合規範（正式目錄 {len(EXPECTED_CORE_DIRS)} 個，{diff_str}）"
         )
 
-    # 2. 檢查嚴格禁止存在之舊目錄
-    present_forbidden: list[str] = []
-    for f_dir in sorted(FORBIDDEN_ROOT_DIRS):
-        target = root / f_dir
-        if target.exists():
-            present_forbidden.append(f_dir)
-
+    present_forbidden = sorted(
+        [name for name in FORBIDDEN_ROOT_DIRS if (root / name).exists()]
+        + [path for path in FORBIDDEN_PACKAGE_DIRS if (root / path).exists()]
+    )
     result.forbidden_dirs_present = present_forbidden
-    if not present_forbidden:
-        result.forbidden_dirs_ok = True
+    result.forbidden_dirs_ok = not present_forbidden
+    if result.forbidden_dirs_ok:
         result.messages.append("[通過] 舊目錄已全數自根目錄移除或遷移。")
     else:
-        result.forbidden_dirs_ok = False
         result.messages.append(
-            f"[失敗] 根目錄仍殘留嚴格禁止之舊目錄：{present_forbidden}"
+            f"[失敗] 專案仍殘留嚴格禁止之舊路徑：{present_forbidden}"
         )
 
-    # 3. 檢查 .runtime 隱藏目錄及其子目錄結構
-    missing_subdirs: list[str] = []
-    for rel_subdir in REQUIRED_RUNTIME_SUBDIRS:
-        target = root / rel_subdir
-        if not target.is_dir():
-            missing_subdirs.append(rel_subdir)
-
+    missing_subdirs = [
+        rel_subdir
+        for rel_subdir in REQUIRED_RUNTIME_SUBDIRS
+        if not (root / rel_subdir).is_dir()
+    ]
     result.missing_runtime_dirs = missing_subdirs
-    if not missing_subdirs:
-        result.runtime_structure_ok = True
+    result.runtime_structure_ok = not missing_subdirs
+    if result.runtime_structure_ok:
         result.messages.append(
             "[通過] .runtime/ 目錄架構完整（包含 jobs, logs, queue）。"
         )
     else:
-        result.runtime_structure_ok = False
         result.messages.append(
             f"[失敗] .runtime/ 缺少必要子目錄：{missing_subdirs}"
         )
 
-    # 4. 檢查 .gitignore 是否包含 .runtime/ 忽略規則
-    gitignore_file = root / ".gitignore"
-    has_runtime_ignore = check_gitignore_contains_runtime(gitignore_file)
+    has_runtime_ignore = check_gitignore_contains_runtime(root / ".gitignore")
     result.gitignore_has_runtime = has_runtime_ignore
     result.gitignore_ok = has_runtime_ignore
-
     if has_runtime_ignore:
-        result.messages.append(
-            "[通過] .gitignore 已正確設定 .runtime/ 排除規則。"
-        )
+        result.messages.append("[通過] .gitignore 已正確設定 .runtime/ 排除規則。")
     else:
-        result.messages.append(
-            "[失敗] .gitignore 未找到有效的 .runtime/ 排除規則。"
-        )
+        result.messages.append("[失敗] .gitignore 未找到有效的 .runtime/ 排除規則。")
 
-    # 綜合評定：四項檢查全數通過才視為有效
     result.is_valid = (
         result.core_dirs_ok
         and result.forbidden_dirs_ok
         and result.runtime_structure_ok
         and result.gitignore_ok
     )
-
     return result
 
 
@@ -278,7 +268,7 @@ def print_report(
         print("\n修復指引與待改善項目:")
         if not result.core_dirs_ok:
             print(
-                f"  - 核心目錄需收斂至嚴格 {len(result.expected_dirs)} 個：{result.expected_dirs}"
+                f"  - 補齊正式目錄並處理未分類目錄：{result.missing_core_dirs}、{result.unexpected_dirs}"
             )
         if not result.forbidden_dirs_ok:
             print(

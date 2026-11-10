@@ -1,0 +1,14 @@
+{
+  "evals": [
+    {
+      "id": "ansys-mapdl_trigger_01",
+      "prompt": "如何使用 ansys-mapdl 進行模擬與 API 腳本編寫？",
+      "expected_route": "ansys-mapdl"
+    },
+    {
+      "id": "ansys-mapdl_trigger_02",
+      "prompt": "請提供 Ansys MAPDL / PyMAPDL 結構分析 的工作流與基準腳本。",
+      "expected_route": "ansys-mapdl"
+    }
+  ]
+}

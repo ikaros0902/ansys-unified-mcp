@@ -7,7 +7,7 @@ name = "ansys-unified-mcp"
 version = "3.0.0"
 description = "Unified ANSYS MCP Server (Workbench, Mechanical, Fluent, SpaceClaim, OptiSLang)"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.10"
 dependencies = [
     # 釘選 fastmcp: per-session 工具可見性與 mount 行為僅對 3.4.x 系列驗證保證，
     # 跨 minor 版本 (3.5+) 可能變更 API 契約，故鎖 minor。
@@ -19,6 +19,14 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+standard = [
+    "ansys-mechanical-core",
+    "ansys-fluent-core",
+    "ansys-geometry-core",
+    "ansys-optislang-core",
+    "ansys-dpf-core>=0.10.0",
+]
+documentation = ["beautifulsoup4>=4.13,<5", "scrapling>=0.5.1"]
 mechanical = ["ansys-mechanical-core"]
 fluent = ["ansys-fluent-core"]
 geometry = ["ansys-geometry-core"]
@@ -57,12 +65,14 @@ ansys-unified-mcp = "ansys_unified_mcp.__main__:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/ansys_unified_mcp"]
+# JSON request files are runtime data, not package artifacts.
 artifacts = [
+    "*.yaml",
+    "*.json",
     "*.ironpy",
     "*.wbjn",
     "*.html",
     "*.sql",
-    "*.json",
 ]
 
 [tool.pytest.ini_options]
@@ -79,16 +89,16 @@ markers = [
 [tool.ruff]
 line-length = 100
 target-version = "py312"
-# 文件語料、執行輸出與佇列目錄不含需檢查的原始碼
+# 文件語料與 runtime 內容不含需檢查的原始碼
 extend-exclude = [
     ".runtime",
     "Documentation",
     "Documentation_md",
     "Documentation_clean",
-    "logs",
+    "docs/ANSYS_Document",
+    "docs/Documentation_clean",
     "runs",
     "jobs",
-    "workbench_queue",
     "scratch",
     # IronPython 2 內嵌腳本（Mechanical 進程內執行，含 `exec ... in` 等 Python 2 語法），
     # CPython 端 ruff 無法解析（parse error），由 py_compile 以 IronPython 語境獨立把關。
@@ -136,7 +146,7 @@ ignore = [
 [tool.ruff.lint.per-file-ignores]
 # ACT / IronPython 內嵌腳本在 ANSYS 進程內執行，ExtAPI、DataModel、Quantity、
 # SelectionTypeEnum 等為求解器注入的全域名稱，CPython 端必然判為未定義，
-# 故這些目錄免除 F821；其語法正確性由 scripts/audit_architecture_compliance.py
+# 故這些目錄免除 F821；其語法正確性由 scripts/skill_governance/audit_architecture_compliance.py
 # 的 py_compile 檢查獨立把關。
 "skills/**/*.py" = ["F821"]
 "SKILLs/**/*.py" = ["F821"]

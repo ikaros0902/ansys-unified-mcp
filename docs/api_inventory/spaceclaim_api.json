@@ -2,6 +2,15 @@
   "module": "SpaceClaim",
   "assembly": "SpaceClaim.Api.V251.Scripting, Version=251.0.0.0, Culture=neutral, PublicKeyToken=7210645d4d5e3a39",
   "version": "2025 R1 (v251)",
+  "source": "Python.NET System.Reflection over exported v251 assembly types",
+  "sources": {
+    "assembly": {
+      "file": "SpaceClaim.Api.V251.Scripting.dll",
+      "sha256": "9f5f3d03675bfc1d62e6fbf0244c9473c5e861fcacc3242028b329350e268261",
+      "bytes": 1909440,
+      "mvid": "06a113f3-00bd-40c2-b02c-53ee8e758a32"
+    }
+  },
   "classes": {
     "SpaceClaim.Api.V251.Scripting.DocObjectHelper": {
       "name": "DocObjectHelper",

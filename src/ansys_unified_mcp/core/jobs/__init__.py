@@ -9,6 +9,22 @@ from ansys_unified_mcp.core.jobs.models import (
 )
 from ansys_unified_mcp.core.jobs.sandbox import JobSandbox
 from ansys_unified_mcp.core.jobs.manager import JobManager
+from ansys_unified_mcp.core.jobs.token_bucket_scheduler import (
+    TokenBucketLicenseScheduler,
+    LicenseLease,
+    FeatureBalance,
+    PreflightCheckResult,
+    LicenseSchedulerError,
+    LicenseUnavailableError,
+    LicenseAcquisitionTimeoutError,
+    FeatureInCooldownError,
+    SentinelServiceUnavailableError,
+)
+from ansys_unified_mcp.core.jobs.interactive_desktop_guard import (
+    InteractiveDesktopGuard,
+    DesktopGuardError,
+    SessionZeroExecutionError,
+)
 
 __all__ = [
     "ExecutionMetadata",
@@ -18,4 +34,16 @@ __all__ = [
     "VerdictEnum",
     "JobSandbox",
     "JobManager",
+    "TokenBucketLicenseScheduler",
+    "LicenseLease",
+    "FeatureBalance",
+    "PreflightCheckResult",
+    "LicenseSchedulerError",
+    "LicenseUnavailableError",
+    "LicenseAcquisitionTimeoutError",
+    "FeatureInCooldownError",
+    "SentinelServiceUnavailableError",
+    "InteractiveDesktopGuard",
+    "DesktopGuardError",
+    "SessionZeroExecutionError",
 ]

@@ -1,0 +1,24 @@
+[
+  {
+    "eval_id": "si_01",
+    "prompt": "在 Q3D Extractor 中如何提取差分對線路的高頻 AC 寄生電感與電容矩陣？",
+    "expected_keywords": [
+      "Q3D",
+      "AC RL",
+      "Capacitance Matrix",
+      "Skin Effect",
+      "Differential Pair"
+    ]
+  },
+  {
+    "eval_id": "pi_01",
+    "prompt": "SIwave 中進行 DC IR Drop 模擬時，評估電源平面通孔載流密度的關鍵準則為何？",
+    "expected_keywords": [
+      "IR Drop",
+      "Current Density",
+      "VRM",
+      "Via",
+      "Power Plane"
+    ]
+  }
+]

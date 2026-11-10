@@ -1,0 +1,1405 @@
+{
+  "module": "generated protobuf modules",
+  "version": "unknown",
+  "sdk_package": "ansys-api-dbu",
+  "sdk_version": "0.3.29",
+  "interface": "dbu gRPC protocol schema",
+  "scope": "限於套件內 protobuf message 欄位與 gRPC service RPC signatures。這是傳輸協定 schema，不是產品 scripting API 或支援狀態聲明。",
+  "sources": {
+    "sdk_files": [
+      {
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/dbu/v0/admin_pb2.py",
+        "sha256": "82ffa812b8a50d4c4d01973bc8e74150a4fecc9a6a338acf3658e55499dc96fc"
+      },
+      {
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/dbu/v0/dbuapi_pb2.py",
+        "sha256": "1d7a0b208dd571cdaafacfe68bfd5e4ca4a22dd45554c1f4f28943897e9a18b6"
+      },
+      {
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/dbu/v0/dbuapplication_pb2.py",
+        "sha256": "ac5d36ef4bf2e9217c578d35e7b17379dfbdf64f0a86252017c25c719f28eec9"
+      },
+      {
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/dbu/v0/dbumodels_pb2.py",
+        "sha256": "ea70ffd3a088f1a3c2d2e9cb0ed4e454df59285e3967a8243b57aa1b9237c04c"
+      },
+      {
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/dbu/v0/dbuwebmodels_pb2.py",
+        "sha256": "bde726a22edd1208465e7a98a2517ad9d49b6e766be387835eb18e89c26825ed"
+      },
+      {
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/dbu/v0/designs_pb2.py",
+        "sha256": "2ba232304329a2c0cc2b4b4942cd3d971fb17e3c7aee8a76aa4ef2cbfd0b027f"
+      },
+      {
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/dbu/v0/drivingdimensions_pb2.py",
+        "sha256": "c01a48e13a72136a8ce696d6405b4d728f290ef4b7f694c26e562df034fcd931"
+      },
+      {
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/dbu/v0/sessionmanager_pb2.py",
+        "sha256": "0eb4fd2eeb8bd5230a1b13741427f3407a84608aa8b064695ba968ae40ca56d5"
+      },
+      {
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/dbu/v0/streaming_pb2.py",
+        "sha256": "1d05edfd31a4e8496039e121c2f4c877d2dd2604ab07d49d3dbfc4e97dcfe25c"
+      },
+      {
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/dbu/v0/windows_pb2.py",
+        "sha256": "0f632576615c5d0feb1bc3d2fc8aed8534fc6f83b6d3381f08c5c736e68d1b59"
+      }
+    ]
+  },
+  "modules": {
+    "ansys.api.dbu.v0.admin_pb2": {
+      "doc": "ansys.api.dbu.v0.admin",
+      "classes": {
+        "LogsRequest": {
+          "name": "LogsRequest",
+          "doc": "Protocol message ansys.api.dbu.v0.admin.LogsRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "target",
+              "type": "ansys.api.dbu.v0.admin.LogsTarget",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "null_path",
+              "type": "google.protobuf.NullValue",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "target_path",
+              "type": "string",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "period_type",
+              "type": "ansys.api.dbu.v0.admin.PeriodType",
+              "doc": "Protobuf field number 4; repeated=False"
+            },
+            {
+              "name": "null_period",
+              "type": "google.protobuf.NullValue",
+              "doc": "Protobuf field number 5; repeated=False"
+            },
+            {
+              "name": "logs_period",
+              "type": "google.protobuf.Timestamp",
+              "doc": "Protobuf field number 6; repeated=False"
+            }
+          ]
+        },
+        "LogsResponse": {
+          "name": "LogsResponse",
+          "doc": "Protocol message ansys.api.dbu.v0.admin.LogsResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "relative_path",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "log_name",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "log_chunk",
+              "type": "bytes",
+              "doc": "Protobuf field number 3; repeated=False"
+            }
+          ]
+        },
+        "HealthResponse": {
+          "name": "HealthResponse",
+          "doc": "Protocol message ansys.api.dbu.v0.admin.HealthResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "message",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "StatusInfoResponse": {
+          "name": "StatusInfoResponse",
+          "doc": "Protocol message ansys.api.dbu.v0.admin.StatusInfoResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "touch_time",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "application_version",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "embedded_api_version",
+              "type": "string",
+              "doc": "Protobuf field number 3; repeated=False"
+            }
+          ]
+        },
+        "SetApplicationTitleRequest": {
+          "name": "SetApplicationTitleRequest",
+          "doc": "Protocol message ansys.api.dbu.v0.admin.SetApplicationTitleRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "title",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "GetBackendResponse": {
+          "name": "GetBackendResponse",
+          "doc": "Protocol message ansys.api.dbu.v0.admin.GetBackendResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "type",
+              "type": "ansys.api.dbu.v0.admin.BackendType",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "version",
+              "type": "ansys.api.dbu.v0.VersionIdentifier",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "backend_version_info",
+              "type": "string",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "additional_build_info",
+              "type": "ansys.api.dbu.v0.admin.GetBackendResponse.AdditionalBuildInfoEntry",
+              "doc": "Protobuf field number 4; repeated=True"
+            }
+          ]
+        },
+        "ApplicationStartedResponse": {
+          "name": "ApplicationStartedResponse",
+          "doc": "Protocol message ansys.api.dbu.v0.admin.ApplicationStartedResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "is_startup_complete",
+              "type": "bool",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "MonikerCompressionMethodMessage": {
+          "name": "MonikerCompressionMethodMessage",
+          "doc": "Protocol message ansys.api.dbu.v0.admin.MonikerCompressionMethodMessage",
+          "methods": [],
+          "properties": [
+            {
+              "name": "method",
+              "type": "ansys.api.dbu.v0.MonikerCompressionMethod",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "Admin": {
+          "name": "Admin",
+          "doc": "gRPC service ansys.api.dbu.v0.admin.Admin",
+          "methods": [
+            {
+              "name": "GetLogs",
+              "signature": "(ansys.api.dbu.v0.admin.LogsRequest) -> ansys.api.dbu.v0.admin.LogsResponse [client_streaming=False, server_streaming=True]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "Health",
+              "signature": "(google.protobuf.Empty) -> ansys.api.dbu.v0.admin.HealthResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "Shutdown",
+              "signature": "(google.protobuf.Empty) -> google.protobuf.Empty [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "StatusInfo",
+              "signature": "(google.protobuf.Empty) -> ansys.api.dbu.v0.admin.StatusInfoResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "SetApplicationTitle",
+              "signature": "(ansys.api.dbu.v0.admin.SetApplicationTitleRequest) -> google.protobuf.Empty [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "CloseApplication",
+              "signature": "(google.protobuf.Empty) -> google.protobuf.Empty [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "GetBackend",
+              "signature": "(google.protobuf.Empty) -> ansys.api.dbu.v0.admin.GetBackendResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "ApplicationStarted",
+              "signature": "(google.protobuf.Empty) -> ansys.api.dbu.v0.admin.ApplicationStartedResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "SetMonikersCompressionMethod",
+              "signature": "(ansys.api.dbu.v0.admin.MonikerCompressionMethodMessage) -> google.protobuf.Empty [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "GetMonikersCompressionMethod",
+              "signature": "(google.protobuf.Empty) -> ansys.api.dbu.v0.admin.MonikerCompressionMethodMessage [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            }
+          ],
+          "properties": []
+        }
+      },
+      "functions": []
+    },
+    "ansys.api.dbu.v0.dbuapi_pb2": {
+      "doc": "ansys.api.dbu.v0.dbuapi",
+      "classes": {
+        "GetVersionResponse": {
+          "name": "GetVersionResponse",
+          "doc": "Protocol message ansys.api.dbu.v0.dbuapi.GetVersionResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "version",
+              "type": "ansys.api.dbu.v0.dbuapi.ApiVersion",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "SetVersionRequest": {
+          "name": "SetVersionRequest",
+          "doc": "Protocol message ansys.api.dbu.v0.dbuapi.SetVersionRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "version",
+              "type": "ansys.api.dbu.v0.dbuapi.ApiVersion",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "SetVersionResponse": {
+          "name": "SetVersionResponse",
+          "doc": "Protocol message ansys.api.dbu.v0.dbuapi.SetVersionResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "result",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "DbuApi": {
+          "name": "DbuApi",
+          "doc": "gRPC service ansys.api.dbu.v0.dbuapi.DbuApi",
+          "methods": [
+            {
+              "name": "SetVersion",
+              "signature": "(ansys.api.dbu.v0.dbuapi.SetVersionRequest) -> ansys.api.dbu.v0.dbuapi.SetVersionResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "GetVersion",
+              "signature": "(google.protobuf.Empty) -> ansys.api.dbu.v0.dbuapi.GetVersionResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            }
+          ],
+          "properties": []
+        }
+      },
+      "functions": []
+    },
+    "ansys.api.dbu.v0.dbuapplication_pb2": {
+      "doc": "ansys.api.dbu.v0.dbuapplication",
+      "classes": {
+        "RunScriptFileRequest": {
+          "name": "RunScriptFileRequest",
+          "doc": "Protocol message ansys.api.dbu.v0.dbuapplication.RunScriptFileRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "script_path",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "script_args",
+              "type": "ansys.api.dbu.v0.dbuapplication.RunScriptFileRequest.ScriptArgsEntry",
+              "doc": "Protobuf field number 2; repeated=True"
+            },
+            {
+              "name": "api_version",
+              "type": "int32",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "script_type",
+              "type": "ansys.api.dbu.v0.dbuapplication.RunScriptType",
+              "doc": "Protobuf field number 4; repeated=False"
+            }
+          ]
+        },
+        "RunScriptFileResponse": {
+          "name": "RunScriptFileResponse",
+          "doc": "Protocol message ansys.api.dbu.v0.dbuapplication.RunScriptFileResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "success",
+              "type": "bool",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "message",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "values",
+              "type": "ansys.api.dbu.v0.dbuapplication.RunScriptFileResponse.ValuesEntry",
+              "doc": "Protobuf field number 3; repeated=True"
+            }
+          ]
+        },
+        "RunScriptRequest": {
+          "name": "RunScriptRequest",
+          "doc": "Protocol message ansys.api.dbu.v0.dbuapplication.RunScriptRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "script",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "api_version",
+              "type": "int32",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "RunScriptResponse": {
+          "name": "RunScriptResponse",
+          "doc": "Protocol message ansys.api.dbu.v0.dbuapplication.RunScriptResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "script_result",
+              "type": "bool",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "RunCommandRequest": {
+          "name": "RunCommandRequest",
+          "doc": "Protocol message ansys.api.dbu.v0.dbuapplication.RunCommandRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "command",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "data",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "RunCommandResponse": {
+          "name": "RunCommandResponse",
+          "doc": "Protocol message ansys.api.dbu.v0.dbuapplication.RunCommandResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "data",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "DbuApplication": {
+          "name": "DbuApplication",
+          "doc": "gRPC service ansys.api.dbu.v0.dbuapplication.DbuApplication",
+          "methods": [
+            {
+              "name": "RunScriptFile",
+              "signature": "(ansys.api.dbu.v0.dbuapplication.RunScriptFileRequest) -> ansys.api.dbu.v0.dbuapplication.RunScriptFileResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "RunNotTrackedScriptFile",
+              "signature": "(ansys.api.dbu.v0.dbuapplication.RunScriptFileRequest) -> ansys.api.dbu.v0.dbuapplication.RunScriptFileResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "RunScript",
+              "signature": "(ansys.api.dbu.v0.dbuapplication.RunScriptRequest) -> ansys.api.dbu.v0.dbuapplication.RunScriptResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "RunCommand",
+              "signature": "(ansys.api.dbu.v0.dbuapplication.RunCommandRequest) -> ansys.api.dbu.v0.dbuapplication.RunCommandResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            }
+          ],
+          "properties": []
+        }
+      },
+      "functions": []
+    },
+    "ansys.api.dbu.v0.dbumodels_pb2": {
+      "doc": "ansys.api.dbu.v0",
+      "classes": {
+        "EntityIdentifier": {
+          "name": "EntityIdentifier",
+          "doc": "Protocol message ansys.api.dbu.v0.EntityIdentifier",
+          "methods": [],
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "PhysicsEntityIdentifier": {
+          "name": "PhysicsEntityIdentifier",
+          "doc": "Protocol message ansys.api.dbu.v0.PhysicsEntityIdentifier",
+          "methods": [],
+          "properties": [
+            {
+              "name": "guid_as_string",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "DrivingDimension": {
+          "name": "DrivingDimension",
+          "doc": "Protocol message ansys.api.dbu.v0.DrivingDimension",
+          "methods": [],
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "name",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "dimension_type",
+              "type": "ansys.api.dbu.v0.DimensionType",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "dimension_value",
+              "type": "double",
+              "doc": "Protobuf field number 4; repeated=False"
+            }
+          ]
+        },
+        "ImportOptionDefinition": {
+          "name": "ImportOptionDefinition",
+          "doc": "Protocol message ansys.api.dbu.v0.ImportOptionDefinition",
+          "methods": [],
+          "properties": [
+            {
+              "name": "bool_option",
+              "type": "bool",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "string_option",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "Design": {
+          "name": "Design",
+          "doc": "Protocol message ansys.api.dbu.v0.Design",
+          "methods": [],
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "is_complete",
+              "type": "bool",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "is_locked",
+              "type": "bool",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "is_modified",
+              "type": "bool",
+              "doc": "Protobuf field number 4; repeated=False"
+            },
+            {
+              "name": "is_removed",
+              "type": "bool",
+              "doc": "Protobuf field number 5; repeated=False"
+            },
+            {
+              "name": "main_part",
+              "type": "ansys.api.dbu.v0.EntityIdentifier",
+              "doc": "Protobuf field number 6; repeated=False"
+            },
+            {
+              "name": "main_part_displays_file_name",
+              "type": "bool",
+              "doc": "Protobuf field number 7; repeated=False"
+            },
+            {
+              "name": "path",
+              "type": "string",
+              "doc": "Protobuf field number 10; repeated=False"
+            },
+            {
+              "name": "name",
+              "type": "string",
+              "doc": "Protobuf field number 11; repeated=False"
+            }
+          ]
+        },
+        "RequestResult": {
+          "name": "RequestResult",
+          "doc": "Protocol message ansys.api.dbu.v0.RequestResult",
+          "methods": [],
+          "properties": [
+            {
+              "name": "success",
+              "type": "bool",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "error_message",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "internal_error",
+              "type": "string",
+              "doc": "Protobuf field number 3; repeated=False"
+            }
+          ]
+        },
+        "VersionIdentifier": {
+          "name": "VersionIdentifier",
+          "doc": "Protocol message ansys.api.dbu.v0.VersionIdentifier",
+          "methods": [],
+          "properties": [
+            {
+              "name": "major_release",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "minor_release",
+              "type": "int32",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "service_pack",
+              "type": "int32",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "build_number",
+              "type": "int32",
+              "doc": "Protobuf field number 4; repeated=False"
+            }
+          ]
+        },
+        "Tessellation": {
+          "name": "Tessellation",
+          "doc": "Protocol message ansys.api.dbu.v0.Tessellation",
+          "methods": [],
+          "properties": [
+            {
+              "name": "vertices",
+              "type": "double",
+              "doc": "Protobuf field number 1; repeated=True"
+            },
+            {
+              "name": "faces",
+              "type": "int32",
+              "doc": "Protobuf field number 2; repeated=True"
+            },
+            {
+              "name": "facecolor",
+              "type": "int32",
+              "doc": "Protobuf field number 3; repeated=False"
+            }
+          ]
+        },
+        "TessellationOptions": {
+          "name": "TessellationOptions",
+          "doc": "Protocol message ansys.api.dbu.v0.TessellationOptions",
+          "methods": [],
+          "properties": [
+            {
+              "name": "surface_deviation",
+              "type": "double",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "angle_deviation",
+              "type": "double",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "maximum_aspect_ratio",
+              "type": "double",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "maximum_edge_length",
+              "type": "double",
+              "doc": "Protobuf field number 4; repeated=False"
+            },
+            {
+              "name": "watertight",
+              "type": "bool",
+              "doc": "Protobuf field number 5; repeated=False"
+            },
+            {
+              "name": "curve_deviation",
+              "type": "double",
+              "doc": "Protobuf field number 6; repeated=False"
+            }
+          ]
+        },
+        "EdgeTessellation": {
+          "name": "EdgeTessellation",
+          "doc": "Protocol message ansys.api.dbu.v0.EdgeTessellation",
+          "methods": [],
+          "properties": [
+            {
+              "name": "vertices",
+              "type": "ansys.api.dbu.v0.Point",
+              "doc": "Protobuf field number 1; repeated=True"
+            }
+          ]
+        },
+        "Point": {
+          "name": "Point",
+          "doc": "Protocol message ansys.api.dbu.v0.Point",
+          "methods": [],
+          "properties": [
+            {
+              "name": "x",
+              "type": "double",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "y",
+              "type": "double",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "z",
+              "type": "double",
+              "doc": "Protobuf field number 3; repeated=False"
+            }
+          ]
+        }
+      },
+      "functions": []
+    },
+    "ansys.api.dbu.v0.dbuwebmodels_pb2": {
+      "doc": "ansys.api.dbu.v0",
+      "classes": {
+        "ObjectIdentifier": {
+          "name": "ObjectIdentifier",
+          "doc": "Protocol message ansys.api.dbu.v0.ObjectIdentifier",
+          "methods": [],
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "SessionHost": {
+          "name": "SessionHost",
+          "doc": "Protocol message ansys.api.dbu.v0.SessionHost",
+          "methods": [],
+          "properties": [
+            {
+              "name": "id",
+              "type": "ansys.api.dbu.v0.ObjectIdentifier",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "name",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "status",
+              "type": "ansys.api.dbu.v0.SessionHostStatus",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "idle_time",
+              "type": "google.protobuf.Timestamp",
+              "doc": "Protobuf field number 4; repeated=False"
+            },
+            {
+              "name": "address",
+              "type": "string",
+              "doc": "Protobuf field number 5; repeated=False"
+            },
+            {
+              "name": "port",
+              "type": "int32",
+              "doc": "Protobuf field number 6; repeated=False"
+            }
+          ]
+        },
+        "Session": {
+          "name": "Session",
+          "doc": "Protocol message ansys.api.dbu.v0.Session",
+          "methods": [],
+          "properties": [
+            {
+              "name": "id",
+              "type": "ansys.api.dbu.v0.ObjectIdentifier",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "name",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "status",
+              "type": "ansys.api.dbu.v0.SessionStatus",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "idle_time",
+              "type": "google.protobuf.Timestamp",
+              "doc": "Protobuf field number 4; repeated=False"
+            },
+            {
+              "name": "address",
+              "type": "string",
+              "doc": "Protobuf field number 5; repeated=False"
+            },
+            {
+              "name": "port",
+              "type": "int32",
+              "doc": "Protobuf field number 6; repeated=False"
+            }
+          ]
+        },
+        "User": {
+          "name": "User",
+          "doc": "Protocol message ansys.api.dbu.v0.User",
+          "methods": [],
+          "properties": [
+            {
+              "name": "id",
+              "type": "ansys.api.dbu.v0.ObjectIdentifier",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "name",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "uri",
+              "type": "string",
+              "doc": "Protobuf field number 3; repeated=False"
+            }
+          ]
+        }
+      },
+      "functions": []
+    },
+    "ansys.api.dbu.v0.designs_pb2": {
+      "doc": "ansys.api.dbu.v0.designs",
+      "classes": {
+        "GetAllResponse": {
+          "name": "GetAllResponse",
+          "doc": "Protocol message ansys.api.dbu.v0.designs.GetAllResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "designs",
+              "type": "ansys.api.dbu.v0.Design",
+              "doc": "Protobuf field number 1; repeated=True"
+            }
+          ]
+        },
+        "OpenRequest": {
+          "name": "OpenRequest",
+          "doc": "Protocol message ansys.api.dbu.v0.designs.OpenRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "filepath",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "import_options",
+              "type": "ansys.api.dbu.v0.designs.OpenRequest.ImportOptionsEntry",
+              "doc": "Protobuf field number 2; repeated=True"
+            },
+            {
+              "name": "import_options_definitions",
+              "type": "ansys.api.dbu.v0.designs.OpenRequest.ImportOptionsDefinitionsEntry",
+              "doc": "Protobuf field number 3; repeated=True"
+            }
+          ]
+        },
+        "NewRequest": {
+          "name": "NewRequest",
+          "doc": "Protocol message ansys.api.dbu.v0.designs.NewRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "name",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "SaveAsRequest": {
+          "name": "SaveAsRequest",
+          "doc": "Protocol message ansys.api.dbu.v0.designs.SaveAsRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "filepath",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "write_body_facets",
+              "type": "bool",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "InsertRequest": {
+          "name": "InsertRequest",
+          "doc": "Protocol message ansys.api.dbu.v0.designs.InsertRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "filepath",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "import_named_selections",
+              "type": "bool",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "GetAsJsonRequest": {
+          "name": "GetAsJsonRequest",
+          "doc": "Protocol message ansys.api.dbu.v0.designs.GetAsJsonRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "id",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "GetAsJsonResponse": {
+          "name": "GetAsJsonResponse",
+          "doc": "Protocol message ansys.api.dbu.v0.designs.GetAsJsonResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "json",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "CopyReferencedDocumentsRequest": {
+          "name": "CopyReferencedDocumentsRequest",
+          "doc": "Protocol message ansys.api.dbu.v0.designs.CopyReferencedDocumentsRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "document_id",
+              "type": "ansys.api.dbu.v0.EntityIdentifier",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "output_path",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "OpenCloudFileFromUrlRequest": {
+          "name": "OpenCloudFileFromUrlRequest",
+          "doc": "Protocol message ansys.api.dbu.v0.designs.OpenCloudFileFromUrlRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "url_filepath",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "DownloadExportFileRequest": {
+          "name": "DownloadExportFileRequest",
+          "doc": "Protocol message ansys.api.dbu.v0.designs.DownloadExportFileRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "format",
+              "type": "ansys.api.dbu.v0.PartExportFormat",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "write_body_facets",
+              "type": "bool",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "DownloadExportFileResponse": {
+          "name": "DownloadExportFileResponse",
+          "doc": "Protocol message ansys.api.dbu.v0.designs.DownloadExportFileResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "data",
+              "type": "bytes",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "DesignTessellationRequest": {
+          "name": "DesignTessellationRequest",
+          "doc": "Protocol message ansys.api.dbu.v0.designs.DesignTessellationRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "options",
+              "type": "ansys.api.dbu.v0.TessellationOptions",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "include_faces",
+              "type": "bool",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "include_edges",
+              "type": "bool",
+              "doc": "Protobuf field number 3; repeated=False"
+            }
+          ]
+        },
+        "DesignTessellationResponseData": {
+          "name": "DesignTessellationResponseData",
+          "doc": "Protocol message ansys.api.dbu.v0.designs.DesignTessellationResponseData",
+          "methods": [],
+          "properties": [
+            {
+              "name": "face_tessellation",
+              "type": "ansys.api.dbu.v0.designs.DesignTessellationResponseData.FaceTessellationEntry",
+              "doc": "Protobuf field number 1; repeated=True"
+            },
+            {
+              "name": "edge_tessellation",
+              "type": "ansys.api.dbu.v0.designs.DesignTessellationResponseData.EdgeTessellationEntry",
+              "doc": "Protobuf field number 2; repeated=True"
+            }
+          ]
+        },
+        "DesignTessellationResponse": {
+          "name": "DesignTessellationResponse",
+          "doc": "Protocol message ansys.api.dbu.v0.designs.DesignTessellationResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "body_tessellation",
+              "type": "ansys.api.dbu.v0.designs.DesignTessellationResponse.BodyTessellationEntry",
+              "doc": "Protobuf field number 1; repeated=True"
+            }
+          ]
+        },
+        "Designs": {
+          "name": "Designs",
+          "doc": "gRPC service ansys.api.dbu.v0.designs.Designs",
+          "methods": [
+            {
+              "name": "Get",
+              "signature": "(ansys.api.dbu.v0.EntityIdentifier) -> ansys.api.dbu.v0.Design [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "GetAll",
+              "signature": "(google.protobuf.Empty) -> ansys.api.dbu.v0.designs.GetAllResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "GetActive",
+              "signature": "(google.protobuf.Empty) -> ansys.api.dbu.v0.Design [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "PutActive",
+              "signature": "(ansys.api.dbu.v0.EntityIdentifier) -> google.protobuf.Empty [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "Open",
+              "signature": "(ansys.api.dbu.v0.designs.OpenRequest) -> ansys.api.dbu.v0.EntityIdentifier [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "New",
+              "signature": "(ansys.api.dbu.v0.designs.NewRequest) -> ansys.api.dbu.v0.Design [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "Close",
+              "signature": "(ansys.api.dbu.v0.EntityIdentifier) -> google.protobuf.Empty [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "Save",
+              "signature": "(ansys.api.dbu.v0.EntityIdentifier) -> google.protobuf.Empty [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "SaveAs",
+              "signature": "(ansys.api.dbu.v0.designs.SaveAsRequest) -> ansys.api.dbu.v0.EntityIdentifier [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "Insert",
+              "signature": "(ansys.api.dbu.v0.designs.InsertRequest) -> ansys.api.dbu.v0.EntityIdentifier [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "GetAsJson",
+              "signature": "(ansys.api.dbu.v0.designs.GetAsJsonRequest) -> ansys.api.dbu.v0.designs.GetAsJsonResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "CopyReferencedDocuments",
+              "signature": "(ansys.api.dbu.v0.designs.CopyReferencedDocumentsRequest) -> ansys.api.dbu.v0.RequestResult [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "SaveWithoutResults",
+              "signature": "(google.protobuf.Empty) -> google.protobuf.Empty [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "OpenCloudFileFromUrl",
+              "signature": "(ansys.api.dbu.v0.designs.OpenCloudFileFromUrlRequest) -> google.protobuf.Empty [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "SaveCloudFile",
+              "signature": "(google.protobuf.Empty) -> google.protobuf.Empty [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "DownloadExportFile",
+              "signature": "(ansys.api.dbu.v0.designs.DownloadExportFileRequest) -> ansys.api.dbu.v0.designs.DownloadExportFileResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "StreamDownloadExportFile",
+              "signature": "(ansys.api.dbu.v0.designs.DownloadExportFileRequest) -> ansys.api.dbu.v0.designs.DownloadExportFileResponse [client_streaming=False, server_streaming=True]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "StreamDesignTessellation",
+              "signature": "(ansys.api.dbu.v0.designs.DesignTessellationRequest) -> ansys.api.dbu.v0.designs.DesignTessellationResponse [client_streaming=False, server_streaming=True]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            }
+          ],
+          "properties": []
+        }
+      },
+      "functions": []
+    },
+    "ansys.api.dbu.v0.drivingdimensions_pb2": {
+      "doc": "ansys.api.dbu.v0.drivingdimensions",
+      "classes": {
+        "GetAllRequest": {
+          "name": "GetAllRequest",
+          "doc": "Protocol message ansys.api.dbu.v0.drivingdimensions.GetAllRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "parent",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "GetAllResponse": {
+          "name": "GetAllResponse",
+          "doc": "Protocol message ansys.api.dbu.v0.drivingdimensions.GetAllResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "driving_dimensions",
+              "type": "ansys.api.dbu.v0.DrivingDimension",
+              "doc": "Protobuf field number 1; repeated=True"
+            }
+          ]
+        },
+        "UpdateRequest": {
+          "name": "UpdateRequest",
+          "doc": "Protocol message ansys.api.dbu.v0.drivingdimensions.UpdateRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "driving_dimension",
+              "type": "ansys.api.dbu.v0.DrivingDimension",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "UpdateResponse": {
+          "name": "UpdateResponse",
+          "doc": "Protocol message ansys.api.dbu.v0.drivingdimensions.UpdateResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "status",
+              "type": "ansys.api.dbu.v0.drivingdimensions.UpdateStatus",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "DrivingDimensions": {
+          "name": "DrivingDimensions",
+          "doc": "gRPC service ansys.api.dbu.v0.drivingdimensions.DrivingDimensions",
+          "methods": [
+            {
+              "name": "Get",
+              "signature": "(ansys.api.dbu.v0.EntityIdentifier) -> ansys.api.dbu.v0.DrivingDimension [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "GetAll",
+              "signature": "(ansys.api.dbu.v0.drivingdimensions.GetAllRequest) -> ansys.api.dbu.v0.drivingdimensions.GetAllResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "Update",
+              "signature": "(ansys.api.dbu.v0.drivingdimensions.UpdateRequest) -> ansys.api.dbu.v0.DrivingDimension [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "UpdateParameter",
+              "signature": "(ansys.api.dbu.v0.drivingdimensions.UpdateRequest) -> ansys.api.dbu.v0.drivingdimensions.UpdateResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            }
+          ],
+          "properties": []
+        }
+      },
+      "functions": []
+    },
+    "ansys.api.dbu.v0.sessionmanager_pb2": {
+      "doc": "ansys.api.dbu.v0.sessionmanager",
+      "classes": {
+        "StartRequest": {
+          "name": "StartRequest",
+          "doc": "Protocol message ansys.api.dbu.v0.sessionmanager.StartRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "user",
+              "type": "ansys.api.dbu.v0.User",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "opening_document",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "StartResponse": {
+          "name": "StartResponse",
+          "doc": "Protocol message ansys.api.dbu.v0.sessionmanager.StartResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "host",
+              "type": "ansys.api.dbu.v0.SessionHost",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "session_object",
+              "type": "ansys.api.dbu.v0.Session",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "SessionManager": {
+          "name": "SessionManager",
+          "doc": "gRPC service ansys.api.dbu.v0.sessionmanager.SessionManager",
+          "methods": [
+            {
+              "name": "Start",
+              "signature": "(ansys.api.dbu.v0.sessionmanager.StartRequest) -> ansys.api.dbu.v0.sessionmanager.StartResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "Stop",
+              "signature": "(ansys.api.dbu.v0.Session) -> google.protobuf.Empty [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            }
+          ],
+          "properties": []
+        }
+      },
+      "functions": []
+    },
+    "ansys.api.dbu.v0.streaming_pb2": {
+      "doc": "ansys.api.dbu.v0",
+      "classes": {
+        "StreamPackage": {
+          "name": "StreamPackage",
+          "doc": "Protocol message ansys.api.dbu.v0.StreamPackage",
+          "methods": [],
+          "properties": [
+            {
+              "name": "content_type",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "count",
+              "type": "int32",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "index",
+              "type": "int32",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "total_size",
+              "type": "int32",
+              "doc": "Protobuf field number 4; repeated=False"
+            },
+            {
+              "name": "package_size",
+              "type": "int32",
+              "doc": "Protobuf field number 5; repeated=False"
+            },
+            {
+              "name": "data",
+              "type": "bytes",
+              "doc": "Protobuf field number 6; repeated=False"
+            }
+          ]
+        }
+      },
+      "functions": []
+    },
+    "ansys.api.dbu.v0.windows_pb2": {
+      "doc": "ansys.api.dbu.v0.windows",
+      "classes": {
+        "GetImageRequest": {
+          "name": "GetImageRequest",
+          "doc": "Protocol message ansys.api.dbu.v0.windows.GetImageRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "format",
+              "type": "ansys.api.dbu.v0.ImageFormat",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "SetViewRequest": {
+          "name": "SetViewRequest",
+          "doc": "Protocol message ansys.api.dbu.v0.windows.SetViewRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "view",
+              "type": "ansys.api.dbu.v0.WindowView",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "Windows": {
+          "name": "Windows",
+          "doc": "gRPC service ansys.api.dbu.v0.windows.Windows",
+          "methods": [
+            {
+              "name": "GetImage",
+              "signature": "(ansys.api.dbu.v0.windows.GetImageRequest) -> ansys.api.dbu.v0.StreamPackage [client_streaming=False, server_streaming=True]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "SetView",
+              "signature": "(ansys.api.dbu.v0.windows.SetViewRequest) -> google.protobuf.Empty [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            }
+          ],
+          "properties": []
+        }
+      },
+      "functions": []
+    }
+  },
+  "statistics": {
+    "total_modules": 10,
+    "total_classes": 62,
+    "total_methods": 42,
+    "total_properties": 128,
+    "total_functions": 0
+  }
+}

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 測試名稱：test_skills_integrity.py
-功能說明：驗證 SKILLs/（唯一真實來源）與 .kiro/skills/ 之間所有受控技能檔案
+功能說明：驗證 agents/skills/（唯一真實來源）與 .kiro/skills/ 之間所有受控技能檔案
           的 1:1 對應與 SHA-256 位元級一致性。
 """
 
@@ -12,7 +12,7 @@ from pathlib import Path
 import pytest
 
 # 匯入同步引擎的共用掃描/發現函式，避免重複實作邏輯
-sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts" / "maintenance"))
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts" / "skill_governance"))
 from sync_skills_bidirectional import (  # noqa: E402
     discover_controlled_skills,
     scan_skill_files,
@@ -30,7 +30,7 @@ if not KIRO_ROOT.is_dir():
 
 
 def _controlled_skills():
-    """回傳 SKILLs/ 下所有受控技能名稱（動態掃描，與同步腳本邏輯一致）"""
+    """回傳 agents/skills/ 下所有受控技能名稱（遞迴掃描模組目錄）"""
     return discover_controlled_skills(str(SOURCE_ROOT))
 
 
@@ -41,7 +41,7 @@ CONTROLLED_SKILLS = _controlled_skills()
 def controlled_skills():
     """提供受控技能清單；若清單為空，判定前置環境有誤，直接失敗"""
     skills = CONTROLLED_SKILLS
-    assert skills, "SKILLs/ 目錄下未掃描到任何含 SKILL.md 的受控技能，請確認來源目錄存在"
+    assert skills, "agents/skills/ 下未掃描到任何含 SKILL.md 的技能，請確認來源目錄存在"
     return skills
 
 
@@ -55,14 +55,14 @@ def test_skill_exists_in_kiro(skill_name):
     """每個受控技能在 .kiro/skills/ 下必須存在對應目錄"""
     kiro_skill_dir = KIRO_ROOT / skill_name
     assert kiro_skill_dir.is_dir(), (
-        f"技能 '{skill_name}' 存在於 SKILLs/ 但缺失於 .kiro/skills/"
+        f"技能 '{skill_name}' 存在於 agents/skills/ 但缺失於 .kiro/skills/"
     )
 
 
 @pytest.mark.parametrize("skill_name", CONTROLLED_SKILLS)
 def test_skill_files_match_byte_for_byte(skill_name):
     """
-    每個受控技能：SKILLs/ 與 .kiro/skills/ 底下的檔案集合須完全一致，
+    每個受控技能：agents/skills/ 與 .kiro/skills/ 底下的檔案集合須完全一致，
     且每個相同相對路徑的檔案 SHA-256 雜湊須逐位元組相符。
     """
     source_dir = SOURCE_ROOT / skill_name
@@ -78,7 +78,7 @@ def test_skill_files_match_byte_for_byte(skill_name):
     extra_in_kiro = kiro_rels - source_rels
 
     assert not missing_in_kiro, (
-        f"技能 '{skill_name}': 以下檔案存在於 SKILLs/ 但缺失於 .kiro/skills/: "
+        f"技能 '{skill_name}': 以下檔案存在於 agents/skills/ 但缺失於 .kiro/skills/: "
         f"{sorted(missing_in_kiro)}"
     )
     assert not extra_in_kiro, (

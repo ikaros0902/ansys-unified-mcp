@@ -28,12 +28,12 @@ def _resolve_queue_root():
         return env_queue
     env_root = os.environ.get("WORKBENCH_MCP_ROOT")
     if env_root:
-        return os.path.join(env_root, "workbench_queue")
+        return os.path.join(env_root, ".runtime", "queue")
     # Search upward for the project root
     cur = _PLUGIN_DIR
     for _ in range(5):
         if os.path.exists(os.path.join(cur, "pyproject.toml")):
-            return os.path.join(cur, "workbench_queue")
+            return os.path.join(cur, ".runtime", "queue")
         parent = os.path.dirname(cur)
         if parent == cur:
             break
@@ -42,7 +42,7 @@ def _resolve_queue_root():
     env_dir = os.environ.get("ANSYS_WORKBENCH_QUEUE_DIR")
     if env_dir:
         return env_dir
-    return os.path.join(_PLUGIN_DIR, "workbench_queue")
+    return os.path.join(_PLUGIN_DIR, ".runtime", "queue")
 
 _QUEUE_ROOT = _resolve_queue_root()
 _COMMANDS_DIR = os.path.join(_QUEUE_ROOT, "commands")

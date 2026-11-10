@@ -117,16 +117,30 @@ class MechanicalController:
         )
         return {"ok": True, "port": target_port, "pid": self._find_pid(target_port), "key": key, "info": info}
 
-    def launch(self, batch: bool = True) -> dict:
+    def launch(self, batch: bool = True, version: Optional[str] = None) -> dict:
         """Launch a new headless Mechanical instance via PyMechanical."""
         try:
             import ansys.mechanical.core as mech
         except ImportError:
             return {"ok": False, "error": "ansys-mechanical-core not installed."}
         try:
-            session = mech.launch_mechanical(
-                batch=batch, start_timeout=120, loglevel="ERROR"
-            )
+            from ansys_unified_mcp.config import config
+            launch_kwargs: dict[str, Any] = {
+                "batch": batch,
+                "start_timeout": 120,
+                "loglevel": "ERROR",
+            }
+            if version:
+                ver_clean = str(version).strip().lstrip("v")
+                if ver_clean.isdigit():
+                    launch_kwargs["version"] = int(ver_clean)
+            elif config.available:
+                if config.mechanical_exe.exists():
+                    launch_kwargs["exec_file"] = str(config.mechanical_exe)
+                elif config.version.isdigit():
+                    launch_kwargs["version"] = int(config.version)
+
+            session = mech.launch_mechanical(**launch_kwargs)
         except Exception as exc:  # noqa: BLE001
             return {"ok": False, "error": str(exc)}
 

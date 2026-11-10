@@ -1,0 +1,215 @@
+{
+  "module": "generated protobuf modules",
+  "version": "unknown",
+  "sdk_package": "ansys-api-mechanical",
+  "sdk_version": "0.1.4",
+  "interface": "mechanical gRPC protocol schema",
+  "scope": "限於套件內 protobuf message 欄位與 gRPC service RPC signatures。這是傳輸協定 schema，不是產品 scripting API 或支援狀態聲明。",
+  "sources": {
+    "sdk_files": [
+      {
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/mechanical/v0/mechanical_pb2.py",
+        "sha256": "26df56ca4f9ef66d22ba2afc79fe1351d27216f2909fcc5619a1f8dd9ad1132a"
+      }
+    ]
+  },
+  "modules": {
+    "ansys.api.mechanical.v0.mechanical_pb2": {
+      "doc": "ansys.api.mechanical.scripting.v1",
+      "classes": {
+        "RunScriptRequest": {
+          "name": "RunScriptRequest",
+          "doc": "Protocol message ansys.api.mechanical.scripting.v1.RunScriptRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "script_code",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "enable_logging",
+              "type": "bool",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "logger_severity",
+              "type": "ansys.api.mechanical.scripting.v1.LoggerSeverity",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "progress_interval",
+              "type": "int32",
+              "doc": "Protobuf field number 4; repeated=False"
+            },
+            {
+              "name": "python_behavior",
+              "type": "int32",
+              "doc": "Protobuf field number 5; repeated=False"
+            }
+          ]
+        },
+        "RunScriptResponse": {
+          "name": "RunScriptResponse",
+          "doc": "Protocol message ansys.api.mechanical.scripting.v1.RunScriptResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "script_result",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "log_info",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "ShutdownRequest": {
+          "name": "ShutdownRequest",
+          "doc": "Protocol message ansys.api.mechanical.scripting.v1.ShutdownRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "force_exit",
+              "type": "bool",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "ShutdownResponse": {
+          "name": "ShutdownResponse",
+          "doc": "Protocol message ansys.api.mechanical.scripting.v1.ShutdownResponse",
+          "methods": [],
+          "properties": []
+        },
+        "Chunk": {
+          "name": "Chunk",
+          "doc": "Protocol message ansys.api.mechanical.scripting.v1.Chunk",
+          "methods": [],
+          "properties": [
+            {
+              "name": "payload",
+              "type": "bytes",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "size",
+              "type": "int64",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "FileUploadRequest": {
+          "name": "FileUploadRequest",
+          "doc": "Protocol message ansys.api.mechanical.scripting.v1.FileUploadRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "file_name",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "file_location",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "chunk",
+              "type": "ansys.api.mechanical.scripting.v1.Chunk",
+              "doc": "Protobuf field number 3; repeated=False"
+            }
+          ]
+        },
+        "FileUploadResponse": {
+          "name": "FileUploadResponse",
+          "doc": "Protocol message ansys.api.mechanical.scripting.v1.FileUploadResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "is_ok",
+              "type": "bool",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "FileDownloadRequest": {
+          "name": "FileDownloadRequest",
+          "doc": "Protocol message ansys.api.mechanical.scripting.v1.FileDownloadRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "file_path",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "chunk_size",
+              "type": "int64",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "FileDownloadResponse": {
+          "name": "FileDownloadResponse",
+          "doc": "Protocol message ansys.api.mechanical.scripting.v1.FileDownloadResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "chunk",
+              "type": "ansys.api.mechanical.scripting.v1.Chunk",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "file_size",
+              "type": "int64",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "MechanicalService": {
+          "name": "MechanicalService",
+          "doc": "gRPC service ansys.api.mechanical.scripting.v1.MechanicalService",
+          "methods": [
+            {
+              "name": "RunJScript",
+              "signature": "(ansys.api.mechanical.scripting.v1.RunScriptRequest) -> ansys.api.mechanical.scripting.v1.RunScriptResponse [client_streaming=False, server_streaming=True]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "RunPythonScript",
+              "signature": "(ansys.api.mechanical.scripting.v1.RunScriptRequest) -> ansys.api.mechanical.scripting.v1.RunScriptResponse [client_streaming=False, server_streaming=True]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "Shutdown",
+              "signature": "(ansys.api.mechanical.scripting.v1.ShutdownRequest) -> ansys.api.mechanical.scripting.v1.ShutdownResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "UploadFile",
+              "signature": "(ansys.api.mechanical.scripting.v1.FileUploadRequest) -> ansys.api.mechanical.scripting.v1.FileUploadResponse [client_streaming=True, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "DownloadFile",
+              "signature": "(ansys.api.mechanical.scripting.v1.FileDownloadRequest) -> ansys.api.mechanical.scripting.v1.FileDownloadResponse [client_streaming=False, server_streaming=True]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            }
+          ],
+          "properties": []
+        }
+      },
+      "functions": []
+    }
+  },
+  "statistics": {
+    "total_modules": 1,
+    "total_classes": 10,
+    "total_methods": 5,
+    "total_properties": 18,
+    "total_functions": 0
+  }
+}

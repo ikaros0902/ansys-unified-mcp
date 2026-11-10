@@ -1,0 +1,23 @@
+[
+  {
+    "eval_id": "syc_01",
+    "prompt": "在 Fluent 與 Mechanical 的雙向瞬態流固耦合中，如何避免附加質量效應引起的數值發散？",
+    "expected_keywords": [
+      "System Coupling",
+      "Added Mass",
+      "IQN-ILS",
+      "Under-Relaxation",
+      "FSI"
+    ]
+  },
+  {
+    "eval_id": "syc_02",
+    "prompt": "System Coupling 中保形映射與守恆映射在力與位移傳遞時的分配原則為何？",
+    "expected_keywords": [
+      "Conservative",
+      "Profile-Preserving",
+      "Force",
+      "Displacement"
+    ]
+  }
+]

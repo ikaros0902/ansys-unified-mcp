@@ -1,0 +1,24 @@
+[
+  {
+    "eval_id": "hfss_01",
+    "prompt": "在 HFSS 中設定微帶貼片天線時，Wave Port 的長寬尺寸推薦規則為何？",
+    "expected_keywords": [
+      "Wave Port",
+      "width",
+      "height",
+      "substrate thickness",
+      "TEM"
+    ]
+  },
+  {
+    "eval_id": "hfss_02",
+    "prompt": "HFSS 插值掃頻 (Interpolating Sweep) 與離散掃頻 (Discrete Sweep) 的適用場景有何差異？",
+    "expected_keywords": [
+      "Interpolating",
+      "Discrete",
+      "resonance",
+      "bandwidth",
+      "S-parameters"
+    ]
+  }
+]

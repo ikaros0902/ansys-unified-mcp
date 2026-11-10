@@ -1,0 +1,806 @@
+{
+  "module": "NativeExports",
+  "version": "v251",
+  "interface": "Speos APIP wrapper native exports; product API support unverified",
+  "scope": "This snapshot lists PE export names from llvm-readobj. An export name does not prove API support. A signature appears only when the MSVC symbol name contains type data. The extractor does not read function bodies or run the DLL.",
+  "sources": {
+    "assembly": {
+      "path": "$env:AWP_ROOT251/Optical Products/Speos/bin/ApipWrapper.dll",
+      "sha256": "d585fac0c0a4811ec4167a44c21d42847baefee19f86e1d2367b40182438f87c",
+      "byte_length": 954880
+    },
+    "analysis": {
+      "tool": "llvm-readobj",
+      "version": "19.1.5",
+      "operation": "--coff-exports"
+    }
+  },
+  "modules": {
+    "NativeExports": {
+      "doc": "Speos APIP wrapper native exports; product API support unverified",
+      "classes": {},
+      "functions": [
+        {
+          "name": "??0ApipClient@Ansys@@QEAA@AEBV01@@Z",
+          "signature": "public: __cdecl Ansys::ApipClient::ApipClient(class Ansys::ApipClient const & __ptr64) __ptr64",
+          "doc": "PE export. Ordinal: 1. RVA: 0x1880. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: __cdecl Ansys::ApipClient::ApipClient(class Ansys::ApipClient const & __ptr64) __ptr64."
+        },
+        {
+          "name": "??0ApipClient@Ansys@@QEAA@PEB_W000PEBVApipConfiguration@1@@Z",
+          "signature": "public: __cdecl Ansys::ApipClient::ApipClient(wchar_t const * __ptr64,wchar_t const * __ptr64,wchar_t const * __ptr64,wchar_t const * __ptr64,class Ansys::ApipConfiguration const * __ptr64) __ptr64",
+          "doc": "PE export. Ordinal: 2. RVA: 0xB990. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: __cdecl Ansys::ApipClient::ApipClient(wchar_t const * __ptr64,wchar_t const * __ptr64,wchar_t const * __ptr64,wchar_t const * __ptr64,class Ansys::ApipConfiguration const * __ptr64) __ptr64."
+        },
+        {
+          "name": "??0ApipClient@Ansys@@QEAA@PEB_W000_N@Z",
+          "signature": "public: __cdecl Ansys::ApipClient::ApipClient(wchar_t const * __ptr64,wchar_t const * __ptr64,wchar_t const * __ptr64,wchar_t const * __ptr64,bool) __ptr64",
+          "doc": "PE export. Ordinal: 3. RVA: 0xBAE0. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: __cdecl Ansys::ApipClient::ApipClient(wchar_t const * __ptr64,wchar_t const * __ptr64,wchar_t const * __ptr64,wchar_t const * __ptr64,bool) __ptr64."
+        },
+        {
+          "name": "??0ApipConfiguration@Ansys@@QEAA@$$QEAV01@@Z",
+          "signature": "public: __cdecl Ansys::ApipConfiguration::ApipConfiguration(class Ansys::ApipConfiguration && __ptr64) __ptr64",
+          "doc": "PE export. Ordinal: 4. RVA: 0x1CA0. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: __cdecl Ansys::ApipConfiguration::ApipConfiguration(class Ansys::ApipConfiguration && __ptr64) __ptr64."
+        },
+        {
+          "name": "??0ApipConfiguration@Ansys@@QEAA@AEBV01@@Z",
+          "signature": "public: __cdecl Ansys::ApipConfiguration::ApipConfiguration(class Ansys::ApipConfiguration const & __ptr64) __ptr64",
+          "doc": "PE export. Ordinal: 5. RVA: 0x1C50. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: __cdecl Ansys::ApipConfiguration::ApipConfiguration(class Ansys::ApipConfiguration const & __ptr64) __ptr64."
+        },
+        {
+          "name": "??0ApipConfiguration@Ansys@@QEAA@PEBD@Z",
+          "signature": "public: __cdecl Ansys::ApipConfiguration::ApipConfiguration(char const * __ptr64) __ptr64",
+          "doc": "PE export. Ordinal: 6. RVA: 0x45B00. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: __cdecl Ansys::ApipConfiguration::ApipConfiguration(char const * __ptr64) __ptr64."
+        },
+        {
+          "name": "??0ApipConfiguration@Ansys@@QEAA@PEB_W00@Z",
+          "signature": "public: __cdecl Ansys::ApipConfiguration::ApipConfiguration(wchar_t const * __ptr64,wchar_t const * __ptr64,wchar_t const * __ptr64) __ptr64",
+          "doc": "PE export. Ordinal: 7. RVA: 0x45A60. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: __cdecl Ansys::ApipConfiguration::ApipConfiguration(wchar_t const * __ptr64,wchar_t const * __ptr64,wchar_t const * __ptr64) __ptr64."
+        },
+        {
+          "name": "??0ApipConfiguration@Ansys@@QEAA@PEB_W@Z",
+          "signature": "public: __cdecl Ansys::ApipConfiguration::ApipConfiguration(wchar_t const * __ptr64) __ptr64",
+          "doc": "PE export. Ordinal: 8. RVA: 0x45CC0. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: __cdecl Ansys::ApipConfiguration::ApipConfiguration(wchar_t const * __ptr64) __ptr64."
+        },
+        {
+          "name": "??0IApipClient@@QEAA@AEBV0@@Z",
+          "signature": "public: __cdecl IApipClient::IApipClient(class IApipClient const & __ptr64) __ptr64",
+          "doc": "PE export. Ordinal: 9. RVA: 0x17B0. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: __cdecl IApipClient::IApipClient(class IApipClient const & __ptr64) __ptr64."
+        },
+        {
+          "name": "??0IApipClient@@QEAA@XZ",
+          "signature": "public: __cdecl IApipClient::IApipClient(void) __ptr64",
+          "doc": "PE export. Ordinal: 10. RVA: 0x17A0. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: __cdecl IApipClient::IApipClient(void) __ptr64."
+        },
+        {
+          "name": "??1ApipClient@Ansys@@UEAA@XZ",
+          "signature": "public: virtual __cdecl Ansys::ApipClient::~ApipClient(void) __ptr64",
+          "doc": "PE export. Ordinal: 11. RVA: 0xBDA0. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: virtual __cdecl Ansys::ApipClient::~ApipClient(void) __ptr64."
+        },
+        {
+          "name": "??1ApipConfiguration@Ansys@@QEAA@XZ",
+          "signature": "public: __cdecl Ansys::ApipConfiguration::~ApipConfiguration(void) __ptr64",
+          "doc": "PE export. Ordinal: 12. RVA: 0x1B40. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: __cdecl Ansys::ApipConfiguration::~ApipConfiguration(void) __ptr64."
+        },
+        {
+          "name": "??1IApipClient@@UEAA@XZ",
+          "signature": "public: virtual __cdecl IApipClient::~IApipClient(void) __ptr64",
+          "doc": "PE export. Ordinal: 13. RVA: 0x1790. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: virtual __cdecl IApipClient::~IApipClient(void) __ptr64."
+        },
+        {
+          "name": "??4ApipClient@Ansys@@QEAAAEAV01@AEBV01@@Z",
+          "signature": "public: class Ansys::ApipClient & __ptr64 __cdecl Ansys::ApipClient::operator=(class Ansys::ApipClient const & __ptr64) __ptr64",
+          "doc": "PE export. Ordinal: 14. RVA: 0x19A0. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: class Ansys::ApipClient & __ptr64 __cdecl Ansys::ApipClient::operator=(class Ansys::ApipClient const & __ptr64) __ptr64."
+        },
+        {
+          "name": "??4ApipConfiguration@Ansys@@QEAAAEAV01@$$QEAV01@@Z",
+          "signature": "public: class Ansys::ApipConfiguration & __ptr64 __cdecl Ansys::ApipConfiguration::operator=(class Ansys::ApipConfiguration && __ptr64) __ptr64",
+          "doc": "PE export. Ordinal: 15. RVA: 0x1D70. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: class Ansys::ApipConfiguration & __ptr64 __cdecl Ansys::ApipConfiguration::operator=(class Ansys::ApipConfiguration && __ptr64) __ptr64."
+        },
+        {
+          "name": "??4ApipConfiguration@Ansys@@QEAAAEAV01@AEBV01@@Z",
+          "signature": "public: class Ansys::ApipConfiguration & __ptr64 __cdecl Ansys::ApipConfiguration::operator=(class Ansys::ApipConfiguration const & __ptr64) __ptr64",
+          "doc": "PE export. Ordinal: 16. RVA: 0x1D30. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: class Ansys::ApipConfiguration & __ptr64 __cdecl Ansys::ApipConfiguration::operator=(class Ansys::ApipConfiguration const & __ptr64) __ptr64."
+        },
+        {
+          "name": "??4ApipHelper@Ansys@@QEAAAEAV01@$$QEAV01@@Z",
+          "signature": "public: class Ansys::ApipHelper & __ptr64 __cdecl Ansys::ApipHelper::operator=(class Ansys::ApipHelper && __ptr64) __ptr64",
+          "doc": "PE export. Ordinal: 17. RVA: 0x1B30. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: class Ansys::ApipHelper & __ptr64 __cdecl Ansys::ApipHelper::operator=(class Ansys::ApipHelper && __ptr64) __ptr64."
+        },
+        {
+          "name": "??4ApipHelper@Ansys@@QEAAAEAV01@AEBV01@@Z",
+          "signature": "public: class Ansys::ApipHelper & __ptr64 __cdecl Ansys::ApipHelper::operator=(class Ansys::ApipHelper const & __ptr64) __ptr64",
+          "doc": "PE export. Ordinal: 18. RVA: 0x1B30. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: class Ansys::ApipHelper & __ptr64 __cdecl Ansys::ApipHelper::operator=(class Ansys::ApipHelper const & __ptr64) __ptr64."
+        },
+        {
+          "name": "??4IApipClient@@QEAAAEAV0@AEBV0@@Z",
+          "signature": "public: class IApipClient & __ptr64 __cdecl IApipClient::operator=(class IApipClient const & __ptr64) __ptr64",
+          "doc": "PE export. Ordinal: 19. RVA: 0x17D0. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: class IApipClient & __ptr64 __cdecl IApipClient::operator=(class IApipClient const & __ptr64) __ptr64."
+        },
+        {
+          "name": "??_7ApipClient@Ansys@@6B@",
+          "signature": "const Ansys::ApipClient::`vftable'",
+          "doc": "PE export. Ordinal: 20. RVA: 0xA4000. This static symbol does not prove official support or runtime behavior. Decoded symbol: const Ansys::ApipClient::`vftable'."
+        },
+        {
+          "name": "??_7IApipClient@@6B@",
+          "signature": "const IApipClient::`vftable'",
+          "doc": "PE export. Ordinal: 21. RVA: 0xA4070. This static symbol does not prove official support or runtime behavior. Decoded symbol: const IApipClient::`vftable'."
+        },
+        {
+          "name": "?AddData@ApipClient@Ansys@@UEAAXPEB_W0@Z",
+          "signature": "public: virtual void __cdecl Ansys::ApipClient::AddData(wchar_t const * __ptr64,wchar_t const * __ptr64) __ptr64",
+          "doc": "PE export. Ordinal: 22. RVA: 0xC480. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: virtual void __cdecl Ansys::ApipClient::AddData(wchar_t const * __ptr64,wchar_t const * __ptr64) __ptr64."
+        },
+        {
+          "name": "?AddData@ApipClient@Ansys@@UEAAXPEB_WH@Z",
+          "signature": "public: virtual void __cdecl Ansys::ApipClient::AddData(wchar_t const * __ptr64,int) __ptr64",
+          "doc": "PE export. Ordinal: 23. RVA: 0xC450. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: virtual void __cdecl Ansys::ApipClient::AddData(wchar_t const * __ptr64,int) __ptr64."
+        },
+        {
+          "name": "?AddData@ApipClient@Ansys@@UEAAXPEB_WN@Z",
+          "signature": "public: virtual void __cdecl Ansys::ApipClient::AddData(wchar_t const * __ptr64,double) __ptr64",
+          "doc": "PE export. Ordinal: 24. RVA: 0xC570. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: virtual void __cdecl Ansys::ApipClient::AddData(wchar_t const * __ptr64,double) __ptr64."
+        },
+        {
+          "name": "?AddData@ApipClient@Ansys@@UEAAXPEB_W_N@Z",
+          "signature": "public: virtual void __cdecl Ansys::ApipClient::AddData(wchar_t const * __ptr64,bool) __ptr64",
+          "doc": "PE export. Ordinal: 25. RVA: 0xC5A0. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: virtual void __cdecl Ansys::ApipClient::AddData(wchar_t const * __ptr64,bool) __ptr64."
+        },
+        {
+          "name": "?AddSslCertificate@ApipClient@Ansys@@QEAAXPEB_W@Z",
+          "signature": "public: void __cdecl Ansys::ApipClient::AddSslCertificate(wchar_t const * __ptr64) __ptr64",
+          "doc": "PE export. Ordinal: 26. RVA: 0x1870. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: void __cdecl Ansys::ApipClient::AddSslCertificate(wchar_t const * __ptr64) __ptr64."
+        },
+        {
+          "name": "?GetAnalyticsServerUrl@ApipConfiguration@Ansys@@QEBA?AV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@XZ",
+          "signature": "public: class std::basic_string<wchar_t,struct std::char_traits<wchar_t>,class std::allocator<wchar_t> > __cdecl Ansys::ApipConfiguration::GetAnalyticsServerUrl(void)const __ptr64",
+          "doc": "PE export. Ordinal: 27. RVA: 0x47010. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: class std::basic_string<wchar_t,struct std::char_traits<wchar_t>,class std::allocator<wchar_t> > __cdecl Ansys::ApipConfiguration::GetAnalyticsServerUrl(void)const __ptr64."
+        },
+        {
+          "name": "?GetEnv@ApipHelper@Ansys@@SA?AV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@PEB_W@Z",
+          "signature": "public: static class std::basic_string<wchar_t,struct std::char_traits<wchar_t>,class std::allocator<wchar_t> > __cdecl Ansys::ApipHelper::GetEnv(wchar_t const * __ptr64)",
+          "doc": "PE export. Ordinal: 28. RVA: 0x51D20. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: static class std::basic_string<wchar_t,struct std::char_traits<wchar_t>,class std::allocator<wchar_t> > __cdecl Ansys::ApipHelper::GetEnv(wchar_t const * __ptr64)."
+        },
+        {
+          "name": "?GetExePath@ApipHelper@Ansys@@CA?AV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@XZ",
+          "signature": "private: static class std::basic_string<wchar_t,struct std::char_traits<wchar_t>,class std::allocator<wchar_t> > __cdecl Ansys::ApipHelper::GetExePath(void)",
+          "doc": "PE export. Ordinal: 29. RVA: 0x52A20. This static symbol does not prove official support or runtime behavior. Decoded symbol: private: static class std::basic_string<wchar_t,struct std::char_traits<wchar_t>,class std::allocator<wchar_t> > __cdecl Ansys::ApipHelper::GetExePath(void)."
+        },
+        {
+          "name": "?GetGeoID@ApipHelper@Ansys@@SAJXZ",
+          "signature": "public: static long __cdecl Ansys::ApipHelper::GetGeoID(void)",
+          "doc": "PE export. Ordinal: 30. RVA: 0x511A0. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: static long __cdecl Ansys::ApipHelper::GetGeoID(void)."
+        },
+        {
+          "name": "?GetGlobalConfigFile@ApipConfiguration@Ansys@@QEBA?AV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@XZ",
+          "signature": "public: class std::basic_string<wchar_t,struct std::char_traits<wchar_t>,class std::allocator<wchar_t> > __cdecl Ansys::ApipConfiguration::GetGlobalConfigFile(void)const __ptr64",
+          "doc": "PE export. Ordinal: 31. RVA: 0x47560. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: class std::basic_string<wchar_t,struct std::char_traits<wchar_t>,class std::allocator<wchar_t> > __cdecl Ansys::ApipConfiguration::GetGlobalConfigFile(void)const __ptr64."
+        },
+        {
+          "name": "?GetGraphicsCardName@ApipHelper@Ansys@@SA?AV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@XZ",
+          "signature": "public: static class std::basic_string<wchar_t,struct std::char_traits<wchar_t>,class std::allocator<wchar_t> > __cdecl Ansys::ApipHelper::GetGraphicsCardName(void)",
+          "doc": "PE export. Ordinal: 32. RVA: 0x51410. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: static class std::basic_string<wchar_t,struct std::char_traits<wchar_t>,class std::allocator<wchar_t> > __cdecl Ansys::ApipHelper::GetGraphicsCardName(void)."
+        },
+        {
+          "name": "?GetInstallDir@ApipHelper@Ansys@@SA?AV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@PEB_W@Z",
+          "signature": "public: static class std::basic_string<wchar_t,struct std::char_traits<wchar_t>,class std::allocator<wchar_t> > __cdecl Ansys::ApipHelper::GetInstallDir(wchar_t const * __ptr64)",
+          "doc": "PE export. Ordinal: 33. RVA: 0x51D90. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: static class std::basic_string<wchar_t,struct std::char_traits<wchar_t>,class std::allocator<wchar_t> > __cdecl Ansys::ApipHelper::GetInstallDir(wchar_t const * __ptr64)."
+        },
+        {
+          "name": "?GetIso3CountryCode@ApipHelper@Ansys@@SA?AV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@XZ",
+          "signature": "public: static class std::basic_string<wchar_t,struct std::char_traits<wchar_t>,class std::allocator<wchar_t> > __cdecl Ansys::ApipHelper::GetIso3CountryCode(void)",
+          "doc": "PE export. Ordinal: 34. RVA: 0x512D0. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: static class std::basic_string<wchar_t,struct std::char_traits<wchar_t>,class std::allocator<wchar_t> > __cdecl Ansys::ApipHelper::GetIso3CountryCode(void)."
+        },
+        {
+          "name": "?GetNumberOfProcessorPhysicalCores@ApipHelper@Ansys@@SAKXZ",
+          "signature": "public: static unsigned long __cdecl Ansys::ApipHelper::GetNumberOfProcessorPhysicalCores(void)",
+          "doc": "PE export. Ordinal: 35. RVA: 0x51740. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: static unsigned long __cdecl Ansys::ApipHelper::GetNumberOfProcessorPhysicalCores(void)."
+        },
+        {
+          "name": "?GetOperatingSystemName@ApipHelper@Ansys@@SA?AV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@XZ",
+          "signature": "public: static class std::basic_string<wchar_t,struct std::char_traits<wchar_t>,class std::allocator<wchar_t> > __cdecl Ansys::ApipHelper::GetOperatingSystemName(void)",
+          "doc": "PE export. Ordinal: 36. RVA: 0x51760. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: static class std::basic_string<wchar_t,struct std::char_traits<wchar_t>,class std::allocator<wchar_t> > __cdecl Ansys::ApipHelper::GetOperatingSystemName(void)."
+        },
+        {
+          "name": "?GetProcessorName@ApipHelper@Ansys@@SA?AV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@XZ",
+          "signature": "public: static class std::basic_string<wchar_t,struct std::char_traits<wchar_t>,class std::allocator<wchar_t> > __cdecl Ansys::ApipHelper::GetProcessorName(void)",
+          "doc": "PE export. Ordinal: 37. RVA: 0x51590. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: static class std::basic_string<wchar_t,struct std::char_traits<wchar_t>,class std::allocator<wchar_t> > __cdecl Ansys::ApipHelper::GetProcessorName(void)."
+        },
+        {
+          "name": "?GetRegionConfigFile@ApipConfiguration@Ansys@@QEBA?AV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@XZ",
+          "signature": "public: class std::basic_string<wchar_t,struct std::char_traits<wchar_t>,class std::allocator<wchar_t> > __cdecl Ansys::ApipConfiguration::GetRegionConfigFile(void)const __ptr64",
+          "doc": "PE export. Ordinal: 38. RVA: 0x47540. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: class std::basic_string<wchar_t,struct std::char_traits<wchar_t>,class std::allocator<wchar_t> > __cdecl Ansys::ApipConfiguration::GetRegionConfigFile(void)const __ptr64."
+        },
+        {
+          "name": "?GetServiceCommand@ApipClient@Ansys@@UEAA?AV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@XZ",
+          "signature": "public: virtual class std::basic_string<wchar_t,struct std::char_traits<wchar_t>,class std::allocator<wchar_t> > __cdecl Ansys::ApipClient::GetServiceCommand(void) __ptr64",
+          "doc": "PE export. Ordinal: 39. RVA: 0xF580. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: virtual class std::basic_string<wchar_t,struct std::char_traits<wchar_t>,class std::allocator<wchar_t> > __cdecl Ansys::ApipClient::GetServiceCommand(void) __ptr64."
+        },
+        {
+          "name": "?GetTimezone@ApipHelper@Ansys@@SA?AV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@XZ",
+          "signature": "public: static class std::basic_string<wchar_t,struct std::char_traits<wchar_t>,class std::allocator<wchar_t> > __cdecl Ansys::ApipHelper::GetTimezone(void)",
+          "doc": "PE export. Ordinal: 40. RVA: 0x511C0. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: static class std::basic_string<wchar_t,struct std::char_traits<wchar_t>,class std::allocator<wchar_t> > __cdecl Ansys::ApipHelper::GetTimezone(void)."
+        },
+        {
+          "name": "?GetTotalPhysicalMemory@ApipHelper@Ansys@@SA_KXZ",
+          "signature": "public: static unsigned __int64 __cdecl Ansys::ApipHelper::GetTotalPhysicalMemory(void)",
+          "doc": "PE export. Ordinal: 41. RVA: 0x51540. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: static unsigned __int64 __cdecl Ansys::ApipHelper::GetTotalPhysicalMemory(void)."
+        },
+        {
+          "name": "?GetUserConfigFile@ApipConfiguration@Ansys@@QEBA?AV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@XZ",
+          "signature": "public: class std::basic_string<wchar_t,struct std::char_traits<wchar_t>,class std::allocator<wchar_t> > __cdecl Ansys::ApipConfiguration::GetUserConfigFile(void)const __ptr64",
+          "doc": "PE export. Ordinal: 42. RVA: 0x47580. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: class std::basic_string<wchar_t,struct std::char_traits<wchar_t>,class std::allocator<wchar_t> > __cdecl Ansys::ApipConfiguration::GetUserConfigFile(void)const __ptr64."
+        },
+        {
+          "name": "?GetUserDir@ApipHelper@Ansys@@SA?AV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@PEB_W@Z",
+          "signature": "public: static class std::basic_string<wchar_t,struct std::char_traits<wchar_t>,class std::allocator<wchar_t> > __cdecl Ansys::ApipHelper::GetUserDir(wchar_t const * __ptr64)",
+          "doc": "PE export. Ordinal: 43. RVA: 0x52910. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: static class std::basic_string<wchar_t,struct std::char_traits<wchar_t>,class std::allocator<wchar_t> > __cdecl Ansys::ApipHelper::GetUserDir(wchar_t const * __ptr64)."
+        },
+        {
+          "name": "?HasUserConfiguration@ApipConfiguration@Ansys@@QEBA_NXZ",
+          "signature": "public: bool __cdecl Ansys::ApipConfiguration::HasUserConfiguration(void)const __ptr64",
+          "doc": "PE export. Ordinal: 44. RVA: 0x47A70. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: bool __cdecl Ansys::ApipConfiguration::HasUserConfiguration(void)const __ptr64."
+        },
+        {
+          "name": "?IsAllowedByGlobalConfiguration@ApipConfiguration@Ansys@@QEBA_NXZ",
+          "signature": "public: bool __cdecl Ansys::ApipConfiguration::IsAllowedByGlobalConfiguration(void)const __ptr64",
+          "doc": "PE export. Ordinal: 45. RVA: 0x45F80. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: bool __cdecl Ansys::ApipConfiguration::IsAllowedByGlobalConfiguration(void)const __ptr64."
+        },
+        {
+          "name": "?IsAllowedForTestbenchRuns@ApipConfiguration@Ansys@@QEBA_NXZ",
+          "signature": "public: bool __cdecl Ansys::ApipConfiguration::IsAllowedForTestbenchRuns(void)const __ptr64",
+          "doc": "PE export. Ordinal: 46. RVA: 0x485A0. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: bool __cdecl Ansys::ApipConfiguration::IsAllowedForTestbenchRuns(void)const __ptr64."
+        },
+        {
+          "name": "?IsAllowedInRegion@ApipConfiguration@Ansys@@QEBA_NXZ",
+          "signature": "public: bool __cdecl Ansys::ApipConfiguration::IsAllowedInRegion(void)const __ptr64",
+          "doc": "PE export. Ordinal: 47. RVA: 0x45FB0. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: bool __cdecl Ansys::ApipConfiguration::IsAllowedInRegion(void)const __ptr64."
+        },
+        {
+          "name": "?IsEnabledByUser@ApipConfiguration@Ansys@@QEBA_NXZ",
+          "signature": "public: bool __cdecl Ansys::ApipConfiguration::IsEnabledByUser(void)const __ptr64",
+          "doc": "PE export. Ordinal: 48. RVA: 0x475A0. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: bool __cdecl Ansys::ApipConfiguration::IsEnabledByUser(void)const __ptr64."
+        },
+        {
+          "name": "?IsRunningWithinTestbench@ApipConfiguration@Ansys@@QEBA_NXZ",
+          "signature": "public: bool __cdecl Ansys::ApipConfiguration::IsRunningWithinTestbench(void)const __ptr64",
+          "doc": "PE export. Ordinal: 49. RVA: 0x48560. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: bool __cdecl Ansys::ApipConfiguration::IsRunningWithinTestbench(void)const __ptr64."
+        },
+        {
+          "name": "?IsServiceRunning@ApipClient@Ansys@@UEAA_NXZ",
+          "signature": "public: virtual bool __cdecl Ansys::ApipClient::IsServiceRunning(void) __ptr64",
+          "doc": "PE export. Ordinal: 50. RVA: 0xCFC0. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: virtual bool __cdecl Ansys::ApipClient::IsServiceRunning(void) __ptr64."
+        },
+        {
+          "name": "?IsUserOnANSYSNetwork@ApipHelper@Ansys@@SA_NXZ",
+          "signature": "public: static bool __cdecl Ansys::ApipHelper::IsUserOnANSYSNetwork(void)",
+          "doc": "PE export. Ordinal: 51. RVA: 0x50D50. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: static bool __cdecl Ansys::ApipHelper::IsUserOnANSYSNetwork(void)."
+        },
+        {
+          "name": "?SaveUserSetting@ApipConfiguration@Ansys@@QEAAX_N@Z",
+          "signature": "public: void __cdecl Ansys::ApipConfiguration::SaveUserSetting(bool) __ptr64",
+          "doc": "PE export. Ordinal: 52. RVA: 0x475D0. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: void __cdecl Ansys::ApipConfiguration::SaveUserSetting(bool) __ptr64."
+        },
+        {
+          "name": "?Send@ApipClient@Ansys@@UEAAXPEB_W@Z",
+          "signature": "public: virtual void __cdecl Ansys::ApipClient::Send(wchar_t const * __ptr64) __ptr64",
+          "doc": "PE export. Ordinal: 53. RVA: 0xC1C0. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: virtual void __cdecl Ansys::ApipClient::Send(wchar_t const * __ptr64) __ptr64."
+        },
+        {
+          "name": "?SetApplicationVersionToSendToServer@ApipClient@Ansys@@UEAAXPEB_W@Z",
+          "signature": "public: virtual void __cdecl Ansys::ApipClient::SetApplicationVersionToSendToServer(wchar_t const * __ptr64) __ptr64",
+          "doc": "PE export. Ordinal: 54. RVA: 0xC3E0. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: virtual void __cdecl Ansys::ApipClient::SetApplicationVersionToSendToServer(wchar_t const * __ptr64) __ptr64."
+        },
+        {
+          "name": "?SetDebugDumpFolderPath@ApipClient@Ansys@@UEAAXPEB_W@Z",
+          "signature": "public: virtual void __cdecl Ansys::ApipClient::SetDebugDumpFolderPath(wchar_t const * __ptr64) __ptr64",
+          "doc": "PE export. Ordinal: 55. RVA: 0xC410. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: virtual void __cdecl Ansys::ApipClient::SetDebugDumpFolderPath(wchar_t const * __ptr64) __ptr64."
+        },
+        {
+          "name": "?SetDebugServerUrl@ApipClient@Ansys@@UEAAXPEB_W@Z",
+          "signature": "public: virtual void __cdecl Ansys::ApipClient::SetDebugServerUrl(wchar_t const * __ptr64) __ptr64",
+          "doc": "PE export. Ordinal: 56. RVA: 0xC440. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: virtual void __cdecl Ansys::ApipClient::SetDebugServerUrl(wchar_t const * __ptr64) __ptr64."
+        },
+        {
+          "name": "?SetEnableDebugMode@ApipClient@Ansys@@QEAAX_N@Z",
+          "signature": "public: void __cdecl Ansys::ApipClient::SetEnableDebugMode(bool) __ptr64",
+          "doc": "PE export. Ordinal: 57. RVA: 0xCFB0. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: void __cdecl Ansys::ApipClient::SetEnableDebugMode(bool) __ptr64."
+        },
+        {
+          "name": "?ShouldShowDialogBoxAtStartup@ApipConfiguration@Ansys@@QEBA_NXZ",
+          "signature": "public: bool __cdecl Ansys::ApipConfiguration::ShouldShowDialogBoxAtStartup(void)const __ptr64",
+          "doc": "PE export. Ordinal: 58. RVA: 0x484B0. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: bool __cdecl Ansys::ApipConfiguration::ShouldShowDialogBoxAtStartup(void)const __ptr64."
+        },
+        {
+          "name": "?ShouldShowHelpMenuItem@ApipConfiguration@Ansys@@QEBA_NXZ",
+          "signature": "public: bool __cdecl Ansys::ApipConfiguration::ShouldShowHelpMenuItem(void)const __ptr64",
+          "doc": "PE export. Ordinal: 59. RVA: 0x48520. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: bool __cdecl Ansys::ApipConfiguration::ShouldShowHelpMenuItem(void)const __ptr64."
+        },
+        {
+          "name": "?Start@ApipClient@Ansys@@UEAAXXZ",
+          "signature": "public: virtual void __cdecl Ansys::ApipClient::Start(void) __ptr64",
+          "doc": "PE export. Ordinal: 60. RVA: 0xC130. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: virtual void __cdecl Ansys::ApipClient::Start(void) __ptr64."
+        },
+        {
+          "name": "?Stop@ApipClient@Ansys@@UEAAXXZ",
+          "signature": "public: virtual void __cdecl Ansys::ApipClient::Stop(void) __ptr64",
+          "doc": "PE export. Ordinal: 61. RVA: 0xC180. This static symbol does not prove official support or runtime behavior. Decoded symbol: public: virtual void __cdecl Ansys::ApipClient::Stop(void) __ptr64."
+        },
+        {
+          "name": "?dumpDataToCSV@ApipClient@Ansys@@AEAAXXZ",
+          "signature": "private: void __cdecl Ansys::ApipClient::dumpDataToCSV(void) __ptr64",
+          "doc": "PE export. Ordinal: 62. RVA: 0xC5D0. This static symbol does not prove official support or runtime behavior. Decoded symbol: private: void __cdecl Ansys::ApipClient::dumpDataToCSV(void) __ptr64."
+        },
+        {
+          "name": "?getPortNumFilePath@ApipClient@Ansys@@AEAA?AV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@XZ",
+          "signature": "private: class std::basic_string<wchar_t,struct std::char_traits<wchar_t>,class std::allocator<wchar_t> > __cdecl Ansys::ApipClient::getPortNumFilePath(void) __ptr64",
+          "doc": "PE export. Ordinal: 63. RVA: 0xF9E0. This static symbol does not prove official support or runtime behavior. Decoded symbol: private: class std::basic_string<wchar_t,struct std::char_traits<wchar_t>,class std::allocator<wchar_t> > __cdecl Ansys::ApipClient::getPortNumFilePath(void) __ptr64."
+        },
+        {
+          "name": "?init@ApipClient@Ansys@@AEAAXPEB_W00@Z",
+          "signature": "private: void __cdecl Ansys::ApipClient::init(wchar_t const * __ptr64,wchar_t const * __ptr64,wchar_t const * __ptr64) __ptr64",
+          "doc": "PE export. Ordinal: 64. RVA: 0xBC10. This static symbol does not prove official support or runtime behavior. Decoded symbol: private: void __cdecl Ansys::ApipClient::init(wchar_t const * __ptr64,wchar_t const * __ptr64,wchar_t const * __ptr64) __ptr64."
+        },
+        {
+          "name": "?initializeForVersion@ApipConfiguration@Ansys@@AEAAXPEB_W@Z",
+          "signature": "private: void __cdecl Ansys::ApipConfiguration::initializeForVersion(wchar_t const * __ptr64) __ptr64",
+          "doc": "PE export. Ordinal: 65. RVA: 0x45D20. This static symbol does not prove official support or runtime behavior. Decoded symbol: private: void __cdecl Ansys::ApipConfiguration::initializeForVersion(wchar_t const * __ptr64) __ptr64."
+        },
+        {
+          "name": "?isAllowedByConfigFile@ApipConfiguration@Ansys@@AEBA_NV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@@Z",
+          "signature": "private: bool __cdecl Ansys::ApipConfiguration::isAllowedByConfigFile(class std::basic_string<wchar_t,struct std::char_traits<wchar_t>,class std::allocator<wchar_t> >)const __ptr64",
+          "doc": "PE export. Ordinal: 66. RVA: 0x47B20. This static symbol does not prove official support or runtime behavior. Decoded symbol: private: bool __cdecl Ansys::ApipConfiguration::isAllowedByConfigFile(class std::basic_string<wchar_t,struct std::char_traits<wchar_t>,class std::allocator<wchar_t> >)const __ptr64."
+        },
+        {
+          "name": "?makeRequest@ApipClient@Ansys@@AEAA_NPEB_W0W4ApipServiceMethod@12@AEAV?$basic_string@_WU?$char_traits@_W@std@@V?$allocator@_W@2@@std@@@Z",
+          "signature": "private: bool __cdecl Ansys::ApipClient::makeRequest(wchar_t const * __ptr64,wchar_t const * __ptr64,enum Ansys::ApipClient::ApipServiceMethod,class std::basic_string<wchar_t,struct std::char_traits<wchar_t>,class std::allocator<wchar_t> > & __ptr64) __ptr64",
+          "doc": "PE export. Ordinal: 67. RVA: 0xE0C0. This static symbol does not prove official support or runtime behavior. Decoded symbol: private: bool __cdecl Ansys::ApipClient::makeRequest(wchar_t const * __ptr64,wchar_t const * __ptr64,enum Ansys::ApipClient::ApipServiceMethod,class std::basic_string<wchar_t,struct std::char_traits<wchar_t>,class std::allocator<wchar_t> > & __ptr64) __ptr64."
+        },
+        {
+          "name": "?registerApplication@ApipClient@Ansys@@AEAA_NXZ",
+          "signature": "private: bool __cdecl Ansys::ApipClient::registerApplication(void) __ptr64",
+          "doc": "PE export. Ordinal: 68. RVA: 0xDC10. This static symbol does not prove official support or runtime behavior. Decoded symbol: private: bool __cdecl Ansys::ApipClient::registerApplication(void) __ptr64."
+        },
+        {
+          "name": "?removeWhiteSpaces@ApipConfiguration@Ansys@@AEBA?AV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEAV34@@Z",
+          "signature": "private: class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > __cdecl Ansys::ApipConfiguration::removeWhiteSpaces(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > & __ptr64)const __ptr64",
+          "doc": "PE export. Ordinal: 69. RVA: 0x483B0. This static symbol does not prove official support or runtime behavior. Decoded symbol: private: class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > __cdecl Ansys::ApipConfiguration::removeWhiteSpaces(class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > & __ptr64)const __ptr64."
+        },
+        {
+          "name": "?sendMessage@ApipClient@Ansys@@AEAA_NPEB_W@Z",
+          "signature": "private: bool __cdecl Ansys::ApipClient::sendMessage(wchar_t const * __ptr64) __ptr64",
+          "doc": "PE export. Ordinal: 70. RVA: 0xDF80. This static symbol does not prove official support or runtime behavior. Decoded symbol: private: bool __cdecl Ansys::ApipClient::sendMessage(wchar_t const * __ptr64) __ptr64."
+        },
+        {
+          "name": "?startService@ApipClient@Ansys@@AEAA_NXZ",
+          "signature": "private: bool __cdecl Ansys::ApipClient::startService(void) __ptr64",
+          "doc": "PE export. Ordinal: 71. RVA: 0xD820. This static symbol does not prove official support or runtime behavior. Decoded symbol: private: bool __cdecl Ansys::ApipClient::startService(void) __ptr64."
+        },
+        {
+          "name": "?unregisterApplication@ApipClient@Ansys@@AEAA_NXZ",
+          "signature": "private: bool __cdecl Ansys::ApipClient::unregisterApplication(void) __ptr64",
+          "doc": "PE export. Ordinal: 72. RVA: 0xDE00. This static symbol does not prove official support or runtime behavior. Decoded symbol: private: bool __cdecl Ansys::ApipClient::unregisterApplication(void) __ptr64."
+        },
+        {
+          "name": "ApipClient_AddData_Bool",
+          "signature": "",
+          "doc": "PE export. Ordinal: 73. RVA: 0x2E00. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "ApipClient_AddData_BoolW",
+          "signature": "",
+          "doc": "PE export. Ordinal: 74. RVA: 0x2F00. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "ApipClient_AddData_Double",
+          "signature": "",
+          "doc": "PE export. Ordinal: 75. RVA: 0x2D50. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "ApipClient_AddData_DoubleW",
+          "signature": "",
+          "doc": "PE export. Ordinal: 76. RVA: 0x2EE0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "ApipClient_AddData_Int",
+          "signature": "",
+          "doc": "PE export. Ordinal: 77. RVA: 0x2BA0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "ApipClient_AddData_IntW",
+          "signature": "",
+          "doc": "PE export. Ordinal: 78. RVA: 0x2EA0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "ApipClient_AddData_String",
+          "signature": "",
+          "doc": "PE export. Ordinal: 79. RVA: 0x2C40. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "ApipClient_AddData_StringW",
+          "signature": "",
+          "doc": "PE export. Ordinal: 80. RVA: 0x2EC0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "ApipClient_AddSslCertificate",
+          "signature": "",
+          "doc": "PE export. Ordinal: 81. RVA: 0x1870. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "ApipClient_AddSslCertificateW",
+          "signature": "",
+          "doc": "PE export. Ordinal: 82. RVA: 0x1870. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "ApipClient_Send",
+          "signature": "",
+          "doc": "PE export. Ordinal: 83. RVA: 0x2F20. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "ApipClient_SendAll",
+          "signature": "",
+          "doc": "PE export. Ordinal: 84. RVA: 0x2F20. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "ApipClient_SetDebugDumpFolderPath",
+          "signature": "",
+          "doc": "PE export. Ordinal: 85. RVA: 0x2F30. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "ApipClient_SetDebugDumpFolderPathW",
+          "signature": "",
+          "doc": "PE export. Ordinal: 86. RVA: 0x2FD0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "ApipClient_SetDebugServerUrl",
+          "signature": "",
+          "doc": "PE export. Ordinal: 87. RVA: 0x2AC0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "ApipClient_SetDebugServerUrlW",
+          "signature": "",
+          "doc": "PE export. Ordinal: 88. RVA: 0x2B60. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "ApipClient_SetEnableDebugMode",
+          "signature": "",
+          "doc": "PE export. Ordinal: 89. RVA: 0x2FF0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "ApipClient_Start",
+          "signature": "",
+          "doc": "PE export. Ordinal: 90. RVA: 0x2B80. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "ApipClient_Stop",
+          "signature": "",
+          "doc": "PE export. Ordinal: 91. RVA: 0x2B90. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "ApipConfiguration_GetAnalyticsServerUrl",
+          "signature": "",
+          "doc": "PE export. Ordinal: 92. RVA: 0x2690. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "ApipConfiguration_GetAnalyticsServerUrlW",
+          "signature": "",
+          "doc": "PE export. Ordinal: 93. RVA: 0x2730. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "ApipConfiguration_HasUserConfiguration",
+          "signature": "",
+          "doc": "PE export. Ordinal: 94. RVA: 0x2670. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "ApipConfiguration_IsAllowedByGlobalConfiguration",
+          "signature": "",
+          "doc": "PE export. Ordinal: 95. RVA: 0x2590. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "ApipConfiguration_IsAllowedForTestbenchRuns",
+          "signature": "",
+          "doc": "PE export. Ordinal: 96. RVA: 0x27A0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "ApipConfiguration_IsAllowedInRegion",
+          "signature": "",
+          "doc": "PE export. Ordinal: 97. RVA: 0x2570. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "ApipConfiguration_IsEnabledByUser",
+          "signature": "",
+          "doc": "PE export. Ordinal: 98. RVA: 0x25C0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "ApipConfiguration_IsRunningWithinTestbench",
+          "signature": "",
+          "doc": "PE export. Ordinal: 99. RVA: 0x2760. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "ApipConfiguration_SaveUserSetting",
+          "signature": "",
+          "doc": "PE export. Ordinal: 100. RVA: 0x2660. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "ApipConfiguration_ShouldShowDialogBoxAtStartup",
+          "signature": "",
+          "doc": "PE export. Ordinal: 101. RVA: 0x25F0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "ApipConfiguration_ShouldShowHelpMenuItem",
+          "signature": "",
+          "doc": "PE export. Ordinal: 102. RVA: 0x2610. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "ApipHelper_GetGeoID",
+          "signature": "",
+          "doc": "PE export. Ordinal: 103. RVA: 0x3020. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "ApipHelper_GetGraphicsCardName",
+          "signature": "",
+          "doc": "PE export. Ordinal: 104. RVA: 0x31B0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "ApipHelper_GetGraphicsCardNameW",
+          "signature": "",
+          "doc": "PE export. Ordinal: 105. RVA: 0x3250. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "ApipHelper_GetIso3CountryCode",
+          "signature": "",
+          "doc": "PE export. Ordinal: 106. RVA: 0x30F0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "ApipHelper_GetIso3CountryCodeW",
+          "signature": "",
+          "doc": "PE export. Ordinal: 107. RVA: 0x3190. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "ApipHelper_GetNumberOfProcessorPhysicalCores",
+          "signature": "",
+          "doc": "PE export. Ordinal: 108. RVA: 0x3340. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "ApipHelper_GetOperatingSystemName",
+          "signature": "",
+          "doc": "PE export. Ordinal: 109. RVA: 0x3350. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "ApipHelper_GetOperatingSystemNameW",
+          "signature": "",
+          "doc": "PE export. Ordinal: 110. RVA: 0x33F0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "ApipHelper_GetProcessorName",
+          "signature": "",
+          "doc": "PE export. Ordinal: 111. RVA: 0x3280. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "ApipHelper_GetProcessorNameW",
+          "signature": "",
+          "doc": "PE export. Ordinal: 112. RVA: 0x3320. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "ApipHelper_GetTimezone",
+          "signature": "",
+          "doc": "PE export. Ordinal: 113. RVA: 0x3030. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "ApipHelper_GetTimezoneW",
+          "signature": "",
+          "doc": "PE export. Ordinal: 114. RVA: 0x30D0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "ApipHelper_GetTotalPhysicalMemory",
+          "signature": "",
+          "doc": "PE export. Ordinal: 115. RVA: 0x3270. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "ApipHelper_IsUserOnANSYSNetwork",
+          "signature": "",
+          "doc": "PE export. Ordinal: 116. RVA: 0x3000. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "CSharp_ApipClient_AddData_Bool",
+          "signature": "",
+          "doc": "PE export. Ordinal: 117. RVA: 0x60E80. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "CSharp_ApipClient_AddData_Double",
+          "signature": "",
+          "doc": "PE export. Ordinal: 118. RVA: 0x60DE0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "CSharp_ApipClient_AddData_Int",
+          "signature": "",
+          "doc": "PE export. Ordinal: 119. RVA: 0x60C30. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "CSharp_ApipClient_AddData_String",
+          "signature": "",
+          "doc": "PE export. Ordinal: 120. RVA: 0x60CD0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "CSharp_ApipClient_CreateApipClient",
+          "signature": "",
+          "doc": "PE export. Ordinal: 121. RVA: 0x60930. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "CSharp_ApipClient_GetServiceCommand",
+          "signature": "",
+          "doc": "PE export. Ordinal: 122. RVA: 0x61070. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "CSharp_ApipClient_IsServiceRunning",
+          "signature": "",
+          "doc": "PE export. Ordinal: 123. RVA: 0x61060. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "CSharp_ApipClient_Send",
+          "signature": "",
+          "doc": "PE export. Ordinal: 124. RVA: 0x60F40. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "CSharp_ApipClient_SendAll",
+          "signature": "",
+          "doc": "PE export. Ordinal: 125. RVA: 0x60F30. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "CSharp_ApipClient_SetDebugDumpFolderPath",
+          "signature": "",
+          "doc": "PE export. Ordinal: 126. RVA: 0x60FD0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "CSharp_ApipClient_SetDebugServerUrl",
+          "signature": "",
+          "doc": "PE export. Ordinal: 127. RVA: 0x60B80. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "CSharp_ApipClient_SetEnableDebugMode",
+          "signature": "",
+          "doc": "PE export. Ordinal: 128. RVA: 0xCFB0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "CSharp_ApipClient_Start",
+          "signature": "",
+          "doc": "PE export. Ordinal: 129. RVA: 0x60C10. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "CSharp_ApipClient_Stop",
+          "signature": "",
+          "doc": "PE export. Ordinal: 130. RVA: 0x60C20. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "CSharp_ApipConfiguration_CreateApipConfiguration",
+          "signature": "",
+          "doc": "PE export. Ordinal: 131. RVA: 0x605A0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "CSharp_ApipConfiguration_CreateApipConfigurationFromVersion",
+          "signature": "",
+          "doc": "PE export. Ordinal: 132. RVA: 0x60760. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "CSharp_ApipConfiguration_GetAnalyticsServerUrl",
+          "signature": "",
+          "doc": "PE export. Ordinal: 133. RVA: 0x60890. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "CSharp_ApipConfiguration_HasUserConfiguration",
+          "signature": "",
+          "doc": "PE export. Ordinal: 134. RVA: 0x60880. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "CSharp_ApipConfiguration_IsAllowedByGlobalConfiguration",
+          "signature": "",
+          "doc": "PE export. Ordinal: 135. RVA: 0x45F80. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "CSharp_ApipConfiguration_IsAllowedInRegion",
+          "signature": "",
+          "doc": "PE export. Ordinal: 136. RVA: 0x60860. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "CSharp_ApipConfiguration_IsEnabledByUser",
+          "signature": "",
+          "doc": "PE export. Ordinal: 137. RVA: 0x475A0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "CSharp_ApipConfiguration_SaveUserSetting",
+          "signature": "",
+          "doc": "PE export. Ordinal: 138. RVA: 0x60870. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "CSharp_ApipHelper_DeleteString",
+          "signature": "",
+          "doc": "PE export. Ordinal: 139. RVA: 0x61260. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "CSharp_ApipHelper_GetGeoID",
+          "signature": "",
+          "doc": "PE export. Ordinal: 140. RVA: 0x3020. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "CSharp_ApipHelper_GetGraphicsCardName",
+          "signature": "",
+          "doc": "PE export. Ordinal: 141. RVA: 0x611C0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "CSharp_ApipHelper_GetIso3CountryCode",
+          "signature": "",
+          "doc": "PE export. Ordinal: 142. RVA: 0x613B0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "CSharp_ApipHelper_GetNumberOfProcessorPhysicalCores",
+          "signature": "",
+          "doc": "PE export. Ordinal: 143. RVA: 0x3340. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "CSharp_ApipHelper_GetOperatingSystemName",
+          "signature": "",
+          "doc": "PE export. Ordinal: 144. RVA: 0x61310. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "CSharp_ApipHelper_GetProcessorName",
+          "signature": "",
+          "doc": "PE export. Ordinal: 145. RVA: 0x61270. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "CSharp_ApipHelper_GetTimezone",
+          "signature": "",
+          "doc": "PE export. Ordinal: 146. RVA: 0x61120. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "CSharp_ApipHelper_GetTotalPhysicalMemory",
+          "signature": "",
+          "doc": "PE export. Ordinal: 147. RVA: 0x3270. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "CSharp_ApipHelper_IsUserOnANSYSNetwork",
+          "signature": "",
+          "doc": "PE export. Ordinal: 148. RVA: 0x61110. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "CreateApipClient",
+          "signature": "",
+          "doc": "PE export. Ordinal: 149. RVA: 0x27C0. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "CreateApipClientW",
+          "signature": "",
+          "doc": "PE export. Ordinal: 150. RVA: 0x2A30. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "CreateApipConfiguration",
+          "signature": "",
+          "doc": "PE export. Ordinal: 151. RVA: 0x2070. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "CreateApipConfigurationDefault",
+          "signature": "",
+          "doc": "PE export. Ordinal: 152. RVA: 0x2310. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "CreateApipConfigurationDefaultW",
+          "signature": "",
+          "doc": "PE export. Ordinal: 153. RVA: 0x2450. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "CreateApipConfigurationW",
+          "signature": "",
+          "doc": "PE export. Ordinal: 154. RVA: 0x2270. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        },
+        {
+          "name": "ReleaseAPIP",
+          "signature": "",
+          "doc": "PE export. Ordinal: 155. RVA: 0x2510. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        }
+      ]
+    }
+  },
+  "statistics": {
+    "total_modules": 1,
+    "total_functions": 155,
+    "demangled_signatures": 72
+  }
+}

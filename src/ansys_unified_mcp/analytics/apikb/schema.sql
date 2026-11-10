@@ -21,8 +21,15 @@ CREATE TABLE IF NOT EXISTS api_sources (
     source_path TEXT NOT NULL,
     sdk_version TEXT NOT NULL DEFAULT '',
     sha256 TEXT NOT NULL,
+    artifact_sha256 TEXT NOT NULL DEFAULT '',
+    rea_evidence_id TEXT NOT NULL DEFAULT '',
     ingested_at TEXT NOT NULL,
     UNIQUE(product, release, interface, source_path)
+);
+
+CREATE TABLE IF NOT EXISTS api_kb_meta (
+    key TEXT PRIMARY KEY,
+    value TEXT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS members (
@@ -69,3 +76,30 @@ CREATE VIRTUAL TABLE IF NOT EXISTS search_fts USING fts5(
     source_id UNINDEXED,
     tokenize = 'trigram'
 );
+
+
+-- Stage 3: Transitive Closure & Navigation
+CREATE TABLE IF NOT EXISTS api_navigation_closure (
+    from_uid INTEGER NOT NULL,
+    to_uid INTEGER NOT NULL,
+    path_semantics TEXT NOT NULL,
+    path_hash TEXT NOT NULL,
+    product TEXT NOT NULL,
+    depth INTEGER NOT NULL,
+    path_nodes TEXT NOT NULL,
+    path_steps TEXT NOT NULL,
+    path_display TEXT,
+    from_name TEXT,
+    to_name TEXT,
+    is_from_root INTEGER DEFAULT 0,
+    is_from_hub INTEGER DEFAULT 0,
+    is_to_hub INTEGER DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (from_uid, to_uid, path_semantics, path_hash)
+);
+
+CREATE INDEX IF NOT EXISTS idx_closure_from ON api_navigation_closure(from_uid);
+CREATE INDEX IF NOT EXISTS idx_closure_to ON api_navigation_closure(to_uid);
+CREATE INDEX IF NOT EXISTS idx_closure_product ON api_navigation_closure(product);
+CREATE INDEX IF NOT EXISTS idx_closure_semantics ON api_navigation_closure(path_semantics);
+CREATE INDEX IF NOT EXISTS idx_closure_lookup ON api_navigation_closure(from_name, to_name);

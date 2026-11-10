@@ -1,0 +1,36 @@
+{
+  "module": "NativeExports",
+  "version": "v251",
+  "interface": "Lumerical Tcl API; support status unverified",
+  "scope": "This snapshot lists PE export names from llvm-readobj. An export name does not prove API support. A signature appears only when the MSVC symbol name contains type data. The extractor does not read function bodies or run the DLL.",
+  "sources": {
+    "assembly": {
+      "path": "$env:AWP_ROOT251/Lumerical/api/tcl/lumapi.dll",
+      "sha256": "21602ad00cf7d082f63aa556d5c5cd91426896ded742c457528749982b23a232",
+      "byte_length": 66048
+    },
+    "analysis": {
+      "tool": "llvm-readobj",
+      "version": "19.1.5",
+      "operation": "--coff-exports"
+    }
+  },
+  "modules": {
+    "NativeExports": {
+      "doc": "Lumerical Tcl API; support status unverified",
+      "classes": {},
+      "functions": [
+        {
+          "name": "Lumapi_Init",
+          "signature": "",
+          "doc": "PE export. Ordinal: 1. RVA: 0x2670. This static symbol does not prove official support or runtime behavior. This export name does not encode a function signature."
+        }
+      ]
+    }
+  },
+  "statistics": {
+    "total_modules": 1,
+    "total_functions": 1,
+    "demangled_signatures": 0
+  }
+}

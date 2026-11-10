@@ -1,0 +1,208 @@
+# ==============================================================================
+# Declarative Security Permission Policy & Boundary Specification
+# Schema Version: 1.0.0
+# Reference: Stage 0 Security Compliance Gate (implementation_plan.md)
+# ==============================================================================
+
+version: "1.0.0"
+description: "Declarative permission tiers and security boundary enforcement manifest"
+
+# ------------------------------------------------------------------------------
+# 1. Permission Categories & Tier Definitions
+# ------------------------------------------------------------------------------
+categories:
+  open_source:
+    tier: 1
+    description: "PyAnsys public open-source repositories and ecosystem packages."
+    allowed_operations:
+      - "read"
+      - "parse"
+      - "static_analysis"
+      - "ast_inspection"
+      - "signature_verification"
+      - "execute_script"
+    forbidden_operations: []
+    restrictions:
+      - "Operations must remain within public repository structures."
+      - "Proprietary license or credential files must not be ingested."
+
+  documented_api:
+    tier: 2
+    description: "Official published API documentation, manuals, Python/C-API public signatures."
+    allowed_operations:
+      - "read"
+      - "parse"
+      - "index_search"
+      - "signature_analysis"
+      - "docstring_extraction"
+      - "schema_validation"
+    forbidden_operations:
+      - "write"
+      - "modify_official_docs"
+    restrictions:
+      - "Read-only access to published manual sources and interface schemas."
+
+  observable_runtime:
+    tier: 3
+    description: "Authorized solver execution and observable runtime telemetry/outputs in execution directories."
+    allowed_operations:
+      - "execute_solver_job"
+      - "monitor_process_health"
+      - "tail_simulation_log"
+      - "extract_observable_results"
+      - "query_job_status"
+      - "read_runtime_telemetry"
+    forbidden_operations:
+      - "symbol_hooking"
+      - "solver_memory_injection"
+      - "runtime_patching"
+    restrictions:
+      - "Solver jobs must run in designated project or sandbox runtime directories."
+      - "Direct process memory tampering is strictly prohibited."
+
+  proprietary_binary:
+    tier: 4
+    description: "Commercial proprietary binaries, solvers, and CAD kernels."
+    allowed_operations:
+      - "execute_authorized_process"
+      - "query_version"
+      - "check_health"
+    forbidden_operations:
+      - "decompilation"
+      - "disassembly"
+      - "reverse_engineering"
+      - "symbol_hijacking"
+      - "binary_patching"
+      - "memory_dumping"
+      - "symbol_scraping"
+      - "hook_injection"
+    restrictions:
+      - "Commercial binary reverse engineering and disassembly are strictly forbidden."
+      - "Proprietary symbol files (.pdb) and disassembler databases must not be inspected."
+
+  restricted:
+    tier: 5
+    description: "Strictly prohibited operations, credentials, and non-project boundaries."
+    allowed_operations: []
+    forbidden_operations:
+      - "license_drm_bypass"
+      - "unauthorized_directory_traversal"
+      - "secret_key_extraction"
+      - "credential_access"
+      - "proprietary_binary_cracking"
+      - "arbitrary_binary_analysis"
+    restrictions:
+      - "Zero access permitted. All access attempts are blocked and logged."
+
+# ------------------------------------------------------------------------------
+# 2. Path Boundary & Access Rules
+# ------------------------------------------------------------------------------
+paths:
+  allowed_roots:
+    - id: "project_root"
+      path: "${PROJECT_ROOT}"
+      description: "Project workspace directory"
+      allow_read: true
+      allow_write: true
+
+    - id: "ansys_install_root"
+      path: "${ANSYS_ROOT}"
+      description: "Official ANSYS installation root directory"
+      allow_read: true
+      allow_write: false
+
+    - id: "runtime_dir"
+      path: "${RUNTIME_DIR}"
+      description: "Designated runtime cache and job working directory"
+      allow_read: true
+      allow_write: true
+
+    - id: "temp_dir"
+      path: "${TEMP_DIR}"
+      description: "System temporary directory for sandbox execution"
+      allow_read: true
+      allow_write: true
+
+  blocked_extensions:
+    # License & Cryptographic Secrets
+    - ".lic"
+    - ".key"
+    - ".pem"
+    - ".crt"
+    - ".pfx"
+    - ".p12"
+    - ".secret"
+    - ".token"
+    # Private symbols and disassembler databases
+    - ".pdb"
+    - ".idb"
+    - ".i64"
+    - ".til"
+    - ".nam"
+    # Memory dumps & Core crash artifacts
+    - ".dmp"
+    - ".dump"
+    - ".core"
+
+  restricted_patterns:
+    - "*licdebug*"
+    - "*ansyslmd*"
+    - "*/.ssh/*"
+    - "*\\.ssh\\*"
+    - "*/.aws/*"
+    - "*\\.aws\\*"
+    - "C:\\Windows\\System32\\*"
+    - "C:\\Windows\\SysWOW64\\*"
+    - "/etc/shadow"
+    - "/etc/passwd"
+
+# ------------------------------------------------------------------------------
+# 3. Command Execution & Reverse Engineering Interception Rules
+# ------------------------------------------------------------------------------
+commands:
+  disallowed_commands:
+    # Disassemblers, Decompilers & Debuggers
+    - "ghidra"
+    - "ida"
+    - "ida64"
+    - "idat"
+    - "idat64"
+    - "x64dbg"
+    - "x32dbg"
+    - "windbg"
+    - "ollydbg"
+    - "radare2"
+    - "r2"
+    - "cutter"
+    - "gdb"
+    - "lldb"
+    - "objdump"
+    - "readelf"
+    - "dnspy"
+    - "ilspy"
+    - "jadx"
+    # Binary dump & string extraction utilities targeting proprietary binaries
+    - "strings"
+    - "pedump"
+    - "dumpbin"
+    - "pestudio"
+    - "hexdump"
+    # Hex editors & patching utilities
+    - "hxd"
+    - "hexedit"
+    - "bpatch"
+    # License tampering utilities
+    - "lmutil"
+    - "lmgrd"
+
+  proprietary_binary_patterns:
+    - "*ansys*.exe"
+    - "*ansys*.dll"
+    - "*fluent*.exe"
+    - "*fluent*.dll"
+    - "*RunWB2*.exe"
+    - "*SpaceClaim*.exe"
+    - "*lsdyna*.exe"
+    - "*cfx5*.exe"
+    - "*mapdl*.exe"
+    - "*optislang*.exe"

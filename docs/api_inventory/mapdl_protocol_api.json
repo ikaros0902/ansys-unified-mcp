@@ -1,0 +1,2366 @@
+{
+  "module": "generated protobuf modules",
+  "version": "unknown",
+  "sdk_package": "ansys-api-mapdl",
+  "sdk_version": "0.6.0",
+  "interface": "mapdl gRPC protocol schema",
+  "scope": "限於套件內 protobuf message 欄位與 gRPC service RPC signatures。這是傳輸協定 schema，不是產品 scripting API 或支援狀態聲明。",
+  "sources": {
+    "sdk_files": [
+      {
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/mapdl/v0/ansys_kernel_pb2.py",
+        "sha256": "af83e7c4a56dd3c36857159142fffbb20447408f8fcc75982af84a956da4bd36"
+      },
+      {
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/mapdl/v0/C_StreamGrpc_pb2.py",
+        "sha256": "f023194a9ee231348f17154015d2cd0f44892fdf82e8237c41ae3d9d30cc034b"
+      },
+      {
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/mapdl/v0/mapdl_db_pb2.py",
+        "sha256": "6fa1943ab6b1441514e858d4f386bc55c145a68b5a463e7decfad03202b66bef"
+      },
+      {
+        "path": "<REPO_ROOT>/.venv/Lib/site-packages/ansys/api/mapdl/v0/mapdl_pb2.py",
+        "sha256": "63448deb96006259adfc87fb03d3c9a8fabe1eb2444a65d6553cb75e7be57e54"
+      }
+    ]
+  },
+  "modules": {
+    "ansys.api.mapdl.v0.C_StreamGrpc_pb2": {
+      "doc": "ansys.api.grpcstream.v0",
+      "classes": {
+        "OpenRequest": {
+          "name": "OpenRequest",
+          "doc": "Protocol message ansys.api.grpcstream.v0.OpenRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "filename",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "mode",
+              "type": "int32",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "OpenResponse": {
+          "name": "OpenResponse",
+          "doc": "Protocol message ansys.api.grpcstream.v0.OpenResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "succeed",
+              "type": "bool",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "msg",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "CloseRequest": {
+          "name": "CloseRequest",
+          "doc": "Protocol message ansys.api.grpcstream.v0.CloseRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "filename",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "CloseResponse": {
+          "name": "CloseResponse",
+          "doc": "Protocol message ansys.api.grpcstream.v0.CloseResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "succeed",
+              "type": "bool",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "msg",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "SeekRequest": {
+          "name": "SeekRequest",
+          "doc": "Protocol message ansys.api.grpcstream.v0.SeekRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "filename",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "offset",
+              "type": "int64",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "whence",
+              "type": "int32",
+              "doc": "Protobuf field number 3; repeated=False"
+            }
+          ]
+        },
+        "SeekResponse": {
+          "name": "SeekResponse",
+          "doc": "Protocol message ansys.api.grpcstream.v0.SeekResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "offset",
+              "type": "int64",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "TellRequest": {
+          "name": "TellRequest",
+          "doc": "Protocol message ansys.api.grpcstream.v0.TellRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "filename",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "TellResponse": {
+          "name": "TellResponse",
+          "doc": "Protocol message ansys.api.grpcstream.v0.TellResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "offset",
+              "type": "int64",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "ReadRequest": {
+          "name": "ReadRequest",
+          "doc": "Protocol message ansys.api.grpcstream.v0.ReadRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "filename",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "streamreq",
+              "type": "ansys.api.kernel.v0.StreamRequest",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "size",
+              "type": "int64",
+              "doc": "Protobuf field number 3; repeated=False"
+            }
+          ]
+        },
+        "WriteRequest": {
+          "name": "WriteRequest",
+          "doc": "Protocol message ansys.api.grpcstream.v0.WriteRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "filename",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "size",
+              "type": "int64",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "WriteResponse": {
+          "name": "WriteResponse",
+          "doc": "Protocol message ansys.api.grpcstream.v0.WriteResponse",
+          "methods": [],
+          "properties": []
+        },
+        "C_StreamGrpcService": {
+          "name": "C_StreamGrpcService",
+          "doc": "gRPC service ansys.api.grpcstream.v0.C_StreamGrpcService",
+          "methods": [
+            {
+              "name": "Open",
+              "signature": "(ansys.api.grpcstream.v0.OpenRequest) -> ansys.api.grpcstream.v0.OpenResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "Close",
+              "signature": "(ansys.api.grpcstream.v0.CloseRequest) -> ansys.api.grpcstream.v0.CloseResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "Seek",
+              "signature": "(ansys.api.grpcstream.v0.SeekRequest) -> ansys.api.grpcstream.v0.SeekResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "Tell",
+              "signature": "(ansys.api.grpcstream.v0.TellRequest) -> ansys.api.grpcstream.v0.TellResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "Read",
+              "signature": "(ansys.api.grpcstream.v0.ReadRequest) -> ansys.api.kernel.v0.Chunk [client_streaming=False, server_streaming=True]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "Write",
+              "signature": "(ansys.api.kernel.v0.Chunk) -> ansys.api.grpcstream.v0.WriteResponse [client_streaming=True, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            }
+          ],
+          "properties": []
+        }
+      },
+      "functions": []
+    },
+    "ansys.api.mapdl.v0.ansys_kernel_pb2": {
+      "doc": "ansys.api.kernel.v0",
+      "classes": {
+        "EmptyRequest": {
+          "name": "EmptyRequest",
+          "doc": "Protocol message ansys.api.kernel.v0.EmptyRequest",
+          "methods": [],
+          "properties": []
+        },
+        "EmptyResponse": {
+          "name": "EmptyResponse",
+          "doc": "Protocol message ansys.api.kernel.v0.EmptyResponse",
+          "methods": [],
+          "properties": []
+        },
+        "CtrlRequest": {
+          "name": "CtrlRequest",
+          "doc": "Protocol message ansys.api.kernel.v0.CtrlRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "ctrl",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "opt1",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "CtrlResponse": {
+          "name": "CtrlResponse",
+          "doc": "Protocol message ansys.api.kernel.v0.CtrlResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "response",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "status",
+              "type": "int32",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "StreamRequest": {
+          "name": "StreamRequest",
+          "doc": "Protocol message ansys.api.kernel.v0.StreamRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "chunk_size",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "rec_name",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "Chunk": {
+          "name": "Chunk",
+          "doc": "Protocol message ansys.api.kernel.v0.Chunk",
+          "methods": [],
+          "properties": [
+            {
+              "name": "array_name",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "payload",
+              "type": "bytes",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "value_type",
+              "type": "ansys.api.kernel.v0.ValueType",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "shape",
+              "type": "string",
+              "doc": "Protobuf field number 4; repeated=False"
+            },
+            {
+              "name": "size",
+              "type": "int64",
+              "doc": "Protobuf field number 5; repeated=False"
+            }
+          ]
+        },
+        "Node": {
+          "name": "Node",
+          "doc": "Protocol message ansys.api.kernel.v0.Node",
+          "methods": [],
+          "properties": [
+            {
+              "name": "id",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "x",
+              "type": "double",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "y",
+              "type": "double",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "z",
+              "type": "double",
+              "doc": "Protobuf field number 4; repeated=False"
+            }
+          ]
+        },
+        "Matrix": {
+          "name": "Matrix",
+          "doc": "Protocol message ansys.api.kernel.v0.Matrix",
+          "methods": [],
+          "properties": [
+            {
+              "name": "nrow",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "ncol",
+              "type": "int32",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "vtype",
+              "type": "ansys.api.kernel.v0.ValueType",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "Storage",
+              "type": "ansys.api.kernel.v0.Matrix.StorageOption",
+              "doc": "Protobuf field number 4; repeated=False"
+            },
+            {
+              "name": "side",
+              "type": "ansys.api.kernel.v0.Matrix.SideOption",
+              "doc": "Protobuf field number 5; repeated=False"
+            }
+          ]
+        },
+        "DenseMatrix": {
+          "name": "DenseMatrix",
+          "doc": "Protocol message ansys.api.kernel.v0.DenseMatrix",
+          "methods": [],
+          "properties": [
+            {
+              "name": "mat",
+              "type": "ansys.api.kernel.v0.Matrix",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "values",
+              "type": "double",
+              "doc": "Protobuf field number 2; repeated=True"
+            }
+          ]
+        },
+        "SparseMatrix": {
+          "name": "SparseMatrix",
+          "doc": "Protocol message ansys.api.kernel.v0.SparseMatrix",
+          "methods": [],
+          "properties": [
+            {
+              "name": "mat",
+              "type": "ansys.api.kernel.v0.Matrix",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "maxlen",
+              "type": "int32",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "nval",
+              "type": "int64",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "sym",
+              "type": "bool",
+              "doc": "Protobuf field number 4; repeated=False"
+            },
+            {
+              "name": "rows",
+              "type": "int64",
+              "doc": "Protobuf field number 5; repeated=True"
+            },
+            {
+              "name": "colsIdx",
+              "type": "int32",
+              "doc": "Protobuf field number 6; repeated=True"
+            },
+            {
+              "name": "values",
+              "type": "double",
+              "doc": "Protobuf field number 7; repeated=True"
+            }
+          ]
+        }
+      },
+      "functions": []
+    },
+    "ansys.api.mapdl.v0.mapdl_db_pb2": {
+      "doc": "ansys.api.mapdl_db.v0",
+      "classes": {
+        "NodRequest": {
+          "name": "NodRequest",
+          "doc": "Protocol message ansys.api.mapdl_db.v0.NodRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "next",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "NodResponse": {
+          "name": "NodResponse",
+          "doc": "Protocol message ansys.api.mapdl_db.v0.NodResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "inum",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "NodSelRequest": {
+          "name": "NodSelRequest",
+          "doc": "Protocol message ansys.api.mapdl_db.v0.NodSelRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "inum",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "ksel",
+              "type": "int32",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "ElmRequest": {
+          "name": "ElmRequest",
+          "doc": "Protocol message ansys.api.mapdl_db.v0.ElmRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "next",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "ElmResponse": {
+          "name": "ElmResponse",
+          "doc": "Protocol message ansys.api.mapdl_db.v0.ElmResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "inum",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "ElmSelRequest": {
+          "name": "ElmSelRequest",
+          "doc": "Protocol message ansys.api.mapdl_db.v0.ElmSelRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "inum",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "ksel",
+              "type": "int32",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "NodInqrRequest": {
+          "name": "NodInqrRequest",
+          "doc": "Protocol message ansys.api.mapdl_db.v0.NodInqrRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "node",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "key",
+              "type": "int32",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "NodInqrResponse": {
+          "name": "NodInqrResponse",
+          "doc": "Protocol message ansys.api.mapdl_db.v0.NodInqrResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "ret",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "getnodRequest": {
+          "name": "getnodRequest",
+          "doc": "Protocol message ansys.api.mapdl_db.v0.getnodRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "node",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "kerr",
+              "type": "int32",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "kcrot",
+              "type": "int32",
+              "doc": "Protobuf field number 3; repeated=False"
+            }
+          ]
+        },
+        "getnodResponse": {
+          "name": "getnodResponse",
+          "doc": "Protocol message ansys.api.mapdl_db.v0.getnodResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "kerr",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "v",
+              "type": "double",
+              "doc": "Protobuf field number 2; repeated=True"
+            }
+          ]
+        },
+        "putnodRequest": {
+          "name": "putnodRequest",
+          "doc": "Protocol message ansys.api.mapdl_db.v0.putnodRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "node",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "vctn",
+              "type": "double",
+              "doc": "Protobuf field number 2; repeated=True"
+            },
+            {
+              "name": "kcrot",
+              "type": "int32",
+              "doc": "Protobuf field number 3; repeated=False"
+            }
+          ]
+        },
+        "NodGallRequest": {
+          "name": "NodGallRequest",
+          "doc": "Protocol message ansys.api.mapdl_db.v0.NodGallRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "node",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "NodGallResponse": {
+          "name": "NodGallResponse",
+          "doc": "Protocol message ansys.api.mapdl_db.v0.NodGallResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "ret",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "xyz",
+              "type": "double",
+              "doc": "Protobuf field number 2; repeated=True"
+            }
+          ]
+        },
+        "NodSpgtRequest": {
+          "name": "NodSpgtRequest",
+          "doc": "Protocol message ansys.api.mapdl_db.v0.NodSpgtRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "node",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "dofs",
+              "type": "int32",
+              "doc": "Protobuf field number 2; repeated=True"
+            },
+            {
+              "name": "ndof",
+              "type": "int32",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "nrot",
+              "type": "int32",
+              "doc": "Protobuf field number 4; repeated=False"
+            },
+            {
+              "name": "xyzang",
+              "type": "double",
+              "doc": "Protobuf field number 5; repeated=True"
+            },
+            {
+              "name": "nuvect",
+              "type": "int32",
+              "doc": "Protobuf field number 6; repeated=False"
+            }
+          ]
+        },
+        "NodSpgtResponse": {
+          "name": "NodSpgtResponse",
+          "doc": "Protocol message ansys.api.mapdl_db.v0.NodSpgtResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "unode",
+              "type": "double",
+              "doc": "Protobuf field number 1; repeated=True"
+            }
+          ]
+        },
+        "ElmIqrRequest": {
+          "name": "ElmIqrRequest",
+          "doc": "Protocol message ansys.api.mapdl_db.v0.ElmIqrRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "ielem",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "key",
+              "type": "int32",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "ElmIqrResponse": {
+          "name": "ElmIqrResponse",
+          "doc": "Protocol message ansys.api.mapdl_db.v0.ElmIqrResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "elmiqr",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "getelmRequest": {
+          "name": "getelmRequest",
+          "doc": "Protocol message ansys.api.mapdl_db.v0.getelmRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "ielem",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "getelmResponse": {
+          "name": "getelmResponse",
+          "doc": "Protocol message ansys.api.mapdl_db.v0.getelmResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "ielem",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "elmdat",
+              "type": "int32",
+              "doc": "Protobuf field number 2; repeated=True"
+            },
+            {
+              "name": "nnod",
+              "type": "int32",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "nodes",
+              "type": "int32",
+              "doc": "Protobuf field number 4; repeated=True"
+            }
+          ]
+        },
+        "putelmRequest": {
+          "name": "putelmRequest",
+          "doc": "Protocol message ansys.api.mapdl_db.v0.putelmRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "ielem",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "elmdat",
+              "type": "int32",
+              "doc": "Protobuf field number 2; repeated=True"
+            },
+            {
+              "name": "nnod",
+              "type": "int32",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "nodes",
+              "type": "int32",
+              "doc": "Protobuf field number 4; repeated=True"
+            }
+          ]
+        },
+        "iqretyRequest": {
+          "name": "iqretyRequest",
+          "doc": "Protocol message ansys.api.mapdl_db.v0.iqretyRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "itype",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "key",
+              "type": "int32",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "iqretyResponse": {
+          "name": "iqretyResponse",
+          "doc": "Protocol message ansys.api.mapdl_db.v0.iqretyResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "iqr",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "getetyRequest": {
+          "name": "getetyRequest",
+          "doc": "Protocol message ansys.api.mapdl_db.v0.getetyRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "itype",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "getetyResponse": {
+          "name": "getetyResponse",
+          "doc": "Protocol message ansys.api.mapdl_db.v0.getetyResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "itype",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "ielx_sz",
+              "type": "int32",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "ielx",
+              "type": "int32",
+              "doc": "Protobuf field number 3; repeated=True"
+            }
+          ]
+        },
+        "putetyRequest": {
+          "name": "putetyRequest",
+          "doc": "Protocol message ansys.api.mapdl_db.v0.putetyRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "itype",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "n",
+              "type": "int32",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "ielx",
+              "type": "int32",
+              "doc": "Protobuf field number 3; repeated=True"
+            }
+          ]
+        },
+        "iqrmpRequest": {
+          "name": "iqrmpRequest",
+          "doc": "Protocol message ansys.api.mapdl_db.v0.iqrmpRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "mat",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "iprop",
+              "type": "int32",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "key",
+              "type": "int32",
+              "doc": "Protobuf field number 3; repeated=False"
+            }
+          ]
+        },
+        "iqrmpResponse": {
+          "name": "iqrmpResponse",
+          "doc": "Protocol message ansys.api.mapdl_db.v0.iqrmpResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "ret",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "getmpRequest": {
+          "name": "getmpRequest",
+          "doc": "Protocol message ansys.api.mapdl_db.v0.getmpRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "mat",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "iprop",
+              "type": "int32",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "getmpResponse": {
+          "name": "getmpResponse",
+          "doc": "Protocol message ansys.api.mapdl_db.v0.getmpResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "ret",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "temp",
+              "type": "double",
+              "doc": "Protobuf field number 2; repeated=True"
+            },
+            {
+              "name": "prop",
+              "type": "double",
+              "doc": "Protobuf field number 3; repeated=True"
+            }
+          ]
+        },
+        "putmpRequest": {
+          "name": "putmpRequest",
+          "doc": "Protocol message ansys.api.mapdl_db.v0.putmpRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "mat",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "iprop",
+              "type": "int32",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "ntab",
+              "type": "int32",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "temp",
+              "type": "double",
+              "doc": "Protobuf field number 4; repeated=True"
+            },
+            {
+              "name": "prop",
+              "type": "double",
+              "doc": "Protobuf field number 5; repeated=True"
+            }
+          ]
+        },
+        "iqrcsyRequest": {
+          "name": "iqrcsyRequest",
+          "doc": "Protocol message ansys.api.mapdl_db.v0.iqrcsyRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "ncsy",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "key",
+              "type": "int32",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "iqrcsyResponse": {
+          "name": "iqrcsyResponse",
+          "doc": "Protocol message ansys.api.mapdl_db.v0.iqrcsyResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "ret",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "getcsyRequest": {
+          "name": "getcsyRequest",
+          "doc": "Protocol message ansys.api.mapdl_db.v0.getcsyRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "ncsy",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "csyinx",
+              "type": "int32",
+              "doc": "Protobuf field number 2; repeated=True"
+            }
+          ]
+        },
+        "getcsyResponse": {
+          "name": "getcsyResponse",
+          "doc": "Protocol message ansys.api.mapdl_db.v0.getcsyResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "ret",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "csydpx",
+              "type": "double",
+              "doc": "Protobuf field number 2; repeated=True"
+            }
+          ]
+        },
+        "putcsyRequest": {
+          "name": "putcsyRequest",
+          "doc": "Protocol message ansys.api.mapdl_db.v0.putcsyRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "ncsy",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "csyinx",
+              "type": "int32",
+              "doc": "Protobuf field number 2; repeated=True"
+            },
+            {
+              "name": "csydpx",
+              "type": "double",
+              "doc": "Protobuf field number 3; repeated=True"
+            }
+          ]
+        },
+        "NodResIqrRequest": {
+          "name": "NodResIqrRequest",
+          "doc": "Protocol message ansys.api.mapdl_db.v0.NodResIqrRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "inode",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "key",
+              "type": "int32",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "NodResIqrResponse": {
+          "name": "NodResIqrResponse",
+          "doc": "Protocol message ansys.api.mapdl_db.v0.NodResIqrResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "iqr",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "NodResGetRequest": {
+          "name": "NodResGetRequest",
+          "doc": "Protocol message ansys.api.mapdl_db.v0.NodResGetRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "inode",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "ndf",
+              "type": "int32",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "idf",
+              "type": "int32",
+              "doc": "Protobuf field number 3; repeated=True"
+            }
+          ]
+        },
+        "NodResGetResponse": {
+          "name": "NodResGetResponse",
+          "doc": "Protocol message ansys.api.mapdl_db.v0.NodResGetResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "value",
+              "type": "double",
+              "doc": "Protobuf field number 1; repeated=True"
+            }
+          ]
+        },
+        "NodResPutRequest": {
+          "name": "NodResPutRequest",
+          "doc": "Protocol message ansys.api.mapdl_db.v0.NodResPutRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "inode",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "ndf",
+              "type": "int32",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "idf",
+              "type": "int32",
+              "doc": "Protobuf field number 3; repeated=True"
+            },
+            {
+              "name": "value",
+              "type": "double",
+              "doc": "Protobuf field number 4; repeated=True"
+            }
+          ]
+        },
+        "NodResDelRequest": {
+          "name": "NodResDelRequest",
+          "doc": "Protocol message ansys.api.mapdl_db.v0.NodResDelRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "inode",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "ndf",
+              "type": "int32",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "idf",
+              "type": "int32",
+              "doc": "Protobuf field number 3; repeated=True"
+            }
+          ]
+        },
+        "ElmResIqrRequest": {
+          "name": "ElmResIqrRequest",
+          "doc": "Protocol message ansys.api.mapdl_db.v0.ElmResIqrRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "type",
+              "type": "ansys.api.mapdl_db.v0.ElmResult",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "ielem",
+              "type": "int32",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "key",
+              "type": "int32",
+              "doc": "Protobuf field number 3; repeated=False"
+            }
+          ]
+        },
+        "ElmResIqrResponse": {
+          "name": "ElmResIqrResponse",
+          "doc": "Protocol message ansys.api.mapdl_db.v0.ElmResIqrResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "iqr",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "ElmResGetRequest": {
+          "name": "ElmResGetRequest",
+          "doc": "Protocol message ansys.api.mapdl_db.v0.ElmResGetRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "type",
+              "type": "ansys.api.mapdl_db.v0.ElmResult",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "ielem",
+              "type": "int32",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "ElmResGetResponse": {
+          "name": "ElmResGetResponse",
+          "doc": "Protocol message ansys.api.mapdl_db.v0.ElmResGetResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "get",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "value",
+              "type": "double",
+              "doc": "Protobuf field number 2; repeated=True"
+            }
+          ]
+        },
+        "ElmResPutRequest": {
+          "name": "ElmResPutRequest",
+          "doc": "Protocol message ansys.api.mapdl_db.v0.ElmResPutRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "type",
+              "type": "ansys.api.mapdl_db.v0.ElmResult",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "ielem",
+              "type": "int32",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "nval",
+              "type": "int32",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "value",
+              "type": "double",
+              "doc": "Protobuf field number 4; repeated=True"
+            }
+          ]
+        },
+        "ElmResDelRequest": {
+          "name": "ElmResDelRequest",
+          "doc": "Protocol message ansys.api.mapdl_db.v0.ElmResDelRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "type",
+              "type": "ansys.api.mapdl_db.v0.ElmResult",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "ielem",
+              "type": "int32",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "GetElmInfoRequest": {
+          "name": "GetElmInfoRequest",
+          "doc": "Protocol message ansys.api.mapdl_db.v0.GetElmInfoRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "inquire",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "GetElmInfoResponse": {
+          "name": "GetElmInfoResponse",
+          "doc": "Protocol message ansys.api.mapdl_db.v0.GetElmInfoResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "value",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "GetElmDataRequest": {
+          "name": "GetElmDataRequest",
+          "doc": "Protocol message ansys.api.mapdl_db.v0.GetElmDataRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "kchar",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "elemId",
+              "type": "int32",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "kMatRecPt",
+              "type": "int32",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "ncomp",
+              "type": "int32",
+              "doc": "Protobuf field number 4; repeated=False"
+            }
+          ]
+        },
+        "GetElmDataResponse": {
+          "name": "GetElmDataResponse",
+          "doc": "Protocol message ansys.api.mapdl_db.v0.GetElmDataResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "vect",
+              "type": "double",
+              "doc": "Protobuf field number 1; repeated=True"
+            }
+          ]
+        },
+        "PutElmDataRequest": {
+          "name": "PutElmDataRequest",
+          "doc": "Protocol message ansys.api.mapdl_db.v0.PutElmDataRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "inquire",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "elemId",
+              "type": "int32",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "kIntg",
+              "type": "int32",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "nvect",
+              "type": "int32",
+              "doc": "Protobuf field number 4; repeated=False"
+            },
+            {
+              "name": "vect",
+              "type": "double",
+              "doc": "Protobuf field number 5; repeated=True"
+            }
+          ]
+        },
+        "PutElmDataResponse": {
+          "name": "PutElmDataResponse",
+          "doc": "Protocol message ansys.api.mapdl_db.v0.PutElmDataResponse",
+          "methods": [],
+          "properties": []
+        },
+        "putElmMatRec1Request": {
+          "name": "putElmMatRec1Request",
+          "doc": "Protocol message ansys.api.mapdl_db.v0.putElmMatRec1Request",
+          "methods": [],
+          "properties": [
+            {
+              "name": "matRecordIndex",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "kMatRecPt",
+              "type": "int32",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "elemId",
+              "type": "int32",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "ncomp",
+              "type": "int32",
+              "doc": "Protobuf field number 4; repeated=False"
+            },
+            {
+              "name": "vect",
+              "type": "double",
+              "doc": "Protobuf field number 5; repeated=True"
+            }
+          ]
+        },
+        "putElmMatRec1Response": {
+          "name": "putElmMatRec1Response",
+          "doc": "Protocol message ansys.api.mapdl_db.v0.putElmMatRec1Response",
+          "methods": [],
+          "properties": []
+        },
+        "INISIsNewVersionUsedRequest": {
+          "name": "INISIsNewVersionUsedRequest",
+          "doc": "Protocol message ansys.api.mapdl_db.v0.INISIsNewVersionUsedRequest",
+          "methods": [],
+          "properties": []
+        },
+        "INISIsNewVersionUsedResponse": {
+          "name": "INISIsNewVersionUsedResponse",
+          "doc": "Protocol message ansys.api.mapdl_db.v0.INISIsNewVersionUsedResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "ret",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "MapdlDbService": {
+          "name": "MapdlDbService",
+          "doc": "gRPC service ansys.api.mapdl_db.v0.MapdlDbService",
+          "methods": [
+            {
+              "name": "NodNext",
+              "signature": "(ansys.api.mapdl_db.v0.NodRequest) -> ansys.api.mapdl_db.v0.NodResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "NodPrev",
+              "signature": "(ansys.api.mapdl_db.v0.NodRequest) -> ansys.api.mapdl_db.v0.NodResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "NodNextDefined",
+              "signature": "(ansys.api.mapdl_db.v0.NodRequest) -> ansys.api.mapdl_db.v0.NodResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "NodSel",
+              "signature": "(ansys.api.mapdl_db.v0.NodSelRequest) -> google.protobuf.Empty [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "ElmNext",
+              "signature": "(ansys.api.mapdl_db.v0.ElmRequest) -> ansys.api.mapdl_db.v0.ElmResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "ElmPrev",
+              "signature": "(ansys.api.mapdl_db.v0.ElmRequest) -> ansys.api.mapdl_db.v0.ElmResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "ElmNextDefined",
+              "signature": "(ansys.api.mapdl_db.v0.ElmRequest) -> ansys.api.mapdl_db.v0.ElmResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "ElmSel",
+              "signature": "(ansys.api.mapdl_db.v0.ElmSelRequest) -> google.protobuf.Empty [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "NodInqr",
+              "signature": "(ansys.api.mapdl_db.v0.NodInqrRequest) -> ansys.api.mapdl_db.v0.NodInqrResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "getNod",
+              "signature": "(ansys.api.mapdl_db.v0.getnodRequest) -> ansys.api.mapdl_db.v0.getnodResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "putNod",
+              "signature": "(ansys.api.mapdl_db.v0.putnodRequest) -> ansys.api.kernel.v0.EmptyResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "getAllNod",
+              "signature": "(ansys.api.kernel.v0.EmptyRequest) -> ansys.api.mapdl_db.v0.getnodResponse [client_streaming=False, server_streaming=True]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "getAllNodC",
+              "signature": "(ansys.api.kernel.v0.EmptyRequest) -> ansys.api.kernel.v0.Chunk [client_streaming=False, server_streaming=True]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "putAllNod",
+              "signature": "(ansys.api.mapdl_db.v0.putnodRequest) -> ansys.api.kernel.v0.EmptyResponse [client_streaming=True, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "NodGall",
+              "signature": "(ansys.api.mapdl_db.v0.NodGallRequest) -> ansys.api.mapdl_db.v0.NodGallResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "NodSpgt",
+              "signature": "(ansys.api.mapdl_db.v0.NodSpgtRequest) -> ansys.api.mapdl_db.v0.NodSpgtResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "ElmIqr",
+              "signature": "(ansys.api.mapdl_db.v0.ElmIqrRequest) -> ansys.api.mapdl_db.v0.ElmIqrResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "getElm",
+              "signature": "(ansys.api.mapdl_db.v0.getelmRequest) -> ansys.api.mapdl_db.v0.getelmResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "putElm",
+              "signature": "(ansys.api.mapdl_db.v0.putelmRequest) -> ansys.api.kernel.v0.EmptyResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "getAllElm",
+              "signature": "(ansys.api.kernel.v0.EmptyRequest) -> ansys.api.mapdl_db.v0.getelmResponse [client_streaming=False, server_streaming=True]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "getAllElmC",
+              "signature": "(ansys.api.kernel.v0.EmptyRequest) -> ansys.api.kernel.v0.Chunk [client_streaming=False, server_streaming=True]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "putAllElm",
+              "signature": "(ansys.api.mapdl_db.v0.putelmRequest) -> ansys.api.kernel.v0.EmptyResponse [client_streaming=True, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "iqrEty",
+              "signature": "(ansys.api.mapdl_db.v0.iqretyRequest) -> ansys.api.mapdl_db.v0.iqretyResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "getEty",
+              "signature": "(ansys.api.mapdl_db.v0.getetyRequest) -> ansys.api.mapdl_db.v0.getetyResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "putEty",
+              "signature": "(ansys.api.mapdl_db.v0.putetyRequest) -> ansys.api.kernel.v0.EmptyResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "getAllEty",
+              "signature": "(ansys.api.kernel.v0.EmptyRequest) -> ansys.api.mapdl_db.v0.getetyResponse [client_streaming=False, server_streaming=True]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "getAllEtyC",
+              "signature": "(ansys.api.kernel.v0.EmptyRequest) -> ansys.api.kernel.v0.Chunk [client_streaming=False, server_streaming=True]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "putAllEty",
+              "signature": "(ansys.api.mapdl_db.v0.putetyRequest) -> ansys.api.kernel.v0.EmptyResponse [client_streaming=True, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "iqrMp",
+              "signature": "(ansys.api.mapdl_db.v0.iqrmpRequest) -> ansys.api.mapdl_db.v0.iqrmpResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "getMp",
+              "signature": "(ansys.api.mapdl_db.v0.getmpRequest) -> ansys.api.mapdl_db.v0.getmpResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "putMp",
+              "signature": "(ansys.api.mapdl_db.v0.putmpRequest) -> ansys.api.kernel.v0.EmptyResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "delMp",
+              "signature": "(ansys.api.mapdl_db.v0.getmpRequest) -> ansys.api.kernel.v0.EmptyResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "iqrCsy",
+              "signature": "(ansys.api.mapdl_db.v0.iqrcsyRequest) -> ansys.api.mapdl_db.v0.iqrcsyResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "getCsy",
+              "signature": "(ansys.api.mapdl_db.v0.getcsyRequest) -> ansys.api.mapdl_db.v0.getcsyResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "putCsy",
+              "signature": "(ansys.api.mapdl_db.v0.putcsyRequest) -> ansys.api.kernel.v0.EmptyResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "delCsy",
+              "signature": "(ansys.api.mapdl_db.v0.getcsyRequest) -> ansys.api.kernel.v0.EmptyResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "NodResIqr",
+              "signature": "(ansys.api.mapdl_db.v0.NodResIqrRequest) -> ansys.api.mapdl_db.v0.NodResIqrResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "NodResGet",
+              "signature": "(ansys.api.mapdl_db.v0.NodResGetRequest) -> ansys.api.mapdl_db.v0.NodResGetResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "NodResPut",
+              "signature": "(ansys.api.mapdl_db.v0.NodResPutRequest) -> google.protobuf.Empty [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "NodResDel",
+              "signature": "(ansys.api.mapdl_db.v0.NodResDelRequest) -> google.protobuf.Empty [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "ElmResIqr",
+              "signature": "(ansys.api.mapdl_db.v0.ElmResIqrRequest) -> ansys.api.mapdl_db.v0.ElmResIqrResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "ElmResGet",
+              "signature": "(ansys.api.mapdl_db.v0.ElmResGetRequest) -> ansys.api.mapdl_db.v0.ElmResGetResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "ElmResPut",
+              "signature": "(ansys.api.mapdl_db.v0.ElmResPutRequest) -> google.protobuf.Empty [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "ElmResDel",
+              "signature": "(ansys.api.mapdl_db.v0.ElmResDelRequest) -> google.protobuf.Empty [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "getElmInfo",
+              "signature": "(ansys.api.mapdl_db.v0.GetElmInfoRequest) -> ansys.api.mapdl_db.v0.GetElmInfoResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "getElmData",
+              "signature": "(ansys.api.mapdl_db.v0.GetElmDataRequest) -> ansys.api.mapdl_db.v0.GetElmDataResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "putElmData",
+              "signature": "(ansys.api.mapdl_db.v0.PutElmDataRequest) -> ansys.api.mapdl_db.v0.PutElmDataResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "putElmMatRec1",
+              "signature": "(ansys.api.mapdl_db.v0.putElmMatRec1Request) -> ansys.api.mapdl_db.v0.putElmMatRec1Response [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "INISIsNewVersionUsed",
+              "signature": "(ansys.api.mapdl_db.v0.INISIsNewVersionUsedRequest) -> ansys.api.mapdl_db.v0.INISIsNewVersionUsedResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            }
+          ],
+          "properties": []
+        }
+      },
+      "functions": []
+    },
+    "ansys.api.mapdl.v0.mapdl_pb2": {
+      "doc": "ansys.api.mapdl.v0",
+      "classes": {
+        "CmdRequest": {
+          "name": "CmdRequest",
+          "doc": "Protocol message ansys.api.mapdl.v0.CmdRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "command",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "opt",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "CmdResponse": {
+          "name": "CmdResponse",
+          "doc": "Protocol message ansys.api.mapdl.v0.CmdResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "response",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "status",
+              "type": "int32",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "error_msg",
+              "type": "string",
+              "doc": "Protobuf field number 3; repeated=False"
+            }
+          ]
+        },
+        "InputFileRequest": {
+          "name": "InputFileRequest",
+          "doc": "Protocol message ansys.api.mapdl.v0.InputFileRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "filename",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "opt",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "CmdOutput": {
+          "name": "CmdOutput",
+          "doc": "Protocol message ansys.api.mapdl.v0.CmdOutput",
+          "methods": [],
+          "properties": [
+            {
+              "name": "msgtype",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "cmdout",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=True"
+            }
+          ]
+        },
+        "FctArg": {
+          "name": "FctArg",
+          "doc": "Protocol message ansys.api.mapdl.v0.FctArg",
+          "methods": [],
+          "properties": [
+            {
+              "name": "type",
+              "type": "ansys.api.kernel.v0.ValueType",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "val",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=True"
+            }
+          ]
+        },
+        "FctCallRequest": {
+          "name": "FctCallRequest",
+          "doc": "Protocol message ansys.api.mapdl.v0.FctCallRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "fct_name",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "args",
+              "type": "ansys.api.mapdl.v0.FctArg",
+              "doc": "Protobuf field number 2; repeated=True"
+            },
+            {
+              "name": "returns_arg",
+              "type": "bool",
+              "doc": "Protobuf field number 3; repeated=False"
+            }
+          ]
+        },
+        "FctCallResponse": {
+          "name": "FctCallResponse",
+          "doc": "Protocol message ansys.api.mapdl.v0.FctCallResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "feedback",
+              "type": "ansys.api.mapdl.v0.FctArg",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "NodeRequest": {
+          "name": "NodeRequest",
+          "doc": "Protocol message ansys.api.mapdl.v0.NodeRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "num",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "NodeResponse": {
+          "name": "NodeResponse",
+          "doc": "Protocol message ansys.api.mapdl.v0.NodeResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "node",
+              "type": "ansys.api.kernel.v0.Node",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "setNodeRequest": {
+          "name": "setNodeRequest",
+          "doc": "Protocol message ansys.api.mapdl.v0.setNodeRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "node",
+              "type": "ansys.api.kernel.v0.Node",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "setNodeResponse": {
+          "name": "setNodeResponse",
+          "doc": "Protocol message ansys.api.mapdl.v0.setNodeResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "num",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "ElementRequest": {
+          "name": "ElementRequest",
+          "doc": "Protocol message ansys.api.mapdl.v0.ElementRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "num",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "Element": {
+          "name": "Element",
+          "doc": "Protocol message ansys.api.mapdl.v0.Element",
+          "methods": [],
+          "properties": [
+            {
+              "name": "id",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "mat",
+              "type": "int32",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "type",
+              "type": "int32",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "real",
+              "type": "int32",
+              "doc": "Protobuf field number 4; repeated=False"
+            },
+            {
+              "name": "sect",
+              "type": "int32",
+              "doc": "Protobuf field number 5; repeated=False"
+            },
+            {
+              "name": "cs",
+              "type": "int32",
+              "doc": "Protobuf field number 6; repeated=False"
+            },
+            {
+              "name": "node_count",
+              "type": "int32",
+              "doc": "Protobuf field number 7; repeated=False"
+            },
+            {
+              "name": "nodes_ids",
+              "type": "int32",
+              "doc": "Protobuf field number 8; repeated=True"
+            }
+          ]
+        },
+        "ElementResponse": {
+          "name": "ElementResponse",
+          "doc": "Protocol message ansys.api.mapdl.v0.ElementResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "elm",
+              "type": "ansys.api.mapdl.v0.Element",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "ElementType": {
+          "name": "ElementType",
+          "doc": "Protocol message ansys.api.mapdl.v0.ElementType",
+          "methods": [],
+          "properties": [
+            {
+              "name": "ielc",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=True"
+            }
+          ]
+        },
+        "ParameterRequest": {
+          "name": "ParameterRequest",
+          "doc": "Protocol message ansys.api.mapdl.v0.ParameterRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "name",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "array",
+              "type": "bool",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "ParameterResponse": {
+          "name": "ParameterResponse",
+          "doc": "Protocol message ansys.api.mapdl.v0.ParameterResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "val",
+              "type": "double",
+              "doc": "Protobuf field number 1; repeated=True"
+            },
+            {
+              "name": "sval",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "type",
+              "type": "int32",
+              "doc": "Protobuf field number 3; repeated=False"
+            }
+          ]
+        },
+        "VariableRequest": {
+          "name": "VariableRequest",
+          "doc": "Protocol message ansys.api.mapdl.v0.VariableRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "inum",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "VariableResponse": {
+          "name": "VariableResponse",
+          "doc": "Protocol message ansys.api.mapdl.v0.VariableResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "val",
+              "type": "double",
+              "doc": "Protobuf field number 1; repeated=True"
+            }
+          ]
+        },
+        "GetRequest": {
+          "name": "GetRequest",
+          "doc": "Protocol message ansys.api.mapdl.v0.GetRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "getcmd",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "GetResponse": {
+          "name": "GetResponse",
+          "doc": "Protocol message ansys.api.mapdl.v0.GetResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "dval",
+              "type": "double",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "sval",
+              "type": "string",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "type",
+              "type": "int32",
+              "doc": "Protobuf field number 3; repeated=False"
+            }
+          ]
+        },
+        "DataResponse": {
+          "name": "DataResponse",
+          "doc": "Protocol message ansys.api.mapdl.v0.DataResponse",
+          "methods": [],
+          "properties": [
+            {
+              "name": "stype",
+              "type": "ansys.api.kernel.v0.ValueType",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "objtype",
+              "type": "ansys.api.mapdl.v0.DataType",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "size1",
+              "type": "int32",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "size2",
+              "type": "int32",
+              "doc": "Protobuf field number 4; repeated=False"
+            },
+            {
+              "name": "mattype",
+              "type": "ansys.api.mapdl.v0.MatType",
+              "doc": "Protobuf field number 5; repeated=False"
+            }
+          ]
+        },
+        "SetVecDataRequest": {
+          "name": "SetVecDataRequest",
+          "doc": "Protocol message ansys.api.mapdl.v0.SetVecDataRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "vname",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "stype",
+              "type": "ansys.api.kernel.v0.ValueType",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "size",
+              "type": "int32",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "chunk",
+              "type": "ansys.api.kernel.v0.Chunk",
+              "doc": "Protobuf field number 4; repeated=False"
+            }
+          ]
+        },
+        "SetMatDataRequest": {
+          "name": "SetMatDataRequest",
+          "doc": "Protocol message ansys.api.mapdl.v0.SetMatDataRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "mname",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "stype",
+              "type": "ansys.api.kernel.v0.ValueType",
+              "doc": "Protobuf field number 2; repeated=False"
+            },
+            {
+              "name": "nrow",
+              "type": "int32",
+              "doc": "Protobuf field number 3; repeated=False"
+            },
+            {
+              "name": "ncol",
+              "type": "int32",
+              "doc": "Protobuf field number 4; repeated=False"
+            },
+            {
+              "name": "chunk",
+              "type": "ansys.api.kernel.v0.Chunk",
+              "doc": "Protobuf field number 5; repeated=False"
+            }
+          ]
+        },
+        "UploadFileRequest": {
+          "name": "UploadFileRequest",
+          "doc": "Protocol message ansys.api.mapdl.v0.UploadFileRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "file_name",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            },
+            {
+              "name": "chunk",
+              "type": "ansys.api.kernel.v0.Chunk",
+              "doc": "Protobuf field number 2; repeated=False"
+            }
+          ]
+        },
+        "UploadFileReply": {
+          "name": "UploadFileReply",
+          "doc": "Protocol message ansys.api.mapdl.v0.UploadFileReply",
+          "methods": [],
+          "properties": [
+            {
+              "name": "length",
+              "type": "int32",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "DownloadFileRequest": {
+          "name": "DownloadFileRequest",
+          "doc": "Protocol message ansys.api.mapdl.v0.DownloadFileRequest",
+          "methods": [],
+          "properties": [
+            {
+              "name": "name",
+              "type": "string",
+              "doc": "Protobuf field number 1; repeated=False"
+            }
+          ]
+        },
+        "MapdlService": {
+          "name": "MapdlService",
+          "doc": "gRPC service ansys.api.mapdl.v0.MapdlService",
+          "methods": [
+            {
+              "name": "SendCommand",
+              "signature": "(ansys.api.mapdl.v0.CmdRequest) -> ansys.api.mapdl.v0.CmdResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "SendCommandS",
+              "signature": "(ansys.api.mapdl.v0.CmdRequest) -> ansys.api.mapdl.v0.CmdOutput [client_streaming=False, server_streaming=True]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "InputFileLocal",
+              "signature": "(ansys.api.mapdl.v0.CmdRequest) -> ansys.api.kernel.v0.Chunk [client_streaming=True, server_streaming=True]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "InputFile",
+              "signature": "(ansys.api.mapdl.v0.InputFileRequest) -> ansys.api.kernel.v0.Chunk [client_streaming=False, server_streaming=True]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "InputFileS",
+              "signature": "(ansys.api.mapdl.v0.InputFileRequest) -> ansys.api.mapdl.v0.CmdOutput [client_streaming=False, server_streaming=True]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "FctCall",
+              "signature": "(ansys.api.mapdl.v0.FctCallRequest) -> ansys.api.mapdl.v0.FctCallResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "GetNodes",
+              "signature": "(ansys.api.kernel.v0.EmptyRequest) -> ansys.api.kernel.v0.Node [client_streaming=False, server_streaming=True]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "GetNode",
+              "signature": "(ansys.api.mapdl.v0.NodeRequest) -> ansys.api.mapdl.v0.NodeResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "SetNode",
+              "signature": "(ansys.api.mapdl.v0.setNodeRequest) -> ansys.api.mapdl.v0.setNodeResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "Nodes",
+              "signature": "(ansys.api.kernel.v0.EmptyRequest) -> ansys.api.kernel.v0.Chunk [client_streaming=False, server_streaming=True]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "GetElements",
+              "signature": "(ansys.api.kernel.v0.EmptyRequest) -> ansys.api.mapdl.v0.Element [client_streaming=False, server_streaming=True]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "GetElement",
+              "signature": "(ansys.api.mapdl.v0.ElementRequest) -> ansys.api.mapdl.v0.ElementResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "LoadElements",
+              "signature": "(ansys.api.kernel.v0.EmptyRequest) -> ansys.api.kernel.v0.Chunk [client_streaming=False, server_streaming=True]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "GetElementType",
+              "signature": "(ansys.api.mapdl.v0.ElementRequest) -> ansys.api.mapdl.v0.ElementType [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "LoadElementTypeDescription",
+              "signature": "(ansys.api.kernel.v0.EmptyRequest) -> ansys.api.kernel.v0.Chunk [client_streaming=False, server_streaming=True]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "GetParameter",
+              "signature": "(ansys.api.mapdl.v0.ParameterRequest) -> ansys.api.mapdl.v0.ParameterResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "GetVariable",
+              "signature": "(ansys.api.mapdl.v0.VariableRequest) -> ansys.api.mapdl.v0.VariableResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "Get",
+              "signature": "(ansys.api.mapdl.v0.GetRequest) -> ansys.api.mapdl.v0.GetResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "VGet",
+              "signature": "(ansys.api.mapdl.v0.GetRequest) -> ansys.api.mapdl.v0.VariableResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "VGet2",
+              "signature": "(ansys.api.mapdl.v0.GetRequest) -> ansys.api.kernel.v0.Chunk [client_streaming=False, server_streaming=True]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "Ctrl",
+              "signature": "(ansys.api.kernel.v0.CtrlRequest) -> ansys.api.kernel.v0.CtrlResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "GetVtkGeometry",
+              "signature": "(ansys.api.kernel.v0.EmptyRequest) -> ansys.api.kernel.v0.Chunk [client_streaming=False, server_streaming=True]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "GetDataInfo",
+              "signature": "(ansys.api.mapdl.v0.ParameterRequest) -> ansys.api.mapdl.v0.DataResponse [client_streaming=False, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "GetVecData",
+              "signature": "(ansys.api.mapdl.v0.ParameterRequest) -> ansys.api.kernel.v0.Chunk [client_streaming=False, server_streaming=True]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "GetMatData",
+              "signature": "(ansys.api.mapdl.v0.ParameterRequest) -> ansys.api.kernel.v0.Chunk [client_streaming=False, server_streaming=True]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "SetVecData",
+              "signature": "(ansys.api.mapdl.v0.SetVecDataRequest) -> ansys.api.kernel.v0.EmptyResponse [client_streaming=True, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "SetMatData",
+              "signature": "(ansys.api.mapdl.v0.SetMatDataRequest) -> ansys.api.kernel.v0.EmptyResponse [client_streaming=True, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "UploadFile",
+              "signature": "(ansys.api.mapdl.v0.UploadFileRequest) -> ansys.api.mapdl.v0.UploadFileReply [client_streaming=True, server_streaming=False]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            },
+            {
+              "name": "DownloadFile",
+              "signature": "(ansys.api.mapdl.v0.DownloadFileRequest) -> ansys.api.kernel.v0.Chunk [client_streaming=False, server_streaming=True]",
+              "doc": "gRPC method declared by the protobuf service descriptor."
+            }
+          ],
+          "properties": []
+        }
+      },
+      "functions": []
+    }
+  },
+  "statistics": {
+    "total_modules": 4,
+    "total_classes": 108,
+    "total_methods": 84,
+    "total_properties": 227,
+    "total_functions": 0
+  }
+}

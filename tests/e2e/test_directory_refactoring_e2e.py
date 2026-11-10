@@ -13,6 +13,7 @@
 
 from __future__ import annotations
 
+import ast
 import json
 import os
 from pathlib import Path
@@ -34,6 +35,7 @@ if str(REPO_ROOT) not in sys.path:
 
 from scripts.verification.verify_directory_topology import (
     EXPECTED_CORE_DIRS,
+    OPTIONAL_ROOT_DIRS,
     FORBIDDEN_ROOT_DIRS,
     REQUIRED_RUNTIME_SUBDIRS,
     TopologyVerificationResult,
@@ -117,7 +119,7 @@ def test_fastmcp_core_simulation_tools_presence() -> None:
 
 
 def _create_mock_compliant_repo(base_dir: Path) -> Path:
-    """建立一個符合 5 大目錄 + .runtime/ + .gitignore 規格的沙盒目錄。"""
+    """建立符合正式領域目錄 + .runtime/ + .gitignore 規格的沙盒目錄。"""
     for core_dir in EXPECTED_CORE_DIRS:
         (base_dir / core_dir).mkdir(parents=True, exist_ok=True)
 
@@ -129,6 +131,62 @@ def _create_mock_compliant_repo(base_dir: Path) -> Path:
         "# 暫存與執行目錄\n.runtime/\n*.log\n__pycache__/\n", encoding="utf-8"
     )
     return base_dir
+
+
+def test_topology_verifier_allows_optional_data_and_generated_dirs(tmp_path: Path) -> None:
+    """無本機 corpus 的 checkout 合法；corpus 與生成輸出亦可選存在。"""
+    mock_repo = _create_mock_compliant_repo(tmp_path / "optional_dirs_repo")
+    for directory in OPTIONAL_ROOT_DIRS:
+        (mock_repo / directory).mkdir()
+
+    result = verify_directory_topology(mock_repo)
+    assert result.is_valid is True
+    assert result.unexpected_dirs == []
+
+
+def _run_act_queue_resolver(plugin_file: Path, plugin_dir: Path) -> str:
+    tree = ast.parse(plugin_file.read_text(encoding="utf-8"))
+    resolver = next(
+        node
+        for node in tree.body
+        if isinstance(node, ast.FunctionDef) and node.name == "_resolve_queue_root"
+    )
+    namespace = {"os": os, "_PLUGIN_DIR": str(plugin_dir)}
+    code = compile(ast.Module(body=[resolver], type_ignores=[]), str(plugin_file), "exec")
+    exec(code, namespace)
+    return namespace["_resolve_queue_root"]()
+
+
+@pytest.mark.parametrize("plugin_name", ["main.py", "wb_event_listener.py"])
+def test_act_queue_resolver_uses_runtime_default_and_keeps_overrides(
+    plugin_name: str, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    for variable in (
+        "WORKBENCH_MCP_QUEUE_ROOT",
+        "WORKBENCH_MCP_ROOT",
+        "ANSYS_WORKBENCH_QUEUE_DIR",
+    ):
+        monkeypatch.delenv(variable, raising=False)
+    plugin_file = REPO_ROOT / "scripts" / "deploy" / "act_plugins" / plugin_name
+
+    assert Path(_run_act_queue_resolver(plugin_file, plugin_file.parent)) == REPO_ROOT / ".runtime" / "queue"
+
+    project_root = tmp_path / "configured-project"
+    monkeypatch.setenv("WORKBENCH_MCP_ROOT", str(project_root))
+    assert Path(_run_act_queue_resolver(plugin_file, plugin_file.parent)) == project_root / ".runtime" / "queue"
+
+    queue_root = tmp_path / "explicit-queue"
+    monkeypatch.setenv("WORKBENCH_MCP_QUEUE_ROOT", str(queue_root))
+    assert Path(_run_act_queue_resolver(plugin_file, plugin_file.parent)) == queue_root
+
+    monkeypatch.delenv("WORKBENCH_MCP_QUEUE_ROOT")
+    monkeypatch.delenv("WORKBENCH_MCP_ROOT")
+    monkeypatch.setenv("ANSYS_WORKBENCH_QUEUE_DIR", str(queue_root))
+    monkeypatch.setattr(os.path, "exists", lambda _path: False)
+    isolated_plugin = tmp_path / "isolated-plugin"
+    assert Path(_run_act_queue_resolver(plugin_file, isolated_plugin)) == queue_root
+    monkeypatch.delenv("ANSYS_WORKBENCH_QUEUE_DIR")
+    assert Path(_run_act_queue_resolver(plugin_file, isolated_plugin)) == isolated_plugin / ".runtime" / "queue"
 
 
 def test_topology_verifier_passes_on_compliant_structure(tmp_path: Path) -> None:
@@ -147,20 +205,26 @@ def test_topology_verifier_passes_on_compliant_structure(tmp_path: Path) -> None
 
 
 def test_topology_verifier_fails_on_forbidden_directories(tmp_path: Path) -> None:
-    """測試拓撲驗證器在根目錄殘留舊資料夾時能精確識別並判定失敗。"""
+    """測試根目錄與套件樹內的舊 runtime 路徑都會被拒絕。"""
     mock_repo = _create_mock_compliant_repo(tmp_path / "forbidden_dirs_repo")
 
-    # 注入被禁止的舊目錄
+    # 注入根目錄和套件樹中的禁止舊路徑
     (mock_repo / "jobs").mkdir()
     (mock_repo / "skills").mkdir()
     (mock_repo / "workbench_queue").mkdir()
+    (mock_repo / "src/ansys_unified_mcp/workbench_queue").mkdir(parents=True)
 
     result: TopologyVerificationResult = verify_directory_topology(mock_repo)
 
     assert result.is_valid is False
     assert result.forbidden_dirs_ok is False
-    assert set(result.forbidden_dirs_present) == {"jobs", "skills", "workbench_queue"}
-    assert result.core_dirs_ok is False  # 非隱藏目錄多於 5 個
+    assert set(result.forbidden_dirs_present) == {
+        "jobs",
+        "skills",
+        "workbench_queue",
+        "src/ansys_unified_mcp/workbench_queue",
+    }
+    assert result.core_dirs_ok is False  # 未分類的舊目錄不得留在根目錄
 
 
 def test_topology_verifier_fails_on_missing_or_extra_core_dirs(
@@ -219,31 +283,12 @@ def test_topology_verifier_fails_when_gitignore_lacks_runtime(
 
 
 def test_current_repo_directory_topology_status() -> None:
-    """對目前專案根目錄執行客觀拓撲檢查，並根據遷移進度提供相容性判定。"""
+    """檢查 source checkout，不依賴被忽略的本機 runtime 資料是否已建立。"""
     result = verify_directory_topology(REPO_ROOT)
-
-    # 檢查是否啟用強制門禁模式（由 M4 驗收時透過環境變數傳入）
-    strict_enforce = os.environ.get("TOPOLOGY_STRICT_ENFORCE") == "1"
-
-    if strict_enforce:
-        # 強制模式：必須 100% 符合 5 大核心目錄架構
-        assert result.is_valid is True, (
-            f"目錄拓撲嚴格門禁失敗：{result.messages}"
-        )
-    else:
-        # 漸進式測試適配：若尚未完成 M2 物理搬遷，驗證驗證器能精確報告未收斂狀態
-        if result.is_valid:
-            # 已收斂完成
-            assert result.core_dirs_ok is True
-            assert result.forbidden_dirs_ok is True
-            assert result.runtime_structure_ok is True
-            assert result.gitignore_ok is True
-        else:
-            # 尚未收斂完成：驗證器必須如實偵測出未完成的項目，不發生非預期例外
-            assert isinstance(result.actual_non_hidden_dirs, list)
-            assert len(result.actual_non_hidden_dirs) > 0
-            # 確保訊息包含客觀原因
-            assert len(result.messages) > 0
+    assert result.core_dirs_ok is True, result.messages
+    assert result.forbidden_dirs_ok is True, result.messages
+    assert result.unexpected_dirs == []
+    assert result.gitignore_ok is True
 
 
 # ============================================================================

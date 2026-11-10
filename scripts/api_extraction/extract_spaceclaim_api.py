@@ -5,6 +5,7 @@ SpaceClaim API 萃取腳本 (Python 3.14 + pythonnet)
 import os
 import sys
 import json
+import hashlib
 import inspect
 from pathlib import Path
 
@@ -41,11 +42,28 @@ def extract_spaceclaim():
         return None
 
     print(f"成功定位組件: {target_assembly.FullName}")
+    artifact_path = Path(str(target_assembly.Location))
+    if not artifact_path.is_file():
+        print(f"找不到組件檔案以記錄來源識別: {artifact_path}")
+        return None
+    try:
+        artifact_bytes = artifact_path.read_bytes()
+    except OSError as e:
+        print(f"讀取組件檔案失敗，無法記錄來源識別: {e}")
+        return None
+    artifact_metadata = {
+        "file": artifact_path.name,
+        "sha256": hashlib.sha256(artifact_bytes).hexdigest(),
+        "bytes": len(artifact_bytes),
+        "mvid": str(target_assembly.ManifestModule.ModuleVersionId),
+    }
 
     api_data = {
         "module": "SpaceClaim",
         "assembly": target_assembly.FullName,
         "version": "2025 R1 (v251)",
+        "source": "Python.NET System.Reflection over exported v251 assembly types",
+        "sources": {"assembly": artifact_metadata},
         "classes": {},
         "enums": {},
         "interfaces": {},

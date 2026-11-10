@@ -7,16 +7,15 @@ from pathlib import Path
 from typing import Optional, List, Dict, Any
 
 from ansys_unified_mcp.config import config
-from ansys_unified_mcp.core.paths import resolve_runtime_dir
+from ansys_unified_mcp.core.paths import resolve_runtime_dir, resolve_shared_registry_dir
 
 logger = logging.getLogger(__name__)
 
 _REPO_ROOT = Path(__file__).resolve().parents[3]
+_SHARED_REGISTRY_DIR = resolve_shared_registry_dir()
 _RUNTIME_REGISTRY_DIR = resolve_runtime_dir() / "queue" / "registry"
 _LEGACY_REGISTRY_DIR = _REPO_ROOT / "workbench_queue" / "registry"
-_DEFAULT_REGISTRY_DIR = (
-    _RUNTIME_REGISTRY_DIR if _RUNTIME_REGISTRY_DIR.exists() else _LEGACY_REGISTRY_DIR
-)
+_DEFAULT_REGISTRY_DIR = _SHARED_REGISTRY_DIR
 
 
 class ConnectionManager:
@@ -232,30 +231,49 @@ class ConnectionManager:
 
     def get_registered_instances(self, registry_dir: Optional[Path] = None) -> List[Dict[str, Any]]:
         """讀取 registry 目錄，獲取所有運行中的 ANSYS 實例，過濾已關閉的 PID 並自動清理。"""
-        reg_dir = registry_dir if registry_dir is not None else _DEFAULT_REGISTRY_DIR
+        candidate_dirs = [registry_dir] if registry_dir is not None else [_SHARED_REGISTRY_DIR, _RUNTIME_REGISTRY_DIR, _LEGACY_REGISTRY_DIR]
+        seen_pids = set()
         instances = []
-        if not reg_dir.exists():
-            return instances
-            
-        for f in reg_dir.glob("*.json"):
-            try:
-                pid = int(f.stem)
-                # 檢查進程是否仍然存在，不存在則清理
-                if not psutil.pid_exists(pid):
-                    if registry_dir is not None:
+
+        for reg_dir in candidate_dirs:
+            if not reg_dir or not reg_dir.exists():
+                continue
+
+            for f in reg_dir.glob("*.json"):
+                try:
+                    pid = int(f.stem)
+                    if pid in seen_pids:
+                        continue
+
+                    # 檢查進程是否仍然存在，不存在則清理
+                    if not psutil.pid_exists(pid):
                         try:
                             f.unlink()
                         except OSError:
                             pass
-                    continue
-                    
-                with open(f, "r", encoding="utf-8") as fp:
-                    data = json.load(fp)
-                    if isinstance(data, dict):
-                        instances.append(data)
-            except Exception as e:
-                logger.warning(f"無法讀取註冊檔案 {f}: {e}")
-                
+                        continue
+
+                    with open(f, "r", encoding="utf-8") as fp:
+                        data = json.load(fp)
+                        if isinstance(data, dict):
+                            seen_pids.add(pid)
+                            # 補齊可識別的 ANSYS 版本
+                            if "ansys_version" not in data:
+                                try:
+                                    proc = psutil.Process(pid)
+                                    exe_path = proc.exe()
+                                    data["exe_path"] = exe_path
+                                    # 嘗試從路徑判斷版本 (e.g. v251 -> 251)
+                                    import re
+                                    m = re.search(r"[\\/]v(\d{3})[\\/]", exe_path)
+                                    if m:
+                                        data["ansys_version"] = m.group(1)
+                                except Exception:
+                                    pass
+                            instances.append(data)
+                except Exception as e:
+                    logger.warning(f"無法讀取註冊檔案 {f}: {e}")
+
         return instances
 
 # 全域連線管理器實例

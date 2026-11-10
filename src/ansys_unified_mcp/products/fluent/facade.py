@@ -48,17 +48,24 @@ class FluentController:
             return {"ok": False, "error": "ansys-fluent-core not installed."}
 
         try:
+            from ansys_unified_mcp.config import config
             if port:
                 session = pyfluent.connect_to_fluent(
                     ip=ip, port=port, password=password, cleanup_on_exit=False
                 )
             else:
-                session = pyfluent.launch_fluent(
-                    precision="double",
-                    processor_count=processors,
-                    cwd=cwd,
-                    start_timeout=connect_timeout,
-                )
+                launch_kwargs: dict[str, Any] = {
+                    "precision": "double",
+                    "processor_count": processors,
+                    "cwd": cwd,
+                    "start_timeout": connect_timeout,
+                }
+                if config.available and config.fluent_exe.exists():
+                    launch_kwargs["fluent_exe"] = str(config.fluent_exe)
+                elif config.available and len(config.version) == 3 and config.version.isdigit():
+                    launch_kwargs["product_version"] = f"{config.version[0:2]}.{config.version[2]}.0"
+
+                session = pyfluent.launch_fluent(**launch_kwargs)
             registry.put(PRODUCT, key, session, owned=port is None)
             return {
                 "ok": True,

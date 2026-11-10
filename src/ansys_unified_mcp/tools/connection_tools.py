@@ -23,6 +23,10 @@ import os
 import sys
 from pathlib import Path
 
+from ansys_unified_mcp.shared import mcp, as_envelope as _envelope
+from ansys_unified_mcp.config import config, discover_installed_versions, set_active_version
+from ansys_unified_mcp.bridges.connection_manager import connection_manager
+
 ROOT = Path(__file__).resolve().parents[2]
 try:
     from dotenv import load_dotenv
@@ -37,6 +41,112 @@ except Exception:
     pass
 
 OK, FAIL, SKIP = "✅ OK", "❌ FAIL", "⏭  SKIP"
+
+
+@mcp.tool(annotations={"readOnlyHint": True, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False})
+def check_ansys_installation() -> dict:
+    """Check the active ANSYS installation and discover available solver executables.
+
+    Returns:
+        Structured envelope with paths, installed versions, and active running instances.
+    """
+    discovered = discover_installed_versions()
+    running = connection_manager.get_registered_instances()
+    data = {
+        "ok": True,
+        "version": config.version,
+        "available": config.available,
+        "root_path": str(config.root_path),
+        "installed_versions": sorted(list(discovered.keys()), reverse=True),
+        "runwb2": str(config.workbench_exe),
+        "runwb2_exists": config.workbench_exe.exists(),
+        "mechanical": str(config.mechanical_exe),
+        "mechanical_exists": config.mechanical_exe.exists(),
+        "fluent": str(config.fluent_exe),
+        "fluent_exists": config.fluent_exe.exists(),
+        "spaceclaim": str(config.spaceclaim_exe),
+        "spaceclaim_exists": config.spaceclaim_exe.exists(),
+        "mapdl": str(config.mapdl_exe),
+        "mapdl_exists": config.mapdl_exe.exists(),
+        "lsdyna": str(config.lsdyna_exe),
+        "lsdyna_exists": config.lsdyna_exe.exists(),
+        "cfx_solve": str(config.cfx_solve_exe),
+        "cfx_solve_exists": config.cfx_solve_exe.exists(),
+        "cfx_pre": str(config.cfx_pre_exe),
+        "cfx_pre_exists": config.cfx_pre_exe.exists(),
+        "running_instances": running,
+    }
+    return _envelope(data)
+
+
+@mcp.tool(annotations={"readOnlyHint": True, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False})
+def ans_list_installed_versions() -> dict:
+    """List all installed ANSYS versions detected on this host computer.
+
+    Returns:
+        Structured envelope with installed versions and their component availability.
+    """
+    discovered = discover_installed_versions()
+    versions_info = []
+    for ver in sorted(discovered.keys(), reverse=True):
+        root = discovered[ver]
+        wb_exe = root / "Framework" / "bin" / "Win64" / "RunWB2.exe"
+        mech_exe = root / "aisol" / "bin" / "winx64" / "AnsysWBU.exe"
+        fl_exe = root / "fluent" / "ntbin" / "win64" / "fluent.exe"
+        sc_exe = root / "scdm" / "SpaceClaim.exe"
+        versions_info.append({
+            "version": ver,
+            "root_path": str(root),
+            "is_active": ver == config.version,
+            "has_workbench": wb_exe.exists(),
+            "has_mechanical": mech_exe.exists(),
+            "has_fluent": fl_exe.exists(),
+            "has_spaceclaim": sc_exe.exists(),
+        })
+
+    return _envelope({
+        "ok": True,
+        "active_version": config.version,
+        "total_installed": len(versions_info),
+        "installed_versions": versions_info,
+    })
+
+
+@mcp.tool(annotations={"readOnlyHint": False, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False})
+def ans_set_active_version(version: str) -> dict:
+    """Switch the active ANSYS version at runtime without restarting the server.
+
+    Args:
+        version: Target ANSYS release code such as 251, 242, or 202.
+
+    Returns:
+        Structured envelope with the updated active configuration.
+    """
+    clean_ver = str(version).strip().lstrip("v")
+    discovered = discover_installed_versions()
+    if clean_ver not in discovered:
+        valid_list = sorted(list(discovered.keys()), reverse=True)
+        return _envelope({
+            "ok": False,
+            "error": f"Version {version} is not found on this system. Installed versions: {valid_list}",
+            "installed_versions": valid_list,
+        })
+
+    updated_config = set_active_version(clean_ver)
+    return _envelope({
+        "ok": True,
+        "message": f"Switched active ANSYS version to v{clean_ver}.",
+        "active_version": updated_config.version,
+        "root_path": str(updated_config.root_path),
+        "available": updated_config.available,
+        "executables": {
+            "workbench": str(updated_config.workbench_exe),
+            "mechanical": str(updated_config.mechanical_exe),
+            "fluent": str(updated_config.fluent_exe),
+            "spaceclaim": str(updated_config.spaceclaim_exe),
+            "mapdl": str(updated_config.mapdl_exe),
+        },
+    })
 
 
 def _has(mod: str) -> bool:
@@ -75,8 +185,10 @@ def check_mechanical(live: bool):
 
 def check_lsdyna(live: bool):
     # LS-DYNA 無 gRPC；後處理靠 lasso 讀 d3plot，求解靠 solver exe/subprocess
+    from ansys_unified_mcp.core.paths import find_lsdyna_exe
+
     lasso = _has("lasso")
-    solver = _exe("ANSYS_LSDYNA") or _find_lsdyna_exe()
+    solver = find_lsdyna_exe()
     pydyna = _has("ansys.dyna.core")
     parts = [f"lasso(d3plot讀取)={'有' if lasso else '無'}",
              f"solver exe={'找到' if solver else '未找到'}",
@@ -84,27 +196,6 @@ def check_lsdyna(live: bool):
     if not lasso and not solver:
         return FAIL, "；".join(parts) + " → 後處理與求解皆缺"
     return OK, "；".join(parts)
-
-
-def _find_lsdyna_exe():
-    try:
-        from ansys_unified_mcp.config import config
-        if config.available and config.root_path:
-            bin_dir = config.root_path / "ansys" / "bin" / "winx64"
-            for name in ("LSDYNA.exe", "lsdyna_dp.exe", "lsdyna_sp.exe", "lsdyna.exe"):
-                p = bin_dir / name
-                if p.exists():
-                    return str(p)
-    except Exception:
-        pass
-    root = os.environ.get("ANSYS_ROOT")
-    if not root:
-        return None
-    for name in ("LSDYNA.exe", "lsdyna_dp.exe", "lsdyna_sp.exe", "lsdyna.exe"):
-        p = Path(root) / f"v{os.environ.get('ANSYS_VERSION', '251')}" / "ansys" / "bin" / "winx64" / name
-        if p.exists():
-            return str(p)
-    return None
 
 
 def check_spaceclaim(live: bool):

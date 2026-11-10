@@ -50,10 +50,10 @@ class TestChapter2CodebaseFacts:
 
     def test_icepak_driver_fake_csv(self, tmp_path: Path):
         """1.3 驗證 icepak_driver.py 徹底移除 85.4 硬編碼，且在無求解器且未授權 synthetic 時嚴格拒絕執行。"""
-        from ansys_unified_mcp.drivers.icepak_driver import IcepakDriver
+        from ansys_unified_mcp.products.icepak.driver import IcepakDriver
         from ansys_unified_mcp.drivers.base import SolverDriverError
 
-        file_path = src_root / "ansys_unified_mcp" / "drivers" / "icepak_driver.py"
+        file_path = src_root / "ansys_unified_mcp" / "products" / "icepak" / "driver.py"
         assert file_path.exists(), "icepak_driver.py 必須存在"
         content = file_path.read_text(encoding="utf-8")
 
@@ -171,7 +171,7 @@ class TestChapter2CodebaseFacts:
         # + 本次工作階段新增 ans_session_diagnose（session_manager_tools.py 唯讀診斷工具，
         #   5 -> 6 個函式，174 -> 175），已有 tests/unit/test_session_manager_tools.py
         #   對應單元測試覆蓋並通過。
-        assert total_funcs == 175, f"AST 解析工具總數應為 175，實測: {total_funcs} (各模組: {tool_counts})"
+        assert total_funcs == 183, f"AST 解析工具總數應為 183，實測: {total_funcs} (各模組: {tool_counts})"
 
     def test_tool_count_102_mechanical_profile(self):
         """3.2 驗證 mechanical profile 動態路由下 FastMCP 暴露之工具總數。

@@ -63,14 +63,14 @@
 2. **執行範例**：
    ```powershell
    # 1. 驗證 gRPC 連線
-   python examples/mesh_debug/test_mech_direct.py
+   python docs/examples/mesh_debug/test_mech_direct.py
 
    # 2. 檢查現有網格設定與未定義控制項
-   python examples/mesh_debug/inspect_mesh_setup.py
+   python docs/examples/mesh_debug/inspect_mesh_setup.py
 
    # 3. 執行分區劃分與自動降級排障流程
-   python examples/mesh_debug/step3_partition_mesh_and_fallback.py
+   python docs/examples/mesh_debug/step3_partition_mesh_and_fallback.py
 
    # 4. 恢復全機可視性與整頓模型樹
-   python examples/mesh_debug/clean_and_collapse_tree.py
+   python docs/examples/mesh_debug/clean_and_collapse_tree.py
    ```
