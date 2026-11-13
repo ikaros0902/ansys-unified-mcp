@@ -17,15 +17,6 @@ def _resolve_mcp_home():
     env_home = os.environ.get("ANSYS_WORKBENCH_MCP_HOME", "").strip()
     if env_home:
         return os.path.abspath(os.path.expanduser(env_home))
-    try:
-        this_file = os.path.abspath(__file__)
-        script_dir = os.path.dirname(this_file)
-        # 專案重構後本檔位在 src/ansys_unified_mcp/scripts/
-        repo_root = os.path.abspath(os.path.join(script_dir, "..", "..", ".."))
-        if os.path.exists(os.path.join(repo_root, "pyproject.toml")) or os.path.exists(os.path.join(repo_root, "requirements.txt")):
-            return repo_root
-    except Exception:
-        pass
     return os.path.join(os.path.expanduser("~"), ".ansys-workbench-mcp")
 
 
@@ -756,34 +747,8 @@ print("Stop:  mcp_stop()")
 print("=" * 60)
 
 
-def _auto_loop_requested():
-    """Only auto-start the loop when explicitly opted-in.
-
-    The MCP-launched dedicated instance sets ANSYS_MCP_AUTO_LOOP=1 so the
-    bridge starts polling immediately without a manual mcp_loop() call. When
-    a user loads this journal into an INTERACTIVE Workbench Command Window
-    instead, the variable is absent, so we wait for an explicit mcp_loop()
-    call rather than starting automatically.
-
-    Note: since mcp_loop() now auto-detects a running WPF Dispatcher and uses
-    a non-blocking DispatcherTimer whenever one is present (see
-    _get_wpf_dispatcher / _mcp_loop_timer above), calling it here no longer
-    freezes an interactive GUI session. The opt-in flag is kept anyway so a
-    Command Window loaded interactively does not start polling before the
-    user is ready, not because of any remaining UI-freeze risk.
-    """
-    flag = os.environ.get("ANSYS_MCP_AUTO_LOOP", "").strip().lower()
-    return flag in ("1", "true", "yes", "on")
-
-
-if _auto_loop_requested():
-    mcp_loop()
-else:
-    print("")
-    print("Interactive mode detected (ANSYS_MCP_AUTO_LOOP not set).")
-    print("Bridge functions are loaded but polling is NOT running yet.")
-    print("Call mcp_loop() to start polling. If a Workbench GUI window is")
-    print("open, this uses a non-blocking DispatcherTimer and the window")
-    print("stays fully responsive; otherwise it falls back to a blocking")
-    print("loop (headless instances only, where there is no UI to freeze).")
-    print("=" * 60)
+print("Auto-starting MCP loop (non-blocking DispatcherTimer mode)...")
+mcp_loop()
+print("Bridge is ACTIVE and listening for commands.")
+print("Stop anytime with: mcp_stop()")
+print("=" * 60)

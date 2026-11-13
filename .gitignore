@@ -111,3 +111,8 @@ agents/skills/.zvec-grep/
 # 大型未受版控文件與輸出
 ANSYS_Document/
 graphify-out/
+
+# Git worktrees & Workbench runtime queue
+.worktrees/
+workbench_queue/
+

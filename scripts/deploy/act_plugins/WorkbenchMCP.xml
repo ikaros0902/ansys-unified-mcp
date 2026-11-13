@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension version="1" minorversion="0" name="WorkbenchMCP">
+<extension version="1" minorversion="0" name="WorkbenchMCP" loadAsDefault="true">
   <guid shortid="WorkbenchMCP">9f2d1d85-97a3-4e23-82f7-c7a8d25a2f31</guid>
   <author>Text-to-CAE</author>
-  <description>Auto-starts the Mechanical gRPC server and registers the instance for the ANSYS Unified MCP server.</description>
+  <description>Auto-starts the Mechanical gRPC server and Workbench bridge for ANSYS Unified MCP.</description>
   <script src="main.py" />
   <interface context="Project">
     <callbacks>

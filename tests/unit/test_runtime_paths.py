@@ -132,6 +132,9 @@ def test_find_lsdyna_exe_preserves_candidate_order_under_config_root(tmp_path, m
 
 def test_find_lsdyna_exe_searches_awp_roots_when_config_is_unavailable(tmp_path, monkeypatch):
     monkeypatch.delenv("ANSYS_LSDYNA", raising=False)
+    for k in list(os.environ.keys()):
+        if k.upper().startswith("AWP_ROOT"):
+            monkeypatch.delenv(k, raising=False)
     root = tmp_path / "v251"
     expected = root / "ansys" / "bin" / "winx64" / "lsdyna_sp.exe"
     expected.parent.mkdir(parents=True)

@@ -23,26 +23,10 @@ from System.IO import FileSystemWatcher, NotifyFilters
 _PLUGIN_DIR = os.path.abspath(os.path.dirname(__file__))
 
 def _resolve_queue_root():
-    env_queue = os.environ.get("WORKBENCH_MCP_QUEUE_ROOT")
+    env_queue = os.environ.get("ANSYS_WORKBENCH_MCP_HOME") or os.environ.get("WORKBENCH_MCP_QUEUE_ROOT")
     if env_queue:
-        return env_queue
-    env_root = os.environ.get("WORKBENCH_MCP_ROOT")
-    if env_root:
-        return os.path.join(env_root, ".runtime", "queue")
-    # Search upward for the project root
-    cur = _PLUGIN_DIR
-    for _ in range(5):
-        if os.path.exists(os.path.join(cur, "pyproject.toml")):
-            return os.path.join(cur, ".runtime", "queue")
-        parent = os.path.dirname(cur)
-        if parent == cur:
-            break
-        cur = parent
-    # Project default fallback path
-    env_dir = os.environ.get("ANSYS_WORKBENCH_QUEUE_DIR")
-    if env_dir:
-        return env_dir
-    return os.path.join(_PLUGIN_DIR, ".runtime", "queue")
+        return os.path.abspath(os.path.expanduser(env_queue))
+    return os.path.join(os.path.expanduser("~"), ".ansys-workbench-mcp")
 
 _QUEUE_ROOT = _resolve_queue_root()
 _COMMANDS_DIR = os.path.join(_QUEUE_ROOT, "commands")
@@ -53,8 +37,8 @@ _watcher = None
 _processed_lock = threading.Lock()
 _processed_ids = set()
 
-# 背景輪詢備援（修復 FileSystemWatcher 事件偶爾不觸發的問題）
-_POLL_INTERVAL = 0.5  # 秒
+# Background poller fallback (mitigate rare FileSystemWatcher missed events)
+_POLL_INTERVAL = 0.5  # seconds
 _poller_thread = None
 _poller_stop = threading.Event()
 
@@ -271,10 +255,10 @@ def _write_result(cmd_id, result):
 
 
 def _process_command_file(filepath, filename=None):
-    """處理單一 command 檔：讀取 -> 執行 -> 寫結果 -> 刪除。
+    """Process a single command file: read -> execute -> write result -> remove.
 
-    供 FileSystemWatcher 事件處理器與背景輪詢 fallback 共用；以 _processed_ids
-    去重，確保事件與輪詢不會重複執行同一指令。
+    Shared by FileSystemWatcher handler and background poller fallback.
+    Uses _processed_ids deduplication to ensure commands are executed once.
     """
     try:
         if filename is None:
@@ -282,14 +266,14 @@ def _process_command_file(filepath, filename=None):
 
         if not filename or not filename.endswith(".json"):
             return
-        # 略過尚未改名完成的暫存檔
+        # Skip temporary files before atomic rename
         if filename.endswith(".tmp"):
             return
 
         base_name = os.path.splitext(filename)[0]
         cmd_id = base_name[4:] if base_name.startswith("cmd_") else base_name
 
-        # 防重複觸發去重鎖（事件與輪詢共用）
+        # Deduplication lock (shared by watcher and poller)
         with _processed_lock:
             if cmd_id in _processed_ids:
                 return
@@ -297,7 +281,7 @@ def _process_command_file(filepath, filename=None):
 
         payload = _read_json_retry(filepath)
         if payload is None:
-            # 讀不到（可能檔案已被移走或仍在寫入）：釋放去重標記以便稍後重試
+            # Read failed or file still being written: release lock for later retry
             with _processed_lock:
                 _processed_ids.discard(cmd_id)
             return
@@ -317,7 +301,7 @@ def _process_command_file(filepath, filename=None):
 
 
 def _on_file_changed(sender, event_args):
-    """FileSystemWatcher 事件處理函式 (觸發於 .NET ThreadPool 背景執行緒)"""
+    """FileSystemWatcher event handler (dispatched on .NET ThreadPool thread)."""
     try:
         _process_command_file(event_args.FullPath, event_args.Name)
     except Exception as exc:
@@ -325,7 +309,7 @@ def _on_file_changed(sender, event_args):
 
 
 def _poll_commands_once():
-    """掃描 commands 目錄，處理任何 FileSystemWatcher 可能漏接的 cmd_*.json。"""
+    """Scan commands directory to handle any cmd_*.json missed by FileSystemWatcher."""
     try:
         if not os.path.isdir(_COMMANDS_DIR):
             return
@@ -338,14 +322,31 @@ def _poll_commands_once():
 
 
 def _poller_loop():
-    """背景輪詢迴圈：作為 FileSystemWatcher 的可靠性備援。
-
-    IronPython / ACT 環境下 .NET FileSystemWatcher 事件偶有不觸發的情形，
-    此輪詢確保指令仍會被處理（延遲約 _POLL_INTERVAL 秒）。
-    """
+    """Background poller loop providing reliability fallback for FileSystemWatcher."""
     while not _poller_stop.is_set():
         _poll_commands_once()
         _poller_stop.wait(_POLL_INTERVAL)
+
+
+
+def _write_status(status, message):
+    try:
+        status_file = os.path.join(_QUEUE_ROOT, "status.json")
+        data = {
+            "status": status,
+            "message": message,
+            "version": "0.2.0",
+            "pid": os.getpid(),
+            "timestamp": time.time(),
+            "datetime": time.strftime("%Y-%m-%d %H:%M:%S"),
+            "commands_processed": len(_processed_ids),
+            "mcp_home": _QUEUE_ROOT,
+            "source": "ACT_Extension"
+        }
+        with open(status_file, "w") as fp:
+            json.dump(data, fp, indent=2)
+    except Exception as exc:
+        _log("Failed to write status.json: " + str(exc))
 
 
 def start_listener(queue_root=None):
@@ -378,29 +379,30 @@ def start_listener(queue_root=None):
 
     _watcher.EnableRaisingEvents = True
     _log("FileSystemWatcher listener started on: " + _COMMANDS_DIR)
+    _write_status("running", "ACT FileSystemWatcher active")
 
-    # 啟動背景輪詢備援執行緒，確保即使 watcher 事件未觸發也能處理指令
+    # Start background poller thread to ensure commands are processed even if watcher misses events
     _start_poller()
 
     return _watcher
 
 
 def _start_poller():
-    """啟動背景輪詢執行緒（若尚未啟動）。"""
+    """Start the background poller thread if not already running."""
     global _poller_thread
     if _poller_thread is not None and _poller_thread.is_alive():
         return
     _poller_stop.clear()
     _poller_thread = threading.Thread(target=_poller_loop)
-    _poller_thread.daemon = True  # 不阻擋 WB 關閉
+    _poller_thread.daemon = True  # Do not block Workbench shutdown
     _poller_thread.start()
     _log("Background command poller started (interval=%.1fs)." % _POLL_INTERVAL)
 
 
 def stop_listener():
-    """停止 FileSystemWatcher 監聽器與背景輪詢執行緒"""
+    """Stop the FileSystemWatcher listener and the background poller thread."""
     global _watcher, _poller_thread
-    # 先停輪詢
+    # Stop poller first
     _poller_stop.set()
     if _poller_thread is not None:
         try:
@@ -418,10 +420,11 @@ def stop_listener():
             pass
         _watcher = None
         _log("FileSystemWatcher listener stopped.")
+        _write_status("stopped", "ACT FileSystemWatcher stopped")
 
 
 def is_listening():
-    """查詢監聽器是否運作中（watcher 或背景輪詢任一在運作即為 True）"""
+    """Check if listener is active (either watcher or background poller running)."""
     watcher_on = _watcher is not None and _watcher.EnableRaisingEvents
     poller_on = _poller_thread is not None and _poller_thread.is_alive()
     return bool(watcher_on or poller_on)

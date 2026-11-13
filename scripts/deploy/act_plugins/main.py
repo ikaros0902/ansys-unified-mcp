@@ -20,28 +20,10 @@ except Exception:
 
 _PLUGIN_DIR = os.path.abspath(os.path.dirname(__file__))
 def _resolve_queue_root():
-    # IronPython cannot import the CPython path helper.
-    env_queue = os.environ.get("WORKBENCH_MCP_QUEUE_ROOT")
+    env_queue = os.environ.get("ANSYS_WORKBENCH_MCP_HOME") or os.environ.get("WORKBENCH_MCP_QUEUE_ROOT")
     if env_queue:
-        return env_queue
-    env_root = os.environ.get("WORKBENCH_MCP_ROOT")
-    if env_root:
-        return os.path.join(env_root, ".runtime", "queue")
-    cur = _PLUGIN_DIR
-    for _ in range(5):
-        if os.path.exists(os.path.join(cur, "pyproject.toml")):
-            return os.path.join(cur, ".runtime", "queue")
-        parent = os.path.dirname(cur)
-        if parent == cur:
-            break
-        cur = parent
-    env_dir = os.environ.get("ANSYS_WORKBENCH_QUEUE_DIR")
-    if env_dir:
-        return env_dir
-    local_app_data = os.environ.get("LOCALAPPDATA")
-    if local_app_data:
-        return os.path.join(local_app_data, "ansys-unified-mcp", "queue")
-    return os.path.join(_PLUGIN_DIR, ".runtime", "queue")
+        return os.path.abspath(os.path.expanduser(env_queue))
+    return os.path.join(os.path.expanduser("~"), ".ansys-workbench-mcp")
 
 _QUEUE_ROOT = _resolve_queue_root()
 _PROJECT_ROOT = os.path.dirname(_QUEUE_ROOT)

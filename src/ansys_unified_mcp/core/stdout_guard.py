@@ -74,6 +74,20 @@ def install_stdio_stdout_guard() -> bool:
             yield streams
 
     mcp_stdio.stdio_server = _guarded_stdio_server
+
+    # Also patch FastMCP modules if imported or importable, ensuring stdio transport routes to guarded descriptor
+    try:
+        import fastmcp.server.mixins.transport as fastmcp_transport
+        fastmcp_transport.stdio_server = _guarded_stdio_server
+    except Exception:
+        pass
+
+    try:
+        import fastmcp.server.low_level as fastmcp_low_level
+        fastmcp_low_level.stdio_server = _guarded_stdio_server
+    except Exception:
+        pass
+
     _GUARD_INSTALLED = True
     logger.info("Installed OS file descriptor guard for MCP stdio transport.")
     return True

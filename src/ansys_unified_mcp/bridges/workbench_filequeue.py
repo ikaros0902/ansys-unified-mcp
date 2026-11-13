@@ -30,7 +30,7 @@ __version__ = "0.2.0"
 from ansys_unified_mcp.core.paths import resolve_runtime_dir
 
 SERVER_ROOT = Path(__file__).resolve().parent
-DEFAULT_MCP_HOME = SERVER_ROOT
+DEFAULT_MCP_HOME = Path.home() / ".ansys-workbench-mcp"
 MCP_HOME = Path(os.environ.get("ANSYS_WORKBENCH_MCP_HOME", DEFAULT_MCP_HOME)).expanduser().resolve()
 
 COMMANDS_DIR = MCP_HOME / "commands"
