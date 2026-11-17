@@ -724,3 +724,36 @@ def mechanical_tune_cfl_mesh(
     return _envelope(tune_cfl_mesh(target_timestep=target_timestep, max_iterations=max_iterations))
 
 
+@aliased_tool(name="mechanical_screenshot", alias=["screenshot", "capture_mechanical_screenshot"])
+def mechanical_screenshot(
+    file_path: str = "mechanical_screenshot.png",
+    target_name: Optional[str] = None,
+    analysis_index: int = 0,
+    view: str = "iso",
+    fit: bool = True,
+    width: int = 1920,
+    height: int = 1080,
+    background: str = "white",
+    capture_type: str = "image_and_legend",
+    return_image: bool = True,
+) -> dict:
+    """Capture a screenshot of the active Mechanical graphics window or a specific result/mesh/geometry object (PyMechanical MCP style)."""
+    from ansys_unified_mcp.core.screenshot_helper import finalize_screenshot_response
+
+    env = as_envelope(
+        mechanical_api.capture_screenshot(
+            file_path=file_path,
+            target_name=target_name,
+            analysis_index=analysis_index,
+            view=view,
+            fit=fit,
+            width=width,
+            height=height,
+            background=background,
+            capture_type=capture_type,
+        )
+    )
+    return finalize_screenshot_response(env, return_image=return_image, as_tool_result=False)
+
+
+

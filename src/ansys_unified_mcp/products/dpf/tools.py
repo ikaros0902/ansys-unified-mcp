@@ -34,3 +34,33 @@ def dpf_get_model_summary(rst_path: str) -> dict:
     """
     result = controller.get_model_summary(rst_path)
     return _envelope(result)
+
+
+@mcp.tool()
+def dpf_screenshot(
+    rst_path: str,
+    file_path: str = "dpf_screenshot.png",
+    result_type: str = "stress",
+    copy_to_sandbox: bool = True,
+    return_image: bool = True,
+) -> dict:
+    """從 Mechanical .rst 結果檔抽取真實物理極值並渲染標準白底 1920x1080 雲圖 PNG。
+
+    Args:
+        rst_path: .rst 結果檔絕對路徑。
+        file_path: 輸出 PNG 影像路徑。
+        result_type: 結果類型（'stress' 或 'deformation'）。
+        copy_to_sandbox: True 時先複製至獨立暫存目錄再讀取，避免檔案鎖衝突。
+        return_image: 是否檢查本機影像存在並回傳可讀狀態。
+    """
+    from ansys_unified_mcp.core.screenshot_helper import finalize_screenshot_response
+
+    env = _envelope(
+        controller.capture_result_screenshot(
+            rst_path=rst_path,
+            file_path=file_path,
+            result_type=result_type,
+            copy_to_sandbox=copy_to_sandbox,
+        )
+    )
+    return finalize_screenshot_response(env, return_image=return_image, as_tool_result=False)

@@ -151,5 +151,57 @@ class DPFController:
             if sandbox_path is not None:
                 self._cleanup_sandbox_copy(sandbox_path)
 
+    def capture_result_screenshot(
+        self,
+        rst_path: str | Path,
+        file_path: str = "dpf_screenshot.png",
+        result_type: str = "stress",
+        copy_to_sandbox: bool = True,
+    ) -> dict:
+        """從 .rst 結果檔抽取物理極值並渲染為 1920x1080 標準白底雲圖 PNG。"""
+        extracted = self.extract_structural_results(rst_path, copy_to_sandbox=copy_to_sandbox)
+        if not extracted.get("ok"):
+            return extracted
+
+        from ansys_unified_mcp.core.screenshot_helper import resolve_screenshot_path
+        from ansys_unified_mcp.drivers.contour_helper import generate_white_contour_png
+
+        out_path = resolve_screenshot_path(file_path, "dpf_screenshot.png")
+        results = extracted.get("results", {})
+        rt_low = (result_type or "stress").strip().lower()
+        if any(k in rt_low for k in ("deform", "disp")):
+            disp = results.get("displacement", {})
+            max_val = float(disp.get("total_max") or extracted.get("metrics", {}).get("max_deformation") or 0.0)
+            min_val = float(disp.get("min") or 0.0)
+            unit = str(disp.get("unit") or "m")
+            metric_name = "Total Deformation"
+            contour_type = "deformation"
+        else:
+            stress = results.get("stress_von_mises", {})
+            max_val = float(stress.get("max") or extracted.get("metrics", {}).get("max_equivalent_stress") or 0.0)
+            min_val = float(stress.get("min") or 0.0)
+            unit = str(stress.get("unit") or "Pa")
+            metric_name = "Equivalent (von-Mises) Stress"
+            contour_type = "stress"
+
+        generate_white_contour_png(
+            output_path=out_path,
+            title=f"DPF Result Contour - {Path(rst_path).name}",
+            metric_name=metric_name,
+            unit=unit,
+            min_val=min_val,
+            max_val=max_val,
+            contour_type=contour_type,
+        )
+        return {
+            "ok": True,
+            "product": "dpf",
+            "file_path": str(out_path),
+            "result_type": result_type,
+            "max_value": max_val,
+            "min_value": min_val,
+            "unit": unit,
+        }
+
 
 controller = DPFController()

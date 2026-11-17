@@ -815,3 +815,141 @@ print(json.dumps(result))
 """
     raw = api._run(script)
     return api._parse_mechanical_output(raw)
+
+
+def capture_screenshot(
+    file_path: str = "mechanical_screenshot.png",
+    target_name: Optional[str] = None,
+    analysis_index: int = 0,
+    view: str = "iso",
+    fit: bool = True,
+    width: int = 1920,
+    height: int = 1080,
+    background: str = "white",
+    capture_type: str = "image_and_legend",
+) -> dict:
+    """擷取目前 Mechanical 圖形視窗或指定樹狀物件之高解析影像（參考 PyMechanical MCP）。"""
+    err = api._check_connection()
+    if err:
+        return err
+    if width <= 0 or height <= 0:
+        return {"ok": False, "error": "width and height must be positive integers."}
+
+    from ansys_unified_mcp.core.screenshot_helper import resolve_screenshot_path
+
+    out_path = resolve_screenshot_path(file_path, "mechanical_screenshot.png")
+    view_norm = (view or "iso").strip().lower()
+    orientation_map = {
+        "iso": "Isometric",
+        "isometric": "Isometric",
+        "front": "Front",
+        "back": "Back",
+        "top": "Top",
+        "bottom": "Bottom",
+        "left": "Left",
+        "right": "Right",
+        "current": None,
+    }
+    if view_norm not in orientation_map:
+        return {
+            "ok": False,
+            "error": f"Unsupported view '{view}'. Valid views: {sorted(orientation_map)}",
+        }
+    orientation_name = orientation_map[view_norm]
+    bg_white = (background or "white").strip().lower() == "white"
+    image_only = (capture_type or "image_and_legend").strip().lower() == "image_only"
+
+    # Strictly ASCII English script sent to Mechanical IronPython engine
+    script = f"""
+import json
+
+out_path_str = {json.dumps(str(out_path))}
+target_query = {json.dumps((target_name or "").strip())}
+analysis_idx = {int(analysis_index)}
+orientation_name = {json.dumps(orientation_name)}
+fit_flag = {bool(fit)}
+img_width = {int(width)}
+img_height = {int(height)}
+bg_white = {bool(bg_white)}
+image_only = {bool(image_only)}
+
+model = ExtAPI.DataModel.Project.Model
+warnings = []
+activated_name = None
+
+if target_query:
+    q_low = target_query.lower()
+    candidates = []
+    if 0 <= analysis_idx < len(model.Analyses):
+        analysis = model.Analyses[analysis_idx]
+        if hasattr(analysis, "Solution") and analysis.Solution is not None:
+            candidates.extend(list(analysis.Solution.Children))
+        candidates.extend(list(analysis.Children))
+    candidates.extend(list(model.Children))
+    matched = None
+    for item in candidates:
+        item_name = str(getattr(item, "Name", "") or "")
+        if item_name.lower() == q_low:
+            matched = item
+            break
+    if matched is None:
+        for item in candidates:
+            item_name = str(getattr(item, "Name", "") or "")
+            if q_low in item_name.lower():
+                matched = item
+                break
+    if matched is not None and hasattr(matched, "Activate"):
+        matched.Activate()
+        activated_name = str(matched.Name)
+    else:
+        warnings.append("Target object not found: " + target_query)
+
+if orientation_name is not None:
+    try:
+        orient = getattr(ViewOrientationType, orientation_name)
+        ExtAPI.Graphics.Camera.SetSpecificViewOrientation(orient)
+    except Exception as cam_exc:
+        warnings.append("Camera orientation skipped: " + str(cam_exc))
+
+if fit_flag:
+    try:
+        ExtAPI.Graphics.Camera.SetFit()
+    except Exception as fit_exc:
+        warnings.append("Camera fit skipped: " + str(fit_exc))
+
+settings = Ansys.Mechanical.Graphics.GraphicsImageExportSettings()
+settings.CurrentGraphicsDisplay = False
+settings.Width = img_width
+settings.Height = img_height
+try:
+    settings.Resolution = GraphicsResolutionType.NormalResolution
+except Exception:
+    pass
+if bg_white:
+    try:
+        settings.Background = GraphicsBackgroundType.White
+    except Exception:
+        pass
+try:
+    settings.Capture = (
+        GraphicsCaptureType.ImageOnly if image_only else GraphicsCaptureType.ImageAndLegend
+    )
+except Exception:
+    pass
+
+ExtAPI.Graphics.ExportImage(out_path_str, GraphicsImageExportFormat.PNG, settings)
+
+payload = {{
+    "ok": True,
+    "product": "mechanical",
+    "file_path": out_path_str,
+    "view": {json.dumps(view_norm)},
+    "width": img_width,
+    "height": img_height,
+    "target_activated": activated_name,
+    "warnings": warnings,
+}}
+print(json.dumps(payload))
+"""
+    raw = api._run(script)
+    return api._parse_mechanical_output(raw, default_error="Mechanical screenshot failed")

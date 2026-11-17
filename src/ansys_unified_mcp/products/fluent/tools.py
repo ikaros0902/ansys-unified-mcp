@@ -250,3 +250,33 @@ async def fluent_reset_mapper() -> dict:
     res = await sim_impl.call_tool('fluent_reset_mapper', args)
     return "\n".join([c.text for c in res])
 
+
+@tool_fluent(name='fluent_screenshot')
+async def fluent_screenshot(
+    file_path: str = "fluent_screenshot.png",
+    view: str = "iso",
+    width: int = 1920,
+    height: int = 1080,
+    return_image: bool = True,
+) -> dict:
+    """擷取已連線 ANSYS Fluent 視窗截圖為 PNG 影像檔。
+
+    Args:
+        file_path: 輸出 PNG 影像路徑（相對路徑將寫入 .runtime/screenshots）。
+        view: 視角名稱（如 iso, front, top, current）。
+        width: 影像寬度像素。
+        height: 影像高度像素。
+        return_image: 是否檢查本機影像存在並回傳可讀狀態。
+    """
+    from ansys_unified_mcp.core.screenshot_helper import finalize_screenshot_response
+
+    args = {
+        "file_path": file_path,
+        "view": view,
+        "width": width,
+        "height": height,
+    }
+    res = await sim_impl.call_tool("fluent_screenshot", args)
+    env = _envelope("\n".join([c.text for c in res]))
+    return finalize_screenshot_response(env, return_image=return_image, as_tool_result=False)
+

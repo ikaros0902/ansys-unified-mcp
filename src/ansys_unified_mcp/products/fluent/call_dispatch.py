@@ -8,6 +8,7 @@
 """
 
 import asyncio
+import json
 import logging
 import os
 import sys
@@ -93,6 +94,12 @@ FLUENT_TOOLS = [
          inputSchema={"type": "object", "properties": {}}),
     Tool(name="fluent_reset_mapper", description="重置 TUI 對映器（清除歷史記錄）",
          inputSchema={"type": "object", "properties": {}}),
+    Tool(name="fluent_screenshot", description="擷取已連線 Fluent 圖形視窗截圖為 PNG 影像檔",
+         inputSchema={"type": "object", "properties": {
+             "file_path": {"type": "string", "default": "fluent_screenshot.png", "description": "輸出 PNG 影像路徑"},
+             "view": {"type": "string", "default": "iso", "description": "視角名稱（如 iso, front, top, current）"},
+             "width": {"type": "integer", "default": 1920, "description": "影像寬度像素"},
+             "height": {"type": "integer", "default": 1080, "description": "影像高度像素"}}}),
 ]
 
 ALL_TOOLS = FLUENT_TOOLS
@@ -171,6 +178,11 @@ async def call_tool(name: str, arguments: dict[str, Any],
                 else:
                     result = "⚠ MCP-TUI 對映器未載入（Skill 指令碼目錄不存在）"
 
+            elif name == "fluent_screenshot" and _fluent_session is None:
+                result = json.dumps(
+                    {"ok": False, "error": "Fluent 未連線，請先執行 fluent_launch"},
+                    ensure_ascii=False,
+                )
             elif _fluent_session is None:
                 result = "Fluent 未連線，請先執行 fluent_launch"
             else:
@@ -301,6 +313,37 @@ async def call_tool(name: str, arguments: dict[str, Any],
 
                 elif name == "fluent_status":
                     result = f"Fluent 已連線 | 版本: {s.get_fluent_version()}"
+                elif name == "fluent_screenshot":
+                    from ansys_unified_mcp.core.screenshot_helper import resolve_screenshot_path
+
+                    out_path = resolve_screenshot_path(
+                        arguments.get("file_path", ""), "fluent_screenshot.png"
+                    )
+                    view = str(arguments.get("view", "iso") or "iso").strip()
+                    width = int(arguments.get("width", 1920) or 1920)
+                    height = int(arguments.get("height", 1080) or 1080)
+                    warnings: list[str] = []
+                    if view.lower() != "current":
+                        try:
+                            s.tui.execute(f"/views/restore-view {view}")
+                        except Exception as view_exc:
+                            warnings.append(f"視角套用略過: {view_exc}")
+                    s.tui.execute(f"/display/set/picture/x-resolution {width}")
+                    s.tui.execute(f"/display/set/picture/y-resolution {height}")
+                    s.tui.execute("/display/set/picture/driver png")
+                    s.tui.execute(f'/display/save-picture "{out_path.as_posix()}"')
+                    result = json.dumps(
+                        {
+                            "ok": True,
+                            "product": "fluent",
+                            "file_path": str(out_path),
+                            "view": view,
+                            "width": width,
+                            "height": height,
+                            "warnings": warnings,
+                        },
+                        ensure_ascii=False,
+                    )
                 elif name == "fluent_exit":
                     s.exit(); _fluent_session = None; registry.drop("fluent"); result = "Fluent 已關閉"
 

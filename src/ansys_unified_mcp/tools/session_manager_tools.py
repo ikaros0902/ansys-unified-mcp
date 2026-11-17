@@ -25,7 +25,7 @@ import importlib.metadata
 import importlib
 import os
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 
 from ansys_unified_mcp.shared import mcp, as_envelope as _envelope, _VISIBILITY_STATE_KEY
 from ansys_unified_mcp.connection.session_manager import session_manager
@@ -175,9 +175,32 @@ def ans_session_disconnect(product: str, options: dict[str, Any] | None = None) 
 
 
 # 方案 D：per-session 工具可見性合法 product 域。
-# common 工具恆可見 (不列入可選集)，workflow 為跨產品高階工況域。
+# common 工具恆可見 (不列入可選集)，"core" 代表僅保留通用核心工具，
+# "workflow" 為跨產品高階工況域，"sound" 為聲學基準工具域。
 _VALID_VISIBILITY_PRODUCTS = frozenset(
-    {"mechanical", "fluent", "geometry", "workbench", "optislang", "dpf", "workflow"}
+    {
+        "core",
+        "mechanical",
+        "fluent",
+        "geometry",
+        "workbench",
+        "optislang",
+        "dpf",
+        "dyna",
+        "mapdl",
+        "aedt",
+        "icepak",
+        "optics",
+        "systems",
+        "granta",
+        "sherlock",
+        "rocky",
+        "motorcad",
+        "aqwa",
+        "chemkin",
+        "sound",
+        "workflow",
+    }
 )
 
 
@@ -191,9 +214,12 @@ async def ans_session_set_workspace(products: list[str] | None = None) -> dict:
     不影響其他 session，也不改動全域工具註冊。
 
     Args:
-        products: 欲保留可見的 product 清單，合法值為 "mechanical" / "fluent" /
-            "geometry" / "workbench" / "optislang" / "dpf" / "workflow"。傳入
-            None 或空清單則清除本 session 的可見性限制 (回到可見全集)。
+        products: 欲保留可見的 product 清單，合法值包含 "core" (僅保留通用核心工具)、
+            "workflow"、"sound" 以及全部 18 個產品模組 ("mechanical" / "fluent" /
+            "geometry" / "workbench" / "optislang" / "dpf" / "dyna" / "mapdl" /
+            "aedt" / "icepak" / "optics" / "systems" / "granta" / "sherlock" /
+            "rocky" / "motorcad" / "aqwa" / "chemkin")。傳入 None 或空清單則清除
+            本 session 的可見性限制 (回到可見全集)。
 
     Returns:
         信封 dict：成功回 {"ok": True, "visible_products": [...]}；
@@ -228,3 +254,123 @@ async def ans_session_set_workspace(products: list[str] | None = None) -> dict:
             lifespan_ctx[_VISIBILITY_STATE_KEY] = target_val
 
     return _envelope({"ok": True, "visible_products": sorted(requested)})
+
+
+@mcp.tool(annotations={"readOnlyHint": False, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False})
+async def ans_capture_screenshot(
+    product: str = "mechanical",
+    file_path: str = "",
+    view: str = "iso",
+    target_name: Optional[str] = None,
+    width: int = 1920,
+    height: int = 1080,
+    return_image: bool = True,
+    options: Optional[dict[str, Any]] = None,
+) -> dict:
+    """跨模組統一截圖入口（支援 mechanical / geometry / spaceclaim / fluent / dpf / dyna）。
+
+    Args:
+        product: 目標產品名稱（mechanical / geometry / spaceclaim / fluent / dpf / dyna / lsdyna）。
+        file_path: 輸出影像路徑；留空則寫入 .runtime/screenshots 預設檔名。
+        view: 視角名稱（如 iso, front, back, top, bottom, left, right, current）。
+        target_name: Mechanical 專用樹狀目標物件名稱（如 Total Deformation）。
+        width: 影像寬度像素（預設 1920）。
+        height: 影像高度像素（預設 1080）。
+        return_image: 是否驗證並回報影像可讀狀態。
+        options: 產品專屬附加參數字典（如 DPF 的 rst_path/result_type、DYNA 的 d3plot_path/fringe_component/dry_run）。
+    """
+    prod = (product or "").strip().lower()
+    opts = dict(options or {})
+
+    if prod == "mechanical":
+        from ansys_unified_mcp.products.mechanical.tools import mechanical_screenshot
+
+        return _envelope(
+            mechanical_screenshot(
+                file_path=file_path or "mechanical_screenshot.png",
+                target_name=target_name,
+                analysis_index=int(opts.get("analysis_index", 0)),
+                view=view,
+                fit=bool(opts.get("fit", True)),
+                width=width,
+                height=height,
+                background=str(opts.get("background", "white")),
+                capture_type=str(opts.get("capture_type", "image_and_legend")),
+                return_image=return_image,
+            )
+        )
+
+    if prod in ("geometry", "spaceclaim"):
+        from ansys_unified_mcp.core.screenshot_helper import resolve_screenshot_path
+        from ansys_unified_mcp.products.geometry.tools import geometry_screenshot
+
+        target_path = file_path or str(resolve_screenshot_path("", "geometry_screenshot.png"))
+        res = await geometry_screenshot(
+            file_path=target_path,
+            image_format=opts.get("image_format"),
+            fit=bool(opts.get("fit", True)),
+            view=view,
+            bodies=opts.get("bodies"),
+            return_image=return_image,
+        )
+        if hasattr(res, "structured_content") and isinstance(res.structured_content, dict):
+            return _envelope(res.structured_content)
+        return _envelope(res)
+
+    if prod == "fluent":
+        from ansys_unified_mcp.products.fluent.tools import fluent_screenshot
+
+        return _envelope(
+            await fluent_screenshot(
+                file_path=file_path or "fluent_screenshot.png",
+                view=view,
+                width=width,
+                height=height,
+                return_image=return_image,
+            )
+        )
+
+    if prod == "dpf":
+        rst_path = opts.get("rst_path")
+        if not rst_path:
+            return _envelope({"ok": False, "error": "DPF screenshot requires options['rst_path']."})
+        from ansys_unified_mcp.products.dpf.tools import dpf_screenshot
+
+        return _envelope(
+            dpf_screenshot(
+                rst_path=str(rst_path),
+                file_path=file_path or "dpf_screenshot.png",
+                result_type=str(opts.get("result_type", "stress")),
+                copy_to_sandbox=bool(opts.get("copy_to_sandbox", True)),
+                return_image=return_image,
+            )
+        )
+
+    if prod in ("dyna", "lsdyna"):
+        d3plot_path = opts.get("d3plot_path")
+        if not d3plot_path:
+            return _envelope({"ok": False, "error": "LS-DYNA screenshot requires options['d3plot_path']."})
+        from ansys_unified_mcp.products.dyna.tools import dyna_screenshot
+
+        return _envelope(
+            dyna_screenshot(
+                d3plot_path=str(d3plot_path),
+                file_path=file_path or "dyna_screenshot.png",
+                fringe_component=int(opts.get("fringe_component", 9)),
+                view=view,
+                state=int(opts.get("state", -1)),
+                dry_run=bool(opts.get("dry_run", False)),
+                timeout=float(opts.get("timeout", 120.0)),
+                return_image=return_image,
+            )
+        )
+
+    return _envelope(
+        {
+            "ok": False,
+            "error": (
+                f"不支援截圖的產品模組: '{product}'；"
+                "支援 mechanical / geometry / spaceclaim / fluent / dpf / dyna"
+            ),
+        }
+    )

@@ -178,3 +178,63 @@ def lsdyna_setup_drop_test(
     return _envelope(result)
 
 
+@mcp.tool(
+    annotations={"readOnlyHint": False, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False}
+)
+def dyna_screenshot(
+    d3plot_path: str,
+    file_path: str = "dyna_screenshot.png",
+    fringe_component: int = 9,
+    view: str = "iso",
+    state: int = -1,
+    dry_run: bool = False,
+    timeout: float = 120.0,
+    return_image: bool = True,
+) -> dict:
+    """透過 LS-PrePost 無頭批次模式載入 d3plot 並輸出應力/變形雲圖 PNG 截圖。
+
+    Args:
+        d3plot_path: d3plot 結果檔路徑。
+        file_path: 輸出 PNG 影像路徑。
+        fringe_component: LS-PrePost fringe 物理量代碼（預設 9 為 von-Mises 應力）。
+        view: 視角命令（預設 iso）。
+        state: 結果時間步索引（-1 代表最終步）。
+        dry_run: True 時僅驗證與產生 cfile 命令，不啟動 LS-PrePost。
+        timeout: 執行超時秒數。
+        return_image: 是否檢查本機影像存在並回傳可讀狀態。
+    """
+    from pathlib import Path
+    from ansys_unified_mcp.core.screenshot_helper import (
+        finalize_screenshot_response,
+        resolve_screenshot_path,
+    )
+
+    out_path = resolve_screenshot_path(file_path, "dyna_screenshot.png")
+    d3_posix = Path(d3plot_path).as_posix()
+    out_posix = out_path.as_posix()
+    view_cmd = (view or "iso").strip().lower()
+    lines = [
+        f'open d3plot "{d3_posix}"',
+        "ac",
+        f"state {int(state)}",
+        f"fringe {int(fringe_component)}",
+        "pfringe",
+        view_cmd,
+        "ac",
+        f'print png "{out_posix}" enlisted DPI 150',
+        "exit",
+    ]
+    cfile_script = "\n".join(lines) + "\n"
+    res = controller.run_prepost(
+        script_content=cfile_script,
+        dry_run=dry_run,
+        timeout=timeout,
+    )
+    env = _envelope(res)
+    env["product"] = "dyna"
+    env["file_path"] = str(out_path)
+    if dry_run:
+        env["cfile_script"] = cfile_script
+    return finalize_screenshot_response(env, return_image=return_image, as_tool_result=False)
+
+

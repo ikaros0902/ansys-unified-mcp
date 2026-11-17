@@ -258,6 +258,7 @@ convert_part_to_point_mass = solution_ops.convert_part_to_point_mass
 get_model_tree_hierarchy = solution_ops.get_model_tree_hierarchy
 assign_materials_from_bom = solution_ops.assign_materials_from_bom
 create_joints_from_groups = solution_ops.create_joints_from_groups
+capture_screenshot = solution_ops.capture_screenshot
 
 __all__ = [
     # Session
@@ -308,4 +309,5 @@ __all__ = [
     "get_model_tree_hierarchy",
     "assign_materials_from_bom",
     "create_joints_from_groups",
+    "capture_screenshot",
 ]
