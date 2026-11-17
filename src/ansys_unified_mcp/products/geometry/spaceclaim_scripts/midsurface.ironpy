@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 # SpaceClaim server-side IronPython midsurface script (ASCII only).
+import json
+import math
 import sys
 result = {}
 
@@ -67,7 +69,10 @@ try:
     Selection = api.Scripting.Selection.Selection
 
     # mm -> m (SpaceClaim API works in meters)
-    max_thickness = _f(argsDict, "max_thickness_mm", 6.0) / 1000.0
+    max_thickness_mm = _f(argsDict, "max_thickness_mm", 6.0)
+    max_thickness = max_thickness_mm / 1000.0
+    min_thickness_mm = _f(argsDict, "min_thickness_mm", 0.300)
+    min_thickness = min_thickness_mm / 1000.0
     main_surface_ratio = _f(argsDict, "main_surface_ratio", 0.7)
     area_difference_ratio = _f(argsDict, "area_difference_ratio", 0.1)
     complex_area_diff = _f(argsDict, "complex_area_diff", 0.05)
@@ -78,6 +83,14 @@ try:
         result["ok"] = "no"
         result["error"] = "max_thickness_mm must be greater than 0"
         raise SystemExit
+    if not 0.0 <= min_thickness_mm < float("inf"):
+        result["ok"] = "no"
+        result["error"] = "min_thickness_mm must be finite and nonnegative"
+        raise SystemExit
+    if min_thickness_mm > max_thickness_mm:
+        result["ok"] = "no"
+        result["error"] = "min_thickness_mm must not exceed max_thickness_mm"
+        raise SystemExit
 
     def get_face_area(face):
         try:
@@ -87,6 +100,43 @@ try:
 
     def get_body_faces(body):
         return [face for face in body.Faces]
+
+    def get_face_moniker(face):
+        moniker = face.Moniker
+        key = str(moniker) if moniker is not None else ""
+        if not key.strip():
+            raise RuntimeError("A face has no Moniker")
+        return key
+
+    def count_connected_pieces(body):
+        faces = get_body_faces(body)
+        # Index by Moniker to avoid hashing DesignFace wrappers across API collections.
+        face_indices = {}
+        for index, face in enumerate(faces):
+            key = get_face_moniker(face)
+            if key in face_indices:
+                raise RuntimeError("The body contains duplicate face Monikers")
+            face_indices[key] = index
+        neighbors = [set() for face in faces]
+        for index, face in enumerate(faces):
+            for adjacent in face.AdjacentFaces:
+                other = face_indices.get(get_face_moniker(adjacent))
+                if other is None:
+                    raise RuntimeError("Adjacent face was not found in the body face collection")
+                neighbors[index].add(other)
+                neighbors[other].add(index)
+
+        unseen = set(range(len(faces)))
+        pieces = 0
+        while unseen:
+            pieces += 1
+            queue = [unseen.pop()]
+            for index in queue:
+                for other in neighbors[index]:
+                    if other in unseen:
+                        unseen.remove(other)
+                        queue.append(other)
+        return pieces
 
     def get_tangent_chain(face):
         return [tf for tf in DesignFaceExtensions.GetTangentChain(face)]
@@ -112,50 +162,58 @@ try:
         return MeasureHelper.DistanceBetweenObjects(s1, s2).Distance
 
     def are_normals_opposed(f1, f2):
-        try:
-            n1 = DesignFaceExtensions.GetFaceNormal(f1, 0.5, 0.5)
-            n2 = DesignFaceExtensions.GetFaceNormal(f2, 0.5, 0.5)
-            return abs(n1.Dot(n2)) > 0.99
-        except Exception:
-            return True
+        v1 = DesignFaceExtensions.GetFaceNormal(f1, 0.5, 0.5).UnitVector
+        v2 = DesignFaceExtensions.GetFaceNormal(f2, 0.5, 0.5).UnitVector
+        dot = float(api.Geometry.Vector.Dot(v1, v2)) / v1.Magnitude / v2.Magnitude
+        return dot < -0.99
 
-    def find_primary_face_pair(body):
+    def find_primary_face_pair(body, probe_errors):
         faces = get_body_faces(body)
         if len(faces) < 2:
             return None
         faces.sort(key=get_face_area, reverse=True)
         first = faces[0]
         first_area = get_face_area(first)
-        for second in faces[1:]:
-            if not are_normals_opposed(first, second):
+        for number, second in enumerate(faces[1:], 2):
+            try:
+                if not are_normals_opposed(first, second):
+                    continue
+            except Exception as error:
+                probe_errors.append({"face_number": number, "stage": "normal_probe", "reason": "%s" % error})
                 continue
             second_area = get_face_area(second)
+            if first_area <= 0.0 or second_area <= 0.0:
+                continue
             rad = abs(first_area - second_area) / max(first_area, second_area)
             if rad > area_difference_ratio:
                 continue
             try:
                 dist = get_gap_distance(first, second)
-            except Exception:
+            except Exception as error:
+                probe_errors.append({"face_number": number, "stage": "gap_probe", "reason": "%s" % error})
                 continue
             if 0.0 < dist <= max_thickness:
                 return (first, second, dist)
+        if len(probe_errors) == len(faces) - 1:
+            raise RuntimeError("No candidate could be evaluated: " + "; ".join(
+                "face %d %s: %s" % (probe["face_number"], probe["stage"], probe["reason"])
+                for probe in probe_errors
+            ))
         return None
 
-    def is_sheet_metal_body(body, f1, f2, thickness):
-        c1 = get_unique_faces(get_tangent_chain(f1))
-        c2 = get_unique_faces(get_tangent_chain(f2))
-        primary = get_unique_faces(c1 + c2)
-        a1 = get_total_area(c1)
-        a2 = get_total_area(c2)
+    def is_positive_area(area):
+        return area > 0.0 and not math.isinf(area)
+
+    def is_sheet_metal_body(body, primary, a1, a2, thickness):
         all_area = get_total_area(get_body_faces(body))
-        if all_area <= 0.0:
+        if not is_positive_area(all_area):
             return False
         rad = abs(a1 - a2) / max(a1, a2)
         psr = get_total_area(primary) / all_area
         return (thickness <= max_thickness and rad <= area_difference_ratio
                 and psr >= main_surface_ratio)
 
-    def create_midsurface(f1, f2, force_tangent):
+    def create_midsurface(f1, f2, force_tangent, chain1, chain2):
         opts = MidsurfaceOptions()
         opts.AllowNonManifold = False
         opts.ExtendSurfaces = True
@@ -165,25 +223,168 @@ try:
         cmd = Midsurface(opts)
         if force_tangent:
             cmd.AddMatchingFacePairs(f1, f2, 1.0e-5, False)
-            for fs in get_tangent_chain(f1):
+            for fs in chain1:
                 cmd.AddMatchingFacePairs(None, fs)
-            for fs in get_tangent_chain(f2):
+            for fs in chain2:
                 cmd.AddMatchingFacePairs(None, fs)
         else:
             cmd.AddMatchingFacePairs(f1, f2, 1.0e-5, True)
-        r = cmd.Execute()
-        if not r.Success:
-            raise RuntimeError("Midsurface command did not complete successfully")
+        return bool(cmd.Execute().Success)
 
     def get_body_name(body):
         try:
-            return body.Name
+            return body.Name or "<unnamed body>"
         except Exception:
             return "<unnamed body>"
 
-    def hide_body(body):
-        ViewHelper.SetObjectVisibility(BodySelection.Create(body),
-                                       VisibilityType.Hide, False, False)
+    def get_body_moniker(body):
+        moniker = body.Moniker
+        if moniker is None or not str(moniker).strip():
+            raise RuntimeError("A body in the active design has no Moniker")
+        return str(moniker)
+
+    def snapshot_bodies():
+        bodies = {}
+        for body in GetRootPart().GetAllBodies():
+            moniker = get_body_moniker(body)
+            if moniker in bodies:
+                raise RuntimeError("The active design contains duplicate body Monikers")
+            bodies[moniker] = body
+        return bodies
+
+    def set_body_visibility(body, show, warnings):
+        try:
+            visibility = VisibilityType.Show if show else VisibilityType.Hide
+            ViewHelper.SetObjectVisibility(BodySelection.Create(body), visibility, False, False)
+        except Exception as error:
+            warnings.append("%s %s: %s" % ("Show" if show else "Hide", get_body_name(body), error))
+
+    def set_outcome(entry, status, stage, reason):
+        entry["status"] = status
+        entry["error_stage"] = stage
+        entry["reason"] = reason
+
+    def process_body(body, entry):
+        entry["error_stage"] = "source_identity"
+        source_id = get_body_moniker(body)
+        entry["source_id"] = source_id
+
+        entry["error_stage"] = "primary_face_pair_detection"
+        pair = find_primary_face_pair(body, entry["pair_probe_errors"])
+        if pair is None:
+            set_outcome(entry, "SKIP", "primary_face_pair_detection", "No valid primary opposing face pair")
+            return
+        f1, f2, thickness = pair
+        entry["thickness_mm"] = float(thickness) * 1000.0
+        if thickness < min_thickness:
+            set_outcome(entry, "SKIP", "minimum_thickness_filter",
+                        "Measured thickness %.6g mm is below minimum %.6g mm" %
+                        (entry["thickness_mm"], min_thickness_mm))
+            return
+
+        entry["error_stage"] = "reference_skin_area"
+        raw_chain1 = get_tangent_chain(f1)
+        raw_chain2 = get_tangent_chain(f2)
+        chain1 = get_unique_faces([f1] + raw_chain1)
+        chain2 = get_unique_faces([f2] + raw_chain2)
+        skin1 = float(get_total_area(chain1))
+        skin2 = float(get_total_area(chain2))
+        reference_area = (skin1 + skin2) / 2.0
+        if not all(is_positive_area(a) for a in (skin1, skin2, reference_area)):
+            raise RuntimeError("Cannot measure a positive finite area for both reference skins")
+        entry["reference_skin_area_mm2"] = reference_area * 1.0e6
+
+        if enable_sheet_metal_check:
+            entry["error_stage"] = "sheet_metal_verification"
+            primary = get_unique_faces(chain1 + chain2)
+            if not is_sheet_metal_body(body, primary, skin1, skin2, thickness):
+                set_outcome(entry, "SKIP", "sheet_metal_verification", "Sheet-metal check not passed")
+                return
+
+        entry["error_stage"] = "midsurface_preparation"
+        a1 = get_face_area(f1)
+        a2 = get_face_area(f2)
+        adiff = float(abs(a1 - a2)) / max(a1, a2)
+        is_complex = adiff > complex_area_diff
+        entry["mode"] = "complex" if is_complex else "simple"
+        entry["primary_area_difference_ratio"] = adiff
+
+        entry["error_stage"] = "result_snapshot_before"
+        before = snapshot_bodies()
+        if source_id not in before:
+            raise RuntimeError("The selected occurrence is absent from the root body snapshot")
+        command_success = False
+        command_error = None
+        try:
+            command_success = create_midsurface(f1, f2, is_complex, raw_chain1, raw_chain2)
+        except Exception as error:
+            command_error = "%s" % error
+        entry["command_success"] = command_success
+        entry["command_error"] = command_error
+
+        # A failed command can still create geometry, so inspect the document after every attempt.
+        try:
+            after = snapshot_bodies()
+        except Exception as error:
+            entry["result_count_unknown"] = True
+            set_outcome(entry, "INCOMPLETE", "result_snapshot_after",
+                        "Cannot verify command effects or new body count: %s" % error)
+            return
+        new_ids = sorted(set(after).difference(before))
+        new_bodies = [after[key] for key in new_ids]
+        entry["new_body_count"] = len(new_bodies)
+        entry["new_body_ids"] = new_ids
+        entry["new_body_names"] = [get_body_name(new_body) for new_body in new_bodies]
+        entry["source_preserved"] = source_id in after
+
+        problems = []
+        if not entry["source_preserved"]:
+            problems.append(("source_preservation", "The selected occurrence is absent after the command"))
+        if not command_success:
+            command_reason = "Midsurface command did not report success"
+            if command_error:
+                command_reason += ": " + command_error
+            problems.append(("midsurface_command", command_reason))
+        if len(new_bodies) != 1:
+            problems.append(("result_body_count", "Expected one new body, found %d" % len(new_bodies)))
+        else:
+            try:
+                piece_count = count_connected_pieces(new_bodies[0])
+                entry["result_piece_count"] = piece_count
+                if piece_count != 1:
+                    problems.append(("result_piece_connectivity", "Expected one connected piece, found %d" % piece_count))
+            except Exception as error:
+                problems.append(("result_piece_connectivity", "Cannot verify face adjacency: %s" % error))
+
+        if new_bodies:
+            try:
+                output_area = float(sum(get_total_area(get_body_faces(b)) for b in new_bodies))
+                ratio = output_area / reference_area
+                if not (is_positive_area(output_area) and is_positive_area(ratio)):
+                    raise RuntimeError("Result or area ratio is non-positive or non-finite")
+                entry["result_area_mm2"] = output_area * 1.0e6
+                entry["area_ratio"] = ratio
+                if not 0.90 <= ratio <= 1.10:
+                    problems.append(("result_area_ratio", "Result area ratio %.6g outside [0.90, 1.10]" % ratio))
+            except Exception as error:
+                problems.append(("result_area_measurement", "Cannot measure result area: %s" % error))
+
+        if problems:
+            status = "INCOMPLETE" if new_bodies else "FAIL"
+            set_outcome(entry, status, problems[0][0], "; ".join(reason for stage, reason in problems))
+            if new_bodies:
+                if entry["source_preserved"]:
+                    set_body_visibility(after[source_id], True, entry["visibility_warnings"])
+                for new_body in new_bodies:
+                    set_body_visibility(new_body, True, entry["visibility_warnings"])
+            return
+
+        set_outcome(entry, "SUCCESS", None, "Midsurface created (%s, area_diff=%.1f%%, area_ratio=%.6g)" % (
+            entry["mode"], adiff * 100.0, entry["area_ratio"]
+        ))
+        if hide_source_bodies:
+            set_body_visibility(after[source_id], False, entry["visibility_warnings"])
+
 
     selected = [b for b in Selection.GetActive().GetItems[IDesignBody]()]
     result["selected_count"] = str(len(selected))
@@ -192,43 +393,54 @@ try:
         result["error"] = "no body selected (Selection.GetActive is empty)"
         raise SystemExit
 
-    success = 0
-    skipped = 0
-    failed = 0
+    counts = {"SUCCESS": 0, "SKIP": 0, "FAIL": 0, "INCOMPLETE": 0}
     details = []
+    metrics = []
     for body in selected:
-        bn = get_body_name(body)
+        entry = {
+            "name": get_body_name(body),
+            "status": None,
+            "error_stage": None,
+            "reason": None,
+            "source_id": None,
+            "source_preserved": None,
+            "thickness_mm": None,
+            "min_thickness_mm": min_thickness_mm,
+            "reference_skin_area_mm2": None,
+            "result_area_mm2": None,
+            "area_ratio": None,
+            "mode": None,
+            "new_body_count": None,
+            "result_count_unknown": False,
+            "result_piece_count": None,
+            "pair_probe_errors": [],
+            "new_body_ids": [],
+            "new_body_names": [],
+            "command_success": None,
+            "command_error": None,
+            "visibility_warnings": [],
+        }
         try:
-            pair = find_primary_face_pair(body)
-            if pair is None:
-                failed += 1
-                details.append("[" + bn + "] FAIL: no valid primary opposing face pair")
-                continue
-            f1, f2, thickness = pair
-            if enable_sheet_metal_check and not is_sheet_metal_body(body, f1, f2, thickness):
-                skipped += 1
-                details.append("[" + bn + "] SKIP: sheet-metal check not passed")
-                continue
-            a1 = get_face_area(f1)
-            a2 = get_face_area(f2)
-            adiff = abs(a1 - a2) / max(a1, a2)
-            is_complex = (adiff > complex_area_diff)
-            create_midsurface(f1, f2, is_complex)
-            if hide_source_bodies:
-                hide_body(body)
-            success += 1
-            mode = "complex" if is_complex else "simple"
-            details.append("[" + bn + "] OK: midsurface created (" + mode
-                           + ", area_diff=" + ("%.1f" % (adiff * 100.0)) + "%)")
-        except Exception:
-            failed += 1
-            details.append("[" + bn + "] FAIL: " + str(sys.exc_info()[1]))
+            process_body(body, entry)
+        except Exception as error:
+            set_outcome(entry, "FAIL", entry["error_stage"], "%s" % error)
+
+        status = entry["status"]
+        counts[status] += 1
+        label = "OK" if status == "SUCCESS" else status
+        stage = "[%s] " % entry["error_stage"] if entry["error_stage"] else ""
+        warnings = ("; Visibility: " + "; ".join(entry["visibility_warnings"])
+                    if entry["visibility_warnings"] else "")
+        details.append("[%s] %s: %s%s%s" % (entry["name"], label, stage, entry["reason"], warnings))
+        metrics.append(entry)
 
     result["ok"] = "yes"
-    result["success"] = str(success)
-    result["skipped"] = str(skipped)
-    result["failed"] = str(failed)
+    result["success"] = str(counts["SUCCESS"])
+    result["skipped"] = str(counts["SKIP"])
+    result["failed"] = str(counts["FAIL"])
+    result["incomplete"] = str(counts["INCOMPLETE"])
     result["details"] = "\n".join(details)
+    result["metrics"] = json.dumps(metrics, ensure_ascii=True, allow_nan=False)
 except SystemExit:
     pass
 except Exception:

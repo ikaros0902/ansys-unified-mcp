@@ -153,6 +153,7 @@ GEOMETRY_TOOLS = [
     Tool(name="geometry_midsurface", description="對 SpaceClaim 中目前「已選取」的 body 批次建立中曲面 (midsurface)。呼叫前請先在 SpaceClaim 視窗選取欲抽中面的鈑金/薄殼 body。採面積最大優先的對向面配對 + 動態相切鏈補強（複雜件強制加入相切面以對抗壓折邊遺失）；可選鈑金件判斷與抽中面後隱藏原始 body。單位：厚度為 mm。",
          inputSchema={"type": "object", "properties": {
              "max_thickness_mm": {"type": "number", "default": 6.0, "description": "判定為薄件/對向面的最大板厚（單位：mm）；對向面間距大於 0 且不超過此值才視為配對"},
+             "min_thickness_mm": {"type": "number", "minimum": 0.0, "default": 0.300, "description": "最小板厚（mm）；量得厚度低於此值時略過，等於時繼續，設為 0 可取消此限制"},
              "main_surface_ratio": {"type": "number", "default": 0.7, "description": "鈑金件判斷：主要對向面（含相切鏈）面積占整體面積的最小比例"},
              "area_difference_ratio": {"type": "number", "default": 0.1, "description": "一對對向面可接受的相對面積差上限（0~1）"},
              "complex_area_diff": {"type": "number", "default": 0.05, "description": "面積差超過此值即視為複雜件，改用強制相切鏈模式建立中面"},
@@ -682,11 +683,13 @@ _MIDSURFACE_SCRIPT = load_script("midsurface")
 def _geom_midsurface(max_thickness_mm: float = 6.0, main_surface_ratio: float = 0.7,
                      area_difference_ratio: float = 0.1, complex_area_diff: float = 0.05,
                      enable_sheet_metal_check: bool = True,
-                     hide_source_bodies: bool = True) -> str:
+                     hide_source_bodies: bool = True,
+                     min_thickness_mm: float = 0.300) -> str:
     """送 IronPython 腳本到 SpaceClaim 伺服器端，對目前「已選取」的 body 批次建立中曲面。
 
     由 SC_midsurface_Agent.py (ACT callback) 改寫。呼叫前需在 SpaceClaim 視窗中
     先選取欲抽中面的 body。回傳 JSON 字串（工具層 as_envelope 解析為信封）。
+    量得厚度低於 min_thickness_mm 的零件會略過，等於時繼續。
     """
     import json
     import tempfile
@@ -698,9 +701,14 @@ def _geom_midsurface(max_thickness_mm: float = 6.0, main_surface_ratio: float = 
         return _err("Geometry 未連線，請先執行 geometry_launch")
     if max_thickness_mm is None or max_thickness_mm <= 0:
         return _err("max_thickness_mm 必須大於 0")
+    if min_thickness_mm is None or not 0.0 <= min_thickness_mm < float("inf"):
+        return _err("min_thickness_mm 必須為非負有限數值")
+    if min_thickness_mm > max_thickness_mm:
+        return _err("min_thickness_mm 不得大於 max_thickness_mm")
 
     script_args = {
         "max_thickness_mm": str(max_thickness_mm),
+        "min_thickness_mm": str(min_thickness_mm),
         "main_surface_ratio": str(main_surface_ratio),
         "area_difference_ratio": str(area_difference_ratio),
         "complex_area_diff": str(complex_area_diff),
@@ -735,8 +743,14 @@ def _geom_midsurface(max_thickness_mm: float = 6.0, main_surface_ratio: float = 
         "success": _int("success"),
         "skipped": _int("skipped"),
         "failed": _int("failed"),
+        "incomplete": _int("incomplete"),
         "api": values.get("api"),
     }
+    try:
+        metrics = json.loads(values.get("metrics", "[]"))
+    except (TypeError, ValueError):
+        metrics = []
+    out["metrics"] = metrics if isinstance(metrics, list) else []
     details = values.get("details")
     if details:
         out["details"] = details.split("\n")
@@ -1255,7 +1269,8 @@ async def call_tool(name: str, arguments: dict[str, Any],
                         area_difference_ratio=arguments.get("area_difference_ratio", 0.1),
                         complex_area_diff=arguments.get("complex_area_diff", 0.05),
                         enable_sheet_metal_check=arguments.get("enable_sheet_metal_check", True),
-                        hide_source_bodies=arguments.get("hide_source_bodies", True))
+                        hide_source_bodies=arguments.get("hide_source_bodies", True),
+                        min_thickness_mm=arguments.get("min_thickness_mm", 0.300))
                 elif name == "geometry_defeature_features":
                     result = _geom_defeature_features(
                         defeature_face_exe=arguments.get("defeature_face_exe", True),

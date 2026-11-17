@@ -310,7 +310,8 @@ async def geometry_simplify_heatsink(source: str, result_name: str = None, densi
 async def geometry_midsurface(max_thickness_mm: float = 6.0, main_surface_ratio: float = 0.7,
                               area_difference_ratio: float = 0.1, complex_area_diff: float = 0.05,
                               enable_sheet_metal_check: bool = True,
-                              hide_source_bodies: bool = True) -> dict:
+                              hide_source_bodies: bool = True,
+                              min_thickness_mm: float = 0.300) -> dict:
     """對目前「已選取」的 body 批次建立中曲面 (midsurface)【呼叫前請先在 SpaceClaim 視窗選取欲抽中面的鈑金/薄殼 body】
 
     採面積最大優先的對向面配對，並以動態相切鏈補強：面積差超過 complex_area_diff 時改用強制相切鏈模式，對抗壓折邊遺失。可選鈑金件判斷（未通過者略過）與抽中面後隱藏原始 body。單位：厚度為毫米 mm。
@@ -320,6 +321,7 @@ async def geometry_midsurface(max_thickness_mm: float = 6.0, main_surface_ratio:
     :param complex_area_diff: 面積差超過此值即視為複雜件，改用強制相切鏈模式建立中面
     :param enable_sheet_metal_check: 是否啟用鈑金件判斷
     :param hide_source_bodies: 成功抽中面後是否隱藏原始實體 body
+    :param min_thickness_mm: 最小板厚（mm，預設 0.300）；量得厚度低於此值時略過，等於時繼續，設為 0 可取消此限制
     """
     args = {}
     for key, val in (('max_thickness_mm', max_thickness_mm),
@@ -327,7 +329,8 @@ async def geometry_midsurface(max_thickness_mm: float = 6.0, main_surface_ratio:
                      ('area_difference_ratio', area_difference_ratio),
                      ('complex_area_diff', complex_area_diff),
                      ('enable_sheet_metal_check', enable_sheet_metal_check),
-                     ('hide_source_bodies', hide_source_bodies)):
+                     ('hide_source_bodies', hide_source_bodies),
+                     ('min_thickness_mm', min_thickness_mm)):
         if val is not None:
             args[key] = val
     res = await sim_impl.call_tool('geometry_midsurface', args)

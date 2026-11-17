@@ -10,6 +10,7 @@ resource 與 tool wrapper 層已有測試，但最底層 driver 分支
 from __future__ import annotations
 
 import asyncio
+import json
 from types import SimpleNamespace
 from unittest.mock import patch
 
@@ -152,5 +153,52 @@ def test_simplify_ram_without_motherboard():
     assert "✓ RAM 簡化完成" in text
     assert "無主機板模式" in text
     assert "Socket 底面" in text
+
+
+def test_midsurface_rejects_invalid_min_thickness():
+    """Verify _geom_midsurface rejects negative min_thickness_mm or min > max."""
+    with patch.object(sim_impl, "_modeler", object()):
+        neg = json.loads(_call("geometry_midsurface", {"min_thickness_mm": -0.1}))
+        gt_max = json.loads(
+            _call("geometry_midsurface", {"min_thickness_mm": 8.0, "max_thickness_mm": 6.0})
+        )
+
+    assert neg["ok"] is False
+    assert "min_thickness_mm" in neg["error"]
+    assert gt_max["ok"] is False
+    assert "min_thickness_mm" in gt_max["error"]
+
+
+def test_midsurface_passes_min_thickness_and_parses_metrics():
+    """Verify default min_thickness_mm=0.300 reaches SpaceClaim script and parses incomplete/metrics."""
+    captured: dict[str, object] = {}
+
+    class FakeModeler:
+        def run_script_file(self, script_path, script_args=None):
+            captured["script_args"] = dict(script_args or {})
+            return (
+                {
+                    "ok": "yes",
+                    "selected_count": "1",
+                    "success": "0",
+                    "skipped": "0",
+                    "failed": "0",
+                    "incomplete": "1",
+                    "api": "mock",
+                    "metrics": '[{"name": "Body1", "status": "INCOMPLETE", "thickness_mm": 0.3}]',
+                },
+                None,
+            )
+
+    with patch.object(sim_impl, "_modeler", FakeModeler()):
+        data = json.loads(_call("geometry_midsurface", {}))
+
+    assert captured["script_args"]["min_thickness_mm"] == "0.3"
+    assert data["ok"] is True
+    assert data["incomplete"] == 1
+    assert isinstance(data["metrics"], list)
+    assert data["metrics"][0]["status"] == "INCOMPLETE"
+    assert data["metrics"][0]["thickness_mm"] == 0.3
+
 
 
