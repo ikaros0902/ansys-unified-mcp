@@ -162,6 +162,7 @@ def test_act_queue_resolver_uses_runtime_default_and_keeps_overrides(
     plugin_name: str, monkeypatch: pytest.MonkeyPatch, tmp_path: Path
 ) -> None:
     for variable in (
+        "ANSYS_WORKBENCH_MCP_HOME",
         "WORKBENCH_MCP_QUEUE_ROOT",
         "WORKBENCH_MCP_ROOT",
         "ANSYS_WORKBENCH_QUEUE_DIR",
@@ -169,7 +170,7 @@ def test_act_queue_resolver_uses_runtime_default_and_keeps_overrides(
         monkeypatch.delenv(variable, raising=False)
     plugin_file = REPO_ROOT / "scripts" / "deploy" / "act_plugins" / plugin_name
 
-    assert Path(_run_act_queue_resolver(plugin_file, plugin_file.parent)) == REPO_ROOT / ".runtime" / "queue"
+    assert Path(_run_act_queue_resolver(plugin_file, plugin_file.parent)) == Path.home() / ".ansys-workbench-mcp"
 
     project_root = tmp_path / "configured-project"
     monkeypatch.setenv("WORKBENCH_MCP_ROOT", str(project_root))
@@ -186,7 +187,7 @@ def test_act_queue_resolver_uses_runtime_default_and_keeps_overrides(
     isolated_plugin = tmp_path / "isolated-plugin"
     assert Path(_run_act_queue_resolver(plugin_file, isolated_plugin)) == queue_root
     monkeypatch.delenv("ANSYS_WORKBENCH_QUEUE_DIR")
-    assert Path(_run_act_queue_resolver(plugin_file, isolated_plugin)) == isolated_plugin / ".runtime" / "queue"
+    assert Path(_run_act_queue_resolver(plugin_file, isolated_plugin)) == Path.home() / ".ansys-workbench-mcp"
 
 
 def test_topology_verifier_passes_on_compliant_structure(tmp_path: Path) -> None:

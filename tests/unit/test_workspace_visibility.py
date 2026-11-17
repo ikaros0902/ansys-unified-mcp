@@ -108,3 +108,78 @@ def test_set_workspace_empty_clears_restriction():
     full, restricted, cleared = _run(scenario())
     assert restricted < full
     assert cleared == full
+
+
+def test_product_of_module_sound_and_apikb():
+    """sound_tools 應歸為 sound 域，apikb_tools 應歸為 common 域。"""
+    assert product_of_module("ansys_unified_mcp.tools.sound_tools") == "sound"
+    assert product_of_module("ansys_unified_mcp.tools.apikb_tools") == COMMON_PRODUCT
+
+
+def test_set_workspace_core_and_all_products():
+    """core 模式僅保留通用核心工具；dyna 與 sound 亦可合法設定並過濾。"""
+    import ansys_unified_mcp.__main__  # noqa: F401
+    from ansys_unified_mcp.shared import mcp
+    from fastmcp import Client
+
+    async def scenario():
+        async with Client(mcp) as c:
+            res_core = await c.call_tool("ans_session_set_workspace", {"products": ["core"]})
+            core_tools = {t.name for t in await c.list_tools()}
+            res_ds = await c.call_tool("ans_session_set_workspace", {"products": ["dyna", "sound"]})
+            ds_tools = {t.name for t in await c.list_tools()}
+        return res_core.data, core_tools, res_ds.data, ds_tools
+
+    res_core, core_tools, res_ds, ds_tools = _run(scenario())
+
+    assert res_core["ok"] is True
+    assert "ans_session_status" in core_tools
+    assert "api_search" in core_tools
+    assert not any(n.startswith("mechanical_") for n in core_tools)
+    assert not any(n.startswith("geometry_") for n in core_tools)
+    assert not any(n.startswith("sound_") for n in core_tools)
+
+    assert res_ds["ok"] is True
+    assert "dyna_solve" in ds_tools
+    assert "sound_calculate_zwicker_loudness" in ds_tools
+    assert not any(n.startswith("mechanical_") for n in ds_tools)
+
+
+def test_visibility_cache_refreshes_on_dynamic_registration():
+    """TOOL_REGISTRY 新增工具後，_ensure_map() 應自動偵測並重建映射。"""
+    from ansys_unified_mcp.shared import TOOL_REGISTRY, mcp
+    from ansys_unified_mcp.tools.visibility import WorkspaceVisibilityMiddleware
+
+    mw = WorkspaceVisibilityMiddleware(mcp, "ansys_visible_products")
+    initial_map = mw._ensure_map()
+    dummy_name = "_test_dynamic_dyna_tool_temp"
+
+    def _dummy_fn():
+        return None
+
+    _dummy_fn.__module__ = "ansys_unified_mcp.products.dyna.tools"
+    assert dummy_name not in initial_map
+    try:
+        TOOL_REGISTRY[dummy_name] = _dummy_fn
+        refreshed_map = mw._ensure_map()
+        assert refreshed_map.get(dummy_name) == "dyna"
+    finally:
+        TOOL_REGISTRY.pop(dummy_name, None)
+
+
+def test_dual_track_tools_include_backend_metadata():
+    """Dual-track 基準工具回傳必須包含 execution_mode 與 backend_notice。"""
+    from ansys_unified_mcp.products.aedt.tools import aedt_solve_hfss
+    from ansys_unified_mcp.tools.sound_tools import sound_calculate_zwicker_loudness
+
+    hfss_res = aedt_solve_hfss()
+    sound_res = sound_calculate_zwicker_loudness(frequency=1000.0, spl_db=40.0)
+
+    assert hfss_res["ok"] is True
+    assert hfss_res["execution_mode"] == "benchmark_fallback"
+    assert "backend_notice" in hfss_res
+
+    assert sound_res["ok"] is True
+    assert sound_res["execution_mode"] == "benchmark_fallback"
+    assert "backend_notice" in sound_res
+

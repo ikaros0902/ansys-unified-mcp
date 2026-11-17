@@ -56,6 +56,7 @@ def sherlock_run_thermal_fatigue_life(
         delta_cte_ppm=delta_cte_ppm,
         dwell_time_minutes=dwell_time_minutes,
     )
+    result = driver.with_backend_metadata(result)
     return _envelope({"ok": True, **result})
 
 
@@ -88,4 +89,5 @@ def sherlock_run_vibration_life(
         transmissibility_q=transmissibility_q,
         lead_wire_diameter_mm=lead_wire_diameter_mm,
     )
+    result = driver.with_backend_metadata(result)
     return _envelope({"ok": True, **result})

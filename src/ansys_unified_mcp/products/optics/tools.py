@@ -51,6 +51,7 @@ def optics_solve_lumerical_waveguide(
         core_half_thickness_um=core_half_thickness_um,
         wavelength_um=wavelength_um,
     )
+    result = driver.with_backend_metadata(result)
     return _envelope({"ok": True, **result})
 
 
@@ -83,6 +84,7 @@ def optics_trace_zemax_lens(
         indices=refractive_indices,
         beam_radius_mm=beam_radius_mm,
     )
+    result = driver.with_backend_metadata(result)
     return _envelope({"ok": True, **result})
 
 
@@ -112,4 +114,5 @@ def optics_evaluate_speos_photometry(
         distance_m=distance_m,
         beam_angle_deg=beam_angle_deg,
     )
+    result = driver.with_backend_metadata(result)
     return _envelope({"ok": True, **result})

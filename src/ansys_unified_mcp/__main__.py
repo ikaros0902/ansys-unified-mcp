@@ -24,6 +24,7 @@ import os
 # Dynamic Tool Routing: 根據 ANSYS_MCP_PROFILE 決定載入的工具模組
 # 可選值:
 # - 'all' (預設全套規範工具，適配 Antigravity 原生 Lazy MCP 索引)
+# - 'core_cae' (僅預載主力實機 CAE 模組，非主力/基準模組可透過 ans_call_domain_tool 按需載入)
 # - 'core' (極簡核心與 Meta-Router 工具，適配 Kiro CLI / Claude Desktop 零延遲連線)
 # - 單一領域: 'geometry', 'mechanical', 'fluent', 'workbench' 等
 profile = os.environ.get("ANSYS_MCP_PROFILE", "all").strip().lower()
@@ -39,31 +40,31 @@ import ansys_unified_mcp.tools.session_manager_tools
 import ansys_unified_mcp.tools.meta_router_tools
 import ansys_unified_mcp.tools.sound_tools
 
-if profile in ("all", "full", "workbench", "wb"):
+if profile in ("all", "full", "core_cae", "workbench", "wb"):
     import ansys_unified_mcp.products.workbench.tools
 
-if profile in ("all", "full", "mechanical", "structural"):
+if profile in ("all", "full", "core_cae", "mechanical", "structural"):
     import ansys_unified_mcp.products.mechanical.tools
 
-if profile in ("all", "full", "mechanical", "structural", "dpf"):
+if profile in ("all", "full", "core_cae", "mechanical", "structural", "dpf"):
     import ansys_unified_mcp.products.dpf.tools
 
-if profile in ("all", "full", "optislang"):
+if profile in ("all", "full", "core_cae", "optislang"):
     import ansys_unified_mcp.products.optislang.tools
 
-if profile in ("all", "full", "fluent", "cfd"):
+if profile in ("all", "full", "core_cae", "fluent", "cfd"):
     import ansys_unified_mcp.products.fluent.tools
 
-if profile in ("all", "full", "geometry", "spaceclaim"):
+if profile in ("all", "full", "core_cae", "geometry", "spaceclaim"):
     import ansys_unified_mcp.products.geometry.tools
 
-if profile in ("all", "full", "dyna", "lsdyna"):
+if profile in ("all", "full", "core_cae", "dyna", "lsdyna"):
     import ansys_unified_mcp.products.dyna.tools
 
 if profile in ('all', 'full', 'icepak', 'thermal'):
     import ansys_unified_mcp.products.icepak.tools
 
-if profile in ('all', 'full', 'mapdl', 'apdl'):
+if profile in ('all', 'full', 'core_cae', 'mapdl', 'apdl'):
     import ansys_unified_mcp.products.mapdl.tools
 
 if profile in ('all', 'full', 'aedt', 'em', 'hfss', 'maxwell'):

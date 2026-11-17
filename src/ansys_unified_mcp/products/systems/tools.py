@@ -56,6 +56,7 @@ def systems_solve_coupling_cht(
         t_cold_k=t_cold_k,
         use_aitken=use_aitken,
     )
+    result = driver.with_backend_metadata(result)
     return _envelope({"ok": True, **result})
 
 
@@ -91,4 +92,5 @@ def systems_run_twin_rom(
         damping_ratio=damping_ratio,
         natural_frequency_rad_s=natural_frequency_rad_s,
     )
+    result = driver.with_backend_metadata(result)
     return _envelope({"ok": True, **result})

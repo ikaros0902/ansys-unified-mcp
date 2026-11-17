@@ -47,7 +47,7 @@ class AEDTDriver(BaseDualTrackDriver):
                 return True, f"Found AEDT in system PATH: {found}"
 
         for ver in ["v251", "v242", "v241", "v232"]:
-            for folder in ["AnsysEM", f"AnsysEM/{ver}/Win64", f"ansys/bin/winx64"]:
+            for folder in ["AnsysEM", f"AnsysEM/{ver}/Win64", "ansys/bin/winx64"]:
                 cand = Path(f"C:/Program Files/ANSYS Inc/{ver}/{folder}/ansysedt.exe")
                 if cand.exists():
                     self.solver_bin = str(cand)

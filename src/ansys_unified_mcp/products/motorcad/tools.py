@@ -53,4 +53,5 @@ def motorcad_solve_efficiency_point(
         omega_m_rad_s=omega_m_rad_s,
         torque_target_nm=torque_target_nm,
     )
+    result = driver.with_backend_metadata(result)
     return _envelope({"ok": True, **result})

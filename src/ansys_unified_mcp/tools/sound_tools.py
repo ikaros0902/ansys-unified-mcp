@@ -104,6 +104,8 @@ def sound_calculate_sound_pressure_level(
             "spl_dbc": res.spl_dbc,
             "duration_sec": res.duration_sec,
             "num_samples": res.num_samples,
+            "execution_mode": "benchmark_fallback",
+            "backend_notice": "Executed via internal ISO 532-1 / DIN 45692 psychoacoustic benchmark engine.",
         })
     except Exception as exc:
         logger.error(f"Error calculating sound pressure level: {exc}")
@@ -179,6 +181,8 @@ def sound_calculate_zwicker_loudness(
             "field_type": res.field_type,
             "specific_loudness": res.specific_loudness,
             "bark_bands": res.bark_bands,
+            "execution_mode": "benchmark_fallback",
+            "backend_notice": "Executed via internal ISO 532-1 / DIN 45692 psychoacoustic benchmark engine.",
         })
     except Exception as exc:
         logger.error(f"Error calculating Zwicker loudness: {exc}")
@@ -252,6 +256,8 @@ def sound_calculate_sharpness(
             "sharpness_acum": res.sharpness_acum,
             "loudness_sone": res.loudness_sone,
             "method": res.method,
+            "execution_mode": "benchmark_fallback",
+            "backend_notice": "Executed via internal ISO 532-1 / DIN 45692 psychoacoustic benchmark engine.",
         })
     except Exception as exc:
         logger.error(f"Error calculating sound sharpness: {exc}")

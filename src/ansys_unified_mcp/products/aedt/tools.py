@@ -66,6 +66,7 @@ def aedt_solve_hfss(
         f_start_ghz=f_start_ghz,
         f_stop_ghz=f_stop_ghz,
     )
+    result = driver.with_backend_metadata(result)
     return _envelope({"ok": True, **result})
 
 
@@ -105,6 +106,7 @@ def aedt_solve_maxwell(
         core_area_cm2=core_area_cm2,
         core_ur=core_ur,
     )
+    result = driver.with_backend_metadata(result)
     return _envelope({"ok": True, **result})
 
 
@@ -140,4 +142,5 @@ def aedt_extract_rlcg(
         er=er,
         length_mm=length_mm,
     )
+    result = driver.with_backend_metadata(result)
     return _envelope({"ok": True, **result})

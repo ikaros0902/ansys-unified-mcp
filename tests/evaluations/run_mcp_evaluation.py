@@ -276,7 +276,7 @@ def format_table(summary: EvaluationSummary, verbose: bool = False) -> str:
     """
     lines = []
     lines.append("=" * 88)
-    lines.append(f"  ANSYS UNIFIED MCP - DETERMINISTIC SCALAR EVALUATION SUITE")
+    lines.append("  ANSYS UNIFIED MCP - DETERMINISTIC SCALAR EVALUATION SUITE")
     lines.append(f"  Specification: mcp-builder Phase 4 | Suite: {summary.suite_name}")
     lines.append(f"  XML File: {summary.xml_path}")
     lines.append(f"  Timestamp: {summary.timestamp}")
@@ -310,7 +310,7 @@ def format_table(summary: EvaluationSummary, verbose: bool = False) -> str:
     lines.append(f"  - 平均判定延遲 (Average Latency)  : {summary.average_latency_ms:.4f} ms")
     lines.append(f"  - 總執行耗時 (Total Duration)     : {summary.total_duration_ms:.2f} ms")
     lines.append(f"  - 嚴格比對模式 (Strict Mode)      : {summary.strict_mode}")
-    lines.append(f"  - 評測保證 (Evaluation Guarantee) : 100% Deterministic (Zero LLM-as-a-Judge Dependency)")
+    lines.append("  - 評測保證 (Evaluation Guarantee) : 100% Deterministic (Zero LLM-as-a-Judge Dependency)")
     lines.append("=" * 88)
 
     return "\n".join(lines)

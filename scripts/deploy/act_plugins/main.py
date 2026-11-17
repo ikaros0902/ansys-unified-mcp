@@ -20,9 +20,16 @@ except Exception:
 
 _PLUGIN_DIR = os.path.abspath(os.path.dirname(__file__))
 def _resolve_queue_root():
-    env_queue = os.environ.get("ANSYS_WORKBENCH_MCP_HOME") or os.environ.get("WORKBENCH_MCP_QUEUE_ROOT")
+    env_queue = (
+        os.environ.get("ANSYS_WORKBENCH_MCP_HOME")
+        or os.environ.get("WORKBENCH_MCP_QUEUE_ROOT")
+        or os.environ.get("ANSYS_WORKBENCH_QUEUE_DIR")
+    )
     if env_queue:
         return os.path.abspath(os.path.expanduser(env_queue))
+    env_root = os.environ.get("WORKBENCH_MCP_ROOT")
+    if env_root:
+        return os.path.join(os.path.abspath(os.path.expanduser(env_root)), ".runtime", "queue")
     return os.path.join(os.path.expanduser("~"), ".ansys-workbench-mcp")
 
 _QUEUE_ROOT = _resolve_queue_root()

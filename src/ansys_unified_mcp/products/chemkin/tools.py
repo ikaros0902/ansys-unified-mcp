@@ -53,4 +53,5 @@ def chemkin_solve_0d_reactor(
         initial_ca_mol_m3=initial_ca_mol_m3,
         t_end_s=t_end_s,
     )
+    result = driver.with_backend_metadata(result)
     return _envelope({"ok": True, **result})

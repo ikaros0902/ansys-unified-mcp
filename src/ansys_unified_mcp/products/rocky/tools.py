@@ -59,4 +59,5 @@ def rocky_solve(
         sim_time_s=sim_time_s,
         dt_s=dt_s,
     )
+    result = driver.with_backend_metadata(result)
     return _envelope({"ok": True, **result})

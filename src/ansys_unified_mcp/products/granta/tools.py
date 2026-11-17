@@ -40,7 +40,7 @@ def granta_search_material(
 
     driver = GrantaDriver()
     results = driver.search_materials(query=query_name, category=category)
-    return _envelope({"ok": True, "count": len(results), "materials": results})
+    return _envelope(driver.with_backend_metadata({"ok": True, "count": len(results), "materials": results}))
 
 
 @mcp.tool(
@@ -63,6 +63,7 @@ def granta_evaluate_compliance(
 
     driver = GrantaDriver()
     result = driver.evaluate_compliance(material_id=material_id, regulation=regulation)
+    result = driver.with_backend_metadata(result)
     return _envelope({"ok": True, **result})
 
 
@@ -92,4 +93,5 @@ def granta_get_temperature_curve(
         temperature_c=temperature_c,
         property_name=property_name,
     )
+    result = driver.with_backend_metadata(result)
     return _envelope({"ok": True, **result})

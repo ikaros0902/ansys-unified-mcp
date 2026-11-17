@@ -270,3 +270,23 @@ class BaseDualTrackDriver(BaseSolverDriver):
             "solver": self.solver_name,
             "artifacts_dir": str(artifacts_dir),
         }
+
+    def with_backend_metadata(
+        self,
+        payload: Dict[str, Any],
+        force_benchmark: bool = True,
+    ) -> Dict[str, Any]:
+        """Attach standardized backend provenance metadata (P0 / B10 rule)."""
+        valid, msg = self.validate_prerequisites()
+        mode = "native_solver" if (valid and not force_benchmark) else "benchmark_fallback"
+        out = dict(payload)
+        out.setdefault("execution_mode", mode)
+        out.setdefault("native_solver_available", valid)
+        out.setdefault("solver_bin", self.solver_bin)
+        out.setdefault("backend_status", msg)
+        if mode == "benchmark_fallback":
+            out.setdefault(
+                "backend_notice",
+                "Executed via internal analytical/numerical benchmark engine; do not sign off as commercial solver output.",
+            )
+        return out

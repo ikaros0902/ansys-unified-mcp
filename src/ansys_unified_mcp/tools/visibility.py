@@ -26,12 +26,15 @@ _COMMON_MODULES = frozenset(
     {
         "ansys_unified_mcp.tools.connection_tools",
         "ansys_unified_mcp.tools.docs_tools",
+        "ansys_unified_mcp.tools.apikb_tools",
         "ansys_unified_mcp.tools.sentinel_tools",
         "ansys_unified_mcp.tools.session_manager_tools",
         "ansys_unified_mcp.tools.meta_router_tools",
-        "ansys_unified_mcp.tools.sound_tools",
     }
 )
+
+# 聲學基準計算工具，歸類為獨立的 "sound" 域。
+_SOUND_MODULE = "ansys_unified_mcp.tools.sound_tools"
 
 # 高階工況 workflow 工具 (跨產品編排)，歸類為獨立的 "workflow" 域。
 _WORKFLOW_MODULE = "ansys_unified_mcp.tools.intent_tools"
@@ -44,12 +47,14 @@ def product_of_module(module: str) -> str:
     """由來源模組字串判定所屬 product 域。
 
     回傳如 ``"mechanical"`` / ``"fluent"`` / ``"geometry"`` / ``"workbench"``
-    / ``"optislang"`` / ``"dpf"`` / ``"workflow"`` / ``"common"``。無法判定時
-    一律歸為 ``common`` (從寬可見，避免誤隱藏)。
+    / ``"optislang"`` / ``"dpf"`` / ``"sound"`` / ``"workflow"`` / ``"common"``。
+    無法判定時一律歸為 ``common`` (從寬可見，避免誤隱藏)。
     """
     module = module or ""
     if module in _COMMON_MODULES:
         return COMMON_PRODUCT
+    if module == _SOUND_MODULE:
+        return "sound"
     if module == _WORKFLOW_MODULE:
         return "workflow"
     prefix = "ansys_unified_mcp.products."
@@ -75,24 +80,28 @@ class WorkspaceVisibilityMiddleware(Middleware):
         self._mcp = mcp
         self._state_key = state_key
         self._name_to_product: Optional[dict[str, str]] = None
+        self._last_registry_size: int = 0
 
     def _ensure_map(self) -> dict[str, str]:
         """以 shared.TOOL_REGISTRY (name -> fn) 同步建立 name->product 映射。
 
         不在 ``on_list_tools`` 內 await FastMCP 的 async 取工具 API，避免 middleware
-        chain 重入導致的 coroutine 處理錯誤。首次呼叫時建表並快取。
+        chain 重入導致的 coroutine 處理錯誤。首次呼叫或工具數量變動時重建並快取。
         """
-        if self._name_to_product is None:
-            try:
-                from ansys_unified_mcp.shared import TOOL_REGISTRY
+        try:
+            from ansys_unified_mcp.shared import TOOL_REGISTRY
+
+            current_size = len(TOOL_REGISTRY)
+            if self._name_to_product is None or current_size != self._last_registry_size:
                 mapping: dict[str, str] = {}
                 for name, fn in TOOL_REGISTRY.items():
                     module = getattr(fn, "__module__", "") or ""
                     mapping[name] = product_of_module(module)
                 self._name_to_product = mapping
-            except Exception:
+                self._last_registry_size = current_size
+        except Exception:
+            if self._name_to_product is None:
                 self._name_to_product = {}
-            return self._name_to_product
         return self._name_to_product
 
     async def _visible_products(self, context: Any) -> Optional[Set[str]]:
@@ -123,7 +132,7 @@ class WorkspaceVisibilityMiddleware(Middleware):
         if not visible:
             return tools
         name_to_product = self._ensure_map()
-        allowed = set(visible)
+        allowed = {p for p in visible if p != "core"}
         allowed.add(COMMON_PRODUCT)  # 通用工具恆可見
         # 未知名稱 (映射缺漏) 從寬保留，避免誤隱藏
         return [

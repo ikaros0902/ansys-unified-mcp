@@ -23,6 +23,13 @@ flowchart TD
     G --> H[求解輸出 Z 軸翹曲變形雲圖]
 ```
 
+## 核心後處理規範 (Post-Processing Best Practices)
+
+1. **嚴格聚焦 Z 軸方向位移 ($U_z$)**：熱翹曲禁用 `Total Deformation`（混入 $U_x, U_y$），必監視 `Z_Displacement_PCB_All_Layers`、`Z_Displacement_L01_Top_Face` 與 `Z_Displacement_L79_Bottom_Face`。
+2. **相機構圖標準**：禁止未校正視角遮擋圖例。
+   - **視角 A（2D 俯視）**：`cam.SetSpecificViewOrientation(ViewOrientationType.Front)` 搭配 `cam.SetFit()` + `cam.Zoom(0.85)`。
+   - **視角 B（3D 等角）**：由 Front 旋轉 `cam.Rotate(-28, CameraAxisType.ScreenX)` 與 `cam.Rotate(-25, CameraAxisType.ScreenY)`，搭配 `cam.SetFit()` + `cam.Zoom(0.82)`。
+
 ## 核心腳本目錄
 本技能目錄內的 `./scripts/` 是唯一腳本實作來源；`docs/examples/pcb_warpage/` 保留相容啟動入口與此工作流的說明，不維護第二份腳本副本：
 1. `01_build_pcb_geometry.py`：SpaceClaim / Discovery 疊構幾何建模

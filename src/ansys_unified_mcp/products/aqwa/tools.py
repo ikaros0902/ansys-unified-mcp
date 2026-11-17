@@ -59,4 +59,5 @@ def aqwa_solve_heave_oscillation(
         initial_displacement_m=initial_displacement_m,
         simulation_time_s=simulation_time_s,
     )
+    result = driver.with_backend_metadata(result)
     return _envelope({"ok": True, **result})
