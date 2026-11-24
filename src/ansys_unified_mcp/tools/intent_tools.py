@@ -21,22 +21,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 logger = logging.getLogger("ansys-unified-mcp.tools.intent")
 
-# 防禦性相容導入 FastMCP
-try:
-    from ansys_unified_mcp.shared import mcp, aliased_tool
-except Exception:
-    try:
-        from mcp.server.fastmcp import FastMCP
-        mcp = FastMCP("ansys-unified-mcp")
-        aliased_tool = mcp.tool
-    except Exception:
-        class _FallbackMCP:
-            def tool(self, *args, **kwargs):
-                def decorator(fn):
-                    return fn
-                return decorator
-        mcp = _FallbackMCP()
-        aliased_tool = mcp.tool
+from ansys_unified_mcp.shared import mcp, aliased_tool
 
 
 @aliased_tool(name="workflow_run_drop_test", alias="run_drop_test")

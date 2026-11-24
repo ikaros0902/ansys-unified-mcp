@@ -230,8 +230,17 @@ class ConnectionManager:
         return self.scan_for_fluent_grpc()
 
     def get_registered_instances(self, registry_dir: Optional[Path] = None) -> List[Dict[str, Any]]:
-        """讀取 registry 目錄，獲取所有運行中的 ANSYS 實例，過濾已關閉的 PID 並自動清理。"""
-        candidate_dirs = [registry_dir] if registry_dir is not None else [_SHARED_REGISTRY_DIR, _RUNTIME_REGISTRY_DIR, _LEGACY_REGISTRY_DIR]
+        """讀取 registry 目錄，獲取所有運行中的 ANSYS 實例，過濾已關閉的 PID 並視情境清理失效檔案。"""
+        if registry_dir is not None:
+            candidate_dirs = [registry_dir]
+            cleanup_dead = True
+        else:
+            cleanup_dead = False
+            if _DEFAULT_REGISTRY_DIR != _SHARED_REGISTRY_DIR:
+                candidate_dirs = [_DEFAULT_REGISTRY_DIR]
+            else:
+                candidate_dirs = [_DEFAULT_REGISTRY_DIR, _RUNTIME_REGISTRY_DIR, _LEGACY_REGISTRY_DIR]
+
         seen_pids = set()
         instances = []
 
@@ -245,12 +254,13 @@ class ConnectionManager:
                     if pid in seen_pids:
                         continue
 
-                    # 檢查進程是否仍然存在，不存在則清理
+                    # 檢查進程是否仍然存在，不存在則過濾（僅顯式指定 registry_dir 時清理檔案）
                     if not psutil.pid_exists(pid):
-                        try:
-                            f.unlink()
-                        except OSError:
-                            pass
+                        if cleanup_dead:
+                            try:
+                                f.unlink()
+                            except OSError:
+                                pass
                         continue
 
                     with open(f, "r", encoding="utf-8") as fp:

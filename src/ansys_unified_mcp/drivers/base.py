@@ -255,10 +255,43 @@ class BaseDualTrackDriver(BaseSolverDriver):
                 "current_step": "QUEUED",
                 "is_converged": False,
             }
+
+        content = log_file.read_text(encoding="utf-8", errors="ignore").strip()
+        if not content:
+            return {
+                "progress_pct": 0.0,
+                "current_step": "RUNNING",
+                "is_converged": False,
+            }
+
+        lowered = content.lower()
+        failure_keywords = ("error", "exception", "failed", "fatal", "diverged", "aborted")
+        if any(keyword in lowered for keyword in failure_keywords):
+            return {
+                "progress_pct": 100.0,
+                "current_step": "FAILED",
+                "is_converged": False,
+            }
+
+        completion_keywords = (
+            "converged",
+            "completed",
+            "normal termination",
+            "solution is done",
+            "finish",
+            "success",
+        )
+        if any(keyword in lowered for keyword in completion_keywords):
+            return {
+                "progress_pct": 100.0,
+                "current_step": "COMPLETED",
+                "is_converged": True,
+            }
+
         return {
-            "progress_pct": 100.0,
-            "current_step": "COMPLETED",
-            "is_converged": True,
+            "progress_pct": 50.0,
+            "current_step": "RUNNING",
+            "is_converged": False,
         }
 
     def extract_artifacts(self, job_dir: Path) -> Dict[str, Any]:

@@ -3,12 +3,7 @@
 
 from __future__ import annotations
 
-import os
-from pathlib import Path
-import subprocess
-from typing import Optional
-
-from ansys_unified_mcp.config import config
+from ansys_unified_mcp.products.mapdl.facade import controller
 from ansys_unified_mcp.shared import mcp, as_envelope as _envelope
 
 
@@ -17,13 +12,7 @@ from ansys_unified_mcp.shared import mcp, as_envelope as _envelope
 )
 def mapdl_check_connection() -> dict:
     """檢查本機 ANSYS MAPDL (ANSYS.exe) 可執行檔與求解環境狀態。"""
-    exe_path = config.mapdl_exe
-    exists = exe_path.is_file() if exe_path else False
-    return _envelope({
-        "available": exists,
-        "executable": str(exe_path) if exe_path else None,
-        "version": "v251" if "v251" in str(exe_path) else "detected",
-    })
+    return _envelope(controller.check_connection())
 
 
 @mcp.tool(
@@ -47,55 +36,16 @@ def mapdl_solve_input(
         dry_run: 若為 True 則僅驗證並構造執行命令，不實際啟動進程。
         timeout: 求解超時秒數 (預設 300 秒)。
     """
-    inp_file = Path(input_path).resolve()
-    if not inp_file.is_file():
-        return _envelope({"ok": False, "error": f"找不到輸入檔: {input_path}"})
-
-    work_path = Path(working_dir).resolve() if working_dir else inp_file.parent
-    work_path.mkdir(parents=True, exist_ok=True)
-
-    out_file = work_path / f"{job_name}.out"
-    exe_path = config.mapdl_exe
-
-    cmd = [
-        str(exe_path),
-        "-b",
-        "-i", str(inp_file),
-        "-o", str(out_file),
-        "-j", job_name,
-        "-np", str(np),
-    ]
-
-    if dry_run:
-        return _envelope({
-            "ok": True,
-            "dry_run": True,
-            "command": cmd,
-            "working_dir": str(work_path),
-            "output_log": str(out_file),
-        })
-
-    if not exe_path.is_file():
-        return _envelope({"ok": False, "error": f"MAPDL 未安裝或路徑不存在: {exe_path}"})
-
-    try:
-        proc = subprocess.run(
-            cmd,
-            cwd=str(work_path),
-            capture_output=True,
-            text=True,
+    return _envelope(
+        controller.solve_input(
+            input_path=input_path,
+            job_name=job_name,
+            np=np,
+            working_dir=working_dir,
+            dry_run=dry_run,
             timeout=timeout,
         )
-        return _envelope({
-            "ok": proc.returncode == 0,
-            "return_code": proc.returncode,
-            "output_log": str(out_file),
-            "command": cmd,
-        })
-    except subprocess.TimeoutExpired:
-        return _envelope({"ok": False, "error": f"MAPDL 求解超時 ({timeout}s)"})
-    except Exception as e:
-        return _envelope({"ok": False, "error": str(e)})
+    )
 
 
 @mcp.tool(
@@ -117,16 +67,12 @@ def mapdl_run_apdl(
         dry_run: 僅驗證與寫入暫存檔，不啟動求解。
         timeout: 超時秒數。
     """
-    work_path = Path(working_dir).resolve() if working_dir else Path.cwd() / ".runtime" / "mapdl_jobs"
-    work_path.mkdir(parents=True, exist_ok=True)
-
-    inp_file = work_path / f"{job_name}.inp"
-    inp_file.write_text(apdl_commands, encoding="utf-8")
-
-    return mapdl_solve_input(
-        input_path=str(inp_file),
-        job_name=job_name,
-        working_dir=str(work_path),
-        dry_run=dry_run,
-        timeout=timeout,
+    return _envelope(
+        controller.run_apdl(
+            apdl_commands=apdl_commands,
+            job_name=job_name,
+            working_dir=working_dir,
+            dry_run=dry_run,
+            timeout=timeout,
+        )
     )

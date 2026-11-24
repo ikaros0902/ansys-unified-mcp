@@ -16,20 +16,7 @@ from ansys_unified_mcp.core.sentinel.daemon import get_sentinel_queue
 
 logger = logging.getLogger("ansys-unified-mcp.tools.sentinel")
 
-# 防禦性相容導入 FastMCP
-try:
-    from ansys_unified_mcp.shared import mcp
-except Exception:
-    try:
-        from mcp.server.fastmcp import FastMCP
-        mcp = FastMCP("ansys-unified-mcp")
-    except Exception:
-        class _FallbackMCP:
-            def tool(self, *args, **kwargs):
-                def decorator(fn):
-                    return fn
-                return decorator
-        mcp = _FallbackMCP()
+from ansys_unified_mcp.shared import mcp
 
 
 @mcp.tool()

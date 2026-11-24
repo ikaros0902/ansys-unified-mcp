@@ -28,7 +28,7 @@
 
 **目標形態**：每個產品應為 `products/<product>/` 下 `facade.py`（控制器）+ `tools.py`（工具）+ `driver.py`（執行機制，若需要）**成組出現**，控制器一律用 `SessionRegistry` 管 session。
 
-現況（已收斂）：所有產品皆已採 `products/<product>/` 分層：`geometry`、`mechanical`、`fluent`、`optislang`、`workbench`、`dpf`、`dyna`、`icepak`。原先散落於 `drivers/sim_impl.py` 的 geometry/fluent `call_tool` 分派實作已拆分歸位至
+現況（已收斂）：所有產品皆已採 `products/<product>/` 分層：`geometry`、`mechanical`、`fluent`、`optislang`、`workbench`、`dpf`、`dyna`、`mapdl`、`icepak`。原先散落於 `drivers/sim_impl.py` 的 geometry/fluent `call_tool` 分派實作已拆分歸位至
 `products/geometry/call_dispatch.py` 與 `products/fluent/call_dispatch.py`；
 `drivers/` 現僅保留共用執行基底／輪廓工具，以及維持舊匯入路徑的 driver 相容轉接；Icepak／LS-DYNA 的實作已歸入各自產品目錄。
 
@@ -57,7 +57,10 @@ products/
 ├── dpf/
 │   ├── facade.py / tools.py
 ├── dyna/
-│   └── facade.py / tools.py / driver.py
+│   ├── facade.py / tools.py / driver.py
+├── mapdl/
+│   ├── facade.py              # MapdlController（批次求解與 job_name 路徑安全防護）
+│   └── tools.py               # @mcp.tool() 工具層，委派 controller
 └── icepak/
     └── driver.py
 
@@ -116,6 +119,15 @@ def some_tool(...) -> dict:
 **守門機制**：`tests/unit/test_envelope_contract.py` 以 AST 掃描全部工具模組，任一 `@mcp.tool` / `@aliased_tool` / 自製裝飾器工廠（如 `products/fluent/tools.py` 的 `@tool_fluent`、`products/geometry/tools.py` 的 `@tool_geometry`）標註非 dict 即測試失敗。不依賴 `TOOL_REGISTRY`，因為裸 `@mcp.tool` 註冊的工具不會進入該字典。
 
 **例外**：`@mcp.resource` 回傳 `str` 屬正常（resource 本質為文字內容），不受此慣例約束。
+
+**兩種信封機制之邊界與適用範圍**：
+
+| 機制 | 來源 | 適用範圍 | 結構契約 |
+|---|---|---|---|
+| `shared.as_envelope` / `shared.error_envelope` | `src/ansys_unified_mcp/shared.py` | **一般工具標準扁平信封**（所有 `products/*/tools.py` 與常規 `tools/*.py`） | 扁平 dict（`{"ok": True, ...}` 或 `{"ok": False, "error": "..."}`），payload 直接置於頂層，不包 `data` 層。 |
+| `create_response_envelope` / `create_error_envelope` | `src/ansys_unified_mcp/schemas/common_envelope.py` | **專供 `tools/meta_router_tools.py`**（`ans_list_domain_tools`、`ans_call_domain_tool` 等跨領域動態路由封裝） | 跨領域路由外層信封，包含 `ok`、`status`、`summary`、`data`（承載被路由工具原始輸出）與 `execution_time_ms`；錯誤信封另含 `error_code`、`message`、`recovery_action`，並同步保留 `ok=False` 與 `error` 以維持向下相容。 |
+
+> 維護邊界：一般產品與系統工具**嚴禁**自行使用 `create_response_envelope` 包裝 `data` 層；當外部呼叫端經由 `ans_call_domain_tool` 跨領域路由時，Meta-Router 會自動將一般工具的扁平回傳封裝為路由信封，並在目標回傳 `ok=False` 或 `status="error"` 時轉為 `create_error_envelope`。
 
 ## 4. 新增功能檢查清單
 
