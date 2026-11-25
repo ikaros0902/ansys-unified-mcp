@@ -1,10 +1,8 @@
 ---
 name: ansys-midsurface
 description: >-
-  ANSYS SpaceClaim 板金中面抽取（Midsurface Extraction）工程主控手冊與 CLI 自動化工具集。
-  涵蓋單側表皮偏置引擎（Single-Skin Continuous Offset）、沉頭孔正規化與邊界自癒（Countersink Normalization & Notch Healing）、
-  沖壓折彎舌片與加強肋防破面拓撲補償（Formed Rib/Latch Patching）、板金長厚比防呆（Aspect Ratio Guard）、以及 ACT Wizard UI 佈局規範。
-  提供 scripts/ 工具可直接對幾何進行 Aspect Ratio 檢驗、中面拓撲審核與無人值守批次抽取測試。
+  Guide sheet metal midsurface extraction and geometry validation.
+  Use SpaceClaim tools or an independent Open CASCADE prototype.
 ---
 
 # ANSYS Midsurface Engineering (SpaceClaim & ACT)
@@ -13,11 +11,13 @@ description: >-
 
 本技能封裝 ANSYS SpaceClaim (SCDM) 與 ACT 板金中面自動化抽取的全流程架構、拓撲修復工法與品質門禁標準。專門解決板金件中面抽取時常遇到的**破面、特徵遺失、沉孔孔徑異常、端部外輪廓畸變、以及非板金塊體誤判**等工程難題。
 
-核心優勢：
-* **單側表皮偏置引擎 (Single-Skin Offset)**：速度比原生 Midsurface 提升 10 倍以上，杜絕無窮面相交崩潰。
-* **沉孔正規化與破口自癒 (Countersink & Notch Healing)**：自動收縮大破孔至穿孔小圓徑（$r_{\text{minor}}$），邊界缺口自動補平再重切。
-* **沖壓成型特徵拓撲補償 (Formed Features Patching)**：有效辨識加強肋（Bead）與折彎舌片（Latch），縫合成單一連續實體。
-* **薄壁縱橫比防呆 (Aspect Ratio Guard)**：強制 $\text{Span} / \text{Thickness} \ge 2.0$，徹底杜絕 2mm 立方體等實心塊誤判為板金。
+此技能記錄表皮偏移、沉孔處理、成型特徵補面和薄壁篩選等方法。速度、特徵辨識成功率及對任意模型的可靠性尚無本技能附帶的完整驗證，不能視為保證。
+
+**引擎無關方法**：分析對立面與厚度、選取表皮、建立候選中面、檢查位置及特徵。這些方法仍須由幾何核心執行。
+
+**SpaceClaim 專屬操作**：下方 `ThickenFaces`、`OffsetEdges`、`Fill`、`SplitFace` 和 `Combine.Merge` 是文件描述的 SpaceClaim 操作。CLI 的 audit 與 batch harness 使用 ANSYS 連線；抽取 agent 本身位於外部目錄，不能從這些包裝工具推定其實際能力。
+
+**獨立 OCCT 原型**：`scripts/occt_midsurface.py` 僅支援單一平面輪廓直擠、可透過幾何檢查的薄板，包含直穿孔。折彎、變厚、沉孔、舌片及壓肋尚不支援，並回報 `unsupported`，不輸出中面。選擇厚度候選使用面積特徵長度與厚度比至少 5 的啟發式門檻，並非殼模型適用性的保證。
 
 ---
 
@@ -26,10 +26,23 @@ description: >-
 * **ansys-geometry-core (`ansys.geometry.core`)**：用於透過 gRPC 與本機 SpaceClaim 實例（連接埠 50051）通訊。
 * **ansys-spaceclaim**：通用 SpaceClaim 幾何前處理基礎技能。
 * **SpaceClaim.Api (`V24` / `V25`)**：IronPython 2.7 內嵌執行環境與 ACT Wizard 擴充外掛。
+* 獨立原型使用隔離環境中的 `cadquery-ocp`；不需要 ANSYS，驗證使用 OCP 7.9.3.1。
 
 ---
 
 ## Quick Start
+
+### 獨立平板原型
+例如使用 Python 3.14，在專案根目錄建立隔離的套件目錄（此安裝會下載相依套件）：
+```powershell
+python -m pip install --target .codex-step-work/lib cadquery-ocp==7.9.3.1.1
+$env:PYTHONPATH = "$PWD/.codex-step-work/lib"
+```
+在技能目錄執行：
+```bash
+python scripts/occt_midsurface.py input.step --output mid.step --report report.json --tolerance-mm 0.01
+```
+輸出路徑必須不存在。結束碼 0 表示通過原型檢查，1 表示讀取或運算錯誤，2 表示不支援；報告使用 mm。距離是表皮到中面的最短距離，不能代替完整的局部誤差圖或 CAE 適用性判定。
 
 ### 1. 檢驗零件是否滿足薄壁縱橫比（Aspect Ratio Guard）
 ```bash
@@ -65,7 +78,9 @@ python scripts/batch_midsurface_harness.py --target "SM-LATCH-RACK-STOP-EDR" --o
 
 ---
 
-## Workflow & Execution Pipeline
+## SpaceClaim 文件記載的流程
+
+以下描述是 SpaceClaim 方法及案例目標，不代表獨立 OCCT 原型已支援全部特徵。
 
 ```mermaid
 flowchart TD
@@ -92,25 +107,25 @@ flowchart TD
 * 複製遠端頂面（Far Cap）並刪除過渡中間體，生成純淨中面曲面。
 
 ### Step 3: 沉頭孔正規化與開口自癒 (Countersink & Notch Healing)
-* 識別錐頂半角 $\theta \in [30^\circ, 75^\circ]$ 且孔徑 $R \le 6.5\text{ mm}$ 之緊固件沉孔。
+* 參考文件程式片段使用錐面半角 0.50～1.35 rad，並限制半徑及階差；這是特定案例啟發式，非通用緊固件標準。
 * 閉合孔直接透過 `OffsetEdges` 向內精確收縮階差 $\Delta R$。
 * 破出外緣之槽口先透過 `Fill` 自動平復邊界，再以 `SplitFace.ByCurves + Delete` 打出穿孔小圓。
 
 ### Step 4: 拓撲補償與審核 (Audit & Quality Gate)
 * 針對折彎舌片與加強肋等未相切面，透過 `patch_unoffset_skin_faces` 進行補償偏移並與主體 `Combine.Merge`。
-* 確保最終中面達到 `components_count == 1`（100% 連續無破面）。
+* 檢查 `components_count == 1`；單一連通分量不足以證明沒有局部缺面或間隙。
 
 ---
 
 ## Verification & Quality Gates
 
-在中面抽取流程標記為成功（SUCCESS）前，必須滿足以下四項硬性指標：
+以下是文件中記載的案例檢查項目，並非通用工程驗收門檻；應以具體模型與分析目的訂定：
 
-1. **單一實體連通性**：`components_count == 1`，杜絕任何游離碎面與開放間隙。
+1. **連通性**：`components_count == 1`；仍需獨立檢查缺面與幾何間隙。
 2. **面積覆蓋率門檻**：中面面積與參考外皮面積比率 $\text{Ratio} \in [0.90, 1.10]$。
 3. **特徵一致性**：
-   - 沉孔 100% 統一為穿孔小圓徑（$r_{\text{minor}}$）。
-   - 杜絕 14.14mm 等非預期 45° 倒角斜線（`has_1414 == False`），外凸平滑圓角完全保留。
+   - 若工程需求允許，檢查沉孔是否依規則簡化為穿孔小圓徑（$r_{\text{minor}}$）。
+   - `has_1414` 是特定模型的邊長啟發式，不能通用判定倒角或圓角是否正確。
    - 折彎舌片與加強肋完整存在，無白色矩形空洞破面。
 4. **編碼底線**：所有 ACT 內嵌腳本全英文 ASCII 註解，防止 IronPython 解譯器崩潰。
 

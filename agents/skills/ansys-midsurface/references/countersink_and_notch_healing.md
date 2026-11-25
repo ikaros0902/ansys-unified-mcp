@@ -1,5 +1,7 @@
 # 沉頭孔正規化與開口槽自癒協議 (Countersink Normalization & Notch Healing)
 
+> 本文記錄 SpaceClaim 特定案例的做法及啟發式門檻；尺寸與角度不代表通用標準。是否簡化沉孔或修補開口須依分析目的決定。OCCT 原型尚未實作這些處理。
+
 ## 一、問題背景與歷史痛點
 
 在板金 CAE 建模中，緊固件沉頭孔（Countersunk Holes）由錐面（Cone）與小圓柱孔（Cylinder）構成。
