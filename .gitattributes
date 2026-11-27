@@ -1,0 +1,3 @@
+# Preserve exact line endings for upstream ODB++ warpage workflow snapshots to protect SHA-256 integrity
+agents/skills/materials-reliability/pcb-warpage-analysis/scripts/odb_workflow/** -text
+agents/skills/materials-reliability/pcb-warpage-analysis/references/odb_workflow/** -text

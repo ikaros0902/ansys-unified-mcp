@@ -1,0 +1,138 @@
+{
+  "_readme": [
+    "ONE json per project and vendor: it drives step 2 (run_odb_tool.py), step 3 (LayerBuilder_pyansys.py)",
+    "and step 9 (level_bga_shadow.py). Keep it in YOUR project folder, not in the shared tool folder.",
+    "Copy this file next to your project inputs, rename it (e.g. TH5_SYE.json) and fill every 'path'.",
+    "Relative paths are relative to THIS json file; absolute paths are fine (inputs may stay where they are). {tool} = the 'ODB Modifying Tool' folder.",
+    "Keys starting with '_' are help text and are ignored by the program.",
+    "Run:  python run_odb_tool.py <this json>   (or set CONFIG_FILE at the top of run_odb_tool.py and press Run).",
+    "Questions the program cannot decide are asked in the terminal (options.interactive = true) or written to",
+    "open_questions_<project>_<vendor>.md next to this json (interactive = false). Answers are stored in 'answers'."
+  ],
+
+  "project": {
+    "name": "",
+    "_name": "REQUIRED. Short project name, e.g. TH5. Used in output folder and file names.",
+    "vendor": "",
+    "_vendor": "REQUIRED. PCB vendor name, e.g. SYE. Used in output folder and file names.",
+    "output_job_name": null,
+    "_output_job_name": "Job name written inside the ODB++ (lower case, letters/digits/_). null = <name>_<vendor>."
+  },
+
+  "inputs": {
+    "vendor_odb": {
+      "path": "",
+      "_help": "REQUIRED. Working-gerber ODB++ from the PCB vendor (.tgz/.tar.gz/.tar). Never modified."
+    },
+    "vendor_stackup": {
+      "path": "",
+      "_help": "REQUIRED. Vendor stackup (.xlsx/.xls/.csv). Thickness comes ONLY from this file.",
+      "thickness_column": "",
+      "_thickness_column": "REQUIRED in practice: the header text of the thickness column to use (all words must appear in the header), or a column letter like \"R\". Examples: \"SYE Final Thickness\", \"Final Thickness\". A human names it; left empty -> the tool asks.",
+      "thickness_unit": null,
+      "_thickness_unit": "mil | um | mm. null = read from the header ('mil' in the header text) or asked.",
+      "sheet": null,
+      "_sheet": "null = the sheet whose copper count equals the ODB++ is found automatically."
+    },
+    "design_material_table": {
+      "path": "",
+      "_help": "REQUIRED. Design-team stackup with the FR4 material of every dielectric layer. Material, PP/core type, layer names, copper oz and function come from this file.",
+      "sheet": null,
+      "_sheet": "null = automatic (sheet with the same copper count as the ODB++).",
+      "material_column": null,
+      "_material_column": "null = the column whose cells match the material library names.",
+      "thickness_column": null,
+      "_thickness_column": "Optional. Only used to list vendor-vs-design thickness differences in the report."
+    },
+    "material_library": {
+      "path": "",
+      "_help": "REQUIRED for step 6. Full path of PCB_Material_Library.xml (Engineering Data library in the 'Material vendor' folder of the Suppliers share; %USERPROFILE% may be used in the path). Every FR4 of the design table must be in it. The materials of this board are embedded into the Mechanical v6 script; import the same file into Engineering Data."
+    },
+    "step_2d_drawing": {
+      "path": "",
+      "_help": "Optional. 2D board drawing used by LayerBuilder. Used to check that the ODB++ outline and the drawing are the same rectangle, and as an extra coverage region."
+    }
+  },
+
+  "options": {
+    "interactive": true,
+    "_interactive": "true = ask questions in the terminal; false = write open_questions_*.md and stop (for AI-driven runs).",
+    "pcb_step": null,
+    "_pcb_step": "null = automatic (only step, or the single-board step called pcb/unit/board/edit/orig). Otherwise the step name.",
+    "origin": {
+      "mode": "profile_lower_left",
+      "_mode": "profile_lower_left = move the profile lower-left corner to (0,0) | keep = vendor coordinates | offset_mm = shift by offset_mm",
+      "offset_mm": null
+    },
+    "write_dielectric_name": true,
+    "_write_dielectric_name": "Write the FR4 material into the matrix DIELECTRIC_NAME of every PP layer.",
+    "coverage": {
+      "enabled": true,
+      "resolution_mil": 1.0,
+      "_resolution_mil": "Render resolution. 1 mil = about 30 s per layer for a 420 x 400 mm board.",
+      "workers": 3,
+      "preview_png": true,
+      "also_drawing_region": true,
+      "_also_drawing_region": "Also compute coverage inside the 2D drawing rectangle (step_2d_drawing).",
+      "extra_regions_mm": {},
+      "_extra_regions_mm": "More rectangles: {\"smb\": [x0, y0, x1, y1]} in mm, final coordinates.",
+      "region_for_outputs": "profile",
+      "_region_for_outputs": "Which coverage goes into the CSV files: profile | drawing | a name from extra_regions_mm."
+    },
+    "ansys_versions": ["v251", "v261"],
+    "_ansys_versions": "Translators used for the closed-loop check. v251 = 2025 R1, v261 = 2026 R1. Both are required to PASS.",
+    "mechanical_script_template": "{tool}/1_Scripts/Mech_py_EquivalentMaterial_v6.py",
+    "_mechanical_script_template": "v6 equivalent-material script copied into the output with the library materials of this board embedded. null = skip.",
+    "work_dir": null,
+    "_work_dir": "Scratch folder (large). null = %TEMP%. Keep it off <cloud_sync_folder>.",
+    "keep_work_dir": false
+  },
+
+  "output": {
+    "root": "runs",
+    "_root": "Output parent folder (relative to this json). Each run creates a new sub-folder.",
+    "name_pattern": "{project}_{vendor}_{timestamp}",
+    "_name_pattern": "Sub-folder and ODB++ file name. {timestamp} = YYYYMMDD_HHMMSS, so runs never overwrite each other."
+  },
+
+  "answers": {
+    "_help": "Answers to the tool's questions, decided by a human. Format: \"<question key>\": \"<chosen option>\", plus \"_note\": \"who decided, why, date\"."
+  },
+
+  "layerbuilder": {
+    "_help": "Step 3: python 1_Scripts/LayerBuilder_pyansys.py <this json>. Needs a PASS run of step 2.",
+    "stackup_csv": null,
+    "_stackup_csv": "null = the *_workinggerber.csv of the NEWEST run folder under output.root. Otherwise a path.",
+    "step_file": null,
+    "_step_file": "null = inputs.step_2d_drawing.path (one planar face, lower-left corner at 0,0).",
+    "output_scdocx": null,
+    "_output_scdocx": "null = geometry/<project>_<vendor>_Stackup.scdocx next to this json. Never overwritten: an existing file stops the run.",
+    "component_name": "Stackup",
+    "open_folder_when_done": false
+  },
+
+  "leveling": {
+    "_help": "Step 9: python 1_Scripts/level_bga_shadow.py <this json>. Levels the BGA-shadow Z displacement (least-squares plane) and reports the warpage.",
+    "z_unit": "mm",
+    "_z_unit": "Unit of the exported displacement: mm | m | um. Must agree with the unit in the column header, e.g. 'Directional Deformation (mm)'.",
+    "xy_unit": "mm",
+    "_xy_unit": "Unit of the node coordinates in ds.dat: mm (NMM solver units) | m | um.",
+    "flip_z": false,
+    "_flip_z": "true = multiply the displacement by -1 (e.g. to look at the board from the other side, as a measurement does). A human decides this.",
+    "value_column": null,
+    "_value_column": "null = automatic (the only value column, or the 'Directional Deformation' one). Set the header text when the file has several value columns.",
+    "mode": "detrend",
+    "_mode": "detrend = subtract the fitted plane (default) | rotate = rigid rotation of the point cloud.",
+    "method": "OLS",
+    "_method": "OLS = least squares (default). RANSAC | Huber | Tukey = robust fits for measured data with outliers.",
+    "output_dir": "leveling",
+    "html": true,
+    "png": true,
+    "accept_warnings": false,
+    "_accept_warnings": "The script exits with code 2 while a WARNING is open. Set true only after a human has read and accepted the warnings.",
+    "cases": [],
+    "_cases": "One entry per exported result: {\"name\": \"220C\", \"result\": \"results/220C/BGA_Z_Disp.txt\", \"dat\": \"results/220C/ds.dat\"}. result = Mechanical export (node number + Z displacement), dat = ds.dat of the SAME solve.",
+    "differences": [],
+    "_differences": "Optional, default none. {\"name\": \"220C_minus_150C\", \"minuend\": \"220C\", \"subtrahend\": \"150C\"} subtracts two cases node by node BEFORE leveling (warpage change between two temperatures)."
+  }
+}

@@ -1,0 +1,16 @@
+# One environment for the whole workflow (created by setup_env.ps1)
+# Step 2 - ODB Modifying Tool
+numpy>=1.26
+pillow>=10.0
+aggdraw>=1.3.18
+openpyxl>=3.1
+xlrd>=2.0.1
+unlzw3>=0.2.2
+# Step 3 - LayerBuilder (PyAnsys Geometry)
+pandas>=2.0
+ansys-geometry-core>=0.8
+# Step 9 - BGA-shadow leveling (plots)
+matplotlib>=3.8
+plotly>=5.20
+# tests
+pytest>=8.0

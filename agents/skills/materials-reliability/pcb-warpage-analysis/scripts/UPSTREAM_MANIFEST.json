@@ -1,0 +1,288 @@
+{
+  "schema_version": 1,
+  "copied_at": "2026-11-27T02:06:21.611971+00:00",
+  "files": [
+    {
+      "source_path": "run_odb_tool.py",
+      "dest_path": "scripts/odb_workflow/run_odb_tool.py",
+      "sha256": "eca324a383d2bfd89564518329bd509f700fb79564ba70520e94e4630b72a478",
+      "modified": false
+    },
+    {
+      "source_path": "requirements.txt",
+      "dest_path": "scripts/odb_workflow/requirements.txt",
+      "sha256": "14bb2065e74e2de4e612ca18d1f0dfb967929510b56256d664008e4825bab25c",
+      "modified": false
+    },
+    {
+      "source_path": "setup_env.ps1",
+      "dest_path": "scripts/odb_workflow/setup_env.ps1",
+      "sha256": "ad01a93baa8628391f09831c42d86e8636364c264ee8c25692ec8551cabb6c9a",
+      "modified": false
+    },
+    {
+      "source_path": "odbtool/__init__.py",
+      "dest_path": "scripts/odb_workflow/odbtool/__init__.py",
+      "sha256": "4da7f2e16e73e45713b8d5c4841ea524bf3c76ab1226f9296085e5c2c6f01237",
+      "modified": false
+    },
+    {
+      "source_path": "odbtool/asker.py",
+      "dest_path": "scripts/odb_workflow/odbtool/asker.py",
+      "sha256": "b33fe86bd79bc0a8e77d6c9917365f765cd18c951a2618c0d1fa479d288fb465",
+      "modified": false
+    },
+    {
+      "source_path": "odbtool/build.py",
+      "dest_path": "scripts/odb_workflow/odbtool/build.py",
+      "sha256": "c073bee74826b5a30a28f735896a251ac27f488d18ab054416a2ac87ae210d6f",
+      "modified": false
+    },
+    {
+      "source_path": "odbtool/coverage.py",
+      "dest_path": "scripts/odb_workflow/odbtool/coverage.py",
+      "sha256": "64678dc6e731eaef5783a3f77f6e139cd899f69779e65475c4b4980e30f866dd",
+      "modified": false
+    },
+    {
+      "source_path": "odbtool/intake.py",
+      "dest_path": "scripts/odb_workflow/odbtool/intake.py",
+      "sha256": "a2f50e345b8dffd3b04ad1ac1b8a2063fac3c9c8fb284b77410e0545f6db06c4",
+      "modified": false
+    },
+    {
+      "source_path": "odbtool/matlib.py",
+      "dest_path": "scripts/odb_workflow/odbtool/matlib.py",
+      "sha256": "7bdadad9b98968490f58efbadd8951e6300bc6242a0032c8c0408641919863da",
+      "modified": false
+    },
+    {
+      "source_path": "odbtool/odb.py",
+      "dest_path": "scripts/odb_workflow/odbtool/odb.py",
+      "sha256": "774d1c7c8674b66201c0dc3fe0bd9de80406786d843c840c6aa7571b786a1a43",
+      "modified": false
+    },
+    {
+      "source_path": "odbtool/outputs.py",
+      "dest_path": "scripts/odb_workflow/odbtool/outputs.py",
+      "sha256": "72df5f47605e06d4987dc95ffd3ef4d3a2fae5cb3ce19eaa8788d155ccaf5252",
+      "modified": false
+    },
+    {
+      "source_path": "odbtool/report.py",
+      "dest_path": "scripts/odb_workflow/odbtool/report.py",
+      "sha256": "e98fa062ea5a819689e0cefb1109621b418a7e6b51527caf9a9553f5204ece81",
+      "modified": false
+    },
+    {
+      "source_path": "odbtool/runner.py",
+      "dest_path": "scripts/odb_workflow/odbtool/runner.py",
+      "sha256": "8588661fdf1636473cd231069223dd0b721f2f7bbe248d049eaa805298d5d734",
+      "modified": false
+    },
+    {
+      "source_path": "odbtool/stp.py",
+      "dest_path": "scripts/odb_workflow/odbtool/stp.py",
+      "sha256": "e6c4f3eaf53230845d4b28147f9a05c5b194def20c4a3219f1ebce52307b3170",
+      "modified": false
+    },
+    {
+      "source_path": "odbtool/tables.py",
+      "dest_path": "scripts/odb_workflow/odbtool/tables.py",
+      "sha256": "b45a7a6aa4d35ce74cf46050cb11b4385dcb2940aeb38f136ec8097e68f899ed",
+      "modified": false
+    },
+    {
+      "source_path": "odbtool/util.py",
+      "dest_path": "scripts/odb_workflow/odbtool/util.py",
+      "sha256": "866c708be627923708accc1b206e25000fa24dd8b5f8d5f4bc70e1c5d8becf50",
+      "modified": false
+    },
+    {
+      "source_path": "odbtool/verify.py",
+      "dest_path": "scripts/odb_workflow/odbtool/verify.py",
+      "sha256": "24b0d09ff9caa0f36ba661490a17a160b5e10b2736218582c97a4169780ce76a",
+      "modified": false
+    },
+    {
+      "source_path": "1_Scripts/LayerBuilder_pyansys.py",
+      "dest_path": "scripts/odb_workflow/1_Scripts/LayerBuilder_pyansys.py",
+      "sha256": "74b48c7cb5e441db4e544406205623f5ac2c12ffd972b0d4c8aa8f1c9f85669a",
+      "modified": false
+    },
+    {
+      "source_path": "1_Scripts/level_bga_shadow.py",
+      "dest_path": "scripts/odb_workflow/1_Scripts/level_bga_shadow.py",
+      "sha256": "ab1b21026278f2c26e67f540c675c646333e569d6025923d83f07f32bffd3eaa",
+      "modified": false
+    },
+    {
+      "source_path": "1_Scripts/Mech_py_EquivalentMaterial_v6.py",
+      "dest_path": "scripts/odb_workflow/1_Scripts/Mech_py_EquivalentMaterial_v6.py",
+      "sha256": "a4ee5260e17a7aa6c1ecbdae0e82aa6edff0afceef208b40fbae2b9c155152e1",
+      "modified": false
+    },
+    {
+      "source_path": "1_Scripts/Compare_TraceMapping_Dat.py",
+      "dest_path": "scripts/odb_workflow/1_Scripts/Compare_TraceMapping_Dat.py",
+      "sha256": "0876b491f824a4ae9848a6c19ef7843305330ee039822820574f91bf96c0e0a4",
+      "modified": false
+    },
+    {
+      "source_path": "1_Scripts/README_TraceMapping.md",
+      "dest_path": "scripts/odb_workflow/1_Scripts/README_TraceMapping.md",
+      "sha256": "11cb2c7fb6d29c148b2b5b2fc5491f832d7f60c795735854a966e0ba3b4f0c9d",
+      "modified": false
+    },
+    {
+      "source_path": "3_materials/Update_PCB_Material_Library.py",
+      "dest_path": "scripts/odb_workflow/3_materials/Update_PCB_Material_Library.py",
+      "sha256": "b8935ddb4100c5280424a28c27c15f327bb2b4f65f561e6cd1fc622b98a05b80",
+      "modified": false
+    },
+    {
+      "source_path": "3_materials/README_Material_Library.md",
+      "dest_path": "scripts/odb_workflow/3_materials/README_Material_Library.md",
+      "sha256": "77cc533bd4efbfc71ddd7e15c08dba4abf5db6e3feceb45a262869285390ebaf",
+      "modified": false
+    },
+    {
+      "source_path": "4_config/project_config.template.json",
+      "dest_path": "scripts/odb_workflow/4_config/project_config.template.json",
+      "sha256": "3e91ffea0fd70dd54298e7c4a3a1dbc95520a88e0b87b20f450a8ed56c411476",
+      "modified": true
+    },
+    {
+      "source_path": "tests/test_coverage.py",
+      "dest_path": "scripts/odb_workflow/tests/test_coverage.py",
+      "sha256": "d1839d352d84c2e94ef86d6f063875d886a0c18140eecb25fa59ed229a62e9de",
+      "modified": false
+    },
+    {
+      "source_path": "tests/test_intake_build.py",
+      "dest_path": "scripts/odb_workflow/tests/test_intake_build.py",
+      "sha256": "dd7a7c66e776474f08856985e73350603a17fbbe640a844edafcd89a287ba4ca",
+      "modified": false
+    },
+    {
+      "source_path": "tests/test_leveling.py",
+      "dest_path": "scripts/odb_workflow/tests/test_leveling.py",
+      "sha256": "4364a8ab540cd19995a7fa2497a068f6b8d951933765a8d15b4bd40d46d104af",
+      "modified": false
+    },
+    {
+      "source_path": "tests/test_materials.py",
+      "dest_path": "scripts/odb_workflow/tests/test_materials.py",
+      "sha256": "86579f1b0cd605f3eec8c3c18025da8457e1bed97385789ffec1277381bf2a0e",
+      "modified": false
+    },
+    {
+      "source_path": "docs/01_overview.md",
+      "dest_path": "references/odb_workflow/docs/01_overview.md",
+      "sha256": "e3f30d3f916c8419313c078f49881ab7ff436b3166ca801493a1436c8c66209b",
+      "modified": false
+    },
+    {
+      "source_path": "docs/02_input_standard.md",
+      "dest_path": "references/odb_workflow/docs/02_input_standard.md",
+      "sha256": "db1c1daf6a0111abdf403f3c3f7d678a519c5976ec807c306d24c15cea8ddc9f",
+      "modified": false
+    },
+    {
+      "source_path": "docs/03_vendor_odb_defects.md",
+      "dest_path": "references/odb_workflow/docs/03_vendor_odb_defects.md",
+      "sha256": "d90a34e783986cbbd4a1908ca737bcd31cc1d13336beaeb024ebc2356cd66ac9",
+      "modified": false
+    },
+    {
+      "source_path": "docs/04_build_procedure.md",
+      "dest_path": "references/odb_workflow/docs/04_build_procedure.md",
+      "sha256": "ad2c2fae772882a45fb4e79332c64d87b019da8229215d5b1ece4d57a79a2795",
+      "modified": false
+    },
+    {
+      "source_path": "docs/05_ambiguity_rules.md",
+      "dest_path": "references/odb_workflow/docs/05_ambiguity_rules.md",
+      "sha256": "b1f6911fb3e0332677c3e0a214f3c194d083fac6417f00bd5f7c1189c466e52a",
+      "modified": false
+    },
+    {
+      "source_path": "docs/06_verification.md",
+      "dest_path": "references/odb_workflow/docs/06_verification.md",
+      "sha256": "a86dc2c51931819227713cbb0ebc3f4192398092a8f73b8b74c6d1413b46ea54",
+      "modified": false
+    },
+    {
+      "source_path": "docs/07_downstream_workflow.md",
+      "dest_path": "references/odb_workflow/docs/07_downstream_workflow.md",
+      "sha256": "f548c72de4b9cc643f81f0d4c6870aa3bbed9e1b73ea52f36d5cc3fa828d3993",
+      "modified": false
+    },
+    {
+      "source_path": "docs/08_vendor_table_formats.md",
+      "dest_path": "references/odb_workflow/docs/08_vendor_table_formats.md",
+      "sha256": "378938c85e0a416c953f51b0a19b19141042b99ee1584eccb43175f357c35d9b",
+      "modified": false
+    },
+    {
+      "source_path": "docs/09_troubleshooting.md",
+      "dest_path": "references/odb_workflow/docs/09_troubleshooting.md",
+      "sha256": "ca330eda6139b7a153284755ed07ab6a6d55c13bbd027ac8dce0cbafe5e6fccc",
+      "modified": false
+    },
+    {
+      "source_path": "docs/10_leveling.md",
+      "dest_path": "references/odb_workflow/docs/10_leveling.md",
+      "sha256": "a362670e59bbd3e1ddb5fec84efc8e1ca35d205bda91cefbb67c548b568a3714",
+      "modified": false
+    },
+    {
+      "source_path": "docs/agent/00_session_and_log.md",
+      "dest_path": "references/odb_workflow/docs/agent/00_session_and_log.md",
+      "sha256": "243517357b24eb0930ff2c1e327e0cb62415bc751a70910eeaa4e9bf90689689",
+      "modified": false
+    },
+    {
+      "source_path": "docs/agent/A_inputs_and_odb.md",
+      "dest_path": "references/odb_workflow/docs/agent/A_inputs_and_odb.md",
+      "sha256": "9db4698808fab87e0bdbb34855e10d7c7d65177e1054a4832211a1ff436e94c7",
+      "modified": false
+    },
+    {
+      "source_path": "docs/agent/B_layerbuilder.md",
+      "dest_path": "references/odb_workflow/docs/agent/B_layerbuilder.md",
+      "sha256": "19bb21370a7166908d323ee90fca993d5d4176aa30715864e375888638a6d049",
+      "modified": false
+    },
+    {
+      "source_path": "docs/agent/C_ansys_model.md",
+      "dest_path": "references/odb_workflow/docs/agent/C_ansys_model.md",
+      "sha256": "d84b154340d4c2d20f51bda497744f8e3d499b07ecb5998ddc2e201161b86ff9",
+      "modified": false
+    },
+    {
+      "source_path": "docs/agent/D_loads.md",
+      "dest_path": "references/odb_workflow/docs/agent/D_loads.md",
+      "sha256": "b582bb4e086c9df3d95e5edf2186399d7760289b76471ae50c1665dc306e8b00",
+      "modified": false
+    },
+    {
+      "source_path": "docs/agent/E_export_and_leveling.md",
+      "dest_path": "references/odb_workflow/docs/agent/E_export_and_leveling.md",
+      "sha256": "590ff544c1bb9fd9c9a9b26e47b9bb79161a776cd00508b9630a9e80f9cb07f1",
+      "modified": false
+    },
+    {
+      "source_path": "docs/agent/human_decisions.md",
+      "dest_path": "references/odb_workflow/docs/agent/human_decisions.md",
+      "sha256": "13c8b0b3518c61f8d59ff9b0ccac71c4b48e9e95c89720b2d45ace2982d87f28",
+      "modified": false
+    },
+    {
+      "source_path": "SKILL.md",
+      "dest_path": "references/odb_workflow/TRACK2_SKILL.md",
+      "sha256": "fcac5296c9a0b5f53d602c5cd2b06937113c261e33fc575af028d04e1c221013",
+      "modified": false
+    }
+  ]
+}
